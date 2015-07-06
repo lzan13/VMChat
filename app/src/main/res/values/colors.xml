@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="ml_white">#ffffffff</color>
+    <color name="ml_black">#ff000000</color>
+    <color name="ml_gray">#ff898989</color>
+
+
+    <color name="ml_primary">#ffe62f17</color>
+    <color name="ml_primary_light">#ffe62f17</color>
+
+    <color name="ml_primary_text_white">#ffffffff</color>
+
+    <!--透明颜色-->
+    <color name="ml_transparent">#00000000</color>
+
+
+    <color name="ml_transparent_primary">#f8e62f17</color>
+    <color name="ml_transparent_primary_light">#f8e62f17</color>
+    <color name="ml_transparent_statusbar">#70e62f17</color>
+    <color name="ml_transparent_navigationbar">#8de62f17</color>
+
+    <!--背景色-->
+    <color name="ml_bg_white">#ffffffff</color>
+    <color name="ml_bg_pink_white">#fff5f0eb</color>
+    <color name="ml_bg_gray_white">#ffd8d8d8</color>
+    <color name="ml_bg_user_item_white">#88ffffff</color>
+    <color name="ml_bg_tip_text">#ffe8e4dd</color>
+
+    <color name="ml_bg_view_timeline">#ffe8e4dd</color>
+    <color name="ml_bg_view_divider">#ffdfd9d3</color>
+    <color name="ml_divider_gray">#ff898989</color>
+
+</resources>
