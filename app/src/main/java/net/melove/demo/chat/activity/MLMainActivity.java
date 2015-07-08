@@ -12,19 +12,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 
+import net.melove.demo.chat.fragment.MLDrawerFragment;
 import net.melove.demo.chat.fragment.NavigationDrawerFragment;
 import net.melove.demo.chat.R;
 
 
-public class MLMainActivity extends MLBaseActivity{
+public class MLMainActivity extends MLBaseActivity {
+
+
+    private Activity mActivity;
+
+    private MLDrawerFragment mMLDrawerFragment;
 
     /**
-     * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
-     */
-    private NavigationDrawerFragment mNavigationDrawerFragment;
-
-    /**
-     * Used to store the last screen title. For use in {@link #restoreActionBar()}.
+     * 存储最后一次显示的title
      */
     private CharSequence mTitle;
 
@@ -33,14 +34,10 @@ public class MLMainActivity extends MLBaseActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
 
-        // Set up the drawer.
-        mNavigationDrawerFragment.setUp(
-                R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
+        mMLDrawerFragment = MLDrawerFragment.newInstance("", "");
+
     }
 
 
@@ -57,7 +54,6 @@ public class MLMainActivity extends MLBaseActivity{
                 break;
         }
     }
-
 
 
     @Override
