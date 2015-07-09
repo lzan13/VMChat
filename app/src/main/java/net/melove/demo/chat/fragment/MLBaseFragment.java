@@ -1,6 +1,7 @@
 package net.melove.demo.chat.fragment;
 
-import android.app.Fragment;
+
+import android.support.v4.app.Fragment;
 
 /**
  * Created by lzan13 on 2015/7/6.

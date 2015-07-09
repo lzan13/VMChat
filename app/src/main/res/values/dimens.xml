@@ -9,6 +9,7 @@
 
 
     <dimen name="ml_dimen_px_1">1px</dimen>
+    <dimen name="ml_dimen_0">0px</dimen>
     <dimen name="ml_dimen_1">1dp</dimen>
     <dimen name="ml_dimen_2">2dp</dimen>
     <dimen name="ml_dimen_4">4dp</dimen>

@@ -1,9 +1,9 @@
 package net.melove.demo.chat.fragment;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,12 +33,15 @@ public class MLDrawerFragment extends MLBaseFragment {
      * @param param2
      * @return
      */
-    public static MLDrawerFragment newInstance(String param1, String param2) {
+    public static MLDrawerFragment newInstance(DrawerLayout layout, String param1, String param2) {
         MLDrawerFragment fragment = new MLDrawerFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
+
+        layout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+
         return fragment;
     }
 
