@@ -8,27 +8,43 @@
 
     <color name="ml_primary">#ffe62f17</color>
     <color name="ml_primary_light">#ffe62f17</color>
-
     <color name="ml_primary_text_white">#ffffffff</color>
-
-    <!--透明颜色-->
-    <color name="ml_transparent">#00000000</color>
-
-
-    <color name="ml_transparent_primary">#f8e62f17</color>
-    <color name="ml_transparent_primary_light">#f8e62f17</color>
-    <color name="ml_transparent_statusbar">#70e62f17</color>
-    <color name="ml_transparent_navigationbar">#8de62f17</color>
 
     <!--背景色-->
     <color name="ml_bg_white">#ffffffff</color>
     <color name="ml_bg_pink_white">#fff5f0eb</color>
     <color name="ml_bg_gray_white">#ffd8d8d8</color>
-    <color name="ml_bg_user_item_white">#88ffffff</color>
-    <color name="ml_bg_tip_text">#ffe8e4dd</color>
+    <color name="ml_bg_tab_pressed">#e8e8e8e8</color>
+
 
     <color name="ml_bg_view_timeline">#ffe8e4dd</color>
     <color name="ml_bg_view_divider">#ffdfd9d3</color>
-    <color name="ml_divider_gray">#ff898989</color>
+
+    <!--按钮颜色-->
+    <color name="ml_btn_drawer_item_normal">#fff6f6f6</color>
+    <color name="ml_btn_drawer_item_pressed">#ffebebeb</color>
+    <color name="ml_btn_red_normal">#ffe62f17</color>
+    <color name="ml_btn_red_pressed">#ffbe2d17</color>
+
+    <!--文字颜色-->
+    <color name="ml_text_hint_gray">#ff9a9a9a</color>
+    <color name="ml_text_hint_blue">#ff1accff</color>
+    <color name="ml_text_item_title_block">#ff232323</color>
+    <color name="ml_text_item_subtitle_block">#ff585858</color>
+    <color name="ml_text_drawer_nickname">#fff8f8f8</color>
+    <color name="ml_text_drawer_top_signation">#fff0f0f0</color>
+    <color name="ml_text_white">#fff8f8f8</color>
+
+    <color name="ml_text_tab_normal">#ff232323</color>
+    <color name="ml_text_tab_selected">#ffe62f17</color>
+
+    <!--边框色-->
+    <color name="ml_border_gray">#ffa8a8a8</color>
+    <color name="ml_border_white">#fff8f8f8</color>
+    <color name="ml_divider_gray">#ffd8d8d8</color>
+
+
+    <!--透明颜色-->
+    <color name="ml_transparent">#00000000</color>
 
 </resources>

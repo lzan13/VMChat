@@ -6,6 +6,6 @@
         android:id="@+id/action_add"
         android:icon="@mipmap/ic_launcher"
         android:orderInCategory="100"
-        android:title="@string/ml_action_add"
+        android:title="@string/ml_add"
         app:showAsAction="always" />
 </menu>

@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:melove="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -23,11 +24,43 @@
                     android:layout_height="wrap_content">
 
                     <ImageView
+                        android:id="@+id/ml_img_drawer_top_cover"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
                         android:scaleType="centerCrop"
-                        android:src="@mipmap/bg_top"
-                        android:adjustViewBounds="true"/>
+                        android:src="@mipmap/bg_top" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@id/ml_img_drawer_top_cover"
+                        android:layout_margin="@dimen/ml_dimen_16"
+                        android:orientation="vertical">
+
+                        <net.melove.demo.chat.widget.MLImageView
+                            android:layout_width="@dimen/ml_dimen_56"
+                            android:layout_height="@dimen/ml_dimen_56"
+                            android:layout_marginBottom="@dimen/ml_dimen_8"
+                            android:src="@mipmap/icon_avatar_default"
+                            melove:shape_type="round" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/app_name"
+                            android:textColor="@color/ml_text_drawer_nickname"
+                            android:textSize="@dimen/ml_size_14" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/app_name"
+                            android:textColor="@color/ml_text_drawer_nickname"
+                            android:textSize="@dimen/ml_size_12" />
+                    </LinearLayout>
+
+
                 </RelativeLayout>
             </LinearLayout>
 
@@ -39,19 +72,91 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/ml_dimen_48"
+                    android:background="@drawable/ml_btn_drawer_item"
+                    android:clickable="true"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@mipmap/ic_launcher" />
+                        android:layout_marginLeft="@dimen/ml_dimen_16"
+                        android:src="@mipmap/icon_group_24dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/app_name" />
+                        android:layout_marginLeft="@dimen/ml_dimen_16"
+                        android:text="@string/ml_group" />
+                </LinearLayout>
+
+
+
+                <!--<LinearLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="@dimen/ml_dimen_48"-->
+                    <!--android:background="@drawable/ml_btn_drawer_item"-->
+                    <!--android:clickable="true"-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:orientation="horizontal">-->
+
+                    <!--<ImageView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginLeft="@dimen/ml_dimen_16"-->
+                        <!--android:src="@mipmap/icon_group_24dp" />-->
+
+                    <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginLeft="@dimen/ml_dimen_16"-->
+                        <!--android:text="@string/ml_room" />-->
+                <!--</LinearLayout>-->
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/ml_dimen_48"
+                    android:background="@drawable/ml_btn_drawer_item"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/ml_dimen_16"
+                        android:src="@mipmap/icon_tag_24dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/ml_dimen_16"
+                        android:text="@string/ml_tag" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/ml_dimen_48"
+                    android:background="@drawable/ml_btn_drawer_item"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/ml_dimen_16"
+                        android:src="@mipmap/icon_drift_bottle" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/ml_dimen_16"
+                        android:text="@string/ml_drift_bottle" />
+
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
@@ -71,21 +176,23 @@
         <LinearLayout
             android:id="@+id/ml_layout_btn_setting"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/ml_dimen_48"
+            android:background="@drawable/ml_btn_drawer_item"
+            android:clickable="true"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/ml_dimen_8"
-                android:src="@mipmap/ic_launcher" />
+                android:layout_marginLeft="@dimen/ml_dimen_16"
+                android:src="@mipmap/icon_settings_gray_24dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/ml_dimen_16"
-                android:text="@string/app_name"
+                android:text="@string/ml_settings"
                 android:textSize="@dimen/ml_size_16" />
         </LinearLayout>
     </LinearLayout>

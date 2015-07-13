@@ -22,9 +22,17 @@
             <net.melove.demo.chat.widget.MLPagerSlidingTab
                 android:id="@+id/ml_widget_pageslidingtab"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/ml_dimen_36"
+                melove:divider_color="@color/ml_transparent"
                 melove:indicator_color="@color/ml_primary"
-                melove:indicator_height="@dimen/ml_dimen_4">
+                melove:indicator_height="@dimen/ml_dimen_4"
+                melove:should_expand="true"
+                melove:tab_text_all_caps="true"
+                melove:tab_text_color="@color/ml_text_tab_normal"
+                melove:tab_text_selected_color="@color/ml_text_tab_selected"
+                melove:tab_text_size="@dimen/ml_size_14"
+                melove:underline_color="@color/ml_primary"
+                melove:underline_height="@dimen/ml_dimen_1">
 
             </net.melove.demo.chat.widget.MLPagerSlidingTab>
 

@@ -13,6 +13,7 @@ import android.view.View;
 import android.support.v4.widget.DrawerLayout;
 
 import net.melove.demo.chat.adapter.MLViewPagerAdapter;
+import net.melove.demo.chat.fragment.MLBaseFragment;
 import net.melove.demo.chat.fragment.MLContactsFragment;
 import net.melove.demo.chat.fragment.MLConversationFragment;
 import net.melove.demo.chat.fragment.MLDrawerFragment;
@@ -22,7 +23,7 @@ import net.melove.demo.chat.fragment.MLTestFragment;
 import net.melove.demo.chat.widget.MLPagerSlidingTab;
 
 
-public class MLMainActivity extends MLBaseActivity {
+public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnMLFragmentListener {
 
 
     private Activity mActivity;
@@ -56,8 +57,9 @@ public class MLMainActivity extends MLBaseActivity {
         setContentView(R.layout.activity_main);
         init();
         initToolbar();
-        initFragment();
-
+        initDrawerFragment();
+        initPagerSlidingTab();
+        initViewPager();
 
     }
 
@@ -114,7 +116,7 @@ public class MLMainActivity extends MLBaseActivity {
     }
 
 
-    private void initFragment() {
+    private void initDrawerFragment() {
         // 侧滑菜单Fragment
         FragmentTransaction ftd = getSupportFragmentManager().beginTransaction();
         mMLDrawerFragment = MLDrawerFragment.newInstance(mDrawerLayout, "", "");
@@ -122,14 +124,25 @@ public class MLMainActivity extends MLBaseActivity {
         ftd.commit();
     }
 
-    private void initViewPager() {
+    /**
+     * 初始化PagerSlidingTab
+     */
+    private void initPagerSlidingTab() {
         mMLPagerSlidingTab = (MLPagerSlidingTab) findViewById(R.id.ml_widget_pageslidingtab);
+
+//        mMLPagerSlidingTab.setSelectedTextColor(mActivity.getResources().getColor(R.color.ml_primary));
+    }
+
+    /**
+     * 初始化ViewPager，将Fragment添加进去
+     */
+    private void initViewPager() {
         mViewPager = (ViewPager) findViewById(R.id.ml_widget_viewpager);
 
-        mMLContactsFragment = new MLContactsFragment();
-        mMLConversationFragment = new MLConversationFragment();
-        mMLSettingFragment = new MLSettingFragment();
-        mMLTestFragment = new MLTestFragment();
+        mMLContactsFragment = MLContactsFragment.newInstance("", "");
+        mMLConversationFragment = MLConversationFragment.newInstance("", "");
+        mMLSettingFragment = MLSettingFragment.newInstance("", "");
+        mMLTestFragment = MLTestFragment.newInstance("", "");
 
         mFragments = new Fragment[]{mMLContactsFragment, mMLConversationFragment, mMLSettingFragment, mMLTestFragment};
         mViewPager.setAdapter(new MLViewPagerAdapter(getSupportFragmentManager(), mFragments, mTabTitles));
@@ -157,6 +170,7 @@ public class MLMainActivity extends MLBaseActivity {
         });
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (isDrawerOpen) {
@@ -175,4 +189,12 @@ public class MLMainActivity extends MLBaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onPotion(int i) {
+        switch (i) {
+            case 0:
+
+                break;
+        }
+    }
 }
