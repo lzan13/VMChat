@@ -26,7 +26,8 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/ml_shape_edit_oval"
                     android:gravity="center"
-                    android:hint="@string/app_name" />
+                    android:hint="@string/app_name"
+                    android:textSize="@dimen/ml_size_16" />
             </LinearLayout>
 
             <LinearLayout
@@ -39,22 +40,60 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/ml_shape_edit_oval"
                     android:gravity="center"
-                    android:hint="@string/app_name"  />
+                    android:hint="@string/app_name"
+                    android:textSize="@dimen/ml_size_16" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/ml_dimen_48"
-                android:layout_margin="@dimen/ml_dimen_8">
+                android:layout_margin="@dimen/ml_dimen_8"
+                android:orientation="vertical">
 
                 <Button
+                    android:id="@+id/ml_signin"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/ml_shape_btn_oval_red"
                     android:text="@string/ml_signin"
                     android:textColor="@color/ml_text_white"
                     android:textSize="@dimen/ml_size_18" />
+
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ml_dimen_48"
+                android:layout_margin="@dimen/ml_dimen_8"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/ml_signup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/ml_signup"
+                    android:textColor="@color/ml_text_blue"
+                    android:textSize="@dimen/ml_size_18" />
+
+                <View
+                    android:layout_width="@dimen/ml_dimen_2"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/ml_dimen_8"
+                    android:background="@color/ml_border_gray" />
+
+                <TextView
+                    android:id="@+id/ml_forget_password"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/ml_btn_transparent"
+                    android:gravity="center"
+                    android:text="@string/ml_forget_password"
+                    android:textColor="@color/ml_text_blue"
+                    android:textSize="@dimen/ml_size_18" />
+            </LinearLayout>
+
         </LinearLayout>
 
         <LinearLayout

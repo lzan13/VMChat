@@ -32,4 +32,16 @@
         <item name="color">@color/ml_white</item>
     </style>
 
+
+    <style name="AnimFade" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/ml_fade_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/ml_fade_out</item>
+        <item name="android:activityCloseEnterAnimation">@anim/ml_fade_out</item>
+        <item name="android:activityCloseExitAnimation">@anim/ml_fade_in</item>
+    </style>
+
+    <style name="MLTheme.AnimFade" parent="MLTheme.Red">
+        <item name="android:windowAnimationStyle">@style/AnimFade</item>
+    </style>
+
 </resources>

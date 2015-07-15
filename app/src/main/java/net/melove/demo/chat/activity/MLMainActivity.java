@@ -79,7 +79,7 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
         mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.ml_widget_drawer_layout);
 
-        mToolbar.setTitle(R.string.ml_title_chat);
+        mToolbar.setTitle(R.string.ml_chat);
         mToolbar.setTitleTextColor(getResources().getColor(R.color.ml_white));
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -119,7 +119,7 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
     private void initDrawerFragment() {
         // 侧滑菜单Fragment
         FragmentTransaction ftd = getSupportFragmentManager().beginTransaction();
-        mMLDrawerFragment = MLDrawerFragment.newInstance(mDrawerLayout, "", "");
+        mMLDrawerFragment = MLDrawerFragment.newInstance(mDrawerLayout);
         ftd.replace(R.id.ml_framelayout_drawer, mMLDrawerFragment);
         ftd.commit();
     }
@@ -130,7 +130,6 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
     private void initPagerSlidingTab() {
         mMLPagerSlidingTab = (MLPagerSlidingTab) findViewById(R.id.ml_widget_pageslidingtab);
 
-//        mMLPagerSlidingTab.setSelectedTextColor(mActivity.getResources().getColor(R.color.ml_primary));
     }
 
     /**

@@ -1,15 +1,21 @@
 package net.melove.demo.chat.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import net.melove.demo.chat.R;
+import net.melove.demo.chat.activity.MLSigninActivity;
 import net.melove.demo.chat.util.MLLog;
+import net.melove.demo.chat.widget.MLImageView;
 
 /**
  * 侧滑抽屉Fragment，
@@ -26,7 +32,16 @@ public class MLDrawerFragment extends MLBaseFragment {
     private String mParam1;
     private String mParam2;
 
+    private Activity mActivity;
+
+    private ImageView mCover;
+    private MLImageView mAvatar;
+
     private OnMLFragmentListener mListener;
+
+    public static MLDrawerFragment newInstance(DrawerLayout layout) {
+        return newInstance(layout, "", "");
+    }
 
     /**
      * @param param1
@@ -40,7 +55,7 @@ public class MLDrawerFragment extends MLBaseFragment {
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
 
-        layout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+        layout.setDrawerShadow(R.mipmap.drawer_shadow, GravityCompat.START);
 
         return fragment;
     }
@@ -59,10 +74,41 @@ public class MLDrawerFragment extends MLBaseFragment {
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mActivity = getActivity();
+        init();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_drawer, container, false);
     }
+
+    private void init() {
+        mCover = (ImageView) getView().findViewById(R.id.ml_img_drawer_top_cover);
+        mAvatar = (MLImageView) getView().findViewById(R.id.ml_img_drawer_top_avatar);
+
+
+        mAvatar.setOnClickListener(viewListener);
+    }
+
+    private View.OnClickListener viewListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.ml_img_drawer_top_avatar:
+                    Intent intent = new Intent();
+                    intent.setClass(mActivity, MLSigninActivity.class);
+                    ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeCustomAnimation(mActivity,
+                            R.anim.ml_fade_in, R.anim.ml_fade_out);
+                    ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
+                    mActivity.finish();
+                    break;
+            }
+        }
+    };
 
     public void onListener(int i) {
         if (mListener != null) {

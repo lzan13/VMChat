@@ -39,6 +39,7 @@
                         android:orientation="vertical">
 
                         <net.melove.demo.chat.widget.MLImageView
+                            android:id="@+id/ml_img_drawer_top_avatar"
                             android:layout_width="@dimen/ml_dimen_56"
                             android:layout_height="@dimen/ml_dimen_56"
                             android:layout_marginBottom="@dimen/ml_dimen_8"
@@ -92,26 +93,25 @@
                 </LinearLayout>
 
 
-
                 <!--<LinearLayout-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="@dimen/ml_dimen_48"-->
-                    <!--android:background="@drawable/ml_btn_drawer_item"-->
-                    <!--android:clickable="true"-->
-                    <!--android:gravity="center_vertical"-->
-                    <!--android:orientation="horizontal">-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="@dimen/ml_dimen_48"-->
+                <!--android:background="@drawable/ml_btn_drawer_item"-->
+                <!--android:clickable="true"-->
+                <!--android:gravity="center_vertical"-->
+                <!--android:orientation="horizontal">-->
 
-                    <!--<ImageView-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_marginLeft="@dimen/ml_dimen_16"-->
-                        <!--android:src="@mipmap/icon_group_24dp" />-->
+                <!--<ImageView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="@dimen/ml_dimen_16"-->
+                <!--android:src="@mipmap/icon_group_24dp" />-->
 
-                    <!--<TextView-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_marginLeft="@dimen/ml_dimen_16"-->
-                        <!--android:text="@string/ml_room" />-->
+                <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="@dimen/ml_dimen_16"-->
+                <!--android:text="@string/ml_room" />-->
                 <!--</LinearLayout>-->
 
 

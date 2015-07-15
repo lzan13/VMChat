@@ -1,6 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
+    <include layout="@layout/widget_toolbar_layout" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/ml_dimen_8">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ml_dimen_48"
+                android:layout_margin="@dimen/ml_dimen_8">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/ml_shape_edit_oval"
+                    android:gravity="center"
+                    android:hint="@string/app_name"
+                    android:textSize="@dimen/ml_size_16" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ml_dimen_48"
+                android:layout_margin="@dimen/ml_dimen_8">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/ml_shape_edit_oval"
+                    android:gravity="center"
+                    android:hint="@string/app_name"
+                    android:textSize="@dimen/ml_size_16" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ml_dimen_48"
+                android:layout_margin="@dimen/ml_dimen_8">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/ml_shape_edit_oval"
+                    android:gravity="center"
+                    android:hint="@string/app_name"
+                    android:textSize="@dimen/ml_size_16" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ml_dimen_48"
+                android:layout_margin="@dimen/ml_dimen_8"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/ml_signup"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/ml_shape_btn_oval_red"
+                    android:text="@string/ml_signup"
+                    android:textColor="@color/ml_text_white"
+                    android:textSize="@dimen/ml_size_18" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/ml_dimen_24"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name" />
+        </LinearLayout>
+    </RelativeLayout>
 </LinearLayout>

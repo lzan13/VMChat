@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer name="ml_time_color_change">200</integer>
+
+    <integer name="ml_time_activity_in">360</integer>
+    <integer name="ml_time_activity_out">360</integer>
+</resources>

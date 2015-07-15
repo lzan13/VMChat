@@ -16,15 +16,17 @@
 
     <string name="ml_signin">Sign in</string>
     <string name="ml_signup">Sign up</string>
+    <string name="ml_forget_password">Forget Password</string>
     <string name="ml_username">User Name</string>
     <string name="ml_password">Password</string>
+    <string name="ml_confirm_password">Confirm Password</string>
 
 
     <string name="ml_nickname">NickName</string>
     <string name="ml_signature">SIgnature</string>
 
 
-    <string name="ml_title_chat">Chat</string>
+    <string name="ml_chat">Chat</string>
 
 
 </resources>

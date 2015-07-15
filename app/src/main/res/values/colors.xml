@@ -34,12 +34,14 @@
     <color name="ml_text_drawer_nickname">#fff8f8f8</color>
     <color name="ml_text_drawer_top_signation">#fff0f0f0</color>
     <color name="ml_text_white">#fff8f8f8</color>
+    <color name="ml_text_blue">#ff1378ae</color>
 
     <color name="ml_text_tab_normal">#ff232323</color>
     <color name="ml_text_tab_selected">#ffe62f17</color>
 
     <!--边框色-->
-    <color name="ml_border_gray">#ffa8a8a8</color>
+    <color name="ml_border_red">#ffe62f17</color>
+    <color name="ml_border_gray">#a8a8a8a8</color>
     <color name="ml_border_white">#fff8f8f8</color>
     <color name="ml_divider_gray">#ffd8d8d8</color>
 

@@ -5,11 +5,8 @@
             <item>
                 <shape android:dither="true">
                     <stroke android:width="@dimen/ml_dimen_1"
-                        android:color="@color/ml_border_gray"
-                        android:dashGap="@dimen/ml_dimen_4"
-                        android:dashWidth="@dimen/ml_dimen_4" />
+                        android:color="@color/ml_border_gray" />
                     <corners android:radius="@dimen/ml_dimen_24" />
-                    <!--<solid android:color="@color/ml_edit_no_focused"/>-->
                 </shape>
             </item>
         </layer-list>
@@ -19,11 +16,8 @@
             <item>
                 <shape android:dither="true">
                     <stroke android:width="@dimen/ml_dimen_1"
-                        android:color="@color/ml_border_white"
-                        android:dashGap="@dimen/ml_dimen_4"
-                        android:dashWidth="@dimen/ml_dimen_2" />
+                        android:color="@color/ml_border_red" />
                     <corners android:radius="@dimen/ml_dimen_24" />
-                    <!--<solid android:color="@color/ml_edit_focused"/>-->
                 </shape>
             </item>
         </layer-list>
