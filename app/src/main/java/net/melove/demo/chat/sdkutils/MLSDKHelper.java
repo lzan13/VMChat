@@ -5,4 +5,10 @@ package net.melove.demo.chat.sdkutils;
  */
 public class MLSDKHelper {
 
+    public synchronized boolean onInit() {
+
+
+        return true;
+    }
+
 }

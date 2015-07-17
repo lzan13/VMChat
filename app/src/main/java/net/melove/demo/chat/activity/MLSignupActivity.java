@@ -70,6 +70,10 @@ public class MLSignupActivity extends MLBaseActivity {
         }
     };
 
+    private void signup(){
+
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();

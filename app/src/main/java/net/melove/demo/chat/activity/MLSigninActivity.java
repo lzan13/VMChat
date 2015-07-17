@@ -51,6 +51,19 @@ public class MLSigninActivity extends MLBaseActivity {
 
     }
 
+
+    /**
+     * 初始化Toolbar组件
+     */
+    private void initToolbar() {
+        mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
+
+        mToolbar.setTitle(R.string.ml_signin);
+        mToolbar.setTitleTextColor(getResources().getColor(R.color.ml_white));
+        setSupportActionBar(mToolbar);
+        mToolbar.setNavigationIcon(R.mipmap.icon_close_white_24dp);
+    }
+
     private View.OnClickListener viewListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -73,16 +86,14 @@ public class MLSigninActivity extends MLBaseActivity {
         }
     };
 
-    /**
-     * 初始化Toolbar组件
-     */
-    private void initToolbar() {
-        mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
 
-        mToolbar.setTitle(R.string.ml_signin);
-        mToolbar.setTitleTextColor(getResources().getColor(R.color.ml_white));
-        setSupportActionBar(mToolbar);
-        mToolbar.setNavigationIcon(R.mipmap.icon_close_white_24dp);
+    private void signin() {
+
+    }
+
+
+    private void forgetPassword() {
+
     }
 
     @Override
