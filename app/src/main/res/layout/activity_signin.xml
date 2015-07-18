@@ -22,6 +22,7 @@
                 android:layout_margin="@dimen/ml_dimen_8">
 
                 <EditText
+                    android:id="@+id/ml_edit_username"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/ml_shape_edit_oval"
@@ -36,6 +37,7 @@
                 android:layout_margin="@dimen/ml_dimen_8">
 
                 <EditText
+                    android:id="@+id/ml_edit_password"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/ml_shape_edit_oval"

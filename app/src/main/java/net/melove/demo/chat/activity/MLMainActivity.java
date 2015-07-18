@@ -86,7 +86,7 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
 
         // 设置Toolbar与DrawerLayout 联动的按钮
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,
-                R.string.ml_drawer_open, R.string.ml_drawer_close) {
+                R.string.ml_open, R.string.ml_close) {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
                 super.onDrawerSlide(drawerView, slideOffset);

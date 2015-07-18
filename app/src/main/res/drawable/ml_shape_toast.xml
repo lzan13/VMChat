@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <layer-list>
+            <!--阴影部分-->
+            <!--<item>-->
+                <!--<shape>-->
+                    <!--&lt;!&ndash; 渐变 &ndash;&gt;-->
+                    <!--<gradient android:angle="-90" android:endColor="@color/ml_transparent" android:startColor="@color/ml_block" android:type="linear" />-->
+                    <!--&lt;!&ndash; 描边 &ndash;&gt;-->
+                    <!--&lt;!&ndash;<stroke&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:width="@dimen/ml_dimen_px_1"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:color="@color/ml_blue"/>&ndash;&gt;-->
+                    <!--&lt;!&ndash; 圆角 &ndash;&gt;-->
+                    <!--<corners android:radius="@dimen/ml_dimen_8" />-->
+                    <!--<padding android:bottom="@dimen/ml_dimen_4" android:left="@dimen/ml_dimen_8" android:right="@dimen/ml_dimen_8" android:top="@dimen/ml_dimen_4" />-->
+                <!--</shape>-->
+            <!--</item>-->
+
+            <!--背景色-->
+            <item>
+                <shape android:dither="true" android:shape="rectangle">
+                    <corners android:radius="@dimen/ml_dimen_20" />
+
+                    <solid android:color="@color/ml_bg_white" />
+                    <stroke android:color="@color/ml_border_gray"
+                        android:width="@dimen/ml_dimen_px_1"/>
+                    <!--<padding android:bottom="@dimen/ml_dimen_4" android:left="@dimen/ml_dimen_8" android:right="@dimen/ml_dimen_8" android:top="@dimen/ml_dimen_4" />-->
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+</selector>

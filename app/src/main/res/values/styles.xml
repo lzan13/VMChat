@@ -32,6 +32,11 @@
         <item name="color">@color/ml_white</item>
     </style>
 
+    <!--自定义控件MLToast 动画-->
+    <style name="ml_toast_anim">
+        <item name="android:windowEnterAnimation">@anim/ml_toast_in</item>
+        <item name="android:windowExitAnimation">@anim/ml_toast_out</item>
+    </style>
 
     <style name="AnimFade" parent="@android:style/Animation.Activity">
         <item name="android:activityOpenEnterAnimation">@anim/ml_fade_in</item>
