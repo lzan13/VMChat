@@ -127,11 +127,11 @@ public class MLSignupActivity extends MLBaseActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (mActivity.isFinishing()) {
+                            if (!mActivity.isFinishing()) {
                                 mDialog.dismiss();
                             }
                             MLSPUtil.put(mActivity, "username", mUsername);
-                            MLToast.makeToast(res.getString(R.string.ml_signup_success)).show();
+                            MLToast.makeToast(R.mipmap.icon_emotion_smile_24dp, res.getString(R.string.ml_signup_success)).show();
                             finish();
                         }
                     });
@@ -140,7 +140,7 @@ public class MLSignupActivity extends MLBaseActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (mActivity.isFinishing()) {
+                            if (!mActivity.isFinishing()) {
                                 mDialog.dismiss();
                             }
                             int errorCode = e.getErrorCode();

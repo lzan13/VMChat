@@ -38,7 +38,10 @@
     <string name="ml_signup_failed_unauthorized">注册失败，未授权注册</string>
     <string name="ml_illegal_username">非法的用户名</string>
     <string name="ml_signup_failed">注册失败</string>
-    <string name="ml_signup_begin">开始注册……</string>
+    <string name="ml_signup_begin">正在注册……</string>
+    <string name="ml_signin_begin">正在登录……</string>
+    <string name="ml_signin_success">登录成功</string>
+    <string name="ml_signin_failed">登录失败</string>
 
 
 </resources>

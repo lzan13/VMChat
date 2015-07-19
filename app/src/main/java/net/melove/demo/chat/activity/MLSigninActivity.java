@@ -1,6 +1,7 @@
 package net.melove.demo.chat.activity;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -13,7 +14,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.easemob.EMCallBack;
+import com.easemob.chat.EMChatManager;
+
 import net.melove.demo.chat.R;
+import net.melove.demo.chat.util.MLLog;
+import net.melove.demo.chat.util.MLSPUtil;
 import net.melove.demo.chat.widget.MLToast;
 
 /**
@@ -23,6 +29,8 @@ public class MLSigninActivity extends MLBaseActivity {
 
     private Activity mActivity;
     private Toolbar mToolbar;
+
+    private ProgressDialog mDialog;
 
     private EditText mUsernameEdit;
     private EditText mPasswordEdit;
@@ -100,7 +108,7 @@ public class MLSigninActivity extends MLBaseActivity {
 
 
     private void signin() {
-        Resources res = mActivity.getResources();
+        final Resources res = mActivity.getResources();
         mUsername = mUsernameEdit.getText().toString().toLowerCase().trim();
         mPassword = mPasswordEdit.getText().toString().toLowerCase().trim();
         if (TextUtils.isEmpty(mUsername)) {
@@ -113,6 +121,53 @@ public class MLSigninActivity extends MLBaseActivity {
             mPasswordEdit.requestFocus();
             return;
         }
+
+        mDialog = new ProgressDialog(mActivity);
+        mDialog.setMessage(res.getString(R.string.ml_signin_begin));
+        mDialog.show();
+
+        EMChatManager.getInstance().login(mUsername, mPassword, new EMCallBack() {
+            @Override
+            public void onSuccess() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mDialog.dismiss();
+                        MLToast.makeToast(R.mipmap.icon_emotion_smile_24dp, res.getString(R.string.ml_signin_success)).show();
+                        MLLog.d(res.getString(R.string.ml_signin_success));
+
+                        MLSPUtil.put(mActivity, "username", mUsername);
+                        MLSPUtil.put(mActivity, "password", mPassword);
+
+                        Intent intent = new Intent();
+                        intent.setClass(mActivity, MLMainActivity.class);
+                        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeCustomAnimation(
+                                mActivity, R.anim.ml_fade_in, R.anim.ml_fade_out);
+                        ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
+                        mActivity.finish();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(final int i, final String s) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mDialog.dismiss();
+                        MLToast.makeToast(res.getString(R.string.ml_signin_failed)).show();
+                        MLLog.d("error: " + i + " " + res.getString(R.string.ml_signin_failed) + s);
+                    }
+                });
+            }
+
+            @Override
+            public void onProgress(int i, String s) {
+                MLLog.d("progress: " + i + " " + res.getString(R.string.ml_signin_begin) + s);
+
+            }
+        });
+
     }
 
 

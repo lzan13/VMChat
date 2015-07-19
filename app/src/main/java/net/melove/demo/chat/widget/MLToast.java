@@ -28,7 +28,7 @@ public class MLToast {
     private WindowManager.LayoutParams mParams;
 
     private MLToast(String text) {
-        initToast(-1, text);
+        initToast(R.mipmap.icon_emotion_sad_24dp, text);
     }
 
     private MLToast(int id, String text) {

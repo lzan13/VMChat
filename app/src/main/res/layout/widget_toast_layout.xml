@@ -7,7 +7,7 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/ml_dimen_36"
+        android:layout_height="@dimen/ml_dimen_40"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="@dimen/ml_dimen_8">
@@ -16,7 +16,7 @@
             android:id="@+id/ml_img_toast_icon"
             android:layout_width="@dimen/ml_dimen_24"
             android:layout_height="@dimen/ml_dimen_24"
-            android:src="@mipmap/icon_close_black" />
+            android:src="@mipmap/icon_emotion_sad_24dp" />
 
         <TextView
             android:id="@+id/ml_text_toast_text"

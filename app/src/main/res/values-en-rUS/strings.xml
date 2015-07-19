@@ -39,6 +39,9 @@
     <string name="ml_illegal_username">Illegal username</string>
     <string name="ml_signup_failed">Sign up failed</string>
     <string name="ml_signup_begin">Sign up begin</string>
+    <string name="ml_signin_begin">Sign in begin</string>
+    <string name="ml_signin_success">Sign in success</string>
+    <string name="ml_signin_failed">Sign in failed</string>
 
 
 </resources>
