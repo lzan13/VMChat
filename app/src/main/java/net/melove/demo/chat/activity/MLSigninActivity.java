@@ -50,16 +50,25 @@ public class MLSigninActivity extends MLBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
-        init();
         initToolbar();
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        init();
     }
 
     private void init() {
         mActivity = this;
 
+        mUsername = (String) MLSPUtil.get(mActivity, "username", "");
+        mPassword = (String) MLSPUtil.get(mActivity, "password", "");
         mUsernameEdit = (EditText) findViewById(R.id.ml_edit_username);
         mPasswordEdit = (EditText) findViewById(R.id.ml_edit_password);
+        mUsernameEdit.setText(mUsername);
+        mPasswordEdit.setText(mPassword);
 
         mSigninBtn = findViewById(R.id.ml_signin);
         mSignupBtn = findViewById(R.id.ml_signup);

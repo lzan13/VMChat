@@ -131,6 +131,7 @@ public class MLSignupActivity extends MLBaseActivity {
                                 mDialog.dismiss();
                             }
                             MLSPUtil.put(mActivity, "username", mUsername);
+                            MLSPUtil.put(mActivity, "password", "");
                             MLToast.makeToast(R.mipmap.icon_emotion_smile_24dp, res.getString(R.string.ml_signup_success)).show();
                             finish();
                         }
