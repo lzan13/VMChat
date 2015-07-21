@@ -1,4 +1,4 @@
-package net.melove.demo.chat;
+package net.melove.demo.chat.application;
 
 import android.app.Application;
 import android.content.Context;

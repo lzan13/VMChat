@@ -10,7 +10,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import net.melove.demo.chat.MLApplication;
+import net.melove.demo.chat.application.MLApplication;
 import net.melove.demo.chat.R;
 
 
