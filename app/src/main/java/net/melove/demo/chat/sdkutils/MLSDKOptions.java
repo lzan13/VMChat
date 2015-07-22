@@ -1,7 +1,30 @@
 package net.melove.demo.chat.sdkutils;
 
+import com.easemob.chat.EMChatManager;
+import com.easemob.chat.EMChatOptions;
+
 /**
  * Created by lzan13 on 2015/7/13.
  */
 public class MLSDKOptions {
+
+    public MLSDKOptions() {
+
+    }
+
+    private void initSDKOption() {
+
+        EMChatOptions options = EMChatManager.getInstance().getChatOptions();
+        // 设置是否需要发送已读回执
+        options.setRequireAck(true);
+        // 设置是否需要发送回执
+        options.setRequireDeliveryAck(true);
+        // 设置初始化数据库DB时，每个会话要加载的Message数量
+        options.setNumberOfMessagesLoaded(1);
+        // 设置是否使用环信的好友体系
+        options.setUseRoster(true);
+        // 添加好友是否需要验证，SDK默认是不需要
+        options.setAcceptInvitationAlways(true);
+
+    }
 }

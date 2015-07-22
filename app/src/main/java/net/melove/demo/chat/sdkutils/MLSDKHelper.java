@@ -41,40 +41,27 @@ public class MLSDKHelper {
         // 调用初始化方法初始化sdk
         EMChat.getInstance().init(mContext);
 
-        initSDKOption();
-
-        isInit = true;
-        return isInit;
-    }
-
-
-    private void initSDKOption() {
         // 设置自动登录
         EMChat.getInstance().setAutoLogin(true);
 
         // 设置开启debug模式
         EMChat.getInstance().setDebugMode(true);
 
-        EMChatOptions options = EMChatManager.getInstance().getChatOptions();
-        // 设置是否需要发送已读回执
-        options.setRequireAck(true);
-        // 设置是否需要发送回执
-        options.setRequireDeliveryAck(true);
-        // 设置初始化数据库DB时，每个会话要加载的Message数量
-        options.setNumberOfMessagesLoaded(1);
-        // 设置是否使用环信的好友体系
-        options.setUseRoster(true);
-        // 添加好友是否需要验证，SDK默认是不需要
-        options.setAcceptInvitationAlways(true);
+        MLSDKOptions initSDKOption();
 
+        isInit = true;
+        return isInit;
     }
+
+
+
 
 
     private void signOut() {
         EMChatManager.getInstance().logout(new EMCallBack() {
             @Override
             public void onSuccess() {
-                MLToast.makeToast("Sign Out Success!").show();
+                MLToast.makeToast("Sign Out Success!").show()
             }
 
             @Override
