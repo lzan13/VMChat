@@ -5,7 +5,6 @@ import android.content.Context;
 import com.easemob.EMCallBack;
 import com.easemob.chat.EMChat;
 import com.easemob.chat.EMChatManager;
-import com.easemob.chat.EMChatOptions;
 
 import net.melove.demo.chat.widget.MLToast;
 
@@ -47,21 +46,18 @@ public class MLSDKHelper {
         // 设置开启debug模式
         EMChat.getInstance().setDebugMode(true);
 
-        MLSDKOptions initSDKOption();
+        MLSDKOptions.getInstance().initOption();
 
         isInit = true;
         return isInit;
     }
 
 
-
-
-
-    private void signOut() {
+    private void signOut(EMCallBack callback) {
         EMChatManager.getInstance().logout(new EMCallBack() {
             @Override
             public void onSuccess() {
-                MLToast.makeToast("Sign Out Success!").show()
+                MLToast.makeToast("Sign Out Success!").show();
             }
 
             @Override

@@ -106,4 +106,22 @@ public class MLUserInfo {
     public void setUpdateAt(String updateAt) {
         this.updateAt = updateAt;
     }
+
+    @Override
+    public String toString() {
+        return nickName == null ? userName : nickName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || o instanceof MLUserInfo) {
+            return false;
+        }
+        return userName.equals(((MLUserInfo) o).getUserName());
+    }
+
+    @Override
+    public int hashCode() {
+        return 17 * userName.hashCode();
+    }
 }

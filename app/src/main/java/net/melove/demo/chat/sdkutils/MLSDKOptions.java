@@ -8,11 +8,20 @@ import com.easemob.chat.EMChatOptions;
  */
 public class MLSDKOptions {
 
-    public MLSDKOptions() {
+    private static MLSDKOptions instance;
+
+    private MLSDKOptions() {
 
     }
 
-    private void initSDKOption() {
+    public static MLSDKOptions getInstance() {
+        if (instance == null) {
+            instance = new MLSDKOptions();
+        }
+        return instance;
+    }
+
+    public void initOption() {
 
         EMChatOptions options = EMChatManager.getInstance().getChatOptions();
         // 设置是否需要发送已读回执
