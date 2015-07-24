@@ -35,7 +35,7 @@ public class MLDBConstants {
      */
 
     /*创建 User 表*/
-    public static final String TABLE_USER = "create table if not exists "
+    public static final String CTABLE_USER = "create table if not exists "
             + TB_USER + " ("
             + COL_USER_NAME + " varchar not null unique, "
             + COL_NICKNAME + " varchar, "
@@ -49,7 +49,7 @@ public class MLDBConstants {
             + COL_UPDATE_AT + " varchar" + " )";
 
     /*创建 User 表*/
-    public static final String TABLE_APPLY_FOR = "create table if not exists "
+    public static final String CTABLE_APPLY_FOR = "create table if not exists "
             + TB_APPLY_FOR + " ("
             + COL_USER_NAME + " varchar not null unique, "
             + COL_NICKNAME + " varchar, "

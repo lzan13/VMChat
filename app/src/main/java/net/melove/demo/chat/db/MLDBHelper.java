@@ -1,9 +1,6 @@
 package net.melove.demo.chat.db;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -46,8 +43,8 @@ public class MLDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        mDB.execSQL(MLDBConstants.TABLE_USER);
-        mDB.execSQL(MLDBConstants.TABLE_APPLY_FOR);
+        mDB.execSQL(MLDBConstants.CTABLE_USER);
+        mDB.execSQL(MLDBConstants.CTABLE_APPLY_FOR);
     }
 
     @Override

@@ -5,19 +5,26 @@ package net.melove.demo.chat.info;
  */
 public class MLUserInfo {
 
-    // column name
+    public String header;
     public String userName;
     public String nickName;
     public String email;
     public String avatar;
     public String cover;
-    public String gender;
+    public int gender;
     public String location;
     public String signature;
     public String createAt;
     public String updateAt;
     public String time;
 
+    public String getHeader() {
+        return header;
+    }
+
+    public void setHeader(String header) {
+        this.header = header;
+    }
 
     public String getUserName() {
         return userName;
@@ -59,11 +66,11 @@ public class MLUserInfo {
         this.email = email;
     }
 
-    public String getGender() {
+    public int getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(int gender) {
         this.gender = gender;
     }
 
