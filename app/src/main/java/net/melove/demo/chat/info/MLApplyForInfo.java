@@ -11,7 +11,7 @@ public class MLApplyForInfo {
     public String groupName;
     public String reason;
     public String time;
-    public String status;
+    public ApplyForStatus status;
 
     public String getGroupId() {
         return groupId;
@@ -45,11 +45,11 @@ public class MLApplyForInfo {
         this.reason = reason;
     }
 
-    public String getStatus() {
+    public ApplyForStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(ApplyForStatus status) {
         this.status = status;
     }
 
@@ -67,5 +67,14 @@ public class MLApplyForInfo {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public enum ApplyForStatus {
+        AGREED,         // 同意
+        REFUSED,        // 决绝
+        BEAGREED,       // 对方同意
+        BEREFUSED,      // 对方拒绝
+        BEAPPLYFOR,     // 对方申请
+        GROUPAPPLYFOR   // 群组邀请
     }
 }

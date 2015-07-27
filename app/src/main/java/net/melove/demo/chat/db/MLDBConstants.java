@@ -51,7 +51,7 @@ public class MLDBConstants {
     /*创建 User 表*/
     public static final String CTABLE_APPLY_FOR = "create table if not exists "
             + TB_APPLY_FOR + " ("
-            + COL_USER_NAME + " varchar not null unique, "
+            + COL_USER_NAME + " varchar, "
             + COL_NICKNAME + " varchar, "
             + COL_GROUP_ID + " varchar, "
             + COL_GROUP_NAME + " varchar, "

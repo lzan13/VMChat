@@ -24,30 +24,23 @@ public class MLUserDao {
         MLDBManager.getInstance().onInit(context);
     }
 
-    public List<MLUserInfo> getUserList() {
-        List<MLUserInfo> list = null;
-
-        return list;
-    }
-
-
     /**
      * 保存一个User
      *
-     * @param user
+     * @param userInfo
      */
-    public synchronized void saveContact(MLUserInfo user) {
+    public synchronized void saveContacts(MLUserInfo userInfo) {
         ContentValues values = new ContentValues();
-        values.put(MLDBConstants.COL_USER_NAME, user.getUserName());
-        values.put(MLDBConstants.COL_NICKNAME, user.getNickName());
-        values.put(MLDBConstants.COL_EMAIL, user.getEmail());
-        values.put(MLDBConstants.COL_AVATAR, user.getAvatar());
-        values.put(MLDBConstants.COL_COVER, user.getCover());
-        values.put(MLDBConstants.COL_GENDER, user.getGender());
-        values.put(MLDBConstants.COL_LOCATION, user.getLocation());
-        values.put(MLDBConstants.COL_SIGNATURE, user.getSignature());
-        values.put(MLDBConstants.COL_CREATE_AT, user.getCreateAt());
-        values.put(MLDBConstants.COL_UPDATE_AT, user.getUpdateAt());
+        values.put(MLDBConstants.COL_USER_NAME, userInfo.getUserName());
+        values.put(MLDBConstants.COL_NICKNAME, userInfo.getNickName());
+        values.put(MLDBConstants.COL_EMAIL, userInfo.getEmail());
+        values.put(MLDBConstants.COL_AVATAR, userInfo.getAvatar());
+        values.put(MLDBConstants.COL_COVER, userInfo.getCover());
+        values.put(MLDBConstants.COL_GENDER, userInfo.getGender());
+        values.put(MLDBConstants.COL_LOCATION, userInfo.getLocation());
+        values.put(MLDBConstants.COL_SIGNATURE, userInfo.getSignature());
+        values.put(MLDBConstants.COL_CREATE_AT, userInfo.getCreateAt());
+        values.put(MLDBConstants.COL_UPDATE_AT, userInfo.getUpdateAt());
         MLDBManager.getInstance().insterData(MLDBConstants.TB_USER, values);
     }
 
@@ -56,29 +49,46 @@ public class MLUserDao {
      *
      * @param username
      */
-    public synchronized void deleteContact(String username) {
-        MLDBManager.getInstance().delete(MLDBConstants.TB_USER, MLDBConstants.COL_USER_NAME, new String[]{username});
+    public synchronized void deleteContacts(String username) {
+        MLDBManager.getInstance().delete(
+                MLDBConstants.TB_USER,
+                MLDBConstants.COL_USER_NAME,
+                new String[]{username});
     }
 
     /**
      * 更新一个User信息
      *
-     * @param user
+     * @param userInfo
      */
-    public synchronized void updateContact(MLUserInfo user) {
+    public synchronized void updateContacts(MLUserInfo userInfo) {
         ContentValues values = new ContentValues();
-        values.put(MLDBConstants.COL_USER_NAME, user.getUserName());
-        values.put(MLDBConstants.COL_NICKNAME, user.getNickName());
-        values.put(MLDBConstants.COL_EMAIL, user.getEmail());
-        values.put(MLDBConstants.COL_AVATAR, user.getAvatar());
-        values.put(MLDBConstants.COL_COVER, user.getCover());
-        values.put(MLDBConstants.COL_GENDER, user.getGender());
-        values.put(MLDBConstants.COL_LOCATION, user.getLocation());
-        values.put(MLDBConstants.COL_SIGNATURE, user.getSignature());
-        values.put(MLDBConstants.COL_CREATE_AT, user.getCreateAt());
-        values.put(MLDBConstants.COL_UPDATE_AT, user.getUpdateAt());
-        MLDBManager.getInstance().updateData(MLDBConstants.TB_USER, values, MLDBConstants.COL_USER_NAME, new String[]{user.getUserName()});
+        values.put(MLDBConstants.COL_USER_NAME, userInfo.getUserName());
+        values.put(MLDBConstants.COL_NICKNAME, userInfo.getNickName());
+        values.put(MLDBConstants.COL_EMAIL, userInfo.getEmail());
+        values.put(MLDBConstants.COL_AVATAR, userInfo.getAvatar());
+        values.put(MLDBConstants.COL_COVER, userInfo.getCover());
+        values.put(MLDBConstants.COL_GENDER, userInfo.getGender());
+        values.put(MLDBConstants.COL_LOCATION, userInfo.getLocation());
+        values.put(MLDBConstants.COL_SIGNATURE, userInfo.getSignature());
+        values.put(MLDBConstants.COL_CREATE_AT, userInfo.getCreateAt());
+        values.put(MLDBConstants.COL_UPDATE_AT, userInfo.getUpdateAt());
+        MLDBManager.getInstance().updateData(
+                MLDBConstants.TB_USER, values,
+                MLDBConstants.COL_USER_NAME,
+                new String[]{userInfo.getUserName()});
 
+    }
+
+    /**
+     * 保存联系人集合
+     *
+     * @param userInfoList
+     */
+    public synchronized void saveContactsList(List<MLUserInfo> userInfoList) {
+        for (MLUserInfo userInfo : userInfoList) {
+            saveContacts(userInfo);
+        }
     }
 
     /**
@@ -87,11 +97,12 @@ public class MLUserDao {
      * @return
      */
     public synchronized Map<String, MLUserInfo> getContactList() {
-        Cursor cursor = MLDBManager.getInstance().queryData(MLDBConstants.TB_USER, null, null, null, null, null, null, null);
+        Cursor cursor = MLDBManager.getInstance().queryData(MLDBConstants.TB_USER,
+                null, null, null, null, null, null, null);
 
         Map<String, MLUserInfo> users = new HashMap<String, MLUserInfo>();
         while (cursor.moveToNext()) {
-            MLUserInfo user = new MLUserInfo();
+            MLUserInfo userInfo = new MLUserInfo();
             String username = cursor.getString(cursor.getColumnIndex(MLDBConstants.COL_USER_NAME));
             String nickname = cursor.getString(cursor.getColumnIndex(MLDBConstants.COL_NICKNAME));
             String email = cursor.getString(cursor.getColumnIndex(MLDBConstants.COL_EMAIL));
@@ -103,30 +114,33 @@ public class MLUserDao {
             String createAt = cursor.getString(cursor.getColumnIndex(MLDBConstants.COL_CREATE_AT));
             String updateAt = cursor.getString(cursor.getColumnIndex(MLDBConstants.COL_UPDATE_AT));
 
-            user.setUserName(username);
             if (TextUtils.isEmpty(nickname)) {
                 nickname = username;
             }
-            user.setNickName(nickname);
-            user.setEmail(email);
-            user.setAvatar(avatar);
-            user.setCover(cover);
-            user.setGender(gender);
-            user.setLocation(location);
-            user.setSignature(signature);
-            user.setCreateAt(createAt);
-            user.setUpdateAt(updateAt);
+            userInfo.setUserName(username);
+            userInfo.setNickName(nickname);
+            userInfo.setEmail(email);
+            userInfo.setAvatar(avatar);
+            userInfo.setCover(cover);
+            userInfo.setGender(gender);
+            userInfo.setLocation(location);
+            userInfo.setSignature(signature);
+            userInfo.setCreateAt(createAt);
+            userInfo.setUpdateAt(updateAt);
 
-            if (Character.isDigit(user.getNickName().charAt(0))) {
-                user.setHeader("");
+            // 判断是否为阿拉伯数字 设置联系人列表的header
+            if (Character.isDigit(userInfo.getNickName().charAt(0))) {
+                userInfo.setHeader("");
             } else {
-                user.setHeader(HanziToPinyin.getInstance().get(user.getNickName().substring(0, 1)).get(0).target.substring(0, 1).toUpperCase());
-                char header = user.getHeader().toLowerCase().charAt(0);
+                userInfo.setHeader(HanziToPinyin.getInstance()
+                        .get(userInfo.getNickName().substring(0, 1))
+                        .get(0).target.substring(0, 1).toUpperCase());
+                char header = userInfo.getHeader().toLowerCase().charAt(0);
                 if (header < 'a' || header > 'z') {
-                    user.setHeader("#");
+                    userInfo.setHeader("#");
                 }
             }
-            users.put(username, user);
+            users.put(username, userInfo);
         }
         cursor.close();
         return users;

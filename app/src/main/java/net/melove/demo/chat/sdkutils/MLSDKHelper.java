@@ -3,8 +3,12 @@ package net.melove.demo.chat.sdkutils;
 import android.content.Context;
 
 import com.easemob.EMCallBack;
+import com.easemob.EMConnectionListener;
+import com.easemob.EMEventListener;
+import com.easemob.EMNotifierEvent;
 import com.easemob.chat.EMChat;
 import com.easemob.chat.EMChatManager;
+import com.easemob.chat.EMMessage;
 
 import net.melove.demo.chat.widget.MLToast;
 
@@ -17,7 +21,11 @@ public class MLSDKHelper {
 
     private static MLSDKHelper instance;
 
+    // 记录sdk是否初始化
     private boolean isInit;
+
+    private EMConnectionListener mConnectionListener;
+    private EMEventListener mEventListener;
 
 
     public static MLSDKHelper getInstance() {
@@ -46,12 +54,50 @@ public class MLSDKHelper {
         // 设置开启debug模式
         EMChat.getInstance().setDebugMode(true);
 
+        // 初始化sdk的一些设置
         MLSDKOptions.getInstance().initOption();
-
+        initListener();
         isInit = true;
         return isInit;
     }
 
+
+    public void initListener() {
+        initConnectionListener();
+        //
+        initMessageListener();
+    }
+
+    /**
+     * 初始化链接监听
+     */
+    protected void initConnectionListener() {
+        mConnectionListener = new EMConnectionListener() {
+            @Override
+            public void onConnected() {
+                MLToast.makeToast("链接成功").show();
+            }
+
+            @Override
+            public void onDisconnected(int i) {
+                MLToast.makeToast("链接断开 " + i).show();
+            }
+        };
+        EMChatManager.getInstance().addConnectionListener(mConnectionListener);
+    }
+
+    /**
+     * 初始化消息监听
+     */
+    protected void initMessageListener() {
+        mEventListener = new EMEventListener() {
+            @Override
+            public void onEvent(EMNotifierEvent event) {
+                EMMessage message = null;
+
+            }
+        };
+    }
 
     private void signOut(EMCallBack callback) {
         EMChatManager.getInstance().logout(new EMCallBack() {
