@@ -15,7 +15,7 @@ public class MLBaseFragment extends Fragment {
      * 与其它Fragment进行沟通：http://developer.android.com/training/basics/fragments/communicating.html
      */
     public static interface OnMLFragmentListener {
-        public void onPotion(int i);
+        public void onClick(int i);
     }
 
 

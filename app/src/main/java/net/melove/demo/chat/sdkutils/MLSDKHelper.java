@@ -56,7 +56,10 @@ public class MLSDKHelper {
 
         // 初始化sdk的一些设置
         MLSDKOptions.getInstance().initOption();
+        // 设置全局监听
         initListener();
+
+        // 促使话完成
         isInit = true;
         return isInit;
     }
@@ -99,21 +102,27 @@ public class MLSDKHelper {
         };
     }
 
-    private void signOut(EMCallBack callback) {
+    public void signOut(final EMCallBack callback) {
         EMChatManager.getInstance().logout(new EMCallBack() {
             @Override
             public void onSuccess() {
-                MLToast.makeToast("Sign Out Success!").show();
+                if (callback != null) {
+                    callback.onSuccess();
+                }
             }
 
             @Override
             public void onError(int i, String s) {
-
+                if (callback != null) {
+                    callback.onError(i, s);
+                }
             }
 
             @Override
             public void onProgress(int i, String s) {
-
+                if (callback != null) {
+                    callback.onProgress(i, s);
+                }
             }
         });
     }

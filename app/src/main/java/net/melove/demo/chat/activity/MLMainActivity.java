@@ -39,7 +39,7 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
     private MLConversationFragment mMLConversationFragment;
     private MLSettingFragment mMLSettingFragment;
     private MLTestFragment mMLTestFragment;
-    private String mTabTitles[] = new String[]{"聊天", "通讯录", "设置", "测试"};
+    private String mTabTitles[] = new String[]{"聊天", "通讯录", "我", "测试"};
     private int mCurrentTabIndex;
 
     private MLDrawerFragment mMLDrawerFragment;
@@ -188,11 +188,11 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
         return super.onOptionsItemSelected(item);
     }
 
+
     @Override
-    public void onPotion(int i) {
+    public void onClick(int i) {
         switch (i) {
             case 0:
-
                 break;
         }
     }

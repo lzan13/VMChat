@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.activity.MLSigninActivity;
@@ -36,6 +37,9 @@ public class MLDrawerFragment extends MLBaseFragment {
 
     private ImageView mCover;
     private MLImageView mAvatar;
+    private TextView mNickname;
+    private TextView mSignature;
+    private View mChatMenu, mOtherMenu, mSettingMenu;
 
     private OnMLFragmentListener mListener;
 
@@ -44,6 +48,8 @@ public class MLDrawerFragment extends MLBaseFragment {
     }
 
     /**
+     * 工厂方法，用来创建一个Fragment的实例
+     *
      * @param param1
      * @param param2
      * @return
@@ -89,9 +95,17 @@ public class MLDrawerFragment extends MLBaseFragment {
     private void init() {
         mCover = (ImageView) getView().findViewById(R.id.ml_img_drawer_top_cover);
         mAvatar = (MLImageView) getView().findViewById(R.id.ml_img_drawer_top_avatar);
-
-
         mAvatar.setOnClickListener(viewListener);
+        mNickname = (TextView) getView().findViewById(R.id.ml_text_drawer_top_nickname);
+        mSignature = (TextView) getView().findViewById(R.id.ml_text_drawer_top_signature);
+
+        mChatMenu = getView().findViewById(R.id.ml_layout_btn_chat);
+        mOtherMenu = getView().findViewById(R.id.ml_layout_btn_other);
+        mSettingMenu = getView().findViewById(R.id.ml_layout_btn_setting);
+        mChatMenu.setOnClickListener(viewListener);
+        mOtherMenu.setOnClickListener(viewListener);
+        mSettingMenu.setOnClickListener(viewListener);
+
     }
 
     private View.OnClickListener viewListener = new View.OnClickListener() {
@@ -106,13 +120,22 @@ public class MLDrawerFragment extends MLBaseFragment {
                     ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
                     mActivity.finish();
                     break;
+                case R.id.ml_layout_btn_chat:
+                    onListener(R.id.ml_layout_btn_chat);
+                    break;
+                case R.id.ml_layout_btn_other:
+                    onListener(R.id.ml_layout_btn_other);
+                    break;
+                case R.id.ml_layout_btn_setting:
+                    onListener(R.id.ml_layout_btn_setting);
+                    break;
             }
         }
     };
 
     public void onListener(int i) {
         if (mListener != null) {
-            mListener.onPotion(i);
+            mListener.onClick(i);
         }
     }
 
