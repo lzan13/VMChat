@@ -17,8 +17,6 @@ public class MLDBHelper extends SQLiteOpenHelper {
 
     private static MLDBHelper instance;
 
-    private SQLiteDatabase mDB = null;
-
 
     /**
      * 单例模式获取 获取数据库操作类实例
@@ -43,8 +41,8 @@ public class MLDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        mDB.execSQL(MLDBConstants.CTABLE_USER);
-        mDB.execSQL(MLDBConstants.CTABLE_APPLY_FOR);
+        db.execSQL(MLDBConstants.CTABLE_USER);
+        db.execSQL(MLDBConstants.CTABLE_APPLY_FOR);
     }
 
     @Override

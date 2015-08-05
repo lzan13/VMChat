@@ -2,6 +2,8 @@ package net.melove.demo.chat.fragment;
 
 
 import android.app.Activity;
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,9 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.easemob.EMCallBack;
+import com.easemob.chat.EMConversation;
 
 import net.melove.demo.chat.R;
+import net.melove.demo.chat.db.MLTestHelper;
 import net.melove.demo.chat.sdkutils.MLSDKHelper;
+import net.melove.demo.chat.util.MLLog;
 
 /**
  * 测试Fragment，
@@ -73,6 +78,47 @@ public class MLTestFragment extends MLBaseFragment {
 
     private void init() {
         getView().findViewById(R.id.ml_btn_signout).setOnClickListener(viewListener);
+        getView().findViewById(R.id.ml_btn_new_conversation).setOnClickListener(viewListener);
+    }
+
+
+    private void signOut() {
+        MLSDKHelper.getInstance().signOut(new EMCallBack() {
+            @Override
+            public void onSuccess() {
+                mActivity.finish();
+            }
+
+            @Override
+            public void onError(int i, String s) {
+
+            }
+
+            @Override
+            public void onProgress(int i, String s) {
+
+            }
+        });
+    }
+
+    private void testCreateConversation() {
+//        EMConversation conversation = new EMConversation("1435906329658", true);
+//        conversation.setExtField("测试qun");
+//        String s = conversation.getExtField();
+//        boolean b = conversation.getIsGroup();
+//        MLLog.d(s);
+//        MLLog.d("b " + b);
+        ContentValues values = new ContentValues();
+        values.put("groupname", "1435906329658");
+        values.put("groupname", "test group");
+        values.put("conversation_type", 1);
+
+        SQLiteDatabase db = MLTestHelper.getInstance(mActivity).getReadableDatabase();
+        if (db.isOpen()) {
+            long result = db.insert("conversation_list", null, values);
+            MLLog.d("result " + result);
+        }
+
     }
 
     private View.OnClickListener viewListener = new View.OnClickListener() {
@@ -80,22 +126,10 @@ public class MLTestFragment extends MLBaseFragment {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.ml_btn_signout:
-                    MLSDKHelper.getInstance().signOut(new EMCallBack() {
-                        @Override
-                        public void onSuccess() {
-                            mActivity.finish();
-                        }
-
-                        @Override
-                        public void onError(int i, String s) {
-
-                        }
-
-                        @Override
-                        public void onProgress(int i, String s) {
-
-                        }
-                    });
+                    signOut();
+                    break;
+                case R.id.ml_btn_new_conversation:
+                    testCreateConversation();
                     break;
             }
         }
