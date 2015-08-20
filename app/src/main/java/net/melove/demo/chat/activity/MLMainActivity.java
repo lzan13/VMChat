@@ -29,8 +29,6 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
     private Activity mActivity;
 
     private Toolbar mToolbar;
-    private DrawerLayout mDrawerLayout;
-    private ActionBarDrawerToggle mDrawerToggle;
 
     private MLPagerSlidingTab mMLPagerSlidingTab;
     private ViewPager mViewPager;
@@ -41,9 +39,6 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
     private MLTestFragment mMLTestFragment;
     private String mTabTitles[] = new String[]{"聊天", "通讯录", "我", "测试"};
     private int mCurrentTabIndex;
-
-    private MLDrawerFragment mMLDrawerFragment;
-    private boolean isDrawerOpen;
 
 
     /**
@@ -57,7 +52,6 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
         setContentView(R.layout.activity_main);
         init();
         initToolbar();
-        initDrawerFragment();
         initPagerSlidingTab();
         initViewPager();
 
@@ -66,7 +60,6 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
 
     private void init() {
         mActivity = this;
-        isDrawerOpen = false;
         mTitle = getTitle();
         mCurrentTabIndex = 0;
 
@@ -77,51 +70,13 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
      */
     private void initToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.ml_widget_drawer_layout);
 
         mToolbar.setTitle(R.string.ml_chat);
         mToolbar.setTitleTextColor(getResources().getColor(R.color.ml_white));
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // 设置Toolbar与DrawerLayout 联动的按钮
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,
-                R.string.ml_open, R.string.ml_close) {
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-                super.onDrawerSlide(drawerView, slideOffset);
 
-            }
-
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                isDrawerOpen = true;
-            }
-
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                super.onDrawerClosed(drawerView);
-
-                isDrawerOpen = false;
-            }
-
-            @Override
-            public void onDrawerStateChanged(int newState) {
-                super.onDrawerStateChanged(newState);
-            }
-        };
-        mDrawerToggle.syncState();
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-    }
-
-
-    private void initDrawerFragment() {
-        // 侧滑菜单Fragment
-        FragmentTransaction ftd = getSupportFragmentManager().beginTransaction();
-        mMLDrawerFragment = MLDrawerFragment.newInstance(mDrawerLayout);
-        ftd.replace(R.id.ml_framelayout_drawer, mMLDrawerFragment);
-        ftd.commit();
     }
 
     /**
@@ -172,10 +127,7 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (isDrawerOpen) {
-            getMenuInflater().inflate(R.menu.main, menu);
-            return true;
-        }
+        getMenuInflater().inflate(R.menu.main, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
