@@ -39,7 +39,7 @@ public class MLDrawerFragment extends MLBaseFragment {
     private MLImageView mAvatar;
     private TextView mNickname;
     private TextView mSignature;
-    private View mChatMenu, mOtherMenu, mSettingMenu;
+    private View mChatMenu, mGroupsMenu, mRoomMenu, mSettingMenu;
 
     private OnMLFragmentListener mListener;
 
@@ -50,9 +50,10 @@ public class MLDrawerFragment extends MLBaseFragment {
     /**
      * 工厂方法，用来创建一个Fragment的实例
      *
+     * @param layout
      * @param param1
      * @param param2
-     * @return
+     * @return MLDrawerFragment
      */
     public static MLDrawerFragment newInstance(DrawerLayout layout, String param1, String param2) {
         MLDrawerFragment fragment = new MLDrawerFragment();
@@ -80,18 +81,21 @@ public class MLDrawerFragment extends MLBaseFragment {
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_drawer, container, false);
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mActivity = getActivity();
         init();
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_drawer, container, false);
-    }
-
+    /**
+     * 初始化侧滑抽屉菜单
+     */
     private void init() {
         mCover = (ImageView) getView().findViewById(R.id.ml_img_drawer_top_cover);
         mAvatar = (MLImageView) getView().findViewById(R.id.ml_img_drawer_top_avatar);
@@ -99,11 +103,13 @@ public class MLDrawerFragment extends MLBaseFragment {
         mNickname = (TextView) getView().findViewById(R.id.ml_text_drawer_top_nickname);
         mSignature = (TextView) getView().findViewById(R.id.ml_text_drawer_top_signature);
 
-        mChatMenu = getView().findViewById(R.id.ml_layout_btn_chat);
-        mOtherMenu = getView().findViewById(R.id.ml_layout_btn_other);
+        mChatMenu = getView().findViewById(R.id.ml_layout_btn_single);
+        mGroupsMenu = getView().findViewById(R.id.ml_layout_btn_groups);
+        mRoomMenu = getView().findViewById(R.id.ml_layout_btn_room);
         mSettingMenu = getView().findViewById(R.id.ml_layout_btn_setting);
         mChatMenu.setOnClickListener(viewListener);
-        mOtherMenu.setOnClickListener(viewListener);
+        mGroupsMenu.setOnClickListener(viewListener);
+        mRoomMenu.setOnClickListener(viewListener);
         mSettingMenu.setOnClickListener(viewListener);
 
     }
@@ -120,22 +126,25 @@ public class MLDrawerFragment extends MLBaseFragment {
                     ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
                     mActivity.finish();
                     break;
-                case R.id.ml_layout_btn_chat:
-                    onListener(R.id.ml_layout_btn_chat);
+                case R.id.ml_layout_btn_single:
+                    onListener(0x10, 0x00);
                     break;
-                case R.id.ml_layout_btn_other:
-                    onListener(R.id.ml_layout_btn_other);
+                case R.id.ml_layout_btn_groups:
+                    onListener(0x10, 0x01);
+                    break;
+                case R.id.ml_layout_btn_room:
+                    onListener(0x10, 0x02);
                     break;
                 case R.id.ml_layout_btn_setting:
-                    onListener(R.id.ml_layout_btn_setting);
+                    onListener(0x10, 0x03);
                     break;
             }
         }
     };
 
-    public void onListener(int i) {
+    public void onListener(int a, int b) {
         if (mListener != null) {
-            mListener.onClick(i);
+            mListener.onFragmentClick(a, b, null);
         }
     }
 

@@ -7,6 +7,7 @@
 
     <string name="ml_drift_bottle">漂流瓶</string>
     <string name="ml_group">群组</string>
+    <string name="ml_group_chat">群聊</string>
     <string name="ml_room">聊天室</string>
     <string name="ml_tag">标签</string>
 
@@ -26,6 +27,7 @@
     <string name="ml_signature">签名</string>
     <string name="ml_me">我</string>
 
+    <string name="ml_single_chat">单聊</string>
     <string name="ml_chat">聊天</string>
     <string name="ml_username_cannot_to_empty">用户名不能为空</string>
     <string name="ml_password_cannot_to_empty">密码不能为空</string>
@@ -43,6 +45,7 @@
     <string name="ml_signin_failed">登录失败</string>
     <string name="ml_other">其它</string>
     <string name="ml_copy_right">©2015 melove.net</string>
+
 
 
 </resources>

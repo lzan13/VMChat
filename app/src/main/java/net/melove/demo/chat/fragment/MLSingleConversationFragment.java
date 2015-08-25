@@ -2,7 +2,6 @@ package net.melove.demo.chat.fragment;
 
 
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +9,9 @@ import android.view.ViewGroup;
 import net.melove.demo.chat.R;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link MLConversationFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * 单聊会话列表界面Fragment
  */
-public class MLConversationFragment extends MLBaseFragment {
+public class MLSingleConversationFragment extends MLBaseFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -31,11 +28,11 @@ public class MLConversationFragment extends MLBaseFragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment MLConversationFragment.
+     * @return A new instance of fragment MLSingleConversationFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static MLConversationFragment newInstance(String param1, String param2) {
-        MLConversationFragment fragment = new MLConversationFragment();
+    public static MLSingleConversationFragment newInstance(String param1, String param2) {
+        MLSingleConversationFragment fragment = new MLSingleConversationFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -43,7 +40,7 @@ public class MLConversationFragment extends MLBaseFragment {
         return fragment;
     }
 
-    public MLConversationFragment() {
+    public MLSingleConversationFragment() {
         // Required empty public constructor
     }
 

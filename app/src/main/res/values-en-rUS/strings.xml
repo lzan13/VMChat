@@ -7,6 +7,7 @@
 
     <string name="ml_drift_bottle">Drift Bottle</string>
     <string name="ml_group">Group</string>
+    <string name="ml_group_chat">Group chat</string>
     <string name="ml_room">Room</string>
     <string name="ml_tag">Tag</string>
 
@@ -26,6 +27,7 @@
     <string name="ml_signature">SIgnature</string>
     <string name="ml_me">Me</string>
 
+    <string name="ml_single_chat">Single chat</string>
     <string name="ml_chat">Chat</string>
     <string name="ml_username_cannot_to_empty">Username cannot to empty</string>
     <string name="ml_password_cannot_to_empty">Password cannot to empty</string>

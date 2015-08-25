@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 
 /**
  * Created by lzan13 on 2015/7/6.
+ * Fragment的基类，定义Fragment公共接口回调
  */
 public class MLBaseFragment extends Fragment {
 
@@ -15,7 +16,7 @@ public class MLBaseFragment extends Fragment {
      * 与其它Fragment进行沟通：http://developer.android.com/training/basics/fragments/communicating.html
      */
     public static interface OnMLFragmentListener {
-        public void onClick(int i);
+        public void onFragmentClick(int a, int b, String s);
     }
 
 

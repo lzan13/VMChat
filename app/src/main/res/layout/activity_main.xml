@@ -1,39 +1,29 @@
 <!-- A DrawerLayout is intended to be used as the top-level content view using match_parent for both width and height to consume the full space available. -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:melove="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <!--中间内容布局-->
-    <LinearLayout
+    <!-- Toolbar -->
+    <include layout="@layout/widget_toolbar_layout" />
+
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/ml_widget_drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        tools:context=".MainActivity">
 
-        <include layout="@layout/widget_toolbar_layout" />
-
-        <net.melove.demo.chat.widget.MLPagerSlidingTab
-            android:id="@+id/ml_widget_pageslidingtab"
+        <!--中间内容布局-->
+        <FrameLayout
+            android:id="@+id/ml_framelayout_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <!--侧滑菜单-->
+        <FrameLayout
+            android:id="@+id/ml_framelayout_drawer"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/ml_dimen_36"
-            melove:divider_color="@color/ml_transparent"
-            melove:indicator_color="@color/ml_primary"
-            melove:indicator_height="@dimen/ml_dimen_4"
-            melove:should_expand="true"
-            melove:tab_text_all_caps="true"
-            melove:tab_text_color="@color/ml_text_tab_normal"
-            melove:tab_text_selected_color="@color/ml_text_tab_selected"
-            melove:tab_text_size="@dimen/ml_size_14"
-            melove:underline_color="@color/ml_primary"
-            melove:underline_height="@dimen/ml_dimen_1">
+            android:layout_height="match_parent"
+            android:layout_gravity="start" />
 
-        </net.melove.demo.chat.widget.MLPagerSlidingTab>
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/ml_widget_viewpager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"></android.support.v4.view.ViewPager>
-    </LinearLayout>
-
-</RelativeLayout>
+    </android.support.v4.widget.DrawerLayout>
+</LinearLayout>

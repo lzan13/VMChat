@@ -74,7 +74,29 @@
                 android:paddingTop="@dimen/ml_dimen_8">
 
                 <LinearLayout
-                    android:id="@+id/ml_layout_btn_chat"
+                    android:id="@+id/ml_layout_btn_single"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/ml_dimen_48"
+                    android:background="@drawable/ml_btn_drawer_item"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/ml_dimen_16"
+                        android:src="@mipmap/icon_single_24dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/ml_dimen_16"
+                        android:text="@string/ml_chat" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ml_layout_btn_groups"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/ml_dimen_48"
                     android:background="@drawable/ml_btn_drawer_item"
@@ -92,11 +114,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/ml_dimen_16"
-                        android:text="@string/ml_chat" />
+                        android:text="@string/ml_group" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/ml_layout_btn_other"
+                    android:id="@+id/ml_layout_btn_room"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/ml_dimen_48"
                     android:background="@drawable/ml_btn_drawer_item"
@@ -114,9 +136,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/ml_dimen_16"
-                        android:text="@string/ml_other" />
-
+                        android:text="@string/ml_room" />
                 </LinearLayout>
+
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
