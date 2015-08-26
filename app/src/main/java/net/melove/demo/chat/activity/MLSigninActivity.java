@@ -164,8 +164,8 @@ public class MLSigninActivity extends MLBaseActivity {
                     @Override
                     public void run() {
                         mDialog.dismiss();
-                        MLToast.makeToast(res.getString(R.string.ml_signin_failed)).show();
-                        MLLog.d("error: " + i + " " + res.getString(R.string.ml_signin_failed) + s);
+                        MLToast.makeToast("Error: " + i + res.getString(R.string.ml_signin_failed)).show();
+                        MLLog.d("Error: " + i + " " + res.getString(R.string.ml_signin_failed) + s);
                     }
                 });
             }

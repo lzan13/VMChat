@@ -13,13 +13,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.support.v4.widget.DrawerLayout;
 
+import com.easemob.EMConnectionListener;
+import com.easemob.chat.EMChat;
+import com.easemob.chat.EMChatManager;
+
 import net.melove.demo.chat.fragment.MLBaseFragment;
 import net.melove.demo.chat.fragment.MLDrawerFragment;
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.fragment.MLGroupsFragment;
 import net.melove.demo.chat.fragment.MLRoomFragment;
 import net.melove.demo.chat.fragment.MLSingleFragment;
+import net.melove.demo.chat.util.MLLog;
 import net.melove.demo.chat.widget.MLToast;
+
+import static android.view.Gravity.*;
 
 
 public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnMLFragmentListener {
@@ -53,6 +60,7 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
         initToolbar();
         initDrawerFragment();
 
+        initListener();
     }
 
 
@@ -136,10 +144,6 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
         mFragmentTransaction.commit();
     }
 
-    private void initFragment() {
-
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -159,7 +163,18 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
         return super.onOptionsItemSelected(item);
     }
 
+    private void initListener() {
+        EMChatManager.getInstance().addConnectionListener(new MLConnectionListener());
+        EMChat.getInstance().setAppInited();
+    }
 
+    /**
+     * Fragment 的统一回调函数
+     *
+     * @param a
+     * @param b
+     * @param s
+     */
     @Override
     public void onFragmentClick(int a, int b, String s) {
         int w = a | b;
@@ -210,5 +225,30 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
                 break;
         }
         mDrawerLayout.closeDrawer(Gravity.START);
+    }
+
+    private class MLConnectionListener implements EMConnectionListener {
+
+        @Override
+        public void onConnected() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    MLLog.d("onConnected");
+                    MLToast.makeToast("onConnected").show();
+                }
+            });
+        }
+
+        @Override
+        public void onDisconnected(int i) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    MLLog.d("onDisconnected");
+                    MLToast.makeToast("onDisconnected").show();
+                }
+            });
+        }
     }
 }

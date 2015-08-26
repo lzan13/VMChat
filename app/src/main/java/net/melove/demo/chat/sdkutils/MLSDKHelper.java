@@ -66,27 +66,8 @@ public class MLSDKHelper {
 
 
     public void initListener() {
-        initConnectionListener();
-        //
+        // chushihua
         initMessageListener();
-    }
-
-    /**
-     * 初始化链接监听
-     */
-    protected void initConnectionListener() {
-        mConnectionListener = new EMConnectionListener() {
-            @Override
-            public void onConnected() {
-                MLToast.makeToast("链接成功").show();
-            }
-
-            @Override
-            public void onDisconnected(int i) {
-                MLToast.makeToast("链接断开 " + i).show();
-            }
-        };
-        EMChatManager.getInstance().addConnectionListener(mConnectionListener);
     }
 
     /**
@@ -97,9 +78,22 @@ public class MLSDKHelper {
             @Override
             public void onEvent(EMNotifierEvent event) {
                 EMMessage message = null;
+                if (event.getData() instanceof EMMessage) {
+                    message = (EMMessage) event.getData();
+                    switch (event.getEvent()) {
+                        case EventNewMessage:
+
+                            break;
+                        case EventOfflineMessage:
+
+                            break;
+                    }
+                }
+
 
             }
         };
+        EMChatManager.getInstance().registerEventListener(mEventListener);
     }
 
     public void signOut(final EMCallBack callback) {
