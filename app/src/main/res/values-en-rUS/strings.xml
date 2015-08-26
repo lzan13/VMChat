@@ -45,6 +45,12 @@
     <string name="ml_signin_failed">Sign in failed</string>
     <string name="ml_other">Other</string>
     <string name="ml_copy_right">©2015 melove.net</string>
+    <string name="ml_single_chat"></string>
+    <string name="ml_agree">Agree</string>
+    <string name="ml_agreed">Agreed</string>
+    <string name="ml_refuse">Refuse</string>
+    <string name="ml_refused">Refused</string>
+    <string name="ml_reason">Reason</string>
 
 
 </resources>

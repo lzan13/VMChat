@@ -56,7 +56,7 @@ public class MLSDKHelper {
 
         // 初始化sdk的一些设置
         MLSDKOptions.getInstance().initOption();
-        // 设置全局监听
+        // 初始化监听
         initListener();
 
         // 促使话完成

@@ -10,7 +10,7 @@ public class MLApplyForInfo {
     public String groupId;
     public String groupName;
     public String reason;
-    public String time;
+    public long time;
     public ApplyForStatus status;
 
     public String getGroupId() {
@@ -53,11 +53,11 @@ public class MLApplyForInfo {
         this.status = status;
     }
 
-    public String getTime() {
+    public long getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(long time) {
         this.time = time;
     }
 
@@ -71,10 +71,10 @@ public class MLApplyForInfo {
 
     public enum ApplyForStatus {
         AGREED,         // 同意
-        REFUSED,        // 决绝
+        REFUSED,        // 据绝
         BEAGREED,       // 对方同意
         BEREFUSED,      // 对方拒绝
         BEAPPLYFOR,     // 对方申请
-        GROUPAPPLYFOR   // 群组邀请
+        GROUPAPPLYFOR   // 群组请求
     }
 }

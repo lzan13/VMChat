@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="net.melove.demo.chat">
+    package="net.melove.demo.chat" >
 
-    <!--项目权限-->
-    <!--震动-->
+    <!-- 项目权限 -->
+    <!-- 震动 -->
     <uses-permission android:name="android.permission.VIBRATE" />
-    <!--网络-->
+    <!-- 网络 -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <!--录音-->
+    <!-- 录音 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <!--相机-->
+    <!-- 相机 -->
     <uses-permission android:name="android.permission.CAMERA" />
-    <!--访问网络状态-->
+    <!-- 访问网络状态 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!--写入外部存储-->
+    <!-- 写入外部存储 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <!--安装卸载文件系统-->
+    <!-- 安装卸载文件系统 -->
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
-    <!--访问精确定位-->
+    <!-- 访问精确定位 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <!--访问WIFI状态-->
+    <!-- 访问WIFI状态 -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <!--改变WIFI状态-->
+    <!-- 改变WIFI状态 -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <!--唤醒锁屏-->
+    <!-- 唤醒锁屏 -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <!--修改音频设置-->
+    <!-- 修改音频设置 -->
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-    <!--读取手机状态-->
+    <!-- 读取手机状态 -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
@@ -35,34 +35,40 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/MLTheme.Red">
-        <!--主界面-->
+        android:theme="@style/MLTheme.Red" >
+
+        <!-- 主界面 -->
         <activity
             android:name=".activity.MLMainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/MLTheme.AnimFade">
+            android:theme="@style/MLTheme.AnimFade" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!--登录界面-->
+        <!-- 登录界面 -->
         <activity
             android:name=".activity.MLSigninActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.AnimFade" />
-        <!--注册界面-->
+        <!-- 注册界面 -->
         <activity
             android:name=".activity.MLSignupActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.AnimFade" />
 
-        <!--设置环信appkey-->
+        <!-- 设置环信appkey -->
         <meta-data
             android:name="EASEMOB_APPKEY"
             android:value="lzan13#hxsdkdemo" />
+
+        <activity
+            android:name=".activity.MLApplyForActivity"
+            android:label="@string/title_activity_mlapply_for" >
+        </activity>
     </application>
 
 </manifest>

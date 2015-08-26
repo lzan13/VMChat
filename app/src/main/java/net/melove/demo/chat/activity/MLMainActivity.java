@@ -16,17 +16,20 @@ import android.support.v4.widget.DrawerLayout;
 import com.easemob.EMConnectionListener;
 import com.easemob.chat.EMChat;
 import com.easemob.chat.EMChatManager;
+import com.easemob.chat.EMContactListener;
 
+import net.melove.demo.chat.db.MLApplyForDao;
 import net.melove.demo.chat.fragment.MLBaseFragment;
 import net.melove.demo.chat.fragment.MLDrawerFragment;
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.fragment.MLGroupsFragment;
 import net.melove.demo.chat.fragment.MLRoomFragment;
 import net.melove.demo.chat.fragment.MLSingleFragment;
+import net.melove.demo.chat.info.MLApplyForInfo;
 import net.melove.demo.chat.util.MLLog;
 import net.melove.demo.chat.widget.MLToast;
 
-import static android.view.Gravity.*;
+import java.util.List;
 
 
 public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnMLFragmentListener {
@@ -45,6 +48,8 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
     private boolean isDrawerOpen;
     private int mMenuType;
     private int mCurrentIndex;
+
+    private MLApplyForDao mApplyForDao;
 
 
     /**
@@ -70,6 +75,8 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
         mMenuType = 0;
         mCurrentIndex = 0;
         mTitle = getTitle();
+
+        mApplyForDao = new MLApplyForDao(mActivity);
     }
 
     /**
@@ -148,7 +155,7 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (isDrawerOpen) {
-            getMenuInflater().inflate(R.menu.main, menu);
+            getMenuInflater().inflate(R.menu.menu_main, menu);
             return true;
         }
         return super.onCreateOptionsMenu(menu);
@@ -227,6 +234,9 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
         mDrawerLayout.closeDrawer(Gravity.START);
     }
 
+    /**
+     * 链接监听
+     */
     private class MLConnectionListener implements EMConnectionListener {
 
         @Override
@@ -249,6 +259,56 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
                     MLToast.makeToast("onDisconnected").show();
                 }
             });
+        }
+    }
+
+    /**
+     * 联系人监听
+     */
+    private class MLContactListener implements EMContactListener {
+
+        @Override
+        public void onContactAdded(List<String> list) {
+            MLLog.d("onContactAdded");
+            // 添加
+        }
+
+        @Override
+        public void onContactDeleted(List<String> list) {
+            MLLog.d("onContactDeleted");
+            // 被删除
+        }
+
+        @Override
+        public void onContactInvited(String username, String reason) {
+            MLLog.d("onContactInvited");
+            // 收到申请
+            List<MLApplyForInfo> applyForInfos = mApplyForDao.getApplyForList();
+            for (MLApplyForInfo applyForInfo : applyForInfos) {
+                if (applyForInfo.getGroupId() == null && applyForInfo.getUserName().equals(username)) {
+                    mApplyForDao.deleteApplyFor(username);
+                }
+            }
+            MLApplyForInfo applyForInfo = new MLApplyForInfo();
+            applyForInfo.setUserName(username);
+            applyForInfo.setReason(reason);
+            applyForInfo.setStatus(MLApplyForInfo.ApplyForStatus.BEAPPLYFOR);
+            applyForInfo.setTime(System.currentTimeMillis());
+
+            mApplyForDao.saveApplyFor(applyForInfo);
+
+        }
+
+        @Override
+        public void onContactAgreed(String s) {
+            // 同意申请
+            MLLog.d("onContactAgreed");
+        }
+
+        @Override
+        public void onContactRefused(String s) {
+            // 拒绝申请
+            MLLog.d("onContactRefused");
         }
     }
 }
