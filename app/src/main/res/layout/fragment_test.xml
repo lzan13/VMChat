@@ -2,20 +2,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/ml_dimen_8"
     tools:context="net.melove.demo.chat.fragment.MLTestFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_margin="@dimen/ml_dimen_8"
         android:orientation="vertical">
+
+        <Button
+            android:id="@+id/ml_btn_apply_for_test"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/ml_dimen_8"
+            android:background="@drawable/ml_btn_rectangle_red"
+            android:text="@string/ml_apply_for"
+            android:textColor="@color/ml_text_white"
+            android:textSize="@dimen/ml_size_18" />
 
         <Button
             android:id="@+id/ml_btn_new_conversation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/ml_dimen_8"
             android:background="@drawable/ml_btn_rectangle_red"
             android:text="@string/ml_add"
             android:textColor="@color/ml_text_white"

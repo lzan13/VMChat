@@ -1,7 +1,10 @@
 package net.melove.demo.chat.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -14,9 +17,13 @@ import android.view.View;
 import android.support.v4.widget.DrawerLayout;
 
 import com.easemob.EMConnectionListener;
+import com.easemob.EMError;
+import com.easemob.EMEventListener;
+import com.easemob.EMNotifierEvent;
 import com.easemob.chat.EMChat;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMContactListener;
+import com.easemob.chat.EMContactManager;
 
 import net.melove.demo.chat.db.MLApplyForDao;
 import net.melove.demo.chat.fragment.MLBaseFragment;
@@ -31,11 +38,14 @@ import net.melove.demo.chat.widget.MLToast;
 
 import java.util.List;
 
-
-public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnMLFragmentListener {
+/**
+ * Created by lzan13 on 2015/7/2.
+ */
+public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnMLFragmentListener, EMEventListener {
 
 
     private Activity mActivity;
+    private EMEventListener mEventListener;
 
     private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
@@ -71,6 +81,7 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
 
     private void init() {
         mActivity = this;
+        mEventListener = this;
         isDrawerOpen = false;
         mMenuType = 0;
         mCurrentIndex = 0;
@@ -132,6 +143,10 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
+    /**
+     * lzan13   2015-8-28
+     * 初始化侧滑菜单
+     */
     private void initDrawerFragment() {
         mFragmentManager = getSupportFragmentManager();
         // 侧滑菜单Fragment
@@ -151,27 +166,16 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
         mFragmentTransaction.commit();
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (isDrawerOpen) {
-            getMenuInflater().inflate(R.menu.menu_main, menu);
-            return true;
-        }
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
+    /**
+     * 初始化监听
+     */
     private void initListener() {
+        // 设置添加链接监听，监测连接服务器情况
         EMChatManager.getInstance().addConnectionListener(new MLConnectionListener());
+        // 设置添加联系人监听，监测联系人申请及联系人变化
+        EMContactManager.getInstance().setContactListener(new MLContactListener());
+
+        // 最后要通知sdk，UI 已经初始化完毕，注册了相应的listener, 可以进行消息监听了（必须调用）
         EMChat.getInstance().setAppInited();
     }
 
@@ -235,7 +239,31 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
     }
 
     /**
-     * 链接监听
+     * 实现EMEventListener接口，消息的监听方法，用来监听发来的消息
+     *
+     * @param event
+     */
+    @Override
+    public void onEvent(EMNotifierEvent event) {
+        switch (event.getEvent()) {
+            case EventNewMessage:
+                MLLog.d("new message!");
+                break;
+            case EventNewCMDMessage:
+                MLLog.d("new cmd message!");
+                break;
+            case EventOfflineMessage:
+
+                break;
+            default:
+
+                break;
+        }
+    }
+
+    /**
+     * lzan13    2015-8-25
+     * 链接监听，监听与服务器连接状况
      */
     private class MLConnectionListener implements EMConnectionListener {
 
@@ -251,19 +279,26 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
         }
 
         @Override
-        public void onDisconnected(int i) {
+        public void onDisconnected(final int errorCode) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    MLLog.d("onDisconnected");
-                    MLToast.makeToast("onDisconnected").show();
+                    if (errorCode == EMError.CONNECTION_CONFLICT) {
+                        MLLog.d("account conflict");
+                    } else if (errorCode == EMError.USER_REMOVED) {
+                        MLLog.d("user removed");
+                    } else {
+                        MLLog.d("onDisconnected");
+                        MLToast.makeToast("onDisconnected").show();
+                    }
                 }
             });
         }
     }
 
     /**
-     * 联系人监听
+     * lzan13   2015-8-26 16:32
+     * 联系人监听，用来监听联系人的请求与变化等
      */
     private class MLContactListener implements EMContactListener {
 
@@ -310,5 +345,58 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
             // 拒绝申请
             MLLog.d("onContactRefused");
         }
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_add:
+                Intent intent = new Intent();
+                intent.setClass(mActivity, MLNewApplyForActivity.class);
+                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeCustomAnimation(mActivity,
+                        R.anim.ml_fade_in, R.anim.ml_fade_out);
+                ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // 定义要监听的消息类型
+        EMNotifierEvent.Event[] events = new EMNotifierEvent.Event[]{
+                EMNotifierEvent.Event.EventDeliveryAck,     //已发送回执event注册
+                EMNotifierEvent.Event.EventNewCMDMessage,   //接收透传event注册
+                EMNotifierEvent.Event.EventNewMessage,      //接收新消息event注册
+                EMNotifierEvent.Event.EventOfflineMessage,  //接收离线消息event注册
+                EMNotifierEvent.Event.EventReadAck          //已读回执event注册
+        };
+        // 注册消息监听
+        EMChatManager.getInstance().registerEventListener(mEventListener, events);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // 取消消息的监听事件，为了防止多个界面同时监听
+        EMChatManager.getInstance().unregisterEventListener(mEventListener);
     }
 }

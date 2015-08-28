@@ -27,8 +27,8 @@
     <string name="ml_signature">SIgnature</string>
     <string name="ml_me">Me</string>
 
-    <string name="ml_single_chat">Single chat</string>
     <string name="ml_chat">Chat</string>
+    <string name="ml_single_chat">Single chat</string>
     <string name="ml_username_cannot_to_empty">Username cannot to empty</string>
     <string name="ml_password_cannot_to_empty">Password cannot to empty</string>
     <string name="ml_cannot_to_empty">Input item cannot to empty</string>
@@ -45,12 +45,14 @@
     <string name="ml_signin_failed">Sign in failed</string>
     <string name="ml_other">Other</string>
     <string name="ml_copy_right">©2015 melove.net</string>
-    <string name="ml_single_chat"></string>
     <string name="ml_agree">Agree</string>
     <string name="ml_agreed">Agreed</string>
     <string name="ml_refuse">Refuse</string>
     <string name="ml_refused">Refused</string>
     <string name="ml_reason">Reason</string>
+    <string name="hello_world">Hello World</string>
+    <string name="action_settings">Settings</string>
+    <string name="ml_apply_for">Apply for</string>
 
 
 </resources>

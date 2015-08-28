@@ -66,8 +66,8 @@
             android:value="lzan13#hxsdkdemo" />
 
         <activity
-            android:name=".activity.MLApplyForActivity"
-            android:label="@string/title_activity_mlapply_for" >
+            android:name=".activity.MLNewApplyForActivity"
+            android:label="@string/ml_apply_for" >
         </activity>
     </application>
 

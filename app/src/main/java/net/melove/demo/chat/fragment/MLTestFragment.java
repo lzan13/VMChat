@@ -3,17 +3,19 @@ package net.melove.demo.chat.fragment;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.easemob.EMCallBack;
-import com.easemob.chat.EMConversation;
 
 import net.melove.demo.chat.R;
+import net.melove.demo.chat.activity.MLNewApplyForActivity;
 import net.melove.demo.chat.db.MLTestHelper;
 import net.melove.demo.chat.sdkutils.MLSDKHelper;
 import net.melove.demo.chat.util.MLLog;
@@ -72,13 +74,14 @@ public class MLTestFragment extends MLBaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mActivity = getActivity();
+        mActivity = getParentFragment().getActivity();
         init();
     }
 
     private void init() {
         getView().findViewById(R.id.ml_btn_signout).setOnClickListener(viewListener);
         getView().findViewById(R.id.ml_btn_new_conversation).setOnClickListener(viewListener);
+        getView().findViewById(R.id.ml_btn_apply_for_test).setOnClickListener(viewListener);
     }
 
 
@@ -130,6 +133,14 @@ public class MLTestFragment extends MLBaseFragment {
                     break;
                 case R.id.ml_btn_new_conversation:
                     testCreateConversation();
+                    break;
+                case R.id.ml_btn_apply_for_test:
+                    MLLog.d("test jump activity!");
+                    Intent intent = new Intent();
+                    intent.setClass(mActivity, MLNewApplyForActivity.class);
+                    ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeCustomAnimation(mActivity,
+                            R.anim.ml_fade_in, R.anim.ml_fade_out);
+                    ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
                     break;
             }
         }

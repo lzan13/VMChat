@@ -67,7 +67,7 @@ public class MLApplyForDao {
         MLDBManager.getInstance().updateData(
                 MLDBConstants.TB_APPLY_FOR, values,
                 MLDBConstants.COL_TIME,
-                new String[]{applyForInfo.getTime()});
+                new String[]{String.valueOf(applyForInfo.getTime())});
     }
 
 
@@ -112,7 +112,7 @@ public class MLApplyForDao {
             } else if (status == MLApplyForInfo.ApplyForStatus.GROUPAPPLYFOR.ordinal()) {
                 applyForInfo.setStatus(MLApplyForInfo.ApplyForStatus.GROUPAPPLYFOR);
             }
-            applyForInfo.setTime(time);
+            applyForInfo.setTime(Long.valueOf(time));
         }
         return applyForInfos;
     }

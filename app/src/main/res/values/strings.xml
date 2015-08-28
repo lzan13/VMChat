@@ -51,10 +51,10 @@
     <string name="ml_refuse">拒绝</string>
     <string name="ml_refused">已拒绝</string>
     <string name="ml_reason">理由</string>
-    <string name="title_activity_mlapply_for">MLApplyForActivity</string>
 
     <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">设置</string>
+    <string name="ml_apply_for">申请与请求</string>
 
 
 </resources>

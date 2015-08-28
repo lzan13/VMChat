@@ -25,6 +25,8 @@
     <color name="ml_btn_drawer_item_pressed">#ffebebeb</color>
     <color name="ml_btn_red_normal">#ffe62f17</color>
     <color name="ml_btn_red_pressed">#ffbe2d17</color>
+    <color name="ml_btn_blue_normal">#2384fe</color>
+    <color name="ml_btn_blue_pressed">#296dd8</color>
 
     <!--文字颜色-->
     <color name="ml_text_hint_gray">#ff9a9a9a</color>

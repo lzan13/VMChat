@@ -3,6 +3,7 @@
     xmlns:melove="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="@dimen/ml_dimen_56"
+    android:background="@color/ml_bg_white"
     android:paddingLeft="@dimen/ml_dimen_4"
     android:paddingRight="@dimen/ml_dimen_4">
 
@@ -54,16 +55,21 @@
             android:id="@+id/ml_btn_apply_for_agree"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/ml_dimen_4"
+            android:background="@drawable/ml_shape_btn_oval_blue"
             android:padding="@dimen/ml_dimen_8"
             android:text="@string/ml_agree"
+            android:textColor="@color/ml_text_white"
             android:textSize="@dimen/ml_size_16" />
 
         <Button
             android:id="@+id/ml_btn_apply_for_refuse"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/ml_shape_btn_oval_red"
             android:padding="@dimen/ml_dimen_8"
             android:text="@string/ml_refuse"
+            android:textColor="@color/ml_text_white"
             android:textSize="@dimen/ml_size_16" />
     </LinearLayout>
 

@@ -1,7 +1,7 @@
 package net.melove.demo.chat.db;
 
 /**
- * Created by Administrator on 2015/3/24.
+ * Created by lzan13 on 2015/7/24.
  */
 public class MLDBConstants {
 
@@ -33,7 +33,6 @@ public class MLDBConstants {
     /**
      * 创建数据表 sql 语句
      */
-
     /*创建 User 表*/
     public static final String CTABLE_USER = "create table if not exists "
             + TB_USER + " ("
