@@ -32,7 +32,6 @@ public class MLGroupsFragment extends MLBaseFragment {
     private Fragment mFragments[];
     private MLSingleContactsFragment mMLContactsFragment;
     private MLSingleConversationFragment mMLConversationFragment;
-    private MLTestFragment mMLTestFragment;
     private String mTabTitles[] = new String[]{"群聊", "群组列表"};
     private int mCurrentTabIndex;
 
@@ -100,9 +99,8 @@ public class MLGroupsFragment extends MLBaseFragment {
 
         mMLContactsFragment = MLSingleContactsFragment.newInstance("", "");
         mMLConversationFragment = MLSingleConversationFragment.newInstance("", "");
-        mMLTestFragment = MLTestFragment.newInstance("", "");
 
-        mFragments = new Fragment[]{mMLContactsFragment, mMLConversationFragment, mMLTestFragment};
+        mFragments = new Fragment[]{mMLConversationFragment, mMLContactsFragment};
         mViewPager.setAdapter(new MLViewPagerAdapter(getChildFragmentManager(), mFragments, mTabTitles));
 
         mViewPager.setCurrentItem(mCurrentTabIndex);

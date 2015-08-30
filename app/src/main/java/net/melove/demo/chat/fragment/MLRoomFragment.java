@@ -29,8 +29,7 @@ public class MLRoomFragment extends MLBaseFragment {
     private Fragment mFragments[];
     private MLSingleContactsFragment mMLContactsFragment;
     private MLSingleConversationFragment mMLConversationFragment;
-    private MLTestFragment mMLTestFragment;
-    private String mTabTitles[] = new String[]{"聊天室"};
+    private String mTabTitles[] = new String[]{"嗨聊", "聊天室"};
     private int mCurrentTabIndex;
 
     private OnMLFragmentListener mListener;
@@ -95,9 +94,8 @@ public class MLRoomFragment extends MLBaseFragment {
 
         mMLContactsFragment = MLSingleContactsFragment.newInstance("", "");
         mMLConversationFragment = MLSingleConversationFragment.newInstance("", "");
-        mMLTestFragment = MLTestFragment.newInstance("", "");
 
-        mFragments = new Fragment[]{mMLContactsFragment, mMLConversationFragment, mMLTestFragment};
+        mFragments = new Fragment[]{mMLConversationFragment, mMLContactsFragment};
         mViewPager.setAdapter(new MLViewPagerAdapter(getChildFragmentManager(), mFragments, mTabTitles));
 
         mViewPager.setCurrentItem(mCurrentTabIndex);

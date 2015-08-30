@@ -13,15 +13,16 @@
     <!--背景色-->
     <color name="ml_bg_white">#ffffffff</color>
     <color name="ml_bg_pink_white">#fff5f0eb</color>
-    <color name="ml_bg_gray_white">#ffd8d8d8</color>
+    <color name="ml_bg_gray_white">#EBEBEB</color>
     <color name="ml_bg_tab_pressed">#e8e8e8e8</color>
+    <color name="ml_bg_gray_transparent">#52232323</color>
 
 
     <color name="ml_bg_view_timeline">#ffe8e4dd</color>
     <color name="ml_bg_view_divider">#ffdfd9d3</color>
 
     <!--按钮颜色-->
-    <color name="ml_btn_drawer_item_normal">#fff6f6f6</color>
+    <color name="ml_btn_drawer_item_normal">#ffffff</color>
     <color name="ml_btn_drawer_item_pressed">#ffebebeb</color>
     <color name="ml_btn_red_normal">#ffe62f17</color>
     <color name="ml_btn_red_pressed">#ffbe2d17</color>
@@ -30,17 +31,16 @@
 
     <!--文字颜色-->
     <color name="ml_text_hint_gray">#ff9a9a9a</color>
-    <color name="ml_text_hint_blue">#ff1accff</color>
     <color name="ml_text_item_title_block">#ff232323</color>
     <color name="ml_text_item_subtitle_block">#ff585858</color>
+    <color name="ml_text_tab_normal">#ff232323</color>
+    <color name="ml_text_tab_selected">#ffe62f17</color>
     <color name="ml_text_drawer_nickname">#fff8f8f8</color>
     <color name="ml_text_drawer_top_signation">#fff0f0f0</color>
     <color name="ml_text_white">#fff8f8f8</color>
     <color name="ml_text_blue">#ff1378ae</color>
     <color name="ml_text_block">#ff232323</color>
-
-    <color name="ml_text_tab_normal">#ff232323</color>
-    <color name="ml_text_tab_selected">#ffe62f17</color>
+    <color name="ml_text_gray">#7a7a7a</color>
 
     <!--边框色-->
     <color name="ml_border_red">#ffe62f17</color>

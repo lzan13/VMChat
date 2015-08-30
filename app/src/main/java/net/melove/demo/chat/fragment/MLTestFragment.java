@@ -135,12 +135,9 @@ public class MLTestFragment extends MLBaseFragment {
                     testCreateConversation();
                     break;
                 case R.id.ml_btn_apply_for_test:
-                    MLLog.d("test jump activity!");
                     Intent intent = new Intent();
                     intent.setClass(mActivity, MLNewApplyForActivity.class);
-                    ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeCustomAnimation(mActivity,
-                            R.anim.ml_fade_in, R.anim.ml_fade_out);
-                    ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
+                    mActivity.startActivity(intent);
                     break;
             }
         }

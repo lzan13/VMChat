@@ -15,7 +15,7 @@
             android:layout_height="@dimen/ml_dimen_40"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:background="@drawable/ml_shape_btn_oval_red"
+            android:background="@drawable/ml_shape_btn_round_red"
             android:text="@string/ml_search"
             android:textColor="@color/ml_text_white"
             android:textSize="@dimen/ml_size_16" />

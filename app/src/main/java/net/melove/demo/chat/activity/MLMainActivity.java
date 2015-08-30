@@ -124,7 +124,7 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
                 switch (mMenuType) {
                     case 0:
                         mFragmentTransaction = getSupportFragmentManager().beginTransaction();
-                        mFragmentTransaction.setCustomAnimations(R.anim.ml_fade_in, R.anim.ml_fade_out);
+                        mFragmentTransaction.setCustomAnimations(R.anim.ml_anim_fade_in, R.anim.ml_anim_fade_out);
                         mFragmentTransaction.replace(R.id.ml_framelayout_container, mCurrentFragment);
                         mFragmentTransaction.commit();
                         break;
@@ -162,7 +162,7 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
         mFragmentTransaction = mFragmentManager.beginTransaction();
         mFragmentTransaction.replace(R.id.ml_framelayout_container, mCurrentFragment);
 //        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        mFragmentTransaction.setCustomAnimations(R.anim.ml_fade_in, R.anim.ml_fade_out);
+        mFragmentTransaction.setCustomAnimations(R.anim.ml_anim_fade_in, R.anim.ml_anim_fade_out);
         mFragmentTransaction.commit();
     }
 
@@ -200,7 +200,7 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
             // 侧滑调用
             case 0x10:
                 if (mCurrentIndex != 0) {
-                    MLToast.makeToast(mActivity.getResources().getString(R.string.ml_chat)).show();
+                    MLToast.makeToast(mActivity.getResources().getString(R.string.ml_single_chat)).show();
                     mCurrentIndex = 0;
                     mMenuType = 0;
                     mCurrentFragment = new MLSingleFragment();
@@ -361,7 +361,7 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
                 Intent intent = new Intent();
                 intent.setClass(mActivity, MLNewApplyForActivity.class);
                 ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeCustomAnimation(mActivity,
-                        R.anim.ml_fade_in, R.anim.ml_fade_out);
+                        R.anim.ml_anim_slide_right_in, R.anim.ml_anim_slide_left_out);
                 ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
                 break;
         }

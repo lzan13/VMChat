@@ -8,6 +8,8 @@
         <item name="colorPrimaryDark">@color/ml_primary_light</item>
         <item name="android:windowBackground">@color/ml_bg_gray_white</item>
 
+        <!--定义Activity切换动画-->
+        <item name="android:windowAnimationStyle">@style/AnimSlide</item>
         <!--menu anim style-->
         <item name="drawerArrowStyle">@style/MLTheme.DrawerArrowToggle</item>
 
@@ -19,10 +21,11 @@
     </style>
 
     <style name="MLTheme.Red" parent="MLTheme.Base">
+        <item name="android:windowAnimationStyle">@style/AnimSlide</item>
 
     </style>
 
-
+    <!--搜索栏样式-->
     <style name="MLSearchViewStyle" parent="Widget.AppCompat.SearchView">
 
     </style>
@@ -34,19 +37,23 @@
 
     <!--自定义控件MLToast 动画-->
     <style name="ml_toast_anim">
-        <item name="android:windowEnterAnimation">@anim/ml_toast_in</item>
-        <item name="android:windowExitAnimation">@anim/ml_toast_out</item>
+        <item name="android:windowEnterAnimation">@anim/ml_anim_toast_in</item>
+        <item name="android:windowExitAnimation">@anim/ml_anim_toast_out</item>
     </style>
 
     <style name="AnimFade" parent="@android:style/Animation.Activity">
-        <item name="android:activityOpenEnterAnimation">@anim/ml_fade_in</item>
-        <item name="android:activityOpenExitAnimation">@anim/ml_fade_out</item>
-        <item name="android:activityCloseEnterAnimation">@anim/ml_fade_in</item>
-        <item name="android:activityCloseExitAnimation">@anim/ml_fade_out</item>
+        <item name="android:activityOpenEnterAnimation">@anim/ml_anim_fade_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/ml_anim_fade_out</item>
+        <item name="android:activityCloseEnterAnimation">@anim/ml_anim_fade_in</item>
+        <item name="android:activityCloseExitAnimation">@anim/ml_anim_fade_out</item>
     </style>
 
-    <style name="MLTheme.AnimFade" parent="MLTheme.Red">
-        <item name="android:windowAnimationStyle">@style/AnimFade</item>
+    <style name="AnimSlide" parent="@android:style/Animation">
+        <item name="android:activityOpenEnterAnimation">@anim/ml_anim_slide_right_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/ml_anim_slide_left_out</item>
+        <item name="android:activityCloseEnterAnimation">@anim/ml_anim_slide_left_in</item>
+        <item name="android:activityCloseExitAnimation">@anim/ml_anim_slide_right_out</item>
     </style>
+
 
 </resources>

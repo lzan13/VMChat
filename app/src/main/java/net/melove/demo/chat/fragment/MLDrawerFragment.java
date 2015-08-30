@@ -122,7 +122,7 @@ public class MLDrawerFragment extends MLBaseFragment {
                     Intent intent = new Intent();
                     intent.setClass(mActivity, MLSigninActivity.class);
                     ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeCustomAnimation(mActivity,
-                            R.anim.ml_fade_in, R.anim.ml_fade_out);
+                            R.anim.ml_anim_slide_right_in, R.anim.ml_anim_slide_left_out);
                     ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
                     mActivity.finish();
                     break;

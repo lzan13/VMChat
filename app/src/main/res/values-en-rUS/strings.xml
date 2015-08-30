@@ -53,6 +53,7 @@
     <string name="hello_world">Hello World</string>
     <string name="action_settings">Settings</string>
     <string name="ml_apply_for">Apply for</string>
+    <string name="ml_add_contact">Add Contact</string>
 
 
 </resources>

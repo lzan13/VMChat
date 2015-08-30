@@ -1,18 +1,22 @@
 package net.melove.demo.chat.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.adapter.MLApplyForAdapter;
 import net.melove.demo.chat.db.MLApplyForDao;
 import net.melove.demo.chat.info.MLApplyForInfo;
+import net.melove.demo.chat.info.MLUserInfo;
 
 import java.util.List;
 
@@ -26,6 +30,9 @@ public class MLNewApplyForActivity extends MLBaseActivity {
     private Toolbar mToolbar;
 
     private ListView mListView;
+    private View mHeadView;
+    private EditText mEditText;
+    private Button mBtnSearch;
 
     private MLApplyForDao mApplyForDao;
     private List<MLApplyForInfo> mList;
@@ -40,7 +47,7 @@ public class MLNewApplyForActivity extends MLBaseActivity {
         setContentView(R.layout.activity_apply_for);
         init();
         initToolbar();
-        initContactList();
+        initView();
     }
 
 
@@ -55,24 +62,51 @@ public class MLNewApplyForActivity extends MLBaseActivity {
         mToolbar.setTitleTextColor(getResources().getColor(R.color.ml_white));
         mToolbar.setNavigationIcon(R.mipmap.icon_arrow_back_white_24dp);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mToolbar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mActivity.finish();
-            }
-        });
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mToolbar.setNavigationOnClickListener(viewListener);
     }
 
-    private void initContactList() {
+    private void initView() {
+        // 初始化当前界面 搜索View
+        mHeadView = LayoutInflater.from(mActivity).inflate(R.layout.item_apply_for_head, null);
+        mEditText = (EditText) mHeadView.findViewById(R.id.ml_edit_apply_for_search);
+        mBtnSearch = (Button) mHeadView.findViewById(R.id.ml_btn_apply_for_search);
+        mBtnSearch.setOnClickListener(viewListener);
+
+        // 初始化ListView
         mListView = (ListView) findViewById(R.id.ml_list_applyfor);
-        View headView = LayoutInflater.from(mActivity).inflate(R.layout.item_apply_for_head, null);
-        mListView.addHeaderView(headView);
+        mListView.addHeaderView(mHeadView);
         mList = mApplyForDao.getApplyForList();
         mApplyForAdapter = new MLApplyForAdapter(mActivity, mList);
         mListView.setAdapter(mApplyForAdapter);
     }
 
+    private View.OnClickListener viewListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case -1:
+                    mActivity.finish();
+                    break;
+                case R.id.ml_btn_apply_for_search:
+                    searchContact();
+                    break;
+            }
+        }
+    };
+
+    /**
+     * 搜索联系人
+     */
+    private void searchContact() {
+        String username = mEditText.getText().toString().trim();
+
+        Intent intent = new Intent();
+        intent.setClass(mActivity, MLUserInfoActivity.class);
+        intent.putExtra("username", username);
+
+        mActivity.startActivity(intent);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

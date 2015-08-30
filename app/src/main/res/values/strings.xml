@@ -55,6 +55,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">设置</string>
     <string name="ml_apply_for">申请与请求</string>
+    <string name="ml_add_contact">添加联系人</string>
 
 
 </resources>

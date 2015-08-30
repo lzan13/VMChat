@@ -97,7 +97,7 @@ public class MLSingleFragment extends MLBaseFragment {
         mMLConversationFragment = MLSingleConversationFragment.newInstance("", "");
         mMLTestFragment = MLTestFragment.newInstance("", "");
 
-        mFragments = new Fragment[]{mMLContactsFragment, mMLConversationFragment, mMLTestFragment};
+        mFragments = new Fragment[]{mMLConversationFragment, mMLContactsFragment, mMLTestFragment};
         mViewPager.setAdapter(new MLViewPagerAdapter(getChildFragmentManager(), mFragments, mTabTitles));
 
         mViewPager.setCurrentItem(mCurrentTabIndex);

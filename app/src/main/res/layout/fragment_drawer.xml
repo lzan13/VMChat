@@ -35,34 +35,43 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignBottom="@id/ml_img_drawer_top_cover"
-                        android:layout_margin="@dimen/ml_dimen_16"
                         android:orientation="vertical">
 
                         <net.melove.demo.chat.widget.MLImageView
                             android:id="@+id/ml_img_drawer_top_avatar"
                             android:layout_width="@dimen/ml_dimen_56"
                             android:layout_height="@dimen/ml_dimen_56"
+                            android:layout_margin="@dimen/ml_dimen_16"
                             android:layout_marginBottom="@dimen/ml_dimen_8"
                             android:src="@mipmap/icon_avatar_default"
                             melove:shape_type="round" />
 
-                        <TextView
-                            android:id="@+id/ml_text_drawer_top_nickname"
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/app_name"
-                            android:textColor="@color/ml_text_drawer_nickname"
-                            android:textSize="@dimen/ml_size_14" />
+                            android:layout_marginBottom="@dimen/ml_dimen_8"
+                            android:orientation="vertical"
+                            android:paddingLeft="@dimen/ml_dimen_16"
+                            android:background="@color/ml_bg_gray_transparent">
 
-                        <TextView
-                            android:id="@+id/ml_text_drawer_top_signature"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/app_name"
-                            android:textColor="@color/ml_text_drawer_nickname"
-                            android:textSize="@dimen/ml_size_12" />
+                            <TextView
+                                android:id="@+id/ml_text_drawer_top_nickname"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/app_name"
+                                android:textColor="@color/ml_text_drawer_nickname"
+                                android:textSize="@dimen/ml_size_14" />
+
+                            <TextView
+                                android:id="@+id/ml_text_drawer_top_signature"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/app_name"
+                                android:textColor="@color/ml_text_drawer_nickname"
+                                android:textSize="@dimen/ml_size_12" />
+                        </LinearLayout>
+
                     </LinearLayout>
-
 
                 </RelativeLayout>
             </LinearLayout>
@@ -92,7 +101,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/ml_dimen_16"
-                        android:text="@string/ml_chat" />
+                        android:text="@string/ml_chat"
+                        android:textColor="@color/ml_text_gray"
+                        android:textSize="@dimen/ml_size_14" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -114,7 +125,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/ml_dimen_16"
-                        android:text="@string/ml_group" />
+                        android:text="@string/ml_group"
+                        android:textColor="@color/ml_text_gray"
+                        android:textSize="@dimen/ml_size_14" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -136,7 +149,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/ml_dimen_16"
-                        android:text="@string/ml_room" />
+                        android:text="@string/ml_room"
+                        android:textColor="@color/ml_text_gray"
+                        android:textSize="@dimen/ml_size_14" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -174,7 +189,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/ml_dimen_16"
                 android:text="@string/ml_settings"
-                android:textSize="@dimen/ml_size_16" />
+                android:textColor="@color/ml_text_gray"
+                android:textSize="@dimen/ml_size_14" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

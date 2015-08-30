@@ -72,16 +72,18 @@ public class MLSignupActivity extends MLBaseActivity {
         mToolbar.setTitleTextColor(getResources().getColor(R.color.ml_white));
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.mipmap.icon_arrow_back_white_24dp);
-        mToolbar.setNavigationOnClickListener(viewListener);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mActivity.finish();
+            }
+        });
     }
 
     private View.OnClickListener viewListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case -1:
-                    mActivity.finish();
-                    break;
                 case R.id.ml_signup:
                     signup();
                     break;

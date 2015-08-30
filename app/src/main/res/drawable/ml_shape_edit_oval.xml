@@ -4,7 +4,7 @@
         <layer-list>
             <item>
                 <shape android:dither="true">
-                    <stroke android:width="@dimen/ml_dimen_1"
+                    <stroke android:width="@dimen/ml_dimen_0_5"
                         android:color="@color/ml_border_gray" />
                     <corners android:radius="@dimen/ml_dimen_24" />
                 </shape>
@@ -15,7 +15,7 @@
         <layer-list>
             <item>
                 <shape android:dither="true">
-                    <stroke android:width="@dimen/ml_dimen_1"
+                    <stroke android:width="@dimen/ml_dimen_0_5"
                         android:color="@color/ml_border_red" />
                     <corners android:radius="@dimen/ml_dimen_24" />
                 </shape>

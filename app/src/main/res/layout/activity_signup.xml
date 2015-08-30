@@ -28,6 +28,7 @@
                     android:background="@drawable/ml_shape_edit_oval"
                     android:gravity="center"
                     android:hint="@string/ml_username"
+                    android:singleLine="true"
                     android:textSize="@dimen/ml_size_16" />
             </LinearLayout>
 
@@ -43,6 +44,8 @@
                     android:background="@drawable/ml_shape_edit_oval"
                     android:gravity="center"
                     android:hint="@string/ml_password"
+                    android:inputType="textPassword"
+                    android:singleLine="true"
                     android:textSize="@dimen/ml_size_16" />
             </LinearLayout>
 
@@ -58,6 +61,8 @@
                     android:background="@drawable/ml_shape_edit_oval"
                     android:gravity="center"
                     android:hint="@string/ml_confirm_password"
+                    android:inputType="textPassword"
+                    android:singleLine="true"
                     android:textSize="@dimen/ml_size_16" />
             </LinearLayout>
 
@@ -71,7 +76,7 @@
                     android:id="@+id/ml_signup"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/ml_shape_btn_oval_red"
+                    android:background="@drawable/ml_shape_btn_round_red"
                     android:text="@string/ml_signup"
                     android:textColor="@color/ml_text_white"
                     android:textSize="@dimen/ml_size_18" />

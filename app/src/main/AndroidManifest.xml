@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="net.melove.demo.chat" >
+    package="net.melove.demo.chat">
 
     <!-- 项目权限 -->
     <!-- 震动 -->
@@ -35,14 +35,12 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/MLTheme.Red" >
+        android:theme="@style/MLTheme.Red">
 
         <!-- 主界面 -->
         <activity
             android:name=".activity.MLMainActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/MLTheme.AnimFade" >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -52,23 +50,25 @@
         <!-- 登录界面 -->
         <activity
             android:name=".activity.MLSigninActivity"
+            android:screenOrientation="portrait" />
+        <!--  -->
+        <activity
+            android:name=".activity.MLBaseActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/MLTheme.AnimFade" />
+            android:theme="@style/MLTheme.Red" />
         <!-- 注册界面 -->
         <activity
             android:name=".activity.MLSignupActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/MLTheme.AnimFade" />
-
+            android:screenOrientation="portrait" />
+        <!--好友申请与通知以及添加界面-->
+        <activity
+            android:name=".activity.MLNewApplyForActivity"
+            android:screenOrientation="portrait" />
         <!-- 设置环信appkey -->
         <meta-data
             android:name="EASEMOB_APPKEY"
             android:value="lzan13#hxsdkdemo" />
 
-        <activity
-            android:name=".activity.MLNewApplyForActivity"
-            android:label="@string/ml_apply_for" >
-        </activity>
     </application>
 
 </manifest>
