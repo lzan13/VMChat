@@ -39,7 +39,7 @@ public class MLDrawerFragment extends MLBaseFragment {
     private MLImageView mAvatar;
     private TextView mNickname;
     private TextView mSignature;
-    private View mChatMenu, mGroupsMenu, mRoomMenu, mSettingMenu;
+    private View mChatMenu, mOtherMenu, mSettingMenu;
 
     private OnMLFragmentListener mListener;
 
@@ -103,13 +103,11 @@ public class MLDrawerFragment extends MLBaseFragment {
         mNickname = (TextView) getView().findViewById(R.id.ml_text_drawer_top_nickname);
         mSignature = (TextView) getView().findViewById(R.id.ml_text_drawer_top_signature);
 
-        mChatMenu = getView().findViewById(R.id.ml_layout_btn_single);
-        mGroupsMenu = getView().findViewById(R.id.ml_layout_btn_groups);
-        mRoomMenu = getView().findViewById(R.id.ml_layout_btn_room);
+        mChatMenu = getView().findViewById(R.id.ml_layout_btn_chat);
+        mOtherMenu = getView().findViewById(R.id.ml_layout_btn_other);
         mSettingMenu = getView().findViewById(R.id.ml_layout_btn_setting);
         mChatMenu.setOnClickListener(viewListener);
-        mGroupsMenu.setOnClickListener(viewListener);
-        mRoomMenu.setOnClickListener(viewListener);
+        mOtherMenu.setOnClickListener(viewListener);
         mSettingMenu.setOnClickListener(viewListener);
 
     }
@@ -126,14 +124,11 @@ public class MLDrawerFragment extends MLBaseFragment {
                     ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
                     mActivity.finish();
                     break;
-                case R.id.ml_layout_btn_single:
+                case R.id.ml_layout_btn_chat:
                     onListener(0x10, 0x00);
                     break;
-                case R.id.ml_layout_btn_groups:
+                case R.id.ml_layout_btn_other:
                     onListener(0x10, 0x01);
-                    break;
-                case R.id.ml_layout_btn_room:
-                    onListener(0x10, 0x02);
                     break;
                 case R.id.ml_layout_btn_setting:
                     onListener(0x10, 0x03);

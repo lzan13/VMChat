@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">MLChatDemo</string>
 
+    <string name="action_settings">Settings</string>
 
     <string name="ml_open">Open navigation drawer</string>
     <string name="ml_close">Close navigation drawer</string>
@@ -28,7 +29,6 @@
     <string name="ml_me">Me</string>
 
     <string name="ml_chat">Chat</string>
-    <string name="ml_single_chat">Single chat</string>
     <string name="ml_username_cannot_to_empty">Username cannot to empty</string>
     <string name="ml_password_cannot_to_empty">Password cannot to empty</string>
     <string name="ml_cannot_to_empty">Input item cannot to empty</string>
@@ -50,8 +50,6 @@
     <string name="ml_refuse">Refuse</string>
     <string name="ml_refused">Refused</string>
     <string name="ml_reason">Reason</string>
-    <string name="hello_world">Hello World</string>
-    <string name="action_settings">Settings</string>
     <string name="ml_apply_for">Apply for</string>
     <string name="ml_add_contact">Add Contact</string>
 

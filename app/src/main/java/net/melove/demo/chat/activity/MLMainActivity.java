@@ -29,9 +29,8 @@ import net.melove.demo.chat.db.MLApplyForDao;
 import net.melove.demo.chat.fragment.MLBaseFragment;
 import net.melove.demo.chat.fragment.MLDrawerFragment;
 import net.melove.demo.chat.R;
-import net.melove.demo.chat.fragment.MLGroupsFragment;
-import net.melove.demo.chat.fragment.MLRoomFragment;
-import net.melove.demo.chat.fragment.MLSingleFragment;
+import net.melove.demo.chat.fragment.MLChatFragment;
+import net.melove.demo.chat.fragment.MLOtherFragment;
 import net.melove.demo.chat.info.MLApplyForInfo;
 import net.melove.demo.chat.util.MLLog;
 import net.melove.demo.chat.widget.MLToast;
@@ -157,7 +156,7 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
 
         // 主Activity 默认显示 TimeLineFragment
         mCurrentIndex = 0;
-        mCurrentFragment = new MLSingleFragment();
+        mCurrentFragment = new MLChatFragment();
         mToolbar.setTitle(mActivity.getResources().getString(R.string.ml_chat));
         mFragmentTransaction = mFragmentManager.beginTransaction();
         mFragmentTransaction.replace(R.id.ml_framelayout_container, mCurrentFragment);
@@ -200,30 +199,24 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
             // 侧滑调用
             case 0x10:
                 if (mCurrentIndex != 0) {
-                    MLToast.makeToast(mActivity.getResources().getString(R.string.ml_single_chat)).show();
+                    MLToast.makeToast(mActivity.getResources().getString(R.string.ml_chat)).show();
                     mCurrentIndex = 0;
                     mMenuType = 0;
-                    mCurrentFragment = new MLSingleFragment();
-                    mToolbar.setTitle(R.string.ml_single_chat);
+                    mCurrentFragment = new MLChatFragment();
+                    mToolbar.setTitle(R.string.ml_chat);
                 }
                 break;
             case 0x11:
                 if (mCurrentIndex != 1) {
-                    MLToast.makeToast(mActivity.getResources().getString(R.string.ml_group)).show();
+                    MLToast.makeToast(mActivity.getResources().getString(R.string.ml_other)).show();
                     mCurrentIndex = 1;
                     mMenuType = 0;
-                    mCurrentFragment = new MLGroupsFragment();
-                    mToolbar.setTitle(R.string.ml_group_chat);
+                    mCurrentFragment = new MLOtherFragment();
+                    mToolbar.setTitle(R.string.ml_other);
                 }
                 break;
             case 0x12:
-                if (mCurrentIndex != 2) {
-                    MLToast.makeToast(mActivity.getResources().getString(R.string.ml_room)).show();
-                    mCurrentIndex = 2;
-                    mMenuType = 0;
-                    mCurrentFragment = new MLRoomFragment();
-                    mToolbar.setTitle(R.string.ml_room);
-                }
+
                 break;
             case 0x13:
                 MLToast.makeToast(mActivity.getResources().getString(R.string.ml_settings)).show();

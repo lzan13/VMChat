@@ -1,9 +1,9 @@
 package net.melove.demo.chat.fragment;
 
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +15,9 @@ import net.melove.demo.chat.util.MLLog;
 import net.melove.demo.chat.widget.MLPagerSlidingTab;
 
 /**
- * 群组模块儿 Fragment
+ * 单聊模块儿 Fragment
  */
-public class MLGroupsFragment extends MLBaseFragment {
+public class MLChatFragment extends MLBaseFragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -25,14 +25,13 @@ public class MLGroupsFragment extends MLBaseFragment {
     private String mParam1;
     private String mParam2;
 
-    private FragmentActivity mActivity;
-
     private MLPagerSlidingTab mMLPagerSlidingTab;
     private ViewPager mViewPager;
     private Fragment mFragments[];
-    private MLSingleContactsFragment mMLContactsFragment;
-    private MLSingleConversationFragment mMLConversationFragment;
-    private String mTabTitles[] = new String[]{"群聊", "群组列表"};
+    private MLContactsFragment mMLContactsFragment;
+    private MLConversationsFragment mMLConversationFragment;
+    private MLTestFragment mMLTestFragment;
+    private String mTabTitles[] = new String[]{"聊天", "通讯录", "测试"};
     private int mCurrentTabIndex;
 
     private OnMLFragmentListener mListener;
@@ -42,10 +41,10 @@ public class MLGroupsFragment extends MLBaseFragment {
      *
      * @param param1
      * @param param2
-     * @return MLGroupsFragment
+     * @return MLSingleFragment
      */
-    public static MLGroupsFragment newInstance(String param1, String param2) {
-        MLGroupsFragment fragment = new MLGroupsFragment();
+    public static MLChatFragment newInstance(String param1, String param2) {
+        MLChatFragment fragment = new MLChatFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -53,7 +52,7 @@ public class MLGroupsFragment extends MLBaseFragment {
         return fragment;
     }
 
-    public MLGroupsFragment() {
+    public MLChatFragment() {
         // Required empty public constructor
     }
 
@@ -67,20 +66,17 @@ public class MLGroupsFragment extends MLBaseFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_container, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_chat, container, false);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mActivity = getActivity();
-
         initPagerSlidingTab();
         initViewPager();
+
     }
 
     /**
@@ -97,10 +93,11 @@ public class MLGroupsFragment extends MLBaseFragment {
     private void initViewPager() {
         mViewPager = (ViewPager) getView().findViewById(R.id.ml_widget_viewpager);
 
-        mMLContactsFragment = MLSingleContactsFragment.newInstance("", "");
-        mMLConversationFragment = MLSingleConversationFragment.newInstance("", "");
+        mMLContactsFragment = MLContactsFragment.newInstance("", "");
+        mMLConversationFragment = MLConversationsFragment.newInstance("", "");
+        mMLTestFragment = MLTestFragment.newInstance("", "");
 
-        mFragments = new Fragment[]{mMLConversationFragment, mMLContactsFragment};
+        mFragments = new Fragment[]{mMLConversationFragment, mMLContactsFragment, mMLTestFragment};
         mViewPager.setAdapter(new MLViewPagerAdapter(getChildFragmentManager(), mFragments, mTabTitles));
 
         mViewPager.setCurrentItem(mCurrentTabIndex);
@@ -141,6 +138,5 @@ public class MLGroupsFragment extends MLBaseFragment {
     public void onDetach() {
         super.onDetach();
     }
-
 
 }

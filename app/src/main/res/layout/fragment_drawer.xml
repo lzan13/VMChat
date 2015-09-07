@@ -83,7 +83,7 @@
                 android:paddingTop="@dimen/ml_dimen_8">
 
                 <LinearLayout
-                    android:id="@+id/ml_layout_btn_single"
+                    android:id="@+id/ml_layout_btn_chat"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/ml_dimen_48"
                     android:background="@drawable/ml_btn_drawer_item"
@@ -107,31 +107,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/ml_layout_btn_groups"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/ml_dimen_48"
-                    android:background="@drawable/ml_btn_drawer_item"
-                    android:clickable="true"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/ml_dimen_16"
-                        android:src="@mipmap/icon_group_24dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/ml_dimen_16"
-                        android:text="@string/ml_group"
-                        android:textColor="@color/ml_text_gray"
-                        android:textSize="@dimen/ml_size_14" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/ml_layout_btn_room"
+                    android:id="@+id/ml_layout_btn_other"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/ml_dimen_48"
                     android:background="@drawable/ml_btn_drawer_item"
@@ -149,7 +125,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/ml_dimen_16"
-                        android:text="@string/ml_room"
+                        android:text="@string/ml_other"
                         android:textColor="@color/ml_text_gray"
                         android:textSize="@dimen/ml_size_14" />
                 </LinearLayout>

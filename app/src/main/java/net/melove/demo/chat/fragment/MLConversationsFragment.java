@@ -11,7 +11,7 @@ import net.melove.demo.chat.R;
 /**
  * 单聊会话列表界面Fragment
  */
-public class MLSingleConversationFragment extends MLBaseFragment {
+public class MLConversationsFragment extends MLBaseFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -31,8 +31,8 @@ public class MLSingleConversationFragment extends MLBaseFragment {
      * @return A new instance of fragment MLSingleConversationFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static MLSingleConversationFragment newInstance(String param1, String param2) {
-        MLSingleConversationFragment fragment = new MLSingleConversationFragment();
+    public static MLConversationsFragment newInstance(String param1, String param2) {
+        MLConversationsFragment fragment = new MLConversationsFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -40,7 +40,7 @@ public class MLSingleConversationFragment extends MLBaseFragment {
         return fragment;
     }
 
-    public MLSingleConversationFragment() {
+    public MLConversationsFragment() {
         // Required empty public constructor
     }
 

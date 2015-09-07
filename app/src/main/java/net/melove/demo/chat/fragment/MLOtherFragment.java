@@ -2,6 +2,7 @@ package net.melove.demo.chat.fragment;
 
 
 import android.os.Bundle;
+import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,10 +10,11 @@ import android.view.ViewGroup;
 import net.melove.demo.chat.R;
 
 /**
- * 聊天室列表界面 Fragment
+ * A simple {@link Fragment} subclass.
+ * Use the {@link MLOtherFragment#newInstance} factory method to
+ * create an instance of this fragment.
  */
-public class MLRoomContactsFragment extends MLBaseFragment {
-
+public class MLOtherFragment extends MLBaseFragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -20,15 +22,8 @@ public class MLRoomContactsFragment extends MLBaseFragment {
     private String mParam2;
 
 
-    /**
-     * 工厂方法，用来创建一个Fragment的实例
-     *
-     * @param param1
-     * @param param2
-     * @return MLRoomContactsFragment
-     */
-    public static MLRoomContactsFragment newInstance(String param1, String param2) {
-        MLRoomContactsFragment fragment = new MLRoomContactsFragment();
+    public static MLOtherFragment newInstance(String param1, String param2) {
+        MLOtherFragment fragment = new MLOtherFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -36,7 +31,7 @@ public class MLRoomContactsFragment extends MLBaseFragment {
         return fragment;
     }
 
-    public MLRoomContactsFragment() {
+    public MLOtherFragment() {
         // Required empty public constructor
     }
 
@@ -50,9 +45,10 @@ public class MLRoomContactsFragment extends MLBaseFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_contacts, container, false);
+        return inflater.inflate(R.layout.fragment_other, container, false);
     }
 
 
