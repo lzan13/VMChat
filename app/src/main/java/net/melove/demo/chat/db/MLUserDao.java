@@ -96,11 +96,11 @@ public class MLUserDao {
      *
      * @return
      */
-    public synchronized Map<String, MLUserInfo> getContactList() {
+    public synchronized List<MLUserInfo> getContactList() {
         Cursor cursor = MLDBManager.getInstance().queryData(MLDBConstants.TB_USER,
                 null, null, null, null, null, null, null);
 
-        Map<String, MLUserInfo> users = new HashMap<String, MLUserInfo>();
+        List<MLUserInfo> users = new ArrayList<MLUserInfo>();
         while (cursor.moveToNext()) {
             MLUserInfo userInfo = new MLUserInfo();
             String username = cursor.getString(cursor.getColumnIndex(MLDBConstants.COL_USER_NAME));
@@ -140,7 +140,7 @@ public class MLUserDao {
                     userInfo.setHeader("#");
                 }
             }
-            users.put(username, userInfo);
+            users.add(userInfo);
         }
         cursor.close();
         return users;

@@ -7,6 +7,10 @@
     <ListView
         android:id="@+id/ml_list_contacts"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></ListView>
+        android:layout_height="match_parent"
+        android:clipChildren="false"
+        android:divider="@color/ml_bg_view_divider"
+        android:dividerHeight="@dimen/ml_dimen_px_1"
+        android:listSelector="@color/ml_transparent"></ListView>
 
 </FrameLayout>

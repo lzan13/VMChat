@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/ml_bg_white">
+    android:layout_height="wrap_content">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/ml_dimen_48"
-        android:layout_margin="@dimen/ml_dimen_4">
+        android:layout_marginBottom="@dimen/ml_dimen_16"
+        android:layout_marginTop="@dimen/ml_dimen_16"
+        android:background="@color/ml_bg_white"
+        android:paddingLeft="@dimen/ml_dimen_16"
+        android:paddingRight="@dimen/ml_dimen_16">
 
         <Button
             android:id="@+id/ml_btn_apply_for_search"
@@ -37,8 +40,14 @@
                 android:drawableLeft="@mipmap/icon_emotion_smile_24dp"
                 android:drawablePadding="@dimen/ml_dimen_8"
                 android:hint="@string/ml_username"
-                android:padding="@dimen/ml_dimen_8" />
+                android:padding="@dimen/ml_dimen_8"
+                android:textSize="@dimen/ml_size_14" />
         </LinearLayout>
     </RelativeLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </RelativeLayout>
 </RelativeLayout>

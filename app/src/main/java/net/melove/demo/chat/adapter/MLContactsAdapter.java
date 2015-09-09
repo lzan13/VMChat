@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.info.MLApplyForInfo;
+import net.melove.demo.chat.info.MLUserInfo;
 import net.melove.demo.chat.widget.MLImageView;
 
 import java.util.List;
@@ -21,10 +22,10 @@ public class MLContactsAdapter extends BaseAdapter {
 
     private Context mContext;
     private LayoutInflater mInflater;
-    private List<MLApplyForInfo> mList;
+    private List<MLUserInfo> mList;
 
 
-    public MLContactsAdapter(Context context, List<MLApplyForInfo> list) {
+    public MLContactsAdapter(Context context, List<MLUserInfo> list) {
         mContext = context;
         mList = list;
     }
@@ -47,7 +48,7 @@ public class MLContactsAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHendler viewHendler = null;
-        MLApplyForInfo info = (MLApplyForInfo) getItem(position);
+        MLUserInfo info = (MLUserInfo) getItem(position);
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.item_contact, null);
             viewHendler = new ViewHendler(convertView);

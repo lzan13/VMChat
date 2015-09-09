@@ -11,6 +11,11 @@ import android.widget.ListView;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.activity.MLNewApplyForActivity;
+import net.melove.demo.chat.adapter.MLContactsAdapter;
+import net.melove.demo.chat.db.MLUserDao;
+import net.melove.demo.chat.info.MLUserInfo;
+
+import java.util.List;
 
 /**
  * 单聊联系人界面 Fragment
@@ -21,7 +26,9 @@ public class MLContactsFragment extends MLBaseFragment {
 
     private ListView mListView;
     private View mHeadView;
+    private MLContactsAdapter mContactsAdapter;
 
+    private MLUserDao mUserDao;
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -68,22 +75,26 @@ public class MLContactsFragment extends MLBaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mActivity = getActivity();
+        mActivity = getParentFragment().getActivity();
 
         init();
 
     }
 
     private void init() {
+        mUserDao = new MLUserDao(mActivity);
 
         mHeadView = LayoutInflater.from(mActivity).inflate(R.layout.item_contacts_head, null);
         mHeadView.findViewById(R.id.ml_btn_contacts_add).setOnClickListener(viewListener);
         mHeadView.findViewById(R.id.ml_btn_contacts_group).setOnClickListener(viewListener);
         mHeadView.findViewById(R.id.ml_btn_contacts_room).setOnClickListener(viewListener);
 
+        List<MLUserInfo> list = mUserDao.getContactList();
+        mContactsAdapter = new MLContactsAdapter(mActivity, list);
         mListView = (ListView) getView().findViewById(R.id.ml_list_contacts);
         mListView.addHeaderView(mHeadView);
-        mListView.setAdapter();
+
+        mListView.setAdapter(mContactsAdapter);
 
     }
 
