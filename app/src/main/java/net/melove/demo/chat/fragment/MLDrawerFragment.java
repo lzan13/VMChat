@@ -15,7 +15,11 @@ import android.widget.TextView;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.activity.MLSigninActivity;
+import net.melove.demo.chat.activity.MLUserInfoActivity;
+import net.melove.demo.chat.application.MLConstants;
+import net.melove.demo.chat.db.MLDBConstants;
 import net.melove.demo.chat.util.MLLog;
+import net.melove.demo.chat.util.MLSPUtil;
 import net.melove.demo.chat.widget.MLImageView;
 
 /**
@@ -25,9 +29,12 @@ import net.melove.demo.chat.widget.MLImageView;
  * 定义创建实例的工厂方法 {@link MLDrawerFragment#newInstance}，可使用此方法创建实例
  */
 public class MLDrawerFragment extends MLBaseFragment {
+
+    private String mUsername = null;
+
     // 初始化获取参数key
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ML_PARAM1 = "param1";
+    private static final String ML_PARAM2 = "param2";
 
     //
     private String mParam1;
@@ -58,8 +65,8 @@ public class MLDrawerFragment extends MLBaseFragment {
     public static MLDrawerFragment newInstance(DrawerLayout layout, String param1, String param2) {
         MLDrawerFragment fragment = new MLDrawerFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ML_PARAM1, param1);
+        args.putString(ML_PARAM2, param2);
         fragment.setArguments(args);
 
         layout.setDrawerShadow(R.mipmap.drawer_shadow, GravityCompat.START);
@@ -75,8 +82,8 @@ public class MLDrawerFragment extends MLBaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mParam1 = getArguments().getString(ML_PARAM1);
+            mParam2 = getArguments().getString(ML_PARAM2);
         }
     }
 
@@ -91,17 +98,28 @@ public class MLDrawerFragment extends MLBaseFragment {
         super.onActivityCreated(savedInstanceState);
         mActivity = getActivity();
         init();
+        initView();
+    }
+
+    private void init() {
+        mUsername = (String) MLSPUtil.get(mActivity, MLConstants.ML_C_USERNAME, "");
     }
 
     /**
      * 初始化侧滑抽屉菜单
      */
-    private void init() {
+    private void initView() {
         mCover = (ImageView) getView().findViewById(R.id.ml_img_drawer_top_cover);
         mAvatar = (MLImageView) getView().findViewById(R.id.ml_img_drawer_top_avatar);
-        mAvatar.setOnClickListener(viewListener);
         mNickname = (TextView) getView().findViewById(R.id.ml_text_drawer_top_nickname);
         mSignature = (TextView) getView().findViewById(R.id.ml_text_drawer_top_signature);
+        mAvatar.setOnClickListener(viewListener);
+        if (mUsername != null) {
+            mNickname.setText(mUsername);
+        }else {
+            mNickname.setText(R.string.ml_signin);
+        }
+
 
         mChatMenu = getView().findViewById(R.id.ml_layout_btn_chat);
         mOtherMenu = getView().findViewById(R.id.ml_layout_btn_other);
@@ -118,7 +136,11 @@ public class MLDrawerFragment extends MLBaseFragment {
             switch (v.getId()) {
                 case R.id.ml_img_drawer_top_avatar:
                     Intent intent = new Intent();
-                    intent.setClass(mActivity, MLSigninActivity.class);
+                    if (mUsername != null) {
+                        intent.setClass(mActivity, MLUserInfoActivity.class);
+                    } else {
+                        intent.setClass(mActivity, MLSigninActivity.class);
+                    }
                     ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeCustomAnimation(mActivity,
                             R.anim.ml_anim_slide_right_in, R.anim.ml_anim_slide_left_out);
                     ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());

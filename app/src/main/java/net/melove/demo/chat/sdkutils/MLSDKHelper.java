@@ -10,6 +10,8 @@ import com.easemob.chat.EMChat;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMMessage;
 
+import net.melove.demo.chat.application.MLConstants;
+import net.melove.demo.chat.util.MLSPUtil;
 import net.melove.demo.chat.widget.MLToast;
 
 /**
@@ -97,6 +99,8 @@ public class MLSDKHelper {
     }
 
     public void signOut(final EMCallBack callback) {
+        MLSPUtil.remove(mContext, MLConstants.ML_C_USERNAME);
+        MLSPUtil.remove(mContext, MLConstants.ML_C_PASSWORD);
         EMChatManager.getInstance().logout(new EMCallBack() {
             @Override
             public void onSuccess() {

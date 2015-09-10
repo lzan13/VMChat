@@ -80,11 +80,12 @@ public class MLTestFragment extends MLBaseFragment {
 
     private void init() {
         getView().findViewById(R.id.ml_btn_signout).setOnClickListener(viewListener);
-        getView().findViewById(R.id.ml_btn_new_conversation).setOnClickListener(viewListener);
-        getView().findViewById(R.id.ml_btn_apply_for_test).setOnClickListener(viewListener);
     }
 
 
+    /**
+     * 退出登录
+     */
     private void signOut() {
         MLSDKHelper.getInstance().signOut(new EMCallBack() {
             @Override
@@ -104,25 +105,6 @@ public class MLTestFragment extends MLBaseFragment {
         });
     }
 
-    private void testCreateConversation() {
-//        EMConversation conversation = new EMConversation("1435906329658", true);
-//        conversation.setExtField("测试qun");
-//        String s = conversation.getExtField();
-//        boolean b = conversation.getIsGroup();
-//        MLLog.d(s);
-//        MLLog.d("b " + b);
-        ContentValues values = new ContentValues();
-        values.put("groupname", "1435906329658");
-        values.put("groupname", "test group");
-        values.put("conversation_type", 1);
-
-        SQLiteDatabase db = MLTestHelper.getInstance(mActivity).getReadableDatabase();
-        if (db.isOpen()) {
-            long result = db.insert("conversation_list", null, values);
-            MLLog.d("result " + result);
-        }
-
-    }
 
     private View.OnClickListener viewListener = new View.OnClickListener() {
         @Override
@@ -130,14 +112,6 @@ public class MLTestFragment extends MLBaseFragment {
             switch (v.getId()) {
                 case R.id.ml_btn_signout:
                     signOut();
-                    break;
-                case R.id.ml_btn_new_conversation:
-                    testCreateConversation();
-                    break;
-                case R.id.ml_btn_apply_for_test:
-                    Intent intent = new Intent();
-                    intent.setClass(mActivity, MLNewApplyForActivity.class);
-                    mActivity.startActivity(intent);
                     break;
             }
         }

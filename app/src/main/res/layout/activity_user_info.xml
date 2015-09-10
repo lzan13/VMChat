@@ -6,6 +6,8 @@
     android:background="@color/ml_bg_gray_white"
     android:orientation="vertical">
 
+    <include layout="@layout/widget_toolbar_layout" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -76,11 +78,10 @@
         android:orientation="vertical">
 
         <Button
+            android:id="@+id/ml_btn_user_info_add"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/ml_dimen_16"
-            android:layout_marginRight="@dimen/ml_dimen_16"
-            android:background="@drawable/ml_shape_btn_rectangle_white"
+            android:background="@drawable/ml_btn_drawer_item"
             android:text="@string/ml_add_contact"
             android:textColor="@color/ml_text_block"
             android:textSize="@dimen/ml_size_16" />

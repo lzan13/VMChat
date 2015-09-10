@@ -41,8 +41,8 @@
                             android:id="@+id/ml_img_drawer_top_avatar"
                             android:layout_width="@dimen/ml_dimen_56"
                             android:layout_height="@dimen/ml_dimen_56"
-                            android:layout_margin="@dimen/ml_dimen_16"
-                            android:layout_marginBottom="@dimen/ml_dimen_8"
+                            android:layout_marginBottom="@dimen/ml_dimen_4"
+                            android:layout_marginLeft="@dimen/ml_dimen_16"
                             android:src="@mipmap/icon_avatar_default"
                             melove:shape_type="round" />
 
@@ -50,9 +50,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/ml_dimen_8"
+                            android:background="@color/ml_bg_gray_transparent"
                             android:orientation="vertical"
-                            android:paddingLeft="@dimen/ml_dimen_16"
-                            android:background="@color/ml_bg_gray_transparent">
+                            android:paddingLeft="@dimen/ml_dimen_16">
 
                             <TextView
                                 android:id="@+id/ml_text_drawer_top_nickname"

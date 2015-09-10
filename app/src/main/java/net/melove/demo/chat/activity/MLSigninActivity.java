@@ -16,6 +16,7 @@ import com.easemob.EMCallBack;
 import com.easemob.chat.EMChatManager;
 
 import net.melove.demo.chat.R;
+import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.util.MLLog;
 import net.melove.demo.chat.util.MLSPUtil;
 import net.melove.demo.chat.widget.MLToast;
@@ -148,8 +149,8 @@ public class MLSigninActivity extends MLBaseActivity {
                         MLToast.makeToast(R.mipmap.icon_emotion_smile_24dp, res.getString(R.string.ml_signin_success)).show();
                         MLLog.d(res.getString(R.string.ml_signin_success));
 
-                        MLSPUtil.put(mActivity, "username", mUsername);
-                        MLSPUtil.put(mActivity, "password", mPassword);
+                        MLSPUtil.put(mActivity, MLConstants.ML_C_USERNAME, mUsername);
+                        MLSPUtil.put(mActivity, MLConstants.ML_C_PASSWORD, mPassword);
 
                         Intent intent = new Intent();
                         intent.setClass(mActivity, MLMainActivity.class);

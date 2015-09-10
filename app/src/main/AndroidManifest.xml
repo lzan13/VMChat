@@ -64,6 +64,11 @@
         <activity
             android:name=".activity.MLNewApplyForActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.MLUserInfoActivity"
+            android:screenOrientation="portrait" />
+
+
         <!-- 设置环信appkey -->
         <meta-data
             android:name="EASEMOB_APPKEY"

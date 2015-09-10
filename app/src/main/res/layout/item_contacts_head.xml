@@ -10,6 +10,7 @@
         android:layout_marginBottom="@dimen/ml_dimen_16"
         android:layout_marginTop="@dimen/ml_dimen_16"
         android:background="@color/ml_bg_white"
+        android:clickable="true"
         android:orientation="vertical">
 
 
@@ -43,6 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/ml_dimen_48"
             android:background="@drawable/ml_btn_drawer_item"
+            android:clickable="true"
             android:gravity="center_vertical"
             android:orientation="vertical">
 
@@ -68,6 +70,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/ml_dimen_48"
             android:background="@drawable/ml_btn_drawer_item"
+            android:clickable="true"
             android:gravity="center_vertical"
             android:orientation="vertical">
 
