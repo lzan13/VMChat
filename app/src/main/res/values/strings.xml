@@ -6,11 +6,13 @@
     <string name="ml_copy_right">©2015 melove.net</string>
 
 
-    <string name="ml_add_contact">添加联系人</string>
     <string name="ml_apply_for">申请与请求</string>
+    <string name="ml_chat">聊天</string>
 
     <string name="ml_open">打开</string>
     <string name="ml_close">关闭</string>
+
+    <string name="ml_new_contact">新的朋友</string>
 
     <string name="ml_drift_bottle">漂流瓶</string>
     <string name="ml_group">群组</string>
@@ -19,6 +21,7 @@
     <string name="ml_tag">标签</string>
 
     <string name="ml_add">添加</string>
+    <string name="ml_add_friend">添加好友</string>
     <string name="ml_search">搜索</string>
     <string name="ml_settings">设置</string>
 
@@ -34,7 +37,6 @@
     <string name="ml_signature">签名</string>
     <string name="ml_me">我</string>
 
-    <string name="ml_chat">聊天</string>
     <string name="ml_username_cannot_to_empty">用户名不能为空</string>
     <string name="ml_password_cannot_to_empty">密码不能为空</string>
     <string name="ml_cannot_to_empty">输入项不能为空</string>
@@ -49,15 +51,13 @@
     <string name="ml_signin_begin">正在登录……</string>
     <string name="ml_signin_success">登录成功</string>
     <string name="ml_signin_failed">登录失败</string>
+
     <string name="ml_other">其它</string>
     <string name="ml_agree">同意</string>
     <string name="ml_agreed">已同意</string>
     <string name="ml_refuse">拒绝</string>
     <string name="ml_refused">已拒绝</string>
     <string name="ml_reason">理由</string>
-
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
+    <string name="ml_info_detailed">详细信息</string>
 
 </resources>

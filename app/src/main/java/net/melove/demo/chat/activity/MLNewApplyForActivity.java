@@ -73,6 +73,7 @@ public class MLNewApplyForActivity extends MLBaseActivity {
         mBtnSearch = (Button) mHeadView.findViewById(R.id.ml_btn_apply_for_search);
         mBtnSearch.setOnClickListener(viewListener);
 
+
         // 初始化ListView
         mListView = (ListView) findViewById(R.id.ml_list_applyfor);
         mListView.addHeaderView(mHeadView);

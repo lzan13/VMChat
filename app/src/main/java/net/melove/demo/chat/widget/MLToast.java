@@ -21,7 +21,7 @@ public class MLToast {
 
     private boolean isShow;
 
-    private Context mContext = MLApplication.getContext();
+    private static Context mContext = MLApplication.getContext();
 
     private WindowManager mWindowManager;
     private View mToastView;
@@ -35,6 +35,12 @@ public class MLToast {
         initToast(id, text);
     }
 
+    /**
+     * 初始化创建Toast
+     *
+     * @param id
+     * @param text
+     */
     private void initToast(int id, String text) {
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mToastView = inflater.inflate(R.layout.widget_toast_layout, null);
@@ -51,6 +57,9 @@ public class MLToast {
         setParams();
     }
 
+    /**
+     * 设置自定义Toast显示的一些属性
+     */
     private void setParams() {
         mParams = new WindowManager.LayoutParams();
         mParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
@@ -69,11 +78,49 @@ public class MLToast {
 
     }
 
+    /**
+     * 根据字符串资源id创建Toast
+     *
+     * @param strId
+     * @return
+     */
+    public static MLToast makeToast(int strId) {
+        String text = mContext.getResources().getString(strId);
+        MLToast toast = new MLToast(text);
+        return toast;
+    }
+
+    /**
+     * 根据传入的字符串创建Toast
+     *
+     * @param text
+     * @return
+     */
     public static MLToast makeToast(String text) {
         MLToast toast = new MLToast(text);
         return toast;
     }
 
+    /**
+     * 根据传入的图片与字符串资源id创建Toast
+     *
+     * @param id
+     * @param strId
+     * @return
+     */
+    public static MLToast makeToast(int id, int strId) {
+        String text = mContext.getResources().getString(strId);
+        MLToast toast = new MLToast(id, text);
+        return toast;
+    }
+
+    /**
+     * 根据传入的图像资源id 以及字符串创建Toast
+     *
+     * @param id
+     * @param text
+     * @return
+     */
     public static MLToast makeToast(int id, String text) {
         MLToast toast = new MLToast(id, text);
         return toast;
@@ -83,6 +130,11 @@ public class MLToast {
         show(3500);
     }
 
+    /**
+     * 将Toast显示在界面
+     *
+     * @param time
+     */
     public void show(int time) {
         if (!isShow) {
             isShow = true;
