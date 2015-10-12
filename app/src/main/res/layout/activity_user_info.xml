@@ -75,7 +75,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/ml_dimen_16"
-        android:layout_marginTop="@dimen/ml_dimen_16"
+        android:layout_marginTop="@dimen/ml_dimen_32"
         android:orientation="vertical">
 
         <Button
@@ -84,6 +84,26 @@
             android:layout_height="wrap_content"
             android:background="@drawable/ml_btn_drawer_item"
             android:text="@string/ml_add_friend"
+            android:textColor="@color/ml_text_block"
+            android:textSize="@dimen/ml_size_16" />
+
+        <Button
+            android:id="@+id/ml_btn_user_info_chat_start"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/ml_dimen_16"
+            android:background="@drawable/ml_btn_drawer_item"
+            android:text="@string/ml_chat_start"
+            android:textColor="@color/ml_text_block"
+            android:textSize="@dimen/ml_size_16" />
+
+        <Button
+            android:id="@+id/ml_btn_user_info_chat_video"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/ml_dimen_16"
+            android:background="@drawable/ml_btn_drawer_item"
+            android:text="@string/ml_chat_video"
             android:textColor="@color/ml_text_block"
             android:textSize="@dimen/ml_size_16" />
     </LinearLayout>

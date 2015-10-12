@@ -60,5 +60,13 @@ public class MLConversationsFragment extends MLBaseFragment {
         return inflater.inflate(R.layout.fragment_conversation, container, false);
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        init();
+    }
 
+    private void init(){
+
+    }
 }

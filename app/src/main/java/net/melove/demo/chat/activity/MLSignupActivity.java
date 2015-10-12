@@ -56,7 +56,7 @@ public class MLSignupActivity extends MLBaseActivity {
         mPasswordEdit = (EditText) findViewById(R.id.ml_edit_password);
         mConfirmPasswordEdit = (EditText) findViewById(R.id.ml_edit_confirm_password);
 
-        mSignupBtn = findViewById(R.id.ml_signup);
+        mSignupBtn = findViewById(R.id.ml_btn_signup);
         mSignupBtn.setOnClickListener(viewListener);
 
     }
@@ -84,7 +84,7 @@ public class MLSignupActivity extends MLBaseActivity {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.ml_signup:
+                case R.id.ml_btn_signup:
                     signup();
                     break;
                 default:

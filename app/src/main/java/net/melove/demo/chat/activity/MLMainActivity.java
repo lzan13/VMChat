@@ -8,6 +8,7 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
@@ -166,7 +167,7 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
     }
 
     /**
-     * 初始化监听
+     * 初始化SDK的一些监听
      */
     private void initListener() {
         // 设置添加链接监听，监测连接服务器情况
@@ -228,7 +229,7 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
                 MLToast.makeToast(mActivity.getResources().getString(R.string.ml_other)).show();
                 break;
         }
-        mDrawerLayout.closeDrawer(Gravity.START);
+        mDrawerLayout.closeDrawer(GravityCompat.START);
     }
 
     /**

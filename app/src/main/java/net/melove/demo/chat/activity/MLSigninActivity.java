@@ -69,9 +69,9 @@ public class MLSigninActivity extends MLBaseActivity {
         mUsernameEdit.setText(mUsername);
         mPasswordEdit.setText(mPassword);
 
-        mSigninBtn = findViewById(R.id.ml_signin);
-        mSignupBtn = findViewById(R.id.ml_signup);
-        mForgetBtn = findViewById(R.id.ml_forget_password);
+        mSigninBtn = findViewById(R.id.ml_btn_signin);
+        mSignupBtn = findViewById(R.id.ml_btn_signup);
+        mForgetBtn = findViewById(R.id.ml_btn_forget_password);
 
         mSigninBtn.setOnClickListener(viewListener);
         mSignupBtn.setOnClickListener(viewListener);
@@ -102,17 +102,17 @@ public class MLSigninActivity extends MLBaseActivity {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.ml_signin:
+                case R.id.ml_btn_signin:
                     signin();
                     break;
-                case R.id.ml_signup:
+                case R.id.ml_btn_signup:
                     Intent intent = new Intent();
                     intent.setClass(mActivity, MLSignupActivity.class);
                     ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeCustomAnimation(mActivity,
                             R.anim.ml_anim_slide_right_in, R.anim.ml_anim_slide_left_out);
                     ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
                     break;
-                case R.id.ml_forget_password:
+                case R.id.ml_btn_forget_password:
 
                     break;
             }

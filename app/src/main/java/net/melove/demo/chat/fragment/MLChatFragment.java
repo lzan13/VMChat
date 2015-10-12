@@ -73,10 +73,14 @@ public class MLChatFragment extends MLBaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        init();
         initPagerSlidingTab();
         initViewPager();
 
+    }
+
+    private void init(){
+        mCurrentTabIndex = 1;
     }
 
     /**

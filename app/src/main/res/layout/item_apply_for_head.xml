@@ -9,13 +9,13 @@
         android:layout_marginBottom="@dimen/ml_dimen_16"
         android:layout_marginTop="@dimen/ml_dimen_16"
         android:background="@color/ml_bg_white"
-        android:paddingLeft="@dimen/ml_dimen_16"
-        android:paddingRight="@dimen/ml_dimen_16">
+        android:paddingLeft="@dimen/ml_dimen_8"
+        android:paddingRight="@dimen/ml_dimen_8">
 
         <Button
             android:id="@+id/ml_btn_apply_for_search"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/ml_dimen_40"
+            android:layout_width="@dimen/ml_dimen_56"
+            android:layout_height="@dimen/ml_dimen_36"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:background="@drawable/ml_shape_btn_round_red"
@@ -28,14 +28,14 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/ml_dimen_4"
+            android:layout_marginRight="@dimen/ml_dimen_8"
             android:layout_toLeftOf="@id/ml_btn_apply_for_search"
             android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/ml_edit_apply_for_search"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/ml_dimen_40"
+                android:layout_height="@dimen/ml_dimen_36"
                 android:background="@drawable/ml_shape_edit_oval"
                 android:drawableLeft="@mipmap/icon_emotion_smile_24dp"
                 android:drawablePadding="@dimen/ml_dimen_8"

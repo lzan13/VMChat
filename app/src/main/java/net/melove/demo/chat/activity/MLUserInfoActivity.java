@@ -1,6 +1,7 @@
 package net.melove.demo.chat.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -11,6 +12,7 @@ import com.easemob.chat.EMContactManager;
 import com.easemob.exceptions.EaseMobException;
 
 import net.melove.demo.chat.R;
+import net.melove.demo.chat.fragment.MLChatFragment;
 import net.melove.demo.chat.widget.MLImageView;
 import net.melove.demo.chat.widget.MLToast;
 
@@ -29,6 +31,8 @@ public class MLUserInfoActivity extends MLBaseActivity {
     private TextView mSignatureView;
     private TextView mTagView;
     private Button mAddFriendBtn;
+    private Button mStartChat;
+    private Button mVideoChat;
 
 
     @Override
@@ -57,6 +61,7 @@ public class MLUserInfoActivity extends MLBaseActivity {
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.mipmap.icon_arrow_back_white_24dp);
         mToolbar.setNavigationOnClickListener(viewListener);
+
     }
 
     private void initView() {
@@ -65,9 +70,13 @@ public class MLUserInfoActivity extends MLBaseActivity {
         mSignatureView = (TextView) findViewById(R.id.ml_text_user_info_signature);
         mTagView = (TextView) findViewById(R.id.ml_text_user_info_tag);
         mAddFriendBtn = (Button) findViewById(R.id.ml_btn_user_info_add);
-        if (true) {
+        mStartChat = (Button) findViewById(R.id.ml_btn_user_info_chat_start);
+        mVideoChat = (Button) findViewById(R.id.ml_btn_user_info_chat_video);
 
-        }
+        mAddFriendBtn.setOnClickListener(viewListener);
+        mStartChat.setOnClickListener(viewListener);
+        mVideoChat.setOnClickListener(viewListener);
+
         mAvatarView.setImageResource(R.mipmap.icon_avatar_01);
         mUsername = getIntent().getStringExtra("username");
         mUsernameView.setText(mUsername);
@@ -83,12 +92,21 @@ public class MLUserInfoActivity extends MLBaseActivity {
                 case R.id.ml_btn_user_info_add:
                     addContact();
                     break;
+                case R.id.ml_btn_user_info_chat_start:
+                    startChat();
+                    break;
+                case R.id.ml_btn_user_info_chat_video:
+                    MLToast.makeToast("暂时还未实现视频聊·天");
+                    break;
                 default:
                     break;
             }
         }
     };
 
+    /**
+     * 添加好友
+     */
     private void addContact() {
         new Thread(new Runnable() {
             @Override
@@ -113,6 +131,17 @@ public class MLUserInfoActivity extends MLBaseActivity {
                 }
             }
         }).start();
+    }
+
+    /**
+     * 发起聊天
+     */
+    private void startChat() {
+        Intent intent = new Intent();
+        intent.setClass(mActivity, MLChatActivity.class);
+        intent.putExtra("username", mUsername);
+        mActivity.startActivity(intent);
+        mActivity.finish();
     }
 
     @Override

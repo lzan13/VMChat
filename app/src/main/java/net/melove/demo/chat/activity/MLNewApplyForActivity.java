@@ -17,6 +17,7 @@ import net.melove.demo.chat.adapter.MLApplyForAdapter;
 import net.melove.demo.chat.db.MLApplyForDao;
 import net.melove.demo.chat.info.MLApplyForInfo;
 import net.melove.demo.chat.info.MLUserInfo;
+import net.melove.demo.chat.widget.MLToast;
 
 import java.util.List;
 
@@ -56,6 +57,9 @@ public class MLNewApplyForActivity extends MLBaseActivity {
         mApplyForDao = new MLApplyForDao(mActivity);
     }
 
+    /**
+     * 初始化Toolbar
+     */
     private void initToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
         mToolbar.setTitle(R.string.ml_apply_for);
@@ -101,6 +105,11 @@ public class MLNewApplyForActivity extends MLBaseActivity {
      */
     private void searchContact() {
         String username = mEditText.getText().toString().trim();
+
+        if (username.isEmpty()) {
+            MLToast.makeToast(mActivity.getResources().getString(R.string.ml_username_cannot_to_empty));
+            return;
+        }
 
         Intent intent = new Intent();
         intent.setClass(mActivity, MLUserInfoActivity.class);

@@ -73,7 +73,7 @@
                 android:orientation="vertical">
 
                 <Button
-                    android:id="@+id/ml_signup"
+                    android:id="@+id/ml_btn_signup"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/ml_shape_btn_round_red"

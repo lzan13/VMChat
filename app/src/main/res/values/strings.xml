@@ -8,6 +8,9 @@
 
     <string name="ml_apply_for">申请与请求</string>
     <string name="ml_chat">聊天</string>
+    <string name="ml_chat_start">开始聊天</string>
+    <string name="ml_chat_video">视频聊天</string>
+
 
     <string name="ml_open">打开</string>
     <string name="ml_close">关闭</string>
@@ -24,10 +27,16 @@
     <string name="ml_add_friend">添加好友</string>
     <string name="ml_search">搜索</string>
     <string name="ml_settings">设置</string>
+    <string name="ml_send">发送</string>
 
     <string name="ml_signin">登录</string>
     <string name="ml_signout">登出</string>
     <string name="ml_signup">注册</string>
+    <string name="ml_signup_failed">注册失败</string>
+    <string name="ml_signup_begin">正在注册……</string>
+    <string name="ml_signin_begin">正在登录……</string>
+    <string name="ml_signin_success">登录成功</string>
+    <string name="ml_signin_failed">登录失败</string>
     <string name="ml_forget_password">忘记密码</string>
     <string name="ml_username">用户名</string>
     <string name="ml_password">密码</string>
@@ -46,11 +55,6 @@
     <string name="ml_network_anomaly">网络异常，请检查网络</string>
     <string name="ml_signup_failed_unauthorized">注册失败，未授权注册</string>
     <string name="ml_illegal_username">非法的用户名</string>
-    <string name="ml_signup_failed">注册失败</string>
-    <string name="ml_signup_begin">正在注册……</string>
-    <string name="ml_signin_begin">正在登录……</string>
-    <string name="ml_signin_success">登录成功</string>
-    <string name="ml_signin_failed">登录失败</string>
 
     <string name="ml_other">其它</string>
     <string name="ml_agree">同意</string>
