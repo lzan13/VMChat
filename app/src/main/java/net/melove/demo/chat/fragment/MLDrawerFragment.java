@@ -17,7 +17,8 @@ import net.melove.demo.chat.R;
 import net.melove.demo.chat.activity.MLSigninActivity;
 import net.melove.demo.chat.activity.MLUserInfoActivity;
 import net.melove.demo.chat.application.MLConstants;
-import net.melove.demo.chat.db.MLDBConstants;
+import net.melove.demo.chat.db.MLUserDao;
+import net.melove.demo.chat.info.MLUserInfo;
 import net.melove.demo.chat.util.MLLog;
 import net.melove.demo.chat.util.MLSPUtil;
 import net.melove.demo.chat.widget.MLImageView;
@@ -30,7 +31,9 @@ import net.melove.demo.chat.widget.MLImageView;
  */
 public class MLDrawerFragment extends MLBaseFragment {
 
-    private String mUsername = null;
+    private MLUserDao mUserDao;
+    private MLUserInfo mUserInfo;
+    private String mUsername;
 
     // 初始化获取参数key
     private static final String ML_PARAM1 = "param1";
@@ -44,8 +47,9 @@ public class MLDrawerFragment extends MLBaseFragment {
 
     private ImageView mCover;
     private MLImageView mAvatar;
-    private TextView mNickname;
-    private TextView mSignature;
+    private TextView mSigninText;
+    private TextView mNicknameText;
+    private TextView mSignatureText;
     private View mChatMenu, mOtherMenu, mSettingMenu;
 
     private OnMLFragmentListener mListener;
@@ -102,7 +106,9 @@ public class MLDrawerFragment extends MLBaseFragment {
     }
 
     private void init() {
+        mUserDao = new MLUserDao(mActivity);
         mUsername = (String) MLSPUtil.get(mActivity, MLConstants.ML_C_USERNAME, "");
+        mUserInfo = mUserDao.getContact(mUsername);
     }
 
     /**
@@ -111,13 +117,20 @@ public class MLDrawerFragment extends MLBaseFragment {
     private void initView() {
         mCover = (ImageView) getView().findViewById(R.id.ml_img_drawer_top_cover);
         mAvatar = (MLImageView) getView().findViewById(R.id.ml_img_drawer_top_avatar);
-        mNickname = (TextView) getView().findViewById(R.id.ml_text_drawer_top_nickname);
-        mSignature = (TextView) getView().findViewById(R.id.ml_text_drawer_top_signature);
-        mAvatar.setOnClickListener(viewListener);
-        if (mUsername != null) {
-            mNickname.setText(mUsername);
-        }else {
-            mNickname.setText(R.string.ml_signin);
+        mSigninText = (TextView) getView().findViewById(R.id.ml_text_drawer_signin);
+        mNicknameText = (TextView) getView().findViewById(R.id.ml_text_drawer_top_nickname);
+        mSignatureText = (TextView) getView().findViewById(R.id.ml_text_drawer_top_signature);
+
+        if (!mUsername.isEmpty()) {
+            mAvatar.setOnClickListener(viewListener);
+            mSigninText.setVisibility(View.GONE);
+            mNicknameText.setText(mUsername);
+            mSignatureText.setText(mUserInfo.getSignature());
+        } else {
+            mSigninText.setVisibility(View.VISIBLE);
+            mSigninText.setOnClickListener(viewListener);
+            mNicknameText.setText(R.string.ml_signin);
+            mSignatureText.setText(R.string.ml_signature);
         }
 
 
@@ -133,9 +146,10 @@ public class MLDrawerFragment extends MLBaseFragment {
     private View.OnClickListener viewListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            Intent intent = null;
             switch (v.getId()) {
                 case R.id.ml_img_drawer_top_avatar:
-                    Intent intent = new Intent();
+                    intent = new Intent();
                     if (mUsername != null) {
                         intent.setClass(mActivity, MLUserInfoActivity.class);
                     } else {
@@ -144,6 +158,12 @@ public class MLDrawerFragment extends MLBaseFragment {
                     ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeCustomAnimation(mActivity,
                             R.anim.ml_anim_slide_right_in, R.anim.ml_anim_slide_left_out);
                     ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
+                    mActivity.finish();
+                    break;
+                case R.id.ml_text_drawer_signin:
+                    intent = new Intent();
+                    intent.setClass(mActivity, MLSigninActivity.class);
+                    mActivity.startActivity(intent);
                     mActivity.finish();
                     break;
                 case R.id.ml_layout_btn_chat:

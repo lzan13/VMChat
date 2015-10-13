@@ -37,14 +37,33 @@
                         android:layout_alignBottom="@id/ml_img_drawer_top_cover"
                         android:orientation="vertical">
 
-                        <net.melove.demo.chat.widget.MLImageView
-                            android:id="@+id/ml_img_drawer_top_avatar"
+                        <RelativeLayout
                             android:layout_width="@dimen/ml_dimen_56"
                             android:layout_height="@dimen/ml_dimen_56"
                             android:layout_marginBottom="@dimen/ml_dimen_4"
-                            android:layout_marginLeft="@dimen/ml_dimen_16"
-                            android:src="@mipmap/icon_avatar_default"
-                            melove:shape_type="round" />
+                            android:layout_marginLeft="@dimen/ml_dimen_16">
+
+                            <net.melove.demo.chat.widget.MLImageView
+                                android:id="@+id/ml_img_drawer_top_avatar"
+                                android:layout_width="@dimen/ml_dimen_56"
+                                android:layout_height="@dimen/ml_dimen_56"
+                                android:src="@mipmap/icon_avatar_default"
+                                melove:shape_type="round" />
+
+                            <TextView
+                                android:id="@+id/ml_text_drawer_signin"
+                                android:layout_width="@dimen/ml_dimen_56"
+                                android:layout_height="@dimen/ml_dimen_56"
+                                android:background="@color/ml_transparent"
+                                android:gravity="center"
+                                android:shadowColor="@color/ml_text_white"
+                                android:shadowDx="1"
+                                android:shadowDy="1"
+                                android:shadowRadius="5"
+                                android:text="@string/ml_signin"
+                                android:textColor="@color/ml_text_block"
+                                android:textSize="@dimen/ml_size_16" />
+                        </RelativeLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"

@@ -283,7 +283,6 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
                         MLLog.d("user removed");
                     } else {
                         MLLog.d("onDisconnected");
-                        MLToast.makeToast("onDisconnected").show();
                     }
                 }
             });

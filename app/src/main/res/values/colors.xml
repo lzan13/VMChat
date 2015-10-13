@@ -43,7 +43,7 @@
     <color name="ml_text_gray">#7a7a7a</color>
 
     <!--边框色-->
-    <color name="ml_border_red">#ffe62f17</color>
+    <color name="ml_border_red">#e67b6d</color>
     <color name="ml_border_gray">#a8a8a8a8</color>
     <color name="ml_border_white">#fff8f8f8</color>
     <color name="ml_divider_gray">#ffd8d8d8</color>

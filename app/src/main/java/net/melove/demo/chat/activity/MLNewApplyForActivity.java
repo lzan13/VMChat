@@ -107,7 +107,8 @@ public class MLNewApplyForActivity extends MLBaseActivity {
         String username = mEditText.getText().toString().trim();
 
         if (username.isEmpty()) {
-            MLToast.makeToast(mActivity.getResources().getString(R.string.ml_username_cannot_to_empty));
+            MLToast.makeToast(mActivity.getResources().getString(R.string.ml_username_cannot_to_empty)).show();
+            mEditText.requestFocus();
             return;
         }
 

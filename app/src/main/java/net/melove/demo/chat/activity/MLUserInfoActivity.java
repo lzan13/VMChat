@@ -12,7 +12,8 @@ import com.easemob.chat.EMContactManager;
 import com.easemob.exceptions.EaseMobException;
 
 import net.melove.demo.chat.R;
-import net.melove.demo.chat.fragment.MLChatFragment;
+import net.melove.demo.chat.db.MLUserDao;
+import net.melove.demo.chat.info.MLUserInfo;
 import net.melove.demo.chat.widget.MLImageView;
 import net.melove.demo.chat.widget.MLToast;
 
@@ -25,14 +26,17 @@ public class MLUserInfoActivity extends MLBaseActivity {
 
     private Toolbar mToolbar;
 
+    private MLUserDao mUserDao;
+    private MLUserInfo mUserInfo;
+
     private String mUsername;
     private MLImageView mAvatarView;
     private TextView mUsernameView;
     private TextView mSignatureView;
     private TextView mTagView;
     private Button mAddFriendBtn;
-    private Button mStartChat;
-    private Button mVideoChat;
+    private Button mStartChatBtn;
+    private Button mVideoChatBtn;
 
 
     @Override
@@ -48,6 +52,7 @@ public class MLUserInfoActivity extends MLBaseActivity {
 
     private void init() {
         mActivity = this;
+        mUserDao = new MLUserDao(mActivity);
     }
 
     /**
@@ -70,16 +75,23 @@ public class MLUserInfoActivity extends MLBaseActivity {
         mSignatureView = (TextView) findViewById(R.id.ml_text_user_info_signature);
         mTagView = (TextView) findViewById(R.id.ml_text_user_info_tag);
         mAddFriendBtn = (Button) findViewById(R.id.ml_btn_user_info_add);
-        mStartChat = (Button) findViewById(R.id.ml_btn_user_info_chat_start);
-        mVideoChat = (Button) findViewById(R.id.ml_btn_user_info_chat_video);
+        mStartChatBtn = (Button) findViewById(R.id.ml_btn_user_info_chat_start);
+        mVideoChatBtn = (Button) findViewById(R.id.ml_btn_user_info_chat_video);
 
         mAddFriendBtn.setOnClickListener(viewListener);
-        mStartChat.setOnClickListener(viewListener);
-        mVideoChat.setOnClickListener(viewListener);
+        mStartChatBtn.setOnClickListener(viewListener);
+        mVideoChatBtn.setOnClickListener(viewListener);
 
         mAvatarView.setImageResource(R.mipmap.icon_avatar_01);
         mUsername = getIntent().getStringExtra("username");
         mUsernameView.setText(mUsername);
+
+        mUserInfo = mUserDao.getContact(mUsername);
+        if (mUserInfo != null) {
+            mAddFriendBtn.setVisibility(View.GONE);
+            mStartChatBtn.setVisibility(View.VISIBLE);
+            mVideoChatBtn.setVisibility(View.VISIBLE);
+        }
     }
 
     private View.OnClickListener viewListener = new View.OnClickListener() {
@@ -96,7 +108,7 @@ public class MLUserInfoActivity extends MLBaseActivity {
                     startChat();
                     break;
                 case R.id.ml_btn_user_info_chat_video:
-                    MLToast.makeToast("暂时还未实现视频聊·天");
+                    MLToast.makeToast("暂时还未实现视频聊天").show();
                     break;
                 default:
                     break;

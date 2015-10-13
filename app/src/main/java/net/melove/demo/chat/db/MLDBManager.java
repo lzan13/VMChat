@@ -159,7 +159,7 @@ public class MLDBManager {
      * @param table     表名
      * @param columns   指定查询的列，如果不指定则查询所有
      * @param selection 查询过滤条件
-     * @param args      查询过滤条件对应的值
+     * @param args      查询过滤条件对应的值（必须是数组）
      * @param groupBy   分组依据
      * @param having    分组后的过滤条件
      * @param orderBy   排序方式

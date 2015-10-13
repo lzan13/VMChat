@@ -92,6 +92,23 @@ public class MLUserDao {
     }
 
     /**
+     * lzan13 create 2015-10-13 16:14:35
+     * 根据username 获取指定的用户信息
+     *
+     * @param username
+     * @return
+     */
+    public synchronized MLUserInfo getContact(String username) {
+        MLUserInfo userinfo = new MLUserInfo();
+        String selection = MLDBConstants.COL_USER_NAME + "=?";
+        String args[] = new String[]{username};
+        Cursor cursor = MLDBManager.getInstance().queryData(MLDBConstants.TB_USER, null, selection, args, null, null, null, null);
+
+        return userinfo;
+    }
+
+
+    /**
      * 获取联系人列表
      *
      * @return

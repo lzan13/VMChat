@@ -39,7 +39,7 @@
 
         <!-- 主界面 -->
         <activity
-            android:name=".activity.MLSigninActivity"
+            android:name=".activity.MLMainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -49,7 +49,7 @@
         </activity>
         <!-- 登录界面 -->
         <activity
-            android:name=".activity.MLMainActivity"
+            android:name=".activity.MLSigninActivity"
             android:screenOrientation="portrait" />
         <!--  -->
         <activity
