@@ -84,7 +84,7 @@
             android:id="@+id/ml_text_apply_for_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/app_name"
+            android:text="@string/ml_app_name"
             android:textColor="@color/ml_text_block"
             android:textSize="@dimen/ml_size_16"
             android:visibility="gone" />

@@ -6,6 +6,6 @@
         android:id="@+id/action_edit"
         android:orderInCategory="100"
         android:icon="@mipmap/icon_create_white_24dp"
-        android:title="@string/action_settings"
+        android:title="@string/ml_action_settings"
         app:showAsAction="always" />
 </menu>

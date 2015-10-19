@@ -1,7 +1,8 @@
 <resources>
-    <string name="app_name">MLChatDemo</string>
+    <string name="ml_app_name">MLChatDemo</string>
+    <string name="ml_test_text">Hello World! This is test text content!\nThis is test text content!\nThis is test text content!\nThis is test text content!\nThis is test text content!</string>
 
-    <string name="action_settings">设置</string>
+    <string name="ml_action_settings">设置</string>
 
     <string name="ml_copy_right">©2015 melove.net</string>
 
@@ -44,6 +45,7 @@
 
     <string name="ml_nickname">昵称</string>
     <string name="ml_signature">签名</string>
+    <string name="ml_signature_null">无个性不签名</string>
     <string name="ml_me">我</string>
 
     <string name="ml_username_cannot_to_empty">用户名不能为空</string>

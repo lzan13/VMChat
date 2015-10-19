@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.RadioButton;
 
 import net.melove.demo.chat.R;
 
@@ -18,6 +20,12 @@ public class MLChatActivity extends MLBaseActivity {
 
     private Toolbar mToolbar;
 
+    private EditText mEditText;
+    private RadioButton mEmotion;
+    private View mSendView;
+    private View mVoiceView;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +33,7 @@ public class MLChatActivity extends MLBaseActivity {
 
         init();
         initToolbar();
+        initView();
     }
 
     private void init() {
@@ -42,13 +51,30 @@ public class MLChatActivity extends MLBaseActivity {
     }
 
     private void initView() {
+        mEditText = (EditText) findViewById(R.id.ml_edit_chat_input);
+        mEmotion = (RadioButton) findViewById(R.id.ml_btn_chat_emotion);
+        mSendView = findViewById(R.id.ml_btn_chat_send);
+        mVoiceView = findViewById(R.id.ml_btn_chat_voice);
 
+        mEmotion.setOnClickListener(viewListener);
+        mSendView.setOnClickListener(viewListener);
+        mVoiceView.setOnClickListener(viewListener);
     }
 
     private View.OnClickListener viewListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.ml_btn_chat_emotion:
 
+                    break;
+                case R.id.ml_btn_chat_send:
+
+                    break;
+                case R.id.ml_btn_chat_voice:
+
+                    break;
+            }
         }
     };
 

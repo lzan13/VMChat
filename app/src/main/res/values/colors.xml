@@ -13,7 +13,8 @@
     <!--背景色-->
     <color name="ml_bg_white">#ffffffff</color>
     <color name="ml_bg_pink_white">#fff5f0eb</color>
-    <color name="ml_bg_gray_white">#EBEBEB</color>
+    <color name="ml_bg_gray">#bfbfbf</color>
+    <color name="ml_bg_gray_white">#ebebeb</color>
     <color name="ml_bg_tab_pressed">#e8e8e8e8</color>
     <color name="ml_bg_gray_transparent">#52232323</color>
 
