@@ -80,7 +80,7 @@ public class MLChatFragment extends MLBaseFragment {
     }
 
     private void init(){
-        mCurrentTabIndex = 1;
+        mCurrentTabIndex = 0;
     }
 
     /**

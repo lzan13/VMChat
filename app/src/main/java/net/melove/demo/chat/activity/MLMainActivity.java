@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.support.v4.widget.DrawerLayout;
+import android.widget.ImageView;
 
 import com.easemob.EMConnectionListener;
 import com.easemob.EMError;
@@ -58,6 +59,7 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
     private boolean isDrawerOpen;
     private int mMenuType;
     private int mCurrentIndex;
+    private ImageView mNetworkState;
 
     private MLApplyForDao mApplyForDao;
 
@@ -72,6 +74,7 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
+        initView();
         initToolbar();
         initDrawerFragment();
 
@@ -79,6 +82,9 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
     }
 
 
+    /**
+     * 界面属性初始值的初始化
+     */
     private void init() {
         mActivity = this;
         mEventListener = this;
@@ -88,6 +94,10 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
         mTitle = getTitle();
 
         mApplyForDao = new MLApplyForDao(mActivity);
+    }
+
+    private void initView() {
+        mNetworkState = (ImageView) findViewById(R.id.ml_img_network_state);
     }
 
     /**
@@ -267,7 +277,8 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
                 @Override
                 public void run() {
                     MLLog.d("onConnected");
-                    MLToast.makeToast("onConnected").show();
+                    mNetworkState.setImageResource(R.mipmap.icon_network_link);
+                    mNetworkState.setVisibility(View.GONE);
                 }
             });
         }
@@ -284,6 +295,8 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
                     } else {
                         MLLog.d("onDisconnected");
                     }
+                    mNetworkState.setImageResource(R.mipmap.icon_network_error);
+                    mNetworkState.setVisibility(View.VISIBLE);
                 }
             });
         }

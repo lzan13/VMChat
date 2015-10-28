@@ -39,6 +39,7 @@
     <string name="ml_signin_success">登录成功</string>
     <string name="ml_signin_failed">登录失败</string>
     <string name="ml_forget_password">忘记密码</string>
+    <string name="ml_invalid_username_or_password">无效的用户名或密码，请检查</string>
     <string name="ml_username">用户名</string>
     <string name="ml_password">密码</string>
     <string name="ml_confirm_password">确认密码</string>
@@ -54,9 +55,11 @@
     <string name="ml_please_confirm_password">请确认密码</string>
     <string name="ml_signup_success">注册成功</string>
     <string name="ml_user_already_exits">用户已经存在</string>
-    <string name="ml_network_anomaly">网络异常，请检查网络</string>
+    <string name="ml_network_anomaly">网络异常，请检查网络设置</string>
+    <string name="ml_network_dns_error">DNS错误，请检查网络本地设置</string>
     <string name="ml_signup_failed_unauthorized">注册失败，未授权注册</string>
     <string name="ml_illegal_username">非法的用户名</string>
+    <string name="ml_load_data">加载资源</string>
 
     <string name="ml_other">其它</string>
     <string name="ml_agree">同意</string>

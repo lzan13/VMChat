@@ -87,7 +87,7 @@ public class MLUserInfoActivity extends MLBaseActivity {
         mUsernameView.setText(mUsername);
 
         mUserInfo = mUserDao.getContact(mUsername);
-        if (mUserInfo != null) {
+        if (mUserInfo.getUserName() != null) {
             mAddFriendBtn.setVisibility(View.GONE);
             mStartChatBtn.setVisibility(View.VISIBLE);
             mVideoChatBtn.setVisibility(View.VISIBLE);

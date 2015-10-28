@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.easemob.EMCallBack;
+import com.easemob.EMError;
 import com.easemob.chat.EMChatManager;
 
 import net.melove.demo.chat.R;
@@ -120,6 +121,10 @@ public class MLSigninActivity extends MLBaseActivity {
     };
 
 
+    /**
+     * by lzan13 2015-10-2 18:03:53
+     * 登录到环信服务器处理
+     */
     private void signin() {
         final Resources res = mActivity.getResources();
         mUsername = mUsernameEdit.getText().toString().toLowerCase().trim();
@@ -140,14 +145,17 @@ public class MLSigninActivity extends MLBaseActivity {
         mDialog.show();
 
         EMChatManager.getInstance().login(mUsername, mPassword, new EMCallBack() {
+            /**
+             * by lzan13 2015-10-28 18:05:12
+             * 登陆成功的回调
+             */
             @Override
             public void onSuccess() {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+//                        mDialog.setMessage(res.getString(R.string.ml_signin_success) + ";" + res.getString(R.string.ml_load_data) + "…");
                         mDialog.dismiss();
-                        MLToast.makeToast(R.mipmap.icon_emotion_smile_24dp, res.getString(R.string.ml_signin_success)).show();
-                        MLLog.d(res.getString(R.string.ml_signin_success));
 
                         MLSPUtil.put(mActivity, MLConstants.ML_C_USERNAME, mUsername);
                         MLSPUtil.put(mActivity, MLConstants.ML_C_PASSWORD, mPassword);
@@ -160,14 +168,30 @@ public class MLSigninActivity extends MLBaseActivity {
                 });
             }
 
+            /**
+             * by lzan13 2015-10-28 18:05:30
+             * 登陆错误的回调
+             * @param i
+             * @param s
+             */
             @Override
             public void onError(final int i, final String s) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         mDialog.dismiss();
-                        MLToast.makeToast("Error: " + i + res.getString(R.string.ml_signin_failed)).show();
                         MLLog.d("Error: " + i + " " + res.getString(R.string.ml_signin_failed) + s);
+                        switch (i) {
+                            case EMError.INVALID_PASSWORD_USERNAME:
+                                MLToast.makeToast(R.mipmap.icon_emotion_sad_24dp, res.getString(R.string.ml_invalid_username_or_password) + ":" + i).show();
+                                break;
+                            case EMError.UNABLE_CONNECT_TO_SERVER:
+                                MLToast.makeToast(R.mipmap.icon_emotion_sad_24dp, res.getString(R.string.ml_network_anomaly) + ":" + i).show();
+                                break;
+                            case EMError.DNS_ERROR:
+                                MLToast.makeToast(R.mipmap.icon_emotion_sad_24dp, res.getString(R.string.ml_network_dns_error) + ":" + i).show();
+                                break;
+                        }
                     }
                 });
             }

@@ -1,29 +1,50 @@
 <!-- A DrawerLayout is intended to be used as the top-level content view using match_parent for both width and height to consume the full space available. -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <!-- Toolbar -->
-    <include layout="@layout/widget_toolbar_layout" />
 
-    <android.support.v4.widget.DrawerLayout
-        android:id="@+id/ml_widget_drawer_layout"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity">
+        android:orientation="vertical">
+        <!-- Toolbar -->
+        <include layout="@layout/widget_toolbar_layout" />
 
-        <!--中间内容布局-->
-        <FrameLayout
-            android:id="@+id/ml_framelayout_container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <!--侧滑菜单-->
-        <FrameLayout
-            android:id="@+id/ml_framelayout_drawer"
+        <android.support.v4.widget.DrawerLayout
+            android:id="@+id/ml_widget_drawer_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="start" />
+            tools:context=".MainActivity">
 
-    </android.support.v4.widget.DrawerLayout>
-</LinearLayout>
+            <!--中间内容布局-->
+            <FrameLayout
+                android:id="@+id/ml_framelayout_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <!--侧滑菜单-->
+            <FrameLayout
+                android:id="@+id/ml_framelayout_drawer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="start" />
+
+        </android.support.v4.widget.DrawerLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:padding="@dimen/ml_dimen_8">
+
+        <ImageView
+            android:id="@+id/ml_img_network_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/icon_network_link" />
+    </LinearLayout>
+</RelativeLayout>
