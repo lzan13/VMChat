@@ -34,6 +34,7 @@ public class MLApplyForDao {
         values.put(MLDBConstants.COL_GROUP_NAME, applyForInfo.getGroupName());
         values.put(MLDBConstants.COL_REASON, applyForInfo.getReason());
         values.put(MLDBConstants.COL_STATUS, applyForInfo.getStatus().ordinal());
+        values.put(MLDBConstants.COL_TIME, applyForInfo.getTime());
 
         MLDBManager.getInstance().insterData(MLDBConstants.TB_APPLY_FOR, values);
     }
@@ -113,6 +114,7 @@ public class MLApplyForDao {
                 applyForInfo.setStatus(MLApplyForInfo.ApplyForStatus.GROUPAPPLYFOR);
             }
             applyForInfo.setTime(Long.valueOf(time));
+            applyForInfos.add(applyForInfo);
         }
         return applyForInfos;
     }

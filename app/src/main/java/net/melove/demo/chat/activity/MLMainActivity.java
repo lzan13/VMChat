@@ -165,7 +165,7 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
         mFragmentTransaction.replace(R.id.ml_framelayout_drawer, mMLDrawerFragment);
         mFragmentTransaction.commit();
 
-        // 主Activity 默认显示 TimeLineFragment
+        // 主Activity 默认显示第一个Fragment
         mCurrentIndex = 0;
         mCurrentFragment = new MLChatFragment();
         mToolbar.setTitle(mActivity.getResources().getString(R.string.ml_chat));

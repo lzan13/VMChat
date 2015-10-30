@@ -27,11 +27,12 @@ public class MLApplyForAdapter extends BaseAdapter {
     public MLApplyForAdapter(Context context, List<MLApplyForInfo> list) {
         mContext = context;
         mList = list;
+        mInflater = LayoutInflater.from(mContext);
     }
 
     @Override
     public int getCount() {
-        return 0;
+        return mList.size();
     }
 
     @Override
