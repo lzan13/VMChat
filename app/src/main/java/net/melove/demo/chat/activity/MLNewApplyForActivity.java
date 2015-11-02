@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -80,11 +81,24 @@ public class MLNewApplyForActivity extends MLBaseActivity {
 
         // 初始化ListView
         mListView = (ListView) findViewById(R.id.ml_list_applyfor);
+        mListView.setOnItemClickListener(itemListener);
+
         mListView.addHeaderView(mHeadView);
         mList = mApplyForDao.getApplyForList();
         mApplyForAdapter = new MLApplyForAdapter(mActivity, mList);
         mListView.setAdapter(mApplyForAdapter);
     }
+
+    /**
+     * by lzan13 2015-11-2 11:25:04
+     * 列表项点击事件
+     */
+    private AdapterView.OnItemClickListener itemListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            MLToast.makeToast("item " + position).show();
+        }
+    };
 
     private View.OnClickListener viewListener = new View.OnClickListener() {
         @Override
