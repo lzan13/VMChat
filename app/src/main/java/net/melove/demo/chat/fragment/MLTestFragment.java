@@ -18,6 +18,7 @@ import net.melove.demo.chat.R;
 import net.melove.demo.chat.activity.MLNewApplyForActivity;
 import net.melove.demo.chat.db.MLTestHelper;
 import net.melove.demo.chat.sdkutils.MLSDKHelper;
+import net.melove.demo.chat.test.MLTestActivity;
 import net.melove.demo.chat.util.MLLog;
 
 /**
@@ -80,6 +81,7 @@ public class MLTestFragment extends MLBaseFragment {
 
     private void init() {
         getView().findViewById(R.id.ml_btn_signout).setOnClickListener(viewListener);
+        getView().findViewById(R.id.ml_btn_jump_test).setOnClickListener(viewListener);
     }
 
 
@@ -112,6 +114,11 @@ public class MLTestFragment extends MLBaseFragment {
             switch (v.getId()) {
                 case R.id.ml_btn_signout:
                     signOut();
+                    break;
+                case R.id.ml_btn_jump_test:
+                    Intent intent = new Intent();
+                    intent.setClass(mActivity, MLTestActivity.class);
+                    mActivity.startActivity(intent);
                     break;
             }
         }

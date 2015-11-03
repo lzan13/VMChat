@@ -47,6 +47,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!-- 测试界面 -->
+        <activity
+            android:name=".test.MLTestActivity"
+            android:screenOrientation="portrait" />
         <!-- 登录界面 -->
         <activity
             android:name=".activity.MLSigninActivity"
@@ -60,15 +64,15 @@
         <activity
             android:name=".activity.MLSignupActivity"
             android:screenOrientation="portrait" />
-        <!--好友申请与通知以及添加界面-->
+        <!-- 好友申请与通知以及添加界面 -->
         <activity
             android:name=".activity.MLNewApplyForActivity"
             android:screenOrientation="portrait" />
-        <!--账户信息界面-->
+        <!-- 账户信息界面 -->
         <activity
             android:name=".activity.MLUserInfoActivity"
             android:screenOrientation="portrait" />
-        <!--聊天界面-->
+        <!-- 聊天界面 -->
         <activity
             android:name=".activity.MLChatActivity"
             android:screenOrientation="portrait"

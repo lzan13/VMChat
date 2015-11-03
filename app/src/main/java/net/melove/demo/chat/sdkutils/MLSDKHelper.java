@@ -82,22 +82,24 @@ public class MLSDKHelper {
                 EMMessage message = null;
                 if (event.getData() instanceof EMMessage) {
                     message = (EMMessage) event.getData();
-                    switch (event.getEvent()) {
-                        case EventNewMessage:
-
-                            break;
-                        case EventOfflineMessage:
-
-                            break;
-                    }
                 }
+                switch (event.getEvent()) {
+                    case EventNewMessage:
 
+                        break;
+                    case EventOfflineMessage:
 
+                        break;
+                }
             }
         };
         EMChatManager.getInstance().registerEventListener(mEventListener);
     }
 
+    /**
+     * 退出登录环信
+     * @param callback
+     */
     public void signOut(final EMCallBack callback) {
         MLSPUtil.remove(mContext, MLConstants.ML_C_USERNAME);
         MLSPUtil.remove(mContext, MLConstants.ML_C_PASSWORD);

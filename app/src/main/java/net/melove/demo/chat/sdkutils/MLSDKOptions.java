@@ -4,7 +4,8 @@ import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMChatOptions;
 
 /**
- * Created by lzan13 on 2015/7/13.
+ * by lzan13 on 2015/7/13.
+ * SDK初始化设置类
  */
 public class MLSDKOptions {
 
