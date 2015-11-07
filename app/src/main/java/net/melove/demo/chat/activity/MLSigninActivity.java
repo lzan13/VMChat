@@ -57,10 +57,13 @@ public class MLSigninActivity extends MLBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        init();
+        initView();
     }
 
-    private void init() {
+    /**
+     * 控件初始化
+     */
+    private void initView() {
         mActivity = this;
 
         mUsername = (String) MLSPUtil.get(mActivity, "username", "");
@@ -99,6 +102,9 @@ public class MLSigninActivity extends MLBaseActivity {
         });
     }
 
+    /**
+     * 按钮点击监听
+     */
     private View.OnClickListener viewListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -206,6 +212,9 @@ public class MLSigninActivity extends MLBaseActivity {
     }
 
 
+    /**
+     * 忘记密码
+     */
     private void forgetPassword() {
 
     }
