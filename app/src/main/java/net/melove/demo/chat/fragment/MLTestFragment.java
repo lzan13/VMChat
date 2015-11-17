@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import com.easemob.EMCallBack;
 
 import net.melove.demo.chat.R;
+import net.melove.demo.chat.activity.MLChatActivity;
 import net.melove.demo.chat.activity.MLNewApplyForActivity;
 import net.melove.demo.chat.db.MLTestHelper;
 import net.melove.demo.chat.sdkutils.MLSDKHelper;
@@ -117,7 +118,7 @@ public class MLTestFragment extends MLBaseFragment {
                     break;
                 case R.id.ml_btn_jump_test:
                     Intent intent = new Intent();
-                    intent.setClass(mActivity, MLTestActivity.class);
+                    intent.setClass(mActivity, MLChatActivity.class);
                     mActivity.startActivity(intent);
                     break;
             }
