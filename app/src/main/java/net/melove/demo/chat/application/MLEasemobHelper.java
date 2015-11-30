@@ -1,4 +1,4 @@
-package net.melove.demo.chat.sdkutils;
+package net.melove.demo.chat.application;
 
 import android.content.Context;
 
@@ -10,18 +10,18 @@ import com.easemob.chat.EMChat;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMMessage;
 
-import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.util.MLSPUtil;
-import net.melove.demo.chat.widget.MLToast;
 
 /**
  * Created by lzan13 on 2015/7/13.
  */
-public class MLSDKHelper {
+public class MLEasemobHelper {
 
     private Context mContext;
 
-    private static MLSDKHelper instance;
+    private static MLEasemobHelper instance;
+
+    private MLEasemobOptions mOptions;
 
     // 记录sdk是否初始化
     private boolean isInit;
@@ -30,14 +30,14 @@ public class MLSDKHelper {
     private EMEventListener mEventListener;
 
 
-    public static MLSDKHelper getInstance() {
+    public static MLEasemobHelper getInstance() {
         if (instance == null) {
-            instance = new MLSDKHelper();
+            instance = new MLEasemobHelper();
         }
         return instance;
     }
 
-    protected MLSDKHelper() {
+    protected MLEasemobHelper() {
 
     }
 
@@ -57,7 +57,9 @@ public class MLSDKHelper {
         EMChat.getInstance().setDebugMode(true);
 
         // 初始化sdk的一些设置
-        MLSDKOptions.getInstance().initOption();
+        mOptions = new MLEasemobOptions();
+        mOptions.initOption();
+
         // 初始化监听
         initListener();
 
@@ -67,9 +69,14 @@ public class MLSDKHelper {
     }
 
 
+    /**
+     * 初始化全局监听
+     */
     public void initListener() {
-        // chushihua
+        // 初始化消息监听
         initMessageListener();
+
+        initGroupListener();
     }
 
     /**
@@ -97,7 +104,15 @@ public class MLSDKHelper {
     }
 
     /**
+     * 初始化群组监听
+     */
+    protected void initGroupListener() {
+
+    }
+
+    /**
      * 退出登录环信
+     *
      * @param callback
      */
     public void signOut(final EMCallBack callback) {

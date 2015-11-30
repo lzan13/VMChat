@@ -1,27 +1,17 @@
-package net.melove.demo.chat.sdkutils;
+package net.melove.demo.chat.application;
 
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMChatOptions;
 
 /**
  * by lzan13 on 2015/7/13.
- * SDK初始化设置类
+ * 环信SDK初始化设置类，进行一些初始化的设置
  */
-public class MLSDKOptions {
+public class MLEasemobOptions {
 
-    private static MLSDKOptions instance;
-
-    private MLSDKOptions() {
-
-    }
-
-    public static MLSDKOptions getInstance() {
-        if (instance == null) {
-            instance = new MLSDKOptions();
-        }
-        return instance;
-    }
-
+    /**
+     * 初始化一些配置
+     */
     public void initOption() {
 
         EMChatOptions options = EMChatManager.getInstance().getChatOptions();

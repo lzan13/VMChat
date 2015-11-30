@@ -3,15 +3,13 @@ package net.melove.demo.chat.application;
 import android.app.Application;
 import android.content.Context;
 
-import net.melove.demo.chat.sdkutils.MLSDKHelper;
-
 /**
  * Created by lzan13 on 2015/7/6.
  */
 public class MLApplication extends Application {
 
     private static Context context;
-    private MLSDKHelper mMLSDKHelper;
+    private MLEasemobHelper mMLSDKHelper;
 
     @Override
     public void onCreate() {
@@ -28,7 +26,7 @@ public class MLApplication extends Application {
     }
 
     private void initSDK() {
-        mMLSDKHelper = MLSDKHelper.getInstance();
+        mMLSDKHelper = MLEasemobHelper.getInstance();
         mMLSDKHelper.onInit(context);
     }
 }

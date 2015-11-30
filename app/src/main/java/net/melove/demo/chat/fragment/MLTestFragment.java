@@ -2,12 +2,8 @@ package net.melove.demo.chat.fragment;
 
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +12,7 @@ import com.easemob.EMCallBack;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.activity.MLChatActivity;
-import net.melove.demo.chat.activity.MLNewApplyForActivity;
-import net.melove.demo.chat.db.MLTestHelper;
-import net.melove.demo.chat.sdkutils.MLSDKHelper;
-import net.melove.demo.chat.test.MLTestActivity;
-import net.melove.demo.chat.util.MLLog;
+import net.melove.demo.chat.application.MLEasemobHelper;
 
 /**
  * 测试Fragment，
@@ -90,7 +82,7 @@ public class MLTestFragment extends MLBaseFragment {
      * 退出登录
      */
     private void signOut() {
-        MLSDKHelper.getInstance().signOut(new EMCallBack() {
+        MLEasemobHelper.getInstance().signOut(new EMCallBack() {
             @Override
             public void onSuccess() {
                 mActivity.finish();
