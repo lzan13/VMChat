@@ -47,21 +47,21 @@
                         android:background="@drawable/ml_shape_btn_rectangle_blue"
                         android:text="@string/ml_send"
                         android:textColor="@color/ml_text_white"
-                        android:textSize="@dimen/ml_size_16"
-                        android:visibility="gone" />
+                        android:textSize="@dimen/ml_size_16" />
 
                     <LinearLayout
                         android:id="@+id/ml_btn_chat_voice"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@drawable/ml_shape_btn_rectangle_white"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:visibility="gone">
 
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@mipmap/icon_voice_36"
-                            android:visibility="visible" />
+                            android:visibility="gone" />
                     </LinearLayout>
 
                 </RelativeLayout>

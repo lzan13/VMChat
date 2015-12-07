@@ -145,6 +145,9 @@ public class MLApplyForAdapter extends BaseAdapter implements View.OnClickListen
         }
     }
 
+    /**
+     *
+     */
     private class ViewHandler {
         MLImageView imageViewAvatar;
         TextView textViewUsername;
