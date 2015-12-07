@@ -19,6 +19,9 @@ import java.util.List;
 
 /**
  * 单聊联系人界面 Fragment
+ * 继承自自定义的MLBaseFramgnet类，为了减少代码量，在MLBaseFrament类中定义接口回调
+ * 包含此Fragment的活动窗口必须实现{@link MLBaseFragment.OnMLFragmentListener}接口,
+ * 定义创建实例的工厂方法 {@link MLContactsFragment#newInstance}，可使用此方法创建实例
  */
 public class MLContactsFragment extends MLBaseFragment {
 
@@ -84,15 +87,9 @@ public class MLContactsFragment extends MLBaseFragment {
     private void init() {
         mUserDao = new MLUserDao(mActivity);
 
-        mHeadView = LayoutInflater.from(mActivity).inflate(R.layout.item_contacts_head, null);
-        mHeadView.findViewById(R.id.ml_btn_contacts_add).setOnClickListener(viewListener);
-        mHeadView.findViewById(R.id.ml_btn_contacts_group).setOnClickListener(viewListener);
-        mHeadView.findViewById(R.id.ml_btn_contacts_room).setOnClickListener(viewListener);
-
         List<MLUserInfo> list = mUserDao.getContactList();
         mContactsAdapter = new MLContactsAdapter(mActivity, list);
         mListView = (ListView) getView().findViewById(R.id.ml_list_contacts);
-        mListView.addHeaderView(mHeadView);
 
         mListView.setAdapter(mContactsAdapter);
 
@@ -102,17 +99,6 @@ public class MLContactsFragment extends MLBaseFragment {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.ml_btn_contacts_add:
-                    Intent intent = new Intent();
-                    intent.setClass(mActivity, MLNewApplyForActivity.class);
-                    mActivity.startActivity(intent);
-                    break;
-                case R.id.ml_btn_contacts_group:
-
-                    break;
-                case R.id.ml_btn_contacts_room:
-
-                    break;
             }
         }
     };

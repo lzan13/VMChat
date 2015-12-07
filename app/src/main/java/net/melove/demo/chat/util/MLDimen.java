@@ -15,7 +15,7 @@ import java.lang.reflect.Method;
 /**
  * Created by Administrator on 2015/4/15.
  */
-public class MLScreen {
+public class MLDimen {
 
     private static final String STATUS_BAR_HEIGHT_RES_NAME = "status_bar_height";
     private static final String NAV_BAR_HEIGHT_RES_NAME = "navigation_bar_height";
@@ -23,7 +23,7 @@ public class MLScreen {
     private static final String NAV_BAR_WIDTH_RES_NAME = "navigation_bar_width";
 
 
-    public MLScreen() {
+    public MLDimen() {
 
     }
 
