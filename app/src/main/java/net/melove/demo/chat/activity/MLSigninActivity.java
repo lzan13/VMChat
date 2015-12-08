@@ -61,41 +61,6 @@ public class MLSigninActivity extends MLBaseActivity {
         init();
     }
 
-    /**
-     * 检测登陆，主要先判断是否满足登陆条件
-     */
-    private void attemptLogin() {
-
-        // 重置错误
-        mUsernameView.setError(null);
-        mPasswordView.setError(null);
-
-        mUsername = mUsernameView.getText().toString().toLowerCase().trim();
-        mPassword = mPasswordView.getText().toString().toLowerCase().trim();
-
-        boolean cancel = false;
-        View focusView = null;
-
-        // 检查密码是否为空
-        if (TextUtils.isEmpty(mPassword)) {
-            mPasswordView.setError(getString(R.string.ml_error_field_required));
-            focusView = mPasswordView;
-            cancel = true;
-        }
-
-        // 检查username是否为空
-        if (TextUtils.isEmpty(mUsername)) {
-            mUsernameView.setError(getString(R.string.ml_error_field_required));
-            focusView = mUsernameView;
-            cancel = true;
-        }
-
-        if (cancel) {
-            focusView.requestFocus();
-        } else {
-            signin();
-        }
-    }
 
     private void init() {
         mActivity = this;
@@ -144,7 +109,7 @@ public class MLSigninActivity extends MLBaseActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.ml_btn_signin:
-                    signin();
+                    attemptLogin();
                     break;
                 case R.id.ml_btn_signup:
                     Intent intent = new Intent();
@@ -160,6 +125,41 @@ public class MLSigninActivity extends MLBaseActivity {
         }
     };
 
+    /**
+     * 检测登陆，主要先判断是否满足登陆条件
+     */
+    private void attemptLogin() {
+
+        // 重置错误
+        mUsernameView.setError(null);
+        mPasswordView.setError(null);
+
+        mUsername = mUsernameView.getText().toString().toLowerCase().trim();
+        mPassword = mPasswordView.getText().toString().toLowerCase().trim();
+
+        boolean cancel = false;
+        View focusView = null;
+
+        // 检查密码是否为空
+        if (TextUtils.isEmpty(mPassword)) {
+            mPasswordView.setError(getString(R.string.ml_error_field_required));
+            focusView = mPasswordView;
+            cancel = true;
+        }
+
+        // 检查username是否为空
+        if (TextUtils.isEmpty(mUsername)) {
+            mUsernameView.setError(getString(R.string.ml_error_field_required));
+            focusView = mUsernameView;
+            cancel = true;
+        }
+
+        if (cancel) {
+            focusView.requestFocus();
+        } else {
+            signin();
+        }
+    }
 
     /**
      * by lzan13 2015-10-2 18:03:53

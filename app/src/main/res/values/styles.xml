@@ -9,7 +9,7 @@
         <!--各控件激活时的颜色，一般是 CheckBox、EditText、Switch、Spinner、RadioButton 等控件激活的颜色-->
         <item name="colorAccent">@color/ml_theme_accent</item>
 
-        <item name="android:textColorPrimary">@color/ml_theme_text_primary</item>
+        <!--<item name="android:textColorPrimary">@color/ml_theme_text_primary</item>-->
 
         <!--设置主题不需要ActionBar-->
         <item name="windowActionBar">false</item>

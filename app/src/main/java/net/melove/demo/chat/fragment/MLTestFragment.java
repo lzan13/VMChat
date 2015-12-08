@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.easemob.EMCallBack;
 
 import net.melove.demo.chat.R;
+import net.melove.demo.chat.activity.MLVideoCallActivity;
 import net.melove.demo.chat.application.MLEasemobHelper;
 import net.melove.demo.chat.test.MLTestActivity;
 
@@ -110,7 +111,7 @@ public class MLTestFragment extends MLBaseFragment {
                     break;
                 case R.id.ml_btn_jump_test:
                     Intent intent = new Intent();
-                    intent.setClass(mActivity, MLTestActivity.class);
+                    intent.setClass(mActivity, MLVideoCallActivity.class);
                     mActivity.startActivity(intent);
                     break;
             }
