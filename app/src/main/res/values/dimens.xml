@@ -29,6 +29,11 @@
     <dimen name="ml_dimen_56">56dp</dimen>
     <dimen name="ml_dimen_72">72dp</dimen>
     <dimen name="ml_dimen_96">96dp</dimen>
+    <dimen name="ml_dimen_144">144dp</dimen>
+    <dimen name="ml_dimen_192">192dp</dimen>
+    <dimen name="ml_dimen_288">288dp</dimen>
+    <dimen name="ml_dimen_384">384dp</dimen>
+    <dimen name="ml_dimen_512">512dp</dimen>
 
 
     <!--公用的字体尺寸-->
