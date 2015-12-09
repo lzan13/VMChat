@@ -4,79 +4,64 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/widget_appbar_main" />
+    <include layout="@layout/widget_toolbar_communal" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/ml_dimen_8">
+        android:layout_margin="@dimen/ml_dimen_16">
 
         <LinearLayout
+            android:id="@+id/layout_login_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/ml_dimen_16"
             android:orientation="vertical">
 
-            <LinearLayout
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/ml_dimen_48"
-                android:layout_margin="@dimen/ml_dimen_8">
+                android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/ml_edit_username"
+                    android:id="@+id/ml_edit_signup_username"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/ml_shape_edit_oval"
-                    android:gravity="center"
-                    android:hint="@string/ml_username"
+                    android:layout_height="wrap_content"
+                    android:digits="@string/input_limit"
+                    android:hint="@string/ml_hint_username"
+                    android:inputType="textCapCharacters"
+                    android:maxLines="1"
                     android:singleLine="true"
                     android:textSize="@dimen/ml_size_16" />
-            </LinearLayout>
+            </android.support.design.widget.TextInputLayout>
 
-            <LinearLayout
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/ml_dimen_48"
-                android:layout_margin="@dimen/ml_dimen_8">
+                android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/ml_edit_password"
+                    android:id="@+id/ml_edit_signup_password"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/ml_shape_edit_oval"
-                    android:gravity="center"
-                    android:hint="@string/ml_password"
-                    android:inputType="textPassword"
+                    android:layout_height="wrap_content"
+                    android:digits="@string/input_limit"
+                    android:hint="@string/ml_hint_password"
+                    android:inputType="textCapCharacters"
+                    android:maxLines="1"
                     android:singleLine="true"
                     android:textSize="@dimen/ml_size_16" />
-            </LinearLayout>
+            </android.support.design.widget.TextInputLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/ml_dimen_48"
-                android:layout_margin="@dimen/ml_dimen_8">
-
-                <EditText
-                    android:id="@+id/ml_edit_confirm_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/ml_shape_edit_oval"
-                    android:gravity="center"
-                    android:hint="@string/ml_confirm_password"
-                    android:inputType="textPassword"
-                    android:singleLine="true"
-                    android:textSize="@dimen/ml_size_16" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/ml_dimen_48"
-                android:layout_margin="@dimen/ml_dimen_8"
+                android:layout_marginTop="@dimen/ml_dimen_16"
                 android:orientation="vertical">
 
                 <Button
                     android:id="@+id/ml_btn_signup"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/ml_shape_btn_round_red"
+                    android:background="@drawable/ml_shape_btn_rectangle_red"
                     android:text="@string/ml_signup"
                     android:textColor="@color/ml_text_white"
                     android:textSize="@dimen/ml_size_18" />
@@ -89,7 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/ml_dimen_24"
+            android:layout_marginBottom="@dimen/ml_dimen_16"
             android:gravity="center_horizontal">
 
             <TextView

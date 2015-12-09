@@ -28,7 +28,6 @@ import net.melove.demo.chat.widget.MLToast;
  */
 public class MLSigninActivity extends MLBaseActivity {
 
-    private Activity mActivity;
     private Toolbar mToolbar;
 
     private ProgressDialog mDialog;
@@ -61,44 +60,8 @@ public class MLSigninActivity extends MLBaseActivity {
         init();
     }
 
-    /**
-     * 检测登陆，主要先判断是否满足登陆条件
-     */
-    private void attemptLogin() {
-
-        // 重置错误
-        mUsernameView.setError(null);
-        mPasswordView.setError(null);
-
-        mUsername = mUsernameView.getText().toString().toLowerCase().trim();
-        mPassword = mPasswordView.getText().toString().toLowerCase().trim();
-
-        boolean cancel = false;
-        View focusView = null;
-
-        // 检查密码是否为空
-        if (TextUtils.isEmpty(mPassword)) {
-            mPasswordView.setError(getString(R.string.ml_error_field_required));
-            focusView = mPasswordView;
-            cancel = true;
-        }
-
-        // 检查username是否为空
-        if (TextUtils.isEmpty(mUsername)) {
-            mUsernameView.setError(getString(R.string.ml_error_field_required));
-            focusView = mUsernameView;
-            cancel = true;
-        }
-
-        if (cancel) {
-            focusView.requestFocus();
-        } else {
-            signin();
-        }
-    }
 
     private void init() {
-        mActivity = this;
 
         mUsername = (String) MLSPUtil.get(mActivity, "username", "");
         mPassword = (String) MLSPUtil.get(mActivity, "password", "");
@@ -144,13 +107,12 @@ public class MLSigninActivity extends MLBaseActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.ml_btn_signin:
-                    signin();
+                    attemptLogin();
                     break;
                 case R.id.ml_btn_signup:
                     Intent intent = new Intent();
                     intent.setClass(mActivity, MLSignupActivity.class);
-                    ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeCustomAnimation(mActivity,
-                            R.anim.ml_anim_slide_right_in, R.anim.ml_anim_slide_left_out);
+                    ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, mToolbar, "toolbar");
                     ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
                     break;
                 case R.id.ml_btn_forget_password:
@@ -160,6 +122,41 @@ public class MLSigninActivity extends MLBaseActivity {
         }
     };
 
+    /**
+     * 检测登陆，主要先判断是否满足登陆条件
+     */
+    private void attemptLogin() {
+
+        // 重置错误
+        mUsernameView.setError(null);
+        mPasswordView.setError(null);
+
+        mUsername = mUsernameView.getText().toString().toLowerCase().trim();
+        mPassword = mPasswordView.getText().toString().toLowerCase().trim();
+
+        boolean cancel = false;
+        View focusView = null;
+
+        // 检查密码是否为空
+        if (TextUtils.isEmpty(mPassword)) {
+            mPasswordView.setError(getString(R.string.ml_error_field_required));
+            focusView = mPasswordView;
+            cancel = true;
+        }
+
+        // 检查username是否为空
+        if (TextUtils.isEmpty(mUsername)) {
+            mUsernameView.setError(getString(R.string.ml_error_field_required));
+            focusView = mUsernameView;
+            cancel = true;
+        }
+
+        if (cancel) {
+            focusView.requestFocus();
+        } else {
+            signin();
+        }
+    }
 
     /**
      * by lzan13 2015-10-2 18:03:53
@@ -182,7 +179,6 @@ public class MLSigninActivity extends MLBaseActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-//                        mDialog.setMessage(res.getString(R.string.ml_signin_success) + ";" + res.getString(R.string.ml_load_data) + "…");
                         mDialog.dismiss();
 
                         MLSPUtil.put(mActivity, MLConstants.ML_C_USERNAME, mUsername);
@@ -190,8 +186,9 @@ public class MLSigninActivity extends MLBaseActivity {
 
                         Intent intent = new Intent();
                         intent.setClass(mActivity, MLMainActivity.class);
-                        mActivity.startActivity(intent);
-                        mActivity.finish();
+                        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, mToolbar, "toolbar");
+                        ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
+                        finishAfterTransition();
                     }
                 });
             }
@@ -211,13 +208,13 @@ public class MLSigninActivity extends MLBaseActivity {
                         MLLog.d("Error: " + i + " " + res.getString(R.string.ml_signin_failed) + s);
                         switch (i) {
                             case EMError.INVALID_PASSWORD_USERNAME:
-                                MLToast.makeToast(R.mipmap.icon_emotion_sad_24dp, res.getString(R.string.ml_invalid_username_or_password) + ":" + i).show();
+                                MLToast.makeToast(R.mipmap.icon_emotion_sad_24dp, res.getString(R.string.ml_invalid_username_or_password) + "(" + i + ")").show();
                                 break;
                             case EMError.UNABLE_CONNECT_TO_SERVER:
-                                MLToast.makeToast(R.mipmap.icon_emotion_sad_24dp, res.getString(R.string.ml_network_anomaly) + ":" + i).show();
+                                MLToast.makeToast(R.mipmap.icon_emotion_sad_24dp, res.getString(R.string.ml_network_anomaly) + "(" + i + ")").show();
                                 break;
                             case EMError.DNS_ERROR:
-                                MLToast.makeToast(R.mipmap.icon_emotion_sad_24dp, res.getString(R.string.ml_network_dns_error) + ":" + i).show();
+                                MLToast.makeToast(R.mipmap.icon_emotion_sad_24dp, res.getString(R.string.ml_network_dns_error) + "(" + i + ")").show();
                                 break;
                         }
                     }

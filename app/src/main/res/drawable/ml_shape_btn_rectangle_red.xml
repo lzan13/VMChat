@@ -3,13 +3,13 @@
     <item android:state_pressed="false">
         <shape android:dither="true">
             <corners android:radius="@dimen/ml_dimen_4" />
-            <solid android:color="@color/ml_btn_red_normal" />
+            <solid android:color="@color/ml_theme_primary" />
         </shape>
     </item>
     <item android:state_pressed="true">
         <shape android:dither="true">
             <corners android:radius="@dimen/ml_dimen_4" />
-            <solid android:color="@color/ml_btn_red_pressed" />
+            <solid android:color="@color/ml_theme_primary_dark" />
         </shape>
     </item>
 </selector>

@@ -40,7 +40,7 @@
     <string name="ml_signin_success">登录成功</string>
     <string name="ml_signin_failed">登录失败</string>
     <string name="ml_forget_password">忘记密码</string>
-    <string name="ml_invalid_username_or_password">无效的用户名或密码，请检查</string>
+    <string name="ml_invalid_username_or_password">无效的用户名或密码</string>
     <string name="ml_username">用户名</string>
     <string name="ml_password">密码</string>
     <string name="ml_confirm_password">确认密码</string>

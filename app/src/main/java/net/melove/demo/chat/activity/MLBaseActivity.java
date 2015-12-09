@@ -17,7 +17,6 @@ public class MLBaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mActivity = this;
     }
 
     @Override
@@ -43,6 +42,7 @@ public class MLBaseActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        mActivity = this;
     }
 
     @Override
