@@ -39,7 +39,7 @@ public class MLSignupActivity extends MLBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
-        mActivity = this;
+
         init();
         initToolbar();
 
@@ -64,9 +64,8 @@ public class MLSignupActivity extends MLBaseActivity {
         mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
 
         mToolbar.setTitle(R.string.ml_signup);
-        mToolbar.setTitleTextColor(getResources().getColor(R.color.ml_white));
         setSupportActionBar(mToolbar);
-        mToolbar.setNavigationIcon(R.mipmap.icon_arrow_back_white_24dp);
+        mToolbar.setNavigationIcon(R.drawable.ic_menu_arrow);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -145,7 +144,7 @@ public class MLSignupActivity extends MLBaseActivity {
                             }
                             MLSPUtil.put(mActivity, "username", mUsername);
                             MLSPUtil.put(mActivity, "password", "");
-                            MLToast.makeToast(R.mipmap.icon_emotion_smile_24dp, res.getString(R.string.ml_signup_success)).show();
+                            MLToast.makeToast(R.mipmap.ic_emotion_smile_24dp, res.getString(R.string.ml_signup_success)).show();
                             finish();
                         }
                     });
@@ -159,13 +158,13 @@ public class MLSignupActivity extends MLBaseActivity {
                             }
                             int errorCode = e.getErrorCode();
                             if (errorCode == EMError.NONETWORK_ERROR) {
-                                MLToast.makeToast(res.getString(R.string.ml_network_anomaly)).show();
+                                MLToast.makeToast(res.getString(R.string.ml_error_network_anomaly)).show();
                             } else if (errorCode == EMError.USER_ALREADY_EXISTS) {
-                                MLToast.makeToast(res.getString(R.string.ml_user_already_exits)).show();
+                                MLToast.makeToast(res.getString(R.string.ml_error_user_already_exits)).show();
                             } else if (errorCode == EMError.UNAUTHORIZED) {
-                                MLToast.makeToast(res.getString(R.string.ml_signup_failed_unauthorized)).show();
+                                MLToast.makeToast(res.getString(R.string.ml_error_signup_failed_unauthorized)).show();
                             } else if (errorCode == EMError.ILLEGAL_USER_NAME) {
-                                MLToast.makeToast(res.getString(R.string.ml_illegal_username)).show();
+                                MLToast.makeToast(res.getString(R.string.ml_error_illegal_username)).show();
                             } else {
                                 MLToast.makeToast(res.getString(R.string.ml_signup_failed)).show();
                             }

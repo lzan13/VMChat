@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 
@@ -15,6 +16,7 @@ import com.easemob.chat.EMGroupManager;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLEasemobHelper;
+import net.melove.demo.chat.widget.MLToast;
 
 /**
  * Created by lz on 2015/12/7.
@@ -58,7 +60,7 @@ public class MLSplashActivity extends MLBaseActivity {
                     long start = System.currentTimeMillis();
                     // 加载群组到内存
                     EMGroupManager.getInstance().loadAllGroups();
-                    // 加载本地会话到内存
+                    // 加载所有本地会话到内存
                     EMChatManager.getInstance().loadAllConversations();
                     // 获取加载回话使用的时间差 毫秒表示
                     long costTime = System.currentTimeMillis() - start;
@@ -97,6 +99,7 @@ public class MLSplashActivity extends MLBaseActivity {
     private void jumpScene(Intent intent) {
         ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity);
         ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
+        mActivity.finishAfterTransition();
     }
 
     private Handler mHandler = new Handler() {
@@ -119,4 +122,13 @@ public class MLSplashActivity extends MLBaseActivity {
             }
         }
     };
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+            MLToast.makeToast("暂时不能返回哦~").show();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 }

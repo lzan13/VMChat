@@ -72,7 +72,7 @@
         <!--Toolbar字体颜色-->
         <item name="colorControlNormal">@color/ml_theme_text_primary</item>
         <item name="android:textColor">@color/ml_theme_text_primary</item>
-        <item name="android:textSize">@dimen/ml_size_24</item>
+        <item name="android:textSize">@dimen/ml_size_20</item>
     </style>
     <!--自定义 TabLayout 的字体样式-->
     <style name="MLCustomTabTextAppearance" parent="TextAppearance.Design.Tab"></style>

@@ -4,8 +4,8 @@
     tools:context="net.melove.demo.chat.activity.MLNewApplyForActivity">
     <item
         android:id="@+id/action_edit"
+        android:icon="@drawable/ic_menu_setting"
         android:orderInCategory="100"
-        android:icon="@mipmap/icon_create_white_24dp"
         android:title="@string/ml_action_settings"
         app:showAsAction="always" />
 </menu>

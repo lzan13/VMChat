@@ -8,9 +8,6 @@ import android.view.SurfaceView;
 import android.view.View;
 
 import com.easemob.chat.EMVideoCallHelper;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
 
 import net.melove.demo.chat.R;
 

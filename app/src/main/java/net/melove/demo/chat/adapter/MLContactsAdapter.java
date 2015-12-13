@@ -56,7 +56,7 @@ public class MLContactsAdapter extends BaseAdapter {
         } else {
             viewHendler = (ViewHendler) convertView.getTag();
         }
-        viewHendler.imageViewAvatar.setImageResource(R.mipmap.icon_avatar_01);
+        viewHendler.imageViewAvatar.setImageResource(R.mipmap.ic_character_blackcat);
         viewHendler.textViewUsername.setText(info.getUserName());
 
         return convertView;

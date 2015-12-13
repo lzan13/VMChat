@@ -1,18 +1,25 @@
 package net.melove.demo.chat.activity;
 
-import android.appwidget.AppWidgetProvider;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.support.v4.widget.DrawerLayout;
+import android.widget.EditText;
 
 import com.easemob.EMConnectionListener;
 import com.easemob.EMError;
@@ -39,7 +46,10 @@ public class MLMainActivity extends MLBaseActivity implements
         NavigationView.OnNavigationItemSelectedListener,
         MLBaseFragment.OnMLFragmentListener, EMEventListener {
 
+    // 记录时间（按两次返回键退出程序使用）
+    private long mTime;
 
+    // 环信事件监听接口
     private EMEventListener mEventListener;
 
     private DrawerLayout mDrawerLayout;
@@ -65,8 +75,6 @@ public class MLMainActivity extends MLBaseActivity implements
 
         init();
         initView();
-        initToolbar();
-        initDrawer();
         initFragment();
         initListener();
     }
@@ -76,6 +84,7 @@ public class MLMainActivity extends MLBaseActivity implements
      * 界面属性初始值的初始化
      */
     private void init() {
+        mActivity = this;
         mEventListener = this;
         mMenuType = 0;
         mTitle = getTitle();
@@ -88,18 +97,17 @@ public class MLMainActivity extends MLBaseActivity implements
     private void initView() {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.ml_layout_drawer);
         mNavigationView = (NavigationView) findViewById(R.id.ml_widget_navigation);
-        mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
-    }
 
-    /**
-     * 初始化Toolbar组件
-     */
-    private void initToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
-        mToolbar.setTitle(R.string.ml_chat);
+        mToolbar.setTitle(mActivity.getResources().getString(R.string.ml_chat));
         setSupportActionBar(mToolbar);
 
+        mFabBtn = (FloatingActionButton) findViewById(R.id.ml_btn_fab);
+        mFabBtn.setOnClickListener(viewListener);
+
+        initDrawer();
     }
+
 
     /**
      * 初始化侧滑抽屉，实现抽屉的监听
@@ -150,6 +158,48 @@ public class MLMainActivity extends MLBaseActivity implements
     }
 
     /**
+     * lzan13   2015-8-28
+     * 初始化界面显示的 Fragment
+     */
+    private void initFragment() {
+        // 主Activity 默认显示第一个Fragment
+        mCurrentFragment = new MLHomeFragment();
+        mToolbar.setTitle(R.string.ml_chat);
+        mFragmentTransaction = getSupportFragmentManager().beginTransaction();
+        mFragmentTransaction.replace(R.id.ml_framelayout_container, mCurrentFragment);
+        mFragmentTransaction.setCustomAnimations(R.anim.ml_anim_fade_in, R.anim.ml_anim_fade_out);
+        mFragmentTransaction.commit();
+    }
+
+    /**
+     * 初始化SDK的一些监听
+     */
+    private void initListener() {
+        // 设置添加链接监听，监测连接服务器情况
+        EMChatManager.getInstance().addConnectionListener(new MLConnectionListener());
+        // 设置添加联系人监听，监测联系人申请及联系人变化
+        EMContactManager.getInstance().setContactListener(new MLContactListener());
+
+        // 最后要通知sdk，UI 已经初始化完毕，注册了相应的listener, 可以进行消息监听了（必须调用）
+        EMChat.getInstance().setAppInited();
+    }
+
+    /**
+     * 界面控件点击事件
+     */
+    @NonNull
+    private View.OnClickListener viewListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.ml_btn_fab:
+                    createNewConversation();
+                    break;
+            }
+        }
+    };
+
+    /**
      * 侧滑导航的点击事件
      *
      * @param item
@@ -190,30 +240,31 @@ public class MLMainActivity extends MLBaseActivity implements
     }
 
     /**
-     * lzan13   2015-8-28
-     * 初始化界面显示的 Fragment
+     * 根据输入的 username 创建一个新的会话
      */
-    private void initFragment() {
-        // 主Activity 默认显示第一个Fragment
-        mCurrentFragment = new MLHomeFragment();
-        mToolbar.setTitle(mActivity.getResources().getString(R.string.ml_chat));
-        mFragmentTransaction = getSupportFragmentManager().beginTransaction();
-        mFragmentTransaction.replace(R.id.ml_framelayout_container, mCurrentFragment);
-        mFragmentTransaction.setCustomAnimations(R.anim.ml_anim_fade_in, R.anim.ml_anim_fade_out);
-        mFragmentTransaction.commit();
-    }
+    private void createNewConversation() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
+        dialog.setTitle("发起新会话");
+        dialog.setMessage("演示环信不需要互为好友就能发起会话，在下边直接输入对方环信账户进行聊天");
+        final EditText editText = new EditText(mActivity);
+        dialog.setView(editText);
+        dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent();
+                intent.setClass(mActivity, MLChatActivity.class);
+                intent.putExtra("username", editText.getText().toString().trim());
+                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, mToolbar, "toolbar");
+                ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
+            }
+        });
+        dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
 
-    /**
-     * 初始化SDK的一些监听
-     */
-    private void initListener() {
-        // 设置添加链接监听，监测连接服务器情况
-        EMChatManager.getInstance().addConnectionListener(new MLConnectionListener());
-        // 设置添加联系人监听，监测联系人申请及联系人变化
-        EMContactManager.getInstance().setContactListener(new MLContactListener());
-
-        // 最后要通知sdk，UI 已经初始化完毕，注册了相应的listener, 可以进行消息监听了（必须调用）
-        EMChat.getInstance().setAppInited();
+            }
+        });
+        dialog.show();
     }
 
 
@@ -325,6 +376,25 @@ public class MLMainActivity extends MLBaseActivity implements
     }
 
     @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+            if (mTime != 0) {
+                long time = System.currentTimeMillis() - mTime;
+                if (time > 1500) {
+                    MLToast.makeToast("重新按下 Back 键").show();
+                    mTime = System.currentTimeMillis();
+                } else {
+                    mActivity.finish();
+                }
+            } else {
+                mTime = System.currentTimeMillis();
+                MLToast.makeToast("再按退出程序").show();
+            }
+        }
+        return true;
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
     }
@@ -369,12 +439,13 @@ public class MLMainActivity extends MLBaseActivity implements
         switch (w) {
             // 系统级调用
             case 0x00:
+                // 设置当前 Toolbar title内容
                 mToolbar.setTitle(s);
                 break;
             case 0x01:
 
                 break;
-            // 侧滑调用
+            //
             case 0x10:
 
                 break;
@@ -385,11 +456,15 @@ public class MLMainActivity extends MLBaseActivity implements
 
                 break;
             case 0x13:
-                MLToast.makeToast(mActivity.getResources().getString(R.string.ml_settings)).show();
-                mMenuType = 1;
 
                 break;
-
+            // Test
+            case 0x20:
+                Intent intent = new Intent();
+                intent.setClass(mActivity, MLUserInfoActivity.class);
+                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, mToolbar, "toolbar");
+                ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
+                break;
             default:
                 MLToast.makeToast(mActivity.getResources().getString(R.string.ml_other)).show();
                 break;

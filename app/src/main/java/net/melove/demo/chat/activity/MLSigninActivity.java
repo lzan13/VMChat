@@ -1,11 +1,9 @@
 package net.melove.demo.chat.activity;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +14,7 @@ import android.widget.EditText;
 import com.easemob.EMCallBack;
 import com.easemob.EMError;
 import com.easemob.chat.EMChatManager;
+import com.easemob.chat.EMGroupManager;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLConstants;
@@ -88,9 +87,8 @@ public class MLSigninActivity extends MLBaseActivity {
         mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
 
         mToolbar.setTitle(R.string.ml_signin);
-        mToolbar.setTitleTextColor(getResources().getColor(R.color.ml_white));
+        mToolbar.setNavigationIcon(R.drawable.ic_menu_close);
         setSupportActionBar(mToolbar);
-        mToolbar.setNavigationIcon(R.mipmap.icon_close_white_24dp);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -181,8 +179,14 @@ public class MLSigninActivity extends MLBaseActivity {
                     public void run() {
                         mDialog.dismiss();
 
+                        // 登录成功，把用户名和密码保存在本地（可以不保存，根据自己的需求）
                         MLSPUtil.put(mActivity, MLConstants.ML_C_USERNAME, mUsername);
                         MLSPUtil.put(mActivity, MLConstants.ML_C_PASSWORD, mPassword);
+
+                        // 加载所有会话到内存
+                        EMChatManager.getInstance().loadAllConversations();
+                        // 加载所有群组到内存
+                        EMGroupManager.getInstance().loadAllGroups();
 
                         Intent intent = new Intent();
                         intent.setClass(mActivity, MLMainActivity.class);
@@ -208,13 +212,19 @@ public class MLSigninActivity extends MLBaseActivity {
                         MLLog.d("Error: " + i + " " + res.getString(R.string.ml_signin_failed) + s);
                         switch (i) {
                             case EMError.INVALID_PASSWORD_USERNAME:
-                                MLToast.makeToast(R.mipmap.icon_emotion_sad_24dp, res.getString(R.string.ml_invalid_username_or_password) + "(" + i + ")").show();
+                                MLToast.makeToast(R.mipmap.ic_emotion_sad_24dp, res.getString(R.string.ml_error_invalid_username_or_password) + "(" + i + ")").show();
                                 break;
                             case EMError.UNABLE_CONNECT_TO_SERVER:
-                                MLToast.makeToast(R.mipmap.icon_emotion_sad_24dp, res.getString(R.string.ml_network_anomaly) + "(" + i + ")").show();
+                                MLToast.makeToast(R.mipmap.ic_emotion_sad_24dp, res.getString(R.string.ml_error_network_anomaly) + "(" + i + ")").show();
                                 break;
                             case EMError.DNS_ERROR:
-                                MLToast.makeToast(R.mipmap.icon_emotion_sad_24dp, res.getString(R.string.ml_network_dns_error) + "(" + i + ")").show();
+                                MLToast.makeToast(R.mipmap.ic_emotion_sad_24dp, res.getString(R.string.ml_error_network_dns_error) + "(" + i + ")").show();
+                                break;
+                            case EMError.CONNECT_TIMER_OUT:
+                                MLToast.makeToast(R.mipmap.ic_emotion_sad_24dp, res.getString(R.string.ml_error_connect_time_out) + "(" + i + ")").show();
+                                break;
+                            default:
+                                MLToast.makeToast(R.mipmap.ic_emotion_sad_24dp, res.getString(R.string.ml_error_signin_error) + "(" + i + ")").show();
                                 break;
                         }
                     }
@@ -232,8 +242,7 @@ public class MLSigninActivity extends MLBaseActivity {
 
 
     private void forgetPassword() {
-        Snackbar.make(mActivity.getWindow().getDecorView(), "暂不支持找回密码", Snackbar.LENGTH_LONG).show();
-
+        MLToast.makeToast(R.mipmap.ic_emotion_sad_24dp, "暂不支持找回密码").show();
     }
 
     @Override

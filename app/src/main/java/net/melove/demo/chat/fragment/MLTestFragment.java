@@ -2,8 +2,11 @@ package net.melove.demo.chat.fragment;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +14,13 @@ import android.view.ViewGroup;
 import com.easemob.EMCallBack;
 
 import net.melove.demo.chat.R;
+import net.melove.demo.chat.activity.MLMainActivity;
+import net.melove.demo.chat.activity.MLUserInfoActivity;
 import net.melove.demo.chat.activity.MLVideoCallActivity;
 import net.melove.demo.chat.application.MLEasemobHelper;
+import net.melove.demo.chat.info.MLUserInfo;
 import net.melove.demo.chat.test.MLTestActivity;
+import net.melove.demo.chat.util.MLLog;
 
 /**
  * 测试Fragment，
@@ -30,6 +37,7 @@ public class MLTestFragment extends MLBaseFragment {
     private String mParam1;
     private String mParam2;
 
+    private OnMLFragmentListener mListener;
 
     /**
      * 使用这个工厂方法创建一个新的实例
@@ -101,6 +109,16 @@ public class MLTestFragment extends MLBaseFragment {
         });
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mListener = (OnMLFragmentListener) context;
+        } catch (ClassCastException e) {
+            MLLog.e("必须实现Fragment的回调接口！");
+            e.printStackTrace();
+        }
+    }
 
     private View.OnClickListener viewListener = new View.OnClickListener() {
         @Override
@@ -110,9 +128,7 @@ public class MLTestFragment extends MLBaseFragment {
                     signOut();
                     break;
                 case R.id.ml_btn_jump_test:
-                    Intent intent = new Intent();
-                    intent.setClass(mActivity, MLVideoCallActivity.class);
-                    mActivity.startActivity(intent);
+                    mListener.onFragmentClick(0x20, 0x00, null);
                     break;
             }
         }

@@ -2,9 +2,9 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_focused="true">
         <layer-list>
-            <item >
+            <item>
                 <shape android:dither="true">
-                    <solid android:color="@color/ml_border_red" />
+                    <solid android:color="@color/ml_theme_accent" />
                 </shape>
             </item>
             <item android:bottom="@dimen/ml_dimen_1">

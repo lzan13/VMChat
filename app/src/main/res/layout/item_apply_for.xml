@@ -15,7 +15,7 @@
         android:layout_height="@dimen/ml_dimen_48"
         android:layout_alignParentLeft="true"
         android:layout_margin="@dimen/ml_dimen_4"
-        android:src="@mipmap/icon_avatar_06"
+        android:src="@mipmap/ic_character_blackcat"
         melove:shape_type="round" />
 
     <LinearLayout

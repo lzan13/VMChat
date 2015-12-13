@@ -9,9 +9,10 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/ml_layout_appbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
+        android:layout_height="@dimen/ml_dimen_56"
+        android:fitsSystemWindows="false"
         android:theme="@style/MLTheme.AppBarOverlay">
+
         <!--主界面 Toolbar-->
         <android.support.v7.widget.Toolbar
             android:id="@+id/ml_widget_toolbar"
@@ -19,6 +20,8 @@
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
             android:minHeight="?attr/actionBarSize"
+            android:popupTheme="@style/MLTheme.PupopMenu"
+            android:theme="@style/MLTheme.Toolbar"
             android:transitionName="toolbar">
 
         </android.support.v7.widget.Toolbar>
@@ -38,5 +41,5 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/ml_dimen_16"
-        android:src="@mipmap/icon_create_white_24dp" />
+        android:src="@drawable/ic_menu_add" />
 </android.support.design.widget.CoordinatorLayout>

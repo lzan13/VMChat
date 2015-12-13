@@ -1,15 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:fitsSystemWindows="false"
+    android:orientation="vertical"
+    tools:Content=".activity.MLSigninActivity">
 
-    <include layout="@layout/widget_toolbar_communal" />
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/ml_layout_appbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/ml_dimen_56"
+        android:theme="@style/MLTheme.AppBarOverlay">
+
+        <!--公共的 Toolbar 控件-->
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/ml_widget_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="@style/MLTheme.Toolbar"
+            android:transitionName="toolbar" />
+    </android.support.design.widget.AppBarLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/ml_dimen_16">
+        android:layout_margin="@dimen/ml_dimen_16"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:id="@+id/layout_login_form"
@@ -53,8 +73,9 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/ml_dimen_48"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/ml_dimen_16"
+                android:gravity="center"
                 android:orientation="vertical">
 
                 <Button
@@ -65,6 +86,14 @@
                     android:text="@string/ml_signup"
                     android:textColor="@color/ml_text_white"
                     android:textSize="@dimen/ml_size_18" />
+
+                <CheckBox
+                    android:id="@+id/ml_checkbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/ml_dimen_24"
+                    android:text="New CheckBox" />
 
             </LinearLayout>
 
@@ -83,4 +112,4 @@
                 android:text="@string/ml_copy_right" />
         </LinearLayout>
     </RelativeLayout>
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>
