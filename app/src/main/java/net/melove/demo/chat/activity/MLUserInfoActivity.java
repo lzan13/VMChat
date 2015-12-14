@@ -6,16 +6,11 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.easemob.chat.EMContactManager;
 import com.easemob.exceptions.EaseMobException;
 
 import net.melove.demo.chat.R;
-import net.melove.demo.chat.db.MLUserDao;
-import net.melove.demo.chat.info.MLUserInfo;
-import net.melove.demo.chat.widget.MLImageView;
 import net.melove.demo.chat.widget.MLToast;
 
 /**

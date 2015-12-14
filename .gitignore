@@ -4,5 +4,6 @@
 /.idea/libraries
 .DS_Store
 /app/build
+/app/app.iml
 /build
 /captures

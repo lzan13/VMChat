@@ -1,25 +1,17 @@
 package net.melove.demo.chat.fragment;
 
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.easemob.EMCallBack;
+import com.easemob.chat.EMChatManager;
 
 import net.melove.demo.chat.R;
-import net.melove.demo.chat.activity.MLMainActivity;
-import net.melove.demo.chat.activity.MLUserInfoActivity;
-import net.melove.demo.chat.activity.MLVideoCallActivity;
 import net.melove.demo.chat.application.MLEasemobHelper;
-import net.melove.demo.chat.info.MLUserInfo;
-import net.melove.demo.chat.test.MLTestActivity;
 import net.melove.demo.chat.util.MLLog;
 
 /**
@@ -30,27 +22,18 @@ import net.melove.demo.chat.util.MLLog;
  */
 public class MLTestFragment extends MLBaseFragment {
 
-    private Activity mActivity;
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    private String mParam1;
-    private String mParam2;
+    private Context mContext;
 
     private OnMLFragmentListener mListener;
 
     /**
      * 使用这个工厂方法创建一个新的实例
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return 一个新的Fragment MLTestFragment.
      */
-    public static MLTestFragment newInstance(String param1, String param2) {
+    public static MLTestFragment newInstance() {
         MLTestFragment fragment = new MLTestFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,10 +45,6 @@ public class MLTestFragment extends MLBaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -77,11 +56,12 @@ public class MLTestFragment extends MLBaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mActivity = getParentFragment().getActivity();
+        mContext = getParentFragment().getActivity();
         init();
     }
 
     private void init() {
+        getView().findViewById(R.id.ml_btn_test_delete_conversation).setOnClickListener(viewListener);
         getView().findViewById(R.id.ml_btn_signout).setOnClickListener(viewListener);
         getView().findViewById(R.id.ml_btn_jump_test).setOnClickListener(viewListener);
     }
@@ -94,7 +74,7 @@ public class MLTestFragment extends MLBaseFragment {
         MLEasemobHelper.getInstance().signOut(new EMCallBack() {
             @Override
             public void onSuccess() {
-                mActivity.finish();
+                mListener.onFragmentClick(0x00, 0x01, null);
             }
 
             @Override
@@ -129,6 +109,9 @@ public class MLTestFragment extends MLBaseFragment {
                     break;
                 case R.id.ml_btn_jump_test:
                     mListener.onFragmentClick(0x20, 0x00, null);
+                    break;
+                case R.id.ml_btn_test_delete_conversation:
+                    EMChatManager.getInstance().deleteConversation("lz0");
                     break;
             }
         }

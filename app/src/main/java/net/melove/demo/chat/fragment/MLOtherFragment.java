@@ -1,6 +1,7 @@
 package net.melove.demo.chat.fragment;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -15,18 +16,12 @@ import net.melove.demo.chat.R;
  * create an instance of this fragment.
  */
 public class MLOtherFragment extends MLBaseFragment {
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    private String mParam1;
-    private String mParam2;
+    private Context mContext;
 
-
-    public static MLOtherFragment newInstance(String param1, String param2) {
+    public static MLOtherFragment newInstance() {
         MLOtherFragment fragment = new MLOtherFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -38,10 +33,6 @@ public class MLOtherFragment extends MLBaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -51,5 +42,10 @@ public class MLOtherFragment extends MLBaseFragment {
         return inflater.inflate(R.layout.fragment_other, container, false);
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mContext = getParentFragment().getActivity();
+    }
 
 }

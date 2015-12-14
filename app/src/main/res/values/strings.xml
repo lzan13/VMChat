@@ -62,7 +62,6 @@
 
     <string name="ml_new_contact">新的朋友</string>
 
-    <string name="ml_drift_bottle">漂流瓶</string>
     <string name="ml_group">群组</string>
     <string name="ml_group_chat">群聊</string>
     <string name="ml_room">聊天室</string>
@@ -91,16 +90,6 @@
     <string name="ml_nickname">昵称</string>
     <string name="ml_signature">签名</string>
     <string name="ml_signature_null">无个性不签名</string>
-
-
-    <string name="ml_error_connect_time_out">链接超时，请检查网络</string>
-    <string name="ml_error_illegal_username">非法的用户名</string>
-    <string name="ml_error_invalid_username_or_password">无效的用户名或密码</string>
-    <string name="ml_error_network_anomaly">网络异常，请检查网络设置</string>
-    <string name="ml_error_network_dns_error">DNS错误，请检查网络本地设置</string>
-    <string name="ml_error_signup_failed_unauthorized">注册失败，未授权注册</string>
-    <string name="ml_error_user_already_exits">用户已经存在</string>
-    <string name="ml_error_signin_error">登陆错误</string>
 
     <string name="ml_load_data">加载资源</string>
 
@@ -137,5 +126,16 @@
     <string name="ml_hint_password">密码</string>
 
     <!--Error 文字内容-->
+    <string name="ml_error_connect_time_out">链接超时，请检查网络</string>
     <string name="ml_error_field_required">此项是必须的</string>
+    <string name="ml_error_illegal_username">非法的用户名</string>
+    <string name="ml_error_invalid_username_or_password">无效的用户名或密码</string>
+    <string name="ml_error_network_anomaly">网络异常，请检查网络设置</string>
+    <string name="ml_error_network_dns_error">DNS错误，请检查网络本地设置</string>
+    <string name="ml_error_signin_error">登陆错误</string>
+    <string name="ml_error_signup_failed_unauthorized">注册失败，未授权注册</string>
+    <string name="ml_error_user_already_exits">用户已经存在</string>
+
+
+
 </resources>

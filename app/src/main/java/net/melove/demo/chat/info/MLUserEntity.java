@@ -2,8 +2,9 @@ package net.melove.demo.chat.info;
 
 /**
  * Created by lzan13 on 2015/7/21.
+ * 用户信息实体类
  */
-public class MLUserInfo {
+public class MLUserEntity {
 
     public String header;
     public String userName;
@@ -121,10 +122,10 @@ public class MLUserInfo {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || o instanceof MLUserInfo) {
+        if (o == null || o instanceof MLUserEntity) {
             return false;
         }
-        return userName.equals(((MLUserInfo) o).getUserName());
+        return userName.equals(((MLUserEntity) o).getUserName());
     }
 
     @Override

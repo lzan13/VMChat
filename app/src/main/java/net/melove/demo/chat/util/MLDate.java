@@ -28,6 +28,7 @@ public class MLDate {
 
     /**
      * 将给定的字符串型时间格式化为另一种样式
+     *
      * @param dateStr
      * @return
      */
@@ -39,6 +40,11 @@ public class MLDate {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static String formatDate(long time) {
+        Date date = new Date(time);
+        return sdp1.format(date);
     }
 
 

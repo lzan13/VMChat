@@ -19,11 +19,8 @@ import net.melove.demo.chat.util.MLLog;
  */
 public class MLHomeFragment extends MLBaseFragment {
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private Context mContext;
 
-    private String mParam1;
-    private String mParam2;
 
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
@@ -39,15 +36,11 @@ public class MLHomeFragment extends MLBaseFragment {
     /**
      * 工厂方法，用来创建一个Fragment的实例
      *
-     * @param param1
-     * @param param2
      * @return MLSingleFragment
      */
-    public static MLHomeFragment newInstance(String param1, String param2) {
+    public static MLHomeFragment newInstance() {
         MLHomeFragment fragment = new MLHomeFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -59,10 +52,6 @@ public class MLHomeFragment extends MLBaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -73,6 +62,7 @@ public class MLHomeFragment extends MLBaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mContext = getActivity();
         init();
         initView();
 
@@ -86,9 +76,9 @@ public class MLHomeFragment extends MLBaseFragment {
         mTabLayout = (TabLayout) getView().findViewById(R.id.ml_widget_tablayout);
         mViewPager = (ViewPager) getView().findViewById(R.id.ml_view_viewpager);
 
-        mMLContactsFragment = MLContactsFragment.newInstance("", "");
-        mMLConversationFragment = MLConversationsFragment.newInstance("", "");
-        mMLTestFragment = MLTestFragment.newInstance("", "");
+        mMLContactsFragment = MLContactsFragment.newInstance();
+        mMLConversationFragment = MLConversationsFragment.newInstance();
+        mMLTestFragment = MLTestFragment.newInstance();
 
         mFragments = new Fragment[]{mMLConversationFragment, mMLContactsFragment, mMLTestFragment};
         MLViewPagerAdapter adapter = new MLViewPagerAdapter(getChildFragmentManager(), mFragments, mTabTitles);

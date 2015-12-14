@@ -5,7 +5,7 @@
     tools:context="net.melove.demo.chat.fragment.MLConversationsFragment">
 
     <ListView
-        android:id="@+id/ml_list_applyfor"
+        android:id="@+id/ml_listview_conversation"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipChildren="false"

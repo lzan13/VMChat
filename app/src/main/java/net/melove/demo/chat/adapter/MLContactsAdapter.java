@@ -5,12 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.TextView;
 
 import net.melove.demo.chat.R;
-import net.melove.demo.chat.info.MLApplyForInfo;
-import net.melove.demo.chat.info.MLUserInfo;
+import net.melove.demo.chat.info.MLUserEntity;
 import net.melove.demo.chat.widget.MLImageView;
 
 import java.util.List;
@@ -22,10 +20,10 @@ public class MLContactsAdapter extends BaseAdapter {
 
     private Context mContext;
     private LayoutInflater mInflater;
-    private List<MLUserInfo> mList;
+    private List<MLUserEntity> mList;
 
 
-    public MLContactsAdapter(Context context, List<MLUserInfo> list) {
+    public MLContactsAdapter(Context context, List<MLUserEntity> list) {
         mContext = context;
         mList = list;
     }
@@ -48,7 +46,7 @@ public class MLContactsAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHendler viewHendler = null;
-        MLUserInfo info = (MLUserInfo) getItem(position);
+        MLUserEntity info = (MLUserEntity) getItem(position);
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.item_contact, null);
             viewHendler = new ViewHendler(convertView);

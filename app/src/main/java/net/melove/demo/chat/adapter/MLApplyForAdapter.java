@@ -12,7 +12,7 @@ import com.easemob.chat.EMChatManager;
 import com.easemob.exceptions.EaseMobException;
 
 import net.melove.demo.chat.R;
-import net.melove.demo.chat.info.MLApplyForInfo;
+import net.melove.demo.chat.info.MLApplyForEntity;
 import net.melove.demo.chat.widget.MLImageView;
 import net.melove.demo.chat.widget.MLToast;
 
@@ -26,10 +26,10 @@ public class MLApplyForAdapter extends BaseAdapter implements View.OnClickListen
 
     private Context mContext;
     private LayoutInflater mInflater;
-    private List<MLApplyForInfo> mList;
+    private List<MLApplyForEntity> mList;
 
 
-    public MLApplyForAdapter(Context context, List<MLApplyForInfo> list) {
+    public MLApplyForAdapter(Context context, List<MLApplyForEntity> list) {
         mContext = context;
         mList = list;
         mInflater = LayoutInflater.from(mContext);
@@ -53,7 +53,7 @@ public class MLApplyForAdapter extends BaseAdapter implements View.OnClickListen
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHandler viewHandler = null;
-        MLApplyForInfo info = (MLApplyForInfo) getItem(position);
+        MLApplyForEntity info = (MLApplyForEntity) getItem(position);
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.item_apply_for, null);
             viewHandler = new ViewHandler(convertView);
@@ -64,32 +64,32 @@ public class MLApplyForAdapter extends BaseAdapter implements View.OnClickListen
         viewHandler.imageViewAvatar.setImageResource(R.mipmap.ic_character_blackcat);
         viewHandler.textViewUsername.setText(info.getUserName());
         viewHandler.textViewReason.setText(info.getReason());
-        if (info.getStatus() == MLApplyForInfo.ApplyForStatus.AGREED) {
+        if (info.getStatus() == MLApplyForEntity.ApplyForStatus.AGREED) {
             viewHandler.textViewStatus.setText("agreed");
             viewHandler.textViewStatus.setVisibility(View.VISIBLE);
             viewHandler.btnAgree.setVisibility(View.GONE);
             viewHandler.btnRefuse.setVisibility(View.GONE);
-        } else if (info.getStatus() == MLApplyForInfo.ApplyForStatus.REFUSED) {
+        } else if (info.getStatus() == MLApplyForEntity.ApplyForStatus.REFUSED) {
             viewHandler.textViewStatus.setText("refused");
             viewHandler.textViewStatus.setVisibility(View.VISIBLE);
             viewHandler.btnAgree.setVisibility(View.GONE);
             viewHandler.btnRefuse.setVisibility(View.GONE);
-        } else if (info.getStatus() == MLApplyForInfo.ApplyForStatus.BEAGREED) {
+        } else if (info.getStatus() == MLApplyForEntity.ApplyForStatus.BEAGREED) {
             viewHandler.textViewStatus.setText("be agreed");
             viewHandler.textViewStatus.setVisibility(View.VISIBLE);
             viewHandler.btnAgree.setVisibility(View.GONE);
             viewHandler.btnRefuse.setVisibility(View.GONE);
-        } else if (info.getStatus() == MLApplyForInfo.ApplyForStatus.BEREFUSED) {
+        } else if (info.getStatus() == MLApplyForEntity.ApplyForStatus.BEREFUSED) {
             viewHandler.textViewStatus.setText("be refused");
             viewHandler.textViewStatus.setVisibility(View.VISIBLE);
             viewHandler.btnAgree.setVisibility(View.GONE);
             viewHandler.btnRefuse.setVisibility(View.GONE);
-        } else if (info.getStatus() == MLApplyForInfo.ApplyForStatus.BEAPPLYFOR) {
+        } else if (info.getStatus() == MLApplyForEntity.ApplyForStatus.BEAPPLYFOR) {
             viewHandler.textViewStatus.setText("be apply for");
             viewHandler.textViewStatus.setVisibility(View.GONE);
             viewHandler.btnAgree.setVisibility(View.VISIBLE);
             viewHandler.btnRefuse.setVisibility(View.VISIBLE);
-        } else if (info.getStatus() == MLApplyForInfo.ApplyForStatus.GROUPAPPLYFOR) {
+        } else if (info.getStatus() == MLApplyForEntity.ApplyForStatus.GROUPAPPLYFOR) {
             viewHandler.textViewStatus.setText("Agreed");
         }
         viewHandler.btnAgree.setTag(position);
@@ -105,7 +105,7 @@ public class MLApplyForAdapter extends BaseAdapter implements View.OnClickListen
      */
     private void agreeApplyFor(int position) {
         MLToast.makeToast("agree apply for").show();
-        final MLApplyForInfo info = (MLApplyForInfo) getItem(position);
+        final MLApplyForEntity info = (MLApplyForEntity) getItem(position);
         new Thread(new Runnable() {
             @Override
             public void run() {

@@ -7,12 +7,10 @@ import android.text.TextUtils;
 
 import com.easemob.util.HanziToPinyin;
 
-import net.melove.demo.chat.info.MLUserInfo;
+import net.melove.demo.chat.info.MLUserEntity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by lzan13 on 2015/7/21.
@@ -29,7 +27,7 @@ public class MLUserDao {
      *
      * @param userInfo
      */
-    public synchronized void saveContacts(MLUserInfo userInfo) {
+    public synchronized void saveContacts(MLUserEntity userInfo) {
         ContentValues values = new ContentValues();
         values.put(MLDBConstants.COL_USER_NAME, userInfo.getUserName());
         values.put(MLDBConstants.COL_NICKNAME, userInfo.getNickName());
@@ -61,7 +59,7 @@ public class MLUserDao {
      *
      * @param userInfo
      */
-    public synchronized void updateContacts(MLUserInfo userInfo) {
+    public synchronized void updateContacts(MLUserEntity userInfo) {
         ContentValues values = new ContentValues();
         values.put(MLDBConstants.COL_USER_NAME, userInfo.getUserName());
         values.put(MLDBConstants.COL_NICKNAME, userInfo.getNickName());
@@ -85,8 +83,8 @@ public class MLUserDao {
      *
      * @param userInfoList
      */
-    public synchronized void saveContactsList(List<MLUserInfo> userInfoList) {
-        for (MLUserInfo userInfo : userInfoList) {
+    public synchronized void saveContactsList(List<MLUserEntity> userInfoList) {
+        for (MLUserEntity userInfo : userInfoList) {
             saveContacts(userInfo);
         }
     }
@@ -98,8 +96,8 @@ public class MLUserDao {
      * @param username
      * @return
      */
-    public synchronized MLUserInfo getContact(String username) {
-        MLUserInfo userinfo = new MLUserInfo();
+    public synchronized MLUserEntity getContact(String username) {
+        MLUserEntity userinfo = new MLUserEntity();
         String selection = MLDBConstants.COL_USER_NAME + "=?";
         String args[] = new String[]{username};
         Cursor cursor = MLDBManager.getInstance().queryData(MLDBConstants.TB_USER, null, selection, args, null, null, null, null);
@@ -113,13 +111,13 @@ public class MLUserDao {
      *
      * @return
      */
-    public synchronized List<MLUserInfo> getContactList() {
+    public synchronized List<MLUserEntity> getContactList() {
         Cursor cursor = MLDBManager.getInstance().queryData(MLDBConstants.TB_USER,
                 null, null, null, null, null, null, null);
 
-        List<MLUserInfo> users = new ArrayList<MLUserInfo>();
+        List<MLUserEntity> users = new ArrayList<MLUserEntity>();
         while (cursor.moveToNext()) {
-            MLUserInfo userInfo = new MLUserInfo();
+            MLUserEntity userInfo = new MLUserEntity();
             String username = cursor.getString(cursor.getColumnIndex(MLDBConstants.COL_USER_NAME));
             String nickname = cursor.getString(cursor.getColumnIndex(MLDBConstants.COL_NICKNAME));
             String email = cursor.getString(cursor.getColumnIndex(MLDBConstants.COL_EMAIL));

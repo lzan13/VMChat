@@ -2,8 +2,9 @@ package net.melove.demo.chat.info;
 
 /**
  * Created by lzan13 on 2015/7/21.
+ * 好友申请实体类
  */
-public class MLApplyForInfo {
+public class MLApplyForEntity {
 
     public String userName;
     public String nickName;

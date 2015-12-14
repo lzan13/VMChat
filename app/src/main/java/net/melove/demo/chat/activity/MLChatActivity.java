@@ -206,6 +206,7 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
     @Override
     protected void onResume() {
         super.onResume();
+        // 注册环信的消息监听器
         EMNotifierEvent.Event[] events = {
                 EMNotifierEvent.Event.EventNewMessage,
                 EMNotifierEvent.Event.EventNewCMDMessage,

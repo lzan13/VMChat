@@ -1,14 +1,17 @@
 package net.melove.demo.chat.adapter;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.easemob.chat.EMChatManager;
-import com.easemob.chat.EMConversation;
+import net.melove.demo.chat.R;
+import net.melove.demo.chat.info.MLConversationEntity;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * Created by lz on 2015/12/13.
@@ -16,23 +19,21 @@ import java.util.Map;
 public class MLConversationAdapter extends BaseAdapter {
 
     private Context mContext;
+    private List<MLConversationEntity> mList;
 
-    private Map<String, EMConversation> mConversationMap;
-
-    public MLConversationAdapter(Context context) {
+    public MLConversationAdapter(Context context, List<MLConversationEntity> list) {
         mContext = context;
-        mConversationMap = EMChatManager.getInstance().getAllConversations();
-
+        mList = list;
     }
 
     @Override
     public int getCount() {
-        return 0;
+        return mList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return mList.get(position);
     }
 
     @Override
@@ -42,6 +43,40 @@ public class MLConversationAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        return null;
+
+        ViewHolder viewHolder = null;
+        MLConversationEntity conversation = (MLConversationEntity) getItem(position);
+
+        if (convertView == null) {
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_conversation, null);
+            viewHolder = new ViewHolder(convertView);
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
+        }
+
+        viewHolder.mUsernameView.setText(conversation.getNick());
+        viewHolder.mContentView.setText(conversation.getContent());
+        viewHolder.mTimeView.setText(conversation.getTime());
+        viewHolder.mCountView.setText(String.valueOf(conversation.getCount()));
+        return convertView;
     }
+
+    class ViewHolder {
+        public ImageView mAvatarView;
+        public TextView mUsernameView;
+        public TextView mContentView;
+        public TextView mTimeView;
+        public TextView mCountView;
+
+        public ViewHolder(View view) {
+            mAvatarView = (ImageView) view.findViewById(R.id.ml_img_conversation_avatar);
+            mUsernameView = (TextView) view.findViewById(R.id.ml_text_conversation_username);
+            mContentView = (TextView) view.findViewById(R.id.ml_text_conversation_content);
+            mTimeView = (TextView) view.findViewById(R.id.ml_text_conversation_time);
+            mCountView = (TextView) view.findViewById(R.id.ml_text_conversation_count);
+        }
+    }
+
+
 }

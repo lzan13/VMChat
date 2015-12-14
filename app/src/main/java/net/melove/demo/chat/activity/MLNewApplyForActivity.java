@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,8 +15,7 @@ import android.widget.ListView;
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.adapter.MLApplyForAdapter;
 import net.melove.demo.chat.db.MLApplyForDao;
-import net.melove.demo.chat.info.MLApplyForInfo;
-import net.melove.demo.chat.info.MLUserInfo;
+import net.melove.demo.chat.info.MLApplyForEntity;
 import net.melove.demo.chat.widget.MLToast;
 
 import java.util.List;
@@ -36,7 +34,7 @@ public class MLNewApplyForActivity extends MLBaseActivity {
     private Button mBtnSearch;
 
     private MLApplyForDao mApplyForDao;
-    private List<MLApplyForInfo> mList;
+    private List<MLApplyForEntity> mList;
     private MLApplyForAdapter mApplyForAdapter;
 
     public MLNewApplyForActivity() {
@@ -100,7 +98,7 @@ public class MLNewApplyForActivity extends MLBaseActivity {
         String username = mEditText.getText().toString().trim();
 
         if (username.isEmpty()) {
-            MLToast.makeToast(mActivity.getResources().getString(R.string.ml_username_cannot_to_empty)).show();
+            MLToast.makeToast(mActivity.getResources().getString(R.string.ml_error_field_required)).show();
             mEditText.requestFocus();
             return;
         }

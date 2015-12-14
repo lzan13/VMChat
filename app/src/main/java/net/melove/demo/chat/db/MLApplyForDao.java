@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.text.TextUtils;
 
-import net.melove.demo.chat.info.MLApplyForInfo;
+import net.melove.demo.chat.info.MLApplyForEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ public class MLApplyForDao {
      *
      * @param applyForInfo
      */
-    public synchronized void saveApplyFor(MLApplyForInfo applyForInfo) {
+    public synchronized void saveApplyFor(MLApplyForEntity applyForInfo) {
         ContentValues values = new ContentValues();
         values.put(MLDBConstants.COL_USER_NAME, applyForInfo.getUserName());
         values.put(MLDBConstants.COL_NICKNAME, applyForInfo.getNickName());
@@ -56,7 +56,7 @@ public class MLApplyForDao {
      *
      * @param applyForInfo
      */
-    public synchronized void updateApplyFor(MLApplyForInfo applyForInfo) {
+    public synchronized void updateApplyFor(MLApplyForEntity applyForInfo) {
         ContentValues values = new ContentValues();
         values.put(MLDBConstants.COL_USER_NAME, applyForInfo.getUserName());
         values.put(MLDBConstants.COL_NICKNAME, applyForInfo.getNickName());
@@ -77,13 +77,13 @@ public class MLApplyForDao {
      *
      * @return
      */
-    public synchronized List<MLApplyForInfo> getApplyForList() {
+    public synchronized List<MLApplyForEntity> getApplyForList() {
         Cursor cursor = MLDBManager.getInstance().queryData(
                 MLDBConstants.TB_APPLY_FOR, null, null, null, null, null, null, null);
 
-        List<MLApplyForInfo> applyForInfos = new ArrayList<MLApplyForInfo>();
+        List<MLApplyForEntity> applyForInfos = new ArrayList<MLApplyForEntity>();
         while (cursor.moveToNext()) {
-            MLApplyForInfo applyForInfo = new MLApplyForInfo();
+            MLApplyForEntity applyForInfo = new MLApplyForEntity();
             String username = cursor.getString(cursor.getColumnIndex(MLDBConstants.COL_USER_NAME));
             String nickname = cursor.getString(cursor.getColumnIndex(MLDBConstants.COL_NICKNAME));
             String groupId = cursor.getString(cursor.getColumnIndex(MLDBConstants.COL_GROUP_ID));
@@ -100,18 +100,18 @@ public class MLApplyForDao {
             applyForInfo.setGroupId(groupId);
             applyForInfo.setGroupName(groupName);
             applyForInfo.setReason(reason);
-            if (status == MLApplyForInfo.ApplyForStatus.AGREED.ordinal()) {
-                applyForInfo.setStatus(MLApplyForInfo.ApplyForStatus.AGREED);
-            } else if (status == MLApplyForInfo.ApplyForStatus.REFUSED.ordinal()) {
-                applyForInfo.setStatus(MLApplyForInfo.ApplyForStatus.REFUSED);
-            } else if (status == MLApplyForInfo.ApplyForStatus.BEAGREED.ordinal()) {
-                applyForInfo.setStatus(MLApplyForInfo.ApplyForStatus.BEAGREED);
-            } else if (status == MLApplyForInfo.ApplyForStatus.BEREFUSED.ordinal()) {
-                applyForInfo.setStatus(MLApplyForInfo.ApplyForStatus.BEREFUSED);
-            } else if (status == MLApplyForInfo.ApplyForStatus.BEAPPLYFOR.ordinal()) {
-                applyForInfo.setStatus(MLApplyForInfo.ApplyForStatus.BEAPPLYFOR);
-            } else if (status == MLApplyForInfo.ApplyForStatus.GROUPAPPLYFOR.ordinal()) {
-                applyForInfo.setStatus(MLApplyForInfo.ApplyForStatus.GROUPAPPLYFOR);
+            if (status == MLApplyForEntity.ApplyForStatus.AGREED.ordinal()) {
+                applyForInfo.setStatus(MLApplyForEntity.ApplyForStatus.AGREED);
+            } else if (status == MLApplyForEntity.ApplyForStatus.REFUSED.ordinal()) {
+                applyForInfo.setStatus(MLApplyForEntity.ApplyForStatus.REFUSED);
+            } else if (status == MLApplyForEntity.ApplyForStatus.BEAGREED.ordinal()) {
+                applyForInfo.setStatus(MLApplyForEntity.ApplyForStatus.BEAGREED);
+            } else if (status == MLApplyForEntity.ApplyForStatus.BEREFUSED.ordinal()) {
+                applyForInfo.setStatus(MLApplyForEntity.ApplyForStatus.BEREFUSED);
+            } else if (status == MLApplyForEntity.ApplyForStatus.BEAPPLYFOR.ordinal()) {
+                applyForInfo.setStatus(MLApplyForEntity.ApplyForStatus.BEAPPLYFOR);
+            } else if (status == MLApplyForEntity.ApplyForStatus.GROUPAPPLYFOR.ordinal()) {
+                applyForInfo.setStatus(MLApplyForEntity.ApplyForStatus.GROUPAPPLYFOR);
             }
             applyForInfo.setTime(Long.valueOf(time));
             applyForInfos.add(applyForInfo);

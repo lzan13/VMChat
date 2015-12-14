@@ -163,7 +163,7 @@ public class MLMainActivity extends MLBaseActivity implements
      */
     private void initFragment() {
         // 主Activity 默认显示第一个Fragment
-        mCurrentFragment = new MLHomeFragment();
+        mCurrentFragment = MLHomeFragment.newInstance();
         mToolbar.setTitle(R.string.ml_chat);
         mFragmentTransaction = getSupportFragmentManager().beginTransaction();
         mFragmentTransaction.replace(R.id.ml_framelayout_container, mCurrentFragment);
@@ -284,6 +284,10 @@ public class MLMainActivity extends MLBaseActivity implements
                 break;
             case EventOfflineMessage:
 
+                break;
+            case EventConversationListChanged:
+                MLLog.i("有新的会话");
+                MLToast.makeToast("有新的会话").show();
                 break;
             default:
 
@@ -409,11 +413,12 @@ public class MLMainActivity extends MLBaseActivity implements
         super.onResume();
         // 定义要监听的消息类型
         EMNotifierEvent.Event[] events = new EMNotifierEvent.Event[]{
-                EMNotifierEvent.Event.EventDeliveryAck,     //已发送回执event注册
-                EMNotifierEvent.Event.EventNewCMDMessage,   //接收透传event注册
-                EMNotifierEvent.Event.EventNewMessage,      //接收新消息event注册
-                EMNotifierEvent.Event.EventOfflineMessage,  //接收离线消息event注册
-                EMNotifierEvent.Event.EventReadAck          //已读回执event注册
+                EMNotifierEvent.Event.EventConversationListChanged, // 会话列表改变
+                EMNotifierEvent.Event.EventDeliveryAck,     // 已发送回执event注册
+                EMNotifierEvent.Event.EventNewCMDMessage,   // 接收透传event注册
+                EMNotifierEvent.Event.EventNewMessage,      // 接收新消息event注册
+                EMNotifierEvent.Event.EventOfflineMessage,  // 接收离线消息event注册
+                EMNotifierEvent.Event.EventReadAck          // 已读回执event注册
         };
         // 注册消息监听
         EMChatManager.getInstance().registerEventListener(mEventListener, events);
@@ -443,7 +448,7 @@ public class MLMainActivity extends MLBaseActivity implements
                 mToolbar.setTitle(s);
                 break;
             case 0x01:
-
+                mActivity.finish();
                 break;
             //
             case 0x10:

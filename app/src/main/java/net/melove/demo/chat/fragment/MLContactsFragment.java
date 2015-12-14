@@ -1,8 +1,7 @@
 package net.melove.demo.chat.fragment;
 
 
-import android.app.Activity;
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,10 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import net.melove.demo.chat.R;
-import net.melove.demo.chat.activity.MLNewApplyForActivity;
 import net.melove.demo.chat.adapter.MLContactsAdapter;
 import net.melove.demo.chat.db.MLUserDao;
-import net.melove.demo.chat.info.MLUserInfo;
+import net.melove.demo.chat.info.MLUserEntity;
 
 import java.util.List;
 
@@ -25,7 +23,7 @@ import java.util.List;
  */
 public class MLContactsFragment extends MLBaseFragment {
 
-    private Activity mActivity;
+    private Context mContext;
 
     private ListView mListView;
     private View mHeadView;
@@ -33,25 +31,15 @@ public class MLContactsFragment extends MLBaseFragment {
 
     private MLUserDao mUserDao;
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    private String mParam1;
-    private String mParam2;
-
 
     /**
      * 工厂方法，用来创建一个Fragment的实例
      *
-     * @param param1
-     * @param param2
      * @return MLSingleContactsFragment
      */
-    public static MLContactsFragment newInstance(String param1, String param2) {
+    public static MLContactsFragment newInstance() {
         MLContactsFragment fragment = new MLContactsFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -63,10 +51,7 @@ public class MLContactsFragment extends MLBaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
     }
 
     @Override
@@ -78,17 +63,17 @@ public class MLContactsFragment extends MLBaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mActivity = getParentFragment().getActivity();
+        mContext = getParentFragment().getActivity();
 
         init();
 
     }
 
     private void init() {
-        mUserDao = new MLUserDao(mActivity);
+        mUserDao = new MLUserDao(mContext);
 
-        List<MLUserInfo> list = mUserDao.getContactList();
-        mContactsAdapter = new MLContactsAdapter(mActivity, list);
+        List<MLUserEntity> list = mUserDao.getContactList();
+        mContactsAdapter = new MLContactsAdapter(mContext, list);
         mListView = (ListView) getView().findViewById(R.id.ml_list_contacts);
 
         mListView.setAdapter(mContactsAdapter);
