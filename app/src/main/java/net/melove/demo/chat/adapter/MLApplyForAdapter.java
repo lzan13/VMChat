@@ -61,7 +61,7 @@ public class MLApplyForAdapter extends BaseAdapter implements View.OnClickListen
         } else {
             viewHandler = (ViewHandler) convertView.getTag();
         }
-        viewHandler.imageViewAvatar.setImageResource(R.mipmap.icon_avatar_01);
+        viewHandler.imageViewAvatar.setImageResource(R.mipmap.ic_character_blackcat);
         viewHandler.textViewUsername.setText(info.getUserName());
         viewHandler.textViewReason.setText(info.getReason());
         if (info.getStatus() == MLApplyForInfo.ApplyForStatus.AGREED) {

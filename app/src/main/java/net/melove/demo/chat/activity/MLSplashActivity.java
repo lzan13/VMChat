@@ -1,7 +1,13 @@
 package net.melove.demo.chat.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 
@@ -10,6 +16,7 @@ import com.easemob.chat.EMGroupManager;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLEasemobHelper;
+import net.melove.demo.chat.widget.MLToast;
 
 /**
  * Created by lz on 2015/12/7.
@@ -53,7 +60,7 @@ public class MLSplashActivity extends MLBaseActivity {
                     long start = System.currentTimeMillis();
                     // 加载群组到内存
                     EMGroupManager.getInstance().loadAllGroups();
-                    // 加载本地会话到内存
+                    // 加载所有本地会话到内存
                     EMChatManager.getInstance().loadAllConversations();
                     // 获取加载回话使用的时间差 毫秒表示
                     long costTime = System.currentTimeMillis() - start;
@@ -65,7 +72,9 @@ public class MLSplashActivity extends MLBaseActivity {
                         }
                     }
                     // 进入主页面
-                    startActivity(new Intent(mActivity, MLMainActivity.class));
+                    Message msg = mHandler.obtainMessage();
+                    msg.what = 0;
+                    msg.sendToTarget();
                 } else {
                     try {
                         // 初始化数据
@@ -76,10 +85,50 @@ public class MLSplashActivity extends MLBaseActivity {
                         e.printStackTrace();
                     }
                     // 跳转到登录界面
-                    startActivity(new Intent(mActivity, MLSigninActivity.class));
+                    Message msg = mHandler.obtainMessage();
+                    msg.what = 1;
+                    msg.sendToTarget();
                 }
-                finish();
             }
         }).start();
+    }
+
+    /**
+     * 跳转场景
+     */
+    private void jumpScene(Intent intent) {
+        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity);
+        ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
+        mActivity.finishAfterTransition();
+    }
+
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            int w = msg.what;
+            Intent intent = new Intent();
+            switch (w) {
+                case 0:
+                    intent.setClass(mActivity, MLMainActivity.class);
+                    jumpScene(intent);
+                    break;
+                case 1:
+                    intent.setClass(mActivity, MLSigninActivity.class);
+                    jumpScene(intent);
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+            MLToast.makeToast("暂时不能返回哦~").show();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

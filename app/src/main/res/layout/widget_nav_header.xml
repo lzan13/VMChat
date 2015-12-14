@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/navigation_header_vertical_spacing"
-            android:src="@mipmap/icon_avatar_02" />
+            android:src="@mipmap/ic_character_blackcat" />
 
         <TextView
             android:id="@+id/ml_text_nav_username"

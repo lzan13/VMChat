@@ -4,12 +4,10 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.easemob.EMError;
 import com.easemob.chat.EMChatManager;
@@ -30,12 +28,10 @@ public class MLSignupActivity extends MLBaseActivity {
 
     private ProgressDialog mDialog;
 
-    private EditText mUsernameEdit;
-    private EditText mPasswordEdit;
-    private EditText mConfirmPasswordEdit;
+    private EditText mUsernameView;
+    private EditText mPasswordView;
     private String mUsername;
     private String mPassword;
-    private String mConfirmPassword;
 
     private View mSignupBtn;
 
@@ -43,7 +39,7 @@ public class MLSignupActivity extends MLBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
-        mActivity = this;
+
         init();
         initToolbar();
 
@@ -52,9 +48,8 @@ public class MLSignupActivity extends MLBaseActivity {
     private void init() {
         mActivity = this;
 
-        mUsernameEdit = (EditText) findViewById(R.id.ml_edit_username);
-        mPasswordEdit = (EditText) findViewById(R.id.ml_edit_password);
-        mConfirmPasswordEdit = (EditText) findViewById(R.id.ml_edit_confirm_password);
+        mUsernameView = (EditText) findViewById(R.id.ml_edit_signup_username);
+        mPasswordView = (EditText) findViewById(R.id.ml_edit_signup_password);
 
         mSignupBtn = findViewById(R.id.ml_btn_signup);
         mSignupBtn.setOnClickListener(viewListener);
@@ -69,13 +64,12 @@ public class MLSignupActivity extends MLBaseActivity {
         mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
 
         mToolbar.setTitle(R.string.ml_signup);
-        mToolbar.setTitleTextColor(getResources().getColor(R.color.ml_white));
         setSupportActionBar(mToolbar);
-        mToolbar.setNavigationIcon(R.mipmap.icon_arrow_back_white_24dp);
+        mToolbar.setNavigationIcon(R.drawable.ic_menu_arrow);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mActivity.finish();
+                mActivity.finishAfterTransition();
             }
         });
     }
@@ -85,7 +79,7 @@ public class MLSignupActivity extends MLBaseActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.ml_btn_signup:
-                    signup();
+                    attemptSignup();
                     break;
                 default:
                     break;
@@ -93,31 +87,47 @@ public class MLSignupActivity extends MLBaseActivity {
         }
     };
 
+    /**
+     * 检测登陆，主要先判断是否满足登陆条件
+     */
+    private void attemptSignup() {
+
+        // 重置错误
+        mUsernameView.setError(null);
+        mPasswordView.setError(null);
+
+        mUsername = mUsernameView.getText().toString().toLowerCase().trim();
+        mPassword = mPasswordView.getText().toString().toLowerCase().trim();
+
+        boolean cancel = false;
+        View focusView = null;
+
+        // 检查密码是否为空
+        if (TextUtils.isEmpty(mPassword)) {
+            mPasswordView.setError(getString(R.string.ml_error_field_required));
+            focusView = mPasswordView;
+            cancel = true;
+        }
+
+        // 检查username是否为空
+        if (TextUtils.isEmpty(mUsername)) {
+            mUsernameView.setError(getString(R.string.ml_error_field_required));
+            focusView = mUsernameView;
+            cancel = true;
+        }
+
+        if (cancel) {
+            focusView.requestFocus();
+        } else {
+            signup();
+        }
+    }
+
+    /**
+     * 注册方法
+     */
     private void signup() {
         final Resources res = mActivity.getResources();
-        mUsername = mUsernameEdit.getText().toString().toLowerCase().trim();
-        mPassword = mPasswordEdit.getText().toString().toLowerCase().trim();
-        mConfirmPassword = mConfirmPasswordEdit.getText().toString().toLowerCase().trim();
-        if (TextUtils.isEmpty(mUsername)) {
-            MLToast.makeToast(res.getString(R.string.ml_username_cannot_to_empty)).show();
-            mUsernameEdit.requestFocus();
-            return;
-        }
-        if (TextUtils.isEmpty(mPassword)) {
-            MLToast.makeToast(res.getString(R.string.ml_password_cannot_to_empty)).show();
-            mPasswordEdit.requestFocus();
-            return;
-        }
-        if (TextUtils.isEmpty(mConfirmPassword)) {
-            MLToast.makeToast(res.getString(R.string.ml_cannot_to_empty)).show();
-            mConfirmPasswordEdit.requestFocus();
-            return;
-        }
-        if (!mPassword.equals(mConfirmPassword)) {
-            MLToast.makeToast(res.getString(R.string.ml_please_confirm_password)).show();
-            mConfirmPasswordEdit.requestFocus();
-            return;
-        }
         mDialog = new ProgressDialog(mActivity);
         mDialog.setMessage(res.getString(R.string.ml_signup_begin));
         mDialog.show();
@@ -134,7 +144,7 @@ public class MLSignupActivity extends MLBaseActivity {
                             }
                             MLSPUtil.put(mActivity, "username", mUsername);
                             MLSPUtil.put(mActivity, "password", "");
-                            MLToast.makeToast(R.mipmap.icon_emotion_smile_24dp, res.getString(R.string.ml_signup_success)).show();
+                            MLToast.makeToast(R.mipmap.ic_emotion_smile_24dp, res.getString(R.string.ml_signup_success)).show();
                             finish();
                         }
                     });
@@ -148,13 +158,13 @@ public class MLSignupActivity extends MLBaseActivity {
                             }
                             int errorCode = e.getErrorCode();
                             if (errorCode == EMError.NONETWORK_ERROR) {
-                                MLToast.makeToast(res.getString(R.string.ml_network_anomaly)).show();
+                                MLToast.makeToast(res.getString(R.string.ml_error_network_anomaly)).show();
                             } else if (errorCode == EMError.USER_ALREADY_EXISTS) {
-                                MLToast.makeToast(res.getString(R.string.ml_user_already_exits)).show();
+                                MLToast.makeToast(res.getString(R.string.ml_error_user_already_exits)).show();
                             } else if (errorCode == EMError.UNAUTHORIZED) {
-                                MLToast.makeToast(res.getString(R.string.ml_signup_failed_unauthorized)).show();
+                                MLToast.makeToast(res.getString(R.string.ml_error_signup_failed_unauthorized)).show();
                             } else if (errorCode == EMError.ILLEGAL_USER_NAME) {
-                                MLToast.makeToast(res.getString(R.string.ml_illegal_username)).show();
+                                MLToast.makeToast(res.getString(R.string.ml_error_illegal_username)).show();
                             } else {
                                 MLToast.makeToast(res.getString(R.string.ml_signup_failed)).show();
                             }

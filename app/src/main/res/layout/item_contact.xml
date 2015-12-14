@@ -11,7 +11,7 @@
         android:layout_height="@dimen/ml_dimen_48"
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/ml_dimen_8"
-        android:src="@mipmap/icon_avatar_default"
+        android:src="@mipmap/ic_character_blackcat"
         melove:border_color="@color/ml_border_gray"
         melove:border_width="@dimen/ml_dimen_1"
         melove:shape_type="round" />

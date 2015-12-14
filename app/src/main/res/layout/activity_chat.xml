@@ -4,135 +4,124 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/widget_appbar_main" />
+    <include layout="@layout/widget_toolbar_communal" />
 
-    <!--聊天输入部分布局-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/ml_chat_input_layout"
+            android:id="@+id/ml_layout_chat_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@color/ml_bg_gray_white"
+            android:elevation="@dimen/ml_dimen_4"
             android:orientation="vertical">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/ml_dimen_0_5"
-                android:background="@color/ml_bg_view_divider" />
             <!--输入条布局-->
             <RelativeLayout
-                android:id="@+id/ml_chat_input_top_bar"
+                android:id="@+id/ml_layout_chat_input_top_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/ml_dimen_8"
-                android:layout_marginRight="@dimen/ml_dimen_8"
+                android:background="@color/ml_theme_background_primary"
+                android:elevation="@dimen/ml_dimen_4"
                 android:minHeight="@dimen/ml_dimen_48">
-                <!--发送按钮部分-->
+
                 <RelativeLayout
-                    android:id="@+id/ml_chat_input_top_bar_right"
+                    android:id="@+id/ml_layout_chat_input_bar_right"
                     android:layout_width="@dimen/ml_dimen_48"
-                    android:layout_height="@dimen/ml_dimen_36"
+                    android:layout_height="@dimen/ml_dimen_48"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/ml_dimen_8">
+                    android:layout_centerVertical="true">
 
-                    <Button
-                        android:id="@+id/ml_btn_chat_send"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/ml_shape_btn_rectangle_blue"
-                        android:text="@string/ml_send"
-                        android:textColor="@color/ml_text_white"
-                        android:textSize="@dimen/ml_size_16" />
+                    <!--语音按钮-->
 
-                    <LinearLayout
-                        android:id="@+id/ml_btn_chat_voice"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/ml_shape_btn_rectangle_white"
-                        android:gravity="center"
-                        android:visibility="gone">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@mipmap/icon_voice_36"
-                            android:visibility="gone" />
-                    </LinearLayout>
+                    <ImageView
+                        android:id="@+id/ml_img_chat_voice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/ic_keyboard_voice"
+                        android:tint="@color/ml_theme_accent" />
+                    <!--发送按钮-->
+                    <ImageView
+                        android:id="@+id/ml_img_chat_send"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/ic_keyboard_send"
+                        android:tint="@color/ml_theme_accent"
+                        android:visibility="gone" />
 
                 </RelativeLayout>
                 <!--表情按钮-->
-                <RadioButton
-                    android:id="@+id/ml_btn_chat_emotion"
-                    android:layout_width="@dimen/ml_dimen_36"
-                    android:layout_height="@dimen/ml_dimen_36"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="@dimen/ml_dimen_4"
-                    android:background="@null"
-                    android:button="@null"
-                    android:drawableLeft="@drawable/ml_btn_emotion" />
+                <RelativeLayout
+                    android:id="@+id/ml_layout_chat_input_bar_left"
+                    android:layout_width="@dimen/ml_dimen_48"
+                    android:layout_height="@dimen/ml_dimen_48">
+
+                    <ImageView
+                        android:id="@+id/ml_img_chat_emotion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/ic_keyboard_face"
+                        android:tint="@color/ml_theme_accent" />
+
+                    <ImageView
+                        android:id="@+id/ml_img_chat_keyboard"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/ic_keyboard_keyboard"
+                        android:tint="@color/ml_theme_accent"
+                        android:visibility="gone" />
+                </RelativeLayout>
                 <!--输入框-->
                 <EditText
                     android:id="@+id/ml_edit_chat_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginBottom="@dimen/ml_dimen_4"
-                    android:layout_marginTop="@dimen/ml_dimen_4"
-                    android:layout_toLeftOf="@id/ml_chat_input_top_bar_right"
-                    android:layout_toRightOf="@id/ml_btn_chat_emotion"
-                    android:background="@drawable/ml_shape_edit_line"
+                    android:layout_toLeftOf="@id/ml_layout_chat_input_bar_right"
+                    android:layout_toRightOf="@id/ml_layout_chat_input_bar_left"
+                    android:background="@null"
                     android:hint="@string/ml_chat"
                     android:maxLines="3"
-                    android:minHeight="@dimen/ml_dimen_36"
-                    android:paddingLeft="@dimen/ml_dimen_8"
-                    android:paddingRight="@dimen/ml_dimen_8"
+                    android:paddingBottom="@dimen/ml_dimen_8"
+                    android:paddingTop="@dimen/ml_dimen_8"
                     android:textColor="@color/ml_text_block"
                     android:textColorHint="@color/ml_text_hint_gray"
                     android:textSize="@dimen/ml_size_16" />
 
             </RelativeLayout>
 
-            <!--聊天表情布局-->
+            <!--聊天表情框-->
             <RelativeLayout
-                android:id="@+id/ml_chat_input_emotion_layout"
+                android:id="@+id/ml_layout_chat_input_emotion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:minHeight="@dimen/ml_dimen_144"
                 android:visibility="gone">
 
-                <TextView
+                <GridView
+                    android:id="@+id/ml_gridview_caht_input_emotion"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:text="@string/ml_test_text" />
+                    android:layout_height="wrap_content">
+
+                </GridView>
             </RelativeLayout>
 
-
-            <!--聊天功能选择布局-->
-            <RelativeLayout
-                android:id="@+id/ml_chat_input_action_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:text="@string/ml_app_name"
-                    android:visibility="gone" />
-            </RelativeLayout>
         </LinearLayout>
 
-        <ListView
-            android:id="@+id/ml_chat_listview"
+        <!--聊天消息显示控件 ListView-->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/ml_recyclerview_message_listview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/ml_chat_input_layout"
+            android:layout_above="@id/ml_layout_chat_input"
             android:layout_alignParentTop="true">
 
-        </ListView>
+        </android.support.v7.widget.RecyclerView>
     </RelativeLayout>
 
 </LinearLayout>

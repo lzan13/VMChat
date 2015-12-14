@@ -64,7 +64,7 @@ public class MLNewApplyForActivity extends MLBaseActivity {
         mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
         mToolbar.setTitle(R.string.ml_apply_for);
         mToolbar.setTitleTextColor(getResources().getColor(R.color.ml_white));
-        mToolbar.setNavigationIcon(R.mipmap.icon_arrow_back_white_24dp);
+        mToolbar.setNavigationIcon(R.drawable.ic_menu_arrow);
         setSupportActionBar(mToolbar);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 //        mToolbar.setNavigationOnClickListener(viewListener);

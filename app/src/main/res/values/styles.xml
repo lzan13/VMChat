@@ -9,8 +9,6 @@
         <!--各控件激活时的颜色，一般是 CheckBox、EditText、Switch、Spinner、RadioButton 等控件激活的颜色-->
         <item name="colorAccent">@color/ml_theme_accent</item>
 
-        <!--<item name="android:textColorPrimary">@color/ml_theme_text_primary</item>-->
-
         <!--设置主题不需要ActionBar-->
         <item name="windowActionBar">false</item>
         <!--设置主题不需要Title-->
@@ -19,11 +17,15 @@
         <!--menu anim style-->
         <item name="drawerArrowStyle">@style/MLTheme.DrawerArrowToggle</item>
 
-        <item name="android:toolbarStyle">@style/MLTheme.Toolbar</item>
+        <!--设置 Toolbar 样式-->
+        <item name="toolbarStyle">@style/MLTheme.Toolbar</item>
+        <!--设置弹出菜单 PopupMenu 样式-->
+        <item name="popupMenuStyle">@style/MLTheme.PupopMenu</item>
+
     </style>
 
     <!--默认主题-->
-    <style name="MLTheme.Default">
+    <style name="MLTheme.Default" parent="MLTheme">
         <!--定义Activity切换动画-->
         <!--<item name="android:windowAnimationStyle">@style/AnimSlide</item>-->
     </style>
@@ -40,36 +42,37 @@
         <item name="android:windowExitAnimation">@anim/ml_anim_toast_out</item>
     </style>
 
-    <!--<style name="AnimFade" parent="@android:style/Animation.Activity">-->
-    <!--<item name="android:activityOpenEnterAnimation">@anim/ml_anim_fade_in</item>-->
-    <!--<item name="android:activityOpenExitAnimation">@anim/ml_anim_fade_out</item>-->
-    <!--<item name="android:activityCloseEnterAnimation">@anim/ml_anim_fade_in</item>-->
-    <!--<item name="android:activityCloseExitAnimation">@anim/ml_anim_fade_out</item>-->
-    <!--</style>-->
+    <style name="AnimFade" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/ml_anim_fade_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/ml_anim_fade_out</item>
+        <item name="android:activityCloseEnterAnimation">@anim/ml_anim_fade_in</item>
+        <item name="android:activityCloseExitAnimation">@anim/ml_anim_fade_out</item>
+    </style>
 
-    <!--<style name="AnimSlide" parent="@android:style/Animation">-->
-    <!--<item name="android:activityOpenEnterAnimation">@anim/ml_anim_slide_right_in</item>-->
-    <!--<item name="android:activityOpenExitAnimation">@anim/ml_anim_slide_left_out</item>-->
-    <!--<item name="android:activityCloseEnterAnimation">@anim/ml_anim_slide_left_in</item>-->
-    <!--<item name="android:activityCloseExitAnimation">@anim/ml_anim_slide_right_out</item>-->
-    <!--</style>-->
+    <style name="AnimSlide" parent="@android:style/Animation">
+        <item name="android:activityOpenEnterAnimation">@anim/ml_anim_slide_right_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/ml_anim_slide_left_out</item>
+        <item name="android:activityCloseEnterAnimation">@anim/ml_anim_slide_left_in</item>
+        <item name="android:activityCloseExitAnimation">@anim/ml_anim_slide_right_out</item>
+    </style>
 
     <!--自定 AppBar样式-->
     <style name="MLTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:textColor">@color/ml_text_white</item>
     </style>
 
-    <style name="MLTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
     <!--自定 Toolbar 弹出 PopupMenu 样式-->
     <style name="MLTheme.PupopMenu" parent="@style/ThemeOverlay.AppCompat">
         <item name="android:colorBackground">#ffffff</item>
         <item name="android:textColor">#232323</item>
     </style>
 
+    <!--自定义 Toolbar 样式-->
     <style name="MLTheme.Toolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <!--Toolbar字体颜色-->
         <item name="colorControlNormal">@color/ml_theme_text_primary</item>
         <item name="android:textColor">@color/ml_theme_text_primary</item>
+        <item name="android:textSize">@dimen/ml_size_20</item>
     </style>
     <!--自定义 TabLayout 的字体样式-->
     <style name="MLCustomTabTextAppearance" parent="TextAppearance.Design.Tab"></style>

@@ -20,18 +20,27 @@ import net.melove.demo.chat.R;
 
 /**
  * Created by Administrator on 2015/4/30.
+ * 自定义 ImageView 控件，实现了圆角和边框，以及按下变色
  */
 public class MLImageView extends ImageView {
+    // 图片按下的画笔
     private Paint mPressPaint;
 
+    // 图片的宽高
     private int mWidth;
     private int mHeight;
 
+    // 边框宽度
     private int mBorderWidth;
+    // 边框颜色
     private int mBorderColor;
+    // 按下的透明度
     private int mPressAlpha;
+    // 按下的颜色
     private int mPressColor;
+    // 圆角半径
     private int mRadius;
+    // 图片类型（矩形，圆形）
     private int mShapeType;
 
     public MLImageView(Context context) {
@@ -106,6 +115,7 @@ public class MLImageView extends ImageView {
 
     /**
      * 实现圆角的绘制
+     *
      * @param canvas
      * @param bitmap
      */
@@ -154,13 +164,14 @@ public class MLImageView extends ImageView {
 
     /**
      * 绘制按下效果
+     *
      * @param canvas
      */
     private void drawPress(Canvas canvas) {
 
-        if(mShapeType == 0){
-            canvas.drawCircle(mWidth/2, mHeight/2, mWidth/2, mPressPaint);
-        }else if (mShapeType == 1) {
+        if (mShapeType == 0) {
+            canvas.drawCircle(mWidth / 2, mHeight / 2, mWidth / 2, mPressPaint);
+        } else if (mShapeType == 1) {
             RectF rectF = new RectF(0, 0, mWidth, mHeight);
             canvas.drawRoundRect(rectF, mRadius, mRadius, mPressPaint);
         }
@@ -168,10 +179,11 @@ public class MLImageView extends ImageView {
 
     /**
      * 绘制边框
+     *
      * @param canvas
      */
-    private void drawBorder(Canvas canvas){
-        if(mBorderWidth > 0){
+    private void drawBorder(Canvas canvas) {
+        if (mBorderWidth > 0) {
             Paint paint = new Paint();
             paint.setStrokeWidth(mBorderWidth);
             paint.setStyle(Paint.Style.STROKE);
