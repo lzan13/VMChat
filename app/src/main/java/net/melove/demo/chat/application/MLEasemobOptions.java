@@ -5,15 +5,14 @@ import com.easemob.chat.EMChatOptions;
 
 /**
  * by lzan13 on 2015/7/13.
- * 环信SDK初始化设置类，进行一些初始化的设置
+ * SDK初始化设置类
  */
 public class MLEasemobOptions {
 
     /**
-     * 初始化一些配置
+     * 环信SDK的一些初始化设置
      */
     public void initOption() {
-
         EMChatOptions options = EMChatManager.getInstance().getChatOptions();
         // 设置是否需要发送已读回执
         options.setRequireAck(true);

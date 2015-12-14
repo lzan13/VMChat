@@ -11,14 +11,15 @@ import android.view.ViewGroup;
 import com.easemob.EMCallBack;
 
 import net.melove.demo.chat.R;
-import net.melove.demo.chat.activity.MLChatActivity;
+import net.melove.demo.chat.activity.MLVideoCallActivity;
 import net.melove.demo.chat.application.MLEasemobHelper;
+import net.melove.demo.chat.test.MLTestActivity;
 
 /**
  * 测试Fragment，
  * 继承自自定义的MLBaseFramgnet类，为了减少代码量，在MLBaseFrament类中定义接口回调
  * 包含此Fragment的活动窗口必须实现{@link MLBaseFragment.OnMLFragmentListener}接口,
- * 定义创建实例的工厂方法 {@link MLDrawerFragment#newInstance}，可使用此方法创建实例
+ * 定义创建实例的工厂方法 {@link MLTestFragment#newInstance}，可使用此方法创建实例
  */
 public class MLTestFragment extends MLBaseFragment {
 
@@ -110,7 +111,7 @@ public class MLTestFragment extends MLBaseFragment {
                     break;
                 case R.id.ml_btn_jump_test:
                     Intent intent = new Intent();
-                    intent.setClass(mActivity, MLChatActivity.class);
+                    intent.setClass(mActivity, MLVideoCallActivity.class);
                     mActivity.startActivity(intent);
                     break;
             }

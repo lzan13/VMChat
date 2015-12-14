@@ -1,36 +1,35 @@
 <resources>
+    <!-- 应用基础主题 -->
+    <style name="MLTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- 在这里自定义自己的主题 -->
+        <!-- 默认主要颜色，一般是 Toolbar 等颜色 -->
+        <item name="colorPrimary">@color/ml_theme_primary</item>
+        <!-- 深一些的主要色，一般是状态栏等颜色 -->
+        <item name="colorPrimaryDark">@color/ml_theme_primary_dark</item>
+        <!--各控件激活时的颜色，一般是 CheckBox、EditText、Switch、Spinner、RadioButton 等控件激活的颜色-->
+        <item name="colorAccent">@color/ml_theme_accent</item>
 
-    <!-- Base application theme. -->
-    <style name="MLTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- toolbar background color-->
-        <item name="colorPrimary">@color/ml_primary</item>
-        <!--status bar color-->
-        <item name="colorPrimaryDark">@color/ml_primary_light</item>
-        <item name="android:windowBackground">@color/ml_bg_gray_white</item>
+        <!--<item name="android:textColorPrimary">@color/ml_theme_text_primary</item>-->
 
-        <!--定义Activity切换动画-->
-        <item name="android:windowAnimationStyle">@style/AnimSlide</item>
+        <!--设置主题不需要ActionBar-->
+        <item name="windowActionBar">false</item>
+        <!--设置主题不需要Title-->
+        <item name="windowNoTitle">true</item>
+
         <!--menu anim style-->
         <item name="drawerArrowStyle">@style/MLTheme.DrawerArrowToggle</item>
 
-        <!-- colorAccent is used as the default value for colorControlActivated, which is used to tint widgets -->
-        <!--<item name="colorAccent">@color/ml_accent_1</item>-->
-
-        <!--自定义搜索样式-->
-        <item name="searchViewStyle">@style/MLSearchViewStyle</item>
+        <item name="android:toolbarStyle">@style/MLTheme.Toolbar</item>
     </style>
 
-    <style name="MLTheme.Red" parent="MLTheme.Base">
-        <item name="android:windowAnimationStyle">@style/AnimSlide</item>
-
+    <!--默认主题-->
+    <style name="MLTheme.Default">
+        <!--定义Activity切换动画-->
+        <!--<item name="android:windowAnimationStyle">@style/AnimSlide</item>-->
     </style>
 
-    <!--搜索栏样式-->
-    <style name="MLSearchViewStyle" parent="Widget.AppCompat.SearchView">
 
-    </style>
-
-    <!-- 箭头颜色 -->
+    <!-- 侧滑抽屉切换图标样式 -->
     <style name="MLTheme.DrawerArrowToggle" parent="Base.Widget.AppCompat.DrawerArrowToggle">
         <item name="color">@color/ml_white</item>
     </style>
@@ -41,19 +40,37 @@
         <item name="android:windowExitAnimation">@anim/ml_anim_toast_out</item>
     </style>
 
-    <style name="AnimFade" parent="@android:style/Animation.Activity">
-        <item name="android:activityOpenEnterAnimation">@anim/ml_anim_fade_in</item>
-        <item name="android:activityOpenExitAnimation">@anim/ml_anim_fade_out</item>
-        <item name="android:activityCloseEnterAnimation">@anim/ml_anim_fade_in</item>
-        <item name="android:activityCloseExitAnimation">@anim/ml_anim_fade_out</item>
+    <!--<style name="AnimFade" parent="@android:style/Animation.Activity">-->
+    <!--<item name="android:activityOpenEnterAnimation">@anim/ml_anim_fade_in</item>-->
+    <!--<item name="android:activityOpenExitAnimation">@anim/ml_anim_fade_out</item>-->
+    <!--<item name="android:activityCloseEnterAnimation">@anim/ml_anim_fade_in</item>-->
+    <!--<item name="android:activityCloseExitAnimation">@anim/ml_anim_fade_out</item>-->
+    <!--</style>-->
+
+    <!--<style name="AnimSlide" parent="@android:style/Animation">-->
+    <!--<item name="android:activityOpenEnterAnimation">@anim/ml_anim_slide_right_in</item>-->
+    <!--<item name="android:activityOpenExitAnimation">@anim/ml_anim_slide_left_out</item>-->
+    <!--<item name="android:activityCloseEnterAnimation">@anim/ml_anim_slide_left_in</item>-->
+    <!--<item name="android:activityCloseExitAnimation">@anim/ml_anim_slide_right_out</item>-->
+    <!--</style>-->
+
+    <!--自定 AppBar样式-->
+    <style name="MLTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColor">@color/ml_text_white</item>
     </style>
 
-    <style name="AnimSlide" parent="@android:style/Animation">
-        <item name="android:activityOpenEnterAnimation">@anim/ml_anim_slide_right_in</item>
-        <item name="android:activityOpenExitAnimation">@anim/ml_anim_slide_left_out</item>
-        <item name="android:activityCloseEnterAnimation">@anim/ml_anim_slide_left_in</item>
-        <item name="android:activityCloseExitAnimation">@anim/ml_anim_slide_right_out</item>
+    <style name="MLTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <!--自定 Toolbar 弹出 PopupMenu 样式-->
+    <style name="MLTheme.PupopMenu" parent="@style/ThemeOverlay.AppCompat">
+        <item name="android:colorBackground">#ffffff</item>
+        <item name="android:textColor">#232323</item>
     </style>
 
-
+    <style name="MLTheme.Toolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <!--Toolbar字体颜色-->
+        <item name="colorControlNormal">@color/ml_theme_text_primary</item>
+        <item name="android:textColor">@color/ml_theme_text_primary</item>
+    </style>
+    <!--自定义 TabLayout 的字体样式-->
+    <style name="MLCustomTabTextAppearance" parent="TextAppearance.Design.Tab"></style>
 </resources>

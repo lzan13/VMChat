@@ -15,20 +15,4 @@
         </attr>
     </declare-styleable>
 
-    <declare-styleable name="MLPagerSlidingTab">
-        <attr name="indicator_color" format="color" />
-        <attr name="underline_color" format="color" />
-        <attr name="divider_color" format="color" />
-        <attr name="indicator_height" format="dimension" />
-        <attr name="underline_height" format="dimension" />
-        <attr name="divider_padding" format="dimension" />
-        <attr name="horizontal_padding" format="dimension" />
-        <attr name="scroll_offset" format="dimension" />
-        <attr name="tab_background" format="reference" />
-        <attr name="should_expand" format="boolean" />
-        <attr name="tab_text_all_caps" format="boolean" />
-        <attr name="tab_text_color" format="color" />
-        <attr name="tab_text_selected_color" format="color" />
-        <attr name="tab_text_size" format="dimension" />
-    </declare-styleable>
 </resources>

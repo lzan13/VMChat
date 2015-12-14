@@ -5,7 +5,7 @@
     android:background="@color/ml_bg_gray_white"
     android:orientation="vertical">
 
-    <include layout="@layout/widget_toolbar_layout" />
+    <include layout="@layout/widget_appbar_main" />
 
     <LinearLayout
         android:layout_width="match_parent"

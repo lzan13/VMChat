@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.Toolbar;
@@ -32,8 +33,8 @@ public class MLSigninActivity extends MLBaseActivity {
 
     private ProgressDialog mDialog;
 
-    private EditText mUsernameEdit;
-    private EditText mPasswordEdit;
+    private EditText mUsernameView;
+    private EditText mPasswordView;
     private String mUsername;
     private String mPassword;
 
@@ -57,21 +58,19 @@ public class MLSigninActivity extends MLBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        initView();
+        init();
     }
 
-    /**
-     * 控件初始化
-     */
-    private void initView() {
+
+    private void init() {
         mActivity = this;
 
         mUsername = (String) MLSPUtil.get(mActivity, "username", "");
         mPassword = (String) MLSPUtil.get(mActivity, "password", "");
-        mUsernameEdit = (EditText) findViewById(R.id.ml_edit_username);
-        mPasswordEdit = (EditText) findViewById(R.id.ml_edit_password);
-        mUsernameEdit.setText(mUsername);
-        mPasswordEdit.setText(mPassword);
+        mUsernameView = (EditText) findViewById(R.id.ml_edit_login_username);
+        mPasswordView = (EditText) findViewById(R.id.ml_edit_login_password);
+        mUsernameView.setText(mUsername);
+        mPasswordView.setText(mPassword);
 
         mSigninBtn = findViewById(R.id.ml_btn_signin);
         mSignupBtn = findViewById(R.id.ml_btn_signup);
@@ -103,14 +102,14 @@ public class MLSigninActivity extends MLBaseActivity {
     }
 
     /**
-     * 按钮点击监听
+     * 界面内控件的点击事件监听器
      */
     private View.OnClickListener viewListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.ml_btn_signin:
-                    signin();
+                    attemptLogin();
                     break;
                 case R.id.ml_btn_signup:
                     Intent intent = new Intent();
@@ -120,12 +119,47 @@ public class MLSigninActivity extends MLBaseActivity {
                     ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
                     break;
                 case R.id.ml_btn_forget_password:
-
+                    forgetPassword();
                     break;
             }
         }
     };
 
+    /**
+     * 检测登陆，主要先判断是否满足登陆条件
+     */
+    private void attemptLogin() {
+
+        // 重置错误
+        mUsernameView.setError(null);
+        mPasswordView.setError(null);
+
+        mUsername = mUsernameView.getText().toString().toLowerCase().trim();
+        mPassword = mPasswordView.getText().toString().toLowerCase().trim();
+
+        boolean cancel = false;
+        View focusView = null;
+
+        // 检查密码是否为空
+        if (TextUtils.isEmpty(mPassword)) {
+            mPasswordView.setError(getString(R.string.ml_error_field_required));
+            focusView = mPasswordView;
+            cancel = true;
+        }
+
+        // 检查username是否为空
+        if (TextUtils.isEmpty(mUsername)) {
+            mUsernameView.setError(getString(R.string.ml_error_field_required));
+            focusView = mUsernameView;
+            cancel = true;
+        }
+
+        if (cancel) {
+            focusView.requestFocus();
+        } else {
+            signin();
+        }
+    }
 
     /**
      * by lzan13 2015-10-2 18:03:53
@@ -133,18 +167,6 @@ public class MLSigninActivity extends MLBaseActivity {
      */
     private void signin() {
         final Resources res = mActivity.getResources();
-        mUsername = mUsernameEdit.getText().toString().toLowerCase().trim();
-        mPassword = mPasswordEdit.getText().toString().toLowerCase().trim();
-        if (TextUtils.isEmpty(mUsername)) {
-            MLToast.makeToast(res.getString(R.string.ml_username_cannot_to_empty)).show();
-            mUsernameEdit.requestFocus();
-            return;
-        }
-        if (TextUtils.isEmpty(mPassword)) {
-            MLToast.makeToast(res.getString(R.string.ml_password_cannot_to_empty)).show();
-            mPasswordEdit.requestFocus();
-            return;
-        }
 
         mDialog = new ProgressDialog(mActivity);
         mDialog.setMessage(res.getString(R.string.ml_signin_begin));
@@ -212,10 +234,8 @@ public class MLSigninActivity extends MLBaseActivity {
     }
 
 
-    /**
-     * 忘记密码
-     */
     private void forgetPassword() {
+        Snackbar.make(mActivity.getWindow().getDecorView(), "暂不支持找回密码", Snackbar.LENGTH_LONG).show();
 
     }
 

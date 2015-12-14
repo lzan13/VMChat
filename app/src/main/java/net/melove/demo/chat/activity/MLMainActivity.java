@@ -1,22 +1,18 @@
 package net.melove.demo.chat.activity;
 
-import android.app.Activity;
-import android.content.Intent;
+import android.appwidget.AppWidgetProvider;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.support.v4.widget.DrawerLayout;
-import android.widget.ImageView;
 
 import com.easemob.EMConnectionListener;
 import com.easemob.EMError;
@@ -27,13 +23,10 @@ import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMContactListener;
 import com.easemob.chat.EMContactManager;
 
-import net.melove.demo.chat.db.MLApplyForDao;
-import net.melove.demo.chat.fragment.MLBaseFragment;
-import net.melove.demo.chat.fragment.MLDrawerFragment;
 import net.melove.demo.chat.R;
-import net.melove.demo.chat.fragment.MLChatFragment;
+import net.melove.demo.chat.fragment.MLBaseFragment;
+import net.melove.demo.chat.fragment.MLHomeFragment;
 import net.melove.demo.chat.fragment.MLOtherFragment;
-import net.melove.demo.chat.info.MLApplyForInfo;
 import net.melove.demo.chat.util.MLLog;
 import net.melove.demo.chat.widget.MLToast;
 
@@ -42,26 +35,22 @@ import java.util.List;
 /**
  * Created by lzan13 on 2015/7/2.
  */
-public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnMLFragmentListener, EMEventListener {
+public class MLMainActivity extends MLBaseActivity implements
+        NavigationView.OnNavigationItemSelectedListener,
+        MLBaseFragment.OnMLFragmentListener, EMEventListener {
 
 
-    private Activity mActivity;
     private EMEventListener mEventListener;
 
-    private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
+    private NavigationView mNavigationView;
+    private Toolbar mToolbar;
+    private FloatingActionButton mFabBtn;
 
-    private FragmentManager mFragmentManager;
     private FragmentTransaction mFragmentTransaction;
     private Fragment mCurrentFragment;
-    private MLDrawerFragment mMLDrawerFragment;
-    private boolean isDrawerOpen;
     private int mMenuType;
-    private int mCurrentIndex;
-    private ImageView mNetworkState;
-
-    private MLApplyForDao mApplyForDao;
 
 
     /**
@@ -73,11 +62,12 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         init();
         initView();
         initToolbar();
-        initDrawerFragment();
-
+        initDrawer();
+        initFragment();
         initListener();
     }
 
@@ -86,18 +76,19 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
      * 界面属性初始值的初始化
      */
     private void init() {
-        mActivity = this;
         mEventListener = this;
-        isDrawerOpen = false;
         mMenuType = 0;
-        mCurrentIndex = 0;
         mTitle = getTitle();
 
-        mApplyForDao = new MLApplyForDao(mActivity);
     }
 
+    /**
+     * 控件初始化
+     */
     private void initView() {
-        mNetworkState = (ImageView) findViewById(R.id.ml_img_network_state);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.ml_layout_drawer);
+        mNavigationView = (NavigationView) findViewById(R.id.ml_widget_navigation);
+        mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
     }
 
     /**
@@ -105,14 +96,19 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
      */
     private void initToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.ml_widget_drawer_layout);
-
         mToolbar.setTitle(R.string.ml_chat);
-        mToolbar.setTitleTextColor(getResources().getColor(R.color.ml_white));
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // 设置Toolbar与DrawerLayout 联动的按钮
+    }
+
+    /**
+     * 初始化侧滑抽屉，实现抽屉的监听
+     */
+    private void initDrawer() {
+        // 设置侧滑导航的监听
+        mNavigationView.setNavigationItemSelectedListener(this);
+
+        // 设置Toolbar与DrawerLayout 联动的按钮，并重写DrawerToggle 的几个方法，主要是为了实现抽屉关闭后再加界面
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,
                 R.string.ml_open, R.string.ml_close) {
             @Override
@@ -124,13 +120,11 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                isDrawerOpen = true;
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
-                isDrawerOpen = false;
                 switch (mMenuType) {
                     case 0:
                         mFragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -141,6 +135,8 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
                     case 1:
 
                         break;
+                    default:
+                        break;
                 }
             }
 
@@ -149,29 +145,60 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
                 super.onDrawerStateChanged(newState);
             }
         };
-        mDrawerToggle.syncState();
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerToggle.syncState();
+    }
+
+    /**
+     * 侧滑导航的点击事件
+     *
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.ml_nav_home:
+                mMenuType = 0;
+                mCurrentFragment = new MLHomeFragment();
+                mToolbar.setTitle(R.string.ml_chat);
+                break;
+            case R.id.ml_nav_group:
+                mMenuType = 0;
+                mCurrentFragment = new MLOtherFragment();
+                mToolbar.setTitle(R.string.ml_chat);
+                break;
+            case R.id.ml_nav_room:
+                mMenuType = 1;
+
+                break;
+            case R.id.ml_nav_help:
+                mMenuType = 1;
+
+                break;
+            case R.id.ml_nav_setting:
+                mMenuType = 1;
+
+                break;
+            default:
+                mMenuType = 1;
+                break;
+        }
+        mDrawerLayout.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     /**
      * lzan13   2015-8-28
-     * 初始化侧滑菜单
+     * 初始化界面显示的 Fragment
      */
-    private void initDrawerFragment() {
-        mFragmentManager = getSupportFragmentManager();
-        // 侧滑菜单Fragment
-        mFragmentTransaction = mFragmentManager.beginTransaction();
-        mMLDrawerFragment = MLDrawerFragment.newInstance(mDrawerLayout);
-        mFragmentTransaction.replace(R.id.ml_framelayout_drawer, mMLDrawerFragment);
-        mFragmentTransaction.commit();
-
+    private void initFragment() {
         // 主Activity 默认显示第一个Fragment
-        mCurrentIndex = 0;
-        mCurrentFragment = new MLChatFragment();
+        mCurrentFragment = new MLHomeFragment();
         mToolbar.setTitle(mActivity.getResources().getString(R.string.ml_chat));
-        mFragmentTransaction = mFragmentManager.beginTransaction();
+        mFragmentTransaction = getSupportFragmentManager().beginTransaction();
         mFragmentTransaction.replace(R.id.ml_framelayout_container, mCurrentFragment);
-//        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         mFragmentTransaction.setCustomAnimations(R.anim.ml_anim_fade_in, R.anim.ml_anim_fade_out);
         mFragmentTransaction.commit();
     }
@@ -189,58 +216,6 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
         EMChat.getInstance().setAppInited();
     }
 
-    /**
-     * Fragment 的统一回调函数
-     *
-     * @param a
-     * @param b
-     * @param s
-     */
-    @Override
-    public void onFragmentClick(int a, int b, String s) {
-        int w = a | b;
-        switch (w) {
-            // 系统级调用
-            case 0x00:
-                mToolbar.setTitle(s);
-                break;
-            case 0x01:
-
-                break;
-            // 侧滑调用
-            case 0x10:
-                if (mCurrentIndex != 0) {
-                    MLToast.makeToast(mActivity.getResources().getString(R.string.ml_chat)).show();
-                    mCurrentIndex = 0;
-                    mMenuType = 0;
-                    mCurrentFragment = new MLChatFragment();
-                    mToolbar.setTitle(R.string.ml_chat);
-                }
-                break;
-            case 0x11:
-                if (mCurrentIndex != 1) {
-                    MLToast.makeToast(mActivity.getResources().getString(R.string.ml_other)).show();
-                    mCurrentIndex = 1;
-                    mMenuType = 0;
-                    mCurrentFragment = new MLOtherFragment();
-                    mToolbar.setTitle(R.string.ml_other);
-                }
-                break;
-            case 0x12:
-
-                break;
-            case 0x13:
-                MLToast.makeToast(mActivity.getResources().getString(R.string.ml_settings)).show();
-                mMenuType = 1;
-
-                break;
-
-            default:
-                MLToast.makeToast(mActivity.getResources().getString(R.string.ml_other)).show();
-                break;
-        }
-        mDrawerLayout.closeDrawer(GravityCompat.START);
-    }
 
     /**
      * 实现EMEventListener接口，消息的监听方法，用来监听发来的消息
@@ -265,6 +240,7 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
         }
     }
 
+
     /**
      * lzan13    2015-8-25
      * 链接监听，监听与服务器连接状况
@@ -277,8 +253,6 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
                 @Override
                 public void run() {
                     MLLog.d("onConnected");
-                    mNetworkState.setImageResource(R.mipmap.icon_network_link);
-                    mNetworkState.setVisibility(View.GONE);
                 }
             });
         }
@@ -295,8 +269,6 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
                     } else {
                         MLLog.d("onDisconnected");
                     }
-                    mNetworkState.setImageResource(R.mipmap.icon_network_error);
-                    mNetworkState.setVisibility(View.VISIBLE);
                 }
             });
         }
@@ -323,20 +295,6 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
         @Override
         public void onContactInvited(String username, String reason) {
             MLLog.d("onContactInvited");
-            // 收到申请
-            List<MLApplyForInfo> applyForInfos = mApplyForDao.getApplyForList();
-            for (MLApplyForInfo applyForInfo : applyForInfos) {
-                if (applyForInfo.getGroupId() == null && applyForInfo.getUserName().equals(username)) {
-                    mApplyForDao.deleteApplyFor(username);
-                }
-            }
-            MLApplyForInfo applyForInfo = new MLApplyForInfo();
-            applyForInfo.setUserName(username);
-            applyForInfo.setReason(reason);
-            applyForInfo.setStatus(MLApplyForInfo.ApplyForStatus.BEAPPLYFOR);
-            applyForInfo.setTime(System.currentTimeMillis());
-
-            mApplyForDao.saveApplyFor(applyForInfo);
 
         }
 
@@ -362,15 +320,7 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_add:
-                Intent intent = new Intent();
-                intent.setClass(mActivity, MLNewApplyForActivity.class);
-                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeCustomAnimation(mActivity,
-                        R.anim.ml_anim_slide_right_in, R.anim.ml_anim_slide_left_out);
-                ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
-                break;
-        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -404,5 +354,46 @@ public class MLMainActivity extends MLBaseActivity implements MLBaseFragment.OnM
         super.onStop();
         // 取消消息的监听事件，为了防止多个界面同时监听
         EMChatManager.getInstance().unregisterEventListener(mEventListener);
+    }
+
+    /**
+     * Fragment 的统一回调函数
+     *
+     * @param a
+     * @param b
+     * @param s
+     */
+    @Override
+    public void onFragmentClick(int a, int b, String s) {
+        int w = a | b;
+        switch (w) {
+            // 系统级调用
+            case 0x00:
+                mToolbar.setTitle(s);
+                break;
+            case 0x01:
+
+                break;
+            // 侧滑调用
+            case 0x10:
+
+                break;
+            case 0x11:
+
+                break;
+            case 0x12:
+
+                break;
+            case 0x13:
+                MLToast.makeToast(mActivity.getResources().getString(R.string.ml_settings)).show();
+                mMenuType = 1;
+
+                break;
+
+            default:
+                MLToast.makeToast(mActivity.getResources().getString(R.string.ml_other)).show();
+                break;
+        }
+        mDrawerLayout.closeDrawer(GravityCompat.START);
     }
 }

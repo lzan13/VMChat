@@ -47,9 +47,9 @@
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
     <!-- 允许读写系统设置项 -->
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-    <!--读取描述文件-->
+    <!-- 读取描述文件 -->
     <uses-permission android:name="android.permission.READ_PROFILE" />
-    <!--读取联系人-->
+    <!-- 读取联系人 -->
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
@@ -57,12 +57,16 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/ml_app_name"
-        android:theme="@style/MLTheme.Red">
-
-        <!-- 主界面 -->
+        android:theme="@style/MLTheme">
         <activity
             android:name=".activity.MLMainActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/MLTheme.Default" />
+        <!-- 主界面 -->
+        <activity
+            android:name=".activity.MLSplashActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MLTheme.Default">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -72,39 +76,51 @@
         <!-- 测试界面 -->
         <activity
             android:name=".test.MLTestActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/MLTheme.Default" />
         <!-- 登录界面 -->
         <activity
             android:name=".activity.MLSigninActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/MLTheme.Default" />
         <!--  -->
         <activity
             android:name=".activity.MLBaseActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/MLTheme.Red" />
+            android:theme="@style/MLTheme.Default" />
         <!-- 注册界面 -->
         <activity
             android:name=".activity.MLSignupActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/MLTheme.Default" />
         <!-- 好友申请与通知以及添加界面 -->
         <activity
             android:name=".activity.MLNewApplyForActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/MLTheme.Default" />
         <!-- 账户信息界面 -->
         <activity
             android:name=".activity.MLUserInfoActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/MLTheme.Default" />
         <!-- 聊天界面 -->
         <activity
             android:name=".activity.MLChatActivity"
             android:screenOrientation="portrait"
+            android:theme="@style/MLTheme.Default"
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <!-- 设置环信appkey -->
         <meta-data
             android:name="EASEMOB_APPKEY"
-            android:value="lzan13#hxsdkdemo" />
+            android:value="easemob-demo#chatdemoui" />
 
+        <activity android:name=".activity.MLVideoCallActivity"></activity>
+        <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+             App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
     </application>
 
 </manifest>

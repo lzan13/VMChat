@@ -3,7 +3,7 @@
     <string name="ml_test">Test</string>
     <string name="ml_test_text">Hello World! This is test text content!\nThis is test text content!\nThis is test text content!\nThis is test text content!\nThis is test text content!</string>
 
-    <string name="ml_action_settings">设置</string>
+    <string name="input_limit">0123456789abcdefghigklmnopqrstuvwxyz</string>
 
     <string name="ml_copy_right">©2015 melove.net</string>
 
@@ -70,4 +70,30 @@
     <string name="ml_reason">理由</string>
     <string name="ml_info_detailed">详细信息</string>
 
+    <string name="title_home">主页</string>
+    <string name="title_search">搜索</string>
+
+    <!--Action 提示文字-->
+    <string name="ml_action_search">搜索</string>
+    <string name="ml_action_settings">设置</string>
+
+    <!--导航菜单-->
+    <string name="ml_menu_home">主页</string>
+    <string name="ml_menu_group">群组</string>
+    <string name="ml_menu_room">聊天室</string>
+    <string name="ml_menu_call">电话</string>
+    <string name="ml_menu_chat">聊天</string>
+    <string name="ml_menu_video_call">视频</string>
+    <string name="ml_menu_help">帮助</string>
+    <string name="ml_menu_setting">设置</string>
+
+    <string name="ml_drawer_open">打开</string>
+    <string name="ml_drawer_close">关闭</string>
+
+    <!--Hint 提醒文字-->
+    <string name="ml_hint_username">账户名</string>
+    <string name="ml_hint_password">密码</string>
+
+    <!--Error 文字内容-->
+    <string name="ml_error_field_required">此项是必须的</string>
 </resources>

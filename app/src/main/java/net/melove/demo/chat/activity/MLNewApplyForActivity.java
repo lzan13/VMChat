@@ -32,7 +32,6 @@ public class MLNewApplyForActivity extends MLBaseActivity {
     private Toolbar mToolbar;
 
     private ListView mListView;
-    private View mHeadView;
     private EditText mEditText;
     private Button mBtnSearch;
 
@@ -68,22 +67,15 @@ public class MLNewApplyForActivity extends MLBaseActivity {
         mToolbar.setNavigationIcon(R.mipmap.icon_arrow_back_white_24dp);
         setSupportActionBar(mToolbar);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mToolbar.setNavigationOnClickListener(viewListener);
+//        mToolbar.setNavigationOnClickListener(viewListener);
     }
 
     private void initView() {
-        // 初始化当前界面 搜索View
-        mHeadView = LayoutInflater.from(mActivity).inflate(R.layout.item_apply_for_head, null);
-        mEditText = (EditText) mHeadView.findViewById(R.id.ml_edit_apply_for_search);
-        mBtnSearch = (Button) mHeadView.findViewById(R.id.ml_btn_apply_for_search);
-        mBtnSearch.setOnClickListener(viewListener);
-
 
         // 初始化ListView
         mListView = (ListView) findViewById(R.id.ml_list_applyfor);
         mListView.setOnItemClickListener(itemListener);
 
-        mListView.addHeaderView(mHeadView);
         mList = mApplyForDao.getApplyForList();
         mApplyForAdapter = new MLApplyForAdapter(mActivity, mList);
         mListView.setAdapter(mApplyForAdapter);
@@ -100,19 +92,6 @@ public class MLNewApplyForActivity extends MLBaseActivity {
         }
     };
 
-    private View.OnClickListener viewListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case -1:
-                    mActivity.finish();
-                    break;
-                case R.id.ml_btn_apply_for_search:
-                    searchContact();
-                    break;
-            }
-        }
-    };
 
     /**
      * 搜索联系人

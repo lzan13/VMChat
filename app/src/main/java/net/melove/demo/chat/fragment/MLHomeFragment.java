@@ -1,8 +1,9 @@
 package net.melove.demo.chat.fragment;
 
 
-import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -12,12 +13,11 @@ import android.view.ViewGroup;
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.adapter.MLViewPagerAdapter;
 import net.melove.demo.chat.util.MLLog;
-import net.melove.demo.chat.widget.MLPagerSlidingTab;
 
 /**
  * 单聊模块儿 Fragment
  */
-public class MLChatFragment extends MLBaseFragment {
+public class MLHomeFragment extends MLBaseFragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -25,7 +25,7 @@ public class MLChatFragment extends MLBaseFragment {
     private String mParam1;
     private String mParam2;
 
-    private MLPagerSlidingTab mMLPagerSlidingTab;
+    private TabLayout mTabLayout;
     private ViewPager mViewPager;
     private Fragment mFragments[];
     private MLContactsFragment mMLContactsFragment;
@@ -43,8 +43,8 @@ public class MLChatFragment extends MLBaseFragment {
      * @param param2
      * @return MLSingleFragment
      */
-    public static MLChatFragment newInstance(String param1, String param2) {
-        MLChatFragment fragment = new MLChatFragment();
+    public static MLHomeFragment newInstance(String param1, String param2) {
+        MLHomeFragment fragment = new MLHomeFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -52,7 +52,7 @@ public class MLChatFragment extends MLBaseFragment {
         return fragment;
     }
 
-    public MLChatFragment() {
+    public MLHomeFragment() {
         // Required empty public constructor
     }
 
@@ -67,71 +67,43 @@ public class MLChatFragment extends MLBaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_chat, container, false);
+        return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         init();
-        initPagerSlidingTab();
-        initViewPager();
+        initView();
 
     }
 
-    private void init(){
+    private void init() {
         mCurrentTabIndex = 0;
     }
 
-    /**
-     * 初始化PagerSlidingTab
-     */
-    private void initPagerSlidingTab() {
-        mMLPagerSlidingTab = (MLPagerSlidingTab) getView().findViewById(R.id.ml_widget_pageslidingtab);
-
-    }
-
-    /**
-     * 初始化ViewPager，将Fragment添加进去
-     */
-    private void initViewPager() {
-        mViewPager = (ViewPager) getView().findViewById(R.id.ml_widget_viewpager);
+    private void initView() {
+        mTabLayout = (TabLayout) getView().findViewById(R.id.ml_widget_tablayout);
+        mViewPager = (ViewPager) getView().findViewById(R.id.ml_view_viewpager);
 
         mMLContactsFragment = MLContactsFragment.newInstance("", "");
         mMLConversationFragment = MLConversationsFragment.newInstance("", "");
         mMLTestFragment = MLTestFragment.newInstance("", "");
 
         mFragments = new Fragment[]{mMLConversationFragment, mMLContactsFragment, mMLTestFragment};
-        mViewPager.setAdapter(new MLViewPagerAdapter(getChildFragmentManager(), mFragments, mTabTitles));
-
+        MLViewPagerAdapter adapter = new MLViewPagerAdapter(getChildFragmentManager(), mFragments, mTabTitles);
+        mViewPager.setAdapter(adapter);
         mViewPager.setCurrentItem(mCurrentTabIndex);
-
-        mMLPagerSlidingTab.setViewPager(mViewPager);
-        mMLPagerSlidingTab.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                mCurrentTabIndex = position;
-                // 调用回调方法设置Toolbar Title
-                mListener.onFragmentClick(0, 0, mTabTitles[position]);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
+        mTabLayout.setupWithViewPager(mViewPager);
+        mTabLayout.setTabsFromPagerAdapter(adapter);
     }
 
+
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
         try {
-            mListener = (OnMLFragmentListener) activity;
+            mListener = (OnMLFragmentListener) context;
         } catch (ClassCastException e) {
             MLLog.e("必须实现Fragment的回调接口！");
             e.printStackTrace();

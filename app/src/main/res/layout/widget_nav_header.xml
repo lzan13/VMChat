@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/navigation_header_height">
+
+    <ImageView
+        android:id="@+id/ml_img_nav_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/bg_top"
+        android:tint="@color/ml_img_tint_black" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
+
+        <ImageView
+            android:id="@+id/ml_img_nav_avatar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/navigation_header_vertical_spacing"
+            android:src="@mipmap/icon_avatar_02" />
+
+        <TextView
+            android:id="@+id/ml_text_nav_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/navigation_header_vertical_spacing"
+            android:text="穿裤衩闯天下"
+            android:textColor="@color/ml_theme_primary_text_white"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/ml_text_nav_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="lzan13.gg@gmail.com"
+            android:textColor="@color/ml_theme_primary_text_white" />
+    </LinearLayout>
+</RelativeLayout>

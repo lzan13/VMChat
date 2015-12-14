@@ -17,7 +17,7 @@ public class MLApplication extends Application {
 
         context = this;
 
-        initSDK();
+        initEasemob();
 
     }
 
@@ -25,8 +25,7 @@ public class MLApplication extends Application {
         return context;
     }
 
-    private void initSDK() {
-        mMLSDKHelper = MLEasemobHelper.getInstance();
-        mMLSDKHelper.onInit(context);
+    private void initEasemob() {
+        MLEasemobHelper.getInstance().onInit(context);
     }
 }

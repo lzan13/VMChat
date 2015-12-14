@@ -1,68 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:Content=".activity.MLSigninActivity">
 
-    <include layout="@layout/widget_toolbar_layout" />
+    <include layout="@layout/widget_toolbar_communal" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/ml_dimen_8">
+        android:layout_margin="@dimen/ml_dimen_16">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/ml_dimen_48"
-                android:layout_margin="@dimen/ml_dimen_8">
 
-                <EditText
-                    android:id="@+id/ml_edit_username"
+            <LinearLayout
+                android:id="@+id/layout_login_form"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/ml_shape_edit_oval"
-                    android:gravity="center"
-                    android:hint="@string/ml_username"
-                    android:singleLine="true"
-                    android:textSize="@dimen/ml_size_16" />
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/ml_edit_login_username"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:digits="@string/input_limit"
+                        android:hint="@string/ml_hint_username"
+                        android:inputType="textCapCharacters"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textSize="@dimen/ml_size_16" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/ml_edit_login_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/ml_hint_password"
+                        android:inputType="textPassword"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textSize="@dimen/ml_size_16" />
+                </android.support.design.widget.TextInputLayout>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/ml_dimen_48"
-                android:layout_margin="@dimen/ml_dimen_8">
-
-                <EditText
-                    android:id="@+id/ml_edit_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/ml_shape_edit_oval"
-                    android:gravity="center"
-                    android:hint="@string/ml_password"
-                    android:inputType="textPassword"
-                    android:singleLine="true"
-                    android:textSize="@dimen/ml_size_16" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/ml_dimen_48"
-                android:layout_margin="@dimen/ml_dimen_8"
+                android:layout_margin="@dimen/ml_dimen_16"
                 android:orientation="vertical">
 
                 <Button
                     android:id="@+id/ml_btn_signin"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/ml_shape_btn_round_red"
                     android:text="@string/ml_signin"
                     android:textColor="@color/ml_text_white"
-                    android:textSize="@dimen/ml_size_18" />
+                    android:textSize="@dimen/ml_size_16" />
 
             </LinearLayout>
 
@@ -77,11 +85,11 @@
                     android:id="@+id/ml_btn_signup"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:background="@drawable/ml_btn_transparent"
+                    android:background="@null"
                     android:gravity="center"
                     android:text="@string/ml_signup"
                     android:textColor="@color/ml_text_blue"
-                    android:textSize="@dimen/ml_size_18" />
+                    android:textSize="@dimen/ml_size_16" />
 
                 <View
                     android:layout_width="@dimen/ml_dimen_2"
@@ -93,11 +101,11 @@
                     android:id="@+id/ml_btn_forget_password"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:background="@drawable/ml_btn_transparent"
+                    android:background="@null"
                     android:gravity="center"
                     android:text="@string/ml_forget_password"
                     android:textColor="@color/ml_text_blue"
-                    android:textSize="@dimen/ml_size_18" />
+                    android:textSize="@dimen/ml_size_16" />
             </LinearLayout>
 
         </LinearLayout>
