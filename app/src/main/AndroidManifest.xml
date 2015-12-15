@@ -95,7 +95,7 @@
             android:theme="@style/MLTheme.Default" />
         <!-- 好友申请与通知以及添加界面 -->
         <activity
-            android:name=".activity.MLNewApplyForActivity"
+            android:name=".fragment.MLApplyforFragment"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Default" />
         <!-- 账户信息界面 -->

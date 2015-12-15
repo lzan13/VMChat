@@ -22,6 +22,7 @@ import net.melove.demo.chat.R;
 import net.melove.demo.chat.activity.MLChatActivity;
 import net.melove.demo.chat.activity.MLMainActivity;
 import net.melove.demo.chat.adapter.MLConversationAdapter;
+import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.entity.MLConversationEntity;
 import net.melove.demo.chat.widget.MLToast;
 
@@ -36,7 +37,7 @@ public class MLConversationsFragment extends MLBaseFragment {
 
     private Activity mActivity;
     private List<MLConversationEntity> mConversationList;
-
+    private String[] mMenus = null;
     private ListView mListView;
 
 
@@ -68,13 +69,17 @@ public class MLConversationsFragment extends MLBaseFragment {
         super.onActivityCreated(savedInstanceState);
 
         mActivity = getParentFragment().getActivity();
-
+        getArguments().getString("");
         init();
         initConversationListView();
     }
 
     private void init() {
-
+        mMenus = new String[]{
+                mActivity.getResources().getString(R.string.ml_menu_conversation_top),
+                mActivity.getResources().getString(R.string.ml_menu_conversation_clear),
+                mActivity.getResources().getString(R.string.ml_menu_conversation_delete)
+        };
 
     }
 
@@ -138,7 +143,7 @@ public class MLConversationsFragment extends MLBaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent();
                 intent.setClass(mActivity, MLChatActivity.class);
-                intent.putExtra("username", mConversationList.get(position).getUsername());
+                intent.putExtra(MLConstants.ML_C_USERNAME, mConversationList.get(position).getUsername());
                 ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, ((MLMainActivity) mActivity).getToolbar(), "toolbar");
                 ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
             }
@@ -153,10 +158,10 @@ public class MLConversationsFragment extends MLBaseFragment {
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                MLToast.makeToast("选择长按操作" + position).show();
+//                MLToast.makeToast("选择长按操作" + position).show();
                 new AlertDialog.Builder(mActivity)
-                        .setTitle("Select")
-                        .setItems(new String[]{"Delete", "Top"}, null)
+                        .setTitle(R.string.ml_title_dialog_conversation)
+                        .setItems(mMenus, null)
                         .show();
 
                 return true;

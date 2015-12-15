@@ -31,6 +31,8 @@ import com.easemob.chat.EMContactListener;
 import com.easemob.chat.EMContactManager;
 
 import net.melove.demo.chat.R;
+import net.melove.demo.chat.application.MLConstants;
+import net.melove.demo.chat.fragment.MLApplyforFragment;
 import net.melove.demo.chat.fragment.MLBaseFragment;
 import net.melove.demo.chat.fragment.MLHomeFragment;
 import net.melove.demo.chat.fragment.MLOtherFragment;
@@ -99,7 +101,7 @@ public class MLMainActivity extends MLBaseActivity implements
         mNavigationView = (NavigationView) findViewById(R.id.ml_widget_navigation);
 
         mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
-        mToolbar.setTitle(mActivity.getResources().getString(R.string.ml_chat));
+        mToolbar.setTitle(mActivity.getResources().getString(R.string.ml_title_dialog_chat));
         setSupportActionBar(mToolbar);
 
         mFabBtn = (FloatingActionButton) findViewById(R.id.ml_btn_fab);
@@ -118,7 +120,7 @@ public class MLMainActivity extends MLBaseActivity implements
 
         // 设置Toolbar与DrawerLayout 联动的按钮，并重写DrawerToggle 的几个方法，主要是为了实现抽屉关闭后再加界面
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,
-                R.string.ml_open, R.string.ml_close) {
+                R.string.ml_drawer_open, R.string.ml_drawer_close) {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
                 super.onDrawerSlide(drawerView, slideOffset);
@@ -164,7 +166,7 @@ public class MLMainActivity extends MLBaseActivity implements
     private void initFragment() {
         // 主Activity 默认显示第一个Fragment
         mCurrentFragment = MLHomeFragment.newInstance();
-        mToolbar.setTitle(R.string.ml_chat);
+        mToolbar.setTitle(R.string.ml_title_chat);
         mFragmentTransaction = getSupportFragmentManager().beginTransaction();
         mFragmentTransaction.replace(R.id.ml_framelayout_container, mCurrentFragment);
         mFragmentTransaction.setCustomAnimations(R.anim.ml_anim_fade_in, R.anim.ml_anim_fade_out);
@@ -212,17 +214,22 @@ public class MLMainActivity extends MLBaseActivity implements
             case R.id.ml_nav_home:
                 mMenuType = 0;
                 mCurrentFragment = new MLHomeFragment();
-                mToolbar.setTitle(R.string.ml_chat);
+                mToolbar.setTitle(R.string.ml_title_chat);
                 break;
             case R.id.ml_nav_group:
                 mMenuType = 0;
                 mCurrentFragment = new MLOtherFragment();
-                mToolbar.setTitle(R.string.ml_group);
+                mToolbar.setTitle(R.string.ml_title_group);
                 break;
             case R.id.ml_nav_room:
                 mMenuType = 1;
-                mToolbar.setTitle(R.string.ml_room);
+                mToolbar.setTitle(R.string.ml_title_room);
 
+                break;
+            case R.id.ml_nav_notification:
+                mMenuType = 0;
+                mCurrentFragment = new MLApplyforFragment();
+                mToolbar.setTitle(R.string.ml_title_apply_for);
                 break;
             case R.id.ml_nav_help:
                 mMenuType = 1;
@@ -254,7 +261,7 @@ public class MLMainActivity extends MLBaseActivity implements
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent();
                 intent.setClass(mActivity, MLChatActivity.class);
-                intent.putExtra("username", editText.getText().toString().trim());
+                intent.putExtra(MLConstants.ML_C_USERNAME, editText.getText().toString().trim());
                 ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, mToolbar, "toolbar");
                 ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
             }
@@ -472,7 +479,7 @@ public class MLMainActivity extends MLBaseActivity implements
                 ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
                 break;
             default:
-                MLToast.makeToast(mActivity.getResources().getString(R.string.ml_other)).show();
+                MLToast.makeToast(mActivity.getResources().getString(R.string.ml_test)).show();
                 break;
         }
         mDrawerLayout.closeDrawer(GravityCompat.START);

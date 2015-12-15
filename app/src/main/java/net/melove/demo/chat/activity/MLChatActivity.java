@@ -18,6 +18,7 @@ import com.easemob.chat.EMMessage;
 import com.easemob.chat.TextMessageBody;
 
 import net.melove.demo.chat.R;
+import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.util.MLLog;
 
 /**
@@ -57,7 +58,7 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
 
     private void init() {
         mActivity = this;
-        mChatUsername = getIntent().getStringExtra("username");
+        mChatUsername = getIntent().getStringExtra(MLConstants.ML_C_USERNAME);
     }
 
     /**

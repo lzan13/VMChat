@@ -46,32 +46,6 @@
         关于“melove”这个名字，说实话，我还真没想好要表达什么确切的意思，只是想建立一个自己的空间博客，分享以及记录一些东西，正在努力建设中！希望来到这里的朋友能给予我鼓励，谢谢O(∩_∩)O~\n\n
         有什么好的建议和意见可以提出来，我会努力完善的</string>
 
-    <string name="input_limit">0123456789abcdefghigklmnopqrstuvwxyz</string>
-
-    <string name="ml_copy_right">©2015 melove.net</string>
-
-
-    <string name="ml_apply_for">申请与请求</string>
-    <string name="ml_chat">聊天</string>
-    <string name="ml_chat_start">开始聊天</string>
-    <string name="ml_chat_video">视频聊天</string>
-
-
-    <string name="ml_open">打开</string>
-    <string name="ml_close">关闭</string>
-
-    <string name="ml_new_contact">新的朋友</string>
-
-    <string name="ml_group">群组</string>
-    <string name="ml_group_chat">群聊</string>
-    <string name="ml_room">聊天室</string>
-    <string name="ml_tag">标签</string>
-
-    <string name="ml_add">添加</string>
-    <string name="ml_add_friend">添加好友</string>
-    <string name="ml_search">搜索</string>
-    <string name="ml_settings">设置</string>
-    <string name="ml_send">发送</string>
 
     <!--登录与注册-->
     <string name="ml_signin">登录</string>
@@ -84,25 +58,34 @@
     <string name="ml_signin_success">登录成功</string>
     <string name="ml_signin_failed">登录失败</string>
     <string name="ml_forget_password">忘记密码</string>
-    <string name="ml_username">用户名</string>
-    <string name="ml_password">密码</string>
 
+    <!--用户信息相关-->
     <string name="ml_nickname">昵称</string>
     <string name="ml_signature">签名</string>
     <string name="ml_signature_null">无个性不签名</string>
 
-    <string name="ml_load_data">加载资源</string>
 
-    <string name="ml_other">其它</string>
-    <string name="ml_agree">同意</string>
-    <string name="ml_agreed">已同意</string>
-    <string name="ml_refuse">拒绝</string>
-    <string name="ml_refused">已拒绝</string>
-    <string name="ml_reason">理由</string>
-    <string name="ml_info_detailed">详细信息</string>
+    <!--Button 按钮相关-->
+    <string name="ml_btn_ok">确定</string>
+    <string name="ml_btn_cancel">取消</string>
+    <string name="ml_btn_agree">同意</string>
+    <string name="ml_btn_agreed">已同意</string>
+    <string name="ml_btn_refuse">拒绝</string>
+    <string name="ml_btn_refused">已拒绝</string>
 
-    <string name="title_home">主页</string>
-    <string name="title_search">搜索</string>
+    <!--Title 相关-->
+    <string name="ml_title_home">主页</string>
+    <string name="ml_title_chat">聊天</string>
+    <string name="ml_title_group">群组</string>
+    <string name="ml_title_room">聊天室</string>
+    <string name="ml_title_contacts">联系人</string>
+    <string name="ml_title_apply_for">申请与通知</string>
+    <string name="ml_title_other">其他</string>
+    <string name="ml_title_test">测试</string>
+    <string name="ml_title_setting">设置</string>
+    <!--Dialog-->
+    <string name="ml_title_dialog_conversation">会话操作</string>
+    <string name="ml_title_dialog_chat">Message 操作</string>
 
     <!--Action 提示文字-->
     <string name="ml_action_search">搜索</string>
@@ -114,16 +97,32 @@
     <string name="ml_menu_room">聊天室</string>
     <string name="ml_menu_call">电话</string>
     <string name="ml_menu_chat">聊天</string>
-    <string name="ml_menu_video_call">视频</string>
+    <string name="ml_menu_video">视频</string>
+    <string name="ml_menu_apply_for">申请与请求</string>
     <string name="ml_menu_help">帮助</string>
+    <string name="ml_menu_search">搜索</string>
     <string name="ml_menu_setting">设置</string>
-
+    <string name="ml_menu_more">更多</string>
     <string name="ml_drawer_open">打开</string>
     <string name="ml_drawer_close">关闭</string>
 
+    <!--弹出菜单-->
+    <string name="ml_menu_chat_copy">复制</string>
+    <string name="ml_menu_chat_delete">删除消息</string>
+    <string name="ml_menu_chat_forward">转发消息</string>
+    <string name="ml_menu_conversation_clear">清空会话内容</string>
+    <string name="ml_menu_conversation_delete">删除会话</string>
+    <string name="ml_menu_conversation_top">会话置顶</string>
+
     <!--Hint 提醒文字-->
+    <string name="ml_hint_chat">唠十块钱的(☆_☆)/~~</string>
     <string name="ml_hint_username">账户名</string>
     <string name="ml_hint_password">密码</string>
+    <string name="ml_hint_content">内容</string>
+    <string name="ml_hint_time">时间</string>
+    <string name="ml_hint_count">数量</string>
+    <string name="ml_hint_reason">申请理由</string>
+    <string name="ml_hint_loading">加载中...</string>
 
     <!--Error 文字内容-->
     <string name="ml_error_connect_time_out">链接超时，请检查网络</string>
@@ -137,5 +136,7 @@
     <string name="ml_error_user_already_exits">用户已经存在</string>
 
 
+    <string name="ml_input_limit">0123456789abcdefghigklmnopqrstuvwxyz</string>
+    <string name="ml_copy_right">©2015 melove.net</string>
 
 </resources>

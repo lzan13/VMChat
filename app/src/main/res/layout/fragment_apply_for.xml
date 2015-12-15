@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ml_bg_white"
+    android:orientation="vertical">
+
+    <ViewStub
+        android:id="@+id/ml_viewstub"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/activity_default_margin"
+        android:layout="@layout/widget_empty" />
+
+    <ListView
+        android:id="@+id/ml_listview_applyfor"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:descendantFocusability="blocksDescendants"
+        android:divider="@color/ml_divider_black"
+        android:dividerHeight="@dimen/ml_dimen_0_5"
+        android:listSelector="@color/ml_transparent"></ListView>
+</LinearLayout>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/activity_default_margin"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ml_ripple_gray"
+        android:clickable="true"
+        android:gravity="center"
+        android:padding="@dimen/ml_dimen_16"
+        android:text="这里为空哦"
+        android:textColor="@color/ml_text_title_black" />
+
+</LinearLayout>

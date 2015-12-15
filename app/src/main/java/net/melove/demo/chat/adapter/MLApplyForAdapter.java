@@ -157,7 +157,7 @@ public class MLApplyForAdapter extends BaseAdapter implements View.OnClickListen
         Button btnRefuse;
 
         public ViewHandler(View view) {
-            imageViewAvatar = (MLImageView) view.findViewById(R.id.ml_img_applyfor_avatar);
+            imageViewAvatar = (MLImageView) view.findViewById(R.id.ml_img_apply_for_avatar);
             textViewUsername = (TextView) view.findViewById(R.id.ml_text_apply_for_username);
             textViewReason = (TextView) view.findViewById(R.id.ml_text_apply_for_reason);
             textViewStatus = (TextView) view.findViewById(R.id.ml_text_apply_for_status);

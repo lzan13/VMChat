@@ -66,7 +66,7 @@ public class MLContactsAdapter extends BaseAdapter {
 
 
         public ViewHendler(View view) {
-            imageViewAvatar = (MLImageView) view.findViewById(R.id.ml_img_applyfor_avatar);
+            imageViewAvatar = (MLImageView) view.findViewById(R.id.ml_img_apply_for_avatar);
             textViewUsername = (TextView) view.findViewById(R.id.ml_text_apply_for_username);
 
         }

@@ -62,6 +62,9 @@ public class MLConversationAdapter extends BaseAdapter {
         return convertView;
     }
 
+    /**
+     * 自定义会话列表项的 ViewHolder 用来显示会话列表项的内容
+     */
     class ViewHolder {
         public ImageView mAvatarView;
         public TextView mUsernameView;
@@ -69,6 +72,10 @@ public class MLConversationAdapter extends BaseAdapter {
         public TextView mTimeView;
         public TextView mCountView;
 
+        /**
+         * 构造方法，初始化列表项的控件
+         * @param view
+         */
         public ViewHolder(View view) {
             mAvatarView = (ImageView) view.findViewById(R.id.ml_img_conversation_avatar);
             mUsernameView = (TextView) view.findViewById(R.id.ml_text_conversation_username);

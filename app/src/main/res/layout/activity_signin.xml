@@ -69,7 +69,7 @@
                             android:id="@+id/ml_edit_login_username"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:digits="@string/input_limit"
+                            android:digits="@string/ml_input_limit"
                             android:hint="@string/ml_hint_username"
                             android:inputType="textCapCharacters"
                             android:maxLines="1"

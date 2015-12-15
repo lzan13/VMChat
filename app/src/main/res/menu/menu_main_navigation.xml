@@ -9,9 +9,14 @@
             android:id="@+id/ml_nav_group"
             android:icon="@drawable/ic_menu_group"
             android:title="@string/ml_menu_group" />
-        <item android:id="@+id/ml_nav_room"
+        <item
+            android:id="@+id/ml_nav_room"
             android:icon="@drawable/ic_menu_group"
-            android:title="@string/ml_menu_room"/>
+            android:title="@string/ml_menu_room" />
+        <item
+            android:id="@+id/ml_nav_notification"
+            android:icon="@drawable/ic_menu_notification"
+            android:title="@string/ml_menu_apply_for" />
 
     </group>
     <item android:title="@string/ml_menu_setting">

@@ -1,6 +1,7 @@
 package net.melove.demo.chat.fragment;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -19,7 +20,7 @@ import net.melove.demo.chat.util.MLLog;
  */
 public class MLHomeFragment extends MLBaseFragment {
 
-    private Context mContext;
+    private Activity mActivity;
 
 
     private TabLayout mTabLayout;
@@ -28,7 +29,7 @@ public class MLHomeFragment extends MLBaseFragment {
     private MLContactsFragment mMLContactsFragment;
     private MLConversationsFragment mMLConversationFragment;
     private MLTestFragment mMLTestFragment;
-    private String mTabTitles[] = new String[]{"聊天", "通讯录", "测试"};
+    private String mTabTitles[] = null;
     private int mCurrentTabIndex;
 
     private OnMLFragmentListener mListener;
@@ -62,7 +63,7 @@ public class MLHomeFragment extends MLBaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mContext = getActivity();
+        mActivity = getActivity();
         init();
         initView();
 
@@ -70,6 +71,11 @@ public class MLHomeFragment extends MLBaseFragment {
 
     private void init() {
         mCurrentTabIndex = 0;
+        mTabTitles = new String[]{
+                mActivity.getResources().getString(R.string.ml_title_chat),
+                mActivity.getResources().getString(R.string.ml_title_contacts),
+                mActivity.getResources().getString(R.string.ml_title_test)
+        };
     }
 
     private void initView() {

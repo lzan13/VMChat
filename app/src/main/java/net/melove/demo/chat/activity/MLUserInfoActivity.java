@@ -46,7 +46,7 @@ public class MLUserInfoActivity extends MLBaseActivity {
      */
     private void initToolbar() {
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.ml_widget_collapsing);
-        mCollapsingToolbarLayout.setTitle(mActivity.getResources().getString(R.string.ml_username));
+        mCollapsingToolbarLayout.setTitle(mActivity.getResources().getString(R.string.ml_hint_username));
 
         mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
         mToolbar.setTitleTextColor(getResources().getColor(R.color.ml_white));

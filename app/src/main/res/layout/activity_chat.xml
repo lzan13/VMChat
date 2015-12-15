@@ -94,7 +94,7 @@
                     android:layout_toLeftOf="@id/ml_layout_chat_input_bar_right"
                     android:layout_toRightOf="@id/ml_layout_chat_input_bar_left"
                     android:background="@null"
-                    android:hint="@string/ml_chat"
+                    android:hint="@string/ml_hint_chat"
                     android:maxLines="3"
                     android:paddingBottom="@dimen/ml_dimen_8"
                     android:paddingTop="@dimen/ml_dimen_8"

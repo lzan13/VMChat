@@ -34,10 +34,10 @@
     <color name="ml_btn_red_pressed">#89be2d17</color>
     <color name="ml_btn_blue_normal">#dd2384fe</color>
     <color name="ml_btn_blue_pressed">#89296dd8</color>
-    <color name="ml_btn_gray_normal">#34000000</color>
-    <color name="ml_btn_gray_pressed">#4d000000</color>
-    <color name="ml_btn_white_normal">#34ffffff</color>
-    <color name="ml_btn_white_pressed">#4dffffff</color>
+    <color name="ml_btn_gray_normal">#21000000</color>
+    <color name="ml_btn_gray_pressed">#89000000</color>
+    <color name="ml_btn_white_normal">#21ffffff</color>
+    <color name="ml_btn_white_pressed">#89ffffff</color>
 
     <!--文字颜色-->
     <color name="ml_text_title_black">#dd000000</color>

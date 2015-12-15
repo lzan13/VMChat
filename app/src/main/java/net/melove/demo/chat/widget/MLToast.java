@@ -19,6 +19,7 @@ import net.melove.demo.chat.R;
  */
 public class MLToast {
 
+    private int defaultTime = 3500;
     private boolean isShow;
 
     private static Context mContext = MLApplication.getContext();
@@ -127,7 +128,7 @@ public class MLToast {
     }
 
     public void show() {
-        show(3500);
+        show(defaultTime);
     }
 
     /**
