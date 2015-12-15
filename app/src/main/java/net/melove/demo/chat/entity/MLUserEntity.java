@@ -1,4 +1,4 @@
-package net.melove.demo.chat.info;
+package net.melove.demo.chat.entity;
 
 /**
  * Created by lzan13 on 2015/7/21.

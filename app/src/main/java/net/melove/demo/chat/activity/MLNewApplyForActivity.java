@@ -15,7 +15,7 @@ import android.widget.ListView;
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.adapter.MLApplyForAdapter;
 import net.melove.demo.chat.db.MLApplyForDao;
-import net.melove.demo.chat.info.MLApplyForEntity;
+import net.melove.demo.chat.entity.MLApplyForEntity;
 import net.melove.demo.chat.widget.MLToast;
 
 import java.util.List;
@@ -71,7 +71,7 @@ public class MLNewApplyForActivity extends MLBaseActivity {
     private void initView() {
 
         // 初始化ListView
-        mListView = (ListView) findViewById(R.id.ml_list_applyfor);
+        mListView = (ListView) findViewById(R.id.ml_listview_applyfor);
         mListView.setOnItemClickListener(itemListener);
 
         mList = mApplyForDao.getApplyForList();

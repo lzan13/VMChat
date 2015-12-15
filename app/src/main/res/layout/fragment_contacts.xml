@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipChildren="false"
-        android:divider="@color/ml_bg_view_divider"
+        android:divider="@color/ml_divider_black"
         android:dividerHeight="@dimen/ml_dimen_px_1"
         android:listSelector="@color/ml_transparent"></ListView>
 

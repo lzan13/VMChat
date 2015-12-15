@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.text.TextUtils;
 
-import net.melove.demo.chat.info.MLApplyForEntity;
+import net.melove.demo.chat.entity.MLApplyForEntity;
 
 import java.util.ArrayList;
 import java.util.List;

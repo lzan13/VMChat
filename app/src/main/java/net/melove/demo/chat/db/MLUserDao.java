@@ -7,7 +7,7 @@ import android.text.TextUtils;
 
 import com.easemob.util.HanziToPinyin;
 
-import net.melove.demo.chat.info.MLUserEntity;
+import net.melove.demo.chat.entity.MLUserEntity;
 
 import java.util.ArrayList;
 import java.util.List;

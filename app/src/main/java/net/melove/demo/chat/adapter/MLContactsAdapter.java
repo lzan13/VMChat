@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import net.melove.demo.chat.R;
-import net.melove.demo.chat.info.MLUserEntity;
+import net.melove.demo.chat.entity.MLUserEntity;
 import net.melove.demo.chat.widget.MLImageView;
 
 import java.util.List;
@@ -66,7 +66,7 @@ public class MLContactsAdapter extends BaseAdapter {
 
 
         public ViewHendler(View view) {
-            imageViewAvatar = (MLImageView) view.findViewById(R.id.ml_img_apply_for_avatar);
+            imageViewAvatar = (MLImageView) view.findViewById(R.id.ml_img_applyfor_avatar);
             textViewUsername = (TextView) view.findViewById(R.id.ml_text_apply_for_username);
 
         }

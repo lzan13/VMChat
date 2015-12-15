@@ -3,21 +3,18 @@
 
     <!--透明颜色-->
     <color name="ml_transparent">#00000000</color>
+
     <!--Application 基色-->
     <color name="ml_white">#ffffffff</color>
     <color name="ml_black">#ff000000</color>
-
-    <!--图片叠加色-->
-    <color name="ml_img_tint_black">#48000000</color>
 
     <!--Application 主题基色-->
     <color name="ml_theme_primary">#ffe62f17</color>
     <color name="ml_theme_primary_dark">#d22a14</color>
     <color name="ml_theme_accent">#ffff5177</color>
-    <color name="ml_theme_primary_text_white">#ddffffff</color>
-    <color name="ml_theme_primary_text_black">#dd000000</color>
+    <color name="ml_theme_text_primary_white">#ddffffff</color>
+    <color name="ml_theme_text_primary_black">#dd000000</color>
     <color name="ml_theme_menu_primary">#ffffffff</color>
-    <color name="ml_theme_text_primary">#ffffffff</color>
     <color name="ml_theme_background_primary">#fff8f8f8</color>
 
     <!--TabLayout 颜色-->
@@ -27,41 +24,42 @@
     <color name="ml_tab_selected">#dde62f17</color>
 
     <!--背景色-->
-    <color name="ml_bg_white">#ffffffff</color>
-    <color name="ml_bg_pink_white">#fff5f0eb</color>
-    <color name="ml_bg_gray">#bfbfbf</color>
-    <color name="ml_bg_gray_white">#ebebeb</color>
-    <color name="ml_bg_tab_pressed">#e8e8e8e8</color>
-    <color name="ml_bg_gray_transparent">#52232323</color>
+    <color name="ml_bg_white">#fff8f8f8</color>
 
-
-    <color name="ml_bg_view_timeline">#ffe8e4dd</color>
-    <color name="ml_bg_view_divider">#ffdfd9d3</color>
+    <!--图片叠加色-->
+    <color name="ml_img_tint_black">#42000000</color>
 
     <!--按钮颜色-->
-    <color name="ml_btn_drawer_item_normal">#ffffff</color>
-    <color name="ml_btn_drawer_item_pressed">#ffe8e8e8</color>
-    <color name="ml_btn_red_normal">#ffe62f17</color>
-    <color name="ml_btn_red_pressed">#ffbe2d17</color>
-    <color name="ml_btn_blue_normal">#2384fe</color>
-    <color name="ml_btn_blue_pressed">#296dd8</color>
+    <color name="ml_btn_red_normal">#dde62f17</color>
+    <color name="ml_btn_red_pressed">#89be2d17</color>
+    <color name="ml_btn_blue_normal">#dd2384fe</color>
+    <color name="ml_btn_blue_pressed">#89296dd8</color>
+    <color name="ml_btn_gray_normal">#34000000</color>
+    <color name="ml_btn_gray_pressed">#4d000000</color>
+    <color name="ml_btn_white_normal">#34ffffff</color>
+    <color name="ml_btn_white_pressed">#4dffffff</color>
 
     <!--文字颜色-->
-    <color name="ml_text_hint_gray">#ff9a9a9a</color>
-    <color name="ml_text_item_title_block">#ff232323</color>
-    <color name="ml_text_item_subtitle_block">#ff585858</color>
-    <color name="ml_text_drawer_nickname">#fff8f8f8</color>
-    <color name="ml_text_drawer_top_signation">#fff0f0f0</color>
-    <color name="ml_text_white">#fff8f8f8</color>
-    <color name="ml_text_blue">#ff1378ae</color>
-    <color name="ml_text_block">#ff232323</color>
-    <color name="ml_text_gray">#7a7a7a</color>
+    <color name="ml_text_title_black">#dd000000</color>
+    <color name="ml_text_subtitle_black">#89000000</color>
+    <color name="ml_text_hint_black">#42000000</color>
+    <color name="ml_text_title_white">#ddffffff</color>
+    <color name="ml_text_subtitle_white">#89ffffff</color>
+    <color name="ml_text_hint_white">#42ffffff</color>
+    <color name="ml_text_title_red">#dde62f17</color>
+    <color name="ml_text_subtitle_red">#89e62f17</color>
+    <color name="ml_text_hint_red">#42e62f17</color>
+
+
+    <!--分割线颜色-->
+    <color name="ml_divider_black">#42000000</color>
+    <color name="ml_divider_white">#42ffffff</color>
+    <color name="ml_divider_red">#42e62f17</color>
 
     <!--边框色-->
-    <color name="ml_border_red">#e67b6d</color>
-    <color name="ml_border_gray">#a8a8a8a8</color>
-    <color name="ml_border_white">#fff8f8f8</color>
-    <color name="ml_divider_gray">#ffd8d8d8</color>
+    <color name="ml_border_black">#dd000000</color>
+    <color name="ml_border_white">#ddffffff</color>
+    <color name="ml_border_red">#dde62f17</color>
 
 
 </resources>

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/ml_bg_white"
     android:fitsSystemWindows="false"
     android:orientation="vertical"
     tools:Content=".activity.MLSigninActivity">
@@ -40,7 +41,9 @@
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:textColor="@color/ml_text_title_black"
+                android:textColorHint="@color/ml_text_hint_black">
 
                 <EditText
                     android:id="@+id/ml_edit_signup_username"
@@ -56,7 +59,9 @@
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:textColor="@color/ml_text_title_black"
+                android:textColorHint="@color/ml_text_hint_black">
 
                 <EditText
                     android:id="@+id/ml_edit_signup_password"
@@ -84,7 +89,7 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/ml_shape_btn_rectangle_red"
                     android:text="@string/ml_signup"
-                    android:textColor="@color/ml_text_white"
+                    android:textColor="@color/ml_text_title_white"
                     android:textSize="@dimen/ml_size_18" />
 
                 <CheckBox
@@ -93,7 +98,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/ml_dimen_24"
-                    android:text="New CheckBox" />
+                    android:text="New CheckBox"
+                    android:textColor="@color/ml_text_title_red" />
 
             </LinearLayout>
 
@@ -109,7 +115,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/ml_copy_right" />
+                android:text="@string/ml_copy_right"
+                android:textColor="@color/ml_text_subtitle_red" />
         </LinearLayout>
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

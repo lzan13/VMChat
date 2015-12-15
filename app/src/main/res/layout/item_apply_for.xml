@@ -1,98 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:melove="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/ml_dimen_56"
-    android:background="@color/ml_bg_white"
-    android:clipChildren="false"
-    android:paddingLeft="@dimen/ml_dimen_4"
-    android:paddingRight="@dimen/ml_dimen_4">
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/ml_dimen_16"
+    android:paddingRight="@dimen/ml_dimen_16">
 
-
-    <net.melove.demo.chat.widget.MLImageView
-        android:id="@+id/ml_img_apply_for_avatar"
-        android:layout_width="@dimen/ml_dimen_48"
-        android:layout_height="@dimen/ml_dimen_48"
-        android:layout_alignParentLeft="true"
-        android:layout_margin="@dimen/ml_dimen_4"
-        android:src="@mipmap/ic_character_blackcat"
-        melove:shape_type="round" />
-
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/ml_dimen_48"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/ml_dimen_4"
-        android:layout_toRightOf="@id/ml_img_apply_for_avatar"
-        android:gravity="center_vertical"
-        android:orientation="vertical">
+        android:layout_marginBottom="@dimen/ml_dimen_4"
+        android:layout_marginTop="@dimen/ml_dimen_4">
 
-        <TextView
-            android:id="@+id/ml_text_apply_for_username"
+
+        <net.melove.demo.chat.widget.MLImageView
+            android:id="@+id/ml_img_applyfor_avatar"
+            android:layout_width="@dimen/ml_dimen_40"
+            android:layout_height="@dimen/ml_dimen_40"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/ic_character_blackcat"
+            melove:border_color="@color/ml_border_white"
+            melove:border_width="@dimen/ml_dimen_2"
+            melove:shape_type="round" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/ml_dimen_56"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/ml_text_apply_for_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ml_username"
+                android:textColor="@color/ml_text_title_black"
+                android:textSize="@dimen/ml_size_14" />
+
+            <TextView
+                android:id="@+id/ml_text_apply_for_reason"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ml_reason"
+                android:textColor="@color/ml_text_subtitle_black"
+                android:textSize="@dimen/ml_size_12" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <Button
+                android:id="@+id/ml_btn_apply_for_agree"
+                android:layout_width="@dimen/ml_dimen_56"
+                android:layout_height="@dimen/ml_dimen_36"
+                android:layout_marginRight="@dimen/ml_dimen_8"
+                android:background="@drawable/ml_shape_btn_rectangle_blue"
+                android:elevation="@dimen/ml_dimen_0"
+                android:focusable="false"
+                android:text="@string/ml_agree"
+                android:textColor="@color/ml_text_title_white"
+                android:textSize="@dimen/ml_size_14" />
+
+            <Button
+                android:id="@+id/ml_btn_apply_for_refuse"
+                android:layout_width="@dimen/ml_dimen_56"
+                android:layout_height="@dimen/ml_dimen_36"
+                android:background="@drawable/ml_shape_btn_rectangle_red"
+                android:elevation="@dimen/ml_dimen_0"
+                android:focusable="false"
+                android:text="@string/ml_refuse"
+                android:textColor="@color/ml_text_title_white"
+                android:textSize="@dimen/ml_size_14" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/ml_username"
-            android:textColor="@color/ml_text_item_title_block"
-            android:textSize="@dimen/ml_size_16" />
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true">
 
-        <TextView
-            android:id="@+id/ml_text_apply_for_reason"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/ml_reason"
-            android:textColor="@color/ml_text_item_subtitle_block"
-            android:textSize="@dimen/ml_size_14" />
-    </LinearLayout>
+            <TextView
+                android:id="@+id/ml_text_apply_for_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ml_app_name"
+                android:textColor="@color/ml_text_subtitle_black"
+                android:textSize="@dimen/ml_size_12"
+                android:visibility="gone" />
+        </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/ml_dimen_4"
-        android:clipChildren="false"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/ml_btn_apply_for_agree"
-            android:layout_width="@dimen/ml_dimen_56"
-            android:layout_height="@dimen/ml_dimen_36"
-            android:layout_margin="@dimen/ml_dimen_4"
-            android:background="@drawable/ml_shape_btn_round_blue"
-            android:focusable="false"
-            android:text="@string/ml_agree"
-            android:textColor="@color/ml_text_white"
-            android:textSize="@dimen/ml_size_14" />
-
-        <Button
-            android:id="@+id/ml_btn_apply_for_refuse"
-            android:layout_width="@dimen/ml_dimen_56"
-            android:layout_height="@dimen/ml_dimen_36"
-            android:layout_marginBottom="@dimen/ml_dimen_4"
-            android:layout_marginTop="@dimen/ml_dimen_4"
-            android:background="@drawable/ml_shape_btn_round_red"
-            android:focusable="false"
-            android:text="@string/ml_refuse"
-            android:textColor="@color/ml_text_white"
-            android:textSize="@dimen/ml_size_14" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/ml_dimen_4">
-
-        <TextView
-            android:id="@+id/ml_text_apply_for_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/ml_app_name"
-            android:textColor="@color/ml_text_block"
-            android:textSize="@dimen/ml_size_16"
-            android:visibility="gone" />
-    </LinearLayout>
-
-</RelativeLayout>
+    </RelativeLayout>
+</LinearLayout>

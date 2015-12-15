@@ -12,7 +12,7 @@ import com.easemob.chat.EMChatManager;
 import com.easemob.exceptions.EaseMobException;
 
 import net.melove.demo.chat.R;
-import net.melove.demo.chat.info.MLApplyForEntity;
+import net.melove.demo.chat.entity.MLApplyForEntity;
 import net.melove.demo.chat.widget.MLImageView;
 import net.melove.demo.chat.widget.MLToast;
 
@@ -157,7 +157,7 @@ public class MLApplyForAdapter extends BaseAdapter implements View.OnClickListen
         Button btnRefuse;
 
         public ViewHandler(View view) {
-            imageViewAvatar = (MLImageView) view.findViewById(R.id.ml_img_apply_for_avatar);
+            imageViewAvatar = (MLImageView) view.findViewById(R.id.ml_img_applyfor_avatar);
             textViewUsername = (TextView) view.findViewById(R.id.ml_text_apply_for_username);
             textViewReason = (TextView) view.findViewById(R.id.ml_text_apply_for_reason);
             textViewStatus = (TextView) view.findViewById(R.id.ml_text_apply_for_status);

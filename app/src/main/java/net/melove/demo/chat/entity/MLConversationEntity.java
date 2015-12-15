@@ -1,4 +1,4 @@
-package net.melove.demo.chat.info;
+package net.melove.demo.chat.entity;
 
 import com.easemob.chat.EMConversation;
 import com.easemob.chat.EMMessage;
@@ -19,7 +19,13 @@ public class MLConversationEntity {
     private String content;
     private int count;
     private int type;
+    private int top;
 
+
+    /**
+     * 会话实体类构造函数，根据传入的会话对象去
+     * @param conversation
+     */
     public MLConversationEntity(EMConversation conversation) {
         if (conversation.getAllMessages().size() > 0) {
             EMMessage message = conversation.getLastMessage();
@@ -90,6 +96,14 @@ public class MLConversationEntity {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public int getTop() {
+        return top;
+    }
+
+    public void setTop(int top) {
+        this.top = top;
     }
 
     public int getType() {

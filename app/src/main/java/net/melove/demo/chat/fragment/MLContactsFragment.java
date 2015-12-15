@@ -11,7 +11,7 @@ import android.widget.ListView;
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.adapter.MLContactsAdapter;
 import net.melove.demo.chat.db.MLUserDao;
-import net.melove.demo.chat.info.MLUserEntity;
+import net.melove.demo.chat.entity.MLUserEntity;
 
 import java.util.List;
 

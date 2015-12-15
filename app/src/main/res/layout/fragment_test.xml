@@ -31,8 +31,9 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/ml_dimen_8"
             android:background="@drawable/ml_shape_btn_rectangle_red"
+            android:elevation="@dimen/ml_dimen_0"
             android:text="@string/ml_test"
-            android:textColor="@color/ml_text_white"
+            android:textColor="@color/ml_text_title_white"
             android:textSize="@dimen/ml_size_18" />
 
         <Button
@@ -41,7 +42,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/ml_shape_btn_rectangle_red"
             android:text="@string/ml_signout"
-            android:textColor="@color/ml_text_white"
+            android:textColor="@color/ml_text_title_white"
             android:textSize="@dimen/ml_size_18" />
     </LinearLayout>
 

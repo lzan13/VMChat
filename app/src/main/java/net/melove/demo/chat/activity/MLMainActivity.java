@@ -217,10 +217,11 @@ public class MLMainActivity extends MLBaseActivity implements
             case R.id.ml_nav_group:
                 mMenuType = 0;
                 mCurrentFragment = new MLOtherFragment();
-                mToolbar.setTitle(R.string.ml_chat);
+                mToolbar.setTitle(R.string.ml_group);
                 break;
             case R.id.ml_nav_room:
                 mMenuType = 1;
+                mToolbar.setTitle(R.string.ml_room);
 
                 break;
             case R.id.ml_nav_help:
@@ -475,5 +476,9 @@ public class MLMainActivity extends MLBaseActivity implements
                 break;
         }
         mDrawerLayout.closeDrawer(GravityCompat.START);
+    }
+
+    public View getToolbar() {
+        return mToolbar;
     }
 }

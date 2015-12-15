@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/ml_bg_white"
     android:orientation="vertical">
 
     <include layout="@layout/widget_toolbar_communal" />
@@ -10,6 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/bg_top" />
+
         <LinearLayout
             android:id="@+id/ml_layout_chat_input"
             android:layout_width="match_parent"
@@ -17,6 +24,7 @@
             android:layout_alignParentBottom="true"
             android:elevation="@dimen/ml_dimen_4"
             android:orientation="vertical">
+
             <!--输入条布局-->
             <RelativeLayout
                 android:id="@+id/ml_layout_chat_input_top_bar"
@@ -34,7 +42,6 @@
                     android:layout_centerVertical="true">
 
                     <!--语音按钮-->
-
                     <ImageView
                         android:id="@+id/ml_img_chat_voice"
                         android:layout_width="wrap_content"
@@ -57,7 +64,9 @@
                 <RelativeLayout
                     android:id="@+id/ml_layout_chat_input_bar_left"
                     android:layout_width="@dimen/ml_dimen_48"
-                    android:layout_height="@dimen/ml_dimen_48">
+                    android:layout_height="@dimen/ml_dimen_48"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true">
 
                     <ImageView
                         android:id="@+id/ml_img_chat_emotion"
@@ -89,8 +98,8 @@
                     android:maxLines="3"
                     android:paddingBottom="@dimen/ml_dimen_8"
                     android:paddingTop="@dimen/ml_dimen_8"
-                    android:textColor="@color/ml_text_block"
-                    android:textColorHint="@color/ml_text_hint_gray"
+                    android:textColor="@color/ml_text_title_black"
+                    android:textColorHint="@color/ml_text_hint_black"
                     android:textSize="@dimen/ml_size_16" />
 
             </RelativeLayout>

@@ -3,6 +3,7 @@
     android:id="@+id/ml_layout_splash_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/ml_bg_white"
     android:orientation="vertical">
 
     <ImageView

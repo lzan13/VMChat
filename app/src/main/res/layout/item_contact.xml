@@ -1,34 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:melove="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/ml_dimen_56"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/ml_dimen_16"
+    android:paddingRight="@dimen/ml_dimen_16">
 
-    <net.melove.demo.chat.widget.MLImageView
-        android:id="@+id/ml_img_contact_avatar"
-        android:layout_width="@dimen/ml_dimen_48"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="@dimen/ml_dimen_48"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/ml_dimen_8"
-        android:src="@mipmap/ic_character_blackcat"
-        melove:border_color="@color/ml_border_gray"
-        melove:border_width="@dimen/ml_dimen_1"
-        melove:shape_type="round" />
+        android:layout_marginBottom="@dimen/ml_dimen_4"
+        android:layout_marginTop="@dimen/ml_dimen_4">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="@dimen/ml_dimen_72"
-        android:gravity="center_vertical"
-        android:orientation="vertical">
+        <net.melove.demo.chat.widget.MLImageView
+            android:id="@+id/ml_img_contact_avatar"
+            android:layout_width="@dimen/ml_dimen_40"
+            android:layout_height="@dimen/ml_dimen_40"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/ic_character_blackcat"
+            melove:border_color="@color/ml_border_white"
+            melove:border_width="@dimen/ml_dimen_2"
+            melove:shape_type="round" />
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/ml_username"
-            android:textColor="@color/ml_text_item_title_block"
-            android:textSize="@dimen/ml_size_14" />
-    </LinearLayout>
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/ml_dimen_56"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
 
-</RelativeLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ml_username"
+                android:textColor="@color/ml_text_title_black"
+                android:textSize="@dimen/ml_size_14" />
+        </LinearLayout>
+
+    </RelativeLayout>
+</LinearLayout>

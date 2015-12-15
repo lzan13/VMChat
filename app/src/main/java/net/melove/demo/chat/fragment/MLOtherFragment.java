@@ -45,7 +45,7 @@ public class MLOtherFragment extends MLBaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mContext = getParentFragment().getActivity();
+        mContext = getActivity();
     }
 
 }

@@ -1,19 +1,29 @@
 package net.melove.demo.chat.fragment;
 
 
-import android.content.Context;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v7.app.AlertDialog;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMConversation;
 
 import net.melove.demo.chat.R;
+import net.melove.demo.chat.activity.MLChatActivity;
+import net.melove.demo.chat.activity.MLMainActivity;
 import net.melove.demo.chat.adapter.MLConversationAdapter;
-import net.melove.demo.chat.info.MLConversationEntity;
+import net.melove.demo.chat.entity.MLConversationEntity;
+import net.melove.demo.chat.widget.MLToast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +34,7 @@ import java.util.Map;
  */
 public class MLConversationsFragment extends MLBaseFragment {
 
-    private Context mContext;
+    private Activity mActivity;
     private List<MLConversationEntity> mConversationList;
 
     private ListView mListView;
@@ -44,7 +54,6 @@ public class MLConversationsFragment extends MLBaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mContext = getParentFragment().getActivity();
     }
 
     @Override
@@ -58,7 +67,7 @@ public class MLConversationsFragment extends MLBaseFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mContext = getParentFragment().getActivity();
+        mActivity = getParentFragment().getActivity();
 
         init();
         initConversationListView();
@@ -79,9 +88,79 @@ public class MLConversationsFragment extends MLBaseFragment {
             mConversationList.add(temp);
         }
 
-        MLConversationAdapter mAdapter = new MLConversationAdapter(mContext, mConversationList);
+        MLConversationAdapter mAdapter = new MLConversationAdapter(mActivity, mConversationList);
 
         mListView = (ListView) getView().findViewById(R.id.ml_listview_conversation);
         mListView.setAdapter(mAdapter);
+        // 设置列表项点击监听
+        setItemClickListener();
+
+        // 设置列表项长按监听
+        setItemLongClickListener();
+        // 设置长按弹出上下文菜单，和 onContextItemSelected 配套使用
+//        setContextMenuListener();
+
+    }
+
+    private void setContextMenuListener() {
+        mListView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+            @Override
+            public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+                menu.add(0, 0, 0, "Delete");
+                menu.add(0, 1, 0, "Top");
+                menu.add(0, 2, 0, "Other");
+            }
+        });
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case 0:
+
+                break;
+            case 1:
+                break;
+            case 2:
+
+                break;
+        }
+        return super.onContextItemSelected(item);
+    }
+
+    /**
+     * ListView 控件点击监听
+     */
+    private void setItemClickListener() {
+        // ListView 的点击监听
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent();
+                intent.setClass(mActivity, MLChatActivity.class);
+                intent.putExtra("username", mConversationList.get(position).getUsername());
+                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, ((MLMainActivity) mActivity).getToolbar(), "toolbar");
+                ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
+            }
+        });
+    }
+
+    /**
+     * ListView 列表项的长按监听
+     */
+    private void setItemLongClickListener() {
+        // ListView 的长按监听
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                MLToast.makeToast("选择长按操作" + position).show();
+                new AlertDialog.Builder(mActivity)
+                        .setTitle("Select")
+                        .setItems(new String[]{"Delete", "Top"}, null)
+                        .show();
+
+                return true;
+            }
+        });
     }
 }

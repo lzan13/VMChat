@@ -33,7 +33,7 @@
 
     <!-- 侧滑抽屉切换图标样式 -->
     <style name="MLTheme.DrawerArrowToggle" parent="Base.Widget.AppCompat.DrawerArrowToggle">
-        <item name="color">@color/ml_white</item>
+        <item name="color">@color/ml_theme_menu_primary</item>
     </style>
 
     <!--自定义控件MLToast 动画-->
@@ -58,7 +58,7 @@
 
     <!--自定 AppBar样式-->
     <style name="MLTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="android:textColor">@color/ml_text_white</item>
+        <item name="android:textColor">@color/ml_theme_text_primary_white</item>
     </style>
 
     <!--自定 Toolbar 弹出 PopupMenu 样式-->
@@ -70,9 +70,10 @@
     <!--自定义 Toolbar 样式-->
     <style name="MLTheme.Toolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <!--Toolbar字体颜色-->
-        <item name="colorControlNormal">@color/ml_theme_text_primary</item>
-        <item name="android:textColor">@color/ml_theme_text_primary</item>
-        <item name="android:textSize">@dimen/ml_size_20</item>
+        <item name="colorControlNormal">@color/ml_theme_text_primary_white</item>
+        <item name="android:textColor">@color/ml_theme_text_primary_white</item>
+        <item name="android:textSize">@dimen/ml_size_18</item>
+        <item name="android:textStyle">bold</item>
     </style>
     <!--自定义 TabLayout 的字体样式-->
     <style name="MLCustomTabTextAppearance" parent="TextAppearance.Design.Tab"></style>

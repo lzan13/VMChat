@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:melove="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/ml_dimen_56"
+    android:layout_height="wrap_content"
+    android:background="@drawable/ml_ripple_white"
     android:gravity="center_vertical"
     android:orientation="vertical"
     android:paddingLeft="@dimen/ml_dimen_16"
@@ -10,22 +11,25 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/ml_dimen_48">
+        android:layout_height="@dimen/ml_dimen_48"
+        android:layout_marginBottom="@dimen/ml_dimen_4"
+        android:layout_marginTop="@dimen/ml_dimen_4">
 
         <net.melove.demo.chat.widget.MLImageView
             android:id="@+id/ml_img_conversation_avatar"
-            android:layout_width="@dimen/ml_dimen_48"
-            android:layout_height="@dimen/ml_dimen_48"
+            android:layout_width="@dimen/ml_dimen_40"
+            android:layout_height="@dimen/ml_dimen_40"
             android:layout_centerVertical="true"
             android:src="@mipmap/ic_character_blackcat"
-            melove:border_color="@color/ml_border_gray"
-            melove:border_width="@dimen/ml_dimen_1"
+            melove:border_color="@color/ml_border_white"
+            melove:border_width="@dimen/ml_dimen_2"
             melove:shape_type="round" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/ml_dimen_72"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/ml_dimen_56"
             android:gravity="center_vertical"
             android:orientation="vertical">
 
@@ -34,15 +38,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/ml_username"
-                android:textColor="@color/ml_text_item_title_block"
+                android:textColor="@color/ml_text_title_black"
                 android:textSize="@dimen/ml_size_14" />
 
             <TextView
                 android:id="@+id/ml_text_conversation_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:singleLine="true"
                 android:text="@string/ml_app_name"
-                android:textColor="@color/ml_text_item_subtitle_block"
+                android:textColor="@color/ml_text_subtitle_black"
                 android:textSize="@dimen/ml_size_12" />
         </LinearLayout>
 
@@ -50,8 +55,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/ml_dimen_8"
-            android:gravity="center_vertical"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical|right"
             android:orientation="vertical">
 
             <TextView
@@ -59,16 +64,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/ml_app_name"
-                android:textColor="@color/ml_text_item_subtitle_block"
-                android:textSize="@dimen/ml_size_12" />
+                android:textColor="@color/ml_text_subtitle_black"
+                android:textSize="@dimen/ml_size_10" />
 
             <TextView
                 android:id="@+id/ml_text_conversation_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/ml_app_name"
-                android:textColor="@color/ml_text_item_subtitle_block"
-                android:textSize="@dimen/ml_size_12" />
+                android:text="0"
+                android:textColor="@color/ml_text_subtitle_black"
+                android:textSize="@dimen/ml_size_10" />
         </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

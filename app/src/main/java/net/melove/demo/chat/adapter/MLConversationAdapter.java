@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import net.melove.demo.chat.R;
-import net.melove.demo.chat.info.MLConversationEntity;
+import net.melove.demo.chat.entity.MLConversationEntity;
 
 import java.util.List;
 

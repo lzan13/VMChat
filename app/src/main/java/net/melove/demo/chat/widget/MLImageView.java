@@ -61,10 +61,10 @@ public class MLImageView extends ImageView {
 
     private void init(Context context, AttributeSet attrs) {
         //初始化默认值
-        mBorderColor = 0xffffffff;
+        mBorderColor = 0xddffffff;
         mBorderWidth = 0;
-        mPressAlpha = 45;
-        mPressColor = 0xff898989;
+        mPressAlpha = 128;
+        mPressColor = 0x42000000;
         mRadius = 16;
         mShapeType = 1;
 
@@ -190,7 +190,7 @@ public class MLImageView extends ImageView {
             paint.setColor(mBorderColor);
             paint.setAntiAlias(true);
             if (mShapeType == 0) {
-                canvas.drawCircle(mWidth / 2, mHeight / 2, mWidth / 2, paint);
+                canvas.drawCircle(mWidth / 2, mHeight / 2, (mWidth - mBorderWidth) / 2, paint);
             } else {
                 // 当ShapeType = 1 时 图片为圆角矩形
                 RectF rectf = new RectF(0, 0, getWidth(), getHeight());
@@ -217,7 +217,11 @@ public class MLImageView extends ImageView {
                 mPressPaint.setAlpha(0);
                 invalidate();
                 break;
+            case MotionEvent.ACTION_MOVE:
+
+                break;
             default:
+                mPressPaint.setAlpha(0);
                 invalidate();
                 break;
         }

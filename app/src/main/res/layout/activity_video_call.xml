@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/ml_bg_white"
     tools:context=".activity.MLVideoCallActivity">
 
     <RelativeLayout
@@ -21,7 +22,7 @@
             android:layout_height="@dimen/ml_dimen_384"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:background="@color/ml_bg_gray" />
+            android:background="@color/ml_bg_white" />
     </RelativeLayout>
 
     <LinearLayout
