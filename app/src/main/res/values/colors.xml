@@ -25,6 +25,8 @@
 
     <!--背景色-->
     <color name="ml_bg_white">#fff8f8f8</color>
+    <color name="ml_bg_white_87">#ddf8f8f8</color>
+    <color name="ml_bg_white_54">#89f8f8f8</color>
 
     <!--图片叠加色-->
     <color name="ml_img_tint_black">#42000000</color>
@@ -36,8 +38,9 @@
     <color name="ml_btn_blue_pressed">#89296dd8</color>
     <color name="ml_btn_gray_normal">#21000000</color>
     <color name="ml_btn_gray_pressed">#89000000</color>
-    <color name="ml_btn_white_normal">#21ffffff</color>
+    <color name="ml_btn_white_normal">#ddffffff</color>
     <color name="ml_btn_white_pressed">#89ffffff</color>
+    <color name="ml_btn_white_shadow">#895e5e5e</color>
 
     <!--文字颜色-->
     <color name="ml_text_title_black">#dd000000</color>

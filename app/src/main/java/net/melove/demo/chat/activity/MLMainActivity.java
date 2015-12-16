@@ -58,7 +58,15 @@ public class MLMainActivity extends MLBaseActivity implements
     private ActionBarDrawerToggle mDrawerToggle;
     private NavigationView mNavigationView;
     private Toolbar mToolbar;
+
+    // fab按钮
+    private boolean isActivateFab;
+    private View mFabView;
+    private FloatingActionButton mFabCreateConversationBtn;
+    private FloatingActionButton mFabAddContactBtn;
+    private FloatingActionButton mFabAddGroupBtn;
     private FloatingActionButton mFabBtn;
+
 
     private FragmentTransaction mFragmentTransaction;
     private Fragment mCurrentFragment;
@@ -89,6 +97,7 @@ public class MLMainActivity extends MLBaseActivity implements
         mActivity = this;
         mEventListener = this;
         mMenuType = 0;
+        isActivateFab = false;
         mTitle = getTitle();
 
     }
@@ -104,6 +113,10 @@ public class MLMainActivity extends MLBaseActivity implements
         mToolbar.setTitle(mActivity.getResources().getString(R.string.ml_title_dialog_chat));
         setSupportActionBar(mToolbar);
 
+        mFabView = findViewById(R.id.ml_btn_fab_menu_layout);
+        mFabCreateConversationBtn = (FloatingActionButton) findViewById(R.id.ml_btn_fab_create_conversation);
+        mFabAddContactBtn = (FloatingActionButton) findViewById(R.id.ml_btn_fab_add_contact);
+        mFabAddGroupBtn = (FloatingActionButton) findViewById(R.id.ml_btn_fab_add_group);
         mFabBtn = (FloatingActionButton) findViewById(R.id.ml_btn_fab);
         mFabBtn.setOnClickListener(viewListener);
 
@@ -195,7 +208,16 @@ public class MLMainActivity extends MLBaseActivity implements
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.ml_btn_fab:
+                    fabChange();
+                    break;
+                case R.id.ml_btn_fab_create_conversation:
                     createNewConversation();
+                    break;
+                case R.id.ml_btn_fab_add_contact:
+
+                    break;
+                case R.id.ml_btn_fab_add_group:
+
                     break;
             }
         }
@@ -245,6 +267,16 @@ public class MLMainActivity extends MLBaseActivity implements
         }
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void fabChange() {
+        if (isActivateFab) {
+            mFabView.setVisibility(View.GONE);
+            isActivateFab = false;
+        } else {
+            mFabView.setVisibility(View.VISIBLE);
+            isActivateFab = true;
+        }
     }
 
     /**

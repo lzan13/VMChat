@@ -72,6 +72,10 @@
     <string name="ml_btn_agreed">已同意</string>
     <string name="ml_btn_refuse">拒绝</string>
     <string name="ml_btn_refused">已拒绝</string>
+    <string name="ml_btn_add_contact">添加联系人</string>
+    <string name="ml_btn_add_group">添加群组</string>
+    <string name="ml_btn_create_group">新建群组</string>
+    <string name="ml_btn_create_conversation">创建新会话</string>
 
     <!--Title 相关-->
     <string name="ml_title_home">主页</string>
