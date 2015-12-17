@@ -21,6 +21,8 @@ import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.util.MLLog;
 
+import java.util.List;
+
 /**
  * Class ${FILE_NAME}
  * <p/>
@@ -120,7 +122,12 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
      */
     private void initConversation() {
         mConversation = EMChatManager.getInstance().getConversationByType(mChatUsername, EMConversation.EMConversationType.Chat);
-
+        mConversation.markAllMessagesAsRead();
+        List<EMMessage> messages = mConversation.getAllMessages();
+        for (EMMessage message : messages) {
+            String content = ((TextMessageBody) message.getBody()).getMessage();
+            MLLog.i(content);
+        }
 
     }
 

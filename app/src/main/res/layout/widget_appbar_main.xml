@@ -39,16 +39,82 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/ml_btn_fab_menu_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/ml_bg_white_87"
             android:gravity="bottom|right"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/ml_dimen_96"
-            android:paddingRight="@dimen/ml_dimen_24"
-            android:visibility="visible"></LinearLayout>
+            android:paddingBottom="@dimen/ml_dimen_72"
+            android:visibility="visible">
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/ml_btn_fab_add_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="@dimen/ml_dimen_16"
+                android:layout_marginRight="@dimen/ml_dimen_24"
+                android:src="@drawable/ic_menu_add_group"
+                app:fabSize="mini" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/ml_btn_fab_add_group"
+                android:layout_marginBottom="@dimen/ml_dimen_4"
+                android:layout_marginRight="@dimen/ml_dimen_16"
+                android:layout_toLeftOf="@id/ml_btn_fab_add_group"
+                android:background="@drawable/ml_shape_btn_rectangle_white"
+                android:linksClickable="true"
+                android:padding="@dimen/ml_dimen_4"
+                android:text="@string/ml_btn_add_group" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/ml_btn_fab_add_contact"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/ml_btn_fab_add_group"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="@dimen/ml_dimen_16"
+                android:layout_marginRight="@dimen/ml_dimen_24"
+                android:src="@drawable/ic_menu_add_contact"
+                app:fabSize="mini" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/ml_btn_fab_add_contact"
+                android:layout_marginBottom="@dimen/ml_dimen_4"
+                android:layout_marginRight="@dimen/ml_dimen_16"
+                android:layout_toLeftOf="@id/ml_btn_fab_add_contact"
+                android:background="@drawable/ml_shape_btn_rectangle_white"
+                android:padding="@dimen/ml_dimen_4"
+                android:text="@string/ml_btn_add_contact" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/ml_btn_fab_create_conversation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/ml_btn_fab_add_contact"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="@dimen/ml_dimen_16"
+                android:layout_marginRight="@dimen/ml_dimen_24"
+                android:src="@drawable/ic_menu_chat"
+                app:fabSize="mini" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/ml_btn_fab_create_conversation"
+                android:layout_marginBottom="@dimen/ml_dimen_4"
+                android:layout_marginRight="@dimen/ml_dimen_16"
+                android:layout_toLeftOf="@id/ml_btn_fab_create_conversation"
+                android:background="@drawable/ml_shape_btn_rectangle_white"
+                android:padding="@dimen/ml_dimen_4"
+                android:text="@string/ml_btn_create_conversation" />
+        </RelativeLayout>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/ml_btn_fab"
@@ -58,72 +124,5 @@
             android:layout_alignParentRight="true"
             android:layout_margin="@dimen/ml_dimen_16"
             android:src="@drawable/ic_menu_add" />
-
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/ml_btn_fab_add_group"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/ml_btn_fab"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/ml_dimen_24"
-            android:src="@drawable/ic_menu_add_group"
-            app:fabSize="mini" />
-
-        <TextView
-            android:linksClickable="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/ml_btn_fab_add_group"
-            android:layout_marginBottom="@dimen/ml_dimen_4"
-            android:layout_marginRight="@dimen/ml_dimen_16"
-            android:layout_toLeftOf="@id/ml_btn_fab_add_group"
-            android:background="@drawable/ml_shape_btn_rectangle_white"
-            android:padding="@dimen/ml_dimen_4"
-            android:text="@string/ml_btn_add_group" />
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/ml_btn_fab_add_contact"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/ml_btn_fab_add_group"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="@dimen/ml_dimen_16"
-            android:layout_marginRight="@dimen/ml_dimen_24"
-            android:src="@drawable/ic_menu_add_contact"
-            app:fabSize="mini" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/ml_btn_fab_add_contact"
-            android:layout_marginBottom="@dimen/ml_dimen_4"
-            android:layout_marginRight="@dimen/ml_dimen_16"
-            android:layout_toLeftOf="@id/ml_btn_fab_add_contact"
-            android:background="@drawable/ml_shape_btn_rectangle_white"
-            android:padding="@dimen/ml_dimen_4"
-            android:text="@string/ml_btn_add_contact" />
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/ml_btn_fab_create_conversation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/ml_btn_fab_add_contact"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="@dimen/ml_dimen_16"
-            android:layout_marginRight="@dimen/ml_dimen_24"
-            android:src="@drawable/ic_menu_chat"
-            app:fabSize="mini" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/ml_btn_fab_create_conversation"
-            android:layout_marginBottom="@dimen/ml_dimen_4"
-            android:layout_marginRight="@dimen/ml_dimen_16"
-            android:layout_toLeftOf="@id/ml_btn_fab_create_conversation"
-            android:background="@drawable/ml_shape_btn_rectangle_white"
-            android:padding="@dimen/ml_dimen_4"
-            android:text="@string/ml_btn_create_conversation" />
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

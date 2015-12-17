@@ -118,6 +118,10 @@ public class MLMainActivity extends MLBaseActivity implements
         mFabAddContactBtn = (FloatingActionButton) findViewById(R.id.ml_btn_fab_add_contact);
         mFabAddGroupBtn = (FloatingActionButton) findViewById(R.id.ml_btn_fab_add_group);
         mFabBtn = (FloatingActionButton) findViewById(R.id.ml_btn_fab);
+
+        mFabCreateConversationBtn.setOnClickListener(viewListener);
+        mFabAddContactBtn.setOnClickListener(viewListener);
+        mFabAddGroupBtn.setOnClickListener(viewListener);
         mFabBtn.setOnClickListener(viewListener);
 
         initDrawer();
@@ -211,12 +215,15 @@ public class MLMainActivity extends MLBaseActivity implements
                     fabChange();
                     break;
                 case R.id.ml_btn_fab_create_conversation:
+                    fabChange();
                     createNewConversation();
                     break;
                 case R.id.ml_btn_fab_add_contact:
+                    fabChange();
 
                     break;
                 case R.id.ml_btn_fab_add_group:
+                    fabChange();
 
                     break;
             }

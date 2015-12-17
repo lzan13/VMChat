@@ -15,6 +15,12 @@
             android:layout_height="wrap_content"
             android:text="删除会话" />
 
+        <Button
+            android:id="@+id/ml_btn_test_import_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="导入消息" />
+
     </LinearLayout>
 
     <LinearLayout

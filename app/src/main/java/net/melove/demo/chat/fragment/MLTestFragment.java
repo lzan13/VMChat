@@ -9,9 +9,12 @@ import android.view.ViewGroup;
 
 import com.easemob.EMCallBack;
 import com.easemob.chat.EMChatManager;
+import com.easemob.chat.EMMessage;
+import com.easemob.chat.TextMessageBody;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLEasemobHelper;
+import net.melove.demo.chat.util.MLDate;
 import net.melove.demo.chat.util.MLLog;
 
 /**
@@ -62,6 +65,7 @@ public class MLTestFragment extends MLBaseFragment {
 
     private void init() {
         getView().findViewById(R.id.ml_btn_test_delete_conversation).setOnClickListener(viewListener);
+        getView().findViewById(R.id.ml_btn_test_import_message).setOnClickListener(viewListener);
         getView().findViewById(R.id.ml_btn_signout).setOnClickListener(viewListener);
         getView().findViewById(R.id.ml_btn_jump_test).setOnClickListener(viewListener);
     }
@@ -89,6 +93,15 @@ public class MLTestFragment extends MLBaseFragment {
         });
     }
 
+    private void importMessage() {
+        EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
+        TextMessageBody textMessageBody = new TextMessageBody("导入消息" + MLDate.getCurrentDate());
+        message.addBody(textMessageBody);
+        message.setFrom("lz0");
+        EMChatManager.getInstance().importMessage(message, false);
+
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -112,6 +125,9 @@ public class MLTestFragment extends MLBaseFragment {
                     break;
                 case R.id.ml_btn_test_delete_conversation:
                     EMChatManager.getInstance().deleteConversation("lz0");
+                    break;
+                case R.id.ml_btn_test_import_message:
+                    importMessage();
                     break;
             }
         }

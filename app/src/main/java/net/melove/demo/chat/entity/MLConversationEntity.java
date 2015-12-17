@@ -5,6 +5,7 @@ import com.easemob.chat.EMMessage;
 import com.easemob.chat.TextMessageBody;
 
 import net.melove.demo.chat.util.MLDate;
+import net.melove.demo.chat.util.MLLog;
 
 /**
  * Created by lzan13 on 2015/12/14 15:27.
@@ -24,6 +25,7 @@ public class MLConversationEntity {
 
     /**
      * 会话实体类构造函数，根据传入的会话对象去
+     *
      * @param conversation
      */
     public MLConversationEntity(EMConversation conversation) {
@@ -52,6 +54,7 @@ public class MLConversationEntity {
             setContent("还没有聊天内容");
             setTime("00:00");
         }
+        MLLog.i(getContent());
         setUsername(conversation.getUserName());
         setNick("昵称");
         setAvatar("");
