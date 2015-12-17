@@ -63,13 +63,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@id/ml_btn_fab_add_group"
-                android:layout_marginBottom="@dimen/ml_dimen_4"
+                android:layout_marginBottom="@dimen/ml_dimen_8"
                 android:layout_marginRight="@dimen/ml_dimen_16"
                 android:layout_toLeftOf="@id/ml_btn_fab_add_group"
-                android:background="@drawable/ml_shape_btn_rectangle_white"
-                android:linksClickable="true"
+                android:background="@drawable/ml_shape_fab_text"
+                android:clickable="true"
                 android:padding="@dimen/ml_dimen_4"
-                android:text="@string/ml_btn_add_group" />
+                android:text="@string/ml_btn_add_group"
+                android:textSize="@dimen/ml_size_10" />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/ml_btn_fab_add_contact"
@@ -86,12 +87,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@id/ml_btn_fab_add_contact"
-                android:layout_marginBottom="@dimen/ml_dimen_4"
+                android:layout_marginBottom="@dimen/ml_dimen_8"
                 android:layout_marginRight="@dimen/ml_dimen_16"
                 android:layout_toLeftOf="@id/ml_btn_fab_add_contact"
-                android:background="@drawable/ml_shape_btn_rectangle_white"
+                android:background="@drawable/ml_shape_fab_text"
+                android:clickable="true"
                 android:padding="@dimen/ml_dimen_4"
-                android:text="@string/ml_btn_add_contact" />
+                android:text="@string/ml_btn_add_contact"
+                android:textSize="@dimen/ml_size_10" />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/ml_btn_fab_create_conversation"
@@ -108,12 +111,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@id/ml_btn_fab_create_conversation"
-                android:layout_marginBottom="@dimen/ml_dimen_4"
+                android:layout_marginBottom="@dimen/ml_dimen_8"
                 android:layout_marginRight="@dimen/ml_dimen_16"
                 android:layout_toLeftOf="@id/ml_btn_fab_create_conversation"
-                android:background="@drawable/ml_shape_btn_rectangle_white"
+                android:background="@drawable/ml_shape_fab_text"
+                android:clickable="true"
                 android:padding="@dimen/ml_dimen_4"
-                android:text="@string/ml_btn_create_conversation" />
+                android:text="@string/ml_btn_create_conversation"
+                android:textSize="@dimen/ml_size_10" />
         </RelativeLayout>
 
         <android.support.design.widget.FloatingActionButton
