@@ -1,5 +1,7 @@
 package net.melove.demo.chat.activity;
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -61,7 +63,7 @@ public class MLMainActivity extends MLBaseActivity implements
 
     // fab按钮
     private boolean isActivateFab;
-    private View mFabView;
+    private View mFabMenuLayout;
     private FloatingActionButton mFabCreateConversationBtn;
     private FloatingActionButton mFabAddContactBtn;
     private FloatingActionButton mFabAddGroupBtn;
@@ -113,12 +115,15 @@ public class MLMainActivity extends MLBaseActivity implements
         mToolbar.setTitle(mActivity.getResources().getString(R.string.ml_title_dialog_chat));
         setSupportActionBar(mToolbar);
 
-        mFabView = findViewById(R.id.ml_btn_fab_menu_layout);
+        mFabMenuLayout = findViewById(R.id.ml_btn_fab_menu_layout);
         mFabCreateConversationBtn = (FloatingActionButton) findViewById(R.id.ml_btn_fab_create_conversation);
         mFabAddContactBtn = (FloatingActionButton) findViewById(R.id.ml_btn_fab_add_contact);
         mFabAddGroupBtn = (FloatingActionButton) findViewById(R.id.ml_btn_fab_add_group);
         mFabBtn = (FloatingActionButton) findViewById(R.id.ml_btn_fab);
 
+        findViewById(R.id.ml_text_fab_create_conversation).setOnClickListener(viewListener);
+        findViewById(R.id.ml_text_fab_add_contact).setOnClickListener(viewListener);
+        findViewById(R.id.ml_text_fab_add_group).setOnClickListener(viewListener);
         mFabCreateConversationBtn.setOnClickListener(viewListener);
         mFabAddContactBtn.setOnClickListener(viewListener);
         mFabAddGroupBtn.setOnClickListener(viewListener);
@@ -214,14 +219,17 @@ public class MLMainActivity extends MLBaseActivity implements
                 case R.id.ml_btn_fab:
                     fabChange();
                     break;
+                case R.id.ml_text_fab_create_conversation:
                 case R.id.ml_btn_fab_create_conversation:
                     fabChange();
                     createNewConversation();
                     break;
+                case R.id.ml_text_fab_add_contact:
                 case R.id.ml_btn_fab_add_contact:
                     fabChange();
 
                     break;
+                case R.id.ml_text_fab_add_group:
                 case R.id.ml_btn_fab_add_group:
                     fabChange();
 
@@ -278,11 +286,43 @@ public class MLMainActivity extends MLBaseActivity implements
 
     private void fabChange() {
         if (isActivateFab) {
-            mFabView.setVisibility(View.GONE);
             isActivateFab = false;
+            Animator animator = AnimatorInflater.loadAnimator(mActivity, R.animator.ml_animator_fab_rotate_left);
+            animator.setTarget(mFabBtn);
+            animator.start();
+            Animator animator2 = AnimatorInflater.loadAnimator(mActivity, R.animator.ml_animator_fab_alpha_out);
+            animator2.setTarget(mFabMenuLayout);
+            animator2.start();
+            animator2.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mFabMenuLayout.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
+            });
         } else {
-            mFabView.setVisibility(View.VISIBLE);
             isActivateFab = true;
+            mFabMenuLayout.setVisibility(View.VISIBLE);
+            Animator animator = AnimatorInflater.loadAnimator(mActivity, R.animator.ml_animator_fab_rotate_right);
+            animator.setTarget(mFabBtn);
+            animator.start();
+            Animator animator2 = AnimatorInflater.loadAnimator(mActivity, R.animator.ml_animator_fab_alpha_in);
+            animator2.setTarget(mFabMenuLayout);
+            animator2.start();
         }
     }
 

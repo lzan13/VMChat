@@ -30,10 +30,6 @@ import java.util.List;
  */
 public class MLChatActivity extends MLBaseActivity implements EMEventListener {
 
-    /**
-     * 测试群ID:1447497414589
-     */
-    private String testGroupId = "1447497414589";
     private String mChatUsername;
     private EMConversation mConversation;
 
@@ -228,6 +224,12 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mActivity = null;
+        mToolbar = null;
+        mConversation.clear();
+        mConversation = null;
+
+
     }
 
     @Override

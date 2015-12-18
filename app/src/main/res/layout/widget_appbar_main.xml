@@ -47,7 +47,7 @@
             android:gravity="bottom|right"
             android:orientation="vertical"
             android:paddingBottom="@dimen/ml_dimen_72"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/ml_btn_fab_add_group"
@@ -60,6 +60,7 @@
                 app:fabSize="mini" />
 
             <TextView
+                android:id="@+id/ml_text_fab_add_group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@id/ml_btn_fab_add_group"
@@ -84,6 +85,7 @@
                 app:fabSize="mini" />
 
             <TextView
+                android:id="@+id/ml_text_fab_add_contact"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@id/ml_btn_fab_add_contact"
@@ -108,6 +110,7 @@
                 app:fabSize="mini" />
 
             <TextView
+                android:id="@+id/ml_text_fab_create_conversation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@id/ml_btn_fab_create_conversation"

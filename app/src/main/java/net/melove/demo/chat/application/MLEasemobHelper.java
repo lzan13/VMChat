@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 
 import com.easemob.EMCallBack;
-import com.easemob.EMConnectionListener;
 import com.easemob.EMEventListener;
 import com.easemob.EMNotifierEvent;
 import com.easemob.chat.EMChat;
@@ -50,8 +49,7 @@ public class MLEasemobHelper {
         // 如果app启用了远程的service，此application:onCreate会被调用2次
         // 为了防止环信SDK被初始化2次，加此判断会保证SDK被初始化1次
         // 默认的app会在以包名为默认的process name下运行，如果查到的process name不是app的process name就立即返回
-        //"net.melove.demo.chat"为demo的包名，换到自己项目中要改成自己包名
-        if (processAppName == null || !processAppName.equalsIgnoreCase("net.melove.demo.chat")) {
+        if (processAppName == null || !processAppName.equalsIgnoreCase(context.getPackageName())) {
             // 则此application::onCreate 是被service 调用的，直接返回
             return true;
         }
@@ -73,8 +71,8 @@ public class MLEasemobHelper {
         MLEasemobOptions options = new MLEasemobOptions();
         options.initOption();
 
-        // 初始化监听
-        initListener();
+        // 初始化全局监听
+        initGlobalListener();
 
         // 初始化完成
         isInit = true;
@@ -85,7 +83,7 @@ public class MLEasemobHelper {
     /**
      * 初始化环信的一些监听
      */
-    public void initListener() {
+    public void initGlobalListener() {
         // 初始化全局消息监听
         initMessageListener();
     }
