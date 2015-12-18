@@ -24,7 +24,6 @@ import net.melove.demo.chat.activity.MLMainActivity;
 import net.melove.demo.chat.adapter.MLConversationAdapter;
 import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.entity.MLConversationEntity;
-import net.melove.demo.chat.widget.MLToast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -143,7 +142,7 @@ public class MLConversationsFragment extends MLBaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent();
                 intent.setClass(mActivity, MLChatActivity.class);
-                intent.putExtra(MLConstants.ML_C_USERNAME, mConversationList.get(position).getUsername());
+                intent.putExtra(MLConstants.ML_C_CHAT_ID, mConversationList.get(position).getChatId());
                 ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, ((MLMainActivity) mActivity).getToolbar(), "toolbar");
                 ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
             }

@@ -7,6 +7,7 @@ package net.melove.demo.chat.application;
  */
 public class MLConstants {
 
+    public static final String ML_C_CHAT_ID = "chat_id";
     public static final String ML_C_USERNAME = "username";
     public static final String ML_C_PASSWORD = "password";
 

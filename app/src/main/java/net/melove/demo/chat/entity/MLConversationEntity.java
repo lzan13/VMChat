@@ -13,13 +13,21 @@ import net.melove.demo.chat.util.MLLog;
  * 比如展示会话者的头像，昵称等，TODO 置顶操作
  */
 public class MLConversationEntity {
-    private String username;
+    // 会话id
+    private String chatId;
+    // 会话的昵称
     private String nick;
+    // 会话的头像
     private String avatar;
+    // 最后会话时间
     private String time;
+    // 最后一条消息内容
     private String content;
+    // 聊天未读数
     private int count;
+    // 聊天类型
     private int type;
+    // 标记是否置顶
     private int top;
 
 
@@ -54,8 +62,7 @@ public class MLConversationEntity {
             setContent("还没有聊天内容");
             setTime("00:00");
         }
-        MLLog.i(getContent());
-        setUsername(conversation.getUserName());
+        setChatId(conversation.getUserName());
         setNick("昵称");
         setAvatar("");
         setType(conversation.getType().ordinal());
@@ -117,11 +124,11 @@ public class MLConversationEntity {
         this.type = type;
     }
 
-    public String getUsername() {
-        return username;
+    public String getChatId() {
+        return chatId;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setChatId(String chatId) {
+        this.chatId = chatId;
     }
 }

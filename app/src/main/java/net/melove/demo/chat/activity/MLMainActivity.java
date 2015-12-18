@@ -373,6 +373,7 @@ public class MLMainActivity extends MLBaseActivity implements
 
                 break;
             case EventConversationListChanged:
+                Object obj = event.getData();
                 MLLog.i("有新的会话");
                 MLToast.makeToast("有新的会话").show();
                 break;

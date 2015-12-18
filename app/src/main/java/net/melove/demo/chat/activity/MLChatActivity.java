@@ -7,7 +7,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.RadioButton;
 
 import com.easemob.EMCallBack;
 import com.easemob.EMEventListener;
@@ -30,7 +29,8 @@ import java.util.List;
  */
 public class MLChatActivity extends MLBaseActivity implements EMEventListener {
 
-    private String mChatUsername;
+    // 当前聊天的 ID
+    private String mChatId;
     private EMConversation mConversation;
 
     private Activity mActivity;
@@ -56,7 +56,7 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
 
     private void init() {
         mActivity = this;
-        mChatUsername = getIntent().getStringExtra(MLConstants.ML_C_USERNAME);
+        mChatId = getIntent().getStringExtra(MLConstants.ML_C_CHAT_ID);
     }
 
     /**
@@ -100,7 +100,7 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
     private void initToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
 
-        mToolbar.setTitle(mChatUsername);
+        mToolbar.setTitle(mChatId);
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_menu_arrow);
         mToolbar.setNavigationOnClickListener(viewListener);
@@ -117,7 +117,7 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
      * 初始化会话对象
      */
     private void initConversation() {
-        mConversation = EMChatManager.getInstance().getConversationByType(mChatUsername, EMConversation.EMConversationType.Chat);
+        mConversation = EMChatManager.getInstance().getConversationByType(mChatId, EMConversation.EMConversationType.Chat);
         mConversation.markAllMessagesAsRead();
         List<EMMessage> messages = mConversation.getAllMessages();
         for (EMMessage message : messages) {
@@ -125,6 +125,26 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
             MLLog.i(content);
         }
 
+    }
+
+    private void sendMessage(final EMMessage message) {
+        MLLog.i("消息开始发送 %s", message.getMsgId());
+        EMChatManager.getInstance().sendMessage(message, new EMCallBack() {
+            @Override
+            public void onSuccess() {
+                MLLog.i("消息发送成功 %s", message.getMsgId());
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                MLLog.i("消息发送失败 code: %d, error: %s", i, s);
+            }
+
+            @Override
+            public void onProgress(int i, String s) {
+
+            }
+        });
     }
 
     /**
@@ -141,26 +161,10 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
         // 设置消息body
         message.addBody(txtBody);
 
-        message.setReceipt(mChatUsername);
+        message.setReceipt(mChatId);
         // 把messgage加到conversation中
         mConversation.addMessage(message);
-        EMChatManager.getInstance().sendMessage(message, new EMCallBack() {
-            @Override
-            public void onSuccess() {
-                MLLog.i("消息发送成功 O(∩_∩)O~~");
-                message.getMsgId();
-            }
-
-            @Override
-            public void onError(int i, String s) {
-                MLLog.i("消息发送失败 -_-||");
-            }
-
-            @Override
-            public void onProgress(int i, String s) {
-
-            }
-        });
+        sendMessage(message);
     }
 
     /**
@@ -195,7 +199,7 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
             case EventNewMessage:
                 EMMessage message = (EMMessage) event.getData();
                 MLLog.i(message.getBody().toString());
-                if (mChatUsername.equals(message.getFrom())) {
+                if (mChatId.equals(message.getFrom())) {
 
                 } else {
 
