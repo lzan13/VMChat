@@ -18,8 +18,6 @@ import net.melove.demo.chat.widget.MLToast;
  */
 public class MLUserInfoActivity extends MLBaseActivity {
 
-    private Activity mActivity;
-
 
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
     private Toolbar mToolbar;

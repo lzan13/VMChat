@@ -190,9 +190,9 @@ public class MLSigninActivity extends MLBaseActivity {
 
                         Intent intent = new Intent();
                         intent.setClass(mActivity, MLMainActivity.class);
-                        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, mToolbar, "toolbar");
+                        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeCustomAnimation(mActivity, R.anim.ml_anim_fade_in, R.anim.ml_anim_fade_out);
                         ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
-                        finishAfterTransition();
+                        mActivity.finish();
                     }
                 });
             }

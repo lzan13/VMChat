@@ -1,7 +1,6 @@
 package net.melove.demo.chat.fragment;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -19,8 +18,6 @@ import net.melove.demo.chat.util.MLLog;
  * 单聊模块儿 Fragment
  */
 public class MLHomeFragment extends MLBaseFragment {
-
-    private Activity mActivity;
 
 
     private TabLayout mTabLayout;

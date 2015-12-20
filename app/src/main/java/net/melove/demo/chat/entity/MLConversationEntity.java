@@ -63,8 +63,8 @@ public class MLConversationEntity {
             setTime("00:00");
         }
         setChatId(conversation.getUserName());
-        setNick("昵称");
-        setAvatar("");
+//        setNick("昵称");
+//        setAvatar("");
         setType(conversation.getType().ordinal());
     }
 

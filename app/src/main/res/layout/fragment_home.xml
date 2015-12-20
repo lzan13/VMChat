@@ -14,7 +14,7 @@
             android:id="@+id/ml_widget_tablayout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/ml_dimen_36"
-            app:tabBackground="@color/ml_tab_background"
+            app:tabBackground="@drawable/ml_click_rectangle_white"
             app:tabIndicatorColor="@color/ml_tab_indicator"
             app:tabIndicatorHeight="@dimen/ml_dimen_2"
             app:tabMode="fixed"

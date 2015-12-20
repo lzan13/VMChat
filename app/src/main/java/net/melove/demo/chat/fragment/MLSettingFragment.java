@@ -11,8 +11,6 @@ import net.melove.demo.chat.R;
 
 public class MLSettingFragment extends MLBaseFragment {
 
-    private Context mContext;
-
     public static MLSettingFragment newInstance(String param1, String param2) {
         MLSettingFragment fragment = new MLSettingFragment();
         Bundle args = new Bundle();
@@ -39,6 +37,6 @@ public class MLSettingFragment extends MLBaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mContext = getParentFragment().getActivity();
+        mActivity = getParentFragment().getActivity();
     }
 }

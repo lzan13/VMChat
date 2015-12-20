@@ -23,8 +23,6 @@ import java.util.List;
  */
 public class MLContactsFragment extends MLBaseFragment {
 
-    private Context mContext;
-
     private ListView mListView;
     private View mHeadView;
     private MLContactsAdapter mContactsAdapter;
@@ -63,17 +61,17 @@ public class MLContactsFragment extends MLBaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mContext = getParentFragment().getActivity();
+        mActivity = getParentFragment().getActivity();
 
         init();
 
     }
 
     private void init() {
-        mUserDao = new MLUserDao(mContext);
+        mUserDao = new MLUserDao(mActivity);
 
         List<MLUserEntity> list = mUserDao.getContactList();
-        mContactsAdapter = new MLContactsAdapter(mContext, list);
+        mContactsAdapter = new MLContactsAdapter(mActivity, list);
         mListView = (ListView) getView().findViewById(R.id.ml_list_contacts);
 
         mListView.setAdapter(mContactsAdapter);

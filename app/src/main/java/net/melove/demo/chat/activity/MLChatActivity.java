@@ -33,8 +33,6 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
     private String mChatId;
     private EMConversation mConversation;
 
-    private Activity mActivity;
-
     private Toolbar mToolbar;
 
     private EditText mEditText;

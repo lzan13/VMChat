@@ -87,7 +87,7 @@
                     android:id="@+id/ml_btn_signup"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/ml_shape_btn_rectangle_red"
+                    android:background="@drawable/ml_click_rectangle_red"
                     android:text="@string/ml_signup"
                     android:textColor="@color/ml_text_title_white"
                     android:textSize="@dimen/ml_size_18" />

@@ -97,9 +97,9 @@ public class MLSplashActivity extends MLBaseActivity {
      * 跳转场景
      */
     private void jumpScene(Intent intent) {
-        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity);
+        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeCustomAnimation(mActivity, R.anim.ml_anim_fade_in, R.anim.ml_anim_fade_out);
         ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
-        mActivity.finishAfterTransition();
+        mActivity.finish();
     }
 
     private Handler mHandler = new Handler() {

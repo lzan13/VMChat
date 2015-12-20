@@ -22,8 +22,6 @@ import net.melove.demo.chat.widget.MLToast;
  */
 public class MLSignupActivity extends MLBaseActivity {
 
-
-    private Activity mActivity;
     private Toolbar mToolbar;
 
     private ProgressDialog mDialog;

@@ -31,7 +31,6 @@ import java.util.List;
  */
 public class MLApplyforFragment extends MLBaseFragment {
 
-    private Activity mActivity;
 
     private ViewStub mViewStub;
 

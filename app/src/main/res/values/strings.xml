@@ -88,8 +88,9 @@
     <string name="ml_title_test">测试</string>
     <string name="ml_title_setting">设置</string>
     <!--Dialog-->
-    <string name="ml_title_dialog_conversation">会话操作</string>
-    <string name="ml_title_dialog_chat">Message 操作</string>
+    <string name="ml_dialog_title_conversation">会话操作</string>
+    <string name="ml_dialog_title_chat">Message 操作</string>
+    <string name="ml_dialog_content_create_conversation">演示环信不需要互为好友就能发起会话，只需要知道对方环信账户，即可跳转到聊天界面进行聊天</string>
 
     <!--Action 提示文字-->
     <string name="ml_action_search">搜索</string>

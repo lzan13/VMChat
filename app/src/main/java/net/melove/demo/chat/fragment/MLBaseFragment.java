@@ -2,12 +2,15 @@ package net.melove.demo.chat.fragment;
 
 
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 
 /**
  * Created by lzan13 on 2015/7/6.
  * Fragment的基类，定义Fragment公共接口回调
  */
 public class MLBaseFragment extends Fragment {
+
+    protected FragmentActivity mActivity;
 
     /**
      * 这个接口必须由包含此Fragment的Activity来实现，用来实现Activity和Fragment的交互，

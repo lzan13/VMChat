@@ -25,7 +25,6 @@ import net.melove.demo.chat.util.MLLog;
  */
 public class MLTestFragment extends MLBaseFragment {
 
-    private Context mContext;
 
     private OnMLFragmentListener mListener;
 
@@ -59,7 +58,7 @@ public class MLTestFragment extends MLBaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mContext = getParentFragment().getActivity();
+        mActivity = getParentFragment().getActivity();
         init();
     }
 

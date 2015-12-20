@@ -28,7 +28,7 @@ public class MLApplyForDao {
      */
     public synchronized void saveApplyFor(MLApplyForEntity applyForInfo) {
         ContentValues values = new ContentValues();
-        values.put(MLDBConstants.COL_USER_NAME, applyForInfo.getUserName());
+        values.put(MLDBConstants.COL_USERNAME, applyForInfo.getUserName());
         values.put(MLDBConstants.COL_NICKNAME, applyForInfo.getNickName());
         values.put(MLDBConstants.COL_GROUP_ID, applyForInfo.getGroupId());
         values.put(MLDBConstants.COL_GROUP_NAME, applyForInfo.getGroupName());
@@ -58,7 +58,7 @@ public class MLApplyForDao {
      */
     public synchronized void updateApplyFor(MLApplyForEntity applyForInfo) {
         ContentValues values = new ContentValues();
-        values.put(MLDBConstants.COL_USER_NAME, applyForInfo.getUserName());
+        values.put(MLDBConstants.COL_USERNAME, applyForInfo.getUserName());
         values.put(MLDBConstants.COL_NICKNAME, applyForInfo.getNickName());
         values.put(MLDBConstants.COL_GROUP_ID, applyForInfo.getGroupId());
         values.put(MLDBConstants.COL_GROUP_NAME, applyForInfo.getGroupName());
@@ -84,7 +84,7 @@ public class MLApplyForDao {
         List<MLApplyForEntity> applyForInfos = new ArrayList<MLApplyForEntity>();
         while (cursor.moveToNext()) {
             MLApplyForEntity applyForInfo = new MLApplyForEntity();
-            String username = cursor.getString(cursor.getColumnIndex(MLDBConstants.COL_USER_NAME));
+            String username = cursor.getString(cursor.getColumnIndex(MLDBConstants.COL_USERNAME));
             String nickname = cursor.getString(cursor.getColumnIndex(MLDBConstants.COL_NICKNAME));
             String groupId = cursor.getString(cursor.getColumnIndex(MLDBConstants.COL_GROUP_ID));
             String groupName = cursor.getString(cursor.getColumnIndex(MLDBConstants.COL_GROUP_NAME));

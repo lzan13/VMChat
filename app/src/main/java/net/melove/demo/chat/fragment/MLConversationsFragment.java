@@ -1,11 +1,13 @@
 package net.melove.demo.chat.fragment;
 
 
-import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -34,7 +36,8 @@ import java.util.Map;
  */
 public class MLConversationsFragment extends MLBaseFragment {
 
-    private Activity mActivity;
+    // 异步加载数据管理器
+    private LoaderManager mLoaderManager;
     private List<MLConversationEntity> mConversationList;
     private String[] mMenus = null;
     private ListView mListView;
@@ -68,12 +71,14 @@ public class MLConversationsFragment extends MLBaseFragment {
         super.onActivityCreated(savedInstanceState);
 
         mActivity = getParentFragment().getActivity();
-        getArguments().getString("");
+
         init();
         initConversationListView();
     }
 
     private void init() {
+        mLoaderManager = getLoaderManager();
+        mLoaderManager.initLoader(10001, null, callback);
         mMenus = new String[]{
                 mActivity.getResources().getString(R.string.ml_menu_conversation_top),
                 mActivity.getResources().getString(R.string.ml_menu_conversation_clear),
@@ -159,7 +164,7 @@ public class MLConversationsFragment extends MLBaseFragment {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 //                MLToast.makeToast("选择长按操作" + position).show();
                 new AlertDialog.Builder(mActivity)
-                        .setTitle(R.string.ml_title_dialog_conversation)
+                        .setTitle(R.string.ml_dialog_title_conversation)
                         .setItems(mMenus, null)
                         .show();
 
@@ -167,4 +172,21 @@ public class MLConversationsFragment extends MLBaseFragment {
             }
         });
     }
+
+    private LoaderManager.LoaderCallbacks<Cursor> callback = new LoaderManager.LoaderCallbacks<Cursor>() {
+        @Override
+        public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
+            return null;
+        }
+
+        @Override
+        public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+
+        }
+
+        @Override
+        public void onLoaderReset(Loader<Cursor> loader) {
+
+        }
+    };
 }

@@ -29,7 +29,7 @@ public class MLUserDao {
      */
     public synchronized void saveContacts(MLUserEntity userInfo) {
         ContentValues values = new ContentValues();
-        values.put(MLDBConstants.COL_USER_NAME, userInfo.getUserName());
+        values.put(MLDBConstants.COL_USERNAME, userInfo.getUserName());
         values.put(MLDBConstants.COL_NICKNAME, userInfo.getNickName());
         values.put(MLDBConstants.COL_EMAIL, userInfo.getEmail());
         values.put(MLDBConstants.COL_AVATAR, userInfo.getAvatar());
@@ -50,7 +50,7 @@ public class MLUserDao {
     public synchronized void deleteContacts(String username) {
         MLDBManager.getInstance().delete(
                 MLDBConstants.TB_USER,
-                MLDBConstants.COL_USER_NAME,
+                MLDBConstants.COL_USERNAME,
                 new String[]{username});
     }
 
@@ -61,7 +61,7 @@ public class MLUserDao {
      */
     public synchronized void updateContacts(MLUserEntity userInfo) {
         ContentValues values = new ContentValues();
-        values.put(MLDBConstants.COL_USER_NAME, userInfo.getUserName());
+        values.put(MLDBConstants.COL_USERNAME, userInfo.getUserName());
         values.put(MLDBConstants.COL_NICKNAME, userInfo.getNickName());
         values.put(MLDBConstants.COL_EMAIL, userInfo.getEmail());
         values.put(MLDBConstants.COL_AVATAR, userInfo.getAvatar());
@@ -73,7 +73,7 @@ public class MLUserDao {
         values.put(MLDBConstants.COL_UPDATE_AT, userInfo.getUpdateAt());
         MLDBManager.getInstance().updateData(
                 MLDBConstants.TB_USER, values,
-                MLDBConstants.COL_USER_NAME,
+                MLDBConstants.COL_USERNAME,
                 new String[]{userInfo.getUserName()});
 
     }
@@ -98,7 +98,7 @@ public class MLUserDao {
      */
     public synchronized MLUserEntity getContact(String username) {
         MLUserEntity userinfo = new MLUserEntity();
-        String selection = MLDBConstants.COL_USER_NAME + "=?";
+        String selection = MLDBConstants.COL_USERNAME + "=?";
         String args[] = new String[]{username};
         Cursor cursor = MLDBManager.getInstance().queryData(MLDBConstants.TB_USER, null, selection, args, null, null, null, null);
 
@@ -118,7 +118,7 @@ public class MLUserDao {
         List<MLUserEntity> users = new ArrayList<MLUserEntity>();
         while (cursor.moveToNext()) {
             MLUserEntity userInfo = new MLUserEntity();
-            String username = cursor.getString(cursor.getColumnIndex(MLDBConstants.COL_USER_NAME));
+            String username = cursor.getString(cursor.getColumnIndex(MLDBConstants.COL_USERNAME));
             String nickname = cursor.getString(cursor.getColumnIndex(MLDBConstants.COL_NICKNAME));
             String email = cursor.getString(cursor.getColumnIndex(MLDBConstants.COL_EMAIL));
             String avatar = cursor.getString(cursor.getColumnIndex(MLDBConstants.COL_AVATAR));

@@ -17,7 +17,6 @@ import net.melove.demo.chat.R;
  */
 public class MLOtherFragment extends MLBaseFragment {
 
-    private Context mContext;
 
     public static MLOtherFragment newInstance() {
         MLOtherFragment fragment = new MLOtherFragment();
@@ -45,7 +44,7 @@ public class MLOtherFragment extends MLBaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mContext = getActivity();
+        mActivity = getActivity();
     }
 
 }

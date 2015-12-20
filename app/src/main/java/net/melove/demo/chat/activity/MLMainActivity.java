@@ -112,7 +112,7 @@ public class MLMainActivity extends MLBaseActivity implements
         mNavigationView = (NavigationView) findViewById(R.id.ml_widget_navigation);
 
         mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
-        mToolbar.setTitle(mActivity.getResources().getString(R.string.ml_title_dialog_chat));
+        mToolbar.setTitle(mActivity.getResources().getString(R.string.ml_dialog_title_chat));
         setSupportActionBar(mToolbar);
 
         mFabMenuLayout = findViewById(R.id.ml_btn_fab_menu_layout);
@@ -121,6 +121,7 @@ public class MLMainActivity extends MLBaseActivity implements
         mFabAddGroupBtn = (FloatingActionButton) findViewById(R.id.ml_btn_fab_add_group);
         mFabBtn = (FloatingActionButton) findViewById(R.id.ml_btn_fab);
 
+        findViewById(R.id.ml_btn_fab_menu_layout).setOnClickListener(viewListener);
         findViewById(R.id.ml_text_fab_create_conversation).setOnClickListener(viewListener);
         findViewById(R.id.ml_text_fab_add_contact).setOnClickListener(viewListener);
         findViewById(R.id.ml_text_fab_add_group).setOnClickListener(viewListener);
@@ -234,6 +235,9 @@ public class MLMainActivity extends MLBaseActivity implements
                     fabChange();
 
                     break;
+                case R.id.ml_btn_fab_menu_layout:
+                    fabChange();
+                    break;
             }
         }
     };
@@ -327,20 +331,20 @@ public class MLMainActivity extends MLBaseActivity implements
     }
 
     /**
-     * 根据输入的 username 创建一个新的会话
+     * 根据输入的 chatId 创建一个新的会话
      */
     private void createNewConversation() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
         dialog.setTitle("发起新会话");
-        dialog.setMessage("演示环信不需要互为好友就能发起会话，在下边直接输入对方环信账户进行聊天");
-        final EditText editText = new EditText(mActivity);
-        dialog.setView(editText);
+        View view = mActivity.getLayoutInflater().inflate(R.layout.dialog_create_conversation, null);
+        final EditText editText = (EditText) view.findViewById(R.id.ml_edit_chat_id);
+        dialog.setView(view);
         dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent();
                 intent.setClass(mActivity, MLChatActivity.class);
-                intent.putExtra(MLConstants.ML_C_USERNAME, editText.getText().toString().trim());
+                intent.putExtra(MLConstants.ML_C_CHAT_ID, editText.getText().toString().trim());
                 ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, mToolbar, "toolbar");
                 ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
             }
@@ -562,7 +566,7 @@ public class MLMainActivity extends MLBaseActivity implements
                 MLToast.makeToast(mActivity.getResources().getString(R.string.ml_test)).show();
                 break;
         }
-        mDrawerLayout.closeDrawer(GravityCompat.START);
+//        mDrawerLayout.closeDrawer(GravityCompat.START);
     }
 
     public View getToolbar() {
