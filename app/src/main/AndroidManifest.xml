@@ -109,13 +109,18 @@
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Default"
             android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity android:name=".activity.MLVideoCallActivity"></activity>
 
         <!-- 设置环信appkey -->
         <meta-data
             android:name="EASEMOB_APPKEY"
             android:value="lzan13#hxsdkdemo" />
-
-        <activity android:name=".activity.MLVideoCallActivity"></activity>
+        <!--配置环信 SDK 需要的服务-->
+        <service android:name="com.easemob.chat.EMChatService" />
+        <!--配置谷歌推送需要的服务-->
+        <service
+            android:name="com.easemob.chat.EMGCMListenerService"
+            android:exported="false"></service>
 
     </application>
 

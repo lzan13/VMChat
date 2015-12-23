@@ -16,6 +16,7 @@ import com.easemob.chat.EMGroupManager;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLEasemobHelper;
+import net.melove.demo.chat.test.MLEMCheck;
 import net.melove.demo.chat.widget.MLToast;
 
 /**
@@ -35,6 +36,7 @@ public class MLSplashActivity extends MLBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        MLEMCheck.getInstance().init(this);
 
         initView();
 

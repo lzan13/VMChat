@@ -14,6 +14,7 @@ import com.easemob.chat.TextMessageBody;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLEasemobHelper;
+import net.melove.demo.chat.test.MLTestHelper;
 import net.melove.demo.chat.util.MLDate;
 import net.melove.demo.chat.util.MLLog;
 
@@ -63,10 +64,12 @@ public class MLTestFragment extends MLBaseFragment {
     }
 
     private void init() {
+        getView().findViewById(R.id.ml_btn_signout).setOnClickListener(viewListener);
         getView().findViewById(R.id.ml_btn_test_delete_conversation).setOnClickListener(viewListener);
         getView().findViewById(R.id.ml_btn_test_import_message).setOnClickListener(viewListener);
-        getView().findViewById(R.id.ml_btn_signout).setOnClickListener(viewListener);
-        getView().findViewById(R.id.ml_btn_jump_test).setOnClickListener(viewListener);
+        getView().findViewById(R.id.ml_btn_test_signup).setOnClickListener(viewListener);
+        getView().findViewById(R.id.ml_btn_test_signin).setOnClickListener(viewListener);
+
     }
 
 
@@ -127,6 +130,15 @@ public class MLTestFragment extends MLBaseFragment {
                     break;
                 case R.id.ml_btn_test_import_message:
                     importMessage();
+                    break;
+                case R.id.ml_btn_test_signup:
+                    MLTestHelper.getInstance().signup();
+                    break;
+                case R.id.ml_btn_test_signin:
+                    MLTestHelper.getInstance().signin("lz1", "123123");
+                    break;
+                case R.id.ml_btn_test_send_message:
+                    MLTestHelper.getInstance().sendMessage("", "测试发送消息");
                     break;
             }
         }

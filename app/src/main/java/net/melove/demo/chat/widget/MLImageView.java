@@ -19,7 +19,7 @@ import net.melove.demo.chat.R;
 
 
 /**
- * Created by Administrator on 2015/4/30.
+ * Created by lzan13 on 2015/4/30.
  * 自定义 ImageView 控件，实现了圆角和边框，以及按下变色
  */
 public class MLImageView extends ImageView {
@@ -70,13 +70,13 @@ public class MLImageView extends ImageView {
 
         // 获取控件的属性值
         if (attrs != null) {
-            TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.MLCustomView);
-            mBorderWidth = array.getDimensionPixelOffset(R.styleable.MLCustomView_border_width, mBorderWidth);
-            mBorderColor = array.getColor(R.styleable.MLCustomView_border_color, mBorderColor);
-            mPressAlpha = array.getInteger(R.styleable.MLCustomView_press_alpha, mPressAlpha);
-            mPressColor = array.getColor(R.styleable.MLCustomView_press_color, mPressColor);
-            mRadius = array.getDimensionPixelSize(R.styleable.MLCustomView_radius, mRadius);
-            mShapeType = array.getInteger(R.styleable.MLCustomView_shape_type, mShapeType);
+            TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.MLImageView);
+            mBorderWidth = array.getDimensionPixelOffset(R.styleable.MLImageView_border_width, mBorderWidth);
+            mBorderColor = array.getColor(R.styleable.MLImageView_border_color, mBorderColor);
+            mPressAlpha = array.getInteger(R.styleable.MLImageView_press_alpha, mPressAlpha);
+            mPressColor = array.getColor(R.styleable.MLImageView_press_color, mPressColor);
+            mRadius = array.getDimensionPixelSize(R.styleable.MLImageView_radius, mRadius);
+            mShapeType = array.getInteger(R.styleable.MLImageView_shape_type, mShapeType);
             array.recycle();
         }
 
@@ -163,12 +163,13 @@ public class MLImageView extends ImageView {
     }
 
     /**
-     * 绘制按下效果
+     * 绘制控件的按下效果
      *
      * @param canvas
      */
     private void drawPress(Canvas canvas) {
 
+        // 这里根据类型判断绘制的效果是圆形还是矩形
         if (mShapeType == 0) {
             canvas.drawCircle(mWidth / 2, mHeight / 2, mWidth / 2, mPressPaint);
         } else if (mShapeType == 1) {
@@ -178,7 +179,7 @@ public class MLImageView extends ImageView {
     }
 
     /**
-     * 绘制边框
+     * 绘制自定义控件边框
      *
      * @param canvas
      */
@@ -189,6 +190,7 @@ public class MLImageView extends ImageView {
             paint.setStyle(Paint.Style.STROKE);
             paint.setColor(mBorderColor);
             paint.setAntiAlias(true);
+            // 根据控件类型的属性去绘制圆形或者矩形
             if (mShapeType == 0) {
                 canvas.drawCircle(mWidth / 2, mHeight / 2, (mWidth - mBorderWidth) / 2, paint);
             } else {
@@ -199,6 +201,14 @@ public class MLImageView extends ImageView {
         }
     }
 
+    /**
+     * 重写父类的 onSizeChanged 方法，检测控件宽高的变化
+     *
+     * @param w
+     * @param h
+     * @param oldw
+     * @param oldh
+     */
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
@@ -206,6 +216,12 @@ public class MLImageView extends ImageView {
         mHeight = h;
     }
 
+    /**
+     * 重写 onTouchEvent 监听方法，用来监听自定义控件是否被触摸
+     *
+     * @param event
+     * @return
+     */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
