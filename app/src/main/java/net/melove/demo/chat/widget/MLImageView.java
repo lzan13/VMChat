@@ -10,6 +10,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -24,24 +25,27 @@ import net.melove.demo.chat.R;
  */
 public class MLImageView extends ImageView {
     // 图片按下的画笔
-    private Paint mPressPaint;
-
+    private Paint pressPaint;
     // 图片的宽高
-    private int mWidth;
-    private int mHeight;
+    private int width;
+    private int height;
 
-    // 边框宽度
-    private int mBorderWidth;
+    // 定义 Bitmap 的默认配置
+    private static final Bitmap.Config BITMAP_CONFIG = Bitmap.Config.ARGB_8888;
+    private static final int COLORDRAWABLE_DIMENSION = 1;
+
     // 边框颜色
-    private int mBorderColor;
+    private int borderColor;
+    // 边框宽度
+    private int borderWidth;
     // 按下的透明度
-    private int mPressAlpha;
+    private int pressAlpha;
     // 按下的颜色
-    private int mPressColor;
+    private int pressColor;
     // 圆角半径
-    private int mRadius;
+    private int radius;
     // 图片类型（矩形，圆形）
-    private int mShapeType;
+    private int shapeType;
 
     public MLImageView(Context context) {
         super(context);
@@ -61,32 +65,32 @@ public class MLImageView extends ImageView {
 
     private void init(Context context, AttributeSet attrs) {
         //初始化默认值
-        mBorderColor = 0xddffffff;
-        mBorderWidth = 0;
-        mPressAlpha = 128;
-        mPressColor = 0x42000000;
-        mRadius = 16;
-        mShapeType = 1;
+        borderWidth = 6;
+        borderColor = 0xddffffff;
+        pressAlpha = 0x42;
+        pressColor = 0x42000000;
+        radius = 16;
+        shapeType = 2;
 
         // 获取控件的属性值
         if (attrs != null) {
             TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.MLImageView);
-            mBorderWidth = array.getDimensionPixelOffset(R.styleable.MLImageView_border_width, mBorderWidth);
-            mBorderColor = array.getColor(R.styleable.MLImageView_border_color, mBorderColor);
-            mPressAlpha = array.getInteger(R.styleable.MLImageView_press_alpha, mPressAlpha);
-            mPressColor = array.getColor(R.styleable.MLImageView_press_color, mPressColor);
-            mRadius = array.getDimensionPixelSize(R.styleable.MLImageView_radius, mRadius);
-            mShapeType = array.getInteger(R.styleable.MLImageView_shape_type, mShapeType);
+            borderColor = array.getColor(R.styleable.MLImageView_ml_border_color, borderColor);
+            borderWidth = array.getDimensionPixelOffset(R.styleable.MLImageView_ml_border_width, borderWidth);
+            pressAlpha = array.getInteger(R.styleable.MLImageView_ml_press_alpha, pressAlpha);
+            pressColor = array.getColor(R.styleable.MLImageView_ml_press_color, pressColor);
+            radius = array.getDimensionPixelOffset(R.styleable.MLImageView_ml_radius, radius);
+            shapeType = array.getInteger(R.styleable.MLImageView_ml_shape_type, shapeType);
             array.recycle();
         }
 
         // 按下的画笔设置
-        mPressPaint = new Paint();
-        mPressPaint.setAntiAlias(true);
-        mPressPaint.setStyle(Paint.Style.FILL);
-        mPressPaint.setColor(mPressColor);
-        mPressPaint.setAlpha(0);
-        mPressPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
+        pressPaint = new Paint();
+        pressPaint.setAntiAlias(true);
+        pressPaint.setStyle(Paint.Style.FILL);
+        pressPaint.setColor(pressColor);
+        pressPaint.setAlpha(0);
+        pressPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
 
         setClickable(true);
         setDrawingCacheEnabled(true);
@@ -95,7 +99,11 @@ public class MLImageView extends ImageView {
 
     @Override
     protected void onDraw(Canvas canvas) {
-//        super.onDraw(canvas);
+
+        if (shapeType == 0) {
+            super.onDraw(canvas);
+            return;
+        }
         // 获取当前控件的 drawable
         Drawable drawable = getDrawable();
         if (drawable == null) {
@@ -106,7 +114,10 @@ public class MLImageView extends ImageView {
             return;
         }
         // 获取 bitmap，即传入 imageview 的 bitmap
-        Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+        // Bitmap bitmap = ((BitmapDrawable) ((SquaringDrawable)
+        // drawable).getCurrent()).getBitmap();
+        // 这里参考赵鹏的获取 bitmap 方式，因为上边的获取会导致 Glide 加载的drawable 强转为 BitmapDrawable 出错
+        Bitmap bitmap = getBitmapFromDrawable(drawable);
         drawDrawable(canvas, bitmap);
 
         drawPress(canvas);
@@ -134,15 +145,15 @@ public class MLImageView extends ImageView {
                 | Canvas.HAS_ALPHA_LAYER_SAVE_FLAG
                 | Canvas.FULL_COLOR_LAYER_SAVE_FLAG
                 | Canvas.CLIP_TO_LAYER_SAVE_FLAG;
-        canvas.saveLayer(0, 0, mWidth, mHeight, null, saveFlags);
+        canvas.saveLayer(0, 0, width, height, null, saveFlags);
 
-        if (mShapeType == 0) {
-            // 画遮罩，画出来就是一个和空间大小相匹配的圆
-            canvas.drawCircle(mWidth / 2, mHeight / 2, mWidth / 2, paint);
-        } else {
-            // 当ShapeType = 1 时 图片为圆角矩形
-            RectF rectf = new RectF(0, 0, getWidth(), getHeight());
-            canvas.drawRoundRect(rectf, mRadius, mRadius, paint);
+        if (shapeType == 1) {
+            // 画遮罩，画出来就是一个和空间大小相匹配的圆（这里在半径上 -1 是为了不让图片超出边框）
+            canvas.drawCircle(width / 2, height / 2, width / 2 - 1, paint);
+        } else if (shapeType == 2) {
+            // 当ShapeType == 2 时 图片为圆角矩形 （这里在宽高上 -1 是为了不让图片超出边框）
+            RectF rectf = new RectF(1, 1, getWidth() - 1, getHeight() - 1);
+            canvas.drawRoundRect(rectf, radius + 1, radius + 1, paint);
         }
 
         paint.setXfermode(xfermode);
@@ -168,13 +179,14 @@ public class MLImageView extends ImageView {
      * @param canvas
      */
     private void drawPress(Canvas canvas) {
-
         // 这里根据类型判断绘制的效果是圆形还是矩形
-        if (mShapeType == 0) {
-            canvas.drawCircle(mWidth / 2, mHeight / 2, mWidth / 2, mPressPaint);
-        } else if (mShapeType == 1) {
-            RectF rectF = new RectF(0, 0, mWidth, mHeight);
-            canvas.drawRoundRect(rectF, mRadius, mRadius, mPressPaint);
+        if (shapeType == 1) {
+            // 当ShapeType == 1 时 图片为圆形 （这里在半径上 -1 是为了不让图片超出边框）
+            canvas.drawCircle(width / 2, height / 2, width / 2 - 1, pressPaint);
+        } else if (shapeType == 2) {
+            // 当ShapeType == 2 时 图片为圆角矩形 （这里在宽高上 -1 是为了不让图片超出边框）
+            RectF rectF = new RectF(1, 1, width - 1, height - 1);
+            canvas.drawRoundRect(rectF, radius + 1, radius + 1, pressPaint);
         }
     }
 
@@ -184,19 +196,20 @@ public class MLImageView extends ImageView {
      * @param canvas
      */
     private void drawBorder(Canvas canvas) {
-        if (mBorderWidth > 0) {
+        if (borderWidth > 0) {
             Paint paint = new Paint();
-            paint.setStrokeWidth(mBorderWidth);
+            paint.setStrokeWidth(borderWidth);
             paint.setStyle(Paint.Style.STROKE);
-            paint.setColor(mBorderColor);
+            paint.setColor(borderColor);
             paint.setAntiAlias(true);
             // 根据控件类型的属性去绘制圆形或者矩形
-            if (mShapeType == 0) {
-                canvas.drawCircle(mWidth / 2, mHeight / 2, (mWidth - mBorderWidth) / 2, paint);
-            } else {
+            if (shapeType == 1) {
+                canvas.drawCircle(width / 2, height / 2, (width - borderWidth) / 2, paint);
+            } else if (shapeType == 2) {
                 // 当ShapeType = 1 时 图片为圆角矩形
-                RectF rectf = new RectF(0, 0, getWidth(), getHeight());
-                canvas.drawRoundRect(rectf, mRadius, mRadius, paint);
+                RectF rectf = new RectF(borderWidth / 2, borderWidth / 2, getWidth() - borderWidth / 2,
+                        getHeight() - borderWidth / 2);
+                canvas.drawRoundRect(rectf, radius, radius, paint);
             }
         }
     }
@@ -212,8 +225,8 @@ public class MLImageView extends ImageView {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        mWidth = w;
-        mHeight = h;
+        width = w;
+        height = h;
     }
 
     /**
@@ -226,22 +239,106 @@ public class MLImageView extends ImageView {
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                mPressPaint.setAlpha(mPressAlpha);
+                pressPaint.setAlpha(pressAlpha);
                 invalidate();
                 break;
             case MotionEvent.ACTION_UP:
-                mPressPaint.setAlpha(0);
+                pressPaint.setAlpha(0);
                 invalidate();
                 break;
             case MotionEvent.ACTION_MOVE:
 
                 break;
             default:
-                mPressPaint.setAlpha(0);
+                pressPaint.setAlpha(0);
                 invalidate();
                 break;
         }
         return super.onTouchEvent(event);
     }
 
+    /**
+     * 这里是复制的赵鹏写的获取Bitmap内容的方法， 之前是因为没有考虑到 Glide 加载的图片 导致drawable 类型是属于
+     * SquaringDrawable 类型，导致强转失败 这里是通过drawable不同的类型来进行获取Bitmap
+     *
+     * @param drawable
+     * @return
+     */
+    private Bitmap getBitmapFromDrawable(Drawable drawable) {
+        try {
+            Bitmap bitmap;
+            if (drawable instanceof BitmapDrawable) {
+                return ((BitmapDrawable) drawable).getBitmap();
+            } else if (drawable instanceof ColorDrawable) {
+                bitmap = Bitmap.createBitmap(COLORDRAWABLE_DIMENSION, COLORDRAWABLE_DIMENSION, BITMAP_CONFIG);
+            } else {
+                bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(),
+                        BITMAP_CONFIG);
+            }
+            Canvas canvas = new Canvas(bitmap);
+            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+            drawable.draw(canvas);
+            return bitmap;
+        } catch (OutOfMemoryError e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * 设置边框颜色
+     *
+     * @param borderColor
+     */
+    public void setBorderColor(int borderColor) {
+        this.borderColor = borderColor;
+        invalidate();
+    }
+
+    /**
+     * 设置边框宽度
+     *
+     * @param borderWidth
+     */
+    public void setBorderWidth(int borderWidth) {
+        this.borderWidth = borderWidth;
+    }
+
+    /**
+     * 设置图片按下颜色透明度
+     *
+     * @param pressAlpha
+     */
+    public void setPressAlpha(int pressAlpha) {
+        this.pressAlpha = pressAlpha;
+    }
+
+    /**
+     * 设置图片按下的颜色
+     *
+     * @param pressColor
+     */
+    public void setPressColor(int pressColor) {
+        this.pressColor = pressColor;
+    }
+
+    /**
+     * 设置倒角半径
+     *
+     * @param radius
+     */
+    public void setRadius(int radius) {
+        this.radius = radius;
+        invalidate();
+    }
+
+    /**
+     * 设置形状类型
+     *
+     * @param shapeType
+     */
+    public void setShapeType(int shapeType) {
+        this.shapeType = shapeType;
+        invalidate();
+    }
 }

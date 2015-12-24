@@ -36,6 +36,8 @@ public class MLSplashActivity extends MLBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        // 调用初始化sdk的一些检查
         MLEMCheck.getInstance().init(this);
 
         initView();

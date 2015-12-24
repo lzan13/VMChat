@@ -49,9 +49,9 @@
                     android:layout_height="@dimen/ml_dimen_72"
                     android:layout_marginBottom="@dimen/ml_dimen_16"
                     android:src="@mipmap/ic_character_blackcat"
-                    app:border_color="@color/ml_border_white"
-                    app:border_width="@dimen/ml_dimen_2"
-                    app:shape_type="round" />
+                    app:ml_border_color="@color/ml_border_white"
+                    app:ml_border_width="@dimen/ml_dimen_2"
+                    app:ml_shape_type="round" />
 
                 <LinearLayout
                     android:id="@+id/layout_login_form"

@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.easemob.EMConnectionListener;
 import com.easemob.EMError;
@@ -39,6 +40,7 @@ import net.melove.demo.chat.fragment.MLBaseFragment;
 import net.melove.demo.chat.fragment.MLHomeFragment;
 import net.melove.demo.chat.fragment.MLOtherFragment;
 import net.melove.demo.chat.util.MLLog;
+import net.melove.demo.chat.widget.MLImageView;
 import net.melove.demo.chat.widget.MLToast;
 
 import java.util.List;
@@ -110,6 +112,8 @@ public class MLMainActivity extends MLBaseActivity implements
     private void initView() {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.ml_layout_drawer);
         mNavigationView = (NavigationView) findViewById(R.id.ml_widget_navigation);
+        MLImageView imageView = (MLImageView) mNavigationView.getHeaderView(0).findViewById(R.id.ml_img_nav_avatar);
+        imageView.setShapeType(2);
 
         mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
         mToolbar.setTitle(mActivity.getResources().getString(R.string.ml_dialog_title_chat));

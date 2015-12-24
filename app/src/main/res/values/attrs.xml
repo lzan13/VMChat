@@ -3,15 +3,15 @@
 
     <!--自定义MLImageView的属性-->
     <declare-styleable name="MLImageView">
-        <attr name="border_color" format="color" />
-        <attr name="border_width" format="dimension" />
-        <attr name="filter_color" format="color" />
-        <attr name="press_alpha" format="integer" />
-        <attr name="press_color" format="color" />
-        <attr name="radius" format="dimension" />
-        <attr name="shape_type" format="enum">
-            <enum name="round" value="0" />
-            <enum name="rectangle" value="1" />
+        <attr name="ml_border_color" format="color" />
+        <attr name="ml_border_width" format="dimension" />
+        <attr name="ml_press_alpha" format="integer" />
+        <attr name="ml_press_color" format="color" />
+        <attr name="ml_radius" format="dimension" />
+        <attr name="ml_shape_type" format="enum">
+            <enum name="none" value="0" />
+            <enum name="round" value="1" />
+            <enum name="rectangle" value="2" />
         </attr>
     </declare-styleable>
 

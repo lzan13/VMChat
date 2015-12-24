@@ -32,17 +32,17 @@
 
     <!-- 新添加的一些属性 -->
     <!-- 开机自启动 -->
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!--<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />-->
     <!-- 访问GMail账户列表 -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <!--<uses-permission android:name="android.permission.GET_ACCOUNTS" />-->
     <!-- 使用证书 -->
-    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <!--<uses-permission android:name="android.permission.USE_CREDENTIALS" />-->
     <!-- 管理账户 -->
-    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <!--<uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />-->
     <!-- 验证账户 -->
-    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    <!--<uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />-->
     <!-- 读取启动设置 -->
-    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
+    <!--<uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />-->
     <!-- 连续广播（允许一个程序收到广播后快速收到下一个广播） -->
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
     <!-- 允许读写系统设置项 -->
@@ -93,11 +93,6 @@
             android:name=".activity.MLSignupActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Default" />
-        <!-- 好友申请与通知以及添加界面 -->
-        <activity
-            android:name=".fragment.MLApplyforFragment"
-            android:screenOrientation="portrait"
-            android:theme="@style/MLTheme.Default" />
         <!-- 账户信息界面 -->
         <activity
             android:name=".activity.MLUserInfoActivity"
@@ -118,9 +113,9 @@
         <!--配置环信 SDK 需要的服务-->
         <service android:name="com.easemob.chat.EMChatService" />
         <!--配置谷歌推送需要的服务-->
-        <service
-            android:name="com.easemob.chat.EMGCMListenerService"
-            android:exported="false"></service>
+        <!--<service-->
+        <!--android:name="com.easemob.chat.EMGCMListenerService"-->
+        <!--android:exported="false"></service>-->
 
     </application>
 

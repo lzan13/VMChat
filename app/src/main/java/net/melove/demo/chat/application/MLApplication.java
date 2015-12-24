@@ -18,7 +18,6 @@ public class MLApplication extends Application {
         super.onCreate();
 
         context = this;
-        MLEMCheck.getInstance().init(this);
 
         initEasemob();
 

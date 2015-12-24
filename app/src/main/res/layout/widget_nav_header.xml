@@ -28,9 +28,9 @@
             android:layout_height="@dimen/ml_dimen_56"
             android:paddingTop="@dimen/navigation_header_vertical_spacing"
             android:src="@mipmap/ic_character_blackcat"
-            melove:border_color="@color/ml_border_white"
-            melove:border_width="@dimen/ml_dimen_2"
-            melove:shape_type="round" />
+            melove:ml_border_color="@color/ml_border_white"
+            melove:ml_border_width="@dimen/ml_dimen_2"
+            melove:ml_shape_type="round" />
 
         <TextView
             android:id="@+id/ml_text_nav_username"

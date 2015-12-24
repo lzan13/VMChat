@@ -10,6 +10,9 @@ import android.util.Log;
 
 import com.easemob.chat.EMChatConfig;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Class ${FILE_NAME}
  * <p/>
@@ -37,11 +40,16 @@ public class MLEMCheck {
         return instance;
     }
 
+    /**
+     * 初始化方法
+     * 自动调用所有测试方法
+     *
+     * @param context
+     */
     public void init(Context context) {
-        MLEMCheck check = new MLEMCheck();
 
-        check.checkPermission(context);
-        check.checkApplication(context);
+        checkPermission(context);
+        checkApplication(context);
         checkMetaData(context);
         checkService(context);
     }
@@ -69,17 +77,52 @@ public class MLEMCheck {
      * @param context
      */
     public void checkPermission(Context context) {
+        /**
+         * 这里定义Demo默认请求的一些权限，用来检查开发时是否有漏掉配置
+         * 这些权限也不是圈闭必须，如果不需要某些功能是可以去掉的，根据自己需求以及理解配置
+         */
+        String[] pArray = {
+                "android.permission.VIBRATE",
+                "android.permission.INTERNET",
+                "android.permission.RECORD_AUDIO",
+                "android.permission.CAMERA",
+                "android.permission.ACCESS_NETWORK_STATE",
+                "android.permission.WRITE_EXTERNAL_STORAGE",
+                "android.permission.MOUNT_UNMOUNT_FILESYSTEMS",
+                "android.permission.ACCESS_FINE_LOCATION",
+                "android.permission.ACCESS_WIFI_STATE",
+                "android.permission.CHANGE_WIFI_STATE",
+                "android.permission.WAKE_LOCK",
+                "android.permission.MODIFY_AUDIO_SETTINGS",
+                "android.permission.READ_PHONE_STATE",
+                "android.permission.RECEIVE_BOOT_COMPLETED",
+                "android.permission.GET_ACCOUNTS",
+                "android.permission.USE_CREDENTIALS",
+                "android.permission.MANAGE_ACCOUNTS",
+                "android.permission.AUTHENTICATE_ACCOUNTS",
+                "com.android.launcher.permission.READ_SETTINGS",
+                "android.permission.BROADCAST_STICKY",
+                "android.permission.WRITE_SETTINGS",
+                "android.permission.READ_PROFILE",
+                "android.permission.READ_CONTACTS",
+                "android.permission.READ_EXTERNAL_STORAGE"
+        };
         logStart();
         logE("检查 Permission 配置情况");
         logLine();
         PackageInfo pi = getPackageInfo(context, PackageManager.GET_PERMISSIONS);
         // 获取权限列表
         String[] permissions = pi.requestedPermissions;
-        logE("总共请求了 %d 个权限", permissions.length);
+        List<String> pLists = Arrays.asList(permissions);
+        logE("Demo 中请求了 %d 个权限，当前项目请求了 %d 个权限", pArray.length, permissions.length);
         logLine();
-        // 循环输出下权限内容
-        for (int i = 0; i < permissions.length; i++) {
-            logE(permissions[i]);
+        // 输出 Demo 配置的权限，并判断当前项目是否有配置
+        for (int i = 0; i < pArray.length; i++) {
+            if (pLists.contains(pArray[i])) {
+                logE("YES    %s", pArray[i]);
+            } else {
+                logE("NO     %s", pArray[i]);
+            }
         }
         logEnd();
     }
@@ -93,11 +136,15 @@ public class MLEMCheck {
         logLine();
         PackageInfo pi = getPackageInfo(context, PackageManager.GET_UNINSTALLED_PACKAGES);
         ApplicationInfo ai = pi.applicationInfo;
-        String name = ai.name;
         String className = ai.className;
-
-        logE("application name %s, className %s", name, className);
-
+        logE("Application className %s", className);
+        logLine();
+        if (className != null) {
+            logE("Application 已配置，可以在 Application 的 onCreate 方法里进行 SDK 的初始化");
+        } else {
+            logE("没有配置 Application，如果有在 onCreate 做 SDK 的初始化操作会无效，请检查！");
+        }
+        logEnd();
     }
 
 
