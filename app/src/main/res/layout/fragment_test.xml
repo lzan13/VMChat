@@ -10,59 +10,54 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/ml_btn_jump_test"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:elevation="@dimen/ml_dimen_0"
-            android:text="@string/ml_test" />
-
-        <Button
-            android:id="@+id/ml_btn_test_delete_conversation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="删除会话" />
-
-        <Button
-            android:id="@+id/ml_btn_test_import_message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="导入消息" />
-
-        <Button
-            android:id="@+id/ml_btn_test_signup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="测试注册" />
-
-        <Button
-            android:id="@+id/ml_btn_test_signin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="测试登陆" />
-
-        <Button
-            android:id="@+id/ml_btn_test_send_message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="发送消息" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="@dimen/ml_dimen_8"
-        android:orientation="vertical">
-
-        <Button
-            android:id="@+id/ml_btn_signout"
+        <net.melove.demo.chat.widget.MLViewGroup
+            android:id="@+id/ml_view_custom_viewgroup"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/ml_click_rectangle_red"
-            android:text="@string/ml_signout"
-            android:textColor="@color/ml_text_title_white"
-            android:textSize="@dimen/ml_size_18" />
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/ml_btn_signout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ml_signout" />
+
+            <Button
+                android:id="@+id/ml_btn_jump_test"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:elevation="@dimen/ml_dimen_0"
+                android:text="@string/ml_test" />
+
+            <Button
+                android:id="@+id/ml_btn_test_delete_conversation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="删除会话" />
+
+            <Button
+                android:id="@+id/ml_btn_test_import_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="导入消息到数据库" />
+
+            <Button
+                android:id="@+id/ml_btn_test_signup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="注册" />
+
+            <Button
+                android:id="@+id/ml_btn_test_signin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="登录" />
+
+            <Button
+                android:id="@+id/ml_btn_test_send_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="发送消息" />
+        </net.melove.demo.chat.widget.MLViewGroup>
     </LinearLayout>
 
 </RelativeLayout>

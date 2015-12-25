@@ -17,6 +17,7 @@ import net.melove.demo.chat.application.MLEasemobHelper;
 import net.melove.demo.chat.test.MLTestHelper;
 import net.melove.demo.chat.util.MLDate;
 import net.melove.demo.chat.util.MLLog;
+import net.melove.demo.chat.widget.MLViewGroup;
 
 /**
  * 测试Fragment，
@@ -28,6 +29,7 @@ public class MLTestFragment extends MLBaseFragment {
 
 
     private OnMLFragmentListener mListener;
+    private MLViewGroup viewGroup;
 
     /**
      * 使用这个工厂方法创建一个新的实例
@@ -64,6 +66,8 @@ public class MLTestFragment extends MLBaseFragment {
     }
 
     private void init() {
+        viewGroup = (MLViewGroup) getView().findViewById(R.id.ml_view_custom_viewgroup);
+
         getView().findViewById(R.id.ml_btn_signout).setOnClickListener(viewListener);
         getView().findViewById(R.id.ml_btn_test_delete_conversation).setOnClickListener(viewListener);
         getView().findViewById(R.id.ml_btn_test_import_message).setOnClickListener(viewListener);
