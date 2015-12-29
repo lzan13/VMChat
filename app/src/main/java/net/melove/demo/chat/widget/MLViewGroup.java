@@ -71,6 +71,9 @@ public class MLViewGroup extends ViewGroup {
         }
     }
 
+    /**
+     * 设置 MLViewGroup的子项的点击监听
+     */
     public void setItemOnClickListener() {
 
     }

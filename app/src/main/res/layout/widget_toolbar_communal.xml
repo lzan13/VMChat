@@ -4,16 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-
-        <!--公共的 Toolbar 控件-->
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/ml_widget_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            android:minHeight="?attr/actionBarSize"
-            android:popupTheme="@style/MLTheme.PupopMenu"
-            android:theme="@style/MLTheme.Toolbar"
-            android:transitionName="toolbar" />
+    <!--公共的 Toolbar 控件-->
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/ml_widget_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:popupTheme="@style/MLTheme.PupopMenu"
+        android:theme="@style/MLTheme.Toolbar"
+        android:transitionName="toolbar" />
 
 </LinearLayout>

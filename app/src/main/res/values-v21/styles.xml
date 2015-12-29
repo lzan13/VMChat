@@ -10,12 +10,12 @@
 
 
         <!--设置是否允许使用 Transitions 动画-->
-        <item name="android:windowContentTransitions">false</item>
-        <!--&lt;!&ndash;指定进入和退出的 Transitions&ndash;&gt;-->
-        <!--<item name="android:windowEnterTransition">@transition/transition_slide_right</item>-->
-        <!--<item name="android:windowExitTransition">@transition/transition_slide_left</item>-->
-        <!--&lt;!&ndash;指定界面共享元素的 Transitions&ndash;&gt;-->
-        <!--<item name="android:windowSharedElementEnterTransition">@transition/transition_fade_in</item>-->
-        <!--<item name="android:windowSharedElementExitTransition">@transition/transition_fade_out</item>-->
+        <item name="android:windowContentTransitions">true</item>
+        <!--指定进入和退出的 Transitions-->
+        <item name="android:windowEnterTransition">@transition/transition_fade_in</item>
+        <item name="android:windowExitTransition">@transition/transition_fade_out</item>
+        <!--指定界面共享元素的 Transitions-->
+        <item name="android:windowSharedElementEnterTransition">@transition/transition_explode</item>
+        <item name="android:windowSharedElementExitTransition">@transition/transition_explode</item>
     </style>
 </resources>

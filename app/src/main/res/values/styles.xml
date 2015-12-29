@@ -22,18 +22,12 @@
         <!--设置弹出菜单 PopupMenu 样式-->
         <item name="popupMenuStyle">@style/MLTheme.PupopMenu</item>
 
-
-        <item name="android:activityOpenEnterAnimation">@anim/ml_anim_fade_in</item>
-        <item name="android:activityOpenExitAnimation">@anim/ml_anim_fade_out</item>
-        <item name="android:activityCloseEnterAnimation">@anim/ml_anim_fade_in</item>
-        <item name="android:activityCloseExitAnimation">@anim/ml_anim_fade_out</item>
-
     </style>
 
     <!--默认主题-->
     <style name="MLTheme.Default" parent="MLTheme">
         <!--定义Activity切换动画-->
-        <!--<item name="android:windowAnimationStyle">@style/AnimSlide</item>-->
+        <item name="android:windowAnimationStyle">@style/AnimSlide</item>
     </style>
 
 

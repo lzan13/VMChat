@@ -57,6 +57,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="发送消息" />
+
+            <Button
+                android:id="@+id/ml_btn_text_record"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="录音" />
         </net.melove.demo.chat.widget.MLViewGroup>
     </LinearLayout>
 

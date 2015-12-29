@@ -8,16 +8,22 @@ import android.content.pm.ServiceInfo;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.easemob.chat.EMChat;
 import com.easemob.chat.EMChatConfig;
 
 import java.util.Arrays;
 import java.util.List;
 
 /**
- * Class ${FILE_NAME}
+ * Class MLEMCheck
  * <p/>
  * Created by lzan13 on 2015/12/23 18:51.
  * 主要检查在环信 SDK集成过程中的一些基本配置是否正确
+ * 主要做了一下几项检查：
+ * 权限的配置（permission）
+ * Application 的 name 配置
+ * Appkey 的配置
+ * Service 的配置
  */
 public class MLEMCheck {
     private final String TAG = "em_check";
@@ -47,7 +53,6 @@ public class MLEMCheck {
      * @param context
      */
     public void init(Context context) {
-
         checkPermission(context);
         checkApplication(context);
         checkMetaData(context);
@@ -164,7 +169,7 @@ public class MLEMCheck {
         try {
             Bundle bundle = ai.metaData;
             appkey = bundle.getString("EASEMOB_APPKEY", null);
-            if (appkey != null) {
+            if (appkey != null && !appkey.equals("")) {
                 isAppkey = true;
             }
         } catch (NullPointerException e) {
@@ -173,7 +178,7 @@ public class MLEMCheck {
             logE("Exception %s", e.getMessage());
 //            e.printStackTrace();
         }
-        if (EMChatConfig.getInstance().APPKEY != null) {
+        if (EMChat.getInstance().getAppkey() != null && !EMChat.getInstance().getAppkey().equals("")) {
             isAppkey = true;
             appkey = EMChatConfig.getInstance().APPKEY;
         }

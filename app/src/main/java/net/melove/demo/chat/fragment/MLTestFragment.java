@@ -144,6 +144,9 @@ public class MLTestFragment extends MLBaseFragment {
                 case R.id.ml_btn_test_send_message:
                     MLTestHelper.getInstance().sendMessage("", "测试发送消息");
                     break;
+                case R.id.ml_btn_text_record:
+
+                    break;
             }
         }
     };

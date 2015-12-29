@@ -12,17 +12,17 @@
         android:layout_height="match_parent">
 
         <!--<ImageView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:scaleType="centerCrop"-->
-            <!--android:src="@mipmap/bg_top" />-->
+        <!--android:id="@+id/ml_img_chat_bg"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:scaleType="centerCrop"-->
+        <!--android:src="@mipmap/bg_top" />-->
 
         <LinearLayout
             android:id="@+id/ml_layout_chat_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:elevation="@dimen/ml_dimen_4"
             android:orientation="vertical">
 
             <!--输入条布局-->
@@ -30,78 +30,86 @@
                 android:id="@+id/ml_layout_chat_input_top_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/ml_theme_background_primary"
-                android:elevation="@dimen/ml_dimen_4"
-                android:minHeight="@dimen/ml_dimen_48">
+                android:background="@color/ml_theme_background_primary">
 
                 <RelativeLayout
-                    android:id="@+id/ml_layout_chat_input_bar_right"
-                    android:layout_width="@dimen/ml_dimen_48"
-                    android:layout_height="@dimen/ml_dimen_48"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true">
-
-                    <!--语音按钮-->
-                    <ImageView
-                        android:id="@+id/ml_img_chat_voice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:src="@drawable/ic_keyboard_voice"
-                        android:tint="@color/ml_theme_accent" />
-                    <!--发送按钮-->
-                    <ImageView
-                        android:id="@+id/ml_img_chat_send"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:src="@drawable/ic_keyboard_send"
-                        android:tint="@color/ml_theme_accent"
-                        android:visibility="gone" />
-
-                </RelativeLayout>
-                <!--表情按钮-->
-                <RelativeLayout
-                    android:id="@+id/ml_layout_chat_input_bar_left"
-                    android:layout_width="@dimen/ml_dimen_48"
-                    android:layout_height="@dimen/ml_dimen_48"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true">
-
-                    <ImageView
-                        android:id="@+id/ml_img_chat_emotion"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:src="@drawable/ic_keyboard_face"
-                        android:tint="@color/ml_theme_accent" />
-
-                    <ImageView
-                        android:id="@+id/ml_img_chat_keyboard"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:src="@drawable/ic_keyboard_keyboard"
-                        android:tint="@color/ml_theme_accent"
-                        android:visibility="gone" />
-                </RelativeLayout>
-                <!--输入框-->
-                <EditText
-                    android:id="@+id/ml_edit_chat_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@id/ml_layout_chat_input_bar_right"
-                    android:layout_toRightOf="@id/ml_layout_chat_input_bar_left"
-                    android:background="@null"
-                    android:hint="@string/ml_hint_chat"
-                    android:maxLines="3"
-                    android:paddingBottom="@dimen/ml_dimen_8"
-                    android:paddingTop="@dimen/ml_dimen_8"
-                    android:textColor="@color/ml_text_title_black"
-                    android:textColorHint="@color/ml_text_hint_black"
-                    android:textSize="@dimen/ml_size_16" />
+                    android:minHeight="@dimen/ml_dimen_48">
 
+                    <RelativeLayout
+                        android:id="@+id/ml_layout_chat_input_bar_right"
+                        android:layout_width="@dimen/ml_dimen_48"
+                        android:layout_height="@dimen/ml_dimen_48"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true">
+
+                        <!--语音按钮-->
+                        <ImageView
+                            android:id="@+id/ml_img_chat_voice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:src="@drawable/ic_keyboard_voice"
+                            android:tint="@color/ml_theme_accent" />
+                        <!--发送按钮-->
+                        <ImageView
+                            android:id="@+id/ml_img_chat_send"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:src="@drawable/ic_keyboard_send"
+                            android:tint="@color/ml_theme_accent"
+                            android:visibility="gone" />
+
+                    </RelativeLayout>
+                    <!--表情按钮-->
+                    <RelativeLayout
+                        android:id="@+id/ml_layout_chat_input_bar_left"
+                        android:layout_width="@dimen/ml_dimen_48"
+                        android:layout_height="@dimen/ml_dimen_48"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true">
+
+                        <ImageView
+                            android:id="@+id/ml_img_chat_emotion"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:src="@drawable/ic_keyboard_face"
+                            android:tint="@color/ml_theme_accent" />
+
+                        <ImageView
+                            android:id="@+id/ml_img_chat_keyboard"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:src="@drawable/ic_keyboard_keyboard"
+                            android:tint="@color/ml_theme_accent"
+                            android:visibility="gone" />
+                    </RelativeLayout>
+                    <!--输入框-->
+                    <EditText
+                        android:id="@+id/ml_edit_chat_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@id/ml_layout_chat_input_bar_right"
+                        android:layout_toRightOf="@id/ml_layout_chat_input_bar_left"
+                        android:background="@null"
+                        android:hint="@string/ml_hint_chat"
+                        android:maxLines="3"
+                        android:paddingBottom="@dimen/ml_dimen_8"
+                        android:paddingTop="@dimen/ml_dimen_8"
+                        android:textColor="@color/ml_text_title_black"
+                        android:textColorHint="@color/ml_text_hint_black"
+                        android:textSize="@dimen/ml_size_16" />
+                </RelativeLayout>
+
+                <net.melove.demo.chat.widget.MLRecordView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/ml_dimen_48"
+                    android:background="@color/ml_theme_background_primary"/>
             </RelativeLayout>
 
             <!--聊天表情框-->
