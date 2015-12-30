@@ -3,13 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/ml_bg_white"
+    android:clipChildren="false"
     android:orientation="vertical">
 
     <include layout="@layout/widget_toolbar_communal" />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:clipChildren="false">
 
         <!--<ImageView-->
         <!--android:id="@+id/ml_img_chat_bg"-->
@@ -23,6 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:clipChildren="false"
             android:orientation="vertical">
 
             <!--输入条布局-->
@@ -30,11 +33,13 @@
                 android:id="@+id/ml_layout_chat_input_top_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/ml_theme_background_primary">
+                android:background="@color/ml_theme_background_primary"
+                android:clipChildren="false">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:clipChildren="false"
                     android:minHeight="@dimen/ml_dimen_48">
 
                     <RelativeLayout
@@ -109,7 +114,8 @@
                 <net.melove.demo.chat.widget.MLRecordView
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/ml_dimen_48"
-                    android:background="@color/ml_theme_background_primary"/>
+                    android:clipChildren="false"
+                    android:background="@color/ml_theme_background_primary" />
             </RelativeLayout>
 
             <!--聊天表情框-->

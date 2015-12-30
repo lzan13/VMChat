@@ -142,12 +142,18 @@ public class MLDimen {
     /**
      * 将dp类尺寸转换为px尺寸
      *
-     * @param count
+     * @param id
      * @return
      */
-    public static int dp2px(int count) {
+    public static int dp2px(int id) {
         Resources res = MLApplication.getContext().getResources();
-        int result = res.getDimensionPixelSize(count);
+        int result = res.getDimensionPixelSize(id);
         return result;
+    }
+
+    public static int dip2px(int dip) {
+        Resources res = MLApplication.getContext().getResources();
+        float density = res.getDisplayMetrics().density;
+        return (int) (dip * density * 0.5f);
     }
 }

@@ -4,7 +4,10 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
+
+import net.melove.demo.chat.util.MLDimen;
 
 /**
  * Class MLRecordView
@@ -30,6 +33,7 @@ public class MLRecordView extends View {
      */
     public MLRecordView(Context context) {
         super(context);
+        init(context, null);
     }
 
     /**
@@ -44,9 +48,9 @@ public class MLRecordView extends View {
     }
 
     private void init(Context context, AttributeSet attrs) {
-        width = context.getResources().getDimensionPixelSize(width);
-        height = context.getResources().getDimensionPixelSize(height);
-        radius = context.getResources().getDimensionPixelSize(radius);
+        width = MLDimen.dip2px(width);
+        height = MLDimen.dip2px(height);
+        radius = MLDimen.dip2px(radius);
     }
 
 
@@ -77,5 +81,10 @@ public class MLRecordView extends View {
         super.onSizeChanged(w, h, oldw, oldh);
         width = w;
         height = h;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return super.onTouchEvent(event);
     }
 }
