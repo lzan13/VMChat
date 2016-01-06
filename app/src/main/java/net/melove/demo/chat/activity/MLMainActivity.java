@@ -113,7 +113,6 @@ public class MLMainActivity extends MLBaseActivity implements
         mDrawerLayout = (DrawerLayout) findViewById(R.id.ml_layout_drawer);
         mNavigationView = (NavigationView) findViewById(R.id.ml_widget_navigation);
         MLImageView imageView = (MLImageView) mNavigationView.getHeaderView(0).findViewById(R.id.ml_img_nav_avatar);
-        imageView.setShapeType(2);
 
         mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
         mToolbar.setTitle(mActivity.getResources().getString(R.string.ml_dialog_title_chat));

@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.entity.MLConversationEntity;
+import net.melove.demo.chat.widget.MLImageView;
 
 import java.util.List;
 
@@ -66,7 +67,7 @@ public class MLConversationAdapter extends BaseAdapter {
      * 自定义会话列表项的 ViewHolder 用来显示会话列表项的内容
      */
     class ViewHolder {
-        public ImageView mAvatarView;
+        public MLImageView mAvatarView;
         public TextView mUsernameView;
         public TextView mContentView;
         public TextView mTimeView;
@@ -77,7 +78,7 @@ public class MLConversationAdapter extends BaseAdapter {
          * @param view
          */
         public ViewHolder(View view) {
-            mAvatarView = (ImageView) view.findViewById(R.id.ml_img_conversation_avatar);
+            mAvatarView = (MLImageView) view.findViewById(R.id.ml_img_conversation_avatar);
             mUsernameView = (TextView) view.findViewById(R.id.ml_text_conversation_username);
             mContentView = (TextView) view.findViewById(R.id.ml_text_conversation_content);
             mTimeView = (TextView) view.findViewById(R.id.ml_text_conversation_time);

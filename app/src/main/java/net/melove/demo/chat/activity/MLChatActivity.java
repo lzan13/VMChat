@@ -2,11 +2,13 @@ package net.melove.demo.chat.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ListView;
 
 import com.easemob.EMCallBack;
 import com.easemob.EMEventListener;
@@ -17,6 +19,7 @@ import com.easemob.chat.EMMessage;
 import com.easemob.chat.TextMessageBody;
 
 import net.melove.demo.chat.R;
+import net.melove.demo.chat.adapter.MLMessageAdapter;
 import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.util.MLLog;
 
@@ -28,16 +31,23 @@ import java.util.List;
  * Created by lzan13 on 2015/10/12 15:00.
  */
 public class MLChatActivity extends MLBaseActivity implements EMEventListener {
+    private Toolbar mToolbar;
 
     // 当前聊天的 ID
     private String mChatId;
+    // 当前会话对象
     private EMConversation mConversation;
 
-    private Toolbar mToolbar;
+    private ListView mListView;
+    private MLMessageAdapter mAdapter;
 
+    // 聊天内容输入框
     private EditText mEditText;
+    // 表情按钮
     private View mEmotionView;
+    // 发送按钮
     private View mSendView;
+    // 语音按钮
     private View mVoiceView;
 
 
@@ -47,8 +57,8 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
         setContentView(R.layout.activity_chat);
 
         init();
-        initView();
         initToolbar();
+        initView();
         initConversation();
     }
 
@@ -61,6 +71,10 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
      * 初始化界面控件
      */
     private void initView() {
+        mAdapter = new MLMessageAdapter(mActivity, mChatId);
+        mListView = (ListView) findViewById(R.id.ml_listview_message);
+        mListView.setAdapter(mAdapter);
+
         mEditText = (EditText) findViewById(R.id.ml_edit_chat_input);
         mEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -71,6 +85,11 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
 
+            /**
+             * 检测输入框内容变化
+             *
+             * @param s 输入框内容
+             */
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.toString().equals("")) {
@@ -83,10 +102,12 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
             }
         });
 
+        // 获取控件对象
         mEmotionView = findViewById(R.id.ml_img_chat_emotion);
         mSendView = findViewById(R.id.ml_img_chat_send);
         mVoiceView = findViewById(R.id.ml_img_chat_voice);
 
+        // 设置控件的点击监听
         mEmotionView.setOnClickListener(viewListener);
         mSendView.setOnClickListener(viewListener);
         mVoiceView.setOnClickListener(viewListener);
@@ -97,7 +118,6 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
      */
     private void initToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
-
         mToolbar.setTitle(mChatId);
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_menu_arrow);
@@ -228,8 +248,8 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
         super.onDestroy();
         mActivity = null;
         mToolbar = null;
-        mConversation.clear();
-        mConversation = null;
+//        mConversation.clear();
+//        mConversation = null;
 
 
     }

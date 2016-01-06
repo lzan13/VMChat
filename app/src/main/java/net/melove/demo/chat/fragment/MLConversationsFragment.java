@@ -97,8 +97,10 @@ public class MLConversationsFragment extends MLBaseFragment {
             mConversationList.add(temp);
         }
 
+        // 实例化会话列表的 Adapter 对象
         MLConversationAdapter mAdapter = new MLConversationAdapter(mActivity, mConversationList);
 
+        // 初始化会话列表的 ListView 控件
         mListView = (ListView) getView().findViewById(R.id.ml_listview_conversation);
         mListView.setAdapter(mAdapter);
         // 设置列表项点击监听

@@ -11,6 +11,7 @@ import com.easemob.chat.EMChat;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMMessage;
 
+import net.melove.demo.chat.util.MLLog;
 import net.melove.demo.chat.util.MLSPUtil;
 
 import java.util.Iterator;
@@ -21,8 +22,10 @@ import java.util.List;
  */
 public class MLEasemobHelper {
 
+    // 上下文对象
     private Context mContext;
 
+    // MLEasemobHelper 单例对象
     private static MLEasemobHelper instance;
 
     // 记录sdk是否初始化
@@ -31,6 +34,11 @@ public class MLEasemobHelper {
     private EMEventListener mEventListener;
 
 
+    /**
+     * 单例类，用来初始化环信的sdk
+     *
+     * @return
+     */
     public static MLEasemobHelper getInstance() {
         if (instance == null) {
             instance = new MLEasemobHelper();
@@ -38,11 +46,20 @@ public class MLEasemobHelper {
         return instance;
     }
 
-    protected MLEasemobHelper() {
+    /**
+     * 私有的构造方法
+     */
+    private MLEasemobHelper() {
 
     }
 
-    public synchronized boolean onInit(Context context) {
+    /**
+     * 初始化环信的SDK
+     *
+     * @param context
+     * @return 返回初始化状态是否成功
+     */
+    public synchronized boolean initEasemob(Context context) {
         mContext = context;
         int pid = android.os.Process.myPid();
         String processAppName = getAppName(pid);
@@ -50,7 +67,7 @@ public class MLEasemobHelper {
         // 为了防止环信SDK被初始化2次，加此判断会保证SDK被初始化1次
         // 默认的app会在以包名为默认的process name下运行，如果查到的process name不是app的process name就立即返回
         if (processAppName == null || !processAppName.equalsIgnoreCase(context.getPackageName())) {
-            // 则此application::onCreate 是被service 调用的，直接返回
+            // 则此application的onCreate 是被service 调用的，直接返回
             return true;
         }
         if (isInit) {
@@ -89,33 +106,50 @@ public class MLEasemobHelper {
     }
 
     /**
-     * 初始化消息监听
+     * 初始化全局的消息监听
      */
     protected void initMessageListener() {
         mEventListener = new EMEventListener() {
             @Override
             public void onEvent(EMNotifierEvent event) {
-                EMMessage message = null;
-                if (event.getData() instanceof EMMessage) {
-                    message = (EMMessage) event.getData();
-                }
                 switch (event.getEvent()) {
                     case EventNewMessage:
+                        // 正常的新消息，包含：Txt、Image、File、Location、Voice、Video
+                        EMMessage message = (EMMessage) event.getData();
 
+                        MLLog.i("EventNewMessage - msgId:%s", message.getMsgId());
                         break;
                     case EventOfflineMessage:
+                        // 离线消息，离线消息得到的数据是一个 list 集合，不是一个单一的EMMessage对象
 
+                        MLLog.i("EventOfflineMessage");
+                        break;
+                    case EventNewCMDMessage:
+                        // 透传消息
+
+                        MLLog.i("EventNewCMDMessage");
+                        break;
+                    case EventReadAck:
+                        // 已读回执，表示对反已经查看了消息
+
+                        MLLog.i("EventReadAck");
+                        break;
+                    case EventDeliveryAck:
+                        // 发送回执，表示对方已经收到
+
+                        MLLog.i("EventDeliveryAck");
                         break;
                 }
             }
         };
+        // 注册消息监听
         EMChatManager.getInstance().registerEventListener(mEventListener);
     }
 
     /**
      * 退出登录环信
      *
-     * @param callback
+     * @param callback 退出登录的回调函数，用来给上次回调退出状态
      */
     public void signOut(final EMCallBack callback) {
         MLSPUtil.remove(mContext, MLConstants.ML_C_USERNAME);
@@ -144,11 +178,22 @@ public class MLEasemobHelper {
         });
     }
 
+    /**
+     * 判断是否登录成功过
+     *
+     * @return 返回一个boolean值 表示是否登录成功过
+     */
     public boolean isLogined() {
         return EMChat.getInstance().isLoggedIn();
     }
 
-    private String getAppName(int pID) {
+    /**
+     * 根据Pid获取当前进程的名字，一般就是当前app的包名
+     *
+     * @param pid 进程的id
+     * @return 返回进程的名字
+     */
+    private String getAppName(int pid) {
         String processName = null;
         ActivityManager activityManager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
         List list = activityManager.getRunningAppProcesses();
@@ -157,7 +202,7 @@ public class MLEasemobHelper {
         while (i.hasNext()) {
             ActivityManager.RunningAppProcessInfo info = (ActivityManager.RunningAppProcessInfo) (i.next());
             try {
-                if (info.pid == pID) {
+                if (info.pid == pid) {
                     CharSequence c = pm.getApplicationLabel(pm.getApplicationInfo(info.processName, PackageManager.GET_META_DATA));
                     // Log.d("Process", "Id: "+ info.pid +" ProcessName: "+
                     // info.processName +"  Label: "+c.toString());
@@ -166,7 +211,7 @@ public class MLEasemobHelper {
                     return processName;
                 }
             } catch (Exception e) {
-                // Log.d("Process", "Error>> :"+ e.toString());
+                MLLog.e(e.toString());
             }
         }
         return processName;

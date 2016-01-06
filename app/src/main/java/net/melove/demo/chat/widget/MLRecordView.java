@@ -64,7 +64,7 @@ public class MLRecordView extends View {
 
 
     /**
-     * 绘制自定义控件边框
+     * 这里绘制一个圆，用来表示一个可以按下的按钮
      *
      * @param canvas
      */

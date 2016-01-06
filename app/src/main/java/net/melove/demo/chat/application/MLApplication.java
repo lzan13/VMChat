@@ -3,8 +3,6 @@ package net.melove.demo.chat.application;
 import android.app.Application;
 import android.content.Context;
 
-import net.melove.demo.chat.test.MLEMCheck;
-
 /**
  * Created by lzan13 on 2015/7/6.
  */
@@ -29,6 +27,6 @@ public class MLApplication extends Application {
     }
 
     private void initEasemob() {
-        MLEasemobHelper.getInstance().onInit(context);
+        MLEasemobHelper.getInstance().initEasemob(context);
     }
 }
