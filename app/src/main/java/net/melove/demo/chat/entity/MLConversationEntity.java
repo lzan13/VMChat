@@ -56,7 +56,7 @@ public class MLConversationEntity {
                 str = "CMD";
             }
             setContent(str);
-            setTime(MLDate.formatDate(message.getMsgTime()));
+            setTime(MLDate.long2Time(message.getMsgTime()));
             setCount(conversation.getUnreadMsgCount());
         } else {
             setContent("还没有聊天内容");

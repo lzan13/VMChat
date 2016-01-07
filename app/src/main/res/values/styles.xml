@@ -58,22 +58,22 @@
 
     <!--自定 AppBar样式-->
     <style name="MLTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="android:textColor">@color/ml_theme_text_primary_white</item>
+        <item name="android:textColor">@color/ml_theme_text_primary_white_dark</item>
     </style>
 
     <!--自定 Toolbar 弹出 PopupMenu 样式-->
     <style name="MLTheme.PupopMenu" parent="@style/ThemeOverlay.AppCompat">
-        <item name="android:colorBackground">#ffffff</item>
-        <item name="android:textColor">#232323</item>
+        <item name="android:colorBackground">@color/ml_theme_background_primary</item>
+        <item name="android:textColor">@color/ml_theme_text_primary_black</item>
     </style>
 
     <!--自定义 Toolbar 样式-->
     <style name="MLTheme.Toolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <!--Toolbar字体颜色-->
         <item name="colorControlNormal">@color/ml_theme_text_primary_white</item>
-        <item name="android:textColor">@color/ml_theme_text_primary_white</item>
+        <item name="android:textColor">@color/ml_theme_text_primary_white_dark</item>
         <item name="android:textSize">@dimen/ml_size_18</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textStyle">normal</item>
     </style>
     <!--自定义 TabLayout 的字体样式-->
     <style name="MLCustomTabTextAppearance" parent="TextAppearance.Design.Tab"></style>

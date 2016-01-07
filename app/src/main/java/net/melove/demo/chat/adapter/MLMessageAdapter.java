@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.easemob.chat.EMChatManager;
@@ -34,12 +35,15 @@ public class MLMessageAdapter extends BaseAdapter {
 
     private LayoutInflater mInflater;
 
+    private ListView mListView;
     private EMConversation mConversation;
     private List<EMMessage> messages;
 
-    public MLMessageAdapter(Context context, String chatId) {
+    public MLMessageAdapter(Context context, String chatId, ListView listView) {
         mContext = context;
         mInflater = LayoutInflater.from(mContext);
+
+        mListView = listView;
         mConversation = EMChatManager.getInstance().getConversation(chatId);
         messages = mConversation.getAllMessages();
 
@@ -69,27 +73,15 @@ public class MLMessageAdapter extends BaseAdapter {
         ViewHolder viewHolder = null;
         if (convertView == null) {
             convertView = createItemView(message);
-            viewHolder = new ViewHolder();
-            switch (message.getType()) {
-                case TXT:
-                    viewHolder.avatarView = (MLImageView) convertView.findViewById(R.id.ml_img_msg_avatar);
-                    viewHolder.contentView = (TextView) convertView.findViewById(R.id.ml_text_msg_content);
-                    viewHolder.usernameView = (TextView) convertView.findViewById(R.id.ml_text_msg_username);
-                    viewHolder.timeView = (TextView) convertView.findViewById(R.id.ml_text_msg_time);
-                    break;
-                case IMAGE:
-                    break;
-                default:
-                    break;
-            }
-
+            viewHolder = new ViewHolder(convertView);
+            convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.contentView.setText(((TextMessageBody) message.getBody()).getMessage());
+        viewHolder.contentView.setText(((TextMessageBody) message.getBody()).getMessage().toString());
+        viewHolder.timeView.setText(MLDate.long2Time(message.getMsgTime()));
         viewHolder.usernameView.setText(message.getFrom());
-        viewHolder.timeView.setText(MLDate.formatDate(message.getMsgTime()));
         return convertView;
     }
 
@@ -100,7 +92,7 @@ public class MLMessageAdapter extends BaseAdapter {
      */
     @Override
     public int getViewTypeCount() {
-        return 12;
+        return 2;
     }
 
     /**
@@ -117,20 +109,8 @@ public class MLMessageAdapter extends BaseAdapter {
             case TXT:
                 itemType = message.direct == EMMessage.Direct.SEND ? MSG_TYPE_TXT_SEND : MSG_TYPE_TXT_received;
                 break;
-            case IMAGE:
-                break;
-            case FILE:
-                break;
-            case VOICE:
-                break;
-            case VIDEO:
-                break;
-            case LOCATION:
-                break;
-            case CMD:
-
-                break;
             default:
+                itemType = message.direct == EMMessage.Direct.SEND ? MSG_TYPE_TXT_SEND : MSG_TYPE_TXT_received;
                 break;
         }
         return itemType;
@@ -144,16 +124,43 @@ public class MLMessageAdapter extends BaseAdapter {
                         ? mInflater.inflate(R.layout.item_msg_text_send, null)
                         : mInflater.inflate(R.layout.item_msg_text_received, null);
                 break;
-            case IMAGE:
-
+            default:
+                itemView = message.direct == EMMessage.Direct.SEND
+                        ? mInflater.inflate(R.layout.item_msg_text_send, null)
+                        : mInflater.inflate(R.layout.item_msg_text_received, null);
+                break;
         }
         return itemView;
     }
 
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+        mListView.setSelection(messages.size() - 1);
+    }
+
+    /**
+     * 非静态内部类会隐式持有外部类的引用，就像大家经常将自定义的adapter在Activity类里，
+     * 然后在adapter类里面是可以随意调用外部activity的方法的。当你将内部类定义为static时，
+     * 你就调用不了外部类的实例方法了，因为这时候静态内部类是不持有外部类的引用的。
+     * 声明ViewHolder静态内部类，可以将ViewHolder和外部类解引用。
+     * 大家会说一般ViewHolder都很简单，不定义为static也没事吧。
+     * 确实如此，但是如果你将它定义为static的，说明你懂这些含义。
+     * 万一有一天你在这个ViewHolder加入一些复杂逻辑，做了一些耗时工作，
+     * 那么如果ViewHolder是非静态内部类的话，就很容易出现内存泄露。如果是静态的话，
+     * 你就不能直接引用外部类，迫使你关注如何避免相互引用。 所以将 ViewHolder内部类 定义为静态的，是一种好习惯
+     */
     static class ViewHolder {
         MLImageView avatarView;
         TextView usernameView;
         TextView contentView;
         TextView timeView;
+
+        public ViewHolder(View view) {
+            avatarView = (MLImageView) view.findViewById(R.id.ml_img_msg_avatar);
+            contentView = (TextView) view.findViewById(R.id.ml_text_msg_content);
+            usernameView = (TextView) view.findViewById(R.id.ml_text_msg_username);
+            timeView = (TextView) view.findViewById(R.id.ml_text_msg_time);
+        }
     }
 }

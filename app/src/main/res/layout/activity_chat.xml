@@ -134,19 +134,23 @@
 
                 </GridView>
             </RelativeLayout>
-
         </LinearLayout>
 
-        <!--聊天消息显示控件 ListView-->
-        <ListView
-            android:id="@+id/ml_listview_message"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/ml_layout_chat_input"
             android:layout_alignParentTop="true"
-            android:divider="@color/ml_transparent">
+            android:clipChildren="true">
 
-        </ListView>
+            <!--聊天消息显示控件 ListView-->
+            <ListView
+                android:id="@+id/ml_listview_message"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@color/ml_transparent" />
+
+        </LinearLayout>
     </RelativeLayout>
 
 </LinearLayout>

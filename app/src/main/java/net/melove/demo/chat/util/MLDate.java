@@ -9,17 +9,20 @@ import java.util.Date;
  */
 public class MLDate {
 
-    private static SimpleDateFormat sdp1 = new SimpleDateFormat("yyyy年MM月dd日 HH时mm分ss秒");
-    private static SimpleDateFormat sdp2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    private static SimpleDateFormat sdp3 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+    private static SimpleDateFormat dateTimeFormat1 = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+    private static SimpleDateFormat dateTimeFormat2 = new SimpleDateFormat("yyyy年MM月dd日 HH时mm分ss秒");
+    private static SimpleDateFormat dateTimeFormat3 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+    private static SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+    private static SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy/MM/dd");
+    private static SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy年MM月dd日");
 
     /**
-     * 使用 SimpleDateFormat 方式获取当前格式化后的时间
+     * 获取当前格式化后的时间
      *
      * @return
      */
     public static String getCurrentDate() {
-        return sdp1.format(new Date());
+        return dateTimeFormat1.format(new Date());
     }
 
     public static long getCurrentMillisecond() {
@@ -34,17 +37,34 @@ public class MLDate {
      */
     public static String formatDate(String dateStr) {
         try {
-            Date date = sdp2.parse(dateStr);
-            return sdp1.format(date);
+            Date date = dateTimeFormat1.parse(dateStr);
+            return dateTimeFormat2.format(date);
         } catch (ParseException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    public static String formatDate(long time) {
+    /**
+     * 从 long 整型的时间戳里取出时间
+     *
+     * @param time
+     * @return
+     */
+    public static String long2Time(long time) {
         Date date = new Date(time);
-        return sdp1.format(date);
+        return timeFormat.format(date);
+    }
+
+    /**
+     * 从 long 整型的时间戳里取出日期
+     *
+     * @param time
+     * @return
+     */
+    public static String long2Date(long time) {
+        Date date = new Date(time);
+        return dateFormat1.format(date);
     }
 
 

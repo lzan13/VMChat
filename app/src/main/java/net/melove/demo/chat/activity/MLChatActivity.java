@@ -71,8 +71,8 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
      * 初始化界面控件
      */
     private void initView() {
-        mAdapter = new MLMessageAdapter(mActivity, mChatId);
         mListView = (ListView) findViewById(R.id.ml_listview_message);
+        mAdapter = new MLMessageAdapter(mActivity, mChatId, mListView);
         mListView.setAdapter(mAdapter);
 
         mEditText = (EditText) findViewById(R.id.ml_edit_chat_input);
@@ -151,6 +151,7 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
             @Override
             public void onSuccess() {
                 MLLog.i("消息发送成功 %s", message.getMsgId());
+                refreshChatUI();
             }
 
             @Override
@@ -185,6 +186,10 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
         sendMessage(message);
     }
 
+    private void refreshChatUI() {
+        mAdapter.notifyDataSetChanged();
+    }
+
     /**
      * 聊天界面按钮监听事件
      */
@@ -216,12 +221,13 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
         switch (event.getEvent()) {
             case EventNewMessage:
                 EMMessage message = (EMMessage) event.getData();
-                MLLog.i(message.getBody().toString());
+                MLLog.i(((TextMessageBody) message.getBody()).getMessage());
                 if (mChatId.equals(message.getFrom())) {
 
                 } else {
 
                 }
+                refreshChatUI();
                 break;
             case EventNewCMDMessage:
 

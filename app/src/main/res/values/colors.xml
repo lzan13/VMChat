@@ -13,6 +13,7 @@
     <color name="ml_theme_primary_dark">#d22a14</color>
     <color name="ml_theme_accent">#ffff5177</color>
     <color name="ml_theme_text_primary_white">#ddffffff</color>
+    <color name="ml_theme_text_primary_white_dark">#ffffffff</color>
     <color name="ml_theme_text_primary_black">#dd000000</color>
     <color name="ml_theme_menu_primary">#ffffffff</color>
     <color name="ml_theme_background_primary">#fff8f8f8</color>
