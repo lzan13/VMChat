@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:scaleType="centerCrop"
         android:src="@mipmap/bg_top"
-        android:tint="@color/ml_img_tint_black" />
+        android:tint="@color/ml_black_26" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/navigation_header_vertical_spacing"
             android:text="穿裤衩闯天下"
-            android:textColor="@color/ml_theme_text_primary_white"
+            android:textColor="@color/ml_white_87"
             android:textStyle="bold" />
 
         <TextView
@@ -46,6 +46,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="lzan13.gg@gmail.com"
-            android:textColor="@color/ml_theme_text_primary_white" />
+            android:textColor="@color/ml_white_87" />
     </LinearLayout>
 </RelativeLayout>

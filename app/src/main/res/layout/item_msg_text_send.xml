@@ -31,7 +31,7 @@
                 android:maxWidth="@dimen/ml_dimen_264"
                 android:padding="@dimen/ml_dimen_8"
                 android:text="@string/ml_app_name"
-                android:textColor="@color/ml_theme_text_primary_white"
+                android:textColor="@color/ml_white_87"
                 android:textSize="@dimen/ml_size_14" />
 
             <LinearLayout
@@ -47,7 +47,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/ml_hint_time"
-                    android:textColor="@color/ml_text_subtitle_white"
+                    android:textColor="@color/ml_white_54"
                     android:textSize="@dimen/ml_size_8" />
 
                 <TextView
@@ -55,7 +55,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/ml_hint_username"
-                    android:textColor="@color/ml_text_subtitle_white"
+                    android:textColor="@color/ml_white_54"
                     android:textSize="@dimen/ml_size_8" />
 
             </LinearLayout>

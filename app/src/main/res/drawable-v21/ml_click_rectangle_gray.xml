@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="@color/ml_btn_gray_pressed">
+    android:color="@color/ml_blue_100">
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/ml_btn_gray_normal" />
+            <solid android:color="@color/ml_blue_87" />
         </shape>
     </item>
 </ripple>

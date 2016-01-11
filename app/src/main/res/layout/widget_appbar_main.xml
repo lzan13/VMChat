@@ -43,7 +43,7 @@
             android:id="@+id/ml_btn_fab_menu_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/ml_bg_white_87"
+            android:background="@color/ml_white_54"
             android:gravity="bottom|right"
             android:orientation="vertical"
             android:paddingBottom="@dimen/ml_dimen_72"

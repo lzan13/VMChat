@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/ml_dialog_content_create_conversation"
-        android:textColor="@color/ml_text_subtitle_black" />
+        android:textColor="@color/ml_black_54" />
 
     <EditText
         android:id="@+id/ml_edit_chat_id"

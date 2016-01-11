@@ -74,6 +74,7 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
         mListView = (ListView) findViewById(R.id.ml_listview_message);
         mAdapter = new MLMessageAdapter(mActivity, mChatId, mListView);
         mListView.setAdapter(mAdapter);
+        refreshChatUI();
 
         mEditText = (EditText) findViewById(R.id.ml_edit_chat_input);
         mEditText.addTextChangedListener(new TextWatcher() {
@@ -157,6 +158,8 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
             @Override
             public void onError(int i, String s) {
                 MLLog.i("消息发送失败 code: %d, error: %s", i, s);
+                refreshChatUI();
+
             }
 
             @Override
@@ -187,7 +190,9 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
     }
 
     private void refreshChatUI() {
-        mAdapter.notifyDataSetChanged();
+//        mAdapter.refresh();
+//        mAdapter.notifyDataSetChanged();
+        mAdapter.refreshList();
     }
 
     /**

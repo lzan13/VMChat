@@ -17,6 +17,7 @@ import net.melove.demo.chat.application.MLEasemobHelper;
 import net.melove.demo.chat.test.MLTestHelper;
 import net.melove.demo.chat.util.MLDate;
 import net.melove.demo.chat.util.MLLog;
+import net.melove.demo.chat.widget.MLToast;
 import net.melove.demo.chat.widget.MLViewGroup;
 
 /**
@@ -68,11 +69,14 @@ public class MLTestFragment extends MLBaseFragment {
     private void init() {
         viewGroup = (MLViewGroup) getView().findViewById(R.id.ml_view_custom_viewgroup);
 
-        getView().findViewById(R.id.ml_btn_signout).setOnClickListener(viewListener);
+        getView().findViewById(R.id.ml_btn_test_signout).setOnClickListener(viewListener);
+        getView().findViewById(R.id.ml_btn_test_jump).setOnClickListener(viewListener);
+        getView().findViewById(R.id.ml_btn_test_toast).setOnClickListener(viewListener);
         getView().findViewById(R.id.ml_btn_test_delete_conversation).setOnClickListener(viewListener);
         getView().findViewById(R.id.ml_btn_test_import_message).setOnClickListener(viewListener);
         getView().findViewById(R.id.ml_btn_test_signup).setOnClickListener(viewListener);
         getView().findViewById(R.id.ml_btn_test_signin).setOnClickListener(viewListener);
+        getView().findViewById(R.id.ml_btn_test_record).setOnClickListener(viewListener);
 
     }
 
@@ -123,11 +127,14 @@ public class MLTestFragment extends MLBaseFragment {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.ml_btn_signout:
+                case R.id.ml_btn_test_signout:
                     signOut();
                     break;
-                case R.id.ml_btn_jump_test:
+                case R.id.ml_btn_test_jump:
                     mListener.onFragmentClick(0x20, 0x00, null);
+                    break;
+                case R.id.ml_btn_test_toast:
+                    MLToast.makeToast(1, "Test Toast").show();
                     break;
                 case R.id.ml_btn_test_delete_conversation:
                     EMChatManager.getInstance().deleteConversation("lz0");
@@ -144,7 +151,7 @@ public class MLTestFragment extends MLBaseFragment {
                 case R.id.ml_btn_test_send_message:
                     MLTestHelper.getInstance().sendMessage("", "测试发送消息");
                     break;
-                case R.id.ml_btn_text_record:
+                case R.id.ml_btn_test_record:
 
                     break;
             }

@@ -1,6 +1,8 @@
 package net.melove.demo.chat.adapter;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +41,13 @@ public class MLMessageAdapter extends BaseAdapter {
     private EMConversation mConversation;
     private List<EMMessage> messages;
 
+
+    /**
+     * 构造方法
+     * @param context
+     * @param chatId
+     * @param listView
+     */
     public MLMessageAdapter(Context context, String chatId, ListView listView) {
         mContext = context;
         mInflater = LayoutInflater.from(mContext);
@@ -99,7 +108,7 @@ public class MLMessageAdapter extends BaseAdapter {
      * 重写 Adapter 的获取当前 Item 类型的方法（必须重写，同上）
      *
      * @param position 当前 Item 位置
-     * @return 返回当前 Item 的类型
+     * @return 当前 Item 的类型
      */
     @Override
     public int getItemViewType(int position) {
@@ -116,6 +125,12 @@ public class MLMessageAdapter extends BaseAdapter {
         return itemType;
     }
 
+    /**
+     * 获取 item 的布局，根据传入的消息类型不同，返回不同的布局
+     *
+     * @param message 要展示的消息
+     * @return 要显示的布局
+     */
     private View createItemView(EMMessage message) {
         View itemView = null;
         switch (message.getType()) {
@@ -133,11 +148,30 @@ public class MLMessageAdapter extends BaseAdapter {
         return itemView;
     }
 
-    @Override
-    public void notifyDataSetChanged() {
-        super.notifyDataSetChanged();
-        mListView.setSelection(messages.size() - 1);
+    public void refreshList() {
+        Message msg = mHandler.obtainMessage();
+        msg.what = 0;
+        mHandler.sendMessage(msg);
     }
+
+    Handler mHandler = new Handler() {
+
+        private void refresh() {
+//            messages = mConversation.getAllMessages();
+            notifyDataSetChanged();
+            mListView.setSelection(messages.size() - 1);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+//            super.handleMessage(msg);
+            switch (msg.what) {
+                case 0:
+                    refresh();
+                    break;
+            }
+        }
+    };
 
     /**
      * 非静态内部类会隐式持有外部类的引用，就像大家经常将自定义的adapter在Activity类里，

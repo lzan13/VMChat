@@ -13,6 +13,6 @@
         android:gravity="center"
         android:padding="@dimen/ml_dimen_16"
         android:text="这里为空哦"
-        android:textColor="@color/ml_text_title_black" />
+        android:textColor="@color/ml_black_54" />
 
 </LinearLayout>

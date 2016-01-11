@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/ml_bg_white"
     android:clipChildren="false"
     android:orientation="vertical">
 
@@ -33,7 +32,7 @@
                 android:id="@+id/ml_layout_chat_input_top_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/ml_theme_background_primary"
+                android:background="@color/ml_white_87"
                 android:clipChildren="false">
 
                 <RelativeLayout
@@ -106,8 +105,8 @@
                         android:maxLines="3"
                         android:paddingBottom="@dimen/ml_dimen_8"
                         android:paddingTop="@dimen/ml_dimen_8"
-                        android:textColor="@color/ml_text_title_black"
-                        android:textColorHint="@color/ml_text_hint_black"
+                        android:textColor="@color/ml_black_87"
+                        android:textColorHint="@color/ml_black_26"
                         android:textSize="@dimen/ml_size_16" />
                 </RelativeLayout>
 
@@ -121,14 +120,13 @@
 
             <!--聊天表情框-->
             <RelativeLayout
-                android:id="@+id/ml_layout_chat_input_emotion"
+                android:id="@+id/ml_layout_chat_input_smilies"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="@dimen/ml_dimen_144"
+                android:layout_height="@dimen/ml_dimen_192"
                 android:visibility="gone">
 
                 <GridView
-                    android:id="@+id/ml_gridview_caht_input_emotion"
+                    android:id="@+id/ml_gridview_caht_input_smilies"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -148,7 +146,10 @@
                 android:id="@+id/ml_listview_message"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:divider="@color/ml_transparent" />
+                android:divider="@null"
+                android:fadeScrollbars="true"
+                android:fadingEdge="none"
+                android:transcriptMode="alwaysScroll" />
 
         </LinearLayout>
     </RelativeLayout>

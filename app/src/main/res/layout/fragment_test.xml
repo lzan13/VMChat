@@ -16,17 +16,24 @@
             android:layout_height="wrap_content">
 
             <Button
-                android:id="@+id/ml_btn_signout"
+                android:id="@+id/ml_btn_test_signout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/ml_signout" />
 
             <Button
-                android:id="@+id/ml_btn_jump_test"
+                android:id="@+id/ml_btn_test_jump"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:elevation="@dimen/ml_dimen_0"
                 android:text="@string/ml_test" />
+
+            <Button
+                android:id="@+id/ml_btn_test_toast"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:elevation="@dimen/ml_dimen_0"
+                android:text="Test Toast" />
 
             <Button
                 android:id="@+id/ml_btn_test_delete_conversation"
@@ -59,7 +66,7 @@
                 android:text="发送消息" />
 
             <Button
-                android:id="@+id/ml_btn_text_record"
+                android:id="@+id/ml_btn_test_record"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="录音" />

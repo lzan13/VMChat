@@ -2,12 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/ml_shape_toast"
     android:fitsSystemWindows="true">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="@dimen/ml_dimen_40"
+        android:background="@drawable/ml_shape_toast"
+        android:elevation="@dimen/ml_dimen_8"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="@dimen/ml_dimen_8">
@@ -16,7 +17,7 @@
             android:id="@+id/ml_img_toast_icon"
             android:layout_width="@dimen/ml_dimen_24"
             android:layout_height="@dimen/ml_dimen_24"
-            android:src="@mipmap/ic_emotion_sad_24dp" />
+            android:tint="@color/ml_theme_primary" />
 
         <TextView
             android:id="@+id/ml_text_toast_text"
@@ -25,9 +26,8 @@
             android:layout_marginLeft="@dimen/ml_dimen_4"
             android:layout_marginRight="@dimen/ml_dimen_8"
             android:gravity="center_vertical"
-            android:singleLine="true"
             android:text="@string/ml_app_name"
-            android:textColor="@color/ml_text_title_black"
+            android:textColor="@color/ml_black_87"
             android:textSize="@dimen/ml_size_14" />
     </LinearLayout>
 

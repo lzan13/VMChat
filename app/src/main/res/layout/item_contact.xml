@@ -36,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/ml_hint_username"
-                android:textColor="@color/ml_text_title_black"
+                android:textColor="@color/ml_black_87"
                 android:textSize="@dimen/ml_size_14" />
         </LinearLayout>
 

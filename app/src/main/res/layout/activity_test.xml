@@ -15,6 +15,6 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/ml_dimen_8"
         android:text="@string/ml_test_text"
-        android:textColor="@color/ml_text_subtitle_black" />
+        android:textColor="@color/ml_black_87" />
 
 </RelativeLayout>

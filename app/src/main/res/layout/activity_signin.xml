@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/ml_bg_white"
+    android:background="@color/ml_white_87"
     android:fitsSystemWindows="false"
     android:orientation="vertical"
     tools:Content=".activity.MLSigninActivity">
@@ -62,8 +62,8 @@
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/ml_text_title_black"
-                        android:textColorHint="@color/ml_text_hint_black">
+                        android:textColor="@color/ml_black_87"
+                        android:textColorHint="@color/ml_black_26">
 
                         <EditText
                             android:id="@+id/ml_edit_login_username"
@@ -74,16 +74,16 @@
                             android:inputType="textCapCharacters"
                             android:maxLines="1"
                             android:singleLine="true"
-                            android:textColor="@color/ml_text_title_black"
-                            android:textColorHint="@color/ml_text_hint_black"
+                            android:textColor="@color/ml_black_87"
+                            android:textColorHint="@color/ml_black_26"
                             android:textSize="@dimen/ml_size_16" />
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/ml_text_title_black"
-                        android:textColorHint="@color/ml_text_hint_black">
+                        android:textColor="@color/ml_black_87"
+                        android:textColorHint="@color/ml_black_26">
 
                         <EditText
                             android:id="@+id/ml_edit_login_password"
@@ -109,7 +109,7 @@
                         android:layout_height="match_parent"
                         android:background="@drawable/ml_click_rectangle_red"
                         android:text="@string/ml_signin"
-                        android:textColor="@color/ml_text_title_white"
+                        android:textColor="@color/ml_white_87"
                         android:textSize="@dimen/ml_size_16" />
 
                 </LinearLayout>
@@ -128,7 +128,7 @@
                         android:background="@drawable/ml_click_rectangle_white"
                         android:gravity="center"
                         android:text="@string/ml_signup"
-                        android:textColor="@color/ml_text_subtitle_red"
+                        android:textColor="@color/ml_red_54"
                         android:textSize="@dimen/ml_size_16" />
 
                     <View
@@ -144,7 +144,7 @@
                         android:background="@drawable/ml_click_rectangle_white"
                         android:gravity="center"
                         android:text="@string/ml_forget_password"
-                        android:textColor="@color/ml_text_subtitle_red"
+                        android:textColor="@color/ml_red_54"
                         android:textSize="@dimen/ml_size_16" />
                 </LinearLayout>
 
@@ -162,7 +162,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/ml_copy_right"
-                android:textColor="@color/ml_text_subtitle_red" />
+                android:textColor="@color/ml_red_54" />
         </LinearLayout>
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

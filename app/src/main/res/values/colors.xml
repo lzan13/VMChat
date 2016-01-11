@@ -10,13 +10,50 @@
 
     <!--Application 主题基色-->
     <color name="ml_theme_primary">#ffe62f17</color>
-    <color name="ml_theme_primary_dark">#d22a14</color>
-    <color name="ml_theme_accent">#ffff5177</color>
-    <color name="ml_theme_text_primary_white">#ddffffff</color>
-    <color name="ml_theme_text_primary_white_dark">#ffffffff</color>
-    <color name="ml_theme_text_primary_black">#dd000000</color>
-    <color name="ml_theme_menu_primary">#ffffffff</color>
-    <color name="ml_theme_background_primary">#fff8f8f8</color>
+    <color name="ml_theme_primary_dark">#ffd22a14</color>
+    <color name="ml_theme_accent">#ffff5722</color>
+
+    <!--白色-->
+    <color name="ml_white_100">#ffffffff</color>
+    <color name="ml_white_87">#ddffffff</color>
+    <color name="ml_white_54">#89ffffff</color>
+    <color name="ml_white_26">#42ffffff</color>
+
+    <!--黑色-->
+    <color name="ml_black_100">#ff000000</color>
+    <color name="ml_black_87">#dd000000</color>
+    <color name="ml_black_54">#89000000</color>
+    <color name="ml_black_26">#42000000</color>
+
+    <!--灰色-->
+    <color name="ml_gray_100">#ff9e9e9e</color>
+    <color name="ml_gray_87">#dd9e9e9e</color>
+    <color name="ml_gray_54">#89e9e9e9</color>
+    <color name="ml_gray_26">#429e9e9e</color>
+
+    <!--主题定义的红色-->
+    <color name="ml_red_100">#ffe62f17</color>
+    <color name="ml_red_87">#dde62f17</color>
+    <color name="ml_red_54">#89e62f17</color>
+    <color name="ml_red_26">#42e62f17</color>
+
+    <color name="ml_red_dark_100">#ffd22a14</color>
+    <color name="ml_red_dark_87">#ddd22a14</color>
+    <color name="ml_red_dark_54">#89d22a14</color>
+    <color name="ml_red_dark_26">#42d22a14</color>
+
+    <!--主题定义的粉色-->
+    <color name="ml_orange_100">#ffff5722</color>
+    <color name="ml_orange_87">#ddff5722</color>
+    <color name="ml_orange_54">#89ff5722</color>
+    <color name="ml_orange_26">#42ff5722</color>
+
+    <!--蓝色-->
+    <color name="ml_blue_100">#ff2384fe</color>
+    <color name="ml_blue_87">#dd2384fe</color>
+    <color name="ml_blue_54">#892384fe</color>
+    <color name="ml_blue_26">#422384fe</color>
+
 
     <!--TabLayout 颜色-->
     <color name="ml_tab_indicator">#dde62f17</color>
@@ -24,48 +61,15 @@
     <color name="ml_tab_normal">#79e62f17</color>
     <color name="ml_tab_selected">#dde62f17</color>
 
-    <!--背景色-->
-    <color name="ml_bg_white">#fff8f8f8</color>
-    <color name="ml_bg_white_100">#fff8f8f8</color>
-    <color name="ml_bg_white_87">#ddf8f8f8</color>
-    <color name="ml_bg_white_54">#89f8f8f8</color>
-    <color name="ml_bg_white_showed_54">#89000000</color>
-
-    <!--图片叠加色-->
-    <color name="ml_img_tint_black">#42000000</color>
-
-    <!--按钮颜色-->
-    <color name="ml_btn_red_normal">#dde62f17</color>
-    <color name="ml_btn_red_pressed">#89be2d17</color>
-    <color name="ml_btn_blue_normal">#dd2384fe</color>
-    <color name="ml_btn_blue_pressed">#89296dd8</color>
-    <color name="ml_btn_gray_normal">#21000000</color>
-    <color name="ml_btn_gray_pressed">#42000000</color>
-    <color name="ml_btn_white_normal">#21ffffff</color>
-    <color name="ml_btn_white_pressed">#42ffffff</color>
-    <color name="ml_btn_white_shadow">#89ffffff</color>
-
-    <!--文字颜色-->
-    <color name="ml_text_title_black">#dd000000</color>
-    <color name="ml_text_subtitle_black">#89000000</color>
-    <color name="ml_text_hint_black">#42000000</color>
-    <color name="ml_text_title_white">#ddffffff</color>
-    <color name="ml_text_subtitle_white">#89ffffff</color>
-    <color name="ml_text_hint_white">#42ffffff</color>
-    <color name="ml_text_title_red">#dde62f17</color>
-    <color name="ml_text_subtitle_red">#89e62f17</color>
-    <color name="ml_text_hint_red">#42e62f17</color>
-
-
     <!--分割线颜色-->
-    <color name="ml_divider_black">#42000000</color>
-    <color name="ml_divider_white">#42ffffff</color>
-    <color name="ml_divider_red">#42e62f17</color>
+    <color name="ml_divider_black">@color/ml_black_26</color>
+    <color name="ml_divider_white">@color/ml_white_26</color>
+    <color name="ml_divider_red">@color/ml_red_26</color>
 
     <!--边框色-->
-    <color name="ml_border_black">#dd000000</color>
-    <color name="ml_border_white">#ddffffff</color>
-    <color name="ml_border_red">#dde62f17</color>
+    <color name="ml_border_black">@color/ml_black_54</color>
+    <color name="ml_border_white">@color/ml_white_54</color>
+    <color name="ml_border_red">@color/ml_red_54</color>
 
 
 </resources>

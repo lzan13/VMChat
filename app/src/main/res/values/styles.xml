@@ -33,7 +33,7 @@
 
     <!-- 侧滑抽屉切换图标样式 -->
     <style name="MLTheme.DrawerArrowToggle" parent="Base.Widget.AppCompat.DrawerArrowToggle">
-        <item name="color">@color/ml_theme_menu_primary</item>
+        <item name="color">@color/ml_white_87</item>
     </style>
 
     <!--自定义控件MLToast 动画-->
@@ -58,20 +58,20 @@
 
     <!--自定 AppBar样式-->
     <style name="MLTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="android:textColor">@color/ml_theme_text_primary_white_dark</item>
+        <item name="android:textColor">@color/ml_white_100</item>
     </style>
 
     <!--自定 Toolbar 弹出 PopupMenu 样式-->
     <style name="MLTheme.PupopMenu" parent="@style/ThemeOverlay.AppCompat">
-        <item name="android:colorBackground">@color/ml_theme_background_primary</item>
-        <item name="android:textColor">@color/ml_theme_text_primary_black</item>
+        <item name="android:colorBackground">@color/ml_white_87</item>
+        <item name="android:textColor">@color/ml_black_87</item>
     </style>
 
     <!--自定义 Toolbar 样式-->
     <style name="MLTheme.Toolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <!--Toolbar字体颜色-->
-        <item name="colorControlNormal">@color/ml_theme_text_primary_white</item>
-        <item name="android:textColor">@color/ml_theme_text_primary_white_dark</item>
+        <item name="colorControlNormal">@color/ml_white_100</item>
+        <item name="android:textColor">@color/ml_white_100</item>
         <item name="android:textSize">@dimen/ml_size_18</item>
         <item name="android:textStyle">normal</item>
     </style>
