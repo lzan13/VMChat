@@ -50,34 +50,67 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <!--中间内容布局-->
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/ml_dimen_16"
-            android:padding="@dimen/ml_dimen_8">
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/ml_dimen_16">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/ml_dimen_16"
-                android:orientation="vertical"
-                android:paddingLeft="@dimen/ml_dimen_16">
+                android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/ml_test_text" />
+                    android:text="@string/ml_app_name" />
             </LinearLayout>
-        </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/ml_dimen_8"
+                android:layout_marginTop="@dimen/ml_dimen_8"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="所属公司：" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="环信" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ml_test_text" />
+        </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
     <!--悬浮按钮-->
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/ml_btn_fab"
+        android:id="@+id/ml_btn_fab_create_conversation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/ml_dimen_16"
         android:src="@drawable/ic_menu_chat"
+        app:fabSize="normal"
+        app:layout_anchor="@id/ml_layout_appbar"
+        app:layout_anchorGravity="bottom|end" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/ml_btn_fab_add_contact"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/ml_dimen_16"
+        android:src="@drawable/ic_menu_add"
+        android:visibility="gone"
         app:fabSize="normal"
         app:layout_anchor="@id/ml_layout_appbar"
         app:layout_anchorGravity="bottom|end" />

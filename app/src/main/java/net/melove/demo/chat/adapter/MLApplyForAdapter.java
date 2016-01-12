@@ -52,50 +52,50 @@ public class MLApplyForAdapter extends BaseAdapter implements View.OnClickListen
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHandler viewHandler = null;
+        ViewHolder viewHolder = null;
         MLApplyForEntity info = (MLApplyForEntity) getItem(position);
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.item_apply_for, null);
-            viewHandler = new ViewHandler(convertView);
-            convertView.setTag(viewHandler);
+            viewHolder = new ViewHolder(convertView);
+            convertView.setTag(viewHolder);
         } else {
-            viewHandler = (ViewHandler) convertView.getTag();
+            viewHolder = (ViewHolder) convertView.getTag();
         }
-        viewHandler.imageViewAvatar.setImageResource(R.mipmap.ic_character_blackcat);
-        viewHandler.textViewUsername.setText(info.getUserName());
-        viewHandler.textViewReason.setText(info.getReason());
+        viewHolder.imageViewAvatar.setImageResource(R.mipmap.ic_character_blackcat);
+        viewHolder.textViewUsername.setText(info.getUserName());
+        viewHolder.textViewReason.setText(info.getReason());
         if (info.getStatus() == MLApplyForEntity.ApplyForStatus.AGREED) {
-            viewHandler.textViewStatus.setText("agreed");
-            viewHandler.textViewStatus.setVisibility(View.VISIBLE);
-            viewHandler.btnAgree.setVisibility(View.GONE);
-            viewHandler.btnRefuse.setVisibility(View.GONE);
+            viewHolder.textViewStatus.setText("agreed");
+            viewHolder.textViewStatus.setVisibility(View.VISIBLE);
+            viewHolder.btnAgree.setVisibility(View.GONE);
+            viewHolder.btnRefuse.setVisibility(View.GONE);
         } else if (info.getStatus() == MLApplyForEntity.ApplyForStatus.REFUSED) {
-            viewHandler.textViewStatus.setText("refused");
-            viewHandler.textViewStatus.setVisibility(View.VISIBLE);
-            viewHandler.btnAgree.setVisibility(View.GONE);
-            viewHandler.btnRefuse.setVisibility(View.GONE);
+            viewHolder.textViewStatus.setText("refused");
+            viewHolder.textViewStatus.setVisibility(View.VISIBLE);
+            viewHolder.btnAgree.setVisibility(View.GONE);
+            viewHolder.btnRefuse.setVisibility(View.GONE);
         } else if (info.getStatus() == MLApplyForEntity.ApplyForStatus.BEAGREED) {
-            viewHandler.textViewStatus.setText("be agreed");
-            viewHandler.textViewStatus.setVisibility(View.VISIBLE);
-            viewHandler.btnAgree.setVisibility(View.GONE);
-            viewHandler.btnRefuse.setVisibility(View.GONE);
+            viewHolder.textViewStatus.setText("be agreed");
+            viewHolder.textViewStatus.setVisibility(View.VISIBLE);
+            viewHolder.btnAgree.setVisibility(View.GONE);
+            viewHolder.btnRefuse.setVisibility(View.GONE);
         } else if (info.getStatus() == MLApplyForEntity.ApplyForStatus.BEREFUSED) {
-            viewHandler.textViewStatus.setText("be refused");
-            viewHandler.textViewStatus.setVisibility(View.VISIBLE);
-            viewHandler.btnAgree.setVisibility(View.GONE);
-            viewHandler.btnRefuse.setVisibility(View.GONE);
+            viewHolder.textViewStatus.setText("be refused");
+            viewHolder.textViewStatus.setVisibility(View.VISIBLE);
+            viewHolder.btnAgree.setVisibility(View.GONE);
+            viewHolder.btnRefuse.setVisibility(View.GONE);
         } else if (info.getStatus() == MLApplyForEntity.ApplyForStatus.BEAPPLYFOR) {
-            viewHandler.textViewStatus.setText("be apply for");
-            viewHandler.textViewStatus.setVisibility(View.GONE);
-            viewHandler.btnAgree.setVisibility(View.VISIBLE);
-            viewHandler.btnRefuse.setVisibility(View.VISIBLE);
+            viewHolder.textViewStatus.setText("被申请");
+            viewHolder.textViewStatus.setVisibility(View.GONE);
+            viewHolder.btnAgree.setVisibility(View.VISIBLE);
+            viewHolder.btnRefuse.setVisibility(View.VISIBLE);
         } else if (info.getStatus() == MLApplyForEntity.ApplyForStatus.GROUPAPPLYFOR) {
-            viewHandler.textViewStatus.setText("Agreed");
+            viewHolder.textViewStatus.setText("已经同意群组申请");
         }
-        viewHandler.btnAgree.setTag(position);
-        viewHandler.btnRefuse.setTag(position);
-        viewHandler.btnAgree.setOnClickListener(this);
-        viewHandler.btnRefuse.setOnClickListener(this);
+        viewHolder.btnAgree.setTag(position);
+        viewHolder.btnRefuse.setTag(position);
+        viewHolder.btnAgree.setOnClickListener(this);
+        viewHolder.btnRefuse.setOnClickListener(this);
         return convertView;
     }
 
@@ -146,9 +146,9 @@ public class MLApplyForAdapter extends BaseAdapter implements View.OnClickListen
     }
 
     /**
-     *
+     * 用户申请与通知的 ViewHolder
      */
-    private class ViewHandler {
+    private class ViewHolder {
         MLImageView imageViewAvatar;
         TextView textViewUsername;
         TextView textViewReason;
@@ -156,7 +156,7 @@ public class MLApplyForAdapter extends BaseAdapter implements View.OnClickListen
         Button btnAgree;
         Button btnRefuse;
 
-        public ViewHandler(View view) {
+        public ViewHolder(View view) {
             imageViewAvatar = (MLImageView) view.findViewById(R.id.ml_img_apply_for_avatar);
             textViewUsername = (TextView) view.findViewById(R.id.ml_text_apply_for_username);
             textViewReason = (TextView) view.findViewById(R.id.ml_text_apply_for_reason);

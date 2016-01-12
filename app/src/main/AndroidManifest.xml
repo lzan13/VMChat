@@ -104,7 +104,16 @@
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Default"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity android:name=".activity.MLVideoCallActivity"></activity>
+        <activity
+            android:name=".activity.MLVideoCallActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MLTheme.Default"
+            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
+        <!--搜索界面-->
+        <activity
+            android:name=".activity.MLSearchActivity"
+            android:theme="@style/MLTheme.Default"
+            android:windowSoftInputMode="adjustResize|stateVisible"></activity>
 
         <!-- 设置环信appkey -->
         <meta-data

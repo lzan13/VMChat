@@ -44,6 +44,7 @@ public class MLMessageAdapter extends BaseAdapter {
 
     /**
      * 构造方法
+     *
      * @param context
      * @param chatId
      * @param listView
@@ -78,6 +79,7 @@ public class MLMessageAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        // 获取当前要显示的 message 对象
         EMMessage message = (EMMessage) getItem(position);
         ViewHolder viewHolder = null;
         if (convertView == null) {

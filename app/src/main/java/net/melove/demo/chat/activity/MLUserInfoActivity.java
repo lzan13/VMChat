@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
@@ -11,6 +12,9 @@ import com.easemob.chat.EMContactManager;
 import com.easemob.exceptions.EaseMobException;
 
 import net.melove.demo.chat.R;
+import net.melove.demo.chat.application.MLConstants;
+import net.melove.demo.chat.db.MLUserDao;
+import net.melove.demo.chat.entity.MLUserEntity;
 import net.melove.demo.chat.widget.MLToast;
 
 /**
@@ -18,9 +22,16 @@ import net.melove.demo.chat.widget.MLToast;
  */
 public class MLUserInfoActivity extends MLBaseActivity {
 
+    private String mChatId;
 
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
     private Toolbar mToolbar;
+
+    private FloatingActionButton mFabAddContacts;
+    private FloatingActionButton mFabCreateConverstaion;
+
+    private MLUserDao mUserDao;
+    private MLUserEntity mUserEntity;
 
 
     @Override
@@ -36,7 +47,9 @@ public class MLUserInfoActivity extends MLBaseActivity {
 
     private void init() {
         mActivity = this;
-//        mUserDao = new MLUserDao(mActivity);
+        mChatId = getIntent().getStringExtra(MLConstants.ML_C_CHAT_ID);
+        mUserDao = new MLUserDao(mActivity);
+        mUserEntity = mUserDao.getContact(mChatId);
     }
 
     /**
@@ -47,7 +60,6 @@ public class MLUserInfoActivity extends MLBaseActivity {
         mCollapsingToolbarLayout.setTitle(mActivity.getResources().getString(R.string.ml_hint_username));
 
         mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
-        mToolbar.setTitleTextColor(getResources().getColor(R.color.ml_white));
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_menu_arrow);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -59,7 +71,23 @@ public class MLUserInfoActivity extends MLBaseActivity {
 
     }
 
+    /**
+     * 控件的初始化
+     */
     private void initView() {
+        mFabAddContacts = (FloatingActionButton) findViewById(R.id.ml_btn_fab_create_conversation);
+        mFabCreateConverstaion = (FloatingActionButton) findViewById(R.id.ml_btn_fab_create_conversation);
+        mFabAddContacts.setOnClickListener(viewListener);
+        mFabCreateConverstaion.setOnClickListener(viewListener);
+
+        // 根据本地查询到的用户情况来确定是显示 添加好友 还是显示 发送消息
+        if (mUserEntity != null && mUserEntity.getUserName() != null) {
+            mFabAddContacts.setVisibility(View.GONE);
+            mFabCreateConverstaion.setVisibility(View.VISIBLE);
+        } else {
+            mFabAddContacts.setVisibility(View.VISIBLE);
+            mFabCreateConverstaion.setVisibility(View.GONE);
+        }
 
     }
 
@@ -69,6 +97,12 @@ public class MLUserInfoActivity extends MLBaseActivity {
             switch (v.getId()) {
                 case -1:
                     mActivity.finishAfterTransition();
+                    break;
+                case R.id.ml_btn_fab_create_conversation:
+                    startChat();
+                    break;
+                case R.id.ml_btn_fab_add_contact:
+                    addContact();
                     break;
                 default:
                     break;
@@ -85,7 +119,7 @@ public class MLUserInfoActivity extends MLBaseActivity {
             public void run() {
                 String reason = "加个好友呗";
                 try {
-                    EMContactManager.getInstance().addContact("", reason);
+                    EMContactManager.getInstance().addContact(mChatId, reason);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -97,7 +131,7 @@ public class MLUserInfoActivity extends MLBaseActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            MLToast.makeToast("发送好友请求失败-_-||").show();
+                            MLToast.makeToast("发送好友请求失败-_-||，稍后重试").show();
                         }
                     });
                 }
@@ -111,7 +145,7 @@ public class MLUserInfoActivity extends MLBaseActivity {
     private void startChat() {
         Intent intent = new Intent();
         intent.setClass(mActivity, MLChatActivity.class);
-//        intent.putExtra("username", mUsername);
+        intent.putExtra(MLConstants.ML_C_CHAT_ID, mChatId);
         mActivity.startActivity(intent);
         mActivity.finish();
     }

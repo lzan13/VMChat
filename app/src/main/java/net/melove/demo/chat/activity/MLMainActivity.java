@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import com.easemob.EMConnectionListener;
 import com.easemob.EMError;
 import com.easemob.EMEventListener;
+import com.easemob.EMGroupChangeListener;
 import com.easemob.EMNotifierEvent;
 import com.easemob.chat.EMChat;
 import com.easemob.chat.EMChatManager;
@@ -47,6 +48,7 @@ import java.util.List;
 
 /**
  * Created by lzan13 on 2015/7/2.
+ * 主Activity类，整个程序启动的主界面
  */
 public class MLMainActivity extends MLBaseActivity implements
         NavigationView.OnNavigationItemSelectedListener,
@@ -65,6 +67,7 @@ public class MLMainActivity extends MLBaseActivity implements
 
     // fab按钮
     private boolean isActivateFab;
+    // 定义的包含Fab按钮的一个Layout布局，控制其他的Fab按钮的显示和隐藏
     private View mFabMenuLayout;
     private FloatingActionButton mFabCreateConversationBtn;
     private FloatingActionButton mFabAddContactBtn;
@@ -118,6 +121,7 @@ public class MLMainActivity extends MLBaseActivity implements
         mToolbar.setTitle(mActivity.getResources().getString(R.string.ml_dialog_title_chat));
         setSupportActionBar(mToolbar);
 
+        // 定义的包含Fab按钮的一个Layout布局，控制其他的Fab按钮的显示和隐藏
         mFabMenuLayout = findViewById(R.id.ml_btn_fab_menu_layout);
         mFabCreateConversationBtn = (FloatingActionButton) findViewById(R.id.ml_btn_fab_create_conversation);
         mFabAddContactBtn = (FloatingActionButton) findViewById(R.id.ml_btn_fab_add_contact);
@@ -213,7 +217,7 @@ public class MLMainActivity extends MLBaseActivity implements
     }
 
     /**
-     * 界面控件点击事件
+     * Fab 按钮控件点击监听
      */
     @NonNull
     private View.OnClickListener viewListener = new View.OnClickListener() {
@@ -231,12 +235,12 @@ public class MLMainActivity extends MLBaseActivity implements
                 case R.id.ml_text_fab_add_contact:
                 case R.id.ml_btn_fab_add_contact:
                     fabChange();
-
+                    startSearch();
                     break;
                 case R.id.ml_text_fab_add_group:
                 case R.id.ml_btn_fab_add_group:
                     fabChange();
-
+//                    startSearch();
                     break;
                 case R.id.ml_btn_fab_menu_layout:
                     fabChange();
@@ -291,6 +295,9 @@ public class MLMainActivity extends MLBaseActivity implements
         return true;
     }
 
+    /**
+     * 悬浮按钮的变化
+     */
     private void fabChange() {
         if (isActivateFab) {
             isActivateFab = false;
@@ -361,6 +368,13 @@ public class MLMainActivity extends MLBaseActivity implements
         dialog.show();
     }
 
+    /**
+     * 开始搜索用户或者群组，
+     */
+    private void startSearch() {
+        Intent intent = new Intent(mActivity, MLSearchActivity.class);
+        startActivity(intent);
+    }
 
     /**
      * 实现EMEventListener接口，消息的监听方法，用来监听发来的消息
@@ -397,6 +411,9 @@ public class MLMainActivity extends MLBaseActivity implements
      */
     private class MLConnectionListener implements EMConnectionListener {
 
+        /**
+         * 链接聊天服务器成功
+         */
         @Override
         public void onConnected() {
             runOnUiThread(new Runnable() {
@@ -407,6 +424,11 @@ public class MLMainActivity extends MLBaseActivity implements
             });
         }
 
+        /**
+         * 链接聊天服务器失败
+         *
+         * @param errorCode
+         */
         @Override
         public void onDisconnected(final int errorCode) {
             runOnUiThread(new Runnable() {
@@ -430,37 +452,161 @@ public class MLMainActivity extends MLBaseActivity implements
      */
     private class MLContactListener implements EMContactListener {
 
+        /**
+         * 添加联系人
+         *
+         * @param list
+         */
         @Override
         public void onContactAdded(List<String> list) {
             MLLog.d("onContactAdded");
-            // 添加
         }
 
+        /**
+         * 联系人被删除
+         *
+         * @param list
+         */
         @Override
         public void onContactDeleted(List<String> list) {
             MLLog.d("onContactDeleted");
-            // 被删除
         }
 
+        /**
+         * 收到联系人申请
+         *
+         * @param username
+         * @param reason
+         */
         @Override
         public void onContactInvited(String username, String reason) {
             MLLog.d("onContactInvited");
 
         }
 
+        /**
+         * 同意联系人申请
+         *
+         * @param s
+         */
         @Override
         public void onContactAgreed(String s) {
-            // 同意申请
             MLLog.d("onContactAgreed");
         }
 
+        /**
+         * 拒绝联系人申请
+         *
+         * @param s
+         */
         @Override
         public void onContactRefused(String s) {
-            // 拒绝申请
             MLLog.d("onContactRefused");
         }
     }
 
+    /**
+     * 群组变化监听，用来监听群组请求，以及其他群组情况
+     */
+    private class MLGroupListener implements EMGroupChangeListener {
+
+        /**
+         * 收到加入群组邀请
+         *
+         * @param s
+         * @param s1
+         * @param s2
+         * @param s3
+         */
+        @Override
+        public void onInvitationReceived(String s, String s1, String s2, String s3) {
+
+        }
+
+        /**
+         * 收到加入群组申请
+         *
+         * @param s
+         * @param s1
+         * @param s2
+         * @param s3
+         */
+        @Override
+        public void onApplicationReceived(String s, String s1, String s2, String s3) {
+
+        }
+
+        /**
+         * 接收加群申请
+         *
+         * @param s
+         * @param s1
+         * @param s2
+         */
+        @Override
+        public void onApplicationAccept(String s, String s1, String s2) {
+
+        }
+
+        /**
+         * 拒绝加群申请
+         *
+         * @param s
+         * @param s1
+         * @param s2
+         * @param s3
+         */
+        @Override
+        public void onApplicationDeclined(String s, String s1, String s2, String s3) {
+
+        }
+
+        /**
+         * 接收群邀请
+         *
+         * @param s
+         * @param s1
+         * @param s2
+         */
+        @Override
+        public void onInvitationAccpted(String s, String s1, String s2) {
+
+        }
+
+        /**
+         * 拒绝群邀请
+         *
+         * @param s
+         * @param s1
+         * @param s2
+         */
+        @Override
+        public void onInvitationDeclined(String s, String s1, String s2) {
+
+        }
+
+        /**
+         * 群成员被删除
+         *
+         * @param s
+         * @param s1
+         */
+        @Override
+        public void onUserRemoved(String s, String s1) {
+
+        }
+
+        /**
+         * 群解散
+         *
+         * @param s
+         * @param s1
+         */
+        @Override
+        public void onGroupDestroy(String s, String s1) {
+
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
