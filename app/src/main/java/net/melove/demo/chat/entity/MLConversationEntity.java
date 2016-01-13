@@ -19,6 +19,8 @@ public class MLConversationEntity {
     private String nick;
     // 会话的头像
     private String avatar;
+    // 会话聊天背景
+    private String cover;
     // 最后会话时间
     private String time;
     // 最后一条消息内容

@@ -19,7 +19,7 @@ public class MLUserDao {
 
 
     public MLUserDao(Context context) {
-        MLDBManager.getInstance().onInit(context);
+        MLDBManager.getInstance().init(context);
     }
 
     /**

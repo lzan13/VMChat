@@ -87,6 +87,7 @@ public class MLSigninActivity extends MLBaseActivity {
         mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
 
         mToolbar.setTitle(R.string.ml_signin);
+        // TODO 这里设置Toolbar的图标时,在5.x上才能支持，在4.x的设备 svg 图标会显示，但是颜色是黑色不能改变，
         mToolbar.setNavigationIcon(R.drawable.ic_menu_close);
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {

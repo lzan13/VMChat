@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:contentScrim="?attr/colorPrimary"
-            app:expandedTitleMarginStart="@dimen/ml_dimen_144"
+            app:expandedTitleMarginStart="@dimen/ml_dimen_72"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <ImageView
@@ -94,24 +94,16 @@
     </android.support.v4.widget.NestedScrollView>
 
     <!--悬浮按钮-->
+
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/ml_btn_fab_create_conversation"
+        android:id="@+id/ml_btn_fab_user_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/ml_dimen_16"
         android:src="@drawable/ic_menu_chat"
+        android:visibility="visible"
         app:fabSize="normal"
         app:layout_anchor="@id/ml_layout_appbar"
         app:layout_anchorGravity="bottom|end" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/ml_btn_fab_add_contact"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/ml_dimen_16"
-        android:src="@drawable/ic_menu_add"
-        android:visibility="gone"
-        app:fabSize="normal"
-        app:layout_anchor="@id/ml_layout_appbar"
-        app:layout_anchorGravity="bottom|end" />
 </android.support.design.widget.CoordinatorLayout>

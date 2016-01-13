@@ -64,24 +64,24 @@
                 android:layout_width="@dimen/ml_dimen_56"
                 android:layout_height="@dimen/ml_dimen_36"
                 android:layout_marginRight="@dimen/ml_dimen_8"
-                android:background="@drawable/ml_click_rectangle_blue"
+                android:background="@drawable/ml_click_rectangle_white"
                 android:elevation="@dimen/ml_dimen_0"
                 android:focusable="false"
                 android:gravity="center"
                 android:text="@string/ml_btn_agree"
-                android:textColor="@color/ml_white_87"
+                android:textColor="@color/ml_blue_87"
                 android:textSize="@dimen/ml_size_14" />
 
             <Button
                 android:id="@+id/ml_btn_apply_for_refuse"
                 android:layout_width="@dimen/ml_dimen_56"
                 android:layout_height="@dimen/ml_dimen_36"
-                android:background="@drawable/ml_click_rectangle_red"
+                android:background="@drawable/ml_click_rectangle_white"
                 android:elevation="@dimen/ml_dimen_0"
                 android:focusable="false"
                 android:gravity="center"
                 android:text="@string/ml_btn_refuse"
-                android:textColor="@color/ml_white_87"
+                android:textColor="@color/ml_red_87"
                 android:textSize="@dimen/ml_size_14" />
         </LinearLayout>
 

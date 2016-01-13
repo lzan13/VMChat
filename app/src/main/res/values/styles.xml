@@ -1,6 +1,6 @@
 <resources>
     <!-- 应用基础主题 -->
-    <style name="MLTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="MLTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- 在这里自定义自己的主题 -->
         <!-- 默认主要颜色，一般是 Toolbar 等颜色 -->
         <item name="colorPrimary">@color/ml_theme_primary</item>
@@ -25,7 +25,7 @@
     </style>
 
     <!--默认主题-->
-    <style name="MLTheme.Default" parent="MLTheme">
+    <style name="MLTheme.Default" parent="MLTheme.Base">
         <!--定义Activity切换动画-->
         <item name="android:windowAnimationStyle">@style/AnimSlide</item>
     </style>
@@ -58,7 +58,10 @@
 
     <!--自定 AppBar样式-->
     <style name="MLTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="colorControlNormal">@color/ml_white_100</item>
         <item name="android:textColor">@color/ml_white_100</item>
+        <item name="android:textSize">@dimen/ml_size_18</item>
+        <item name="android:textStyle">normal</item>
     </style>
 
     <!--自定 Toolbar 弹出 PopupMenu 样式-->

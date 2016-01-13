@@ -17,7 +17,7 @@ public class MLApplyForDao {
 
 
     public MLApplyForDao(Context context) {
-        MLDBManager.getInstance().onInit(context);
+        MLDBManager.getInstance().init(context);
     }
 
 

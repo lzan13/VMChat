@@ -25,7 +25,7 @@ public class MLDBManager {
         return instance;
     }
 
-    public void onInit(Context context) {
+    public void init(Context context) {
         mDBHelper = MLDBHelper.getInstance(context);
     }
 

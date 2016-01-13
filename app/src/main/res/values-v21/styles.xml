@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- 适配 Android SDK版本大于21的主题 -->
-    <style name="MLTheme.Default" parent="MLTheme">
+    <style name="MLTheme.Default" parent="MLTheme.Base">
 
         <!-- 设置允许修改系统栏的背景色 比如导航栏 状态栏等-->
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>

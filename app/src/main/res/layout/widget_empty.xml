@@ -2,17 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/activity_default_margin"
+    android:background="@color/ml_red_87"
+    android:gravity="center"
     android:orientation="vertical">
 
-    <TextView
-        android:layout_width="match_parent"
+    <ImageView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/ml_click_rectangle_gray"
-        android:clickable="true"
-        android:gravity="center"
-        android:padding="@dimen/ml_dimen_16"
-        android:text="这里为空哦"
-        android:textColor="@color/ml_black_54" />
-
+        android:scaleType="center"
+        android:src="@mipmap/ic_empty" />
 </LinearLayout>

@@ -4,13 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ViewStub
-        android:id="@+id/ml_viewstub"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/activity_default_margin"
-        android:layout="@layout/widget_empty" />
-
     <ListView
         android:id="@+id/ml_listview_applyfor"
         android:layout_width="match_parent"
@@ -18,5 +11,21 @@
         android:descendantFocusability="blocksDescendants"
         android:divider="@color/ml_divider_black"
         android:dividerHeight="@dimen/ml_dimen_0_5"
-        android:listSelector="@color/ml_transparent"></ListView>
+        android:listSelector="@color/ml_transparent" />
+
+    <!--空数据时显示的布局-->
+    <RelativeLayout
+        android:id="@+id/ml_layout_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/ml_red_87"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="center"
+            android:src="@mipmap/ic_empty" />
+    </RelativeLayout>
 </LinearLayout>

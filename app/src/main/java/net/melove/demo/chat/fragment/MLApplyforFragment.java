@@ -32,8 +32,6 @@ import java.util.List;
 public class MLApplyforFragment extends MLBaseFragment {
 
 
-    private ViewStub mViewStub;
-
     private MLApplyForDao mApplyForDao;
     private List<MLApplyForEntity> mList;
     private MLApplyForAdapter mApplyForAdapter;
@@ -73,12 +71,8 @@ public class MLApplyforFragment extends MLBaseFragment {
         // 初始化ListView
         mListView = (ListView) getView().findViewById(R.id.ml_listview_applyfor);
         mListView.setAdapter(mApplyForAdapter);
-
         setItemClickListener();
-        if (mList.size() == 0) {
-            mViewStub = (ViewStub) getView().findViewById(R.id.ml_viewstub);
-            mViewStub.setVisibility(View.VISIBLE);
-        }
+        mListView.setEmptyView(getView().findViewById(R.id.ml_layout_empty));
     }
 
     /**

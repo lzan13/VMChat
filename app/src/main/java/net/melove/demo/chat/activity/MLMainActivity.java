@@ -5,7 +5,6 @@ import android.animation.AnimatorInflater;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -22,7 +21,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.EditText;
-import android.widget.ImageView;
 
 import com.easemob.EMConnectionListener;
 import com.easemob.EMError;
@@ -33,13 +31,18 @@ import com.easemob.chat.EMChat;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMContactListener;
 import com.easemob.chat.EMContactManager;
+import com.easemob.chat.EMGroupManager;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLConstants;
+import net.melove.demo.chat.db.MLApplyForDao;
+import net.melove.demo.chat.entity.MLApplyForEntity;
 import net.melove.demo.chat.fragment.MLApplyforFragment;
 import net.melove.demo.chat.fragment.MLBaseFragment;
 import net.melove.demo.chat.fragment.MLHomeFragment;
 import net.melove.demo.chat.fragment.MLOtherFragment;
+import net.melove.demo.chat.notification.MLNotifier;
+import net.melove.demo.chat.util.MLDate;
 import net.melove.demo.chat.util.MLLog;
 import net.melove.demo.chat.widget.MLImageView;
 import net.melove.demo.chat.widget.MLToast;
@@ -59,7 +62,10 @@ public class MLMainActivity extends MLBaseActivity implements
 
     // 环信事件监听接口
     private EMEventListener mEventListener;
+    private MLConnectionListener mConnectionListener;
+    private MLContactListener mContactListener;
 
+    // 主界面的一些系统控件
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private NavigationView mNavigationView;
@@ -74,16 +80,14 @@ public class MLMainActivity extends MLBaseActivity implements
     private FloatingActionButton mFabAddGroupBtn;
     private FloatingActionButton mFabBtn;
 
-
+    // Fragment 切换
     private FragmentTransaction mFragmentTransaction;
     private Fragment mCurrentFragment;
     private int mMenuType;
 
 
-    /**
-     * 存储最后一次显示的title
-     */
-    private CharSequence mTitle;
+    // 申请已通知的 Dao
+    private MLApplyForDao mApplyForDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +109,8 @@ public class MLMainActivity extends MLBaseActivity implements
         mEventListener = this;
         mMenuType = 0;
         isActivateFab = false;
-        mTitle = getTitle();
+
+        mApplyForDao = new MLApplyForDao(mActivity);
 
     }
 
@@ -207,10 +212,17 @@ public class MLMainActivity extends MLBaseActivity implements
      * 初始化SDK的一些监听
      */
     private void initListener() {
-        // 设置添加链接监听，监测连接服务器情况
-        EMChatManager.getInstance().addConnectionListener(new MLConnectionListener());
-        // 设置添加联系人监听，监测联系人申请及联系人变化
-        EMContactManager.getInstance().setContactListener(new MLContactListener());
+        mConnectionListener = new MLConnectionListener();
+        // 设置链接监听，监测连接服务器情况
+        EMChatManager.getInstance().addConnectionListener(mConnectionListener);
+
+        // 设置联系人监听，监测联系人申请及联系人变化
+        mContactListener = new MLContactListener();
+        EMContactManager.getInstance().setContactListener(mContactListener);
+
+        // 设置群组监听，监测群组情况的变化
+        MLGroupListener mGroupListener = new MLGroupListener();
+        EMGroupManager.getInstance().addGroupChangeListener(mGroupListener);
 
         // 最后要通知sdk，UI 已经初始化完毕，注册了相应的listener, 可以进行消息监听了（必须调用）
         EMChat.getInstance().setAppInited();
@@ -219,7 +231,6 @@ public class MLMainActivity extends MLBaseActivity implements
     /**
      * Fab 按钮控件点击监听
      */
-    @NonNull
     private View.OnClickListener viewListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -447,7 +458,6 @@ public class MLMainActivity extends MLBaseActivity implements
     }
 
     /**
-     * lzan13   2015-8-26 16:32
      * 联系人监听，用来监听联系人的请求与变化等
      */
     private class MLContactListener implements EMContactListener {
@@ -482,6 +492,26 @@ public class MLMainActivity extends MLBaseActivity implements
         public void onContactInvited(String username, String reason) {
             MLLog.d("onContactInvited");
 
+            MLNotifier.getInstance(mActivity).sendNotification(username +" hi:"+ reason);
+
+            List<MLApplyForEntity> entitys = mApplyForDao.getApplyForList();
+            MLApplyForEntity temp = new MLApplyForEntity();
+            for (MLApplyForEntity e : entitys) {
+                if (username.equals(e.getUserName())
+                        && reason.equals(e.getReason())) {
+                    /**
+                     * 当之前收到过好友请求，并且没有处理的情况下，如果用户离线后重新链接服务器会再次收到服务器推送的好友请求，
+                     * 所以这里循环判断本地是否已经有了本次的请求，如果有直接返回，不做处理
+                     */
+                    return;
+                }
+            }
+
+            temp.setUserName(username);
+            temp.setReason(reason);
+            temp.setStatus(MLApplyForEntity.ApplyForStatus.BEAPPLYFOR);
+            temp.setTime(MLDate.getCurrentMillisecond());
+            mApplyForDao.saveApplyFor(temp);
         }
 
         /**
@@ -608,70 +638,6 @@ public class MLMainActivity extends MLBaseActivity implements
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-            if (mTime != 0) {
-                long time = System.currentTimeMillis() - mTime;
-                if (time > 1500) {
-                    MLToast.makeToast("重新按下 Back 键").show();
-                    mTime = System.currentTimeMillis();
-                } else {
-                    mActivity.finish();
-                }
-            } else {
-                mTime = System.currentTimeMillis();
-                MLToast.makeToast("再按退出程序").show();
-            }
-        }
-        return true;
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // 定义要监听的消息类型
-        EMNotifierEvent.Event[] events = new EMNotifierEvent.Event[]{
-                EMNotifierEvent.Event.EventConversationListChanged, // 会话列表改变
-                EMNotifierEvent.Event.EventDeliveryAck,     // 已发送回执event注册
-                EMNotifierEvent.Event.EventNewCMDMessage,   // 接收透传event注册
-                EMNotifierEvent.Event.EventNewMessage,      // 接收新消息event注册
-                EMNotifierEvent.Event.EventOfflineMessage,  // 接收离线消息event注册
-                EMNotifierEvent.Event.EventReadAck          // 已读回执event注册
-        };
-        // 注册消息监听
-        EMChatManager.getInstance().registerEventListener(mEventListener, events);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        // 取消消息的监听事件，为了防止多个界面同时监听
-        EMChatManager.getInstance().unregisterEventListener(mEventListener);
-    }
-
     /**
      * Fragment 的统一回调函数
      *
@@ -720,5 +686,77 @@ public class MLMainActivity extends MLBaseActivity implements
 
     public View getToolbar() {
         return mToolbar;
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+            if (mTime != 0) {
+                long time = System.currentTimeMillis() - mTime;
+                if (time > 1500) {
+                    MLToast.makeToast("重新按下 Back 键").show();
+                    mTime = System.currentTimeMillis();
+                } else {
+                    mActivity.finish();
+                }
+            } else {
+                mTime = System.currentTimeMillis();
+                MLToast.makeToast("再按退出程序").show();
+            }
+        }
+        return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // 移除链接监听
+        if (mConnectionListener != null) {
+            EMChatManager.getInstance().removeConnectionListener(mConnectionListener);
+        }
+        // 移除联系人监听
+        EMContactManager.getInstance().removeContactListener();
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // 定义要监听的消息类型
+        EMNotifierEvent.Event[] events = new EMNotifierEvent.Event[]{
+                EMNotifierEvent.Event.EventConversationListChanged, // 会话列表改变
+                EMNotifierEvent.Event.EventDeliveryAck,     // 已发送回执event注册
+                EMNotifierEvent.Event.EventNewCMDMessage,   // 接收透传event注册
+                EMNotifierEvent.Event.EventNewMessage,      // 接收新消息event注册
+                EMNotifierEvent.Event.EventOfflineMessage,  // 接收离线消息event注册
+                EMNotifierEvent.Event.EventReadAck          // 已读回执event注册
+        };
+        // 注册消息监听
+        EMChatManager.getInstance().registerEventListener(mEventListener, events);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // 取消消息的监听事件，为了防止多个界面同时监听
+        EMChatManager.getInstance().unregisterEventListener(mEventListener);
     }
 }

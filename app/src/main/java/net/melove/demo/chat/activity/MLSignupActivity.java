@@ -67,7 +67,7 @@ public class MLSignupActivity extends MLBaseActivity {
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mActivity.finishAfterTransition();
+                mActivity.finish();
             }
         });
     }

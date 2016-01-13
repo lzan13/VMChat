@@ -27,8 +27,7 @@ public class MLUserInfoActivity extends MLBaseActivity {
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
     private Toolbar mToolbar;
 
-    private FloatingActionButton mFabAddContacts;
-    private FloatingActionButton mFabCreateConverstaion;
+    private FloatingActionButton mFab;
 
     private MLUserDao mUserDao;
     private MLUserEntity mUserEntity;
@@ -42,7 +41,6 @@ public class MLUserInfoActivity extends MLBaseActivity {
 
         init();
         initToolbar();
-        initView();
     }
 
     private void init() {
@@ -57,7 +55,7 @@ public class MLUserInfoActivity extends MLBaseActivity {
      */
     private void initToolbar() {
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.ml_widget_collapsing);
-        mCollapsingToolbarLayout.setTitle(mActivity.getResources().getString(R.string.ml_hint_username));
+        mCollapsingToolbarLayout.setTitle(mChatId);
 
         mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
         setSupportActionBar(mToolbar);
@@ -65,7 +63,7 @@ public class MLUserInfoActivity extends MLBaseActivity {
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mActivity.finishAfterTransition();
+                mActivity.finish();
             }
         });
 
@@ -75,18 +73,14 @@ public class MLUserInfoActivity extends MLBaseActivity {
      * 控件的初始化
      */
     private void initView() {
-        mFabAddContacts = (FloatingActionButton) findViewById(R.id.ml_btn_fab_create_conversation);
-        mFabCreateConverstaion = (FloatingActionButton) findViewById(R.id.ml_btn_fab_create_conversation);
-        mFabAddContacts.setOnClickListener(viewListener);
-        mFabCreateConverstaion.setOnClickListener(viewListener);
+        mFab = (FloatingActionButton) findViewById(R.id.ml_btn_fab_user_info);
+        mFab.setOnClickListener(viewListener);
 
         // 根据本地查询到的用户情况来确定是显示 添加好友 还是显示 发送消息
         if (mUserEntity != null && mUserEntity.getUserName() != null) {
-            mFabAddContacts.setVisibility(View.GONE);
-            mFabCreateConverstaion.setVisibility(View.VISIBLE);
+            mFab.setImageResource(R.drawable.ic_menu_chat);
         } else {
-            mFabAddContacts.setVisibility(View.VISIBLE);
-            mFabCreateConverstaion.setVisibility(View.GONE);
+            mFab.setImageResource(R.drawable.ic_menu_add);
         }
 
     }
@@ -95,14 +89,12 @@ public class MLUserInfoActivity extends MLBaseActivity {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case -1:
-                    mActivity.finishAfterTransition();
-                    break;
-                case R.id.ml_btn_fab_create_conversation:
-                    startChat();
-                    break;
-                case R.id.ml_btn_fab_add_contact:
-                    addContact();
+                case R.id.ml_btn_fab_user_info:
+                    if (mUserEntity != null && mUserEntity.getUserName() != null) {
+                        startChat();
+                    } else {
+                        addContact();
+                    }
                     break;
                 default:
                     break;
@@ -168,5 +160,6 @@ public class MLUserInfoActivity extends MLBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        initView();
     }
 }

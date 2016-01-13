@@ -1,57 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:melove="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/ml_white_87"
+    android:background="@color/ml_white_100"
     android:fitsSystemWindows="false"
     android:orientation="vertical"
     tools:Content=".activity.MLSigninActivity">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/ml_layout_appbar"
+    <!--公共的 Toolbar 控件-->
+    <include layout="@layout/widget_toolbar_communal" />
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/ml_dimen_56"
-        android:theme="@style/MLTheme.AppBarOverlay">
+        android:layout_height="match_parent">
 
-        <!--公共的 Toolbar 控件-->
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/ml_widget_toolbar"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            android:minHeight="?attr/actionBarSize"
-            android:theme="@style/MLTheme.Toolbar"
-            android:transitionName="toolbar" />
-    </android.support.design.widget.AppBarLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="@dimen/ml_dimen_16"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/ml_dimen_16">
 
             <LinearLayout
+                android:id="@+id/layout_signin_form"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/ml_dimen_16"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
-
                 <net.melove.demo.chat.widget.MLImageView
                     android:layout_width="@dimen/ml_dimen_72"
                     android:layout_height="@dimen/ml_dimen_72"
                     android:layout_marginBottom="@dimen/ml_dimen_16"
                     android:src="@mipmap/ic_character_blackcat"
-                    app:ml_border_color="@color/ml_border_white"
-                    app:ml_border_width="@dimen/ml_dimen_2"
-                    app:ml_shape_type="round" />
+                    melove:ml_border_color="@color/ml_border_white"
+                    melove:ml_border_width="@dimen/ml_dimen_2"
+                    melove:ml_shape_type="round" />
 
                 <LinearLayout
                     android:id="@+id/layout_login_form"
@@ -116,53 +101,57 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/ml_dimen_48"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/ml_dimen_16"
                     android:gravity="center"
                     android:orientation="horizontal">
 
-                    <Button
+                    <TextView
                         android:id="@+id/ml_btn_signup"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:background="@drawable/ml_click_rectangle_white"
                         android:gravity="center"
+                        android:padding="@dimen/ml_dimen_12"
                         android:text="@string/ml_signup"
                         android:textColor="@color/ml_red_54"
-                        android:textSize="@dimen/ml_size_16" />
+                        android:textSize="@dimen/ml_size_14" />
 
                     <View
                         android:layout_width="@dimen/ml_dimen_2"
                         android:layout_height="match_parent"
-                        android:layout_margin="@dimen/ml_dimen_8"
+                        android:layout_margin="@dimen/ml_dimen_12"
                         android:background="@color/ml_divider_red" />
 
-                    <Button
+                    <TextView
                         android:id="@+id/ml_btn_forget_password"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left|center"
                         android:background="@drawable/ml_click_rectangle_white"
                         android:gravity="center"
+                        android:padding="@dimen/ml_dimen_12"
                         android:text="@string/ml_forget_password"
                         android:textColor="@color/ml_red_54"
-                        android:textSize="@dimen/ml_size_16" />
+                        android:textSize="@dimen/ml_size_14" />
                 </LinearLayout>
-
             </LinearLayout>
-        </ScrollView>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/ml_dimen_16"
-            android:gravity="center_horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/ml_copy_right"
-                android:textColor="@color/ml_red_54" />
-        </LinearLayout>
-    </RelativeLayout>
-</android.support.design.widget.CoordinatorLayout>
+                android:layout_alignParentBottom="true"
+                android:layout_below="@id/layout_signin_form"
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/ml_dimen_16"
+                    android:layout_marginTop="@dimen/ml_dimen_96"
+                    android:text="@string/ml_copy_right"
+                    android:textColor="@color/ml_red_54" />
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
+</LinearLayout>
