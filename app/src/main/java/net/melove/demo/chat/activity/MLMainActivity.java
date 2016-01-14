@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.easemob.EMConnectionListener;
 import com.easemob.EMError;
@@ -201,7 +202,7 @@ public class MLMainActivity extends MLBaseActivity implements
     private void initFragment() {
         // 主Activity 默认显示第一个Fragment
         mCurrentFragment = MLHomeFragment.newInstance();
-        mToolbar.setTitle(R.string.ml_title_chat);
+        mToolbar.setTitle(R.string.ml_chat);
         mFragmentTransaction = getSupportFragmentManager().beginTransaction();
         mFragmentTransaction.replace(R.id.ml_framelayout_container, mCurrentFragment);
         mFragmentTransaction.setCustomAnimations(R.anim.ml_anim_fade_in, R.anim.ml_anim_fade_out);
@@ -273,22 +274,22 @@ public class MLMainActivity extends MLBaseActivity implements
             case R.id.ml_nav_home:
                 mMenuType = 0;
                 mCurrentFragment = new MLHomeFragment();
-                mToolbar.setTitle(R.string.ml_title_chat);
+                mToolbar.setTitle(R.string.ml_chat);
                 break;
             case R.id.ml_nav_group:
                 mMenuType = 0;
                 mCurrentFragment = new MLOtherFragment();
-                mToolbar.setTitle(R.string.ml_title_group);
+                mToolbar.setTitle(R.string.ml_group);
                 break;
             case R.id.ml_nav_room:
                 mMenuType = 1;
-                mToolbar.setTitle(R.string.ml_title_room);
+                mToolbar.setTitle(R.string.ml_room);
 
                 break;
             case R.id.ml_nav_notification:
                 mMenuType = 0;
                 mCurrentFragment = new MLApplyforFragment();
-                mToolbar.setTitle(R.string.ml_title_apply_for);
+                mToolbar.setTitle(R.string.ml_apply_for);
                 break;
             case R.id.ml_nav_help:
                 mMenuType = 1;
@@ -356,11 +357,14 @@ public class MLMainActivity extends MLBaseActivity implements
      */
     private void createNewConversation() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
-        dialog.setTitle("发起新会话");
-        View view = mActivity.getLayoutInflater().inflate(R.layout.dialog_create_conversation, null);
-        final EditText editText = (EditText) view.findViewById(R.id.ml_edit_chat_id);
+        dialog.setTitle(mActivity.getResources().getString(R.string.ml_dialog_title_conversation));
+        View view = mActivity.getLayoutInflater().inflate(R.layout.dialog_communal, null);
+        TextView textView = (TextView) view.findViewById(R.id.ml_dialog_text_message);
+        textView.setText(R.string.ml_dialog_content_create_conversation);
+        final EditText editText = (EditText) view.findViewById(R.id.ml_dialog_edit_input);
+        editText.setHint(R.string.ml_hint_input);
         dialog.setView(view);
-        dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+        dialog.setPositiveButton(R.string.ml_btn_ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent();
@@ -370,7 +374,7 @@ public class MLMainActivity extends MLBaseActivity implements
                 ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
             }
         });
-        dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+        dialog.setNegativeButton(R.string.ml_btn_cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
@@ -458,6 +462,7 @@ public class MLMainActivity extends MLBaseActivity implements
     }
 
     /**
+     * ---------------------------------- Contact Listener -------------------------------
      * 联系人监听，用来监听联系人的请求与变化等
      */
     private class MLContactListener implements EMContactListener {
@@ -483,7 +488,7 @@ public class MLMainActivity extends MLBaseActivity implements
         }
 
         /**
-         * 收到联系人申请
+         * 收到对方联系人申请
          *
          * @param username
          * @param reason
@@ -491,8 +496,6 @@ public class MLMainActivity extends MLBaseActivity implements
         @Override
         public void onContactInvited(String username, String reason) {
             MLLog.d("onContactInvited");
-
-            MLNotifier.getInstance(mActivity).sendNotification(username +" hi:"+ reason);
 
             List<MLApplyForEntity> entitys = mApplyForDao.getApplyForList();
             MLApplyForEntity temp = new MLApplyForEntity();
@@ -507,35 +510,41 @@ public class MLMainActivity extends MLBaseActivity implements
                 }
             }
 
+            // 给申请与通知的实体类设置数据
             temp.setUserName(username);
             temp.setReason(reason);
             temp.setStatus(MLApplyForEntity.ApplyForStatus.BEAPPLYFOR);
             temp.setTime(MLDate.getCurrentMillisecond());
             mApplyForDao.saveApplyFor(temp);
+            // 调用发送通知栏提醒方法，提醒用户查看申请通知
+            MLNotifier.getInstance(mActivity).sendApplyForNotification(temp);
         }
 
         /**
-         * 同意联系人申请
+         * 对方同意了联系人申请
          *
          * @param s
          */
         @Override
         public void onContactAgreed(String s) {
             MLLog.d("onContactAgreed");
+
         }
 
         /**
-         * 拒绝联系人申请
+         * 对方拒绝了联系人申请
          *
          * @param s
          */
         @Override
         public void onContactRefused(String s) {
             MLLog.d("onContactRefused");
+
         }
     }
 
     /**
+     * ------------------------------------- Group Listener -------------------------------------
      * 群组变化监听，用来监听群组请求，以及其他群组情况
      */
     private class MLGroupListener implements EMGroupChangeListener {
@@ -699,6 +708,11 @@ public class MLMainActivity extends MLBaseActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
     }
 
     @Override

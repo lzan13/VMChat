@@ -69,9 +69,9 @@ public class MLHomeFragment extends MLBaseFragment {
     private void init() {
         mCurrentTabIndex = 0;
         mTabTitles = new String[]{
-                mActivity.getResources().getString(R.string.ml_title_chat),
-                mActivity.getResources().getString(R.string.ml_title_contacts),
-                mActivity.getResources().getString(R.string.ml_title_test)
+                mActivity.getResources().getString(R.string.ml_chat),
+                mActivity.getResources().getString(R.string.ml_contacts),
+                mActivity.getResources().getString(R.string.ml_test)
         };
     }
 

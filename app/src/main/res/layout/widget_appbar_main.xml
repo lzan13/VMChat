@@ -70,7 +70,7 @@
                 android:background="@drawable/ml_shape_fab_text"
                 android:clickable="true"
                 android:padding="@dimen/ml_dimen_4"
-                android:text="@string/ml_btn_add_group"
+                android:text="@string/ml_add_group"
                 android:textSize="@dimen/ml_size_10" />
 
             <android.support.design.widget.FloatingActionButton
@@ -95,7 +95,7 @@
                 android:background="@drawable/ml_shape_fab_text"
                 android:clickable="true"
                 android:padding="@dimen/ml_dimen_4"
-                android:text="@string/ml_btn_add_contact"
+                android:text="@string/ml_add_contact"
                 android:textSize="@dimen/ml_size_10" />
 
             <android.support.design.widget.FloatingActionButton
@@ -120,7 +120,7 @@
                 android:background="@drawable/ml_shape_fab_text"
                 android:clickable="true"
                 android:padding="@dimen/ml_dimen_4"
-                android:text="@string/ml_btn_create_conversation"
+                android:text="@string/ml_create_conversation"
                 android:textSize="@dimen/ml_size_10" />
         </RelativeLayout>
 

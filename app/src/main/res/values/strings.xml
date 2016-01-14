@@ -36,45 +36,42 @@
     <string name="ml_btn_ok">确定</string>
     <string name="ml_btn_cancel">取消</string>
     <string name="ml_btn_agree">同意</string>
-    <string name="ml_btn_agreed">已同意</string>
     <string name="ml_btn_refuse">拒绝</string>
-    <string name="ml_btn_refused">已拒绝</string>
-    <string name="ml_btn_add_contact">添加联系人</string>
-    <string name="ml_btn_add_group">添加群组</string>
-    <string name="ml_btn_create_group">新建群组</string>
-    <string name="ml_btn_create_conversation">创建新会话</string>
 
-    <!--Title 相关-->
-    <string name="ml_title_home">主页</string>
-    <string name="ml_title_chat">聊天</string>
-    <string name="ml_title_group">群组</string>
-    <string name="ml_title_room">聊天室</string>
-    <string name="ml_title_contacts">联系人</string>
-    <string name="ml_title_apply_for">申请与通知</string>
-    <string name="ml_title_other">其他</string>
-    <string name="ml_title_test">测试</string>
-    <string name="ml_title_setting">设置</string>
+    <string name="ml_agreed">已同意</string>
+    <string name="ml_refused">已拒绝</string>
+    <string name="ml_waiting">等待……</string>
+    <string name="ml_be_agreed">对方已同意</string>
+    <string name="ml_be_refused">对方已拒绝</string>
+    <string name="ml_add_contact">添加好友</string>
+    <string name="ml_add_group">添加群组</string>
+    <string name="ml_create_group">新建群组</string>
+    <string name="ml_create_conversation">创建新会话</string>
+    <string name="ml_add_contact_reason">Hi 加个好友吧 ^_^~</string>
+
     <!--Dialog-->
     <string name="ml_dialog_title_conversation">会话操作</string>
     <string name="ml_dialog_title_chat">Message 操作</string>
-    <string name="ml_dialog_content_create_conversation">演示环信不需要互为好友就能发起会话，只需要知道对方环信账户，即可跳转到聊天界面进行聊天</string>
+    <string name="ml_dialog_content_create_conversation">演示环信不需要互为好友就能发起会话，只需要知道对方环信账户，即可跳转到聊天界面进行聊天，请输入对方的username</string>
+    <string name="ml_dialog_content_add_contact">输入你的申请理由，让对方容易通过你的请求，也可以输入你的姓名，让对方知道你是谁，更容易通过请求</string>
 
     <!--Action 提示文字-->
     <string name="ml_action_search">搜索</string>
     <string name="ml_action_settings">设置</string>
 
-    <!--导航菜单-->
-    <string name="ml_menu_home">主页</string>
-    <string name="ml_menu_group">群组</string>
-    <string name="ml_menu_room">聊天室</string>
-    <string name="ml_menu_call">电话</string>
-    <string name="ml_menu_chat">聊天</string>
-    <string name="ml_menu_video">视频</string>
-    <string name="ml_menu_apply_for">申请与请求</string>
-    <string name="ml_menu_help">帮助</string>
-    <string name="ml_menu_search">搜索</string>
-    <string name="ml_menu_setting">设置</string>
-    <string name="ml_menu_more">更多</string>
+    <!--导航菜单 以及界面 Title-->
+    <string name="ml_chat">聊天</string>
+    <string name="ml_home">主页</string>
+    <string name="ml_contacts">联系人</string>
+    <string name="ml_group">群组</string>
+    <string name="ml_room">聊天室</string>
+    <string name="ml_voice_call">电话</string>
+    <string name="ml_video_call">视频</string>
+    <string name="ml_apply_for">申请与通知</string>
+    <string name="ml_help">帮助</string>
+    <string name="ml_search">搜索</string>
+    <string name="ml_setting">设置</string>
+    <string name="ml_more">更多</string>
     <string name="ml_drawer_open">打开</string>
     <string name="ml_drawer_close">关闭</string>
 
@@ -88,6 +85,7 @@
 
     <!--Hint 提醒文字-->
     <string name="ml_hint_chat">唠十块钱的(☆_☆)/~~</string>
+    <string name="ml_hint_input">请输入</string>
     <string name="ml_hint_username">账户名</string>
     <string name="ml_hint_password">密码</string>
     <string name="ml_hint_content">内容</string>
@@ -106,6 +104,9 @@
     <string name="ml_error_signin_error">登陆错误</string>
     <string name="ml_error_signup_failed_unauthorized">注册失败，未授权注册</string>
     <string name="ml_error_user_already_exits">用户已经存在</string>
+
+    <string name="ml_toast_add_contacts_success">"发送好友请求成功，等待对方同意^_^"</string>
+    <string name="ml_toast_add_contacts_failed">"发送好友请求失败-_-||，稍后重试"</string>
 
 
     <string name="ml_input_limit">0123456789abcdefghigklmnopqrstuvwxyz</string>

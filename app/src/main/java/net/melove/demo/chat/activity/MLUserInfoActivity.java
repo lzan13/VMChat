@@ -1,20 +1,29 @@
 package net.melove.demo.chat.activity;
 
-import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.easemob.chat.EMContactManager;
 import com.easemob.exceptions.EaseMobException;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLConstants;
+import net.melove.demo.chat.db.MLApplyForDao;
 import net.melove.demo.chat.db.MLUserDao;
+import net.melove.demo.chat.entity.MLApplyForEntity;
 import net.melove.demo.chat.entity.MLUserEntity;
+import net.melove.demo.chat.util.MLDate;
+import net.melove.demo.chat.util.MLLog;
 import net.melove.demo.chat.widget.MLToast;
 
 /**
@@ -29,6 +38,7 @@ public class MLUserInfoActivity extends MLBaseActivity {
 
     private FloatingActionButton mFab;
 
+    private MLApplyForDao mApplyForDao;
     private MLUserDao mUserDao;
     private MLUserEntity mUserEntity;
 
@@ -46,6 +56,7 @@ public class MLUserInfoActivity extends MLBaseActivity {
     private void init() {
         mActivity = this;
         mChatId = getIntent().getStringExtra(MLConstants.ML_C_CHAT_ID);
+        mApplyForDao = new MLApplyForDao(mActivity);
         mUserDao = new MLUserDao(mActivity);
         mUserEntity = mUserDao.getContact(mChatId);
     }
@@ -85,6 +96,9 @@ public class MLUserInfoActivity extends MLBaseActivity {
 
     }
 
+    /**
+     * 界面控件点击监听
+     */
     private View.OnClickListener viewListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -106,29 +120,69 @@ public class MLUserInfoActivity extends MLBaseActivity {
      * 添加好友
      */
     private void addContact() {
-        new Thread(new Runnable() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
+        dialog.setTitle(R.string.ml_add_contact);
+        View view = mActivity.getLayoutInflater().inflate(R.layout.dialog_communal, null);
+        TextView textView = (TextView) view.findViewById(R.id.ml_dialog_text_message);
+        textView.setText(R.string.ml_dialog_content_add_contact);
+
+        final EditText editText = (EditText) view.findViewById(R.id.ml_dialog_edit_input);
+        editText.setHint(R.string.ml_hint_input);
+        dialog.setView(view);
+        dialog.setPositiveButton(R.string.ml_btn_ok, new DialogInterface.OnClickListener() {
             @Override
-            public void run() {
-                String reason = "加个好友呗";
-                try {
-                    EMContactManager.getInstance().addContact(mChatId, reason);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            MLToast.makeToast("发送好友请求成功，等待对方同意^_^").show();
+            public void onClick(DialogInterface dialog, int which) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // 获取输入的添加好友理由，并除去首尾空格，然后判断，如果为空就设置默认值
+                        String reason = editText.getText().toString().trim();
+                        if (reason.equals("")) {
+                            reason = mActivity.getResources().getString(R.string.ml_add_contact_reason);
                         }
-                    });
-                } catch (EaseMobException e) {
-                    e.printStackTrace();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            MLToast.makeToast("发送好友请求失败-_-||，稍后重试").show();
+                        try {
+                            EMContactManager.getInstance().addContact(mChatId, reason);
+
+                            // 自己发送好友请求也保存一条申请与通知的信息
+                            mApplyForDao.getApplyForList();
+                            MLApplyForEntity temp = new MLApplyForEntity();
+                            temp.setUserName(mChatId);
+                            temp.setNickName(mUserEntity.getNickName());
+                            temp.setReason(reason);
+                            temp.setStatus(MLApplyForEntity.ApplyForStatus.APPLYFOR);
+                            temp.setTime(MLDate.getCurrentMillisecond());
+                            mApplyForDao.saveApplyFor(temp);
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    MLToast.makeToast(R.string.ml_toast_add_contacts_success).show();
+                                }
+                            });
+                        } catch (EaseMobException e) {
+                            e.printStackTrace();
+                            int errorCode = e.getErrorCode();
+                            String errorMsg = e.getMessage();
+                            MLLog.e("AddContact: errorCode - %d, errorMsg - %s", errorCode, errorMsg);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    MLToast.makeToast(R.string.ml_toast_add_contacts_failed).show();
+                                }
+                            });
                         }
-                    });
-                }
+                    }
+                }).start();
             }
-        }).start();
+        });
+        dialog.setNegativeButton(R.string.ml_btn_cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        dialog.show();
     }
 
     /**

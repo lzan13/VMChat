@@ -6,6 +6,6 @@
         android:id="@+id/ml_action_search"
         android:icon="@drawable/ic_menu_search"
         android:orderInCategory="100"
-        android:title="@string/ml_menu_search"
+        android:title="@string/ml_search"
         app:showAsAction="always" />
 </menu>

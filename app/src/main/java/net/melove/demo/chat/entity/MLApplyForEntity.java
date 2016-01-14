@@ -75,7 +75,8 @@ public class MLApplyForEntity {
         REFUSED,        // 据绝
         BEAGREED,       // 对方同意
         BEREFUSED,      // 对方拒绝
-        BEAPPLYFOR,     // 好友申请
+        APPLYFOR,       // 自己申请
+        BEAPPLYFOR,     // 对方申请
         GROUPAPPLYFOR   // 加群申请
     }
 }
