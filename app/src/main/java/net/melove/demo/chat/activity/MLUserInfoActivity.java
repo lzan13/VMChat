@@ -22,9 +22,12 @@ import net.melove.demo.chat.db.MLApplyForDao;
 import net.melove.demo.chat.db.MLUserDao;
 import net.melove.demo.chat.entity.MLApplyForEntity;
 import net.melove.demo.chat.entity.MLUserEntity;
+import net.melove.demo.chat.util.MLCrypto;
 import net.melove.demo.chat.util.MLDate;
 import net.melove.demo.chat.util.MLLog;
 import net.melove.demo.chat.widget.MLToast;
+
+import java.util.List;
 
 /**
  * Created by lzan13 on 2015/8/29.
@@ -143,16 +146,25 @@ public class MLUserInfoActivity extends MLBaseActivity {
                         try {
                             EMContactManager.getInstance().addContact(mChatId, reason);
 
-                            // 自己发送好友请求也保存一条申请与通知的信息
-                            mApplyForDao.getApplyForList();
-                            MLApplyForEntity temp = new MLApplyForEntity();
-                            temp.setUserName(mChatId);
-                            temp.setNickName(mUserEntity.getNickName());
-                            temp.setReason(reason);
-                            temp.setStatus(MLApplyForEntity.ApplyForStatus.APPLYFOR);
-                            temp.setTime(MLDate.getCurrentMillisecond());
-                            mApplyForDao.saveApplyFor(temp);
+                            // 创建一条好友申请数据，自己发送好友请求也保存
+                            MLApplyForEntity applyForEntity = new MLApplyForEntity();
+                            applyForEntity.setUserName(mChatId);
+                            applyForEntity.setNickName(mUserEntity.getNickName());
+//                            applyForEntity.setGroupId("");
+//                            applyForEntity.setGroupName("");
+                            applyForEntity.setReason(reason);
+                            applyForEntity.setStatus(MLApplyForEntity.ApplyForStatus.APPLYFOR);
+                            applyForEntity.setType(0);
+                            applyForEntity.setTime(MLDate.getCurrentMillisecond());
+                            applyForEntity.setObjId(MLCrypto.cryptoStr2MD5(applyForEntity.getUserName() + applyForEntity.getType()));
 
+                            // 这里进行一下筛选，如果已存在则去更新本地内容
+                            MLApplyForEntity temp = mApplyForDao.getApplyForEntiry(applyForEntity.getObjId());
+                            if (temp != null) {
+                                mApplyForDao.updateApplyFor(applyForEntity);
+                            } else {
+                                mApplyForDao.saveApplyFor(applyForEntity);
+                            }
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {

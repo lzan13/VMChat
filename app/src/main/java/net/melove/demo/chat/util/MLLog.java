@@ -7,7 +7,8 @@ import android.util.Log;
  * log日志输出封装类
  */
 public class MLLog {
-    private static String mTag = "melove ";
+    // 这里设置默认的Tag，使用 MLLog 前可以调用 setTag 方法来更改
+    private static String mTag = "melove";
     private static boolean isDebug = true;
 
     private static MLLogPrinter mPrinter = new MLLogPrinter();
@@ -54,6 +55,7 @@ public class MLLog {
 
     /**
      * 使用默认 Tag 输出 Debug 信息
+     *
      * @param log
      */
     public static void d(String log) {
@@ -64,6 +66,7 @@ public class MLLog {
 
     /**
      * 使用默认 Tag 输出 Error 信息
+     *
      * @param log
      */
     public static void e(String log) {
@@ -74,6 +77,7 @@ public class MLLog {
 
     /**
      * 使用自己传入的 Tag 输出 Info 信息
+     *
      * @param tag
      * @param log
      */
@@ -85,6 +89,7 @@ public class MLLog {
 
     /**
      * 使用自己传入的 Tag 输出 Debug 信息
+     *
      * @param log
      */
     public static void d(String tag, String log) {
@@ -92,8 +97,10 @@ public class MLLog {
             Log.i(tag, "d: " + log);
         }
     }
+
     /**
      * 使用自己传入的 Tag 输出 Error 信息
+     *
      * @param log
      */
     public static void e(String tag, String log) {
@@ -104,6 +111,7 @@ public class MLLog {
 
     /**
      * 使用格式化的方式输出 Info 信息
+     *
      * @param msg
      * @param args
      */
@@ -116,6 +124,7 @@ public class MLLog {
 
     /**
      * 使用格式化的方式输出 Debug 信息
+     *
      * @param msg
      * @param args
      */
@@ -128,6 +137,7 @@ public class MLLog {
 
     /**
      * 使用格式化的方式输出 Error 信息
+     *
      * @param msg
      * @param args
      */

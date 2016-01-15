@@ -1,6 +1,9 @@
 package net.melove.demo.chat.adapter;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,9 +12,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.easemob.chat.EMChatManager;
+import com.easemob.chat.EMContactManager;
 import com.easemob.exceptions.EaseMobException;
 
 import net.melove.demo.chat.R;
+import net.melove.demo.chat.db.MLApplyForDao;
 import net.melove.demo.chat.entity.MLApplyForEntity;
 import net.melove.demo.chat.widget.MLImageView;
 import net.melove.demo.chat.widget.MLToast;
@@ -28,12 +33,31 @@ public class MLApplyForAdapter extends BaseAdapter implements View.OnClickListen
     private LayoutInflater mInflater;
     private List<MLApplyForEntity> mList;
 
+    private MLApplyForDao mApplyForDao;
+
 
     public MLApplyForAdapter(Context context, List<MLApplyForEntity> list) {
         mContext = context;
         mList = list;
         mInflater = LayoutInflater.from(mContext);
+        mApplyForDao = new MLApplyForDao(mContext);
     }
+
+    /**
+     * 处理申请与通知列表的刷新操作
+     */
+    Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            int what = msg.what;
+            switch (what) {
+                case 0:
+                    notifyDataSetChanged();
+                    break;
+            }
+        }
+    };
 
     @Override
     public int getCount() {
@@ -53,7 +77,7 @@ public class MLApplyForAdapter extends BaseAdapter implements View.OnClickListen
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;
-        MLApplyForEntity info = (MLApplyForEntity) getItem(position);
+        MLApplyForEntity applyFor = (MLApplyForEntity) getItem(position);
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.item_apply_for, null);
             viewHolder = new ViewHolder(convertView);
@@ -62,39 +86,41 @@ public class MLApplyForAdapter extends BaseAdapter implements View.OnClickListen
             viewHolder = (ViewHolder) convertView.getTag();
         }
         viewHolder.imageViewAvatar.setImageResource(R.mipmap.ic_character_blackcat);
-        viewHolder.textViewUsername.setText(info.getUserName());
-        viewHolder.textViewReason.setText(info.getReason());
-        if (info.getStatus() == MLApplyForEntity.ApplyForStatus.AGREED) {
+        viewHolder.textViewUsername.setText(applyFor.getUserName());
+        viewHolder.textViewReason.setText(applyFor.getReason());
+
+        // 判断当前的申请与通知的状态，显示不同的提醒文字
+        if (applyFor.getStatus() == MLApplyForEntity.ApplyForStatus.AGREED) {
             viewHolder.textViewStatus.setText(R.string.ml_agreed);
             viewHolder.textViewStatus.setVisibility(View.VISIBLE);
             viewHolder.btnAgree.setVisibility(View.GONE);
             viewHolder.btnRefuse.setVisibility(View.GONE);
-        } else if (info.getStatus() == MLApplyForEntity.ApplyForStatus.REFUSED) {
+        } else if (applyFor.getStatus() == MLApplyForEntity.ApplyForStatus.REFUSED) {
             viewHolder.textViewStatus.setText(R.string.ml_refused);
             viewHolder.textViewStatus.setVisibility(View.VISIBLE);
             viewHolder.btnAgree.setVisibility(View.GONE);
             viewHolder.btnRefuse.setVisibility(View.GONE);
-        } else if (info.getStatus() == MLApplyForEntity.ApplyForStatus.BEAGREED) {
+        } else if (applyFor.getStatus() == MLApplyForEntity.ApplyForStatus.BEAGREED) {
             viewHolder.textViewStatus.setText(R.string.ml_agreed);
             viewHolder.textViewStatus.setVisibility(View.VISIBLE);
             viewHolder.btnAgree.setVisibility(View.GONE);
             viewHolder.btnRefuse.setVisibility(View.GONE);
-        } else if (info.getStatus() == MLApplyForEntity.ApplyForStatus.BEREFUSED) {
+        } else if (applyFor.getStatus() == MLApplyForEntity.ApplyForStatus.BEREFUSED) {
             viewHolder.textViewStatus.setText(R.string.ml_refused);
             viewHolder.textViewStatus.setVisibility(View.VISIBLE);
             viewHolder.btnAgree.setVisibility(View.GONE);
             viewHolder.btnRefuse.setVisibility(View.GONE);
-        } else if (info.getStatus() == MLApplyForEntity.ApplyForStatus.APPLYFOR) {
+        } else if (applyFor.getStatus() == MLApplyForEntity.ApplyForStatus.APPLYFOR) {
             viewHolder.textViewStatus.setText(R.string.ml_waiting);
             viewHolder.textViewStatus.setVisibility(View.VISIBLE);
             viewHolder.btnAgree.setVisibility(View.GONE);
             viewHolder.btnRefuse.setVisibility(View.GONE);
-        } else if (info.getStatus() == MLApplyForEntity.ApplyForStatus.BEAPPLYFOR) {
+        } else if (applyFor.getStatus() == MLApplyForEntity.ApplyForStatus.BEAPPLYFOR) {
             viewHolder.textViewStatus.setText(R.string.ml_waiting);
             viewHolder.textViewStatus.setVisibility(View.GONE);
             viewHolder.btnAgree.setVisibility(View.VISIBLE);
             viewHolder.btnRefuse.setVisibility(View.VISIBLE);
-        } else if (info.getStatus() == MLApplyForEntity.ApplyForStatus.GROUPAPPLYFOR) {
+        } else if (applyFor.getStatus() == MLApplyForEntity.ApplyForStatus.GROUPAPPLYFOR) {
             viewHolder.textViewStatus.setText(R.string.ml_waiting);
             viewHolder.btnAgree.setVisibility(View.VISIBLE);
             viewHolder.btnRefuse.setVisibility(View.VISIBLE);
@@ -108,32 +134,54 @@ public class MLApplyForAdapter extends BaseAdapter implements View.OnClickListen
 
     /**
      * by lzan13 2015-11-2 11:10:18
-     * 同意好友请求
+     * 同意好友请求，环信的同意和拒绝好友请求 都需要异步处理，这里新建线程去调用
      */
     private void agreeApplyFor(int position) {
-        MLToast.makeToast("agree apply for").show();
-        final MLApplyForEntity info = (MLApplyForEntity) getItem(position);
+        final ProgressDialog dialog = new ProgressDialog(mContext);
+        dialog.setMessage(mContext.getResources().getString(R.string.ml_dialog_message_waiting));
+        dialog.show();
+
+        final MLApplyForEntity applyForEntity = (MLApplyForEntity) getItem(position);
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    EMChatManager.getInstance().acceptInvitation(info
-                            .getUserName());
+                    EMChatManager.getInstance().acceptInvitation(applyForEntity.getUserName());
+                    applyForEntity.setStatus(MLApplyForEntity.ApplyForStatus.AGREED);
+                    dialog.dismiss();
+                    refreshList(applyForEntity);
                 } catch (EaseMobException e) {
                     e.printStackTrace();
                 }
             }
-        });
+        }).start();
 
 
     }
 
     /**
      * by lzan13 2015-11-2 11:10:44
-     * 拒绝好友请求
+     * 拒绝好友请求，环信的同意和拒绝好友请求 都需要异步处理，这里新建线程去调用
      */
     private void refuseApplyFor(int positon) {
-        MLToast.makeToast("refuse apply for").show();
+        final ProgressDialog dialog = new ProgressDialog(mContext);
+        dialog.setMessage(mContext.getResources().getString(R.string.ml_dialog_message_waiting));
+        dialog.show();
+        final MLApplyForEntity applyForEntity = (MLApplyForEntity) getItem(positon);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    EMChatManager.getInstance().refuseInvitation(applyForEntity.getUserName());
+                    applyForEntity.setStatus(MLApplyForEntity.ApplyForStatus.REFUSED);
+                    dialog.dismiss();
+                    refreshList(applyForEntity);
+                } catch (EaseMobException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
     }
 
     /**
@@ -150,6 +198,22 @@ public class MLApplyForAdapter extends BaseAdapter implements View.OnClickListen
                 refuseApplyFor(position);
                 break;
         }
+    }
+
+    /**
+     * 刷新申请与通知列表
+     *
+     * @param applyForEntity
+     */
+    private void refreshList(MLApplyForEntity applyForEntity) {
+        // 这里进行一下筛选，如果已存在则去更新本地内容
+        MLApplyForEntity temp = mApplyForDao.getApplyForEntiry(applyForEntity.getObjId());
+        if (temp != null) {
+            mApplyForDao.updateApplyFor(applyForEntity);
+        } else {
+            mApplyForDao.saveApplyFor(applyForEntity);
+        }
+        mHandler.sendMessage(mHandler.obtainMessage(0));
     }
 
     /**

@@ -43,6 +43,7 @@ import net.melove.demo.chat.fragment.MLBaseFragment;
 import net.melove.demo.chat.fragment.MLHomeFragment;
 import net.melove.demo.chat.fragment.MLOtherFragment;
 import net.melove.demo.chat.notification.MLNotifier;
+import net.melove.demo.chat.util.MLCrypto;
 import net.melove.demo.chat.util.MLDate;
 import net.melove.demo.chat.util.MLLog;
 import net.melove.demo.chat.widget.MLImageView;
@@ -497,25 +498,34 @@ public class MLMainActivity extends MLBaseActivity implements
         public void onContactInvited(String username, String reason) {
             MLLog.d("onContactInvited");
 
-            List<MLApplyForEntity> entitys = mApplyForDao.getApplyForList();
-            MLApplyForEntity temp = new MLApplyForEntity();
-            for (MLApplyForEntity e : entitys) {
-                if (username.equals(e.getUserName())
-                        && reason.equals(e.getReason())) {
-                    /**
-                     * 当之前收到过好友请求，并且没有处理的情况下，如果用户离线后重新链接服务器会再次收到服务器推送的好友请求，
-                     * 所以这里循环判断本地是否已经有了本次的请求，如果有直接返回，不做处理
-                     */
+            // 创建一条好友申请数据
+            MLApplyForEntity applyForEntity = new MLApplyForEntity();
+            applyForEntity.setUserName(username);
+//            applyForEntity.setNickName(mUserEntity.getNickName());
+//            applyForEntity.setGroupId("");
+//            applyForEntity.setGroupName("");
+            applyForEntity.setReason(reason);
+            applyForEntity.setStatus(MLApplyForEntity.ApplyForStatus.BEAPPLYFOR);
+            applyForEntity.setType(0);
+            applyForEntity.setTime(MLDate.getCurrentMillisecond());
+            applyForEntity.setObjId(MLCrypto.cryptoStr2MD5(applyForEntity.getUserName() + applyForEntity.getType()));
+
+            /**
+             * 这里先读取本地的申请与通知信息
+             * 如果相同则直接 return，不进行操作
+             * 只有当新的好友请求发过来时才进行保存，并发送通知
+             */
+            // 这里进行一下筛选，如果已存在则去更新本地内容
+            MLApplyForEntity temp = mApplyForDao.getApplyForEntiry(applyForEntity.getObjId());
+            if (temp != null) {
+                if (temp.getReason().equals(applyForEntity.getReason())) {
+                    // 这里判断当前保存的信息如果和新的一模一样不进行操作
                     return;
                 }
+                mApplyForDao.updateApplyFor(applyForEntity);
+            } else {
+                mApplyForDao.saveApplyFor(applyForEntity);
             }
-
-            // 给申请与通知的实体类设置数据
-            temp.setUserName(username);
-            temp.setReason(reason);
-            temp.setStatus(MLApplyForEntity.ApplyForStatus.BEAPPLYFOR);
-            temp.setTime(MLDate.getCurrentMillisecond());
-            mApplyForDao.saveApplyFor(temp);
             // 调用发送通知栏提醒方法，提醒用户查看申请通知
             MLNotifier.getInstance(mActivity).sendApplyForNotification(temp);
         }
@@ -523,23 +533,64 @@ public class MLMainActivity extends MLBaseActivity implements
         /**
          * 对方同意了联系人申请
          *
-         * @param s
+         * @param username 收到处理的对方的username
          */
         @Override
-        public void onContactAgreed(String s) {
-            MLLog.d("onContactAgreed");
+        public void onContactAgreed(String username) {
+            MLLog.d("onContactAgreed %", username);
 
+            // 这里进行一下筛选，如果已存在则去更新本地内容
+            MLApplyForEntity temp = mApplyForDao.getApplyForEntiry(MLCrypto.cryptoStr2MD5(username + 0));
+            if (temp != null) {
+                temp.setStatus(MLApplyForEntity.ApplyForStatus.BEAGREED);
+                mApplyForDao.updateApplyFor(temp);
+            } else {
+                // 创建一条好友申请数据
+                MLApplyForEntity applyForEntity = new MLApplyForEntity();
+                applyForEntity.setUserName(username);
+//            applyForEntity.setNickName(mUserEntity.getNickName());
+//            applyForEntity.setGroupId("");
+//            applyForEntity.setGroupName("");
+                applyForEntity.setReason(mActivity.getResources().getString(R.string.ml_add_contact_reason));
+                applyForEntity.setStatus(MLApplyForEntity.ApplyForStatus.BEAGREED);
+                applyForEntity.setType(0);
+                applyForEntity.setTime(MLDate.getCurrentMillisecond());
+                applyForEntity.setObjId(MLCrypto.cryptoStr2MD5(applyForEntity.getUserName() + applyForEntity.getType()));
+                mApplyForDao.saveApplyFor(applyForEntity);
+            }
+            // 调用发送通知栏提醒方法，提醒用户查看申请通知
+            MLNotifier.getInstance(mActivity).sendApplyForNotification(temp);
         }
 
         /**
          * 对方拒绝了联系人申请
          *
-         * @param s
+         * @param username 收到处理的对方的username
          */
         @Override
-        public void onContactRefused(String s) {
+        public void onContactRefused(String username) {
             MLLog.d("onContactRefused");
-
+            // 这里进行一下筛选，如果已存在则去更新本地内容
+            MLApplyForEntity temp = mApplyForDao.getApplyForEntiry(MLCrypto.cryptoStr2MD5(username + 0));
+            if (temp != null) {
+                temp.setStatus(MLApplyForEntity.ApplyForStatus.BEREFUSED);
+                mApplyForDao.updateApplyFor(temp);
+            } else {
+                // 创建一条好友申请数据
+                MLApplyForEntity applyForEntity = new MLApplyForEntity();
+                applyForEntity.setUserName(username);
+//            applyForEntity.setNickName(mUserEntity.getNickName());
+//            applyForEntity.setGroupId("");
+//            applyForEntity.setGroupName("");
+                applyForEntity.setReason(mActivity.getResources().getString(R.string.ml_add_contact_reason));
+                applyForEntity.setStatus(MLApplyForEntity.ApplyForStatus.BEREFUSED);
+                applyForEntity.setType(0);
+                applyForEntity.setTime(MLDate.getCurrentMillisecond());
+                applyForEntity.setObjId(MLCrypto.cryptoStr2MD5(applyForEntity.getUserName() + applyForEntity.getType()));
+                mApplyForDao.saveApplyFor(applyForEntity);
+            }
+            // 调用发送通知栏提醒方法，提醒用户查看申请通知
+            MLNotifier.getInstance(mActivity).sendApplyForNotification(temp);
         }
     }
 
@@ -658,7 +709,7 @@ public class MLMainActivity extends MLBaseActivity implements
     public void onFragmentClick(int a, int b, String s) {
         int w = a | b;
         switch (w) {
-            // 系统级调用
+            // 0x0x 表示系统级调用
             case 0x00:
                 // 设置当前 Toolbar title内容
                 mToolbar.setTitle(s);
@@ -666,7 +717,7 @@ public class MLMainActivity extends MLBaseActivity implements
             case 0x01:
                 mActivity.finish();
                 break;
-            //
+            // 0x1x 表示其他调用
             case 0x10:
 
                 break;
@@ -679,7 +730,7 @@ public class MLMainActivity extends MLBaseActivity implements
             case 0x13:
 
                 break;
-            // Test
+            // 0x2x 暂时表示Test
             case 0x20:
                 Intent intent = new Intent();
                 intent.setClass(mActivity, MLUserInfoActivity.class);

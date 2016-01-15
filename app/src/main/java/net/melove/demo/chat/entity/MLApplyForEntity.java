@@ -6,13 +6,39 @@ package net.melove.demo.chat.entity;
  */
 public class MLApplyForEntity {
 
-    public String userName;
-    public String nickName;
-    public String groupId;
-    public String groupName;
-    public String reason;
-    public long time;
-    public ApplyForStatus status;
+    private String objId;
+    private String userName;
+    private String nickName;
+    private String groupId;
+    private String groupName;
+    private String reason;
+    private ApplyForStatus status;
+    private int type;
+    private long time;
+
+    public String getObjId() {
+        return objId;
+    }
+
+    public void setObjId(String objId) {
+        this.objId = objId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
 
     public String getGroupId() {
         return groupId;
@@ -30,14 +56,6 @@ public class MLApplyForEntity {
         this.groupName = groupName;
     }
 
-    public String getNickName() {
-        return nickName;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-    }
-
     public String getReason() {
         return reason;
     }
@@ -46,12 +64,12 @@ public class MLApplyForEntity {
         this.reason = reason;
     }
 
-    public ApplyForStatus getStatus() {
-        return status;
+    public int getType() {
+        return type;
     }
 
-    public void setStatus(ApplyForStatus status) {
-        this.status = status;
+    public void setType(int type) {
+        this.type = type;
     }
 
     public long getTime() {
@@ -62,12 +80,12 @@ public class MLApplyForEntity {
         this.time = time;
     }
 
-    public String getUserName() {
-        return userName;
+    public ApplyForStatus getStatus() {
+        return status;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setStatus(ApplyForStatus status) {
+        this.status = status;
     }
 
     public enum ApplyForStatus {

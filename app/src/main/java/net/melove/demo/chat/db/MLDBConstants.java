@@ -11,6 +11,7 @@ public class MLDBConstants {
     public static final String TB_USER = "user";
 
     // column name
+    public static final String COL_OBJ_ID = "obj_id";
     public static final String COL_USERNAME = "username";
     public static final String COL_NICKNAME = "nickname";
     public static final String COL_EMAIL = "email";
@@ -27,6 +28,7 @@ public class MLDBConstants {
     public static final String COL_DESCRIPTION = "description";
     public static final String COL_REASON = "reason";
     public static final String COL_STATUS = "status";
+    public static final String COL_TYPE = "type";
     public static final String COL_OWNER = "owner";
     public static final String COL_MEMBERS = "members";
     public static final String COL_MAX_COUNT = "max_count";
@@ -40,12 +42,14 @@ public class MLDBConstants {
     /*创建申请与通知信息表*/
     public static final String SQL_APPLY_FOR = "create table if not exists '"
             + TB_APPLY_FOR + "' ("
+            + COL_OBJ_ID + " varchar(128), "
             + COL_USERNAME + " varchar(128), "
             + COL_NICKNAME + " varchar(128), "
             + COL_GROUP_ID + " varchar(128), "
             + COL_GROUP_NAME + " varchar(128), "
             + COL_REASON + " text, "
             + COL_STATUS + " integer, "
+            + COL_TYPE + " integer, "
             + COL_TIME + " integer"
             + ")";
 

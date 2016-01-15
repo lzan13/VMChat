@@ -82,36 +82,22 @@ public class MLNotifier {
         // 设置通知栏标题
         mBuilder.setContentTitle("环聊通知");
         switch (applyForEntity.getStatus()) {
-            case AGREED:
-//                message = applyForEntity.getUserName() + "同意了你的请求";
-                break;
-            case REFUSED:
-//                message = applyForEntity.getUserName() + "拒绝了你的请求";
-                break;
             case BEAGREED:
-                message = applyForEntity.getUserName() + "同意了你的请求";
+                message = applyForEntity.getUserName() + " 同意了你的请求";
                 break;
             case BEREFUSED:
-                message = applyForEntity.getUserName() + "拒绝了你的请求";
+                message = applyForEntity.getUserName() + " 拒绝了你的请求";
                 break;
             case BEAPPLYFOR:
-
+                message = applyForEntity.getUserName() + " 申请添加你为好友";
                 break;
             case GROUPAPPLYFOR:
 
                 break;
 
         }
-        if (applyForEntity.getGroupId() != null) {
-            // 是群组申请
-            // 设置通知栏显示内容
-            mBuilder.setContentText(applyForEntity.getNickName() + " 申请加入群组 " + applyForEntity.getGroupName());
-        } else {
-            // 是好友申请
 
-        }
-
-        mBuilder.setContentText(applyForEntity.getNickName() + " 申请添加你为好友");
+        mBuilder.setContentText(message);
 
         // 设置状态栏显示内容（这里是一闪而过的，带有上升动画）
         mBuilder.setTicker("有条新的请求等你处理");

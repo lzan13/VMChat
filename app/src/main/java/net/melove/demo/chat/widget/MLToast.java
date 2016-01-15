@@ -27,8 +27,8 @@ import java.io.ByteArrayOutputStream;
 public class MLToast {
     private static Context mContext = MLApplication.getContext();
 
-    // 默认的图标 1
-    private String iconDone = "iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAYAAABV7bNHAAAABHNCSVQICAgIfAhkiAAAA5JJREFU\n" +
+    // 默认的图标 表示Success 以Base64 字符串的方式保存的图片资源
+    private String iconSuccess = "iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAYAAABV7bNHAAAABHNCSVQICAgIfAhkiAAAA5JJREFU\n" +
             "eJztmk+LFEcYh5/X1bguKmpGUCEIHtRDglE0h4gH0RhIJBo9RNDPkK+QY76KN/FgjMkScghhD+I/\n" +
             "BPGgRETdQESJf+Lq7vxyqBp9d9zZ6ZnpHqvHeqChu6e7pvo39XRXVQ9kMplMJpPJZDKZTCaTyWTe\n" +
             "J+xdV6BqJI0B64EPgRXADTN7VvT8pVVVLAViOKuAj4GtwBrgX0l3zey/ImWMdEDAOmAH8D2wDZgD\n" +
@@ -47,8 +47,8 @@ public class MLToast {
             "ZQEtoFtrPDZF4lp5Kn2r0abbTNx9OXWtPEP5I3nsTK6Om89S6QRmMplMJpPJZDKZTCaTGUX+B1qt\n" +
             "mfkCdPHVAAAAAElFTkSuQmCC\n";
 
-    // 默认的图标 2
-    private String iconClose = "iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAYAAABV7bNHAAAABHNCSVQICAgIfAhkiAAABIRJREFU\n" +
+    // 默认的图标 表示Error  以Base64 字符串的方式保存的图片资源
+    private String iconError = "iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAYAAABV7bNHAAAABHNCSVQICAgIfAhkiAAABIRJREFU\n" +
             "eJztm02PVEUUhp8z3yriqOAC3NkojvEjoisxxgTjwgzsJNH458SguETZ6AZjSIzOEImOGkhcqbgA\n" +
             "6ZkJDkOGPi5OXbuYubf7flRVa1Jv0ou+ydQ9/d7z3FN1qgaysrKysrKysrKysrKysrL+X5IQg6jq\n" +
             "NPCw+7oNbIvIIMTYDWIQYAGYA6aATRHZ6TruTKDAFoH3gHvAD8D3wGbXsRtqATgGPOPi+VhVr4uI\n" +
@@ -70,6 +70,14 @@ public class MLToast {
             "ClXhdsddP48dhbnR9gZdDlDtqOofwNdY5mxjRl0lwimLihjKcDvq4vgUuAT8PpFjwC5AVdVrWBYt\n" +
             "MjyIEAWrEXH4uC1hVew8Hc2BcP+KMINVMQX+Bm6LyL0QYzeIYQo7ivwA9uBviMjdlDFkZWVlZWVl\n" +
             "ZWVlZWVlZWX9F/QPd/y65dzlZGQAAAAASUVORK5CYII=\n";
+
+    private String icon = "";
+
+    private String icon2 = "";
+
+    private final int TOAST_TYPE_SUCCESS =0;
+    private final int TOAST_TYPE_ERROR =0;
+    private final int TOAST_TYPE_ =0;
 
 
     private int defaultTime = 3500;
@@ -109,9 +117,9 @@ public class MLToast {
         mToastView = inflater.inflate(R.layout.widget_toast_layout, null);
         ImageView imageView = (ImageView) mToastView.findViewById(R.id.ml_img_toast_icon);
         if (id == 0) {
-            imageView.setImageBitmap(MLBitmapUtil.string2Bitmap(iconDone));
+            imageView.setImageBitmap(MLBitmapUtil.string2Bitmap(iconSuccess));
         } else if (id == 1) {
-            imageView.setImageBitmap(MLBitmapUtil.string2Bitmap(iconClose));
+            imageView.setImageBitmap(MLBitmapUtil.string2Bitmap(iconError));
         } else {
             imageView.setImageResource(id);
         }
@@ -119,7 +127,6 @@ public class MLToast {
         TextView textView = (TextView) mToastView.findViewById(R.id.ml_text_toast_text);
         textView.setText(text);
 
-        // (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);
         mWindowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
 
         isShow = false;
@@ -136,6 +143,7 @@ public class MLToast {
         // MLToast 的进入和退出动画效果
         mParams.windowAnimations = R.style.ml_toast_anim;
 
+        //
         mParams.format = PixelFormat.TRANSLUCENT;
         mParams.type = WindowManager.LayoutParams.TYPE_TOAST;
         mParams.flags = WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
@@ -148,10 +156,56 @@ public class MLToast {
     }
 
     /**
-     * 根据字符串资源id创建Toast
+     * 根据字符串资源id创建一个正确的 Toast
      *
-     * @param strId
-     * @return
+     * @param strId Toast 显示的内容的字符串资源id
+     * @return 返回 MLToast 对象
+     */
+    public static MLToast successToast(int strId) {
+        String text = mContext.getResources().getString(strId);
+        MLToast toast = new MLToast(0, text);
+        return toast;
+    }
+
+    /**
+     * 根据传入的字符串内容创建一个正确的 Toast
+     *
+     * @param str Toast显示的内容字符串资源
+     * @return 返回 MLToast对象
+     */
+    public static MLToast successToast(String str) {
+        MLToast toast = new MLToast(0, str);
+        return toast;
+    }
+
+    /**
+     * 根据字符串资源id创建一个错误的 Toast
+     *
+     * @param strId Toast 显示的内容的字符串资源id
+     * @return 返回 MLToast 对象
+     */
+    public static MLToast errorToast(int strId) {
+        String text = mContext.getResources().getString(strId);
+        MLToast toast = new MLToast(1, text);
+        return toast;
+    }
+
+    /**
+     * 根据传入的字符串内容创建一个错误的 Toast
+     *
+     * @param str Toast显示的内容字符串资源
+     * @return 返回 MLToast对象
+     */
+    public static MLToast errorToast(String str) {
+        MLToast toast = new MLToast(1, str);
+        return toast;
+    }
+
+    /**
+     * 根据传入的字符串资源id创建 Toast
+     *
+     * @param strId Toast 要显示的内容 在String 资源文件中定义的资源 id
+     * @return 返回当前 MLToast 对象
      */
     public static MLToast makeToast(int strId) {
         String text = mContext.getResources().getString(strId);
@@ -160,22 +214,22 @@ public class MLToast {
     }
 
     /**
-     * 根据传入的字符串创建Toast
+     * 根据传入的字符串创建 Toast
      *
-     * @param text
-     * @return
+     * @param str Toast 要显示的内容
+     * @return 返回当前 MLToast 对象
      */
-    public static MLToast makeToast(String text) {
-        MLToast toast = new MLToast(text);
+    public static MLToast makeToast(String str) {
+        MLToast toast = new MLToast(str);
         return toast;
     }
 
     /**
      * 根据传入的资源id（默认为 0 使用当前类的图片资源） 以及字符串创建Toast
      *
-     * @param id   图标id 默认是0，可以自己传递项目中的图片资源id
+     * @param id    图标id 默认是0，可以自己传递项目中的图片资源id
      * @param strId Toast 要显示的内容 在String 资源文件中定义的资源 id
-     * @return
+     * @return 返回当前 MLToast 对象
      */
     public static MLToast makeToast(int id, int strId) {
         String text = mContext.getResources().getString(strId);

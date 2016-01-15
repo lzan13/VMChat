@@ -52,6 +52,7 @@
     <!--Dialog-->
     <string name="ml_dialog_title_conversation">会话操作</string>
     <string name="ml_dialog_title_chat">Message 操作</string>
+    <string name="ml_dialog_message_waiting">正在处理，请稍候……</string>
     <string name="ml_dialog_content_create_conversation">演示环信不需要互为好友就能发起会话，只需要知道对方环信账户，即可跳转到聊天界面进行聊天，请输入对方的username</string>
     <string name="ml_dialog_content_add_contact">输入你的申请理由，让对方容易通过你的请求，也可以输入你的姓名，让对方知道你是谁，更容易通过请求</string>
 

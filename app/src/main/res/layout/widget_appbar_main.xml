@@ -47,7 +47,7 @@
             android:gravity="bottom|right"
             android:orientation="vertical"
             android:paddingBottom="@dimen/ml_dimen_72"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/ml_btn_fab_add_group"
