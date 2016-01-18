@@ -51,6 +51,7 @@
 
     <!--Dialog-->
     <string name="ml_dialog_title_conversation">会话操作</string>
+    <string name="ml_dialog_title_apply_for">申请操作</string>
     <string name="ml_dialog_title_chat">Message 操作</string>
     <string name="ml_dialog_message_waiting">正在处理，请稍候……</string>
     <string name="ml_dialog_content_create_conversation">演示环信不需要互为好友就能发起会话，只需要知道对方环信账户，即可跳转到聊天界面进行聊天，请输入对方的username</string>
@@ -80,6 +81,7 @@
     <string name="ml_menu_chat_copy">复制</string>
     <string name="ml_menu_chat_delete">删除消息</string>
     <string name="ml_menu_chat_forward">转发消息</string>
+    <string name="ml_menu_chat_recall">撤回</string>
     <string name="ml_menu_conversation_clear">清空会话内容</string>
     <string name="ml_menu_conversation_delete">删除会话</string>
     <string name="ml_menu_conversation_top">会话置顶</string>

@@ -32,6 +32,7 @@ import com.easemob.chat.EMChat;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMContactListener;
 import com.easemob.chat.EMContactManager;
+import com.easemob.chat.EMGroup;
 import com.easemob.chat.EMGroupManager;
 
 import net.melove.demo.chat.R;
@@ -59,13 +60,11 @@ public class MLMainActivity extends MLBaseActivity implements
         NavigationView.OnNavigationItemSelectedListener,
         MLBaseFragment.OnMLFragmentListener, EMEventListener {
 
-    // 记录时间（按两次返回键退出程序使用）
-    private long mTime;
-
     // 环信事件监听接口
     private EMEventListener mEventListener;
     private MLConnectionListener mConnectionListener;
     private MLContactListener mContactListener;
+    private MLGroupListener mGroupListener;
 
     // 主界面的一些系统控件
     private DrawerLayout mDrawerLayout;
@@ -223,7 +222,7 @@ public class MLMainActivity extends MLBaseActivity implements
         EMContactManager.getInstance().setContactListener(mContactListener);
 
         // 设置群组监听，监测群组情况的变化
-        MLGroupListener mGroupListener = new MLGroupListener();
+        mGroupListener = new MLGroupListener();
         EMGroupManager.getInstance().addGroupChangeListener(mGroupListener);
 
         // 最后要通知sdk，UI 已经初始化完毕，注册了相应的listener, 可以进行消息监听了（必须调用）
@@ -502,8 +501,6 @@ public class MLMainActivity extends MLBaseActivity implements
             MLApplyForEntity applyForEntity = new MLApplyForEntity();
             applyForEntity.setUserName(username);
 //            applyForEntity.setNickName(mUserEntity.getNickName());
-//            applyForEntity.setGroupId("");
-//            applyForEntity.setGroupName("");
             applyForEntity.setReason(reason);
             applyForEntity.setStatus(MLApplyForEntity.ApplyForStatus.BEAPPLYFOR);
             applyForEntity.setType(0);
@@ -527,7 +524,7 @@ public class MLMainActivity extends MLBaseActivity implements
                 mApplyForDao.saveApplyFor(applyForEntity);
             }
             // 调用发送通知栏提醒方法，提醒用户查看申请通知
-            MLNotifier.getInstance(mActivity).sendApplyForNotification(temp);
+            MLNotifier.getInstance(mActivity).sendApplyForNotification(applyForEntity);
         }
 
         /**
@@ -548,9 +545,7 @@ public class MLMainActivity extends MLBaseActivity implements
                 // 创建一条好友申请数据
                 MLApplyForEntity applyForEntity = new MLApplyForEntity();
                 applyForEntity.setUserName(username);
-//            applyForEntity.setNickName(mUserEntity.getNickName());
-//            applyForEntity.setGroupId("");
-//            applyForEntity.setGroupName("");
+//                applyForEntity.setNickName(mUserEntity.getNickName());
                 applyForEntity.setReason(mActivity.getResources().getString(R.string.ml_add_contact_reason));
                 applyForEntity.setStatus(MLApplyForEntity.ApplyForStatus.BEAGREED);
                 applyForEntity.setType(0);
@@ -579,9 +574,7 @@ public class MLMainActivity extends MLBaseActivity implements
                 // 创建一条好友申请数据
                 MLApplyForEntity applyForEntity = new MLApplyForEntity();
                 applyForEntity.setUserName(username);
-//            applyForEntity.setNickName(mUserEntity.getNickName());
-//            applyForEntity.setGroupId("");
-//            applyForEntity.setGroupName("");
+//                applyForEntity.setNickName(mUserEntity.getNickName());
                 applyForEntity.setReason(mActivity.getResources().getString(R.string.ml_add_contact_reason));
                 applyForEntity.setStatus(MLApplyForEntity.ApplyForStatus.BEREFUSED);
                 applyForEntity.setType(0);
@@ -769,18 +762,11 @@ public class MLMainActivity extends MLBaseActivity implements
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-            if (mTime != 0) {
-                long time = System.currentTimeMillis() - mTime;
-                if (time > 1500) {
-                    MLToast.makeToast("重新按下 Back 键").show();
-                    mTime = System.currentTimeMillis();
-                } else {
-                    mActivity.finish();
-                }
-            } else {
-                mTime = System.currentTimeMillis();
-                MLToast.makeToast("再按退出程序").show();
+            if(mDrawerToggle.isDrawerIndicatorEnabled()){
+
             }
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+            return true;
         }
         return true;
     }
@@ -791,6 +777,10 @@ public class MLMainActivity extends MLBaseActivity implements
         // 移除链接监听
         if (mConnectionListener != null) {
             EMChatManager.getInstance().removeConnectionListener(mConnectionListener);
+        }
+        // 移除群组监听
+        if (mGroupListener != null) {
+            EMGroupManager.getInstance().removeGroupChangeListener(mGroupListener);
         }
         // 移除联系人监听
         EMContactManager.getInstance().removeContactListener();

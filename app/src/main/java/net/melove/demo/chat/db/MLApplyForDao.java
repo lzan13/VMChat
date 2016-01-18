@@ -70,9 +70,10 @@ public class MLApplyForDao {
         values.put(MLDBConstants.COL_TYPE, applyForEntity.getType());
         values.put(MLDBConstants.COL_TIME, applyForEntity.getTime());
 
+        String whereClause = MLDBConstants.COL_OBJ_ID + "=?";
         MLDBManager.getInstance().updateData(
                 MLDBConstants.TB_APPLY_FOR, values,
-                MLDBConstants.COL_OBJ_ID,
+                whereClause,
                 new String[]{String.valueOf(applyForEntity.getObjId())});
     }
 
@@ -87,7 +88,7 @@ public class MLApplyForDao {
         String selection = MLDBConstants.COL_OBJ_ID + "=?";
         String args[] = new String[]{objId};
         Cursor cursor = MLDBManager.getInstance().queryData(
-                MLDBConstants.TB_APPLY_FOR, new String[]{MLDBConstants.COL_OBJ_ID},
+                MLDBConstants.TB_APPLY_FOR, null,
                 selection, args, null, null, null, null);
         MLApplyForEntity applyForEntity = null;
         if (cursor.moveToNext()) {

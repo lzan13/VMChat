@@ -1,9 +1,13 @@
 package net.melove.demo.chat.fragment;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,11 +19,14 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.activity.MLBaseActivity;
+import net.melove.demo.chat.activity.MLChatActivity;
 import net.melove.demo.chat.activity.MLUserInfoActivity;
 import net.melove.demo.chat.adapter.MLApplyForAdapter;
+import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.db.MLApplyForDao;
 import net.melove.demo.chat.entity.MLApplyForEntity;
 import net.melove.demo.chat.widget.MLToast;
@@ -84,6 +91,31 @@ public class MLApplyforFragment extends MLBaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MLToast.makeToast("item " + position).show();
+            }
+        });
+    }
+
+    private void setItemLongClickListener(){
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
+                dialog.setTitle(mActivity.getResources().getString(R.string.ml_dialog_title_apply_for));
+                dialog.setMessage(mActivity.getResources().getString(R.string.ml_dialog_content_add_contact));
+                dialog.setPositiveButton(R.string.ml_btn_ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                dialog.setNegativeButton(R.string.ml_btn_cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                dialog.show();
+                return false;
             }
         });
     }

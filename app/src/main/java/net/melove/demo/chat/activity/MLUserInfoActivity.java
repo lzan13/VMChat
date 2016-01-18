@@ -149,9 +149,7 @@ public class MLUserInfoActivity extends MLBaseActivity {
                             // 创建一条好友申请数据，自己发送好友请求也保存
                             MLApplyForEntity applyForEntity = new MLApplyForEntity();
                             applyForEntity.setUserName(mChatId);
-                            applyForEntity.setNickName(mUserEntity.getNickName());
-//                            applyForEntity.setGroupId("");
-//                            applyForEntity.setGroupName("");
+//                            applyForEntity.setNickName(mUserEntity.getNickName());
                             applyForEntity.setReason(reason);
                             applyForEntity.setStatus(MLApplyForEntity.ApplyForStatus.APPLYFOR);
                             applyForEntity.setType(0);

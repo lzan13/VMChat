@@ -39,6 +39,8 @@
 
 
     <!--公用的字体尺寸-->
+    <dimen name="ml_size_4">4sp</dimen>
+    <dimen name="ml_size_6">6sp</dimen>
     <dimen name="ml_size_8">8sp</dimen>
     <dimen name="ml_size_10">10sp</dimen>
     <dimen name="ml_size_12">12sp</dimen>

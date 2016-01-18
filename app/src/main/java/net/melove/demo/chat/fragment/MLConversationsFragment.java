@@ -1,6 +1,7 @@
 package net.melove.demo.chat.fragment;
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import net.melove.demo.chat.activity.MLMainActivity;
 import net.melove.demo.chat.adapter.MLConversationAdapter;
 import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.entity.MLConversationEntity;
+import net.melove.demo.chat.widget.MLToast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,12 +81,6 @@ public class MLConversationsFragment extends MLBaseFragment {
     private void init() {
         mLoaderManager = getLoaderManager();
         mLoaderManager.initLoader(10001, null, callback);
-        mMenus = new String[]{
-                mActivity.getResources().getString(R.string.ml_menu_conversation_top),
-                mActivity.getResources().getString(R.string.ml_menu_conversation_clear),
-                mActivity.getResources().getString(R.string.ml_menu_conversation_delete)
-        };
-
     }
 
     private void initConversationListView() {
@@ -160,14 +156,34 @@ public class MLConversationsFragment extends MLBaseFragment {
      * ListView 列表项的长按监听
      */
     private void setItemLongClickListener() {
+        mMenus = new String[]{
+                mActivity.getResources().getString(R.string.ml_menu_conversation_top),
+                mActivity.getResources().getString(R.string.ml_menu_conversation_clear),
+                mActivity.getResources().getString(R.string.ml_menu_conversation_delete)
+        };
         // ListView 的长按监听
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-//                MLToast.makeToast("选择长按操作" + position).show();
+                // 创建并显示 ListView 的长按弹出菜单，并设置弹出菜单 Item的点击监听
                 new AlertDialog.Builder(mActivity)
                         .setTitle(R.string.ml_dialog_title_conversation)
-                        .setItems(mMenus, null)
+                        .setItems(mMenus, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                switch (which) {
+                                    case 0:
+                                        MLToast.makeToast(R.string.ml_menu_conversation_top).show();
+                                        break;
+                                    case 1:
+                                        MLToast.makeToast(R.string.ml_menu_conversation_clear).show();
+                                        break;
+                                    case 2:
+                                        MLToast.makeToast(R.string.ml_menu_conversation_delete).show();
+                                        break;
+                                }
+                            }
+                        })
                         .show();
 
                 return true;

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -23,7 +24,7 @@ import java.util.List;
 
 /**
  * Class ${FILE_NAME}
- * <p/>
+ * <p>
  * Created by lzan13 on 2016/1/6 18:51.
  */
 public class MLMessageAdapter extends BaseAdapter {
@@ -90,16 +91,31 @@ public class MLMessageAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
+
+        viewHolder.avatarView.setVisibility(View.GONE);
         viewHolder.contentView.setText(((TextMessageBody) message.getBody()).getMessage().toString());
-        viewHolder.timeView.setText(MLDate.long2Time(message.getMsgTime()));
         viewHolder.usernameView.setText(message.getFrom());
+        viewHolder.timeView.setText(MLDate.long2Time(message.getMsgTime()));
+        // 判断消息的状态，如果发送失败就显示重发按钮，并设置重发按钮的监听
+        if (message.status == EMMessage.Status.FAIL) {
+            viewHolder.msgState.setVisibility(View.VISIBLE);
+            viewHolder.msgState.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // 重新发送  在这里实现重发逻辑
+
+                }
+            });
+        } else {
+            viewHolder.msgState.setVisibility(View.GONE);
+        }
         return convertView;
     }
 
     /**
      * 重写 Adapter 的 view 类型数目方法（此方法必须重写，否则在不同类型的 Item 重用时会出现错误）
      *
-     * @return 返回当前 adapter 可能显示的 View 类型数
+     * @return 返回当前 adapter 当前 ListView 最多显示的 Item 类型数
      */
     @Override
     public int getViewTypeCount() {
@@ -150,12 +166,18 @@ public class MLMessageAdapter extends BaseAdapter {
         return itemView;
     }
 
+    /**
+     * 供界面调用的刷新 Adapter 的方法
+     */
     public void refreshList() {
         Message msg = mHandler.obtainMessage();
         msg.what = 0;
         mHandler.sendMessage(msg);
     }
 
+    /**
+     * 自定义Handler，用来处理消息的刷新等
+     */
     Handler mHandler = new Handler() {
 
         private void refresh() {
@@ -191,12 +213,14 @@ public class MLMessageAdapter extends BaseAdapter {
         TextView usernameView;
         TextView contentView;
         TextView timeView;
+        ImageView msgState;
 
         public ViewHolder(View view) {
             avatarView = (MLImageView) view.findViewById(R.id.ml_img_msg_avatar);
             contentView = (TextView) view.findViewById(R.id.ml_text_msg_content);
             usernameView = (TextView) view.findViewById(R.id.ml_text_msg_username);
             timeView = (TextView) view.findViewById(R.id.ml_text_msg_time);
+            msgState = (ImageView) view.findViewById(R.id.ml_img_msg_state);
         }
     }
 }
