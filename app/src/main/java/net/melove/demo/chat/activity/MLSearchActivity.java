@@ -65,7 +65,7 @@ public class MLSearchActivity extends MLBaseActivity {
                 String str = mSearchView.getText().toString();
                 Intent intent = new Intent();
                 intent.setClass(mActivity, MLUserInfoActivity.class);
-                intent.putExtra(MLConstants.ML_C_CHAT_ID, str);
+                intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, str);
                 startActivity(intent);
                 mActivity.finish();
             }

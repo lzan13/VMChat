@@ -145,7 +145,7 @@ public class MLConversationsFragment extends MLBaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent();
                 intent.setClass(mActivity, MLChatActivity.class);
-                intent.putExtra(MLConstants.ML_C_CHAT_ID, mConversationList.get(position).getChatId());
+                intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mConversationList.get(position).getChatId());
                 ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, ((MLMainActivity) mActivity).getToolbar(), "toolbar");
                 ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
             }

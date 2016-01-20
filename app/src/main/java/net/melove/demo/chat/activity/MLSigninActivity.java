@@ -181,8 +181,8 @@ public class MLSigninActivity extends MLBaseActivity {
                         mDialog.dismiss();
 
                         // 登录成功，把用户名和密码保存在本地（可以不保存，根据自己的需求）
-                        MLSPUtil.put(mActivity, MLConstants.ML_C_USERNAME, mUsername);
-                        MLSPUtil.put(mActivity, MLConstants.ML_C_PASSWORD, mPassword);
+                        MLSPUtil.put(mActivity, MLConstants.ML_SHARED_USERNAME, mUsername);
+                        MLSPUtil.put(mActivity, MLConstants.ML_SHARED_PASSWORD, mPassword);
 
                         // 加载所有会话到内存
                         EMChatManager.getInstance().loadAllConversations();

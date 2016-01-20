@@ -60,6 +60,7 @@
     <!--Action 提示文字-->
     <string name="ml_action_search">搜索</string>
     <string name="ml_action_settings">设置</string>
+    <string name="ml_action_attachment">附件</string>
 
     <!--导航菜单 以及界面 Title-->
     <string name="ml_chat">聊天</string>

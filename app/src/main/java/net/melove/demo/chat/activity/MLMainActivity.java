@@ -369,7 +369,7 @@ public class MLMainActivity extends MLBaseActivity implements
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent();
                 intent.setClass(mActivity, MLChatActivity.class);
-                intent.putExtra(MLConstants.ML_C_CHAT_ID, editText.getText().toString().trim());
+                intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, editText.getText().toString().trim());
                 ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, mToolbar, "toolbar");
                 ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
             }

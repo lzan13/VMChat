@@ -31,18 +31,18 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <!-- 新添加的一些属性 -->
-    <!-- 开机自启动 -->
-    <!--<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />-->
-    <!-- 访问GMail账户列表 -->
-    <!--<uses-permission android:name="android.permission.GET_ACCOUNTS" />-->
-    <!-- 使用证书 -->
-    <!--<uses-permission android:name="android.permission.USE_CREDENTIALS" />-->
-    <!-- 管理账户 -->
-    <!--<uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />-->
-    <!-- 验证账户 -->
-    <!--<uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />-->
-    <!-- 读取启动设置 -->
-    <!--<uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />-->
+     <!--开机自启动-->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+     <!--访问GMail账户列表-->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+     <!--使用证书-->
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+     <!--管理账户-->
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+     <!--验证账户-->
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+     <!--读取启动设置-->
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
     <!-- 连续广播（允许一个程序收到广播后快速收到下一个广播） -->
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
     <!-- 允许读写系统设置项 -->
@@ -51,6 +51,11 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <!-- 读取联系人 -->
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <!--小米推送的权限-->
+    <permission
+        android:name="net.melove.demo.chat.permission.MIPUSH_RECEIVE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="net.melove.demo.chat.permission.MIPUSH_RECEIVE" />
 
     <application
         android:name=".application.MLApplication"
@@ -89,7 +94,7 @@
             android:name=".activity.MLSigninActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Default"
-            android:windowSoftInputMode="adjustResize|stateHidden"/>
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <!-- 注册界面 -->
         <activity
             android:name=".activity.MLSignupActivity"
@@ -129,6 +134,49 @@
         <!--android:name="com.easemob.chat.EMGCMListenerService"-->
         <!--android:exported="false"></service>-->
 
+        <!--配置小米推送服务-->
+        <service
+            android:name="com.xiaomi.push.service.XMPushService"
+            android:enabled="true"
+            android:process=":pushservice" />
+        <service
+            android:name="com.xiaomi.mipush.sdk.PushMessageHandler"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name="com.xiaomi.mipush.sdk.MessageHandleService"
+            android:enabled="true" />
+
+        <receiver
+            android:name="com.xiaomi.push.service.receivers.NetworkStatusReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.xiaomi.push.service.receivers.PingReceiver"
+            android:exported="false"
+            android:process=":pushservice">
+            <intent-filter>
+                <action android:name="com.xiaomi.push.PING_TIMER" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.easemob.chat.EMMipushReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="ccom.xiaomi.mipush.MESSAGE_ARRIVED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.xiaomi.mipush.ERROR" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

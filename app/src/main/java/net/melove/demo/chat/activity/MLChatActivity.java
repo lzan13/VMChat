@@ -1,5 +1,9 @@
 package net.melove.demo.chat.activity;
 
+import android.app.ProgressDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -10,11 +14,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.easemob.EMCallBack;
 import com.easemob.EMError;
 import com.easemob.EMEventListener;
 import com.easemob.EMNotifierEvent;
+import com.easemob.chat.CmdMessageBody;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMConversation;
 import com.easemob.chat.EMMessage;
@@ -27,11 +33,12 @@ import net.melove.demo.chat.application.MLEasemobHelper;
 import net.melove.demo.chat.util.MLLog;
 import net.melove.demo.chat.widget.MLToast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Class ${FILE_NAME}
- * <p>
+ * <p/>
  * Created by lzan13 on 2015/10/12 15:00.
  */
 public class MLChatActivity extends MLBaseActivity implements EMEventListener {
@@ -42,8 +49,7 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
     // 当前会话对象
     private EMConversation mConversation;
 
-    // ListView 长按弹出菜单项
-    private String[] mMenus;
+    // ListView
     private ListView mListView;
     private MLMessageAdapter mAdapter;
 
@@ -71,7 +77,7 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
 
     private void init() {
         mActivity = this;
-        mChatId = getIntent().getStringExtra(MLConstants.ML_C_CHAT_ID);
+        mChatId = getIntent().getStringExtra(MLConstants.ML_EXTRA_CHAT_ID);
     }
 
     /**
@@ -174,18 +180,21 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
      * ListView 列表项的长按监听
      */
     private void setItemLongClickListener() {
-        mMenus = new String[]{
-                mActivity.getResources().getString(R.string.ml_menu_chat_copy),
-                mActivity.getResources().getString(R.string.ml_menu_chat_delete),
-                mActivity.getResources().getString(R.string.ml_menu_chat_forward),
-                mActivity.getResources().getString(R.string.ml_menu_chat_recall),
-        };
         // ListView 的长按监听
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, final long id) {
                 final EMMessage message = mConversation.getAllMessages().get(position);
-//                MLToast.makeToast("menu " + position + ", id " + id + ", msgId ").show();
+                // 这里要根据消息的类型去判断要弹出的菜单
+                List<String> mMenuList = new ArrayList<String>();
+                mMenuList.add(mActivity.getResources().getString(R.string.ml_menu_chat_copy));
+                mMenuList.add(mActivity.getResources().getString(R.string.ml_menu_chat_delete));
+                mMenuList.add(mActivity.getResources().getString(R.string.ml_menu_chat_forward));
+                if (message.direct == EMMessage.Direct.SEND) {
+                    mMenuList.add(mActivity.getResources().getString(R.string.ml_menu_chat_recall));
+                }
+                String[] mMenus = new String[mMenuList.size()];
+                mMenuList.toArray(mMenus);
                 // 创建并显示 ListView 的长按弹出菜单，并设置弹出菜单 Item的点击监听
                 new AlertDialog.Builder(mActivity)
                         .setTitle(R.string.ml_dialog_title_conversation)
@@ -195,37 +204,65 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
                                 switch (which) {
                                     case 0:
                                         MLToast.makeToast(R.string.ml_menu_chat_copy).show();
+                                        ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                                        ClipData clipData = ClipData.newPlainText("message", ((TextMessageBody) message.getBody()).getMessage());
+                                        clipboardManager.setPrimaryClip(clipData);
                                         break;
                                     case 1:
                                         MLToast.makeToast(R.string.ml_menu_chat_delete).show();
+                                        mConversation.removeMessage(message.getMsgId());
+                                        refreshChatUI();
                                         break;
                                     case 2:
                                         MLToast.makeToast(R.string.ml_menu_chat_forward).show();
                                         break;
                                     case 3:
-                                        MLToast.makeToast(R.string.ml_menu_chat_recall).show();
-                                        MLEasemobHelper.getInstance().sendRecallMessage(message, new EMCallBack() {
-                                            @Override
-                                            public void onSuccess() {
-                                                refreshChatUI();
-                                            }
-
-                                            @Override
-                                            public void onError(int i, String s) {
-
-                                            }
-
-                                            @Override
-                                            public void onProgress(int i, String s) {
-
-                                            }
-                                        });
+                                        recallMessage(message);
                                         break;
                                 }
                             }
                         })
                         .show();
                 return true;
+            }
+        });
+    }
+
+    /**
+     * 撤回消息
+     *
+     * @param message 需要撤回的消息
+     */
+    private void recallMessage(EMMessage message) {
+        // 显示撤回消息操作的 dialog
+        final ProgressDialog pd = new ProgressDialog(mActivity);
+        pd.setMessage("正在撤回 请稍候……");
+        pd.show();
+        MLEasemobHelper.getInstance().sendRecallMessage(message, new EMCallBack() {
+            @Override
+            public void onSuccess() {
+                pd.dismiss();
+                refreshChatUI();
+            }
+
+            @Override
+            public void onError(final int i, final String s) {
+                pd.dismiss();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (s.equals("time")) {
+                            MLToast.errorToast("消息已经超过两分钟 无法撤回").show();
+                        } else {
+                            MLToast.errorToast("撤回失败 失败错误码（" + i + " " + s + ")").show();
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onProgress(int i, String s) {
+
             }
         });
     }
@@ -257,8 +294,8 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
                             MLToast.errorToast("发送内容包含敏感词汇").show();
                         } else if (message.getError() == EMError.MESSAGE_SEND_NOT_IN_THE_GROUP) {
                             MLToast.errorToast("不属于当前群组，不能给群组发送消息").show();
-                        } else if (message.getError() == EMError.MESSAGE_SEND_TRAFFIC_LIMIT) {
-                            MLToast.errorToast("发送文件大小超过限制了").show();
+//                        } else if (message.getError() == EMError.MESSAGE_SEND_TRAFFIC_LIMIT) {
+//                            MLToast.errorToast("发送文件大小超过限制了").show();
                         } else {
                             MLToast.errorToast("发送失败，稍后重试").show();
                         }
@@ -340,7 +377,14 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
                 refreshChatUI();
                 break;
             case EventNewCMDMessage:
-
+                // 透传消息
+                EMMessage cmdMessage = (EMMessage) event.getData();
+                CmdMessageBody body = (CmdMessageBody) cmdMessage.getBody();
+                // 判断是不是撤回消息的透传
+                if (body.action.equals(MLConstants.ML_ATTR_TYPE_RECALL)) {
+                    MLEasemobHelper.getInstance().receiveRecallMessage(cmdMessage);
+                    refreshChatUI();
+                }
                 break;
         }
     }

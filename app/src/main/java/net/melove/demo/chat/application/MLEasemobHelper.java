@@ -1,10 +1,13 @@
 package net.melove.demo.chat.application;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 
 import com.easemob.EMCallBack;
+import com.easemob.EMConnectionListener;
+import com.easemob.EMError;
 import com.easemob.EMEventListener;
 import com.easemob.EMNotifierEvent;
 import com.easemob.chat.CmdMessageBody;
@@ -12,12 +15,13 @@ import com.easemob.chat.EMChat;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.TextMessageBody;
-import com.easemob.exceptions.EaseMobException;
+import com.xiaomi.mipush.sdk.MiPushClient;
 
 import net.melove.demo.chat.util.MLDate;
 import net.melove.demo.chat.util.MLLog;
 import net.melove.demo.chat.util.MLSPUtil;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -36,6 +40,8 @@ public class MLEasemobHelper {
     private boolean isInit;
 
     private EMEventListener mEventListener;
+
+    private List<Activity> mActivityList = new ArrayList<Activity>();
 
 
     /**
@@ -81,6 +87,9 @@ public class MLEasemobHelper {
 
         // 调用初始化方法初始化sdk
         EMChat.getInstance().init(mContext);
+        String APP_ID = "2882303761517430984";
+        String APP_KEY = "5191743065984";
+        EMChatManager.getInstance().setMipushConfig(APP_ID, APP_KEY);
 
         // 设置自动登录
         EMChat.getInstance().setAutoLogin(true);
@@ -168,16 +177,19 @@ public class MLEasemobHelper {
         long currTime = MLDate.getCurrentMillisecond();
         long msgTime = message.getMsgTime();
         if (currTime - msgTime > 120000) {
-            callBack.onError(0, "");
+            callBack.onError(0, "time");
             return;
         }
         String msgId = message.getMsgId();
-        String action = "recall";
         EMMessage cmdMessage = EMMessage.createSendMessage(EMMessage.Type.CMD);
+        if (message.getChatType() == EMMessage.ChatType.GroupChat) {
+            cmdMessage.setChatType(EMMessage.ChatType.GroupChat);
+        }
         cmdMessage.setReceipt(message.getTo());
-        CmdMessageBody body = new CmdMessageBody(action);
+        // 创建CMD 消息的消息体 并设置 action 为 recall
+        CmdMessageBody body = new CmdMessageBody(MLConstants.ML_ATTR_TYPE_RECALL);
         cmdMessage.addBody(body);
-        cmdMessage.setAttribute("msgId", msgId);
+        cmdMessage.setAttribute(MLConstants.ML_ATTR_MSG_ID, msgId);
         // 确认无误，开始发送撤回消息的透传
         EMChatManager.getInstance().sendMessage(cmdMessage, new EMCallBack() {
             @Override
@@ -187,8 +199,8 @@ public class MLEasemobHelper {
                 message.addBody(body);
                 // 这里需要把消息类型改为 TXT 类型
                 message.setType(EMMessage.Type.TXT);
-                // TODO 设置扩展为撤回消息类型，是为了区分消息的显示，这里暂时没有单独去写布局显示，只是用txt 类型的消息显示
-                message.setAttribute("type", "recall");
+                // 设置扩展为撤回消息类型，是为了区分消息的显示
+                message.setAttribute(MLConstants.ML_ATTR_TYPE, MLConstants.ML_ATTR_TYPE_RECALL);
                 // 返回修改消息结果
                 EMChatManager.getInstance().updateMessageBody(message);
                 callBack.onSuccess();
@@ -214,26 +226,25 @@ public class MLEasemobHelper {
      */
     public boolean receiveRecallMessage(EMMessage recallMsg) {
         boolean result = false;
-        try {
-            // 从cmd扩展中获取要撤回消息的id
-            String msgId = recallMsg.getStringAttribute("msgId");
-            // 根据得到的msgId 去本地查找这条消息，如果本地已经没有这条消息了，就不用撤回
-            EMMessage message = EMChatManager.getInstance().getMessage(msgId);
-            if (message == null) {
-                return result;
-            }
-            // 更改要撤销的消息的内容，替换为消息已经撤销的提示内容
-            TextMessageBody body = new TextMessageBody("此条消息已被 " + message.getUserName() + " 撤回");
-            message.addBody(body);
-            // 这里需要把消息类型改为 TXT 类型
-            message.setType(EMMessage.Type.TXT);
-            // TODO 设置扩展为撤回消息类型，是为了区分消息的显示，这里暂时没有单独去写布局显示，只是用txt 类型的消息显示
-            message.setAttribute("type", "recall");
-            // 返回修改消息结果
-            result = EMChatManager.getInstance().updateMessageBody(message);
-        } catch (EaseMobException e) {
-            e.printStackTrace();
+        // 从cmd扩展中获取要撤回消息的id
+        String msgId = recallMsg.getStringAttribute(MLConstants.ML_ATTR_MSG_ID, null);
+        if (msgId == null) {
+            return result;
         }
+        // 根据得到的msgId 去本地查找这条消息，如果本地已经没有这条消息了，就不用撤回
+        EMMessage message = EMChatManager.getInstance().getMessage(msgId);
+        if (message == null) {
+            return result;
+        }
+        // 更改要撤销的消息的内容，替换为消息已经撤销的提示内容
+        TextMessageBody body = new TextMessageBody("此条消息已被 " + message.getUserName() + " 撤回");
+        message.addBody(body);
+        // 这里需要把消息类型改为 TXT 类型
+        message.setType(EMMessage.Type.TXT);
+        // 设置扩展为撤回消息类型，是为了区分消息的显示
+        message.setAttribute(MLConstants.ML_ATTR_TYPE, MLConstants.ML_ATTR_TYPE_RECALL);
+        // 返回修改消息结果
+        result = EMChatManager.getInstance().updateMessageBody(message);
         return result;
     }
 
@@ -243,9 +254,9 @@ public class MLEasemobHelper {
      * @param callback 退出登录的回调函数，用来给上次回调退出状态
      */
     public void signOut(final EMCallBack callback) {
-        MLSPUtil.remove(mContext, MLConstants.ML_C_USERNAME);
-        MLSPUtil.remove(mContext, MLConstants.ML_C_PASSWORD);
-        EMChatManager.getInstance().logout(new EMCallBack() {
+        MLSPUtil.remove(mContext, MLConstants.ML_SHARED_USERNAME);
+        MLSPUtil.remove(mContext, MLConstants.ML_SHARED_PASSWORD);
+        EMChatManager.getInstance().logout(true, new EMCallBack() {
             @Override
             public void onSuccess() {
                 if (callback != null) {
@@ -276,6 +287,28 @@ public class MLEasemobHelper {
      */
     public boolean isLogined() {
         return EMChat.getInstance().isLoggedIn();
+    }
+
+    /**
+     * 添加 Activity 到集合，为了给全局监听用来判断当前是否在 Activity 界面
+     *
+     * @param activity
+     */
+    public void addActivity(Activity activity) {
+        if (!mActivityList.contains(activity)) {
+            mActivityList.add(0, activity);
+        }
+    }
+
+    /**
+     * 将 Activity 从集合中移除
+     *
+     * @param activity
+     */
+    public void removeActivity(Activity activity) {
+        if (mActivityList.contains(activity)) {
+            mActivityList.remove(activity);
+        }
     }
 
     /**

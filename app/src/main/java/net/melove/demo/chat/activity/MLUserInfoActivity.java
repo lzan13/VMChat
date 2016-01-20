@@ -58,7 +58,7 @@ public class MLUserInfoActivity extends MLBaseActivity {
 
     private void init() {
         mActivity = this;
-        mChatId = getIntent().getStringExtra(MLConstants.ML_C_CHAT_ID);
+        mChatId = getIntent().getStringExtra(MLConstants.ML_EXTRA_CHAT_ID);
         mApplyForDao = new MLApplyForDao(mActivity);
         mUserDao = new MLUserDao(mActivity);
         mUserEntity = mUserDao.getContact(mChatId);
@@ -201,7 +201,7 @@ public class MLUserInfoActivity extends MLBaseActivity {
     private void startChat() {
         Intent intent = new Intent();
         intent.setClass(mActivity, MLChatActivity.class);
-        intent.putExtra(MLConstants.ML_C_CHAT_ID, mChatId);
+        intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mChatId);
         mActivity.startActivity(intent);
         mActivity.finish();
     }
