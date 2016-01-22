@@ -10,11 +10,14 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.easemob.EMCallBack;
 import com.easemob.EMError;
@@ -30,15 +33,18 @@ import net.melove.demo.chat.R;
 import net.melove.demo.chat.adapter.MLMessageAdapter;
 import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.application.MLEasemobHelper;
+import net.melove.demo.chat.notification.MLNotifier;
 import net.melove.demo.chat.util.MLLog;
 import net.melove.demo.chat.widget.MLToast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Class ${FILE_NAME}
- * <p/>
+ * <p>
  * Created by lzan13 on 2015/10/12 15:00.
  */
 public class MLChatActivity extends MLBaseActivity implements EMEventListener {
@@ -52,6 +58,8 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
     // ListView
     private ListView mListView;
     private MLMessageAdapter mAdapter;
+
+    private LinearLayout mAttachMenuLayout;
 
     // 聊天内容输入框
     private EditText mEditText;
@@ -81,35 +89,29 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
     }
 
     /**
+     * 初始化 Toolbar 控件
+     */
+    private void initToolbar() {
+        mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
+        mToolbar.setTitle(mChatId);
+        setSupportActionBar(mToolbar);
+        mToolbar.setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
+        mToolbar.setNavigationOnClickListener(viewListener);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mActivity.finish();
+            }
+        });
+    }
+
+    /**
      * 初始化界面控件
      */
     private void initView() {
+        // 初始化输入框控件，并添加输入框监听
         mEditText = (EditText) findViewById(R.id.ml_edit_chat_input);
-        mEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            /**
-             * 检测输入框内容变化
-             *
-             * @param s 输入框内容
-             */
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s.toString().equals("")) {
-                    mSendView.setVisibility(View.GONE);
-                    mVoiceView.setVisibility(View.VISIBLE);
-                } else {
-                    mSendView.setVisibility(View.VISIBLE);
-                    mVoiceView.setVisibility(View.GONE);
-                }
-            }
-        });
+        mEditText.addTextChangedListener(textWatcher);
 
         // 获取控件对象
         mEmotionView = findViewById(R.id.ml_img_chat_emotion);
@@ -118,35 +120,41 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
 
         // 设置控件的点击监听
         mEmotionView.setOnClickListener(viewListener);
-        mSendView.setOnClickListener(viewListener);
         mVoiceView.setOnClickListener(viewListener);
+        mSendView.setOnClickListener(viewListener);
+        mSendView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                switch (v.getId()) {
+                    case R.id.ml_img_chat_send:
+                        sendDestroyMessage();
+                        break;
+                }
+                return true;
+            }
+        });
+        mAttachMenuLayout = (LinearLayout) findViewById(R.id.ml_layout_attach_menu);
+        mAttachMenuLayout.setOnClickListener(viewListener);
+        findViewById(R.id.ml_attach_photo).setOnClickListener(viewListener);
+        findViewById(R.id.ml_attach_video).setOnClickListener(viewListener);
+        findViewById(R.id.ml_attach_file).setOnClickListener(viewListener);
+        findViewById(R.id.ml_attach_location).setOnClickListener(viewListener);
+        findViewById(R.id.ml_attach_gift).setOnClickListener(viewListener);
+        findViewById(R.id.ml_attach_contacts).setOnClickListener(viewListener);
+
     }
 
+
+    /**
+     * 初始化 ListView
+     */
     private void initListView() {
         mListView = (ListView) findViewById(R.id.ml_listview_message);
         mAdapter = new MLMessageAdapter(mActivity, mChatId, mListView);
         mListView.setAdapter(mAdapter);
         refreshChatUI();
         setItemClickListener();
-
         setItemLongClickListener();
-    }
-
-    /**
-     * 初始化 Toolbar 控件
-     */
-    private void initToolbar() {
-        mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
-        mToolbar.setTitle(mChatId);
-        setSupportActionBar(mToolbar);
-        mToolbar.setNavigationIcon(R.drawable.ic_menu_arrow);
-        mToolbar.setNavigationOnClickListener(viewListener);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mActivity.finish();
-            }
-        });
     }
 
 
@@ -163,6 +171,32 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
         }
     }
 
+    private TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        }
+
+        /**
+         * 检测输入框内容变化
+         *
+         * @param s 输入框内容
+         */
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (s.toString().equals("")) {
+                mSendView.setVisibility(View.GONE);
+                mVoiceView.setVisibility(View.VISIBLE);
+            } else {
+                mSendView.setVisibility(View.VISIBLE);
+                mVoiceView.setVisibility(View.GONE);
+            }
+        }
+    };
+
     /**
      * 设置ListView 的点击是监听
      */
@@ -170,8 +204,48 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                EMMessage message = mConversation.getAllMessages().get(position);
-                MLToast.makeToast("item " + position + ", id " + id + ", msgId " + message.getMsgId()).show();
+                final EMMessage message = mConversation.getAllMessages().get(position);
+//                MLToast.makeToast("item " + position + ", id " + id + ", msgId " + message.getMsgId()).show();
+                // 判断当前消息是否为【阅后即焚】类型
+                if (message.getStringAttribute(MLConstants.ML_ATTR_TYPE, "null").equals(MLConstants.ML_ATTR_TYPE_DESTROY)) {
+                    final AlertDialog dialog = new AlertDialog.Builder(mActivity).create();
+//                    dialog.setTitle("阅后即焚内容");
+                    View tView = mActivity.getLayoutInflater().inflate(R.layout.widget_dialog_title_destroy, null);
+                    TextView titleView = (TextView) tView.findViewById(R.id.ml_text_dialog_title);
+                    final TextView timeView = (TextView) tView.findViewById(R.id.ml_text_dialog_title_time);
+                    titleView.setText("消息内容");
+                    timeView.setText("5");
+                    dialog.setCustomTitle(tView);
+                    dialog.setMessage(((TextMessageBody) message.getBody()).getMessage());
+                    dialog.show();
+                    // 创建定时器，进行销毁消息的计时
+                    final Timer timer = new Timer();
+                    TimerTask task = new TimerTask() {
+                        int time = 5;
+
+                        @Override
+                        public void run() {
+                            if (time <= 0) {
+                                message.setType(EMMessage.Type.TXT);
+                                message.setAttribute(MLConstants.ML_ATTR_TYPE, MLConstants.ML_ATTR_TYPE_DESTROYED);
+                                TextMessageBody body = new TextMessageBody("消息已销毁");
+                                message.addBody(body);
+                                EMChatManager.getInstance().updateMessageBody(message);
+                                refreshChatUI();
+                                timer.cancel();
+                                dialog.dismiss();
+                            }
+                            time--;
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    timeView.setText(String.valueOf(time));
+                                }
+                            });
+                        }
+                    };
+                    timer.schedule(task, 1000, 1000);
+                }
             }
         });
     }
@@ -234,6 +308,11 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
      * @param message 需要撤回的消息
      */
     private void recallMessage(EMMessage message) {
+        String msgId = message.getMsgId();
+
+//        if () {
+//
+//        }
         // 显示撤回消息操作的 dialog
         final ProgressDialog pd = new ProgressDialog(mActivity);
         pd.setMessage("正在撤回 请稍候……");
@@ -277,6 +356,7 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
      * @param message
      */
     private void sendMessage(final EMMessage message) {
+        refreshChatUI();
         EMChatManager.getInstance().sendMessage(message, new EMCallBack() {
             @Override
             public void onSuccess() {
@@ -331,6 +411,25 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
         sendMessage(message);
     }
 
+    /**
+     * 发送阅后即焚类型的消息
+     */
+    private void sendDestroyMessage() {
+        String content = mEditText.getText().toString();
+        mEditText.setText("");
+        mSendView.setVisibility(View.GONE);
+        mVoiceView.setVisibility(View.VISIBLE);
+        EMMessage message = EMMessage.createSendMessage(EMMessage.Type.TXT);
+        TextMessageBody txtBody = new TextMessageBody(content);
+        // 设置消息body
+        message.addBody(txtBody);
+        message.setAttribute(MLConstants.ML_ATTR_TYPE, MLConstants.ML_ATTR_TYPE_DESTROY);
+        message.setReceipt(mChatId);
+        // 把messgage加到conversation中
+        mConversation.addMessage(message);
+        sendMessage(message);
+    }
+
     private void refreshChatUI() {
 //        mAdapter.refresh();
 //        mAdapter.notifyDataSetChanged();
@@ -353,6 +452,27 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
                 case R.id.ml_img_chat_voice:
 
                     break;
+                case R.id.ml_attach_photo:
+
+                    break;
+                case R.id.ml_attach_video:
+
+                    break;
+                case R.id.ml_attach_file:
+
+                    break;
+                case R.id.ml_attach_location:
+
+                    break;
+                case R.id.ml_attach_gift:
+
+                    break;
+                case R.id.ml_attach_contacts:
+
+                    break;
+                case R.id.ml_layout_attach_menu:
+                    onAttachMenu();
+                    break;
             }
         }
     };
@@ -364,17 +484,15 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
      */
     @Override
     public void onEvent(EMNotifierEvent event) {
-
         switch (event.getEvent()) {
             case EventNewMessage:
                 EMMessage message = (EMMessage) event.getData();
                 MLLog.i(((TextMessageBody) message.getBody()).getMessage());
                 if (mChatId.equals(message.getFrom())) {
-
+                    refreshChatUI();
                 } else {
-
+                    MLNotifier.getInstance(mActivity).sendMessageNotification(message);
                 }
-                refreshChatUI();
                 break;
             case EventNewCMDMessage:
                 // 透传消息
@@ -382,11 +500,52 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
                 CmdMessageBody body = (CmdMessageBody) cmdMessage.getBody();
                 // 判断是不是撤回消息的透传
                 if (body.action.equals(MLConstants.ML_ATTR_TYPE_RECALL)) {
-                    MLEasemobHelper.getInstance().receiveRecallMessage(cmdMessage);
+//                    MLEasemobHelper.getInstance().receiveRecallMessage(cmdMessage);
                     refreshChatUI();
                 }
                 break;
         }
+    }
+
+    /**
+     * 打开和关闭附件菜单
+     */
+    private void onAttachMenu() {
+        // 判断当前附件菜单显示状态，显示就关闭，不显示就打开
+        if (mAttachMenuLayout.isShown()) {
+            mAttachMenuLayout.setVisibility(View.GONE);
+        } else {
+            mAttachMenuLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
+     * 重写菜单项的选择事件
+     *
+     * @param item 点击的是哪一个菜单项
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.ml_action_call:
+                MLToast.makeToast("还未实现语音通话功能").show();
+                break;
+            case R.id.ml_action_attachment:
+//                MLToast.makeToast("附件").show();
+                onAttachMenu();
+                break;
+            case R.id.ml_action_delete:
+                MLToast.makeToast("清空会话").show();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_chat, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override

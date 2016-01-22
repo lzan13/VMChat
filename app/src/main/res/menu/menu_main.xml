@@ -4,8 +4,14 @@
     tools:context=".MainActivity">
     <item
         android:id="@+id/ml_action_search"
-        android:icon="@drawable/ic_menu_search"
-        android:orderInCategory="100"
+        android:icon="@mipmap/ic_search_white_24dp"
+        android:orderInCategory="50"
         android:title="@string/ml_search"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/ml_action_add"
+        android:icon="@mipmap/ic_add_white_24dp"
+        android:orderInCategory="100"
+        android:title="@string/ml_add_contact"
         app:showAsAction="always" />
 </menu>

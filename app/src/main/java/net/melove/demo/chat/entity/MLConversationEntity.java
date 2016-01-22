@@ -4,6 +4,7 @@ import com.easemob.chat.EMConversation;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.TextMessageBody;
 
+import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.util.MLDate;
 import net.melove.demo.chat.util.MLLog;
 
@@ -22,7 +23,7 @@ public class MLConversationEntity {
     // 会话聊天背景
     private String cover;
     // 最后会话时间
-    private String time;
+    private long time;
     // 最后一条消息内容
     private String content;
     // 聊天未读数
@@ -45,25 +46,29 @@ public class MLConversationEntity {
             if (message.getType() == EMMessage.Type.TXT) {
                 str = ((TextMessageBody) message.getBody()).getMessage();
             } else if (message.getType() == EMMessage.Type.IMAGE) {
-                str = "图片";
+                str = "【图片】";
             } else if (message.getType() == EMMessage.Type.FILE) {
-                str = "文件";
+                str = "【文件】";
             } else if (message.getType() == EMMessage.Type.LOCATION) {
-                str = "位置";
+                str = "【位置】";
             } else if (message.getType() == EMMessage.Type.VIDEO) {
-                str = "视频";
+                str = "【视频】";
             } else if (message.getType() == EMMessage.Type.VOICE) {
-                str = "语音";
-            } else if (message.getType() == EMMessage.Type.CMD) {
-                str = "CMD";
+                str = "【语音】";
+            } else {
+                str = (((TextMessageBody) message.getBody()).getMessage());
+            }
+            if (message.getStringAttribute(MLConstants.ML_ATTR_TYPE, "null").equals(MLConstants.ML_ATTR_TYPE_DESTROY)) {
+                str = "【阅后即焚】进入聊天界面查看";
             }
             setContent(str);
-            setTime(MLDate.long2Time(message.getMsgTime()));
+            setTime(message.getMsgTime());
             setCount(conversation.getUnreadMsgCount());
         } else {
-            setContent("还没有聊天内容");
-            setTime("00:00");
+            setContent("还没聊过哎，快去骚扰Ta吧^_^~");
+            setTime(MLDate.getCurrentMillisecond());
         }
+
         setChatId(conversation.getUserName());
         setNick(conversation.getUserName());
         setAvatar("");
@@ -102,11 +107,11 @@ public class MLConversationEntity {
         this.nick = nick;
     }
 
-    public String getTime() {
+    public long getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(long time) {
         this.time = time;
     }
 

@@ -57,15 +57,9 @@
     <string name="ml_dialog_content_create_conversation">演示环信不需要互为好友就能发起会话，只需要知道对方环信账户，即可跳转到聊天界面进行聊天，请输入对方的username</string>
     <string name="ml_dialog_content_add_contact">输入你的申请理由，让对方容易通过你的请求，也可以输入你的姓名，让对方知道你是谁，更容易通过请求</string>
 
-    <!--Action 提示文字-->
-    <string name="ml_action_search">搜索</string>
-    <string name="ml_action_settings">设置</string>
-    <string name="ml_action_attachment">附件</string>
-
-    <!--导航菜单 以及界面 Title-->
+    <!--导航菜单 Title Action 等-->
     <string name="ml_chat">聊天</string>
     <string name="ml_home">主页</string>
-    <string name="ml_contacts">联系人</string>
     <string name="ml_group">群组</string>
     <string name="ml_room">聊天室</string>
     <string name="ml_voice_call">电话</string>
@@ -73,10 +67,19 @@
     <string name="ml_apply_for">申请与通知</string>
     <string name="ml_help">帮助</string>
     <string name="ml_search">搜索</string>
-    <string name="ml_setting">设置</string>
+    <string name="ml_settings">设置</string>
+    <string name="ml_attachment">附件</string>
+    <string name="ml_clear_message">清空消息</string>
     <string name="ml_more">更多</string>
     <string name="ml_drawer_open">打开</string>
     <string name="ml_drawer_close">关闭</string>
+
+    <string name="ml_photo">图片</string>
+    <string name="ml_video">视频</string>
+    <string name="ml_file">文件</string>
+    <string name="ml_location">位置</string>
+    <string name="ml_gift">礼物</string>
+    <string name="ml_contacts">联系人</string>
 
     <!--弹出菜单-->
     <string name="ml_menu_chat_copy">复制</string>

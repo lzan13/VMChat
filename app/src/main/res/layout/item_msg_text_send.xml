@@ -55,7 +55,7 @@
                     android:layout_marginRight="@dimen/ml_dimen_8"
                     android:text="@string/ml_hint_time"
                     android:textColor="@color/ml_white_54"
-                    android:textSize="@dimen/ml_size_6" />
+                    android:textSize="@dimen/ml_size_8" />
 
                 <TextView
                     android:id="@+id/ml_text_msg_username"
@@ -63,7 +63,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/ml_hint_username"
                     android:textColor="@color/ml_white_54"
-                    android:textSize="@dimen/ml_size_8" />
+                    android:textSize="@dimen/ml_size_10" />
 
             </LinearLayout>
         </LinearLayout>

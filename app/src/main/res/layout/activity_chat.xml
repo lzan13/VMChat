@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:melove="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipChildren="false"
@@ -54,16 +55,16 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
-                            android:src="@drawable/ic_keyboard_voice"
-                            android:tint="@color/ml_theme_accent" />
+                            android:src="@mipmap/ic_keyboard_voice_white_24dp"
+                            android:tint="@color/ml_red_87" />
                         <!--发送按钮-->
                         <ImageView
                             android:id="@+id/ml_img_chat_send"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
-                            android:src="@drawable/ic_keyboard_send"
-                            android:tint="@color/ml_theme_accent"
+                            android:src="@mipmap/ic_send_white_24dp"
+                            android:tint="@color/ml_red_87"
                             android:visibility="gone" />
 
                     </RelativeLayout>
@@ -80,16 +81,16 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
-                            android:src="@drawable/ic_keyboard_face"
-                            android:tint="@color/ml_theme_accent" />
+                            android:src="@mipmap/ic_keyboard_face_white_24dp"
+                            android:tint="@color/ml_red_87" />
 
                         <ImageView
                             android:id="@+id/ml_img_chat_keyboard"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
-                            android:src="@drawable/ic_keyboard_keyboard"
-                            android:tint="@color/ml_theme_accent"
+                            android:src="@mipmap/ic_keyboard_white_24dp"
+                            android:tint="@color/ml_red_87"
                             android:visibility="gone" />
                     </RelativeLayout>
                     <!--输入框-->
@@ -151,6 +152,171 @@
                 android:fadingEdge="none"
                 android:transcriptMode="alwaysScroll" />
 
+        </LinearLayout>
+
+        <!--扩展菜单布局-->
+        <LinearLayout
+            android:id="@+id/ml_layout_attach_menu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/ml_black_26"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/ml_white_87"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/ml_dimen_8"
+                android:paddingLeft="@dimen/ml_dimen_12"
+                android:paddingRight="@dimen/ml_dimen_12"
+                android:paddingTop="@dimen/ml_dimen_16">
+
+                <LinearLayout
+                    android:id="@+id/ml_attach_photo"
+                    android:layout_width="@dimen/ml_dimen_84"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <net.melove.demo.chat.widget.MLImageView
+                        android:layout_width="@dimen/ml_dimen_52"
+                        android:layout_height="@dimen/ml_dimen_52"
+                        android:layout_marginBottom="@dimen/ml_dimen_8"
+                        android:src="@mipmap/ic_attach_photo"
+                        melove:ml_border_color="@color/ml_white_87"
+                        melove:ml_border_width="@dimen/ml_dimen_2"
+                        melove:ml_radius="@dimen/ml_dimen_8" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ml_photo" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ml_attach_video"
+                    android:layout_width="@dimen/ml_dimen_84"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <net.melove.demo.chat.widget.MLImageView
+                        android:layout_width="@dimen/ml_dimen_52"
+                        android:layout_height="@dimen/ml_dimen_52"
+                        android:layout_marginBottom="@dimen/ml_dimen_8"
+                        android:src="@mipmap/ic_attach_video"
+                        melove:ml_border_color="@color/ml_white_87"
+                        melove:ml_border_width="@dimen/ml_dimen_2"
+                        melove:ml_radius="@dimen/ml_dimen_8" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ml_video" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ml_attach_file"
+                    android:layout_width="@dimen/ml_dimen_84"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <net.melove.demo.chat.widget.MLImageView
+                        android:layout_width="@dimen/ml_dimen_52"
+                        android:layout_height="@dimen/ml_dimen_52"
+                        android:layout_marginBottom="@dimen/ml_dimen_8"
+                        android:src="@mipmap/ic_attach_file"
+                        melove:ml_border_color="@color/ml_white_87"
+                        melove:ml_border_width="@dimen/ml_dimen_2"
+                        melove:ml_radius="@dimen/ml_dimen_8" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ml_file" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ml_attach_location"
+                    android:layout_width="@dimen/ml_dimen_84"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <net.melove.demo.chat.widget.MLImageView
+                        android:layout_width="@dimen/ml_dimen_52"
+                        android:layout_height="@dimen/ml_dimen_52"
+                        android:layout_marginBottom="@dimen/ml_dimen_8"
+                        android:src="@mipmap/ic_attach_location"
+                        melove:ml_border_color="@color/ml_white_87"
+                        melove:ml_border_width="@dimen/ml_dimen_2"
+                        melove:ml_radius="@dimen/ml_dimen_8" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ml_location" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/ml_white_87"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/ml_dimen_16"
+                android:paddingLeft="@dimen/ml_dimen_12"
+                android:paddingRight="@dimen/ml_dimen_12"
+                android:paddingTop="@dimen/ml_dimen_8">
+
+                <LinearLayout
+                    android:id="@+id/ml_attach_gift"
+                    android:layout_width="@dimen/ml_dimen_84"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <net.melove.demo.chat.widget.MLImageView
+                        android:layout_width="@dimen/ml_dimen_52"
+                        android:layout_height="@dimen/ml_dimen_52"
+                        android:layout_marginBottom="@dimen/ml_dimen_8"
+                        android:src="@mipmap/ic_attach_gift"
+                        melove:ml_border_color="@color/ml_white_87"
+                        melove:ml_border_width="@dimen/ml_dimen_2"
+                        melove:ml_radius="@dimen/ml_dimen_8" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ml_gift" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ml_attach_contacts"
+                    android:layout_width="@dimen/ml_dimen_84"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <net.melove.demo.chat.widget.MLImageView
+                        android:layout_width="@dimen/ml_dimen_52"
+                        android:layout_height="@dimen/ml_dimen_52"
+                        android:layout_marginBottom="@dimen/ml_dimen_8"
+                        android:src="@mipmap/ic_attach_contacts"
+                        melove:ml_border_color="@color/ml_white_87"
+                        melove:ml_border_width="@dimen/ml_dimen_2"
+                        melove:ml_radius="@dimen/ml_dimen_8" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ml_contacts" />
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
 

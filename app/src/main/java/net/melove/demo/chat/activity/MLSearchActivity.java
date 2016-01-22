@@ -3,6 +3,7 @@ package net.melove.demo.chat.activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,6 +17,8 @@ import net.melove.demo.chat.application.MLConstants;
  */
 public class MLSearchActivity extends MLBaseActivity {
 
+    private Toolbar mToolbar;
+
     private EditText mSearchView;
     private Button mSearchBtn;
 
@@ -28,6 +31,7 @@ public class MLSearchActivity extends MLBaseActivity {
         mActivity = this;
 
         initView();
+        initToolbar();
     }
 
     private void initView() {
@@ -41,6 +45,23 @@ public class MLSearchActivity extends MLBaseActivity {
             }
         });
 
+    }
+
+    /**
+     * 初始化Toolbar组件
+     */
+    private void initToolbar() {
+        mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
+
+        mToolbar.setTitle(R.string.ml_signup);
+        setSupportActionBar(mToolbar);
+        mToolbar.setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mActivity.finish();
+            }
+        });
     }
 
     private void searchContacts() {

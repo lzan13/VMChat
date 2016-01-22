@@ -17,6 +17,7 @@ import com.easemob.chat.EMMessage;
 import com.easemob.chat.TextMessageBody;
 
 import net.melove.demo.chat.R;
+import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.util.MLDate;
 import net.melove.demo.chat.widget.MLImageView;
 
@@ -29,10 +30,15 @@ import java.util.List;
  */
 public class MLMessageAdapter extends BaseAdapter {
 
+    // 消息类型数
+    private static final int MSG_TYPE_COUNT = 5;
+    // 系统级消息类型
+    private static final int MSG_TYPE_SYS_RECALL = 4;
+    // 正常的消息类型
     private static final int MSG_TYPE_TXT_SEND = 0;
-    private static final int MSG_TYPE_TXT_received = 1;
+    private static final int MSG_TYPE_TXT_RECEIVED = 1;
     private static final int MSG_TYPE_IMAGE_SEND = 2;
-    private static final int MSG_TYPE_IMAGE_received = 3;
+    private static final int MSG_TYPE_IMAGE_RECEIVED = 3;
 
     private Context mContext;
 
@@ -78,40 +84,6 @@ public class MLMessageAdapter extends BaseAdapter {
         return position;
     }
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        // 获取当前要显示的 message 对象
-        EMMessage message = (EMMessage) getItem(position);
-        ViewHolder viewHolder = null;
-        if (convertView == null) {
-            convertView = createItemView(message);
-            viewHolder = new ViewHolder(convertView);
-            convertView.setTag(viewHolder);
-        } else {
-            viewHolder = (ViewHolder) convertView.getTag();
-        }
-
-
-        viewHolder.avatarView.setVisibility(View.GONE);
-        viewHolder.contentView.setText(((TextMessageBody) message.getBody()).getMessage().toString());
-        viewHolder.usernameView.setText(message.getFrom());
-        viewHolder.timeView.setText(MLDate.long2Time(message.getMsgTime()));
-        // 判断消息的状态，如果发送失败就显示重发按钮，并设置重发按钮的监听
-        if (message.status == EMMessage.Status.FAIL) {
-            viewHolder.msgState.setVisibility(View.VISIBLE);
-            viewHolder.msgState.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // 重新发送  在这里实现重发逻辑
-
-                }
-            });
-        } else {
-            viewHolder.msgState.setVisibility(View.GONE);
-        }
-        return convertView;
-    }
-
     /**
      * 重写 Adapter 的 view 类型数目方法（此方法必须重写，否则在不同类型的 Item 重用时会出现错误）
      *
@@ -119,7 +91,7 @@ public class MLMessageAdapter extends BaseAdapter {
      */
     @Override
     public int getViewTypeCount() {
-        return 2;
+        return MSG_TYPE_COUNT;
     }
 
     /**
@@ -134,10 +106,14 @@ public class MLMessageAdapter extends BaseAdapter {
         int itemType = -1;
         switch (message.getType()) {
             case TXT:
-                itemType = message.direct == EMMessage.Direct.SEND ? MSG_TYPE_TXT_SEND : MSG_TYPE_TXT_received;
+                if (message.getStringAttribute(MLConstants.ML_ATTR_TYPE, "null").equals(MLConstants.ML_ATTR_TYPE_RECALL)) {
+                    itemType = MSG_TYPE_SYS_RECALL;
+                } else {
+                    itemType = message.direct == EMMessage.Direct.SEND ? MSG_TYPE_TXT_SEND : MSG_TYPE_TXT_RECEIVED;
+                }
                 break;
             default:
-                itemType = message.direct == EMMessage.Direct.SEND ? MSG_TYPE_TXT_SEND : MSG_TYPE_TXT_received;
+                itemType = message.direct == EMMessage.Direct.SEND ? MSG_TYPE_TXT_SEND : MSG_TYPE_TXT_RECEIVED;
                 break;
         }
         return itemType;
@@ -153,9 +129,13 @@ public class MLMessageAdapter extends BaseAdapter {
         View itemView = null;
         switch (message.getType()) {
             case TXT:
-                itemView = message.direct == EMMessage.Direct.SEND
-                        ? mInflater.inflate(R.layout.item_msg_text_send, null)
-                        : mInflater.inflate(R.layout.item_msg_text_received, null);
+                if (message.getStringAttribute(MLConstants.ML_ATTR_TYPE, "null").equals(MLConstants.ML_ATTR_TYPE_RECALL)) {
+                    itemView = mInflater.inflate(R.layout.item_msg_recall, null);
+                } else {
+                    itemView = message.direct == EMMessage.Direct.SEND
+                            ? mInflater.inflate(R.layout.item_msg_text_send, null)
+                            : mInflater.inflate(R.layout.item_msg_text_received, null);
+                }
                 break;
             default:
                 itemView = message.direct == EMMessage.Direct.SEND
@@ -165,6 +145,93 @@ public class MLMessageAdapter extends BaseAdapter {
         }
         return itemView;
     }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        // 获取当前要显示的 message 对象
+        EMMessage message = (EMMessage) getItem(position);
+        ViewHolder viewHolder = null;
+        if (convertView == null) {
+            convertView = createItemView(message);
+            viewHolder = new ViewHolder();
+            if (message.getType() == EMMessage.Type.TXT) {
+                if (message.getStringAttribute(MLConstants.ML_ATTR_TYPE, "null").equals(MLConstants.ML_ATTR_TYPE_RECALL)) {
+                    viewHolder.timeView = (TextView) convertView.findViewById(R.id.ml_text_msg_time);
+                    viewHolder.contentView = (TextView) convertView.findViewById(R.id.ml_text_msg_content);
+                } else {
+                    viewHolder.avatarView = (MLImageView) convertView.findViewById(R.id.ml_img_msg_avatar);
+                    viewHolder.contentView = (TextView) convertView.findViewById(R.id.ml_text_msg_content);
+                    viewHolder.usernameView = (TextView) convertView.findViewById(R.id.ml_text_msg_username);
+                    viewHolder.timeView = (TextView) convertView.findViewById(R.id.ml_text_msg_time);
+                    viewHolder.msgState = (ImageView) convertView.findViewById(R.id.ml_img_msg_state);
+                }
+            }
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
+        }
+
+
+        if (message.getStringAttribute(MLConstants.ML_ATTR_TYPE, "null").equals(MLConstants.ML_ATTR_TYPE_RECALL)) {
+            String messageStr = ((TextMessageBody) message.getBody()).getMessage().toString();
+            viewHolder.contentView.setText(messageStr);
+            viewHolder.timeView.setText(MLDate.long2Time(message.getMsgTime()));
+        } else {
+//            viewHolder.avatarView.setImageBitmap();
+            viewHolder.usernameView.setText(message.getFrom());
+            viewHolder.timeView.setText(MLDate.long2Time(message.getMsgTime()));
+            switch (message.getType()) {
+                case TXT:
+                    handleTextMessage(message, viewHolder);
+                    break;
+                case IMAGE:
+                    break;
+                case FILE:
+                    break;
+                case LOCATION:
+                    break;
+                case VIDEO:
+                    break;
+                case VOICE:
+                    break;
+                default:
+                    break;
+            }
+
+            // 判断消息的状态，如果发送失败就显示重发按钮，并设置重发按钮的监听
+            if (message.status == EMMessage.Status.FAIL) {
+                viewHolder.msgState.setVisibility(View.VISIBLE);
+                viewHolder.msgState.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // 重新发送  在这里实现重发逻辑
+                    }
+                });
+            } else {
+                viewHolder.msgState.setVisibility(View.GONE);
+            }
+        }
+        return convertView;
+    }
+
+
+    /**
+     * 处理文字类消息
+     *
+     * @param message    要展示的消息对象
+     * @param viewHolder 展示消息内容的 ViewHolder
+     */
+    private void handleTextMessage(EMMessage message, ViewHolder viewHolder) {
+        TextMessageBody body = (TextMessageBody) message.getBody();
+        String messageStr = body.getMessage().toString();
+        // 判断是不是阅后即焚的消息
+        if (message.getStringAttribute(MLConstants.ML_ATTR_TYPE, "null").equals(MLConstants.ML_ATTR_TYPE_DESTROY)) {
+            viewHolder.contentView.setText(String.format("【内容长度%d】点击阅读", messageStr.length()));
+        } else {
+            viewHolder.contentView.setText(messageStr);
+        }
+    }
+
 
     /**
      * 供界面调用的刷新 Adapter 的方法
@@ -206,7 +273,7 @@ public class MLMessageAdapter extends BaseAdapter {
      * 确实如此，但是如果你将它定义为static的，说明你懂这些含义。
      * 万一有一天你在这个ViewHolder加入一些复杂逻辑，做了一些耗时工作，
      * 那么如果ViewHolder是非静态内部类的话，就很容易出现内存泄露。如果是静态的话，
-     * 你就不能直接引用外部类，迫使你关注如何避免相互引用。 所以将 ViewHolder内部类 定义为静态的，是一种好习惯
+     * 你就不能直接引用外部类，迫使你关注如何避免相互引用。 所以将 ViewHolder 定义为静态的
      */
     static class ViewHolder {
         MLImageView avatarView;
@@ -215,12 +282,5 @@ public class MLMessageAdapter extends BaseAdapter {
         TextView timeView;
         ImageView msgState;
 
-        public ViewHolder(View view) {
-            avatarView = (MLImageView) view.findViewById(R.id.ml_img_msg_avatar);
-            contentView = (TextView) view.findViewById(R.id.ml_text_msg_content);
-            usernameView = (TextView) view.findViewById(R.id.ml_text_msg_username);
-            timeView = (TextView) view.findViewById(R.id.ml_text_msg_time);
-            msgState = (ImageView) view.findViewById(R.id.ml_img_msg_state);
-        }
     }
 }

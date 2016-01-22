@@ -63,7 +63,7 @@ public class MLSignupActivity extends MLBaseActivity {
 
         mToolbar.setTitle(R.string.ml_signup);
         setSupportActionBar(mToolbar);
-        mToolbar.setNavigationIcon(R.drawable.ic_menu_arrow);
+        mToolbar.setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

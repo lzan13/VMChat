@@ -73,7 +73,7 @@ public class MLUserInfoActivity extends MLBaseActivity {
 
         mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
         setSupportActionBar(mToolbar);
-        mToolbar.setNavigationIcon(R.drawable.ic_menu_arrow);
+        mToolbar.setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,9 +92,9 @@ public class MLUserInfoActivity extends MLBaseActivity {
 
         // 根据本地查询到的用户情况来确定是显示 添加好友 还是显示 发送消息
         if (mUserEntity != null && mUserEntity.getUserName() != null) {
-            mFab.setImageResource(R.drawable.ic_menu_chat);
+            mFab.setImageResource(R.mipmap.ic_chat_white_24dp);
         } else {
-            mFab.setImageResource(R.drawable.ic_menu_add);
+            mFab.setImageResource(R.mipmap.ic_add_contacts_white_24dp);
         }
 
     }

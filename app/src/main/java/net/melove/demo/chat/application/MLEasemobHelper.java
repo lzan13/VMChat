@@ -123,6 +123,8 @@ public class MLEasemobHelper {
      */
     protected void initMessageListener() {
         mEventListener = new EMEventListener() {
+            EMMessage cmdOffline;
+
             @Override
             public void onEvent(EMNotifierEvent event) {
                 switch (event.getEvent()) {
@@ -130,22 +132,28 @@ public class MLEasemobHelper {
                         // 正常的新消息，包含：Txt、Image、File、Location、Voice、Video
                         EMMessage message = (EMMessage) event.getData();
 
-                        MLLog.i("EventNewMessage - msgId:%s", message.getMsgId());
+                        MLLog.i("recall - EventNewMessage - msgId:%s", message.getMsgId());
                         break;
                     case EventOfflineMessage:
                         // 离线消息，离线消息得到的数据是一个 list 集合，不是一个单一的EMMessage对象
-
-                        MLLog.i("EventOfflineMessage");
+                        List<EMMessage> messages = (List<EMMessage>) event.getData();
+                        for (EMMessage msg : messages) {
+                            MLLog.d("recall - 2 msgId %s, body %s", msg.getMsgId(), msg.getBody());
+                        }
+                        receiveRecallMessage(cmdOffline);
+                        MLLog.i("recall - 2 EventOfflineMessage");
                         break;
                     case EventNewCMDMessage:
                         // 透传消息
                         EMMessage cmdMessage = (EMMessage) event.getData();
                         CmdMessageBody body = (CmdMessageBody) cmdMessage.getBody();
                         // 判断是不是撤回消息的透传
-                        if (body.action.equals("recall")) {
+                        if (body.action.equals(MLConstants.ML_ATTR_TYPE_RECALL)) {
+                            cmdOffline = cmdMessage;
+                            MLLog.d("recall - 1 %s", cmdMessage.getStringAttribute(MLConstants.ML_ATTR_MSG_ID, ""));
                             receiveRecallMessage(cmdMessage);
                         }
-                        MLLog.i("EventNewCMDMessage");
+                        MLLog.i("recall - 1 EventNewCMDMessage");
                         break;
                     case EventReadAck:
                         // 已读回执，表示对反已经查看了消息
@@ -229,11 +237,13 @@ public class MLEasemobHelper {
         // 从cmd扩展中获取要撤回消息的id
         String msgId = recallMsg.getStringAttribute(MLConstants.ML_ATTR_MSG_ID, null);
         if (msgId == null) {
+            MLLog.d("recall - 3 %s", msgId);
             return result;
         }
         // 根据得到的msgId 去本地查找这条消息，如果本地已经没有这条消息了，就不用撤回
         EMMessage message = EMChatManager.getInstance().getMessage(msgId);
         if (message == null) {
+            MLLog.d("recall - 3 message is null %s", msgId);
             return result;
         }
         // 更改要撤销的消息的内容，替换为消息已经撤销的提示内容

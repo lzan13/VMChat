@@ -12,6 +12,8 @@ public class MLConstants {
     // 设置自己扩展的消息类型的 key
     public static final String ML_ATTR_TYPE = "msg_type";
     public static final String ML_ATTR_TYPE_RECALL = "recall";
+    public static final String ML_ATTR_TYPE_DESTROY = "destroy";
+    public static final String ML_ATTR_TYPE_DESTROYED = "destroyed";
 
 
     // 界面跳转传递 username/groupid 参数的 key

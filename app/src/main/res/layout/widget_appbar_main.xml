@@ -20,9 +20,9 @@
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
             android:minHeight="?attr/actionBarSize"
-            android:popupTheme="@style/MLTheme.PupopMenu"
             android:theme="@style/MLTheme.Toolbar"
-            android:transitionName="toolbar">
+            android:transitionName="toolbar"
+            app:popupTheme="@style/MLTheme.PupopMenu">
 
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
@@ -56,7 +56,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginBottom="@dimen/ml_dimen_16"
                 android:layout_marginRight="@dimen/ml_dimen_24"
-                android:src="@drawable/ic_menu_add_group"
+                android:src="@mipmap/ic_add_group_white_24dp"
                 app:fabSize="mini" />
 
             <TextView
@@ -81,7 +81,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginBottom="@dimen/ml_dimen_16"
                 android:layout_marginRight="@dimen/ml_dimen_24"
-                android:src="@drawable/ic_menu_add_contact"
+                android:src="@mipmap/ic_add_contacts_white_24dp"
                 app:fabSize="mini" />
 
             <TextView
@@ -106,7 +106,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginBottom="@dimen/ml_dimen_16"
                 android:layout_marginRight="@dimen/ml_dimen_24"
-                android:src="@drawable/ic_menu_chat"
+                android:src="@mipmap/ic_chat_white_24dp"
                 app:fabSize="mini" />
 
             <TextView
@@ -131,6 +131,6 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_margin="@dimen/ml_dimen_16"
-            android:src="@drawable/ic_menu_add" />
+            android:src="@mipmap/ic_add_white_24dp" />
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

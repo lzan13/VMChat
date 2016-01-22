@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_toLeftOf="@id/ml_btn_search"
-                android:hint="@string/ml_action_search" />
+                android:hint="@string/ml_search" />
 
         </RelativeLayout>
 

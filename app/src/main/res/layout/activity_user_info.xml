@@ -100,7 +100,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/ml_dimen_16"
-        android:src="@drawable/ic_menu_chat"
+        android:src="@mipmap/ic_chat_white_24dp"
         android:visibility="visible"
         app:fabSize="normal"
         app:layout_anchor="@id/ml_layout_appbar"

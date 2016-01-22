@@ -64,10 +64,15 @@
         <item name="android:textStyle">normal</item>
     </style>
 
-    <!--自定 Toolbar 弹出 PopupMenu 样式-->
+    <!--自定 Toolbar 弹出 PopupMenu 样式，要想此设置生肖，在布局文件必须要自定义命名空间 xmlns：app-->
     <style name="MLTheme.PupopMenu" parent="@style/ThemeOverlay.AppCompat">
+        <!--弹出菜单背景颜色-->
         <item name="android:colorBackground">@color/ml_white_87</item>
+        <!--弹出菜单项的背景设置 主要是为了添加点击效果-->
+        <item name="android:itemBackground">@drawable/ml_click_rectangle_white</item>
+        <!--弹出菜单的文字颜色和大小-->
         <item name="android:textColor">@color/ml_black_87</item>
+        <item name="android:textSize">@dimen/ml_size_16</item>
     </style>
 
     <!--自定义 Toolbar 样式-->

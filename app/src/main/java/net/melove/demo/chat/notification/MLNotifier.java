@@ -114,10 +114,9 @@ public class MLNotifier {
     /**
      * 发送消息通知
      *
-     * @param content
-     * @param autoCancel
+     * @param message 收到的消息，根据这个消息去发送通知
      */
-    public void sendMessageNotificationno(String content, boolean autoCancel) {
+    public void sendMessageNotification(EMMessage message) {
 
 
         // 设置通知栏点击意图（点击通知栏跳转到相应的页面）

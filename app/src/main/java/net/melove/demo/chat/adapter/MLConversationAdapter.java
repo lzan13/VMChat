@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.entity.MLConversationEntity;
+import net.melove.demo.chat.util.MLDate;
 import net.melove.demo.chat.widget.MLImageView;
 
 import java.util.List;
@@ -58,7 +59,7 @@ public class MLConversationAdapter extends BaseAdapter {
 
         viewHolder.mUsernameView.setText(conversation.getNick());
         viewHolder.mContentView.setText(conversation.getContent());
-        viewHolder.mTimeView.setText(conversation.getTime());
+        viewHolder.mTimeView.setText(MLDate.long2Time(conversation.getTime()));
         viewHolder.mCountView.setText(String.valueOf(conversation.getCount()));
         return convertView;
     }

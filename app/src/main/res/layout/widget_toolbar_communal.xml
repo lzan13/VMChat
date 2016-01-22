@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ml_layout_coordinator"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -11,8 +12,8 @@
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
-        android:popupTheme="@style/MLTheme.PupopMenu"
         android:theme="@style/MLTheme.Toolbar"
-        android:transitionName="toolbar" />
+        android:transitionName="toolbar"
+        app:popupTheme="@style/MLTheme.PupopMenu" />
 
 </LinearLayout>

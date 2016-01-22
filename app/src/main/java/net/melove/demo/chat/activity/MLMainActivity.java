@@ -370,7 +370,7 @@ public class MLMainActivity extends MLBaseActivity implements
                 Intent intent = new Intent();
                 intent.setClass(mActivity, MLChatActivity.class);
                 intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, editText.getText().toString().trim());
-                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, mToolbar, "toolbar");
+                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity);
                 ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
             }
         });
@@ -450,9 +450,9 @@ public class MLMainActivity extends MLBaseActivity implements
                 @Override
                 public void run() {
                     if (errorCode == EMError.CONNECTION_CONFLICT) {
-                        MLLog.d("account conflict");
+                        MLLog.d("监听到被踢，多次初始化也有可能出现这个错误");
                     } else if (errorCode == EMError.USER_REMOVED) {
-                        MLLog.d("user removed");
+                        MLLog.d("账户被后台移除");
                     } else {
                         MLLog.d("onDisconnected");
                     }
@@ -750,7 +750,11 @@ public class MLMainActivity extends MLBaseActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.ml_action_search:
 
+                break;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -762,7 +766,7 @@ public class MLMainActivity extends MLBaseActivity implements
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-            if(mDrawerToggle.isDrawerIndicatorEnabled()){
+            if (mDrawerToggle.isDrawerIndicatorEnabled()) {
 
             }
             mDrawerLayout.closeDrawer(GravityCompat.START);
