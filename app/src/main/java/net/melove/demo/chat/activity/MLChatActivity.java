@@ -5,7 +5,11 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -44,7 +48,7 @@ import java.util.TimerTask;
 
 /**
  * Class ${FILE_NAME}
- * <p>
+ * <p/>
  * Created by lzan13 on 2015/10/12 15:00.
  */
 public class MLChatActivity extends MLBaseActivity implements EMEventListener {
@@ -136,11 +140,17 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
         mAttachMenuLayout = (LinearLayout) findViewById(R.id.ml_layout_attach_menu);
         mAttachMenuLayout.setOnClickListener(viewListener);
         findViewById(R.id.ml_attach_photo).setOnClickListener(viewListener);
+        findViewById(R.id.ml_img_attch_photo).setOnClickListener(viewListener);
         findViewById(R.id.ml_attach_video).setOnClickListener(viewListener);
+        findViewById(R.id.ml_img_attach_video).setOnClickListener(viewListener);
         findViewById(R.id.ml_attach_file).setOnClickListener(viewListener);
+        findViewById(R.id.ml_img_attach_file).setOnClickListener(viewListener);
         findViewById(R.id.ml_attach_location).setOnClickListener(viewListener);
+        findViewById(R.id.ml_img_attach_location).setOnClickListener(viewListener);
         findViewById(R.id.ml_attach_gift).setOnClickListener(viewListener);
+        findViewById(R.id.ml_img_attach_gift).setOnClickListener(viewListener);
         findViewById(R.id.ml_attach_contacts).setOnClickListener(viewListener);
+        findViewById(R.id.ml_img_attach_contacts).setOnClickListener(viewListener);
 
     }
 
@@ -308,11 +318,6 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
      * @param message 需要撤回的消息
      */
     private void recallMessage(EMMessage message) {
-        String msgId = message.getMsgId();
-
-//        if () {
-//
-//        }
         // 显示撤回消息操作的 dialog
         final ProgressDialog pd = new ProgressDialog(mActivity);
         pd.setMessage("正在撤回 请稍候……");
@@ -344,10 +349,6 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
 
             }
         });
-    }
-
-    private void sendImageMessage() {
-
     }
 
     /**
@@ -430,6 +431,48 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
         sendMessage(message);
     }
 
+    /**
+     * 发送图片消息
+     *
+     * @param path 要发送的图片的路径
+     */
+    private void sendImageMessage(String path) {
+
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        MLLog.d("onActivityResult requestCode %d, resultCode %d", requestCode, resultCode);
+        switch (requestCode) {
+            case MLConstants.ML_REQUEST_CODE_PHOTO:
+                Uri imageUri = data.getData();
+                String imagePath = imageUri.getPath();
+                String imageAuthority = imageUri.getAuthority();
+                MLLog.d("imageUri %s", imageUri);
+                MLLog.d("imagePath %s", imagePath);
+                MLLog.d("imageAuthority %s", imageAuthority);
+                break;
+            case MLConstants.ML_REQUEST_CODE_VIDEO:
+                break;
+            case MLConstants.ML_REQUEST_CODE_FILE:
+                Uri fileUri = data.getData();
+                String filePath = fileUri.getPath();
+                MLLog.d("fileUri %s, filePath %s", fileUri, filePath);
+                break;
+            case MLConstants.ML_REQUEST_CODE_LOCATION:
+                break;
+            case MLConstants.ML_REQUEST_CODE_GIFT:
+                break;
+            case MLConstants.ML_REQUEST_CODE_CONTACTS:
+
+                break;
+            default:
+                break;
+        }
+    }
+
     private void refreshChatUI() {
 //        mAdapter.refresh();
 //        mAdapter.notifyDataSetChanged();
@@ -442,34 +485,65 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
     private View.OnClickListener viewListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            Intent intent = new Intent();
             switch (v.getId()) {
+                // 表情按钮
                 case R.id.ml_img_chat_emotion:
 
                     break;
+                // 发送按钮
                 case R.id.ml_img_chat_send:
                     sendTextMessage();
                     break;
+                // 语音按钮
                 case R.id.ml_img_chat_voice:
-
+                    MLToast.makeToast(R.string.ml_voice).show();
                     break;
+                // 附件菜单
                 case R.id.ml_attach_photo:
-
+                case R.id.ml_img_attch_photo:
+                    MLToast.makeToast(R.string.ml_photo).show();
+                    if (Build.VERSION.SDK_INT < 19) {
+                        intent = new Intent();
+                        intent.setAction(Intent.ACTION_GET_CONTENT);
+                        // 设置intent要选择的文件类型，这里用设置为image 图片类型
+                        intent.setType("image/*");
+                    } else {
+                        // 在Android 系统版本大于19 上，调用系统选择图片方法稍有不同
+                        intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    }
+                    mActivity.startActivityForResult(intent, MLConstants.ML_REQUEST_CODE_PHOTO);
                     break;
                 case R.id.ml_attach_video:
+                case R.id.ml_img_attach_video:
+                    MLToast.makeToast(R.string.ml_video).show();
 
                     break;
                 case R.id.ml_attach_file:
-
+                case R.id.ml_img_attach_file:
+                    // 设置intent属性，跳转到系统文件选择界面
+                    intent = new Intent();
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    // 设置intent要选择的文件类型，这里用 * 表示选择全部类型
+                    intent.setType("*/*");
+                    startActivityForResult(intent, MLConstants.ML_REQUEST_CODE_FILE);
                     break;
                 case R.id.ml_attach_location:
+                case R.id.ml_img_attach_location:
+                    MLToast.makeToast(R.string.ml_location).show();
 
                     break;
                 case R.id.ml_attach_gift:
+                case R.id.ml_img_attach_gift:
+                    MLToast.makeToast(R.string.ml_gift).show();
 
                     break;
                 case R.id.ml_attach_contacts:
+                case R.id.ml_img_attach_contacts:
+                    MLToast.makeToast(R.string.ml_contacts).show();
 
                     break;
+                // 附件菜单背景，用来关闭菜单
                 case R.id.ml_layout_attach_menu:
                     onAttachMenu();
                     break;

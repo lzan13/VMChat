@@ -214,19 +214,19 @@ public class MLSigninActivity extends MLBaseActivity {
                         MLLog.d("Error: " + i + " " + res.getString(R.string.ml_signin_failed) + s);
                         switch (i) {
                             case EMError.INVALID_PASSWORD_USERNAME:
-                                MLToast.makeToast(R.mipmap.ic_emotion_sad_24dp, res.getString(R.string.ml_error_invalid_username_or_password) + "(" + i + ")").show();
+                                MLToast.errorToast(res.getString(R.string.ml_error_invalid_username_or_password) + "(" + i + ")").show();
                                 break;
                             case EMError.UNABLE_CONNECT_TO_SERVER:
-                                MLToast.makeToast(R.mipmap.ic_emotion_sad_24dp, res.getString(R.string.ml_error_network_anomaly) + "(" + i + ")").show();
+                                MLToast.errorToast(res.getString(R.string.ml_error_network_anomaly) + "(" + i + ")").show();
                                 break;
                             case EMError.DNS_ERROR:
-                                MLToast.makeToast(R.mipmap.ic_emotion_sad_24dp, res.getString(R.string.ml_error_network_dns_error) + "(" + i + ")").show();
+                                MLToast.errorToast(res.getString(R.string.ml_error_network_dns_error) + "(" + i + ")").show();
                                 break;
                             case EMError.CONNECT_TIMER_OUT:
-                                MLToast.makeToast(R.mipmap.ic_emotion_sad_24dp, res.getString(R.string.ml_error_connect_time_out) + "(" + i + ")").show();
+                                MLToast.errorToast(res.getString(R.string.ml_error_connect_time_out) + "(" + i + ")").show();
                                 break;
                             default:
-                                MLToast.makeToast(R.mipmap.ic_emotion_sad_24dp, res.getString(R.string.ml_error_signin_error) + "(" + i + ")").show();
+                                MLToast.errorToast(res.getString(R.string.ml_error_signin_error) + "(" + i + ")").show();
                                 break;
                         }
                     }
@@ -244,7 +244,7 @@ public class MLSigninActivity extends MLBaseActivity {
 
 
     private void forgetPassword() {
-        MLToast.makeToast(R.mipmap.ic_emotion_sad_24dp, "暂不支持找回密码").show();
+        MLToast.errorToast("暂不支持找回密码").show();
     }
 
     @Override

@@ -48,9 +48,7 @@ public class MLLog {
      * @param log
      */
     public static void i(String log) {
-        if (isDebug) {
-            Log.i(mTag, getClassName() + " i: " + log);
-        }
+        log(0, log);
     }
 
     /**
@@ -59,9 +57,7 @@ public class MLLog {
      * @param log
      */
     public static void d(String log) {
-        if (isDebug) {
-            Log.i(mTag, "d: " + log);
-        }
+        log(1, log);
     }
 
     /**
@@ -70,9 +66,7 @@ public class MLLog {
      * @param log
      */
     public static void e(String log) {
-        if (isDebug) {
-            Log.i(mTag, "e: " + log);
-        }
+        log(2, log);
     }
 
     /**
@@ -82,9 +76,7 @@ public class MLLog {
      * @param log
      */
     public static void i(String tag, String log) {
-        if (isDebug) {
-            Log.i(tag, "i: " + log);
-        }
+        log(0, log);
     }
 
     /**
@@ -93,9 +85,7 @@ public class MLLog {
      * @param log
      */
     public static void d(String tag, String log) {
-        if (isDebug) {
-            Log.i(tag, "d: " + log);
-        }
+        log(1, log);
     }
 
     /**
@@ -104,9 +94,7 @@ public class MLLog {
      * @param log
      */
     public static void e(String tag, String log) {
-        if (isDebug) {
-            Log.i(tag, "e: " + log);
-        }
+        log(2, log);
     }
 
     /**
@@ -116,10 +104,8 @@ public class MLLog {
      * @param args
      */
     public static void i(String msg, Object... args) {
-        if (isDebug) {
-            String log = args.length == 0 ? msg : String.format(msg, args);
-            Log.i(mTag, "i: " + log);
-        }
+        String log = args.length == 0 ? msg : String.format(msg, args);
+        log(0, log);
     }
 
     /**
@@ -129,10 +115,8 @@ public class MLLog {
      * @param args
      */
     public static void d(String msg, Object... args) {
-        if (isDebug) {
-            String log = args.length == 0 ? msg : String.format(msg, args);
-            Log.i(mTag, "d: " + log);
-        }
+        String log = args.length == 0 ? msg : String.format(msg, args);
+        log(1, log);
     }
 
     /**
@@ -142,9 +126,26 @@ public class MLLog {
      * @param args
      */
     public static void e(String msg, Object... args) {
+        String log = args.length == 0 ? msg : String.format(msg, args);
+        log(2, log);
+    }
+
+    private static void log(int i, String log) {
         if (isDebug) {
-            String log = args.length == 0 ? msg : String.format(msg, args);
-            Log.i(mTag, "e: " + log);
+            switch (i) {
+                case 0:
+                    Log.i(mTag, log);
+                    break;
+                case 1:
+                    Log.d(mTag, log);
+                    break;
+                case 2:
+                    Log.e(mTag, log);
+                    break;
+                default:
+                    Log.i(mTag, log);
+                    break;
+            }
         }
     }
 

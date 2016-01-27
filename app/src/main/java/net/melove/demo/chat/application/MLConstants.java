@@ -2,7 +2,7 @@ package net.melove.demo.chat.application;
 
 /**
  * Class ${FILE_NAME}
- * <p>
+ * <p/>
  * Created by lzan13 on 2015/9/10 22:04.
  */
 public class MLConstants {
@@ -22,6 +22,16 @@ public class MLConstants {
 
     public static final String ML_SHARED_USERNAME = "username";
     public static final String ML_SHARED_PASSWORD = "password";
+
+
+    // 请求码
+    public static final int ML_REQUEST_CODE_PHOTO = 0x01;
+    public static final int ML_REQUEST_CODE_GALLERY = 0x02;
+    public static final int ML_REQUEST_CODE_VIDEO = 0x03;
+    public static final int ML_REQUEST_CODE_FILE = 0x04;
+    public static final int ML_REQUEST_CODE_LOCATION = 0x05;
+    public static final int ML_REQUEST_CODE_GIFT = 0x06;
+    public static final int ML_REQUEST_CODE_CONTACTS = 0x07;
 
 
 }

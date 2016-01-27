@@ -46,7 +46,7 @@ public class MLNotifier {
      */
     private void init() {
         //设置通知小ICON
-        mBuilder.setSmallIcon(R.mipmap.ic_emotion_smile_24dp);
+        mBuilder.setSmallIcon(R.mipmap.ic_launcher);
 
         //设置该通知优先级
         mBuilder.setPriority(Notification.PRIORITY_HIGH);

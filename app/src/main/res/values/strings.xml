@@ -62,8 +62,8 @@
     <string name="ml_home">主页</string>
     <string name="ml_group">群组</string>
     <string name="ml_room">聊天室</string>
-    <string name="ml_voice_call">电话</string>
-    <string name="ml_video_call">视频</string>
+    <string name="ml_voice_call">语音电话</string>
+    <string name="ml_video_call">视频通话</string>
     <string name="ml_apply_for">申请与通知</string>
     <string name="ml_help">帮助</string>
     <string name="ml_search">搜索</string>
@@ -75,6 +75,7 @@
     <string name="ml_drawer_close">关闭</string>
 
     <string name="ml_photo">图片</string>
+    <string name="ml_voice">声音</string>
     <string name="ml_video">视频</string>
     <string name="ml_file">文件</string>
     <string name="ml_location">位置</string>

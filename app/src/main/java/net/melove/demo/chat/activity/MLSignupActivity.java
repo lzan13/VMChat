@@ -14,6 +14,7 @@ import com.easemob.chat.EMChatManager;
 import com.easemob.exceptions.EaseMobException;
 
 import net.melove.demo.chat.R;
+import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.util.MLSPUtil;
 import net.melove.demo.chat.widget.MLToast;
 
@@ -140,9 +141,9 @@ public class MLSignupActivity extends MLBaseActivity {
                             if (!mActivity.isFinishing()) {
                                 mDialog.dismiss();
                             }
-                            MLSPUtil.put(mActivity, "username", mUsername);
-                            MLSPUtil.put(mActivity, "password", "");
-                            MLToast.makeToast(R.mipmap.ic_emotion_smile_24dp, res.getString(R.string.ml_signup_success)).show();
+                            MLSPUtil.put(mActivity, MLConstants.ML_SHARED_USERNAME, mUsername);
+                            MLToast.successToast(res.getString(R.string.ml_signup_success)).show();
+                            signupToBmob();
                             finish();
                         }
                     });
@@ -156,15 +157,15 @@ public class MLSignupActivity extends MLBaseActivity {
                             }
                             int errorCode = e.getErrorCode();
                             if (errorCode == EMError.NONETWORK_ERROR) {
-                                MLToast.makeToast(res.getString(R.string.ml_error_network_anomaly)).show();
+                                MLToast.errorToast(res.getString(R.string.ml_error_network_anomaly)).show();
                             } else if (errorCode == EMError.USER_ALREADY_EXISTS) {
-                                MLToast.makeToast(res.getString(R.string.ml_error_user_already_exits)).show();
+                                MLToast.errorToast(res.getString(R.string.ml_error_user_already_exits)).show();
                             } else if (errorCode == EMError.UNAUTHORIZED) {
-                                MLToast.makeToast(res.getString(R.string.ml_error_signup_failed_unauthorized)).show();
+                                MLToast.errorToast(res.getString(R.string.ml_error_signup_failed_unauthorized)).show();
                             } else if (errorCode == EMError.ILLEGAL_USER_NAME) {
-                                MLToast.makeToast(res.getString(R.string.ml_error_illegal_username)).show();
+                                MLToast.errorToast(res.getString(R.string.ml_error_illegal_username)).show();
                             } else {
-                                MLToast.makeToast(res.getString(R.string.ml_signup_failed)).show();
+                                MLToast.errorToast(res.getString(R.string.ml_signup_failed)).show();
                             }
                         }
                     });
@@ -173,7 +174,12 @@ public class MLSignupActivity extends MLBaseActivity {
                 }
             }
         }).start();
+    }
 
+    /**
+     * 注册用户信息到 Bmob 后端服务
+     */
+    private void signupToBmob(){
 
     }
 

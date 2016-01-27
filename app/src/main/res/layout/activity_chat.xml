@@ -161,7 +161,7 @@
             android:layout_height="match_parent"
             android:background="@color/ml_black_26"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -182,9 +182,11 @@
                     android:orientation="vertical">
 
                     <net.melove.demo.chat.widget.MLImageView
+                        android:id="@+id/ml_img_attch_photo"
                         android:layout_width="@dimen/ml_dimen_52"
                         android:layout_height="@dimen/ml_dimen_52"
                         android:layout_marginBottom="@dimen/ml_dimen_8"
+                        android:clickable="false"
                         android:src="@mipmap/ic_attach_photo"
                         melove:ml_border_color="@color/ml_white_87"
                         melove:ml_border_width="@dimen/ml_dimen_2"
@@ -204,9 +206,11 @@
                     android:orientation="vertical">
 
                     <net.melove.demo.chat.widget.MLImageView
+                        android:id="@+id/ml_img_attach_video"
                         android:layout_width="@dimen/ml_dimen_52"
                         android:layout_height="@dimen/ml_dimen_52"
                         android:layout_marginBottom="@dimen/ml_dimen_8"
+                        android:clickable="false"
                         android:src="@mipmap/ic_attach_video"
                         melove:ml_border_color="@color/ml_white_87"
                         melove:ml_border_width="@dimen/ml_dimen_2"
@@ -226,6 +230,7 @@
                     android:orientation="vertical">
 
                     <net.melove.demo.chat.widget.MLImageView
+                        android:id="@+id/ml_img_attach_file"
                         android:layout_width="@dimen/ml_dimen_52"
                         android:layout_height="@dimen/ml_dimen_52"
                         android:layout_marginBottom="@dimen/ml_dimen_8"
@@ -248,6 +253,7 @@
                     android:orientation="vertical">
 
                     <net.melove.demo.chat.widget.MLImageView
+                        android:id="@+id/ml_img_attach_location"
                         android:layout_width="@dimen/ml_dimen_52"
                         android:layout_height="@dimen/ml_dimen_52"
                         android:layout_marginBottom="@dimen/ml_dimen_8"
@@ -281,6 +287,7 @@
                     android:orientation="vertical">
 
                     <net.melove.demo.chat.widget.MLImageView
+                        android:id="@+id/ml_img_attach_gift"
                         android:layout_width="@dimen/ml_dimen_52"
                         android:layout_height="@dimen/ml_dimen_52"
                         android:layout_marginBottom="@dimen/ml_dimen_8"
@@ -303,6 +310,7 @@
                     android:orientation="vertical">
 
                     <net.melove.demo.chat.widget.MLImageView
+                        android:id="@+id/ml_img_attach_contacts"
                         android:layout_width="@dimen/ml_dimen_52"
                         android:layout_height="@dimen/ml_dimen_52"
                         android:layout_marginBottom="@dimen/ml_dimen_8"
