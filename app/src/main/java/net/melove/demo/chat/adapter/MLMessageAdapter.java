@@ -31,14 +31,17 @@ import java.util.List;
 public class MLMessageAdapter extends BaseAdapter {
 
     // 消息类型数
-    private static final int MSG_TYPE_COUNT = 5;
-    // 系统级消息类型
-    private static final int MSG_TYPE_SYS_RECALL = 4;
+    private final int MSG_TYPE_COUNT = 5;
     // 正常的消息类型
-    private static final int MSG_TYPE_TXT_SEND = 0;
-    private static final int MSG_TYPE_TXT_RECEIVED = 1;
-    private static final int MSG_TYPE_IMAGE_SEND = 2;
-    private static final int MSG_TYPE_IMAGE_RECEIVED = 3;
+    private final int MSG_TYPE_TXT_SEND = 0;
+    private final int MSG_TYPE_TXT_RECEIVED = 1;
+    private final int MSG_TYPE_IMAGE_SEND = 2;
+    private final int MSG_TYPE_IMAGE_RECEIVED = 3;
+
+    // 系统级消息类型
+    private final int MSG_TYPE_SYS_RECALL = 4;
+
+    private final int HANDLER_MSG_REFRESH = 0;
 
     private Context mContext;
 
@@ -238,7 +241,7 @@ public class MLMessageAdapter extends BaseAdapter {
      */
     public void refreshList() {
         Message msg = mHandler.obtainMessage();
-        msg.what = 0;
+        msg.what = HANDLER_MSG_REFRESH;
         mHandler.sendMessage(msg);
     }
 
@@ -257,7 +260,7 @@ public class MLMessageAdapter extends BaseAdapter {
         public void handleMessage(Message msg) {
 //            super.handleMessage(msg);
             switch (msg.what) {
-                case 0:
+                case HANDLER_MSG_REFRESH:
                     refresh();
                     break;
             }

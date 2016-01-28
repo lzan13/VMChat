@@ -25,7 +25,7 @@
             android:layout_marginLeft="@dimen/ml_dimen_16"
             android:paddingTop="@dimen/navigation_header_vertical_spacing"
             android:src="@mipmap/ic_character_blackcat"
-            melove:ml_border_color="@color/ml_border_white"
+            melove:ml_border_color="@color/ml_white_87"
             melove:ml_border_width="@dimen/ml_dimen_2"
             melove:ml_shape_type="round" />
 

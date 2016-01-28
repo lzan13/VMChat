@@ -3,14 +3,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="net.melove.demo.chat.fragment.MLConversationsFragment">
-
+    <!--聊天消息显示控件 ListView
+        cacheColorHint  低版本会导致滑动黑色
+        divider         设置分割线颜色 不想要可以设置 @null
+        fadeScrollbars  是否自动隐藏滑动条
+        fadingEdge      listview上下黑色阴影，（在5.0以上没有）
+        listSelector    listview项选中时的颜色 建议设置透明（5.0为涟漪效果）
+        scrollingCache  滑动时是否缓存颜色
+    -->
     <ListView
         android:id="@+id/ml_listview_conversation"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipChildren="false"
-        android:divider="@color/ml_divider_black"
+        android:cacheColorHint="@null"
+        android:divider="@color/ml_divider_54"
         android:dividerHeight="@dimen/ml_dimen_px_1"
-        android:listSelector="@color/ml_transparent"></ListView>
-
+        android:fadeScrollbars="true"
+        android:fadingEdge="none"
+        android:listSelector="@color/ml_transparent"
+        android:scrollingCache="false"
+        android:transcriptMode="alwaysScroll" />
 </FrameLayout>

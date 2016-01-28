@@ -58,10 +58,9 @@ import java.util.List;
  */
 public class MLMainActivity extends MLBaseActivity implements
         NavigationView.OnNavigationItemSelectedListener,
-        MLBaseFragment.OnMLFragmentListener, EMEventListener {
+        MLBaseFragment.OnMLFragmentListener {
 
     // 环信事件监听接口
-    private EMEventListener mEventListener;
     private MLConnectionListener mConnectionListener;
     private MLContactListener mContactListener;
     private MLGroupListener mGroupListener;
@@ -107,7 +106,6 @@ public class MLMainActivity extends MLBaseActivity implements
      */
     private void init() {
         mActivity = this;
-        mEventListener = this;
         mMenuType = 0;
         isActivateFab = false;
 
@@ -390,35 +388,6 @@ public class MLMainActivity extends MLBaseActivity implements
         Intent intent = new Intent(mActivity, MLSearchActivity.class);
         startActivity(intent);
     }
-
-    /**
-     * 实现EMEventListener接口，消息的监听方法，用来监听发来的消息
-     *
-     * @param event
-     */
-    @Override
-    public void onEvent(EMNotifierEvent event) {
-        switch (event.getEvent()) {
-            case EventNewMessage:
-                MLLog.d("new message!");
-                break;
-            case EventNewCMDMessage:
-                MLLog.d("new cmd message!");
-                break;
-            case EventOfflineMessage:
-
-                break;
-            case EventConversationListChanged:
-                Object obj = event.getData();
-                MLLog.i("有新的会话");
-                MLToast.makeToast("有新的会话").show();
-                break;
-            default:
-
-                break;
-        }
-    }
-
 
     /**
      * lzan13    2015-8-25
@@ -799,23 +768,10 @@ public class MLMainActivity extends MLBaseActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        // 定义要监听的消息类型
-        EMNotifierEvent.Event[] events = new EMNotifierEvent.Event[]{
-                EMNotifierEvent.Event.EventConversationListChanged, // 会话列表改变
-                EMNotifierEvent.Event.EventDeliveryAck,     // 已发送回执event注册
-                EMNotifierEvent.Event.EventNewCMDMessage,   // 接收透传event注册
-                EMNotifierEvent.Event.EventNewMessage,      // 接收新消息event注册
-                EMNotifierEvent.Event.EventOfflineMessage,  // 接收离线消息event注册
-                EMNotifierEvent.Event.EventReadAck          // 已读回执event注册
-        };
-        // 注册消息监听
-        EMChatManager.getInstance().registerEventListener(mEventListener, events);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        // 取消消息的监听事件，为了防止多个界面同时监听
-        EMChatManager.getInstance().unregisterEventListener(mEventListener);
     }
 }

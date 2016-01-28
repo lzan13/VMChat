@@ -121,7 +121,7 @@
                         android:layout_width="@dimen/ml_dimen_2"
                         android:layout_height="match_parent"
                         android:layout_margin="@dimen/ml_dimen_12"
-                        android:background="@color/ml_divider_red" />
+                        android:background="@color/ml_red_54" />
 
                     <TextView
                         android:id="@+id/ml_btn_forget_password"

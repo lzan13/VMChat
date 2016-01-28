@@ -13,18 +13,19 @@
         android:layout_height="match_parent"
         android:clipChildren="false">
 
-        <ImageView
-            android:id="@+id/ml_img_chat_bg"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/bg_top" />
+        <!--<ImageView-->
+        <!--android:id="@+id/ml_img_chat_bg"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:scaleType="centerCrop"-->
+        <!--android:src="@mipmap/bg_top" />-->
 
         <LinearLayout
             android:id="@+id/ml_layout_chat_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:background="@color/ml_white_87"
             android:clipChildren="false"
             android:orientation="vertical">
 
@@ -33,7 +34,6 @@
                 android:id="@+id/ml_layout_chat_input_top_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/ml_white_87"
                 android:clipChildren="false">
 
                 <RelativeLayout
@@ -142,15 +142,6 @@
             android:layout_alignParentTop="true"
             android:clipChildren="true">
 
-            <!--聊天消息显示控件 ListView-->
-            <ListView
-                android:id="@+id/ml_listview_message"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:divider="@null"
-                android:fadeScrollbars="true"
-                android:fadingEdge="none"
-                android:transcriptMode="alwaysScroll" />
 
         </LinearLayout>
 
@@ -161,7 +152,7 @@
             android:layout_height="match_parent"
             android:background="@color/ml_black_26"
             android:orientation="vertical"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"

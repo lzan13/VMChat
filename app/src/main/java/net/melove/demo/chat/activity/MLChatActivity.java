@@ -447,19 +447,27 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
         MLLog.d("onActivityResult requestCode %d, resultCode %d", requestCode, resultCode);
         switch (requestCode) {
             case MLConstants.ML_REQUEST_CODE_PHOTO:
-                Uri imageUri = data.getData();
-                String imagePath = imageUri.getPath();
-                String imageAuthority = imageUri.getAuthority();
-                MLLog.d("imageUri %s", imageUri);
-                MLLog.d("imagePath %s", imagePath);
-                MLLog.d("imageAuthority %s", imageAuthority);
+                if (data != null) {
+                    Uri imageUri = data.getData();
+                    String imagePath = imageUri.getPath();
+                    String imageAuthority = imageUri.getAuthority();
+                    MLLog.d("imageUri %s", imageUri);
+                    MLLog.d("imagePath %s", imagePath);
+                    MLLog.d("imageAuthority %s", imageAuthority);
+                    sendImageMessage(imagePath);
+                }
                 break;
             case MLConstants.ML_REQUEST_CODE_VIDEO:
                 break;
             case MLConstants.ML_REQUEST_CODE_FILE:
-                Uri fileUri = data.getData();
-                String filePath = fileUri.getPath();
-                MLLog.d("fileUri %s, filePath %s", fileUri, filePath);
+                if (data != null) {
+                    Uri fileUri = data.getData();
+                    String filePath = fileUri.getPath();
+                    String fileAuthority = fileUri.getAuthority();
+                    MLLog.d("fileUri %s", fileUri);
+                    MLLog.d("filePath %s", filePath);
+                    MLLog.d("fileAuthority %s", fileAuthority);
+                }
                 break;
             case MLConstants.ML_REQUEST_CODE_LOCATION:
                 break;
@@ -473,11 +481,6 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
         }
     }
 
-    private void refreshChatUI() {
-//        mAdapter.refresh();
-//        mAdapter.notifyDataSetChanged();
-        mAdapter.refreshList();
-    }
 
     /**
      * 聊天界面按钮监听事件
@@ -485,7 +488,6 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
     private View.OnClickListener viewListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent();
             switch (v.getId()) {
                 // 表情按钮
                 case R.id.ml_img_chat_emotion:
@@ -502,45 +504,32 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
                 // 附件菜单
                 case R.id.ml_attach_photo:
                 case R.id.ml_img_attch_photo:
-                    MLToast.makeToast(R.string.ml_photo).show();
-                    if (Build.VERSION.SDK_INT < 19) {
-                        intent = new Intent();
-                        intent.setAction(Intent.ACTION_GET_CONTENT);
-                        // 设置intent要选择的文件类型，这里用设置为image 图片类型
-                        intent.setType("image/*");
-                    } else {
-                        // 在Android 系统版本大于19 上，调用系统选择图片方法稍有不同
-                        intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    }
-                    mActivity.startActivityForResult(intent, MLConstants.ML_REQUEST_CODE_PHOTO);
+                    // 选择图片
+                    openSelectPhoto();
                     break;
                 case R.id.ml_attach_video:
                 case R.id.ml_img_attach_video:
-                    MLToast.makeToast(R.string.ml_video).show();
+                    // 选择视频文件
 
                     break;
                 case R.id.ml_attach_file:
                 case R.id.ml_img_attach_file:
-                    // 设置intent属性，跳转到系统文件选择界面
-                    intent = new Intent();
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-                    // 设置intent要选择的文件类型，这里用 * 表示选择全部类型
-                    intent.setType("*/*");
-                    startActivityForResult(intent, MLConstants.ML_REQUEST_CODE_FILE);
+                    // 选择文件
+                    openSelectFile();
                     break;
                 case R.id.ml_attach_location:
                 case R.id.ml_img_attach_location:
-                    MLToast.makeToast(R.string.ml_location).show();
+                    // 选择位置
 
                     break;
                 case R.id.ml_attach_gift:
                 case R.id.ml_img_attach_gift:
-                    MLToast.makeToast(R.string.ml_gift).show();
+                    // 选择选择礼物
 
                     break;
                 case R.id.ml_attach_contacts:
                 case R.id.ml_img_attach_contacts:
-                    MLToast.makeToast(R.string.ml_contacts).show();
+                    // 选择联系人
 
                     break;
                 // 附件菜单背景，用来关闭菜单
@@ -550,6 +539,41 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
             }
         }
     };
+
+    /**
+     * 打开系统文件选择器，去选择文件
+     */
+    private void openSelectFile() {
+        // 设置intent属性，跳转到系统文件选择界面
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        // 设置intent要选择的文件类型，这里用 * 表示选择全部类型
+        intent.setType("*/*");
+        startActivityForResult(intent, MLConstants.ML_REQUEST_CODE_FILE);
+    }
+
+    /**
+     * 打开系统图片选择器，去进行选择图片
+     */
+    private void openSelectPhoto() {
+        Intent intent = null;
+        if (Build.VERSION.SDK_INT < 19) {
+            intent = new Intent();
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            // 设置intent要选择的文件类型，这里用设置为image 图片类型
+            intent.setType("image/*");
+        } else {
+            // 在Android 系统版本大于19 上，调用系统选择图片方法稍有不同
+            intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        }
+        mActivity.startActivityForResult(intent, MLConstants.ML_REQUEST_CODE_PHOTO);
+    }
+
+    private void refreshChatUI() {
+//        mAdapter.refresh();
+//        mAdapter.notifyDataSetChanged();
+        mAdapter.refreshList();
+    }
 
     /**
      * 环信的监听回调

@@ -38,11 +38,10 @@ import java.util.Map;
  */
 public class MLConversationsFragment extends MLBaseFragment {
 
-    // 异步加载数据管理器
-    private LoaderManager mLoaderManager;
     private List<MLConversationEntity> mConversationList;
     private String[] mMenus = null;
     private ListView mListView;
+    private MLConversationAdapter mAdapter;
 
 
     public static MLConversationsFragment newInstance() {
@@ -79,10 +78,11 @@ public class MLConversationsFragment extends MLBaseFragment {
     }
 
     private void init() {
-        mLoaderManager = getLoaderManager();
-        mLoaderManager.initLoader(10001, null, callback);
     }
 
+    /**
+     * 初始化会话列表
+     */
     private void initConversationListView() {
         MLConversationEntity temp = null;
 
@@ -94,7 +94,7 @@ public class MLConversationsFragment extends MLBaseFragment {
         }
 
         // 实例化会话列表的 Adapter 对象
-        MLConversationAdapter mAdapter = new MLConversationAdapter(mActivity, mConversationList);
+        mAdapter = new MLConversationAdapter(mActivity, mConversationList);
 
         // 初始化会话列表的 ListView 控件
         mListView = (ListView) getView().findViewById(R.id.ml_listview_conversation);
@@ -104,35 +104,19 @@ public class MLConversationsFragment extends MLBaseFragment {
 
         // 设置列表项长按监听
         setItemLongClickListener();
-        // 设置长按弹出上下文菜单，和 onContextItemSelected 配套使用
-//        setContextMenuListener();
 
     }
 
-    private void setContextMenuListener() {
-        mListView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
-            @Override
-            public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-                menu.add(0, 0, 0, "Delete");
-                menu.add(0, 1, 0, "Top");
-                menu.add(0, 2, 0, "Other");
-            }
-        });
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case 0:
-
-                break;
-            case 1:
-                break;
-            case 2:
-
-                break;
+    public void refrshConversation() {
+        MLConversationEntity temp = null;
+        mConversationList.clear();
+        Map<String, EMConversation> conversations = EMChatManager.getInstance().getAllConversations();
+        mConversationList = new ArrayList<MLConversationEntity>();
+        for (EMConversation conversation : conversations.values()) {
+            temp = new MLConversationEntity(conversation);
+            mConversationList.add(temp);
         }
-        return super.onContextItemSelected(item);
+        mAdapter.refreshList();
     }
 
     /**
@@ -190,21 +174,4 @@ public class MLConversationsFragment extends MLBaseFragment {
             }
         });
     }
-
-    private LoaderManager.LoaderCallbacks<Cursor> callback = new LoaderManager.LoaderCallbacks<Cursor>() {
-        @Override
-        public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
-            return null;
-        }
-
-        @Override
-        public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-
-        }
-
-        @Override
-        public void onLoaderReset(Loader<Cursor> loader) {
-
-        }
-    };
 }

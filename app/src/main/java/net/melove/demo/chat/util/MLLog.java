@@ -7,94 +7,43 @@ import android.util.Log;
  * log日志输出封装类
  */
 public class MLLog {
-    // 这里设置默认的Tag，使用 MLLog 前可以调用 setTag 方法来更改
+
+    // 这里设置默认的 Tag
     private static String mTag = "melove";
     private static boolean isDebug = true;
 
-    private static MLLogPrinter mPrinter = new MLLogPrinter();
-
-    /**
-     * 设置是否开启 debug模式（默认开启，正式发布一般关闭）
-     *
-     * @param mode
-     */
-    public static void setDebugMode(boolean mode) {
-        isDebug = mode;
-    }
-
-    /**
-     * 设置自己的 Tag （如果不设置使用默认）
-     *
-     * @param tag
-     */
-    public static void setTag(String tag) {
-        mTag = tag;
-    }
-
-    /**
-     * 获取当前类名
-     *
-     * @return
-     */
-    private static String getClassName() {
-        StackTraceElement[] elements = Thread.currentThread().getStackTrace();
-        String result = elements[2].getClassName();
-        return result;
-    }
-
-    /**
-     * 使用默认 Tag 输出 Info 信息
-     *
-     * @param log
-     */
-    public static void i(String log) {
-        log(0, log);
-    }
-
-    /**
-     * 使用默认 Tag 输出 Debug 信息
-     *
-     * @param log
-     */
-    public static void d(String log) {
-        log(1, log);
-    }
-
-    /**
-     * 使用默认 Tag 输出 Error 信息
-     *
-     * @param log
-     */
-    public static void e(String log) {
-        log(2, log);
-    }
 
     /**
      * 使用自己传入的 Tag 输出 Info 信息
      *
-     * @param tag
-     * @param log
+     * @param message
      */
-    public static void i(String tag, String log) {
-        log(0, log);
+    public static void i(String message) {
+        if (isDebug) {
+            Log.i(mTag, message);
+        }
     }
 
     /**
      * 使用自己传入的 Tag 输出 Debug 信息
      *
-     * @param log
+     * @param message
      */
-    public static void d(String tag, String log) {
-        log(1, log);
+    public static void d(String message) {
+        if (isDebug) {
+            Log.d(mTag, message);
+        }
     }
 
     /**
      * 使用自己传入的 Tag 输出 Error 信息
      *
-     * @param log
+     * @param message
      */
-    public static void e(String tag, String log) {
-        log(2, log);
+    public static void e(String message) {
+        if (isDebug) {
+            Log.e(mTag, message);
+        }
     }
 
     /**
@@ -104,8 +53,10 @@ public class MLLog {
      * @param args
      */
     public static void i(String msg, Object... args) {
-        String log = args.length == 0 ? msg : String.format(msg, args);
-        log(0, log);
+        if (isDebug) {
+            String message = args.length == 0 ? msg : String.format(msg, args);
+            Log.i(mTag, message);
+        }
     }
 
     /**
@@ -115,8 +66,10 @@ public class MLLog {
      * @param args
      */
     public static void d(String msg, Object... args) {
-        String log = args.length == 0 ? msg : String.format(msg, args);
-        log(1, log);
+        if (isDebug) {
+            String message = args.length == 0 ? msg : String.format(msg, args);
+            Log.d(mTag, message);
+        }
     }
 
     /**
@@ -126,31 +79,9 @@ public class MLLog {
      * @param args
      */
     public static void e(String msg, Object... args) {
-        String log = args.length == 0 ? msg : String.format(msg, args);
-        log(2, log);
-    }
-
-    private static void log(int i, String log) {
         if (isDebug) {
-            switch (i) {
-                case 0:
-                    Log.i(mTag, log);
-                    break;
-                case 1:
-                    Log.d(mTag, log);
-                    break;
-                case 2:
-                    Log.e(mTag, log);
-                    break;
-                default:
-                    Log.i(mTag, log);
-                    break;
-            }
+            String message = args.length == 0 ? msg : String.format(msg, args);
+            Log.e(mTag, message);
         }
-    }
-
-    private static class MLLogPrinter {
-
-
     }
 }
