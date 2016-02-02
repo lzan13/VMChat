@@ -31,17 +31,17 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <!-- 新添加的一些属性 -->
-     <!--开机自启动-->
+    <!--开机自启动-->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-     <!--访问GMail账户列表-->
+    <!--访问GMail账户列表-->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-     <!--使用证书-->
+    <!--使用证书-->
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
-     <!--管理账户-->
+    <!--管理账户-->
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
-     <!--验证账户-->
+    <!--验证账户-->
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
-     <!--读取启动设置-->
+    <!--读取启动设置-->
     <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
     <!-- 连续广播（允许一个程序收到广播后快速收到下一个广播） -->
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
@@ -143,10 +143,11 @@
             android:name="com.xiaomi.mipush.sdk.PushMessageHandler"
             android:enabled="true"
             android:exported="true" />
+        <!--小米推送消息处理服务-->
         <service
             android:name="com.xiaomi.mipush.sdk.MessageHandleService"
             android:enabled="true" />
-
+        <!--网络状态广播接收器-->
         <receiver
             android:name="com.xiaomi.push.service.receivers.NetworkStatusReceiver"
             android:exported="true">
@@ -156,6 +157,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
+        <!--Ping 结果广播接收器-->
         <receiver
             android:name="com.xiaomi.push.service.receivers.PingReceiver"
             android:exported="false"
@@ -164,6 +166,8 @@
                 <action android:name="com.xiaomi.push.PING_TIMER" />
             </intent-filter>
         </receiver>
+
+        <!--配置sdk实现的小米推送 广播接收器-->
         <receiver
             android:name="com.easemob.chat.EMMipushReceiver"
             android:enabled="true">

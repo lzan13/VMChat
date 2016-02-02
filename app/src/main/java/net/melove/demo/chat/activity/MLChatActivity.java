@@ -174,11 +174,10 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
     private void initConversation() {
         mConversation = EMChatManager.getInstance().getConversationByType(mChatId, EMConversation.EMConversationType.Chat);
         mConversation.markAllMessagesAsRead();
-        List<EMMessage> messages = mConversation.getAllMessages();
-        for (EMMessage message : messages) {
-            String content = ((TextMessageBody) message.getBody()).getMessage();
-            MLLog.i(content);
-        }
+//        List<EMMessage> messages = mConversation.getAllMessages();
+//        for (EMMessage message : messages) {
+//            String content = ((TextMessageBody) message.getBody()).getMessage();
+//        }
     }
 
     private TextWatcher textWatcher = new TextWatcher() {
@@ -644,6 +643,17 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_chat, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        String chatId = intent.getStringExtra(MLConstants.ML_EXTRA_CHAT_ID);
+        if (mChatId.equals(chatId)) {
+            super.onNewIntent(intent);
+        } else {
+            finish();
+            startActivity(intent);
+        }
     }
 
     @Override

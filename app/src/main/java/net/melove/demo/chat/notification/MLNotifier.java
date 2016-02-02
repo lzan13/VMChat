@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.support.v7.app.NotificationCompat;
 
 import com.easemob.chat.EMMessage;
+import com.easemob.chat.TextMessageBody;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.activity.MLChatActivity;
@@ -94,7 +95,6 @@ public class MLNotifier {
             case GROUPAPPLYFOR:
 
                 break;
-
         }
 
         mBuilder.setContentText(message);
@@ -117,18 +117,44 @@ public class MLNotifier {
      * @param message 收到的消息，根据这个消息去发送通知
      */
     public void sendMessageNotification(EMMessage message) {
+        String content = "";
+        EMMessage.Type type = message.getType();
+        switch (type) {
+            case TXT:
+                TextMessageBody body = (TextMessageBody) message.getBody();
+                content = body.getMessage().toString();
+                break;
+            case IMAGE:
+                content = "图片消息";
+                break;
+            case FILE:
+                content = "文件消息";
+                break;
+            case LOCATION:
+                content = "位置消息";
+                break;
+            case VIDEO:
+                content = "视频消息";
+                break;
+            case VOICE:
+                content = "语音消息";
+                break;
+            case CMD:
+                break;
+        }
+        mBuilder.setContentText(content);
 
-
+        mBuilder.setContentTitle("环聊通知");
         // 设置通知栏点击意图（点击通知栏跳转到相应的页面）
         Intent intent = new Intent(mContext, MLChatActivity.class);
-        PendingIntent pIntent = PendingIntent.getActivity(mContext, 0, intent, 0);
+        PendingIntent pIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         mBuilder.setContentIntent(pIntent);
         // 紧急事件，比如通话，跳过发送通知栏提醒，直接响应对应的事件
 //        mBuilder.setFullScreenIntent(pIntent, true);
 
         // 设置通知集合的数量
 //        mBuilder.setNumber(number);
-        // 通知首次出现在通知栏，带上升动画效果的
+        // 通知首次出现在通知栏，带上升动画效果的（这里是一闪而过的，带有上升动画）
         mBuilder.setTicker("有一条新消息，别忘记看~");
         // 通知产生的时间，会在通知信息里显示，一般是系统获取到的时间
         mBuilder.setWhen(System.currentTimeMillis());
@@ -142,13 +168,8 @@ public class MLNotifier {
      * 发送消息通知
      *
      * @param message
-     * @param autoCancel
      */
-    public void sendNotification(EMMessage message, boolean autoCancel) {
-        if (message.getChatType() == EMMessage.ChatType.Chat) {
+    public void sendNotification(String message) {
 
-        } else if (message.getChatType() == EMMessage.ChatType.GroupChat) {
-
-        }
     }
 }

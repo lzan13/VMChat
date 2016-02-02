@@ -5,7 +5,7 @@
     android:id="@+id/ml_layout_drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/ml_white_100"
+    android:background="@color/ml_theme_background"
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 

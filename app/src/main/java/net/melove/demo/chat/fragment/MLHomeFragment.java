@@ -13,11 +13,18 @@ import android.view.ViewGroup;
 import com.easemob.EMEventListener;
 import com.easemob.EMNotifierEvent;
 import com.easemob.chat.EMChatManager;
+import com.easemob.chat.EMConversation;
+import com.easemob.chat.EMMessage;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.adapter.MLViewPagerAdapter;
+import net.melove.demo.chat.application.MLEasemobHelper;
+import net.melove.demo.chat.notification.MLNotifier;
 import net.melove.demo.chat.util.MLLog;
 import net.melove.demo.chat.widget.MLToast;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 单聊模块儿 Fragment
@@ -126,10 +133,21 @@ public class MLHomeFragment extends MLBaseFragment implements EMEventListener {
     public void onEvent(EMNotifierEvent event) {
         switch (event.getEvent()) {
             case EventNewMessage:
+                EMMessage message = (EMMessage) event.getData();
                 MLLog.d("new message!");
-                if (mTabLayout.getSelectedTabPosition() == 0) {
-                    mMLConversationFragment.refrshConversation();
+                Map<String, EMConversation> conversations = EMChatManager.getInstance().getAllConversations();
+                for (EMConversation conversation : conversations.values()) {
+                    if (message.getFrom().equals(conversation.getUserName())) {
+
+                    }
+
                 }
+
+
+                    if (mTabLayout.getSelectedTabPosition() == 0) {
+                        mMLConversationFragment.refrshConversation();
+                    }
+                MLNotifier.getInstance(mActivity).sendMessageNotification(message);
                 break;
             case EventNewCMDMessage:
                 MLLog.d("new cmd message!");

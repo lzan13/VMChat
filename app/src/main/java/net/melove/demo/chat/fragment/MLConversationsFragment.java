@@ -30,6 +30,7 @@ import net.melove.demo.chat.entity.MLConversationEntity;
 import net.melove.demo.chat.widget.MLToast;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -110,7 +111,7 @@ public class MLConversationsFragment extends MLBaseFragment {
     public void refrshConversation() {
         MLConversationEntity temp = null;
         mConversationList.clear();
-        Map<String, EMConversation> conversations = EMChatManager.getInstance().getAllConversations();
+        Hashtable<String, EMConversation> conversations = EMChatManager.getInstance().getAllConversations();
         mConversationList = new ArrayList<MLConversationEntity>();
         for (EMConversation conversation : conversations.values()) {
             temp = new MLConversationEntity(conversation);

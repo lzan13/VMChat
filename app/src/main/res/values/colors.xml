@@ -13,6 +13,7 @@
     <color name="ml_theme_primary_dark">#ffd22a14</color>
     <color name="ml_theme_primary_light">#ff364a</color>
     <color name="ml_theme_accent">#ffff5252</color>
+    <color name="ml_theme_background">#fff8f2f2</color>
 
     <!--白色-->
     <color name="ml_white_100">#ffffffff</color>
@@ -63,10 +64,10 @@
     <color name="ml_tab_selected">#dde62f17</color>
 
     <!--分割线颜色-->
-    <color name="ml_divider_100">#ffb6b6b6</color>
-    <color name="ml_divider_87">#ddb6b6b6</color>
-    <color name="ml_divider_54">#89b6b6b6</color>
-    <color name="ml_divider_26">#42b6b6b6</color>
+    <color name="ml_divider_100">#fff8f2f2</color>
+    <color name="ml_divider_87">#ddf8f2f2</color>
+    <color name="ml_divider_54">#89f8f2f2</color>
+    <color name="ml_divider_26">#42f8f2f2</color>
 
     <!--边框色-->
     <color name="ml_border_black">@color/ml_black_26</color>

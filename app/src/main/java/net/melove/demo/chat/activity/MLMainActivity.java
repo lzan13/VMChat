@@ -735,13 +735,11 @@ public class MLMainActivity extends MLBaseActivity implements
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-            if (mDrawerToggle.isDrawerIndicatorEnabled()) {
-
-            }
-            mDrawerLayout.closeDrawer(GravityCompat.START);
+//            mDrawerLayout.closeDrawer(GravityCompat.START);
+            mActivity.finish();
             return true;
         }
-        return true;
+        return false;
     }
 
     @Override

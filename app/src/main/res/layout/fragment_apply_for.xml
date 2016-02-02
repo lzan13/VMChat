@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/ml_theme_background"
     android:orientation="vertical">
     <!--聊天消息显示控件 ListView
         cacheColorHint  低版本会导致滑动黑色
