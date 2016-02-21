@@ -5,17 +5,8 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 
-import com.easemob.EMCallBack;
-import com.easemob.EMConnectionListener;
-import com.easemob.EMError;
-import com.easemob.EMEventListener;
-import com.easemob.EMNotifierEvent;
-import com.easemob.chat.CmdMessageBody;
-import com.easemob.chat.EMChat;
-import com.easemob.chat.EMChatManager;
-import com.easemob.chat.EMMessage;
-import com.easemob.chat.TextMessageBody;
-import com.xiaomi.mipush.sdk.MiPushClient;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMOptions;
 
 import net.melove.demo.chat.util.MLDate;
 import net.melove.demo.chat.util.MLLog;
@@ -38,8 +29,6 @@ public class MLEasemobHelper {
 
     // 记录sdk是否初始化
     private boolean isInit;
-
-    private EMEventListener mEventListener;
 
     private List<Activity> mActivityList = new ArrayList<Activity>();
 
@@ -85,17 +74,26 @@ public class MLEasemobHelper {
         }
         mContext = context;
 
+        // SDK初始化的一些配置
+        EMOptions options = new EMOptions();
+        options.setAutoLogin(true);
+        // 设置是否需要发送已读回执
+        options.setRequireAck(true);
+        // 设置是否需要发送回执
+        options.setRequireDeliveryAck(true);
+        // 设置初始化数据库DB时，每个会话要加载的Message数量
+        options.setNumberOfMessagesLoaded(5);
+        // 添加好友是否自动同意，如果是自动同意就不会收到好友请求，因为sdk会自动处理
+        options.setAcceptInvitationAlways(false);
         // 调用初始化方法初始化sdk
-        EMChat.getInstance().init(mContext);
+        EMClient.getInstance().init(mContext, options);
+
         String APP_ID = "2882303761517430984";
         String APP_KEY = "5191743065984";
-        EMChatManager.getInstance().setMipushConfig(APP_ID, APP_KEY);
-
-        // 设置自动登录
-        EMChat.getInstance().setAutoLogin(true);
+        EMClient.getInstance().setMipushConfig(APP_ID, APP_KEY);
 
         // 设置开启debug模式
-        EMChat.getInstance().setDebugMode(true);
+        EMClient.getInstance().setDebugMode(true);
 
         // 初始化sdk的一些设置
         MLEasemobOptions options = new MLEasemobOptions();

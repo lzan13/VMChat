@@ -29,10 +29,11 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <!-- 读取手机状态 -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-
-    <!-- 新添加的一些属性 -->
     <!--开机自启动-->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+
+    <!-- Demo新添加的一些属性 -->
     <!--访问GMail账户列表-->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <!--使用证书-->
@@ -51,6 +52,7 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <!-- 读取联系人 -->
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+
     <!--小米推送的权限-->
     <permission
         android:name="net.melove.demo.chat.permission.MIPUSH_RECEIVE"
@@ -123,12 +125,26 @@
             android:theme="@style/MLTheme.Default"
             android:windowSoftInputMode="adjustResize|stateVisible"></activity>
 
-        <!-- 设置环信appkey -->
+        <!-- 设置环信应用的appkey -->
         <meta-data
             android:name="EASEMOB_APPKEY"
             android:value="lzan13#hxsdkdemo" />
-        <!--配置环信 SDK 需要的服务-->
-        <service android:name="com.easemob.chat.EMChatService" />
+        <!-- 声明sdk所需的service SDK核心功能-->
+        <service
+            android:name="com.hyphenate.chat.EMChatService"
+            android:exported="true" />
+        <!-- 声明sdk所需的receiver -->
+        <receiver android:name="com.hyphenate.chat.EMMonitorReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+                <data android:scheme="package" />
+            </intent-filter>
+            <!-- 可选filter -->
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+        </receiver>
         <!--配置谷歌推送需要的服务-->
         <!--<service-->
         <!--android:name="com.easemob.chat.EMGCMListenerService"-->
@@ -169,7 +185,7 @@
 
         <!--配置sdk实现的小米推送 广播接收器-->
         <receiver
-            android:name="com.easemob.chat.EMMipushReceiver"
+            android:name="com."
             android:enabled="true">
             <intent-filter>
                 <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE" />

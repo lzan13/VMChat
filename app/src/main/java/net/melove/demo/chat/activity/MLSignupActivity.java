@@ -1,6 +1,5 @@
 package net.melove.demo.chat.activity;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -9,9 +8,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 
-import com.easemob.EMError;
-import com.easemob.chat.EMChatManager;
-import com.easemob.exceptions.EaseMobException;
+import com.hyphenate.chat.EMClient;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLConstants;
@@ -134,7 +131,7 @@ public class MLSignupActivity extends MLBaseActivity {
             @Override
             public void run() {
                 try {
-                    EMChatManager.getInstance().createAccountOnServer(mUsername, mPassword);
+                    EMClient.getInstance().createAccount(mUsername, mPassword);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -147,7 +144,7 @@ public class MLSignupActivity extends MLBaseActivity {
                             finish();
                         }
                     });
-                } catch (final EaseMobException e) {
+                } catch (final  e) {
                     e.printStackTrace();
                     runOnUiThread(new Runnable() {
                         @Override
@@ -157,7 +154,7 @@ public class MLSignupActivity extends MLBaseActivity {
                             }
                             int errorCode = e.getErrorCode();
                             if (errorCode == EMError.NONETWORK_ERROR) {
-                                MLToast.errorToast(res.getString(R.string.ml_error_network_anomaly)).show();
+                                MLToast.errorToast(res.getString(R.string.ml_error_network_error)).show();
                             } else if (errorCode == EMError.USER_ALREADY_EXISTS) {
                                 MLToast.errorToast(res.getString(R.string.ml_error_user_already_exits)).show();
                             } else if (errorCode == EMError.UNAUTHORIZED) {
