@@ -6,7 +6,6 @@ import com.easemob.chat.TextMessageBody;
 
 import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.util.MLDate;
-import net.melove.demo.chat.util.MLLog;
 
 /**
  * Created by lzan13 on 2015/12/14 15:27.
@@ -58,7 +57,7 @@ public class MLConversationEntity {
             } else {
                 str = (((TextMessageBody) message.getBody()).getMessage());
             }
-            if (message.getStringAttribute(MLConstants.ML_ATTR_TYPE, "null").equals(MLConstants.ML_ATTR_TYPE_DESTROY)) {
+            if (message.getStringAttribute(MLConstants.ML_ATTR_MSG_TYPE, "null").equals(MLConstants.ML_ATTR_TYPE_DESTROY)) {
                 str = "【阅后即焚】进入聊天界面查看";
             }
             setContent(str);

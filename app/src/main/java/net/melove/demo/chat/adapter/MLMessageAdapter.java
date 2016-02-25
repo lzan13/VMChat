@@ -109,7 +109,7 @@ public class MLMessageAdapter extends BaseAdapter {
         int itemType = -1;
         switch (message.getType()) {
             case TXT:
-                if (message.getStringAttribute(MLConstants.ML_ATTR_TYPE, "null").equals(MLConstants.ML_ATTR_TYPE_RECALL)) {
+                if (message.getStringAttribute(MLConstants.ML_ATTR_MSG_TYPE, "null").equals(MLConstants.ML_ATTR_TYPE_RECALL)) {
                     itemType = MSG_TYPE_SYS_RECALL;
                 } else {
                     itemType = message.direct == EMMessage.Direct.SEND ? MSG_TYPE_TXT_SEND : MSG_TYPE_TXT_RECEIVED;
@@ -132,7 +132,7 @@ public class MLMessageAdapter extends BaseAdapter {
         View itemView = null;
         switch (message.getType()) {
             case TXT:
-                if (message.getStringAttribute(MLConstants.ML_ATTR_TYPE, "null").equals(MLConstants.ML_ATTR_TYPE_RECALL)) {
+                if (message.getStringAttribute(MLConstants.ML_ATTR_MSG_TYPE, "null").equals(MLConstants.ML_ATTR_TYPE_RECALL)) {
                     itemView = mInflater.inflate(R.layout.item_msg_recall, null);
                 } else {
                     itemView = message.direct == EMMessage.Direct.SEND
@@ -158,7 +158,7 @@ public class MLMessageAdapter extends BaseAdapter {
             convertView = createItemView(message);
             viewHolder = new ViewHolder();
             if (message.getType() == EMMessage.Type.TXT) {
-                if (message.getStringAttribute(MLConstants.ML_ATTR_TYPE, "null").equals(MLConstants.ML_ATTR_TYPE_RECALL)) {
+                if (message.getStringAttribute(MLConstants.ML_ATTR_MSG_TYPE, "null").equals(MLConstants.ML_ATTR_TYPE_RECALL)) {
                     viewHolder.timeView = (TextView) convertView.findViewById(R.id.ml_text_msg_time);
                     viewHolder.contentView = (TextView) convertView.findViewById(R.id.ml_text_msg_content);
                 } else {
@@ -175,7 +175,7 @@ public class MLMessageAdapter extends BaseAdapter {
         }
 
 
-        if (message.getStringAttribute(MLConstants.ML_ATTR_TYPE, "null").equals(MLConstants.ML_ATTR_TYPE_RECALL)) {
+        if (message.getStringAttribute(MLConstants.ML_ATTR_MSG_TYPE, "null").equals(MLConstants.ML_ATTR_TYPE_RECALL)) {
             String messageStr = ((TextMessageBody) message.getBody()).getMessage().toString();
             viewHolder.contentView.setText(messageStr);
             viewHolder.timeView.setText(MLDate.long2Time(message.getMsgTime()));
@@ -228,7 +228,7 @@ public class MLMessageAdapter extends BaseAdapter {
         TextMessageBody body = (TextMessageBody) message.getBody();
         String messageStr = body.getMessage().toString();
         // 判断是不是阅后即焚的消息
-        if (message.getStringAttribute(MLConstants.ML_ATTR_TYPE, "null").equals(MLConstants.ML_ATTR_TYPE_DESTROY)) {
+        if (message.getStringAttribute(MLConstants.ML_ATTR_MSG_TYPE, "null").equals(MLConstants.ML_ATTR_TYPE_DESTROY)) {
             viewHolder.contentView.setText(String.format("【内容长度%d】点击阅读", messageStr.length()));
         } else {
             viewHolder.contentView.setText(messageStr);

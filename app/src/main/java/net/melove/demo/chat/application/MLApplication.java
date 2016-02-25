@@ -9,7 +9,6 @@ import android.content.Context;
 public class MLApplication extends Application {
 
     private static Context context;
-    private MLEasemobHelper mMLSDKHelper;
 
     @Override
     public void onCreate() {
@@ -26,6 +25,9 @@ public class MLApplication extends Application {
         return context;
     }
 
+    /**
+     * 初始化sdk的一些操作，封装在 MLEasemobHelper 类中
+     */
     private void initEasemob() {
         MLEasemobHelper.getInstance().initEasemob(context);
     }

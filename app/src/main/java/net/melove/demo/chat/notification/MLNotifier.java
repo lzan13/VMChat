@@ -7,8 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.NotificationCompat;
 
-import com.easemob.chat.EMMessage;
-import com.easemob.chat.TextMessageBody;
+import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.EMTextMessageBody;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.activity.MLChatActivity;
@@ -121,23 +121,23 @@ public class MLNotifier {
         EMMessage.Type type = message.getType();
         switch (type) {
             case TXT:
-                TextMessageBody body = (TextMessageBody) message.getBody();
+                EMTextMessageBody body = (EMTextMessageBody) message.getBody();
                 content = body.getMessage().toString();
                 break;
             case IMAGE:
-                content = "图片消息";
+                content = "[图片消息]";
                 break;
             case FILE:
-                content = "文件消息";
+                content = "[文件消息]";
                 break;
             case LOCATION:
-                content = "位置消息";
+                content = "[位置消息]";
                 break;
             case VIDEO:
-                content = "视频消息";
+                content = "[视频消息]";
                 break;
             case VOICE:
-                content = "语音消息";
+                content = "[语音消息]";
                 break;
             case CMD:
                 break;

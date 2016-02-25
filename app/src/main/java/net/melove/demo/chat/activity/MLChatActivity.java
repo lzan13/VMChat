@@ -21,17 +21,15 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import com.easemob.EMCallBack;
-import com.easemob.EMError;
-import com.easemob.EMEventListener;
-import com.easemob.EMNotifierEvent;
-import com.easemob.chat.CmdMessageBody;
-import com.easemob.chat.EMChatManager;
-import com.easemob.chat.EMConversation;
-import com.easemob.chat.EMMessage;
-import com.easemob.chat.TextMessageBody;
+import com.hyphenate.EMCallBack;
+import com.hyphenate.EMError;
+import com.hyphenate.EMMessageListener;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMCmdMessageBody;
+import com.hyphenate.chat.EMConversation;
+import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.EMTextMessageBody;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.adapter.MLMessageAdapter;
@@ -43,17 +41,17 @@ import net.melove.demo.chat.widget.MLToast;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Class ${FILE_NAME}
  * <p/>
  * Created by lzan13 on 2015/10/12 15:00.
  */
-public class MLChatActivity extends MLBaseActivity implements EMEventListener {
+public class MLChatActivity extends MLBaseActivity implements EMMessageListener {
     private Toolbar mToolbar;
 
+    // 消息监听器
+    private EMMessageListener mMessageListener;
     // 当前聊天的 ID
     private String mChatId;
     // 当前会话对象
@@ -63,7 +61,10 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
     private ListView mListView;
     private MLMessageAdapter mAdapter;
 
+    // 聊天扩展菜单
     private LinearLayout mAttachMenuLayout;
+    // 是否为阅后即焚
+    private boolean isBurn;
 
     // 聊天内容输入框
     private EditText mEditText;
@@ -89,6 +90,7 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
 
     private void init() {
         mActivity = this;
+        mMessageListener = this;
         mChatId = getIntent().getStringExtra(MLConstants.ML_EXTRA_CHAT_ID);
     }
 
@@ -126,17 +128,8 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
         mEmotionView.setOnClickListener(viewListener);
         mVoiceView.setOnClickListener(viewListener);
         mSendView.setOnClickListener(viewListener);
-        mSendView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                switch (v.getId()) {
-                    case R.id.ml_img_chat_send:
-                        sendDestroyMessage();
-                        break;
-                }
-                return true;
-            }
-        });
+
+        // 设置扩展菜单点击监听
         mAttachMenuLayout = (LinearLayout) findViewById(R.id.ml_layout_attach_menu);
         mAttachMenuLayout.setOnClickListener(viewListener);
         findViewById(R.id.ml_attach_photo).setOnClickListener(viewListener);
@@ -172,7 +165,7 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
      * 初始化会话对象
      */
     private void initConversation() {
-        mConversation = EMChatManager.getInstance().getConversationByType(mChatId, EMConversation.EMConversationType.Chat);
+        mConversation = EMClient.getInstance().chatManager().getConversation(mChatId);
         mConversation.markAllMessagesAsRead();
 //        List<EMMessage> messages = mConversation.getAllMessages();
 //        for (EMMessage message : messages) {
@@ -207,53 +200,17 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
     };
 
     /**
-     * 设置ListView 的点击是监听
+     * 设置ListView 的点击监听
      */
     private void setItemClickListener() {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final EMMessage message = mConversation.getAllMessages().get(position);
-//                MLToast.makeToast("item " + position + ", id " + id + ", msgId " + message.getMsgId()).show();
                 // 判断当前消息是否为【阅后即焚】类型
-                if (message.getStringAttribute(MLConstants.ML_ATTR_TYPE, "null").equals(MLConstants.ML_ATTR_TYPE_DESTROY)) {
-                    final AlertDialog dialog = new AlertDialog.Builder(mActivity).create();
-//                    dialog.setTitle("阅后即焚内容");
-                    View tView = mActivity.getLayoutInflater().inflate(R.layout.widget_dialog_title_destroy, null);
-                    TextView titleView = (TextView) tView.findViewById(R.id.ml_text_dialog_title);
-                    final TextView timeView = (TextView) tView.findViewById(R.id.ml_text_dialog_title_time);
-                    titleView.setText("消息内容");
-                    timeView.setText("5");
-                    dialog.setCustomTitle(tView);
-                    dialog.setMessage(((TextMessageBody) message.getBody()).getMessage());
-                    dialog.show();
-                    // 创建定时器，进行销毁消息的计时
-                    final Timer timer = new Timer();
-                    TimerTask task = new TimerTask() {
-                        int time = 5;
+                if (message.getBooleanAttribute(MLConstants.ML_ATTR_MSG_TYPE, false)) {
 
-                        @Override
-                        public void run() {
-                            if (time <= 0) {
-                                message.setType(EMMessage.Type.TXT);
-                                message.setAttribute(MLConstants.ML_ATTR_TYPE, MLConstants.ML_ATTR_TYPE_DESTROYED);
-                                TextMessageBody body = new TextMessageBody("消息已销毁");
-                                message.addBody(body);
-                                EMChatManager.getInstance().updateMessageBody(message);
-                                refreshChatUI();
-                                timer.cancel();
-                                dialog.dismiss();
-                            }
-                            time--;
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    timeView.setText(String.valueOf(time));
-                                }
-                            });
-                        }
-                    };
-                    timer.schedule(task, 1000, 1000);
+
                 }
             }
         });
@@ -273,7 +230,9 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
                 mMenuList.add(mActivity.getResources().getString(R.string.ml_menu_chat_copy));
                 mMenuList.add(mActivity.getResources().getString(R.string.ml_menu_chat_delete));
                 mMenuList.add(mActivity.getResources().getString(R.string.ml_menu_chat_forward));
-                if (message.direct == EMMessage.Direct.SEND) {
+                // 判断当前消息是否是发送方，并且是发送成功才能撤回
+                if (message.direct() == EMMessage.Direct.SEND
+                        && message.status() == EMMessage.Status.SUCCESS) {
                     mMenuList.add(mActivity.getResources().getString(R.string.ml_menu_chat_recall));
                 }
                 String[] mMenus = new String[mMenuList.size()];
@@ -286,10 +245,8 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
                             public void onClick(DialogInterface dialog, int which) {
                                 switch (which) {
                                     case 0:
-                                        MLToast.makeToast(R.string.ml_menu_chat_copy).show();
-                                        ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                                        ClipData clipData = ClipData.newPlainText("message", ((TextMessageBody) message.getBody()).getMessage());
-                                        clipboardManager.setPrimaryClip(clipData);
+                                        // 复制消息到剪切板
+                                        copyMessage(message);
                                         break;
                                     case 1:
                                         MLToast.makeToast(R.string.ml_menu_chat_delete).show();
@@ -300,6 +257,7 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
                                         MLToast.makeToast(R.string.ml_menu_chat_forward).show();
                                         break;
                                     case 3:
+                                        // 撤回消息
                                         recallMessage(message);
                                         break;
                                 }
@@ -309,6 +267,21 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
                 return true;
             }
         });
+    }
+
+    /**
+     * 复制消息到剪切板
+     *
+     * @param message
+     */
+    private void copyMessage(EMMessage message) {
+//        MLToast.makeToast(R.string.ml_menu_chat_copy).show();
+        // 获取剪切板管理者
+        ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        // 创建剪切板数据对象
+        ClipData clipData = ClipData.newPlainText("message", ((EMTextMessageBody) message.getBody()).getMessage());
+        // 将刚创建的数据对象添加到剪切板
+        clipboardManager.setPrimaryClip(clipData);
     }
 
     /**
@@ -356,8 +329,10 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
      * @param message
      */
     private void sendMessage(final EMMessage message) {
+        setMessageAttribute(message);
         refreshChatUI();
-        EMChatManager.getInstance().sendMessage(message, new EMCallBack() {
+        // 设置消息状态回调
+        message.setMessageStatusCallback(new EMCallBack() {
             @Override
             public void onSuccess() {
                 MLLog.i("消息发送成功 %s", message.getMsgId());
@@ -370,9 +345,9 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (message.getError() == EMError.MESSAGE_SEND_INVALID_CONTENT) {
+                        if (message.getError() == EMError.MESSAGE_INCLUDE_ILLEGAL_CONTENT) {
                             MLToast.errorToast("发送内容包含敏感词汇").show();
-                        } else if (message.getError() == EMError.MESSAGE_SEND_NOT_IN_THE_GROUP) {
+                        } else if (message.getError() == EMError.GROUP_PERMISSION_DENIED) {
                             MLToast.errorToast("不属于当前群组，不能给群组发送消息").show();
 //                        } else if (message.getError() == EMError.MESSAGE_SEND_TRAFFIC_LIMIT) {
 //                            MLToast.errorToast("发送文件大小超过限制了").show();
@@ -389,6 +364,8 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
 
             }
         });
+        // 调用sdk的消息发送方法，发送消息
+        EMClient.getInstance().chatManager().sendMessage(message);
     }
 
     /**
@@ -401,33 +378,22 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
         mSendView.setVisibility(View.GONE);
         mVoiceView.setVisibility(View.VISIBLE);
         final EMMessage message = EMMessage.createSendMessage(EMMessage.Type.TXT);
-        TextMessageBody txtBody = new TextMessageBody(content);
+        EMTextMessageBody txtBody = new EMTextMessageBody(content);
         // 设置消息body
         message.addBody(txtBody);
-
+        // 设置消息接收者
         message.setReceipt(mChatId);
-        // 把messgage加到conversation中
-        mConversation.addMessage(message);
         sendMessage(message);
     }
 
     /**
      * 发送阅后即焚类型的消息
      */
-    private void sendDestroyMessage() {
-        String content = mEditText.getText().toString();
-        mEditText.setText("");
-        mSendView.setVisibility(View.GONE);
-        mVoiceView.setVisibility(View.VISIBLE);
-        EMMessage message = EMMessage.createSendMessage(EMMessage.Type.TXT);
-        TextMessageBody txtBody = new TextMessageBody(content);
-        // 设置消息body
-        message.addBody(txtBody);
-        message.setAttribute(MLConstants.ML_ATTR_TYPE, MLConstants.ML_ATTR_TYPE_DESTROY);
-        message.setReceipt(mChatId);
-        // 把messgage加到conversation中
-        mConversation.addMessage(message);
-        sendMessage(message);
+    private void setMessageAttribute(EMMessage message) {
+        if (isBurn) {
+            // 设置消息扩展类型为阅后即焚
+            message.setAttribute(MLConstants.ML_ATTR_MSG_TYPE_BURN, true);
+        }
     }
 
     /**
@@ -436,7 +402,7 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
      * @param path 要发送的图片的路径
      */
     private void sendImageMessage(String path) {
-
+        // 根据图片路径创建一条图片消息
     }
 
 
@@ -575,36 +541,6 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
     }
 
     /**
-     * 环信的监听回调
-     *
-     * @param event
-     */
-    @Override
-    public void onEvent(EMNotifierEvent event) {
-        switch (event.getEvent()) {
-            case EventNewMessage:
-                EMMessage message = (EMMessage) event.getData();
-                MLLog.i(((TextMessageBody) message.getBody()).getMessage());
-                if (mChatId.equals(message.getFrom())) {
-                    refreshChatUI();
-                } else {
-                    MLNotifier.getInstance(mActivity).sendMessageNotification(message);
-                }
-                break;
-            case EventNewCMDMessage:
-                // 透传消息
-                EMMessage cmdMessage = (EMMessage) event.getData();
-                CmdMessageBody body = (CmdMessageBody) cmdMessage.getBody();
-                // 判断是不是撤回消息的透传
-                if (body.action.equals(MLConstants.ML_ATTR_TYPE_RECALL)) {
-//                    MLEasemobHelper.getInstance().receiveRecallMessage(cmdMessage);
-                    refreshChatUI();
-                }
-                break;
-        }
-    }
-
-    /**
      * 打开和关闭附件菜单
      */
     private void onAttachMenu() {
@@ -660,14 +596,7 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
     protected void onResume() {
         super.onResume();
         // 注册环信的消息监听器
-        EMNotifierEvent.Event[] events = {
-                EMNotifierEvent.Event.EventNewMessage,
-                EMNotifierEvent.Event.EventNewCMDMessage,
-                EMNotifierEvent.Event.EventDeliveryAck,
-                EMNotifierEvent.Event.EventReadAck,
-                EMNotifierEvent.Event.EventMessageChanged
-        };
-        EMChatManager.getInstance().registerEventListener(this, events);
+        EMClient.getInstance().chatManager().addMessageListener(mMessageListener);
     }
 
     @Override
@@ -680,7 +609,76 @@ public class MLChatActivity extends MLBaseActivity implements EMEventListener {
     @Override
     protected void onStop() {
         super.onStop();
-        EMChatManager.getInstance().unregisterEventListener(this);
+        // 再当前界面处于非活动状态时 移除消息监听
+        EMClient.getInstance().chatManager().removeMessageListener(mMessageListener);
+    }
+    /**
+     * ----------------------------------------------------------------------
+     * 环信消息监听主要方法
+     */
+    /**
+     * 收到新消息
+     *
+     * @param list
+     */
+    @Override
+    public void onMessageReceived(List<EMMessage> list) {
+        EMMessage message = list.get(0);
+
+        if (mChatId.equals(message.getFrom())) {
+            refreshChatUI();
+        } else {
+            MLNotifier.getInstance(mActivity).sendMessageNotification(message);
+        }
     }
 
+    /**
+     * 收到新的 CMD 消息
+     *
+     * @param list
+     */
+    @Override
+    public void onCmdMessageReceived(List<EMMessage> list) {
+        for (int i = 0; i < list.size(); i++) {
+            // 透传消息
+            EMMessage cmdMessage = list.get(i);
+            EMCmdMessageBody body = (EMCmdMessageBody) cmdMessage.getBody();
+            // 判断是不是撤回消息的透传
+            if (body.action().equals(MLConstants.ML_ATTR_MSG_TYPE_RECALL)) {
+                MLEasemobHelper.getInstance().receiveRecallMessage(cmdMessage);
+                refreshChatUI();
+            }
+        }
+    }
+
+    /**
+     * 收到消息已读回执
+     *
+     * @param list
+     */
+    @Override
+    public void onMessageReadAckReceived(List<EMMessage> list) {
+
+    }
+
+    /**
+     * 收到消息送达回执
+     *
+     * @param list
+     */
+    @Override
+    public void onMessageDeliveryAckReceived(List<EMMessage> list) {
+
+    }
+
+    /**
+     * 消息改变
+     *
+     * @param message
+     * @param o
+     */
+    @Override
+    public void onMessageChanged(EMMessage message, Object o) {
+
+    }
 }

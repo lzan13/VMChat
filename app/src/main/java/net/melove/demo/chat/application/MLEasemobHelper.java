@@ -5,8 +5,13 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 
+import com.hyphenate.EMCallBack;
+import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMCmdMessageBody;
+import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMOptions;
+import com.hyphenate.chat.EMTextMessageBody;
 
 import net.melove.demo.chat.util.MLDate;
 import net.melove.demo.chat.util.MLLog;
@@ -31,6 +36,8 @@ public class MLEasemobHelper {
     private boolean isInit;
 
     private List<Activity> mActivityList = new ArrayList<Activity>();
+
+    private EMMessageListener mMessageListener;
 
 
     /**
@@ -60,6 +67,7 @@ public class MLEasemobHelper {
      */
     public synchronized boolean initEasemob(Context context) {
         mContext = context;
+        // 获取当前进程 id
         int pid = android.os.Process.myPid();
         String processAppName = getAppName(pid);
         // 如果app启用了远程的service，此application:onCreate会被调用2次
@@ -82,22 +90,19 @@ public class MLEasemobHelper {
         // 设置是否需要发送回执
         options.setRequireDeliveryAck(true);
         // 设置初始化数据库DB时，每个会话要加载的Message数量
-        options.setNumberOfMessagesLoaded(5);
+        options.setNumberOfMessagesLoaded(1);
         // 添加好友是否自动同意，如果是自动同意就不会收到好友请求，因为sdk会自动处理
         options.setAcceptInvitationAlways(false);
+
         // 调用初始化方法初始化sdk
         EMClient.getInstance().init(mContext, options);
 
         String APP_ID = "2882303761517430984";
         String APP_KEY = "5191743065984";
-        EMClient.getInstance().setMipushConfig(APP_ID, APP_KEY);
+//        EMClient.getInstance().se(APP_ID, APP_KEY);
 
         // 设置开启debug模式
         EMClient.getInstance().setDebugMode(true);
-
-        // 初始化sdk的一些设置
-        MLEasemobOptions options = new MLEasemobOptions();
-        options.initOption();
 
         // 初始化全局监听
         initGlobalListener();
@@ -120,54 +125,71 @@ public class MLEasemobHelper {
      * 初始化全局的消息监听
      */
     protected void initMessageListener() {
-        mEventListener = new EMEventListener() {
-            EMMessage cmdOffline;
-
+        mMessageListener = new EMMessageListener() {
+            /**
+             * 收到新消息
+             * TODO 离线消息（未确定）
+             *
+             * @param list
+             */
             @Override
-            public void onEvent(EMNotifierEvent event) {
-                switch (event.getEvent()) {
-                    case EventNewMessage:
-                        // 正常的新消息，包含：Txt、Image、File、Location、Voice、Video
-                        EMMessage message = (EMMessage) event.getData();
-
-                        MLLog.i("recall - EventNewMessage - msgId:%s", message.getMsgId());
-                        break;
-                    case EventOfflineMessage:
-                        // 离线消息，离线消息得到的数据是一个 list 集合，不是一个单一的EMMessage对象
-                        List<EMMessage> messages = (List<EMMessage>) event.getData();
-                        for (EMMessage msg : messages) {
-                            MLLog.d("recall - 2 msgId %s, body %s", msg.getMsgId(), msg.getBody());
-                        }
-                        receiveRecallMessage(cmdOffline);
-                        MLLog.i("recall - 2 EventOfflineMessage");
-                        break;
-                    case EventNewCMDMessage:
-                        // 透传消息
-                        EMMessage cmdMessage = (EMMessage) event.getData();
-                        CmdMessageBody body = (CmdMessageBody) cmdMessage.getBody();
-                        // 判断是不是撤回消息的透传
-                        if (body.action.equals(MLConstants.ML_ATTR_TYPE_RECALL)) {
-                            cmdOffline = cmdMessage;
-                            MLLog.d("recall - 1 %s", cmdMessage.getStringAttribute(MLConstants.ML_ATTR_MSG_ID, ""));
-                            receiveRecallMessage(cmdMessage);
-                        }
-                        MLLog.i("recall - 1 EventNewCMDMessage");
-                        break;
-                    case EventReadAck:
-                        // 已读回执，表示对反已经查看了消息
-
-                        MLLog.i("EventReadAck");
-                        break;
-                    case EventDeliveryAck:
-                        // 发送回执，表示对方已经收到
-
-                        MLLog.i("EventDeliveryAck");
-                        break;
+            public void onMessageReceived(List<EMMessage> list) {
+                for (EMMessage message : list) {
+                    MLLog.d("msgId-%s, msgTime-%d, msgFrom-%s", message.getMsgId(), message.getMsgTime(), message.getFrom());
                 }
+            }
+
+            /**
+             * 收到新的 CMD 消息
+             *
+             * @param list
+             */
+            @Override
+            public void onCmdMessageReceived(List<EMMessage> list) {
+                for (int i = 0; i < list.size(); i++) {
+                    // 透传消息
+                    EMMessage cmdMessage = list.get(i);
+                    EMCmdMessageBody body = (EMCmdMessageBody) cmdMessage.getBody();
+                    // 判断是不是撤回消息的透传
+                    if (body.action().equals(MLConstants.ML_ATTR_MSG_TYPE_RECALL)) {
+                        MLEasemobHelper.getInstance().receiveRecallMessage(cmdMessage);
+                    }
+                }
+            }
+
+            /**
+             * 收到消息已读回执
+             *
+             * @param list
+             */
+            @Override
+            public void onMessageReadAckReceived(List<EMMessage> list) {
+
+            }
+
+            /**
+             * 收到消息送达回执
+             *
+             * @param list
+             */
+            @Override
+            public void onMessageDeliveryAckReceived(List<EMMessage> list) {
+
+            }
+
+            /**
+             * 消息改变
+             *
+             * @param message
+             * @param o
+             */
+            @Override
+            public void onMessageChanged(EMMessage message, Object o) {
+
             }
         };
         // 注册消息监听
-        EMChatManager.getInstance().registerEventListener(mEventListener);
+        EMClient.getInstance().chatManager().addMessageListener(mMessageListener);
     }
 
     /**
@@ -186,29 +208,35 @@ public class MLEasemobHelper {
             callBack.onError(0, "time");
             return;
         }
+        // 获取消息 id，作为撤回消息的参数
         String msgId = message.getMsgId();
+        // 创建一个CMD 类型的消息，将需要撤回的消息通过这条CMD消息发送给对方
         EMMessage cmdMessage = EMMessage.createSendMessage(EMMessage.Type.CMD);
+        // 判断下消息类型，如果是群聊就设置为群聊
         if (message.getChatType() == EMMessage.ChatType.GroupChat) {
             cmdMessage.setChatType(EMMessage.ChatType.GroupChat);
         }
+        // 设置消息接收者
         cmdMessage.setReceipt(message.getTo());
         // 创建CMD 消息的消息体 并设置 action 为 recall
-        CmdMessageBody body = new CmdMessageBody(MLConstants.ML_ATTR_TYPE_RECALL);
+        String action = MLConstants.ML_ATTR_MSG_TYPE_RECALL;
+        EMCmdMessageBody body = new EMCmdMessageBody(action);
         cmdMessage.addBody(body);
+        // 设置消息的扩展为要撤回的 msgId
         cmdMessage.setAttribute(MLConstants.ML_ATTR_MSG_ID, msgId);
         // 确认无误，开始发送撤回消息的透传
-        EMChatManager.getInstance().sendMessage(cmdMessage, new EMCallBack() {
+        cmdMessage.setMessageStatusCallback(new EMCallBack() {
             @Override
             public void onSuccess() {
                 // 更改要撤销的消息的内容，替换为消息已经撤销的提示内容
-                TextMessageBody body = new TextMessageBody("此条消息已撤回");
-                message.addBody(body);
-                // 这里需要把消息类型改为 TXT 类型
-                message.setType(EMMessage.Type.TXT);
+                EMTextMessageBody body = new EMTextMessageBody("此条消息已撤回");
+                EMMessage recallMessage = EMMessage.createSendMessage(EMMessage.Type.TXT);
+                recallMessage.addBody(body);
+                recallMessage.setReceipt(message.getTo());
                 // 设置扩展为撤回消息类型，是为了区分消息的显示
-                message.setAttribute(MLConstants.ML_ATTR_TYPE, MLConstants.ML_ATTR_TYPE_RECALL);
+                recallMessage.setAttribute(MLConstants.ML_ATTR_MSG_TYPE_RECALL, true);
                 // 返回修改消息结果
-                EMChatManager.getInstance().updateMessageBody(message);
+                EMClient.getInstance().chatManager().updateMessage(recallMessage);
                 callBack.onSuccess();
             }
 
@@ -219,40 +247,46 @@ public class MLEasemobHelper {
 
             @Override
             public void onProgress(int i, String s) {
-
             }
         });
+        // 准备工作完毕，发送消息
+        EMClient.getInstance().chatManager().sendMessage(cmdMessage);
     }
 
     /**
      * 收到撤回消息，这里需要和发送方协商定义，通过一个透传，并加上扩展去实现消息的撤回
      *
-     * @param recallMsg 收到的透传消息，包含需要撤回的消息的 msgId
+     * @param cmdMessage 收到的透传消息，包含需要撤回的消息的 msgId
      * @return 返回撤回结果是否成功
      */
-    public boolean receiveRecallMessage(EMMessage recallMsg) {
+    public boolean receiveRecallMessage(EMMessage cmdMessage) {
         boolean result = false;
         // 从cmd扩展中获取要撤回消息的id
-        String msgId = recallMsg.getStringAttribute(MLConstants.ML_ATTR_MSG_ID, null);
+        String msgId = cmdMessage.getStringAttribute(MLConstants.ML_ATTR_MSG_ID, null);
         if (msgId == null) {
             MLLog.d("recall - 3 %s", msgId);
             return result;
         }
         // 根据得到的msgId 去本地查找这条消息，如果本地已经没有这条消息了，就不用撤回
-        EMMessage message = EMChatManager.getInstance().getMessage(msgId);
+        EMMessage message = EMClient.getInstance().chatManager().getMessage(msgId);
         if (message == null) {
             MLLog.d("recall - 3 message is null %s", msgId);
             return result;
         }
+
+        /**
+         * 创建一条接收方的消息，因为最新版SDK不支持setType，所以其他类型消息无法更新为TXT类型，
+         * 这里只能新建消息，并且设置消息类型为TXT，
+         */
         // 更改要撤销的消息的内容，替换为消息已经撤销的提示内容
-        TextMessageBody body = new TextMessageBody("此条消息已被 " + message.getUserName() + " 撤回");
-        message.addBody(body);
-        // 这里需要把消息类型改为 TXT 类型
-        message.setType(EMMessage.Type.TXT);
+        EMTextMessageBody body = new EMTextMessageBody("此条消息已被 " + message.getUserName() + " 撤回");
+        EMMessage recallMessage = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
+        recallMessage.addBody(body);
+        recallMessage.setFrom(message.getFrom());
         // 设置扩展为撤回消息类型，是为了区分消息的显示
-        message.setAttribute(MLConstants.ML_ATTR_TYPE, MLConstants.ML_ATTR_TYPE_RECALL);
+        message.setAttribute(MLConstants.ML_ATTR_MSG_TYPE_RECALL, true);
         // 返回修改消息结果
-        result = EMChatManager.getInstance().updateMessageBody(message);
+        result = EMClient.getInstance().chatManager().updateMessage(recallMessage);
         return result;
     }
 
@@ -264,7 +298,7 @@ public class MLEasemobHelper {
     public void signOut(final EMCallBack callback) {
         MLSPUtil.remove(mContext, MLConstants.ML_SHARED_USERNAME);
         MLSPUtil.remove(mContext, MLConstants.ML_SHARED_PASSWORD);
-        EMChatManager.getInstance().logout(true, new EMCallBack() {
+        EMClient.getInstance().logout(true, new EMCallBack() {
             @Override
             public void onSuccess() {
                 if (callback != null) {
@@ -289,12 +323,12 @@ public class MLEasemobHelper {
     }
 
     /**
-     * 判断是否登录成功过
+     * 判断是否登录成功过，并且没有调用logout和被踢
      *
      * @return 返回一个boolean值 表示是否登录成功过
      */
     public boolean isLogined() {
-        return EMChat.getInstance().isLoggedIn();
+        return EMClient.getInstance().isLoggedInBefore();
     }
 
     /**

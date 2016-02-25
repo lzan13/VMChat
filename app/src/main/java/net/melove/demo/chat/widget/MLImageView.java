@@ -18,7 +18,6 @@ import android.widget.ImageView;
 
 import net.melove.demo.chat.R;
 
-
 /**
  * Created by lzan13 on 2015/4/30.
  * 自定义 ImageView 控件，实现了圆角和边框，以及按下变色
@@ -61,7 +60,6 @@ public class MLImageView extends ImageView {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
     }
-
 
     private void init(Context context, AttributeSet attrs) {
         //初始化默认值
@@ -258,8 +256,9 @@ public class MLImageView extends ImageView {
     }
 
     /**
-     * 这里是复制的赵鹏写的获取Bitmap内容的方法， 之前是因为没有考虑到 Glide 加载的图片 导致drawable 类型是属于
-     * SquaringDrawable 类型，导致强转失败 这里是通过drawable不同的类型来进行获取Bitmap
+     * 这里是参考其他开发者获取Bitmap内容的方法， 之前是因为没有考虑到 Glide 加载的图片
+     * 导致drawable 类型是属于 SquaringDrawable 类型，导致强转失败
+     * 这里是通过drawable不同的类型来进行获取Bitmap
      *
      * @param drawable
      * @return

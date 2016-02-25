@@ -23,17 +23,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.easemob.EMConnectionListener;
-import com.easemob.EMError;
-import com.easemob.EMEventListener;
-import com.easemob.EMGroupChangeListener;
-import com.easemob.EMNotifierEvent;
-import com.easemob.chat.EMChat;
-import com.easemob.chat.EMChatManager;
-import com.easemob.chat.EMContactListener;
-import com.easemob.chat.EMContactManager;
-import com.easemob.chat.EMGroup;
-import com.easemob.chat.EMGroupManager;
+import com.hyphenate.EMConnectionListener;
+import com.hyphenate.EMContactListener;
+import com.hyphenate.EMError;
+import com.hyphenate.EMGroupChangeListener;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.util.NetUtils;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLConstants;
@@ -50,8 +45,6 @@ import net.melove.demo.chat.util.MLLog;
 import net.melove.demo.chat.widget.MLImageView;
 import net.melove.demo.chat.widget.MLToast;
 
-import java.util.List;
-
 /**
  * Created by lzan13 on 2015/7/2.
  * 主Activity类，整个程序启动的主界面
@@ -63,7 +56,7 @@ public class MLMainActivity extends MLBaseActivity implements
     // 环信事件监听接口
     private MLConnectionListener mConnectionListener;
     private MLContactListener mContactListener;
-    private MLGroupListener mGroupListener;
+    private MLGroupChangeListener mGroupChangeListener;
 
     // 主界面的一些系统控件
     private DrawerLayout mDrawerLayout;
@@ -110,7 +103,7 @@ public class MLMainActivity extends MLBaseActivity implements
         isActivateFab = false;
 
         mApplyForDao = new MLApplyForDao(mActivity);
-
+        android.R.layout.simple_list_item_2
     }
 
     /**
@@ -213,18 +206,18 @@ public class MLMainActivity extends MLBaseActivity implements
     private void initListener() {
         mConnectionListener = new MLConnectionListener();
         // 设置链接监听，监测连接服务器情况
-        EMChatManager.getInstance().addConnectionListener(mConnectionListener);
+        EMClient.getInstance().addConnectionListener(mConnectionListener);
 
         // 设置联系人监听，监测联系人申请及联系人变化
         mContactListener = new MLContactListener();
-        EMContactManager.getInstance().setContactListener(mContactListener);
+        EMClient.getInstance().contactManager().setContactListener(mContactListener);
 
         // 设置群组监听，监测群组情况的变化
-        mGroupListener = new MLGroupListener();
-        EMGroupManager.getInstance().addGroupChangeListener(mGroupListener);
+        mGroupChangeListener = new MLGroupChangeListener();
+        EMClient.getInstance().groupManager().addGroupChangeListener(mGroupChangeListener);
 
         // 最后要通知sdk，UI 已经初始化完毕，注册了相应的listener, 可以进行消息监听了（必须调用）
-        EMChat.getInstance().setAppInited();
+//        EMClient.getInstance().chatManager().setAppInited();
     }
 
     /**
@@ -418,12 +411,16 @@ public class MLMainActivity extends MLBaseActivity implements
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (errorCode == EMError.CONNECTION_CONFLICT) {
+                    if (errorCode == EMError.USER_LOGIN_ANOTHER_DEVICE) {
                         MLLog.d("监听到被踢，多次初始化也有可能出现这个错误");
                     } else if (errorCode == EMError.USER_REMOVED) {
                         MLLog.d("账户被后台移除");
                     } else {
-                        MLLog.d("onDisconnected");
+                        if (NetUtils.hasNetwork(mActivity)) {
+
+                        } else {
+                            MLLog.d("网络不可用");
+                        }
                     }
                 }
             });
@@ -436,24 +433,14 @@ public class MLMainActivity extends MLBaseActivity implements
      */
     private class MLContactListener implements EMContactListener {
 
-        /**
-         * 添加联系人
-         *
-         * @param list
-         */
         @Override
-        public void onContactAdded(List<String> list) {
-            MLLog.d("onContactAdded");
+        public void onContactAdded(String s) {
+
         }
 
-        /**
-         * 联系人被删除
-         *
-         * @param list
-         */
         @Override
-        public void onContactDeleted(List<String> list) {
-            MLLog.d("onContactDeleted");
+        public void onContactDeleted(String s) {
+
         }
 
         /**
@@ -560,102 +547,67 @@ public class MLMainActivity extends MLBaseActivity implements
      * ------------------------------------- Group Listener -------------------------------------
      * 群组变化监听，用来监听群组请求，以及其他群组情况
      */
-    private class MLGroupListener implements EMGroupChangeListener {
+    private class MLGroupChangeListener implements EMGroupChangeListener {
 
         /**
-         * 收到加入群组邀请
+         * 收到其他用户邀请加入群组
          *
-         * @param s
-         * @param s1
-         * @param s2
-         * @param s3
+         * @param groupId   要加入的群的id
+         * @param groupName 要加入的群的名称
+         * @param inviter   邀请者
+         * @param reason    邀请理由
          */
         @Override
-        public void onInvitationReceived(String s, String s1, String s2, String s3) {
+        public void onInvitationReceived(String groupId, String groupName, String inviter, String reason) {
 
         }
 
         /**
-         * 收到加入群组申请
+         * 用户申请加入群组
          *
-         * @param s
-         * @param s1
-         * @param s2
-         * @param s3
+         * @param groupId   要加入的群的id
+         * @param groupName 要加入的群的名称
+         * @param applyer   申请人的username
+         * @param reason    申请加入的reason
          */
         @Override
-        public void onApplicationReceived(String s, String s1, String s2, String s3) {
+        public void onApplicationReceived(String groupId, String groupName, String applyer, String reason) {
 
         }
 
-        /**
-         * 接收加群申请
-         *
-         * @param s
-         * @param s1
-         * @param s2
-         */
         @Override
         public void onApplicationAccept(String s, String s1, String s2) {
 
         }
 
-        /**
-         * 拒绝加群申请
-         *
-         * @param s
-         * @param s1
-         * @param s2
-         * @param s3
-         */
         @Override
         public void onApplicationDeclined(String s, String s1, String s2, String s3) {
 
         }
 
-        /**
-         * 接收群邀请
-         *
-         * @param s
-         * @param s1
-         * @param s2
-         */
         @Override
         public void onInvitationAccpted(String s, String s1, String s2) {
 
         }
 
-        /**
-         * 拒绝群邀请
-         *
-         * @param s
-         * @param s1
-         * @param s2
-         */
         @Override
         public void onInvitationDeclined(String s, String s1, String s2) {
 
         }
 
-        /**
-         * 群成员被删除
-         *
-         * @param s
-         * @param s1
-         */
         @Override
         public void onUserRemoved(String s, String s1) {
 
         }
 
-        /**
-         * 群解散
-         *
-         * @param s
-         * @param s1
-         */
         @Override
         public void onGroupDestroy(String s, String s1) {
+
+        }
+
+
+        @Override
+        public void onAutoAcceptInvitationFromGroup(String s, String s1, String s2) {
 
         }
     }
@@ -747,11 +699,11 @@ public class MLMainActivity extends MLBaseActivity implements
         super.onDestroy();
         // 移除链接监听
         if (mConnectionListener != null) {
-            EMChatManager.getInstance().removeConnectionListener(mConnectionListener);
+            EMClient.getInstance().chatManager().removeConversationListener(mConnectionListener);
         }
         // 移除群组监听
-        if (mGroupListener != null) {
-            EMGroupManager.getInstance().removeGroupChangeListener(mGroupListener);
+        if (mGroupChangeListener != null) {
+            EMClient.getInstance().groupManager().removeGroupChangeListener(mGroupChangeListener);
         }
         // 移除联系人监听
         EMContactManager.getInstance().removeContactListener();

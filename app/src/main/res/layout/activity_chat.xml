@@ -14,12 +14,12 @@
         android:layout_height="match_parent"
         android:clipChildren="false">
 
-        <!--<ImageView-->
-        <!--android:id="@+id/ml_img_chat_bg"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:scaleType="centerCrop"-->
-        <!--android:src="@mipmap/bg_top" />-->
+        <ImageView
+            android:id="@+id/ml_img_chat_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/bg_top" />
 
         <LinearLayout
             android:id="@+id/ml_layout_chat_input"
