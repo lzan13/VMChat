@@ -8,7 +8,9 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 
+import com.hyphenate.EMError;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.exceptions.HyphenateException;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLConstants;
@@ -124,6 +126,7 @@ public class MLSignupActivity extends MLBaseActivity {
      */
     private void signup() {
         final Resources res = mActivity.getResources();
+        // 注册是耗时过程，所以要显示一个dialog来提示下用户
         mDialog = new ProgressDialog(mActivity);
         mDialog.setMessage(res.getString(R.string.ml_signup_begin));
         mDialog.show();
@@ -144,7 +147,7 @@ public class MLSignupActivity extends MLBaseActivity {
                             finish();
                         }
                     });
-                } catch (final  e) {
+                } catch (final HyphenateException e) {
                     e.printStackTrace();
                     runOnUiThread(new Runnable() {
                         @Override
@@ -153,14 +156,18 @@ public class MLSignupActivity extends MLBaseActivity {
                                 mDialog.dismiss();
                             }
                             int errorCode = e.getErrorCode();
-                            if (errorCode == EMError.NONETWORK_ERROR) {
+                            if (errorCode == EMError.NETWORK_ERROR) {
+                                // 网络错误
                                 MLToast.errorToast(res.getString(R.string.ml_error_network_error)).show();
-                            } else if (errorCode == EMError.USER_ALREADY_EXISTS) {
+                            } else if (errorCode == EMError.USER_ALREADY_EXIST) {
+                                // 用户已存在
                                 MLToast.errorToast(res.getString(R.string.ml_error_user_already_exits)).show();
-                            } else if (errorCode == EMError.UNAUTHORIZED) {
-                                MLToast.errorToast(res.getString(R.string.ml_error_signup_failed_unauthorized)).show();
-                            } else if (errorCode == EMError.ILLEGAL_USER_NAME) {
+                            } else if (errorCode == EMError.USER_ILLEGAL_ARGUMENT) {
+                                // 参数不合法，username不能使用uuid注册
                                 MLToast.errorToast(res.getString(R.string.ml_error_illegal_username)).show();
+                            } else if (errorCode == EMError.SERVER_UNKNOWN_ERROR) {
+                                // 服务器未知错误
+                                MLToast.errorToast(res.getString(R.string.ml_error_signup_failed_unauthorized)).show();
                             } else {
                                 MLToast.errorToast(res.getString(R.string.ml_signup_failed)).show();
                             }

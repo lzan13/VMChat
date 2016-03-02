@@ -30,11 +30,6 @@ public class MLBaseActivity extends AppCompatActivity {
     }
 
     @Override
-    public void finish() {
-        super.finish();
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
     }

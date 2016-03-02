@@ -1,6 +1,5 @@
 package net.melove.demo.chat.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,8 +10,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 
-import com.easemob.chat.EMChatManager;
-import com.easemob.chat.EMGroupManager;
+import com.hyphenate.chat.EMClient;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLEasemobHelper;
@@ -63,9 +61,9 @@ public class MLSplashActivity extends MLBaseActivity {
                     // 获取当前系统时间毫秒数
                     long start = System.currentTimeMillis();
                     // 加载群组到内存
-                    EMGroupManager.getInstance().loadAllGroups();
+                    EMClient.getInstance().groupManager().loadAllGroups();
                     // 加载所有本地会话到内存
-                    EMChatManager.getInstance().loadAllConversations();
+                    EMClient.getInstance().chatManager().loadAllConversations();
                     // 获取加载回话使用的时间差 毫秒表示
                     long costTime = System.currentTimeMillis() - start;
                     if (mTime - costTime > 0) {
