@@ -5,16 +5,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.easemob.chat.EMContactManager;
-import com.easemob.exceptions.EaseMobException;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.exceptions.HyphenateException;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLConstants;
@@ -27,7 +25,6 @@ import net.melove.demo.chat.util.MLDate;
 import net.melove.demo.chat.util.MLLog;
 import net.melove.demo.chat.widget.MLToast;
 
-import java.util.List;
 
 /**
  * Created by lzan13 on 2015/8/29.
@@ -56,11 +53,15 @@ public class MLUserInfoActivity extends MLBaseActivity {
         initToolbar();
     }
 
+    /**
+     * 界面的初始化
+     */
     private void init() {
         mActivity = this;
         mChatId = getIntent().getStringExtra(MLConstants.ML_EXTRA_CHAT_ID);
         mApplyForDao = new MLApplyForDao(mActivity);
         mUserDao = new MLUserDao(mActivity);
+        // 查询本地User对象
         mUserEntity = mUserDao.getContact(mChatId);
     }
 
@@ -144,7 +145,7 @@ public class MLUserInfoActivity extends MLBaseActivity {
                             reason = mActivity.getResources().getString(R.string.ml_add_contact_reason);
                         }
                         try {
-                            EMContactManager.getInstance().addContact(mChatId, reason);
+                            EMClient.getInstance().contactManager().addContact(mChatId, reason);
 
                             // 创建一条好友申请数据，自己发送好友请求也保存
                             MLApplyForEntity applyForEntity = new MLApplyForEntity();
@@ -169,7 +170,7 @@ public class MLUserInfoActivity extends MLBaseActivity {
                                     MLToast.makeToast(R.string.ml_toast_add_contacts_success).show();
                                 }
                             });
-                        } catch (EaseMobException e) {
+                        } catch (HyphenateException e) {
                             e.printStackTrace();
                             int errorCode = e.getErrorCode();
                             String errorMsg = e.getMessage();

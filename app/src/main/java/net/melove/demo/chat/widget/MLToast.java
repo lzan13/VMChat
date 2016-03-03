@@ -1,11 +1,8 @@
 package net.melove.demo.chat.widget;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
 import android.os.Handler;
-import android.util.Base64;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +13,6 @@ import android.widget.TextView;
 import net.melove.demo.chat.application.MLApplication;
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.util.MLBitmapUtil;
-import net.melove.demo.chat.util.MLLog;
-
-import java.io.ByteArrayOutputStream;
 
 
 /**
@@ -28,7 +22,7 @@ public class MLToast {
     private static Context mContext = MLApplication.getContext();
 
     // 默认的图标 表示Success 以Base64 字符串的方式保存的图片资源
-    private String iconSuccess = "iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAYAAABV7bNHAAAABHNCSVQICAgIfAhkiAAAA5JJREFU\n" +
+    private String rightIcon = "iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAYAAABV7bNHAAAABHNCSVQICAgIfAhkiAAAA5JJREFU\n" +
             "eJztmk+LFEcYh5/X1bguKmpGUCEIHtRDglE0h4gH0RhIJBo9RNDPkK+QY76KN/FgjMkScghhD+I/\n" +
             "BPGgRETdQESJf+Lq7vxyqBp9d9zZ6ZnpHqvHeqChu6e7pvo39XRXVQ9kMplMJpPJZDKZTCaTyWTe\n" +
             "J+xdV6BqJI0B64EPgRXADTN7VvT8pVVVLAViOKuAj4GtwBrgX0l3zey/ImWMdEDAOmAH8D2wDZgD\n" +
@@ -48,7 +42,7 @@ public class MLToast {
             "mfkCdPHVAAAAAElFTkSuQmCC\n";
 
     // 默认的图标 表示Error  以Base64 字符串的方式保存的图片资源
-    private String iconError = "iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAYAAABV7bNHAAAABHNCSVQICAgIfAhkiAAABIRJREFU\n" +
+    private String errorIcon = "iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAYAAABV7bNHAAAABHNCSVQICAgIfAhkiAAABIRJREFU\n" +
             "eJztm02PVEUUhp8z3yriqOAC3NkojvEjoisxxgTjwgzsJNH458SguETZ6AZjSIzOEImOGkhcqbgA\n" +
             "6ZkJDkOGPi5OXbuYubf7flRVa1Jv0ou+ydQ9/d7z3FN1qgaysrKysrKysrKysrKysrL+X5IQg6jq\n" +
             "NPCw+7oNbIvIIMTYDWIQYAGYA6aATRHZ6TruTKDAFoH3gHvAD8D3wGbXsRtqATgGPOPi+VhVr4uI\n" +
@@ -70,14 +64,6 @@ public class MLToast {
             "ClXhdsddP48dhbnR9gZdDlDtqOofwNdY5mxjRl0lwimLihjKcDvq4vgUuAT8PpFjwC5AVdVrWBYt\n" +
             "MjyIEAWrEXH4uC1hVew8Hc2BcP+KMINVMQX+Bm6LyL0QYzeIYQo7ivwA9uBviMjdlDFkZWVlZWVl\n" +
             "ZWVlZWVlZWX9F/QPd/y65dzlZGQAAAAASUVORK5CYII=\n";
-
-    private String icon = "";
-
-    private String icon2 = "";
-
-    private final int TOAST_TYPE_SUCCESS =0;
-    private final int TOAST_TYPE_ERROR =0;
-    private final int TOAST_TYPE_ =0;
 
 
     private int defaultTime = 3500;
@@ -117,9 +103,9 @@ public class MLToast {
         mToastView = inflater.inflate(R.layout.widget_toast_layout, null);
         ImageView imageView = (ImageView) mToastView.findViewById(R.id.ml_img_toast_icon);
         if (id == 0) {
-            imageView.setImageBitmap(MLBitmapUtil.string2Bitmap(iconSuccess));
+            imageView.setImageBitmap(MLBitmapUtil.string2Bitmap(rightIcon));
         } else if (id == 1) {
-            imageView.setImageBitmap(MLBitmapUtil.string2Bitmap(iconError));
+            imageView.setImageBitmap(MLBitmapUtil.string2Bitmap(errorIcon));
         } else {
             imageView.setImageResource(id);
         }
@@ -161,7 +147,7 @@ public class MLToast {
      * @param strId Toast 显示的内容的字符串资源id
      * @return 返回 MLToast 对象
      */
-    public static MLToast successToast(int strId) {
+    public static MLToast rightToast(int strId) {
         String text = mContext.getResources().getString(strId);
         MLToast toast = new MLToast(0, text);
         return toast;
@@ -173,7 +159,7 @@ public class MLToast {
      * @param str Toast显示的内容字符串资源
      * @return 返回 MLToast对象
      */
-    public static MLToast successToast(String str) {
+    public static MLToast rightToast(String str) {
         MLToast toast = new MLToast(0, str);
         return toast;
     }

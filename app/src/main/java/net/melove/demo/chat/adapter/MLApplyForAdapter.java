@@ -11,15 +11,13 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.easemob.chat.EMChatManager;
-import com.easemob.chat.EMContactManager;
-import com.easemob.exceptions.EaseMobException;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.exceptions.HyphenateException;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.db.MLApplyForDao;
 import net.melove.demo.chat.entity.MLApplyForEntity;
 import net.melove.demo.chat.widget.MLImageView;
-import net.melove.demo.chat.widget.MLToast;
 
 import java.util.List;
 
@@ -146,11 +144,11 @@ public class MLApplyForAdapter extends BaseAdapter implements View.OnClickListen
             @Override
             public void run() {
                 try {
-                    EMChatManager.getInstance().acceptInvitation(applyForEntity.getUserName());
+                    EMClient.getInstance().contactManager().acceptInvitation(applyForEntity.getUserName());
                     applyForEntity.setStatus(MLApplyForEntity.ApplyForStatus.AGREED);
                     dialog.dismiss();
                     refreshList(applyForEntity);
-                } catch (EaseMobException e) {
+                } catch (HyphenateException e) {
                     e.printStackTrace();
                 }
             }
@@ -172,11 +170,11 @@ public class MLApplyForAdapter extends BaseAdapter implements View.OnClickListen
             @Override
             public void run() {
                 try {
-                    EMChatManager.getInstance().refuseInvitation(applyForEntity.getUserName());
+                    EMClient.getInstance().contactManager().declineInvitation(applyForEntity.getUserName());
                     applyForEntity.setStatus(MLApplyForEntity.ApplyForStatus.REFUSED);
                     dialog.dismiss();
                     refreshList(applyForEntity);
-                } catch (EaseMobException e) {
+                } catch (HyphenateException e) {
                     e.printStackTrace();
                 }
             }

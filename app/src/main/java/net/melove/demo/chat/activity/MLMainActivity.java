@@ -103,7 +103,6 @@ public class MLMainActivity extends MLBaseActivity implements
         isActivateFab = false;
 
         mApplyForDao = new MLApplyForDao(mActivity);
-        android.R.layout.simple_list_item_2
     }
 
     /**
@@ -217,7 +216,7 @@ public class MLMainActivity extends MLBaseActivity implements
         EMClient.getInstance().groupManager().addGroupChangeListener(mGroupChangeListener);
 
         // 最后要通知sdk，UI 已经初始化完毕，注册了相应的listener, 可以进行消息监听了（必须调用）
-//        EMClient.getInstance().chatManager().setAppInited();
+        //        EMClient.getInstance().chatManager().setAppInited();
     }
 
     /**
@@ -243,7 +242,7 @@ public class MLMainActivity extends MLBaseActivity implements
                 case R.id.ml_text_fab_add_group:
                 case R.id.ml_btn_fab_add_group:
                     fabChange();
-//                    startSearch();
+                    //                    startSearch();
                     break;
                 case R.id.ml_btn_fab_menu_layout:
                     fabChange();
@@ -456,7 +455,7 @@ public class MLMainActivity extends MLBaseActivity implements
             // 创建一条好友申请数据
             MLApplyForEntity applyForEntity = new MLApplyForEntity();
             applyForEntity.setUserName(username);
-//            applyForEntity.setNickName(mUserEntity.getNickName());
+            //            applyForEntity.setNickName(mUserEntity.getNickName());
             applyForEntity.setReason(reason);
             applyForEntity.setStatus(MLApplyForEntity.ApplyForStatus.BEAPPLYFOR);
             applyForEntity.setType(0);
@@ -501,7 +500,7 @@ public class MLMainActivity extends MLBaseActivity implements
                 // 创建一条好友申请数据
                 MLApplyForEntity applyForEntity = new MLApplyForEntity();
                 applyForEntity.setUserName(username);
-//                applyForEntity.setNickName(mUserEntity.getNickName());
+                //                applyForEntity.setNickName(mUserEntity.getNickName());
                 applyForEntity.setReason(mActivity.getResources().getString(R.string.ml_add_contact_reason));
                 applyForEntity.setStatus(MLApplyForEntity.ApplyForStatus.BEAGREED);
                 applyForEntity.setType(0);
@@ -530,7 +529,7 @@ public class MLMainActivity extends MLBaseActivity implements
                 // 创建一条好友申请数据
                 MLApplyForEntity applyForEntity = new MLApplyForEntity();
                 applyForEntity.setUserName(username);
-//                applyForEntity.setNickName(mUserEntity.getNickName());
+                //                applyForEntity.setNickName(mUserEntity.getNickName());
                 applyForEntity.setReason(mActivity.getResources().getString(R.string.ml_add_contact_reason));
                 applyForEntity.setStatus(MLApplyForEntity.ApplyForStatus.BEREFUSED);
                 applyForEntity.setType(0);
@@ -655,7 +654,7 @@ public class MLMainActivity extends MLBaseActivity implements
                 MLToast.makeToast(mActivity.getResources().getString(R.string.ml_test)).show();
                 break;
         }
-//        mDrawerLayout.closeDrawer(GravityCompat.START);
+        //        mDrawerLayout.closeDrawer(GravityCompat.START);
     }
 
     public View getToolbar() {
@@ -687,7 +686,7 @@ public class MLMainActivity extends MLBaseActivity implements
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-//            mDrawerLayout.closeDrawer(GravityCompat.START);
+            // mDrawerLayout.closeDrawer(GravityCompat.START);
             mActivity.finish();
             return true;
         }
@@ -697,16 +696,18 @@ public class MLMainActivity extends MLBaseActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // 移除链接监听
         if (mConnectionListener != null) {
-            EMClient.getInstance().chatManager().removeConversationListener(mConnectionListener);
+            // 移除链接监听
+            EMClient.getInstance().addConnectionListener(mConnectionListener);
         }
-        // 移除群组监听
         if (mGroupChangeListener != null) {
+            // 移除群组监听
             EMClient.getInstance().groupManager().removeGroupChangeListener(mGroupChangeListener);
         }
-        // 移除联系人监听
-        EMContactManager.getInstance().removeContactListener();
+        if (mContactListener != null) {
+            // 移除联系人监听
+            EMClient.getInstance().contactManager().removeContactListener(mContactListener);
+        }
 
     }
 

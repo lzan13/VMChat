@@ -208,7 +208,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final EMMessage message = mConversation.getAllMessages().get(position);
                 // 判断当前消息是否为【阅后即焚】类型
-                if (message.getBooleanAttribute(MLConstants.ML_ATTR_MSG_TYPE, false)) {
+                if (message.getBooleanAttribute(MLConstants.ML_ATTR_TYPE, false)) {
 
 
                 }
@@ -392,7 +392,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     private void setMessageAttribute(EMMessage message) {
         if (isBurn) {
             // 设置消息扩展类型为阅后即焚
-            message.setAttribute(MLConstants.ML_ATTR_MSG_TYPE_BURN, true);
+            message.setAttribute(MLConstants.ML_ATTR_BURN, true);
         }
     }
 
@@ -644,7 +644,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             EMMessage cmdMessage = list.get(i);
             EMCmdMessageBody body = (EMCmdMessageBody) cmdMessage.getBody();
             // 判断是不是撤回消息的透传
-            if (body.action().equals(MLConstants.ML_ATTR_MSG_TYPE_RECALL)) {
+            if (body.action().equals(MLConstants.ML_ATTR_RECALL)) {
                 MLEasemobHelper.getInstance().receiveRecallMessage(cmdMessage);
                 refreshChatUI();
             }

@@ -142,7 +142,7 @@ public class MLSignupActivity extends MLBaseActivity {
                                 mDialog.dismiss();
                             }
                             MLSPUtil.put(mActivity, MLConstants.ML_SHARED_USERNAME, mUsername);
-                            MLToast.successToast(res.getString(R.string.ml_signup_success)).show();
+                            MLToast.rightToast(res.getString(R.string.ml_signup_success)).show();
                             signupToBmob();
                             finish();
                         }
@@ -156,20 +156,26 @@ public class MLSignupActivity extends MLBaseActivity {
                                 mDialog.dismiss();
                             }
                             int errorCode = e.getErrorCode();
-                            if (errorCode == EMError.NETWORK_ERROR) {
+                            switch (errorCode) {
                                 // 网络错误
-                                MLToast.errorToast(res.getString(R.string.ml_error_network_error)).show();
-                            } else if (errorCode == EMError.USER_ALREADY_EXIST) {
+                                case EMError.NETWORK_ERROR:
+                                    MLToast.errorToast(res.getString(R.string.ml_error_network_error) + "-" + errorCode).show();
+                                    break;
                                 // 用户已存在
-                                MLToast.errorToast(res.getString(R.string.ml_error_user_already_exits)).show();
-                            } else if (errorCode == EMError.USER_ILLEGAL_ARGUMENT) {
-                                // 参数不合法，username不能使用uuid注册
-                                MLToast.errorToast(res.getString(R.string.ml_error_illegal_username)).show();
-                            } else if (errorCode == EMError.SERVER_UNKNOWN_ERROR) {
+                                case EMError.USER_ALREADY_EXIST:
+                                    MLToast.errorToast(res.getString(R.string.ml_error_user_already_exits) + "-" + errorCode).show();
+                                    break;
+                                // 参数不合法，一般情况是username 使用了uuid导致，不能使用uuid注册
+                                case EMError.USER_ILLEGAL_ARGUMENT:
+                                    MLToast.errorToast(res.getString(R.string.ml_error_user_illegal_argument) + "-" + errorCode).show();
+                                    break;
                                 // 服务器未知错误
-                                MLToast.errorToast(res.getString(R.string.ml_error_signup_failed_unauthorized)).show();
-                            } else {
-                                MLToast.errorToast(res.getString(R.string.ml_signup_failed)).show();
+                                case EMError.SERVER_UNKNOWN_ERROR:
+                                    MLToast.errorToast(res.getString(R.string.ml_error_server_unknown_error) + "-" + errorCode).show();
+                                    break;
+                                default:
+                                    MLToast.errorToast(res.getString(R.string.ml_signup_failed) + "-" + errorCode).show();
+                                    break;
                             }
                         }
                     });
@@ -183,7 +189,7 @@ public class MLSignupActivity extends MLBaseActivity {
     /**
      * 注册用户信息到 Bmob 后端服务
      */
-    private void signupToBmob(){
+    private void signupToBmob() {
 
     }
 

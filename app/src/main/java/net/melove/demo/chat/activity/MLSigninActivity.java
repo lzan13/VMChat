@@ -87,7 +87,7 @@ public class MLSigninActivity extends MLBaseActivity {
 
         mToolbar.setTitle(R.string.ml_signin);
         // TODO 这里设置Toolbar的图标时,在5.x上才能支持，在4.x的设备 svg 图标会显示，但是颜色是黑色不能改变，
-//        mToolbar.setNavigationIcon(R.drawable.ic_menu_close);
+        //        mToolbar.setNavigationIcon(R.drawable.ic_menu_close);
         mToolbar.setNavigationIcon(R.mipmap.ic_close_white_24dp);
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -170,7 +170,6 @@ public class MLSigninActivity extends MLBaseActivity {
 
         EMClient.getInstance().login(mUsername, mPassword, new EMCallBack() {
             /**
-             * by lzan13 2015-10-28 18:05:12
              * 登陆成功的回调
              */
             @Override
@@ -199,7 +198,6 @@ public class MLSigninActivity extends MLBaseActivity {
             }
 
             /**
-             * by lzan13 2015-10-28 18:05:30
              * 登陆错误的回调
              * @param i
              * @param s
@@ -216,39 +214,44 @@ public class MLSigninActivity extends MLBaseActivity {
                          * http://www.easemob.com/apidoc/android/chat3.0/classcom_1_1hyphenate_1_1_e_m_error.html
                          */
                         switch (i) {
+                            // 网络异常 2
+                            case EMError.NETWORK_ERROR:
+                                MLToast.errorToast(res.getString(R.string.ml_error_network_error) + "-" + i).show();
+                                break;
                             // 无效的用户名 101
                             case EMError.INVALID_USER_NAME:
-                                MLToast.errorToast(res.getString(R.string.ml_error_invalid_username) + "(" + i + ")").show();
+                                MLToast.errorToast(res.getString(R.string.ml_error_invalid_user_name) + "-" + i).show();
                                 break;
                             // 无效的密码 102
                             case EMError.INVALID_PASSWORD:
-                                MLToast.errorToast(res.getString(R.string.ml_error_invalid_password) + "(" + i + ")").show();
+                                MLToast.errorToast(res.getString(R.string.ml_error_invalid_password) + "-" + i).show();
                                 break;
+                            // 用户认证失败，用户名或密码错误 202
                             case EMError.USER_AUTHENTICATION_FAILED:
-                                MLToast.errorToast(res.getString(R.string.ml_error_invalid_password) + "(" + i + ")").show();
+                                MLToast.errorToast(res.getString(R.string.ml_error_user_authentication_failed) + "-" + i).show();
                                 break;
-                            // 网络异常 2
-                            case EMError.NETWORK_ERROR:
-                                MLToast.errorToast(res.getString(R.string.ml_error_network_error) + "(" + i + ")").show();
+                            // 用户不存在 204
+                            case EMError.USER_NOT_FOUND:
+                                MLToast.errorToast(res.getString(R.string.ml_error_user_not_found) + "-" + i).show();
                                 break;
                             // 无法访问到服务器 300
                             case EMError.SERVER_NOT_REACHABLE:
-                                MLToast.errorToast(res.getString(R.string.ml_error_server_not_reachable) + "(" + i + ")").show();
+                                MLToast.errorToast(res.getString(R.string.ml_error_server_not_reachable) + "-" + i).show();
                                 break;
                             // 等待服务器响应超时 301
                             case EMError.SERVER_TIMEOUT:
-                                MLToast.errorToast(res.getString(R.string.ml_error_server_timeout) + "(" + i + ")").show();
+                                MLToast.errorToast(res.getString(R.string.ml_error_server_timeout) + "-" + i).show();
                                 break;
                             // 服务器繁忙 302
                             case EMError.SERVER_BUSY:
-                                MLToast.errorToast(res.getString(R.string.ml_error_server_busy) + "(" + i + ")").show();
+                                MLToast.errorToast(res.getString(R.string.ml_error_server_busy) + "-" + i).show();
                                 break;
                             // 未知 Server 异常 303
                             case EMError.SERVER_UNKNOWN_ERROR:
-                                MLToast.errorToast(res.getString(R.string.ml_error_server_unknown_error) + "(" + i + ")").show();
+                                MLToast.errorToast(res.getString(R.string.ml_error_server_unknown_error) + "-" + i).show();
                                 break;
                             default:
-                                MLToast.errorToast(res.getString(R.string.ml_error_signin_error) + "(" + i + ")").show();
+                                MLToast.errorToast(res.getString(R.string.ml_signin_failed) + "-" + i).show();
                                 break;
                         }
                     }

@@ -82,7 +82,9 @@ public class MLEasemobHelper {
         }
         mContext = context;
 
-        // SDK初始化的一些配置
+        /**
+         * SDK初始化的一些配置
+         */
         EMOptions options = new EMOptions();
         options.setAutoLogin(true);
         // 设置是否需要发送已读回执
@@ -93,13 +95,13 @@ public class MLEasemobHelper {
         options.setNumberOfMessagesLoaded(1);
         // 添加好友是否自动同意，如果是自动同意就不会收到好友请求，因为sdk会自动处理
         options.setAcceptInvitationAlways(false);
+        // 设置集成小米推送的appid和appkey
+        String APP_ID = "2882303761517430984";
+        String APP_KEY = "5191743065984";
+        options.setMipushConfig(APP_ID, APP_KEY);
 
         // 调用初始化方法初始化sdk
         EMClient.getInstance().init(mContext, options);
-
-        String APP_ID = "2882303761517430984";
-        String APP_KEY = "5191743065984";
-//        EMClient.getInstance().se(APP_ID, APP_KEY);
 
         // 设置开启debug模式
         EMClient.getInstance().setDebugMode(true);
@@ -151,7 +153,7 @@ public class MLEasemobHelper {
                     EMMessage cmdMessage = list.get(i);
                     EMCmdMessageBody body = (EMCmdMessageBody) cmdMessage.getBody();
                     // 判断是不是撤回消息的透传
-                    if (body.action().equals(MLConstants.ML_ATTR_MSG_TYPE_RECALL)) {
+                    if (body.action().equals(MLConstants.ML_ATTR_RECALL)) {
                         MLEasemobHelper.getInstance().receiveRecallMessage(cmdMessage);
                     }
                 }
@@ -219,7 +221,7 @@ public class MLEasemobHelper {
         // 设置消息接收者
         cmdMessage.setReceipt(message.getTo());
         // 创建CMD 消息的消息体 并设置 action 为 recall
-        String action = MLConstants.ML_ATTR_MSG_TYPE_RECALL;
+        String action = MLConstants.ML_ATTR_RECALL;
         EMCmdMessageBody body = new EMCmdMessageBody(action);
         cmdMessage.addBody(body);
         // 设置消息的扩展为要撤回的 msgId
@@ -234,7 +236,7 @@ public class MLEasemobHelper {
                 recallMessage.addBody(body);
                 recallMessage.setReceipt(message.getTo());
                 // 设置扩展为撤回消息类型，是为了区分消息的显示
-                recallMessage.setAttribute(MLConstants.ML_ATTR_MSG_TYPE_RECALL, true);
+                recallMessage.setAttribute(MLConstants.ML_ATTR_RECALL, true);
                 // 返回修改消息结果
                 EMClient.getInstance().chatManager().updateMessage(recallMessage);
                 callBack.onSuccess();
@@ -284,7 +286,7 @@ public class MLEasemobHelper {
         recallMessage.addBody(body);
         recallMessage.setFrom(message.getFrom());
         // 设置扩展为撤回消息类型，是为了区分消息的显示
-        message.setAttribute(MLConstants.ML_ATTR_MSG_TYPE_RECALL, true);
+        message.setAttribute(MLConstants.ML_ATTR_RECALL, true);
         // 返回修改消息结果
         result = EMClient.getInstance().chatManager().updateMessage(recallMessage);
         return result;

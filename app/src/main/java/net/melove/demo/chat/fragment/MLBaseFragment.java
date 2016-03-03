@@ -4,6 +4,8 @@ package net.melove.demo.chat.fragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 
+import net.melove.demo.chat.util.MLLog;
+
 /**
  * Created by lzan13 on 2015/7/6.
  * Fragment的基类，定义Fragment公共接口回调
@@ -22,5 +24,27 @@ public class MLBaseFragment extends Fragment {
         public void onFragmentClick(int a, int b, String s);
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        MLLog.d("onPause");
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        MLLog.d("onStart");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        MLLog.d("onStop");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MLLog.d("onResume");
+    }
 }

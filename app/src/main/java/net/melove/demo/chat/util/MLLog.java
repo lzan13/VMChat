@@ -9,7 +9,7 @@ import android.util.Log;
 public class MLLog {
 
     // 这里设置默认的 Tag
-    private static String mTag = "melove";
+    private static String mTag = "lzan13";
     private static boolean isDebug = true;
 
 

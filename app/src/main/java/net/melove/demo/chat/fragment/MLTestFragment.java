@@ -7,14 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.easemob.EMCallBack;
-import com.easemob.chat.EMChatManager;
-import com.easemob.chat.EMMessage;
-import com.easemob.chat.TextMessageBody;
+import com.hyphenate.EMCallBack;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.EMTextMessageBody;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLEasemobHelper;
-import net.melove.demo.chat.test.MLTestHelper;
 import net.melove.demo.chat.util.MLDate;
 import net.melove.demo.chat.util.MLLog;
 import net.melove.demo.chat.widget.MLToast;
@@ -103,12 +102,15 @@ public class MLTestFragment extends MLBaseFragment {
         });
     }
 
+    /**
+     * 测试保存一条消息到本地
+     */
     private void importMessage() {
         EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
-        TextMessageBody textMessageBody = new TextMessageBody("导入消息" + MLDate.getCurrentDate());
+        EMTextMessageBody textMessageBody = new EMTextMessageBody("导入消息" + MLDate.getCurrentDate());
         message.addBody(textMessageBody);
         message.setFrom("lz0");
-        EMChatManager.getInstance().importMessage(message, false);
+        EMClient.getInstance().chatManager().saveMessage(message);
 
     }
 
@@ -137,19 +139,16 @@ public class MLTestFragment extends MLBaseFragment {
                     MLToast.makeToast(1, "Test Toast").show();
                     break;
                 case R.id.ml_btn_test_delete_conversation:
-                    EMChatManager.getInstance().deleteConversation("lz0");
+                    EMClient.getInstance().chatManager().deleteConversation("lz0", false);
                     break;
                 case R.id.ml_btn_test_import_message:
                     importMessage();
                     break;
                 case R.id.ml_btn_test_signup:
-                    MLTestHelper.getInstance().signup();
                     break;
                 case R.id.ml_btn_test_signin:
-                    MLTestHelper.getInstance().signin("lz1", "123123");
                     break;
                 case R.id.ml_btn_test_send_message:
-                    MLTestHelper.getInstance().sendMessage("", "测试发送消息");
                     break;
                 case R.id.ml_btn_test_record:
 

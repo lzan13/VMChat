@@ -3,34 +3,30 @@ package net.melove.demo.chat.fragment;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.easemob.chat.EMChatManager;
-import com.easemob.chat.EMConversation;
+
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMConversation;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.activity.MLChatActivity;
 import net.melove.demo.chat.activity.MLMainActivity;
 import net.melove.demo.chat.adapter.MLConversationAdapter;
 import net.melove.demo.chat.application.MLConstants;
-import net.melove.demo.chat.entity.MLConversationEntity;
 import net.melove.demo.chat.widget.MLToast;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -39,7 +35,7 @@ import java.util.Map;
  */
 public class MLConversationsFragment extends MLBaseFragment {
 
-    private List<MLConversationEntity> mConversationList;
+    private List<EMConversation> mConversationList;
     private String[] mMenus = null;
     private ListView mListView;
     private MLConversationAdapter mAdapter;
@@ -85,14 +81,7 @@ public class MLConversationsFragment extends MLBaseFragment {
      * 初始化会话列表
      */
     private void initConversationListView() {
-        MLConversationEntity temp = null;
-
-        Map<String, EMConversation> conversations = EMChatManager.getInstance().getAllConversations();
-        mConversationList = new ArrayList<MLConversationEntity>();
-        for (EMConversation conversation : conversations.values()) {
-            temp = new MLConversationEntity(conversation);
-            mConversationList.add(temp);
-        }
+        loadConversationList();
 
         // 实例化会话列表的 Adapter 对象
         mAdapter = new MLConversationAdapter(mActivity, mConversationList);
@@ -102,22 +91,48 @@ public class MLConversationsFragment extends MLBaseFragment {
         mListView.setAdapter(mAdapter);
         // 设置列表项点击监听
         setItemClickListener();
-
         // 设置列表项长按监听
         setItemLongClickListener();
 
     }
 
     public void refrshConversation() {
-        MLConversationEntity temp = null;
         mConversationList.clear();
-        Hashtable<String, EMConversation> conversations = EMChatManager.getInstance().getAllConversations();
-        mConversationList = new ArrayList<MLConversationEntity>();
-        for (EMConversation conversation : conversations.values()) {
-            temp = new MLConversationEntity(conversation);
-            mConversationList.add(temp);
-        }
+        loadConversationList();
         mAdapter.refreshList();
+    }
+
+    /**
+     * 加载会话对象到 List 集合，并根据最后一条消息时间进行排序
+     */
+    public void loadConversationList() {
+        Map<String, EMConversation> conversations = EMClient.getInstance().chatManager().getAllConversations();
+        mConversationList = new ArrayList<EMConversation>();
+        synchronized (conversations) {
+            for (EMConversation temp : conversations.values()) {
+                mConversationList.add(temp);
+            }
+        }
+
+        // 使用Collectons的sort()方法 对会话列表进行排序
+        Collections.sort(mConversationList, new Comparator<EMConversation>() {
+            @Override
+            public int compare(EMConversation lhs, EMConversation rhs) {
+                if (lhs.getAllMessages().size() == 0 && rhs.getAllMessages().size() == 0) {
+                    return 0;
+                } else if (lhs.getAllMessages().size() == 0 && rhs.getAllMessages().size() > 0) {
+                    return -1;
+                } else if (lhs.getAllMessages().size() >= 0 && rhs.getAllMessages().size() == 0) {
+
+                }
+                if (lhs.getLastMessage().getMsgTime() > rhs.getLastMessage().getMsgTime()) {
+                    return 1;
+                } else if (lhs.getLastMessage().getMsgTime() > rhs.getLastMessage().getMsgTime()) {
+                    return -1;
+                }
+                return 0;
+            }
+        });
     }
 
     /**
@@ -130,7 +145,7 @@ public class MLConversationsFragment extends MLBaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent();
                 intent.setClass(mActivity, MLChatActivity.class);
-                intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mConversationList.get(position).getChatId());
+                intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mConversationList.get(position).getUserName());
                 ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, ((MLMainActivity) mActivity).getToolbar(), "toolbar");
                 ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
             }

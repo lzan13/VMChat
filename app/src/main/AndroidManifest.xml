@@ -53,11 +53,11 @@
     <!-- 读取联系人 -->
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
-    <!--小米推送的权限-->
-    <permission
-        android:name="net.melove.demo.chat.permission.MIPUSH_RECEIVE"
-        android:protectionLevel="signature" />
-    <uses-permission android:name="net.melove.demo.chat.permission.MIPUSH_RECEIVE" />
+    <!--&lt;!&ndash;小米推送的权限&ndash;&gt;-->
+    <!--<permission-->
+        <!--android:name="net.melove.demo.chat.permission.MIPUSH_RECEIVE"-->
+        <!--android:protectionLevel="signature" />-->
+    <!--<uses-permission android:name="net.melove.demo.chat.permission.MIPUSH_RECEIVE" />-->
 
     <application
         android:name=".application.MLApplication"
@@ -114,11 +114,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Default"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity
-            android:name=".activity.MLVideoCallActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/MLTheme.Default"
-            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
         <!--搜索界面-->
         <activity
             android:name=".activity.MLSearchActivity"
@@ -150,53 +145,53 @@
         <!--android:name="com.easemob.chat.EMGCMListenerService"-->
         <!--android:exported="false"></service>-->
 
-        <!--配置小米推送服务-->
-        <service
-            android:name="com.xiaomi.push.service.XMPushService"
-            android:enabled="true"
-            android:process=":pushservice" />
-        <service
-            android:name="com.xiaomi.mipush.sdk.PushMessageHandler"
-            android:enabled="true"
-            android:exported="true" />
-        <!--小米推送消息处理服务-->
-        <service
-            android:name="com.xiaomi.mipush.sdk.MessageHandleService"
-            android:enabled="true" />
-        <!--网络状态广播接收器-->
-        <receiver
-            android:name="com.xiaomi.push.service.receivers.NetworkStatusReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+        <!--&lt;!&ndash;配置小米推送服务&ndash;&gt;-->
+        <!--<service-->
+            <!--android:name="com.xiaomi.push.service.XMPushService"-->
+            <!--android:enabled="true"-->
+            <!--android:process=":pushservice" />-->
+        <!--<service-->
+            <!--android:name="com.xiaomi.mipush.sdk.PushMessageHandler"-->
+            <!--android:enabled="true"-->
+            <!--android:exported="true" />-->
+        <!--&lt;!&ndash;小米推送消息处理服务&ndash;&gt;-->
+        <!--<service-->
+            <!--android:name="com.xiaomi.mipush.sdk.MessageHandleService"-->
+            <!--android:enabled="true" />-->
+        <!--&lt;!&ndash;网络状态广播接收器&ndash;&gt;-->
+        <!--<receiver-->
+            <!--android:name="com.xiaomi.push.service.receivers.NetworkStatusReceiver"-->
+            <!--android:exported="true">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />-->
 
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </receiver>
-        <!--Ping 结果广播接收器-->
-        <receiver
-            android:name="com.xiaomi.push.service.receivers.PingReceiver"
-            android:exported="false"
-            android:process=":pushservice">
-            <intent-filter>
-                <action android:name="com.xiaomi.push.PING_TIMER" />
-            </intent-filter>
-        </receiver>
+                <!--<category android:name="android.intent.category.DEFAULT" />-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
+        <!--&lt;!&ndash;Ping 结果广播接收器&ndash;&gt;-->
+        <!--<receiver-->
+            <!--android:name="com.xiaomi.push.service.receivers.PingReceiver"-->
+            <!--android:exported="false"-->
+            <!--android:process=":pushservice">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.xiaomi.push.PING_TIMER" />-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
 
-        <!--配置sdk实现的小米推送 广播接收器-->
-        <receiver
-            android:name="com."
-            android:enabled="true">
-            <intent-filter>
-                <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="ccom.xiaomi.mipush.MESSAGE_ARRIVED" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="com.xiaomi.mipush.ERROR" />
-            </intent-filter>
-        </receiver>
+        <!--&lt;!&ndash;配置sdk实现的小米推送 广播接收器&ndash;&gt;-->
+        <!--<receiver-->
+            <!--android:name="com.hyphenate.chat.EMMipushReceiver"-->
+            <!--android:enabled="true">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE" />-->
+            <!--</intent-filter>-->
+            <!--<intent-filter>-->
+                <!--<action android:name="ccom.xiaomi.mipush.MESSAGE_ARRIVED" />-->
+            <!--</intent-filter>-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.xiaomi.mipush.ERROR" />-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
     </application>
 
 </manifest>

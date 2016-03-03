@@ -6,18 +6,28 @@ package net.melove.demo.chat.entity;
  */
 public class MLUserEntity {
 
+    // 用户对象的头，用来排序和根据字母查找
     public String header;
+    // 用户的username
     public String userName;
+    // 用户的昵称
     public String nickName;
+    // 用户的email
     public String email;
+    // 用户头像
     public String avatar;
+    // 用户封面
     public String cover;
+    // 用户性别
     public int gender;
+    // 用户位置
     public String location;
+    // 用户签名
     public String signature;
+    // 用户创建时间
     public String createAt;
+    // 用户更新时间
     public String updateAt;
-    public String time;
 
     public String getHeader() {
         return header;
@@ -97,14 +107,6 @@ public class MLUserEntity {
 
     public void setSignature(String signature) {
         this.signature = signature;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
     }
 
     public String getUpdateAt() {

@@ -11,10 +11,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.easemob.chat.EMChatManager;
-import com.easemob.chat.EMConversation;
-import com.easemob.chat.EMMessage;
-import com.easemob.chat.TextMessageBody;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMConversation;
+import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.EMTextMessageBody;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLConstants;
@@ -23,9 +23,10 @@ import net.melove.demo.chat.widget.MLImageView;
 
 import java.util.List;
 
+
 /**
  * Class ${FILE_NAME}
- * <p>
+ * <p/>
  * Created by lzan13 on 2016/1/6 18:51.
  */
 public class MLMessageAdapter extends BaseAdapter {
@@ -64,7 +65,7 @@ public class MLMessageAdapter extends BaseAdapter {
         mInflater = LayoutInflater.from(mContext);
 
         mListView = listView;
-        mConversation = EMChatManager.getInstance().getConversation(chatId);
+        mConversation = EMClient.getInstance().chatManager().getConversation(chatId);
         messages = mConversation.getAllMessages();
 
     }
@@ -109,14 +110,16 @@ public class MLMessageAdapter extends BaseAdapter {
         int itemType = -1;
         switch (message.getType()) {
             case TXT:
-                if (message.getStringAttribute(MLConstants.ML_ATTR_MSG_TYPE, "null").equals(MLConstants.ML_ATTR_TYPE_RECALL)) {
+                // 判断是否为撤回类型的消息
+                if (message.getBooleanAttribute(MLConstants.ML_ATTR_TYPE, false)) {
                     itemType = MSG_TYPE_SYS_RECALL;
                 } else {
-                    itemType = message.direct == EMMessage.Direct.SEND ? MSG_TYPE_TXT_SEND : MSG_TYPE_TXT_RECEIVED;
+                    itemType = message.direct() == EMMessage.Direct.SEND ? MSG_TYPE_TXT_SEND : MSG_TYPE_TXT_RECEIVED;
                 }
                 break;
             default:
-                itemType = message.direct == EMMessage.Direct.SEND ? MSG_TYPE_TXT_SEND : MSG_TYPE_TXT_RECEIVED;
+                // 默认返回txt类型
+                itemType = message.direct() == EMMessage.Direct.SEND ? MSG_TYPE_TXT_SEND : MSG_TYPE_TXT_RECEIVED;
                 break;
         }
         return itemType;
@@ -132,16 +135,16 @@ public class MLMessageAdapter extends BaseAdapter {
         View itemView = null;
         switch (message.getType()) {
             case TXT:
-                if (message.getStringAttribute(MLConstants.ML_ATTR_MSG_TYPE, "null").equals(MLConstants.ML_ATTR_TYPE_RECALL)) {
+                if (message.getBooleanAttribute(MLConstants.ML_ATTR_TYPE, false)) {
                     itemView = mInflater.inflate(R.layout.item_msg_recall, null);
                 } else {
-                    itemView = message.direct == EMMessage.Direct.SEND
+                    itemView = message.direct() == EMMessage.Direct.SEND
                             ? mInflater.inflate(R.layout.item_msg_text_send, null)
                             : mInflater.inflate(R.layout.item_msg_text_received, null);
                 }
                 break;
             default:
-                itemView = message.direct == EMMessage.Direct.SEND
+                itemView = message.direct() == EMMessage.Direct.SEND
                         ? mInflater.inflate(R.layout.item_msg_text_send, null)
                         : mInflater.inflate(R.layout.item_msg_text_received, null);
                 break;
@@ -158,7 +161,7 @@ public class MLMessageAdapter extends BaseAdapter {
             convertView = createItemView(message);
             viewHolder = new ViewHolder();
             if (message.getType() == EMMessage.Type.TXT) {
-                if (message.getStringAttribute(MLConstants.ML_ATTR_MSG_TYPE, "null").equals(MLConstants.ML_ATTR_TYPE_RECALL)) {
+                if (message.getBooleanAttribute(MLConstants.ML_ATTR_TYPE, false)) {
                     viewHolder.timeView = (TextView) convertView.findViewById(R.id.ml_text_msg_time);
                     viewHolder.contentView = (TextView) convertView.findViewById(R.id.ml_text_msg_content);
                 } else {
@@ -175,12 +178,12 @@ public class MLMessageAdapter extends BaseAdapter {
         }
 
 
-        if (message.getStringAttribute(MLConstants.ML_ATTR_MSG_TYPE, "null").equals(MLConstants.ML_ATTR_TYPE_RECALL)) {
-            String messageStr = ((TextMessageBody) message.getBody()).getMessage().toString();
+        if (message.getBooleanAttribute(MLConstants.ML_ATTR_TYPE, false)) {
+            String messageStr = ((EMTextMessageBody) message.getBody()).getMessage().toString();
             viewHolder.contentView.setText(messageStr);
             viewHolder.timeView.setText(MLDate.long2Time(message.getMsgTime()));
         } else {
-//            viewHolder.avatarView.setImageBitmap();
+            //            viewHolder.avatarView.setImageBitmap();
             viewHolder.usernameView.setText(message.getFrom());
             viewHolder.timeView.setText(MLDate.long2Time(message.getMsgTime()));
             switch (message.getType()) {
@@ -202,7 +205,7 @@ public class MLMessageAdapter extends BaseAdapter {
             }
 
             // 判断消息的状态，如果发送失败就显示重发按钮，并设置重发按钮的监听
-            if (message.status == EMMessage.Status.FAIL) {
+            if (message.status() == EMMessage.Status.FAIL) {
                 viewHolder.msgState.setVisibility(View.VISIBLE);
                 viewHolder.msgState.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -225,10 +228,10 @@ public class MLMessageAdapter extends BaseAdapter {
      * @param viewHolder 展示消息内容的 ViewHolder
      */
     private void handleTextMessage(EMMessage message, ViewHolder viewHolder) {
-        TextMessageBody body = (TextMessageBody) message.getBody();
+        EMTextMessageBody body = (EMTextMessageBody) message.getBody();
         String messageStr = body.getMessage().toString();
         // 判断是不是阅后即焚的消息
-        if (message.getStringAttribute(MLConstants.ML_ATTR_MSG_TYPE, "null").equals(MLConstants.ML_ATTR_TYPE_DESTROY)) {
+        if (message.getBooleanAttribute(MLConstants.ML_ATTR_BURN, false)) {
             viewHolder.contentView.setText(String.format("【内容长度%d】点击阅读", messageStr.length()));
         } else {
             viewHolder.contentView.setText(messageStr);
@@ -251,14 +254,14 @@ public class MLMessageAdapter extends BaseAdapter {
     Handler mHandler = new Handler() {
 
         private void refresh() {
-//            messages = mConversation.getAllMessages();
+            //            messages = mConversation.getAllMessages();
             notifyDataSetChanged();
             mListView.setSelection(messages.size() - 1);
         }
 
         @Override
         public void handleMessage(Message msg) {
-//            super.handleMessage(msg);
+            //            super.handleMessage(msg);
             switch (msg.what) {
                 case HANDLER_MSG_REFRESH:
                     refresh();

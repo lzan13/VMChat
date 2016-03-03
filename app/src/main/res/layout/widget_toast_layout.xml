@@ -6,7 +6,8 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/ml_dimen_40"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/ml_dimen_40"
         android:background="@drawable/ml_shape_toast"
         android:elevation="@dimen/ml_dimen_8"
         android:gravity="center_vertical"

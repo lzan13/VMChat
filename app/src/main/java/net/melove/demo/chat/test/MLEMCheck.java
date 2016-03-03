@@ -8,8 +8,8 @@ import android.content.pm.ServiceInfo;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.easemob.chat.EMChat;
-import com.easemob.chat.EMChatConfig;
+import com.hyphenate.chat.EMChatConfig;
+import com.hyphenate.chat.EMClient;
 
 import java.util.Arrays;
 import java.util.List;
@@ -178,9 +178,9 @@ public class MLEMCheck {
             logE("Exception %s", e.getMessage());
 //            e.printStackTrace();
         }
-        if (EMChat.getInstance().getAppkey() != null && !EMChat.getInstance().getAppkey().equals("")) {
+        if (EMClient.getInstance().getOptions().getAppKey() != null && !EMClient.getInstance().getOptions().getAppKey().equals("")) {
             isAppkey = true;
-            appkey = EMChatConfig.getInstance().APPKEY;
+            appkey = EMClient.getInstance().getOptions().getAppKey();
         }
         if (isAppkey) {
             logE("appkey 已配置 - %s", appkey);

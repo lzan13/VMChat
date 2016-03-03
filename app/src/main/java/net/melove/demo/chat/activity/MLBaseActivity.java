@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import net.melove.demo.chat.util.MLLog;
+
 /**
  * Created by lzan13 on 2015/7/4.
  */
@@ -16,6 +18,7 @@ public class MLBaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MLLog.d("onCreate");
 
     }
 
@@ -32,31 +35,37 @@ public class MLBaseActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        MLLog.d("onPause");
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
+        MLLog.d("onRestart");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        MLLog.d("onResume");
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         mActivity = this;
+        MLLog.d("onStart");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        MLLog.d("onStop");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        MLLog.d("onDestroy");
     }
 }

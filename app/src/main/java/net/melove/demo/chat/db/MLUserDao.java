@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.text.TextUtils;
 
-import com.easemob.util.HanziToPinyin;
+import com.hyphenate.util.HanziToPinyin;
 
 import net.melove.demo.chat.entity.MLUserEntity;
 

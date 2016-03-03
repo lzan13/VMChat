@@ -10,28 +10,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.easemob.EMEventListener;
-import com.easemob.EMNotifierEvent;
-import com.easemob.chat.EMChatManager;
-import com.easemob.chat.EMConversation;
-import com.easemob.chat.EMMessage;
+
+import com.hyphenate.EMMessageListener;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMMessage;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.adapter.MLViewPagerAdapter;
-import net.melove.demo.chat.application.MLEasemobHelper;
-import net.melove.demo.chat.notification.MLNotifier;
 import net.melove.demo.chat.util.MLLog;
-import net.melove.demo.chat.widget.MLToast;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 单聊模块儿 Fragment
  */
-public class MLHomeFragment extends MLBaseFragment implements EMEventListener {
+public class MLHomeFragment extends MLBaseFragment implements EMMessageListener {
 
-    private EMEventListener mEventListener;
+    private EMMessageListener mMessageListener;
 
     // 和ViewPager配合使用
     private TabLayout mTabLayout;
@@ -82,7 +77,7 @@ public class MLHomeFragment extends MLBaseFragment implements EMEventListener {
     }
 
     private void init() {
-        mEventListener = this;
+        mMessageListener = this;
         mCurrentTabIndex = 0;
         mTabTitles = new String[]{
                 mActivity.getResources().getString(R.string.ml_chat),
@@ -124,63 +119,16 @@ public class MLHomeFragment extends MLBaseFragment implements EMEventListener {
         });
     }
 
-    /**
-     * 实现EMEventListener接口，消息的监听方法，用来监听发来的消息
-     *
-     * @param event
-     */
-    @Override
-    public void onEvent(EMNotifierEvent event) {
-        switch (event.getEvent()) {
-            case EventNewMessage:
-                EMMessage message = (EMMessage) event.getData();
-                MLLog.d("new message!");
-                Map<String, EMConversation> conversations = EMChatManager.getInstance().getAllConversations();
-                for (EMConversation conversation : conversations.values()) {
-                    if (message.getFrom().equals(conversation.getUserName())) {
-
-                    }
-
-                }
-
-
-                    if (mTabLayout.getSelectedTabPosition() == 0) {
-                        mMLConversationFragment.refrshConversation();
-                    }
-                MLNotifier.getInstance(mActivity).sendMessageNotification(message);
-                break;
-            case EventNewCMDMessage:
-                MLLog.d("new cmd message!");
-                break;
-            case EventOfflineMessage:
-
-                break;
-            default:
-
-                break;
-        }
-    }
-
     @Override
     public void onResume() {
         super.onResume();
-        // 定义要监听的消息类型
-        EMNotifierEvent.Event[] events = new EMNotifierEvent.Event[]{
-                EMNotifierEvent.Event.EventDeliveryAck,     // 已发送回执event注册
-                EMNotifierEvent.Event.EventNewCMDMessage,   // 接收透传event注册
-                EMNotifierEvent.Event.EventNewMessage,      // 接收新消息event注册
-                EMNotifierEvent.Event.EventOfflineMessage,  // 接收离线消息event注册
-                EMNotifierEvent.Event.EventReadAck          // 已读回执event注册
-        };
-        // 注册消息监听
-        EMChatManager.getInstance().registerEventListener(mEventListener, events);
     }
 
     @Override
     public void onStop() {
         super.onStop();
         // 取消消息的监听事件，为了防止多个界面同时监听
-        EMChatManager.getInstance().unregisterEventListener(mEventListener);
+        EMClient.getInstance().chatManager().removeMessageListener(mMessageListener);
     }
 
     @Override
@@ -199,4 +147,54 @@ public class MLHomeFragment extends MLBaseFragment implements EMEventListener {
         super.onDetach();
     }
 
+    /**
+     * 收到新消息
+     *
+     * @param list 收到的新消息集合
+     */
+    @Override
+    public void onMessageReceived(List<EMMessage> list) {
+
+    }
+
+    /**
+     * 收到新的透传消息
+     *
+     * @param list
+     */
+    @Override
+    public void onCmdMessageReceived(List<EMMessage> list) {
+
+    }
+
+    /**
+     * 收到新的已读回执
+     *
+     * @param list 收到消息已读回执
+     */
+    @Override
+    public void onMessageReadAckReceived(List<EMMessage> list) {
+
+    }
+
+    /**
+     * 收到新的发送回执
+     *
+     * @param list 收到发送回执的消息集合
+     */
+    @Override
+    public void onMessageDeliveryAckReceived(List<EMMessage> list) {
+
+    }
+
+    /**
+     * 消息的状态改变
+     *
+     * @param message 发生改变的消息
+     * @param object  包含改变的消息
+     */
+    @Override
+    public void onMessageChanged(EMMessage message, Object object) {
+
+    }
 }
