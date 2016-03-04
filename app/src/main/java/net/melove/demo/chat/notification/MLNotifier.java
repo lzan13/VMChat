@@ -11,9 +11,9 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 
 import net.melove.demo.chat.R;
-import net.melove.demo.chat.activity.MLChatActivity;
-import net.melove.demo.chat.activity.MLMainActivity;
-import net.melove.demo.chat.entity.MLApplyForEntity;
+import net.melove.demo.chat.conversation.MLChatActivity;
+import net.melove.demo.chat.main.MLMainActivity;
+import net.melove.demo.chat.contacts.MLInvitedEntity;
 
 /**
  * Created by lzan13 on 2016/1/13.
@@ -21,7 +21,7 @@ import net.melove.demo.chat.entity.MLApplyForEntity;
 public class MLNotifier {
     private Context mContext;
 
-    private int mApplyForNotifyId = 5120;
+    private int mInvitedNotifyId = 5120;
     private int mMsgNotifyId = 5121;
 
     private static MLNotifier instance;
@@ -75,22 +75,22 @@ public class MLNotifier {
     /**
      * 发送好友请求通知
      *
-     * @param applyForEntity 申请与通知的实体类，用来确定发送通知的内容
+     * @param invitedEntity 申请与通知的实体类，用来确定发送通知的内容
      */
-    public void sendApplyForNotification(MLApplyForEntity applyForEntity) {
+    public void sendInvitedNotification(MLInvitedEntity invitedEntity) {
 
         String message = null;
         // 设置通知栏标题
         mBuilder.setContentTitle("环聊通知");
-        switch (applyForEntity.getStatus()) {
+        switch (invitedEntity.getStatus()) {
             case BEAGREED:
-                message = applyForEntity.getUserName() + " 同意了你的请求";
+                message = invitedEntity.getUserName() + " 同意了你的请求";
                 break;
             case BEREFUSED:
-                message = applyForEntity.getUserName() + " 拒绝了你的请求";
+                message = invitedEntity.getUserName() + " 拒绝了你的请求";
                 break;
             case BEAPPLYFOR:
-                message = applyForEntity.getUserName() + " 申请添加你为好友";
+                message = invitedEntity.getUserName() + " 申请添加你为好友";
                 break;
             case GROUPAPPLYFOR:
 
@@ -108,7 +108,7 @@ public class MLNotifier {
         mBuilder.setContentIntent(pIntent);
 
         // 发送通知
-        mNotificationManager.notify(mApplyForNotifyId, mBuilder.build());
+        mNotificationManager.notify(mInvitedNotifyId, mBuilder.build());
     }
 
     /**

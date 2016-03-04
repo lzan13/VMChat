@@ -64,7 +64,7 @@
             </LinearLayout>
         </LinearLayout>
 
-        <net.melove.demo.chat.widget.MLImageView
+        <net.melove.demo.chat.common.widget.MLImageView
             android:id="@+id/ml_img_msg_avatar"
             android:layout_width="@dimen/ml_dimen_40"
             android:layout_height="@dimen/ml_dimen_40"

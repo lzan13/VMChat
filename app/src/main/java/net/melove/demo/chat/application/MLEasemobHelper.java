@@ -6,6 +6,10 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 
 import com.hyphenate.EMCallBack;
+import com.hyphenate.EMConnectionListener;
+import com.hyphenate.EMContactListener;
+import com.hyphenate.EMError;
+import com.hyphenate.EMGroupChangeListener;
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCmdMessageBody;
@@ -13,9 +17,14 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMOptions;
 import com.hyphenate.chat.EMTextMessageBody;
 
-import net.melove.demo.chat.util.MLDate;
-import net.melove.demo.chat.util.MLLog;
-import net.melove.demo.chat.util.MLSPUtil;
+import net.melove.demo.chat.R;
+import net.melove.demo.chat.common.util.MLCrypto;
+import net.melove.demo.chat.common.util.MLDate;
+import net.melove.demo.chat.common.util.MLLog;
+import net.melove.demo.chat.common.util.MLSPUtil;
+import net.melove.demo.chat.contacts.MLInvitedEntity;
+import net.melove.demo.chat.database.MLInvitedDao;
+import net.melove.demo.chat.notification.MLNotifier;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -35,15 +44,27 @@ public class MLEasemobHelper {
     // 记录sdk是否初始化
     private boolean isInit;
 
+    // 保存当前Activity列表
     private List<Activity> mActivityList = new ArrayList<Activity>();
 
+    // 环信的消息监听器
     private EMMessageListener mMessageListener;
+
+    // 环信联系人监听
+    private EMContactListener mContactListener;
+    // 申请已通知的 Dao
+    private MLInvitedDao mInvitedDao;
+
+    // 环信连接监听
+    private EMConnectionListener mConnectionListener;
+    // 环信群组变化监听
+    private EMGroupChangeListener mGroupChangeListener;
 
 
     /**
      * 单例类，用来初始化环信的sdk
      *
-     * @return
+     * @return 返回当前类的实例
      */
     public static MLEasemobHelper getInstance() {
         if (instance == null) {
@@ -56,7 +77,6 @@ public class MLEasemobHelper {
      * 私有的构造方法
      */
     private MLEasemobHelper() {
-
     }
 
     /**
@@ -86,6 +106,7 @@ public class MLEasemobHelper {
          * SDK初始化的一些配置
          */
         EMOptions options = new EMOptions();
+        // 设置自动登录
         options.setAutoLogin(true);
         // 设置是否需要发送已读回执
         options.setRequireAck(true);
@@ -96,9 +117,9 @@ public class MLEasemobHelper {
         // 添加好友是否自动同意，如果是自动同意就不会收到好友请求，因为sdk会自动处理
         options.setAcceptInvitationAlways(false);
         // 设置集成小米推送的appid和appkey
-        String APP_ID = "2882303761517430984";
-        String APP_KEY = "5191743065984";
-        options.setMipushConfig(APP_ID, APP_KEY);
+        //        String APP_ID = "2882303761517430984";
+        //        String APP_KEY = "5191743065984";
+        //        options.setMipushConfig(APP_ID, APP_KEY);
 
         // 调用初始化方法初始化sdk
         EMClient.getInstance().init(mContext, options);
@@ -119,20 +140,60 @@ public class MLEasemobHelper {
      * 初始化环信的一些监听
      */
     public void initGlobalListener() {
+        // 设置全局的连接监听
+        setConnectionListener();
         // 初始化全局消息监听
-        initMessageListener();
+        setMessageListener();
+        // 设置全局的联系人变化监听
+        setContactListener();
+        // 设置全局的群组变化监听
+        setGroupChangeListener();
     }
 
     /**
+     * ------------------------------- Connection Listener ---------------------
+     * 链接监听，监听与服务器连接状况
+     */
+    private void setConnectionListener() {
+        mConnectionListener = new EMConnectionListener() {
+
+            /**
+             * 链接聊天服务器成功
+             */
+            @Override
+            public void onConnected() {
+                MLLog.d("onConnected");
+            }
+
+            /**
+             * 链接聊天服务器失败
+             *
+             * @param errorCode
+             */
+            @Override
+            public void onDisconnected(final int errorCode) {
+                if (errorCode == EMError.USER_LOGIN_ANOTHER_DEVICE) {
+                    MLLog.d("被踢，多次初始化也可能出现-" + errorCode);
+                } else if (errorCode == EMError.USER_REMOVED) {
+                    MLLog.d("账户移除-" + errorCode);
+                } else {
+                    MLLog.d("连接不到服务器-" + errorCode);
+                }
+            }
+        };
+    }
+
+    /**
+     * ---------------------------------- Message Listener ----------------------------
      * 初始化全局的消息监听
      */
-    protected void initMessageListener() {
+    protected void setMessageListener() {
         mMessageListener = new EMMessageListener() {
             /**
              * 收到新消息
              * TODO 离线消息（未确定）
              *
-             * @param list
+             * @param list 收到的新消息集合
              */
             @Override
             public void onMessageReceived(List<EMMessage> list) {
@@ -160,38 +221,233 @@ public class MLEasemobHelper {
             }
 
             /**
-             * 收到消息已读回执
+             * 收到新的已读回执
              *
-             * @param list
+             * @param list 收到消息已读回执
              */
             @Override
             public void onMessageReadAckReceived(List<EMMessage> list) {
-
             }
 
             /**
-             * 收到消息送达回执
+             * 收到新的发送回执
              *
-             * @param list
+             * @param list 收到发送回执的消息集合
              */
             @Override
             public void onMessageDeliveryAckReceived(List<EMMessage> list) {
-
             }
 
             /**
-             * 消息改变
+             * 消息的状态改变
              *
-             * @param message
-             * @param o
+             * @param message 发生改变的消息
+             * @param object  包含改变的消息
              */
             @Override
-            public void onMessageChanged(EMMessage message, Object o) {
-
+            public void onMessageChanged(EMMessage message, Object object) {
             }
         };
         // 注册消息监听
         EMClient.getInstance().chatManager().addMessageListener(mMessageListener);
+    }
+
+    /**
+     * ---------------------------------- Contact Listener -------------------------------
+     * 联系人监听，用来监听联系人的请求与变化等
+     */
+    private void setContactListener() {
+
+        mContactListener = new EMContactListener() {
+
+            /**
+             * 监听到添加联系人
+             * @param s 被添加的联系人
+             */
+            @Override
+            public void onContactAdded(String s) {
+
+            }
+
+            /**
+             * 监听删除联系人
+             * @param s 被删除的联系人
+             */
+            @Override
+            public void onContactDeleted(String s) {
+
+            }
+
+            /**
+             * 收到对方联系人申请
+             *
+             * @param username
+             * @param reason
+             */
+            @Override
+            public void onContactInvited(String username, String reason) {
+                MLLog.d("onContactInvited");
+
+                // 创建一条好友申请数据
+                MLInvitedEntity invitedEntity = new MLInvitedEntity();
+                invitedEntity.setUserName(username);
+                //            invitedEntity.setNickName(mUserEntity.getNickName());
+                invitedEntity.setReason(reason);
+                invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.BEAPPLYFOR);
+                invitedEntity.setType(0);
+                invitedEntity.setTime(MLDate.getCurrentMillisecond());
+                invitedEntity.setObjId(MLCrypto.cryptoStr2MD5(invitedEntity.getUserName() + invitedEntity.getType()));
+
+                /**
+                 * 这里先读取本地的申请与通知信息
+                 * 如果相同则直接 return，不进行操作
+                 * 只有当新的好友请求发过来时才进行保存，并发送通知
+                 */
+                // 这里进行一下筛选，如果已存在则去更新本地内容
+                MLInvitedEntity temp = mInvitedDao.getInvitedEntiry(invitedEntity.getObjId());
+                if (temp != null) {
+                    if (temp.getReason().equals(invitedEntity.getReason())) {
+                        // 这里判断当前保存的信息如果和新的一模一样不进行操作
+                        return;
+                    }
+                    mInvitedDao.updateInvited(invitedEntity);
+                } else {
+                    mInvitedDao.saveInvited(invitedEntity);
+                }
+                // 调用发送通知栏提醒方法，提醒用户查看申请通知
+                MLNotifier.getInstance(MLApplication.getContext()).sendInvitedNotification(invitedEntity);
+            }
+
+            /**
+             * 对方同意了联系人申请
+             *
+             * @param username 收到处理的对方的username
+             */
+            @Override
+            public void onContactAgreed(String username) {
+                MLLog.d("onContactAgreed %", username);
+
+                // 这里进行一下筛选，如果已存在则去更新本地内容
+                MLInvitedEntity temp = mInvitedDao.getInvitedEntiry(MLCrypto.cryptoStr2MD5(username + 0));
+                if (temp != null) {
+                    temp.setStatus(MLInvitedEntity.InvitedStatus.BEAGREED);
+                    mInvitedDao.updateInvited(temp);
+                } else {
+                    // 创建一条好友申请数据
+                    MLInvitedEntity invitedEntity = new MLInvitedEntity();
+                    invitedEntity.setUserName(username);
+                    //                invitedEntity.setNickName(mUserEntity.getNickName());
+                    invitedEntity.setReason(MLApplication.getContext().getString(R.string.ml_add_contact_reason));
+                    invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.BEAGREED);
+                    invitedEntity.setType(0);
+                    invitedEntity.setTime(MLDate.getCurrentMillisecond());
+                    invitedEntity.setObjId(MLCrypto.cryptoStr2MD5(invitedEntity.getUserName() + invitedEntity.getType()));
+                    mInvitedDao.saveInvited(invitedEntity);
+                }
+                // 调用发送通知栏提醒方法，提醒用户查看申请通知
+                MLNotifier.getInstance(MLApplication.getContext()).sendInvitedNotification(temp);
+            }
+
+            /**
+             * 对方拒绝了联系人申请
+             *
+             * @param username 收到处理的对方的username
+             */
+            @Override
+            public void onContactRefused(String username) {
+                MLLog.d("onContactRefused");
+                // 这里进行一下筛选，如果已存在则去更新本地内容
+                MLInvitedEntity temp = mInvitedDao.getInvitedEntiry(MLCrypto.cryptoStr2MD5(username + 0));
+                if (temp != null) {
+                    temp.setStatus(MLInvitedEntity.InvitedStatus.BEREFUSED);
+                    mInvitedDao.updateInvited(temp);
+                } else {
+                    // 创建一条好友申请数据
+                    MLInvitedEntity invitedEntity = new MLInvitedEntity();
+                    invitedEntity.setUserName(username);
+                    //                invitedEntity.setNickName(mUserEntity.getNickName());
+                    invitedEntity.setReason(MLApplication.getContext().getString(R.string.ml_add_contact_reason));
+                    invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.BEREFUSED);
+                    invitedEntity.setType(0);
+                    invitedEntity.setTime(MLDate.getCurrentMillisecond());
+                    invitedEntity.setObjId(MLCrypto.cryptoStr2MD5(invitedEntity.getUserName() + invitedEntity.getType()));
+                    mInvitedDao.saveInvited(invitedEntity);
+                }
+                // 调用发送通知栏提醒方法，提醒用户查看申请通知
+                MLNotifier.getInstance(MLApplication.getContext()).sendInvitedNotification(temp);
+            }
+        };
+    }
+
+    /**
+     * ------------------------------------- Group Listener -------------------------------------
+     * 群组变化监听，用来监听群组请求，以及其他群组情况
+     */
+    private void setGroupChangeListener() {
+        mGroupChangeListener = new EMGroupChangeListener() {
+
+            /**
+             * 收到其他用户邀请加入群组
+             *
+             * @param groupId   要加入的群的id
+             * @param groupName 要加入的群的名称
+             * @param inviter   邀请者
+             * @param reason    邀请理由
+             */
+            @Override
+            public void onInvitationReceived(String groupId, String groupName, String inviter, String reason) {
+
+            }
+
+            /**
+             * 用户申请加入群组
+             *
+             * @param groupId   要加入的群的id
+             * @param groupName 要加入的群的名称
+             * @param applyer   申请人的username
+             * @param reason    申请加入的reason
+             */
+            @Override
+            public void onApplicationReceived(String groupId, String groupName, String applyer, String reason) {
+
+            }
+
+            @Override
+            public void onApplicationAccept(String s, String s1, String s2) {
+
+            }
+
+            @Override
+            public void onApplicationDeclined(String s, String s1, String s2, String s3) {
+
+            }
+
+            @Override
+            public void onInvitationAccpted(String s, String s1, String s2) {
+
+            }
+
+            @Override
+            public void onInvitationDeclined(String s, String s1, String s2) {
+
+            }
+
+            @Override
+            public void onUserRemoved(String s, String s1) {
+
+            }
+
+            @Override
+            public void onGroupDestroy(String s, String s1) {
+
+            }
+
+
+            @Override
+            public void onAutoAcceptInvitationFromGroup(String s, String s1, String s2) {
+
+            }
+        };
     }
 
     /**

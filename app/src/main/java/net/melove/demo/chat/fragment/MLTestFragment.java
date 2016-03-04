@@ -14,10 +14,11 @@ import com.hyphenate.chat.EMTextMessageBody;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLEasemobHelper;
-import net.melove.demo.chat.util.MLDate;
-import net.melove.demo.chat.util.MLLog;
-import net.melove.demo.chat.widget.MLToast;
-import net.melove.demo.chat.widget.MLViewGroup;
+import net.melove.demo.chat.common.base.MLBaseFragment;
+import net.melove.demo.chat.common.util.MLDate;
+import net.melove.demo.chat.common.util.MLLog;
+import net.melove.demo.chat.common.widget.MLToast;
+import net.melove.demo.chat.common.widget.MLViewGroup;
 
 /**
  * 测试Fragment，

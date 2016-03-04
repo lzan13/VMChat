@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <net.melove.demo.chat.widget.MLViewGroup
+        <net.melove.demo.chat.common.widget.MLViewGroup
             android:id="@+id/ml_view_custom_viewgroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -71,7 +71,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="录音" />
-        </net.melove.demo.chat.widget.MLViewGroup>
+        </net.melove.demo.chat.common.widget.MLViewGroup>
     </LinearLayout>
 
 </RelativeLayout>

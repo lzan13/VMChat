@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/ml_white_100"
-    tools:context=".activity.MLVideoCallActivity">
+    tools:context=".main.MLVideoCallActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"

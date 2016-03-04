@@ -112,7 +112,7 @@
                         android:textSize="@dimen/ml_size_16" />
                 </RelativeLayout>
 
-                <!--<net.melove.demo.chat.widget.MLRecordView-->
+                <!--<net.melove.demo.chat.common.widget.MLRecordView-->
                 <!--android:layout_width="match_parent"-->
                 <!--android:layout_height="@dimen/ml_dimen_48"-->
                 <!--android:background="@color/ml_theme_background_primary"-->
@@ -190,7 +190,7 @@
                     android:gravity="center"
                     android:orientation="vertical">
 
-                    <net.melove.demo.chat.widget.MLImageView
+                    <net.melove.demo.chat.common.widget.MLImageView
                         android:id="@+id/ml_img_attch_photo"
                         android:layout_width="@dimen/ml_dimen_52"
                         android:layout_height="@dimen/ml_dimen_52"
@@ -214,7 +214,7 @@
                     android:gravity="center"
                     android:orientation="vertical">
 
-                    <net.melove.demo.chat.widget.MLImageView
+                    <net.melove.demo.chat.common.widget.MLImageView
                         android:id="@+id/ml_img_attach_video"
                         android:layout_width="@dimen/ml_dimen_52"
                         android:layout_height="@dimen/ml_dimen_52"
@@ -238,7 +238,7 @@
                     android:gravity="center"
                     android:orientation="vertical">
 
-                    <net.melove.demo.chat.widget.MLImageView
+                    <net.melove.demo.chat.common.widget.MLImageView
                         android:id="@+id/ml_img_attach_file"
                         android:layout_width="@dimen/ml_dimen_52"
                         android:layout_height="@dimen/ml_dimen_52"
@@ -261,7 +261,7 @@
                     android:gravity="center"
                     android:orientation="vertical">
 
-                    <net.melove.demo.chat.widget.MLImageView
+                    <net.melove.demo.chat.common.widget.MLImageView
                         android:id="@+id/ml_img_attach_location"
                         android:layout_width="@dimen/ml_dimen_52"
                         android:layout_height="@dimen/ml_dimen_52"
@@ -295,7 +295,7 @@
                     android:gravity="center"
                     android:orientation="vertical">
 
-                    <net.melove.demo.chat.widget.MLImageView
+                    <net.melove.demo.chat.common.widget.MLImageView
                         android:id="@+id/ml_img_attach_gift"
                         android:layout_width="@dimen/ml_dimen_52"
                         android:layout_height="@dimen/ml_dimen_52"
@@ -318,7 +318,7 @@
                     android:gravity="center"
                     android:orientation="vertical">
 
-                    <net.melove.demo.chat.widget.MLImageView
+                    <net.melove.demo.chat.common.widget.MLImageView
                         android:id="@+id/ml_img_attach_contacts"
                         android:layout_width="@dimen/ml_dimen_52"
                         android:layout_height="@dimen/ml_dimen_52"

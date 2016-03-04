@@ -172,7 +172,9 @@
     <string name="ml_toast_add_contacts_failed">"发送好友请求失败-_-||，稍后重试"</string>
 
 
-    <string name="ml_input_limit">0123456789abcdefghigklmnopqrstuvwxyz</string>
+    <!--输入框限制输入内容-->
+    <string name="ml_input_limit">0123456789abcdefghigklmnopqrstuvwxyz-_.</string>
+    <!--Copyright-->
     <string name="ml_copy_right">©2015 melove.net</string>
 
 </resources>

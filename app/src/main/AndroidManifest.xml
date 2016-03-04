@@ -67,56 +67,54 @@
         android:theme="@style/MLTheme.Base">
         <!-- Activity的基类 -->
         <activity
-            android:name=".activity.MLBaseActivity"
+            android:name=".common.base.MLBaseActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Default" />
         <!-- 主界面 -->
         <activity
-            android:name=".activity.MLMainActivity"
+            android:name=".main.MLMainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/MLTheme.Default" />
-        <!--启动界面-->
-        <activity
-            android:name=".activity.MLSplashActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/MLTheme.Default">
+            android:theme="@style/MLTheme.Launcher" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!-- 测试界面 -->
+        <!--启动界面-->
         <activity
-            android:name=".test.MLTestActivity"
+            android:name=".main.MLSplashActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/MLTheme.Default" />
+            android:theme="@style/MLTheme.Default">
+
+        </activity>
+        <!-- 测试界面 -->
         <!-- 登录界面 -->
         <activity
-            android:name=".activity.MLSigninActivity"
+            android:name=".authentication.MLSigninActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Default"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <!-- 注册界面 -->
         <activity
-            android:name=".activity.MLSignupActivity"
+            android:name=".authentication.MLSignupActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Default"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <!-- 账户信息界面 -->
         <activity
-            android:name=".activity.MLUserInfoActivity"
+            android:name=".contacts.MLUserInfoActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Default" />
         <!-- 聊天界面 -->
         <activity
-            android:name=".activity.MLChatActivity"
+            android:name=".conversation.MLChatActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Default"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <!--搜索界面-->
         <activity
-            android:name=".activity.MLSearchActivity"
+            android:name=".main.MLSearchActivity"
             android:theme="@style/MLTheme.Default"
             android:windowSoftInputMode="adjustResize|stateVisible"></activity>
 

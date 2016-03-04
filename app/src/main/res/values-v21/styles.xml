@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!--启动时的主题样式-->
+    <style name="MLTheme.Launcher" parent="MLTheme.Base">
+        <item name="android:windowBackground">@color/ml_theme_background</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
     <!-- 适配 Android SDK版本大于21的主题 -->
     <style name="MLTheme.Default" parent="MLTheme.Base">
 
         <!-- 设置允许修改系统栏的背景色 比如导航栏 状态栏等-->
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <!--设置状态栏为透明-->
-        <item name="android:statusBarColor">@color/ml_theme_primary_dark</item>
+        <item name="android:statusBarColor">@drawable/bg_launcher_have_toolbar</item>
 
 
         <!--设置是否允许使用 Transitions 动画-->
@@ -15,7 +22,9 @@
         <item name="android:windowEnterTransition">@transition/transition_fade_in</item>
         <item name="android:windowExitTransition">@transition/transition_fade_out</item>
         <!--指定界面共享元素的 Transitions-->
-        <item name="android:windowSharedElementEnterTransition">@transition/transition_explode</item>
-        <item name="android:windowSharedElementExitTransition">@transition/transition_explode</item>
+        <item name="android:windowSharedElementEnterTransition">@transition/transition_fade_in
+        </item>
+        <item name="android:windowSharedElementExitTransition">@transition/transition_fade_out
+        </item>
     </style>
 </resources>

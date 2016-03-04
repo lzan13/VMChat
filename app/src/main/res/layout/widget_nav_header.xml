@@ -18,7 +18,7 @@
         android:gravity="bottom"
         android:orientation="vertical">
 
-        <net.melove.demo.chat.widget.MLImageView
+        <net.melove.demo.chat.common.widget.MLImageView
             android:id="@+id/ml_img_nav_avatar"
             android:layout_width="@dimen/ml_dimen_56"
             android:layout_height="@dimen/ml_dimen_56"
