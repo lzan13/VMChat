@@ -88,12 +88,10 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="recyclerview-v7-23.1.1" level="project" />
     <orderEntry type="library" exported="" name="palette-v7-23.1.1" level="project" />
-    <orderEntry type="library" exported="" name="hyphenatechat_3.0.0" level="project" />
     <orderEntry type="library" exported="" name="support-v4-23.1.1" level="project" />
     <orderEntry type="library" exported="" name="hyphenatechat_3.0.1" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-23.1.1" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-23.1.1" level="project" />
-    <orderEntry type="library" exported="" name="MiPush_SDK_Client_2_2_21" level="project" />
     <orderEntry type="library" exported="" name="design-23.1.1" level="project" />
   </component>
 </module>

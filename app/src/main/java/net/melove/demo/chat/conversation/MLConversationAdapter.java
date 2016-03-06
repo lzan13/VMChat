@@ -35,8 +35,8 @@ public class MLConversationAdapter extends BaseAdapter {
     /**
      * 构造方法，需传递过来上下文对象和数据源
      *
-     * @param context
-     * @param list
+     * @param context 上下文对象
+     * @param list    需要展示的会话列表集合
      */
     public MLConversationAdapter(Context context, List<EMConversation> list) {
         mContext = context;
@@ -55,7 +55,7 @@ public class MLConversationAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     @Override

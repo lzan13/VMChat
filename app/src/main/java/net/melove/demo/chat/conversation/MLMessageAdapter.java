@@ -263,6 +263,8 @@ public class MLMessageAdapter extends BaseAdapter {
     private class MLHandler extends Handler {
 
         private void refresh() {
+            messages.clear();
+            messages = mConversation.getAllMessages();
             notifyDataSetChanged();
             mListView.setSelection(messages.size() - 1);
         }

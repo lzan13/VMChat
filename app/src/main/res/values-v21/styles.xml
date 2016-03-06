@@ -3,8 +3,10 @@
 
     <!--启动时的主题样式-->
     <style name="MLTheme.Launcher" parent="MLTheme.Base">
-        <item name="android:windowBackground">@color/ml_theme_background</item>
-        <item name="android:windowFullscreen">true</item>
+        <!--防止启动瞬间黑屏或白屏，程序启动时的背景图，可以设置为一张代表性的logo，或者设置app框架类图-->
+        <item name="android:windowBackground">@mipmap/bg_launcher_statusbar_toolbar</item>
+        5.0以上的系统可以设置状态栏是否透明
+        <item name="android:statusBarColor">@color/ml_transparent</item>
     </style>
 
     <!-- 适配 Android SDK版本大于21的主题 -->
@@ -13,7 +15,7 @@
         <!-- 设置允许修改系统栏的背景色 比如导航栏 状态栏等-->
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <!--设置状态栏为透明-->
-        <item name="android:statusBarColor">@drawable/bg_launcher_have_toolbar</item>
+        <item name="android:statusBarColor">@color/ml_transparent</item>
 
 
         <!--设置是否允许使用 Transitions 动画-->

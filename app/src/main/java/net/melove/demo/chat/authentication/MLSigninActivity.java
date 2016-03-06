@@ -114,7 +114,7 @@ public class MLSigninActivity extends MLBaseActivity {
                 case R.id.ml_btn_signup:
                     Intent intent = new Intent();
                     intent.setClass(mActivity, MLSignupActivity.class);
-                    ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, mToolbar, "toolbar");
+                    ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity);
                     ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
                     break;
                 case R.id.ml_btn_forget_password:
@@ -193,7 +193,7 @@ public class MLSigninActivity extends MLBaseActivity {
 
                         Intent intent = new Intent();
                         intent.setClass(mActivity, MLMainActivity.class);
-                        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeCustomAnimation(mActivity, R.anim.ml_anim_fade_in, R.anim.ml_anim_fade_out);
+                        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity);
                         ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
                         mActivity.finish();
                     }

@@ -18,6 +18,7 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 
 import net.melove.demo.chat.R;
+import net.melove.demo.chat.common.util.MLLog;
 import net.melove.demo.chat.main.MLMainActivity;
 import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.common.base.MLBaseFragment;
@@ -77,6 +78,7 @@ public class MLConversationsFragment extends MLBaseFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        // 因为当前 Fragment 的父容器也是 Fragment，因此获取当前的 Activity 需要通过父容器来获得
         mActivity = getParentFragment().getActivity();
 
         initView();
@@ -86,14 +88,15 @@ public class MLConversationsFragment extends MLBaseFragment {
      * 初始化会话列表界面
      */
     private void initView() {
+        // 加载会话到list集合
         loadConversationList();
 
         // 实例化会话列表的 Adapter 对象
         mAdapter = new MLConversationAdapter(mActivity, mConversationList);
-
         // 初始化会话列表的 ListView 控件
         mListView = (ListView) getView().findViewById(R.id.ml_listview_conversation);
         mListView.setAdapter(mAdapter);
+
         // 设置列表项点击监听
         setItemClickListener();
         // 设置列表项长按监听
@@ -118,32 +121,33 @@ public class MLConversationsFragment extends MLBaseFragment {
         mConversationList = new ArrayList<EMConversation>();
         synchronized (conversations) {
             for (EMConversation temp : conversations.values()) {
+                MLLog.d("loadConversation - name - %s, %s, %d", temp.getUserName(), temp.getLastMessage(), temp.getAllMsgCount());
                 mConversationList.add(temp);
             }
         }
 
         // 使用Collectons的sort()方法 对会话列表进行排序
-        Collections.sort(mConversationList, new Comparator<EMConversation>() {
-            @Override
-            public int compare(EMConversation lhs, EMConversation rhs) {
-                // 这里判断的是当有一方的值为空的情况下，尽量把空值的一方挪到下边，让有消息的一方排在上边，
-                // 防止空值的某一项一直处在最上方
-                if (lhs.getAllMessages().size() == 0 && rhs.getAllMessages().size() == 0) {
-                    return 0;
-                } else if (lhs.getAllMessages().size() == 0 && rhs.getAllMessages().size() > 0) {
-                    return -1;
-                } else if (lhs.getAllMessages().size() >= 0 && rhs.getAllMessages().size() == 0) {
-                    return 1;
-                }
-                // 判断需要排序的两项的顺序
-                if (lhs.getLastMessage().getMsgTime() > rhs.getLastMessage().getMsgTime()) {
-                    return 1;
-                } else if (lhs.getLastMessage().getMsgTime() > rhs.getLastMessage().getMsgTime()) {
-                    return -1;
-                }
-                return 0;
-            }
-        });
+//        Collections.sort(mConversationList, new Comparator<EMConversation>() {
+//            @Override
+//            public int compare(EMConversation lhs, EMConversation rhs) {
+//                // 这里判断的是当有一方的值为空的情况下，尽量把空值的一方挪到下边，让有消息的一方排在上边，
+//                // 防止空值的某一项一直处在最上方
+//                if (lhs.getAllMessages().size() == 0 && rhs.getAllMessages().size() == 0) {
+//                    return 0;
+//                } else if (lhs.getAllMessages().size() == 0 && rhs.getAllMessages().size() > 0) {
+//                    return -1;
+//                } else if (lhs.getAllMessages().size() >= 0 && rhs.getAllMessages().size() == 0) {
+//                    return 1;
+//                }
+//                // 判断需要排序的两项的顺序
+//                if (lhs.getLastMessage().getMsgTime() > rhs.getLastMessage().getMsgTime()) {
+//                    return 1;
+//                } else if (lhs.getLastMessage().getMsgTime() > rhs.getLastMessage().getMsgTime()) {
+//                    return -1;
+//                }
+//                return 0;
+//            }
+//        });
     }
 
     /**
@@ -157,7 +161,7 @@ public class MLConversationsFragment extends MLBaseFragment {
                 Intent intent = new Intent();
                 intent.setClass(mActivity, MLChatActivity.class);
                 intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mConversationList.get(position).getUserName());
-                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, ((MLMainActivity) mActivity).getToolbar(), "toolbar");
+                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity);
                 ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
             }
         });

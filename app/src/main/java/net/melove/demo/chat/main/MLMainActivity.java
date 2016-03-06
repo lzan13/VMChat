@@ -365,8 +365,10 @@ public class MLMainActivity extends MLBaseActivity implements
      * 开始搜索用户或者群组，
      */
     private void startSearch() {
-        Intent intent = new Intent(mActivity, MLSearchActivity.class);
-        startActivity(intent);
+        Intent intent = new Intent();
+        intent.setClass(mActivity, MLSearchActivity.class);
+        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity);
+        ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
     }
 
     /**
@@ -405,7 +407,7 @@ public class MLMainActivity extends MLBaseActivity implements
             case 0x20:
                 Intent intent = new Intent();
                 intent.setClass(mActivity, MLUserInfoActivity.class);
-                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, mToolbar, "toolbar");
+                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity);
                 ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
                 break;
             default:

@@ -3,6 +3,8 @@ package net.melove.demo.chat.main;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
@@ -88,7 +90,8 @@ public class MLSearchActivity extends MLBaseActivity {
                 Intent intent = new Intent();
                 intent.setClass(mActivity, MLUserInfoActivity.class);
                 intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, str);
-                startActivity(intent);
+                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity);
+                ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
                 mActivity.finish();
             }
         }).start();
