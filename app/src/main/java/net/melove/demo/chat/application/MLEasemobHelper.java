@@ -3,7 +3,9 @@ package net.melove.demo.chat.application;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.support.v4.content.LocalBroadcastManager;
 
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMConnectionListener;
@@ -23,7 +25,9 @@ import net.melove.demo.chat.common.util.MLDate;
 import net.melove.demo.chat.common.util.MLLog;
 import net.melove.demo.chat.common.util.MLSPUtil;
 import net.melove.demo.chat.contacts.MLInvitedEntity;
+import net.melove.demo.chat.contacts.MLUserEntity;
 import net.melove.demo.chat.database.MLInvitedDao;
+import net.melove.demo.chat.database.MLUserDao;
 import net.melove.demo.chat.notification.MLNotifier;
 
 import java.util.ArrayList;
@@ -50,16 +54,19 @@ public class MLEasemobHelper {
     // 环信的消息监听器
     private EMMessageListener mMessageListener;
 
+    // 申请与邀请类消息的数据库操作类
+    private MLInvitedDao mInvitedDao;
+    // 用户信息数据库操作类
+    private MLUserDao mUserDao;
     // 环信联系人监听
     private EMContactListener mContactListener;
-    // 申请已通知的 Dao
-    private MLInvitedDao mInvitedDao;
-
     // 环信连接监听
     private EMConnectionListener mConnectionListener;
     // 环信群组变化监听
     private EMGroupChangeListener mGroupChangeListener;
 
+    // App内广播管理器，为了安全，这里使用本地广播
+    private LocalBroadcastManager mLocalBroadcastManager;
 
     /**
      * 单例类，用来初始化环信的sdk
@@ -87,6 +94,13 @@ public class MLEasemobHelper {
      */
     public synchronized boolean initEasemob(Context context) {
         mContext = context;
+
+        mUserDao = new MLUserDao(mContext);
+        mInvitedDao = new MLInvitedDao(mContext);
+
+        // 获取App内广播接收器实例
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(mContext);
+
         // 获取当前进程 id
         int pid = android.os.Process.myPid();
         String processAppName = getAppName(pid);
@@ -200,6 +214,8 @@ public class MLEasemobHelper {
                 for (EMMessage message : list) {
                     MLLog.d("msgId-%s, msgTime-%d, msgFrom-%s", message.getMsgId(), message.getMsgTime(), message.getFrom());
                 }
+                // 发送广播，通知需要刷新UI等操作的地方
+                mLocalBroadcastManager.sendBroadcast(new Intent(MLConstants.ML_ACTION_MESSAGE));
             }
 
             /**
@@ -209,15 +225,15 @@ public class MLEasemobHelper {
              */
             @Override
             public void onCmdMessageReceived(List<EMMessage> list) {
-                for (int i = 0; i < list.size(); i++) {
-                    // 透传消息
-                    EMMessage cmdMessage = list.get(i);
+                for (EMMessage cmdMessage : list) {
                     EMCmdMessageBody body = (EMCmdMessageBody) cmdMessage.getBody();
                     // 判断是不是撤回消息的透传
                     if (body.action().equals(MLConstants.ML_ATTR_RECALL)) {
                         MLEasemobHelper.getInstance().receiveRecallMessage(cmdMessage);
                     }
                 }
+                // 发送广播，通知需要刷新UI等操作的地方
+                mLocalBroadcastManager.sendBroadcast(new Intent(MLConstants.ML_ACTION_MESSAGE));
             }
 
             /**
@@ -262,19 +278,22 @@ public class MLEasemobHelper {
 
             /**
              * 监听到添加联系人
-             * @param s 被添加的联系人
+             *
+             * @param username 被添加的联系人
              */
             @Override
-            public void onContactAdded(String s) {
-
+            public void onContactAdded(String username) {
+                MLUserEntity user = new MLUserEntity();
+                user.setUserName(username);
+                mUserDao.saveContacts(user);
             }
 
             /**
              * 监听删除联系人
-             * @param s 被删除的联系人
+             * @param username 被删除的联系人
              */
             @Override
-            public void onContactDeleted(String s) {
+            public void onContactDeleted(String username) {
 
             }
 
@@ -291,11 +310,11 @@ public class MLEasemobHelper {
                 // 创建一条好友申请数据
                 MLInvitedEntity invitedEntity = new MLInvitedEntity();
                 invitedEntity.setUserName(username);
-                //            invitedEntity.setNickName(mUserEntity.getNickName());
+                //                invitedEntity.setNickName(mUserEntity.getNickName());
                 invitedEntity.setReason(reason);
                 invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.BEAPPLYFOR);
                 invitedEntity.setType(0);
-                invitedEntity.setTime(MLDate.getCurrentMillisecond());
+                invitedEntity.setCreateTime(MLDate.getCurrentMillisecond());
                 invitedEntity.setObjId(MLCrypto.cryptoStr2MD5(invitedEntity.getUserName() + invitedEntity.getType()));
 
                 /**
@@ -316,12 +335,13 @@ public class MLEasemobHelper {
                 }
                 // 调用发送通知栏提醒方法，提醒用户查看申请通知
                 MLNotifier.getInstance(MLApplication.getContext()).sendInvitedNotification(invitedEntity);
+                mLocalBroadcastManager.sendBroadcast(new Intent(MLConstants.ML_ACTION_INVITED));
             }
 
             /**
-             * 对方同意了联系人申请
+             * 对方同意了自己的申请
              *
-             * @param username 收到处理的对方的username
+             * @param username 对方的username
              */
             @Override
             public void onContactAgreed(String username) {
@@ -340,18 +360,19 @@ public class MLEasemobHelper {
                     invitedEntity.setReason(MLApplication.getContext().getString(R.string.ml_add_contact_reason));
                     invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.BEAGREED);
                     invitedEntity.setType(0);
-                    invitedEntity.setTime(MLDate.getCurrentMillisecond());
+                    invitedEntity.setCreateTime(MLDate.getCurrentMillisecond());
                     invitedEntity.setObjId(MLCrypto.cryptoStr2MD5(invitedEntity.getUserName() + invitedEntity.getType()));
                     mInvitedDao.saveInvited(invitedEntity);
                 }
                 // 调用发送通知栏提醒方法，提醒用户查看申请通知
                 MLNotifier.getInstance(MLApplication.getContext()).sendInvitedNotification(temp);
+                mLocalBroadcastManager.sendBroadcast(new Intent(MLConstants.ML_ACTION_INVITED));
             }
 
             /**
              * 对方拒绝了联系人申请
              *
-             * @param username 收到处理的对方的username
+             * @param username 对方的username
              */
             @Override
             public void onContactRefused(String username) {
@@ -369,12 +390,13 @@ public class MLEasemobHelper {
                     invitedEntity.setReason(MLApplication.getContext().getString(R.string.ml_add_contact_reason));
                     invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.BEREFUSED);
                     invitedEntity.setType(0);
-                    invitedEntity.setTime(MLDate.getCurrentMillisecond());
+                    invitedEntity.setCreateTime(MLDate.getCurrentMillisecond());
                     invitedEntity.setObjId(MLCrypto.cryptoStr2MD5(invitedEntity.getUserName() + invitedEntity.getType()));
                     mInvitedDao.saveInvited(invitedEntity);
                 }
                 // 调用发送通知栏提醒方法，提醒用户查看申请通知
                 MLNotifier.getInstance(MLApplication.getContext()).sendInvitedNotification(temp);
+                mLocalBroadcastManager.sendBroadcast(new Intent(MLConstants.ML_ACTION_INVITED));
             }
         };
     }

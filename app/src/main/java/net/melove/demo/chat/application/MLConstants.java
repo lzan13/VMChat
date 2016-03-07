@@ -20,7 +20,14 @@ public class MLConstants {
     // 界面跳转传递 username/groupid 参数的 key
     public static final String ML_EXTRA_CHAT_ID = "ml_chat_id";
 
+    // 自定义广播的 action
+    public static final String ML_ACTION_INVITED = "ml_action_invited";
+    public static final String ML_ACTION_CONTACT = "ml_action_contact";
+    public static final String ML_ACTION_MESSAGE = "ml_action_message";
 
+
+
+    // SharedPreference 保存内容的 key
     public static final String ML_SHARED_USERNAME = "ml_username";
     public static final String ML_SHARED_PASSWORD = "ml_password";
 

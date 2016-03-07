@@ -1,16 +1,24 @@
 package net.melove.demo.chat.contacts;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
 import net.melove.demo.chat.R;
+import net.melove.demo.chat.application.MLConstants;
+import net.melove.demo.chat.common.util.MLLog;
 import net.melove.demo.chat.database.MLUserDao;
 import net.melove.demo.chat.common.base.MLBaseFragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,10 +31,16 @@ public class MLContactsFragment extends MLBaseFragment {
 
     private ListView mListView;
     private View mHeadView;
-    private MLContactsAdapter mContactsAdapter;
+    private MLContactsAdapter mAdapter;
 
+    // 用户信息操作类
     private MLUserDao mUserDao;
+    private List<MLUserEntity> mUserList = new ArrayList<MLUserEntity>();
 
+    // 应用内广播管理器，为了完全这里使用局域广播
+    private LocalBroadcastManager mLocalBroadcastManager;
+    // 会话界面监听会话变化的广播接收器
+    private BroadcastReceiver mBroadcastReceiver;
 
     /**
      * 工厂方法，用来创建一个Fragment的实例
@@ -65,17 +79,46 @@ public class MLContactsFragment extends MLBaseFragment {
 
     }
 
+    /**
+     * 初始化联系人列表界面
+     */
     private void init() {
-        mUserDao = new MLUserDao(mActivity);
+        // 加载所有联系人
+        loadUserList();
 
-        List<MLUserEntity> list = mUserDao.getContactList();
-        mContactsAdapter = new MLContactsAdapter(mActivity, list);
+        // 实例化联系人列表的适配器
+        mAdapter = new MLContactsAdapter(mActivity, mUserList);
         mListView = (ListView) getView().findViewById(R.id.ml_list_contacts);
 
-        mListView.setAdapter(mContactsAdapter);
+        mListView.setAdapter(mAdapter);
 
     }
 
+    /**
+     * 刷新邀请信息界面
+     */
+    private void refreshContacts() {
+        MLLog.i("refresh constacs");
+        mUserList.clear();
+        mUserList.addAll(loadUserList());
+        mAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * 加载联系人列表，TODO 后期需要实现排序
+     *
+     * @return 返回加载的联系人集合
+     */
+    private List<MLUserEntity> loadUserList() {
+        mUserDao = new MLUserDao(mActivity);
+        // TODO 这里暂时只进行了简单的获取用户列表，后期需要实现排序
+        List<MLUserEntity> list = mUserDao.getContactList();
+        return list;
+    }
+
+    /**
+     *
+     */
     private View.OnClickListener viewListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -83,4 +126,48 @@ public class MLContactsFragment extends MLBaseFragment {
             }
         }
     };
+
+    /**
+     * 注册广播接收器，用来监听全局监听监听到新消息之后发送的广播
+     */
+    private void registerBroadcastReceiver() {
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(mActivity);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(MLConstants.ML_ACTION_MESSAGE);
+        mBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                refreshContacts();
+            }
+        };
+        mLocalBroadcastManager.registerReceiver(mBroadcastReceiver, intentFilter);
+    }
+
+    /**
+     * 取消注册消息变化的广播监听
+     */
+    private void unregisterBroadcastReceiver() {
+        mLocalBroadcastManager.unregisterReceiver(mBroadcastReceiver);
+    }
+
+    /**
+     * 重写父类的onResume方法， 在这里注册广播
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        // 刷新联系人界面
+        refreshContacts();
+        // 注册广播监听
+        registerBroadcastReceiver();
+    }
+
+    /**
+     * 重写父类的onStop方法，在这里边记得将注册的广播取消
+     */
+    @Override
+    public void onStop() {
+        super.onStop();
+        unregisterBroadcastReceiver();
+    }
 }

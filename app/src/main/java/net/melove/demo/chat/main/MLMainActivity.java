@@ -90,6 +90,7 @@ public class MLMainActivity extends MLBaseActivity implements
             intent.setClass(this, MLSigninActivity.class);
             ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this);
             ActivityCompat.startActivity(this, intent, optionsCompat.toBundle());
+            this.finish();
         }
         // 将主题设置为正常主题
         setTheme(R.style.MLTheme_Default);

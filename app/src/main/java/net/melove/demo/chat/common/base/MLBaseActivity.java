@@ -18,7 +18,7 @@ public class MLBaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MLLog.d("onCreate");
+        MLLog.i("Activity onCreate");
 
     }
 
@@ -35,37 +35,37 @@ public class MLBaseActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        MLLog.d("onPause");
+        MLLog.i("Activity onPause");
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        MLLog.d("onRestart");
+        MLLog.i("Activity onRestart");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        MLLog.d("onResume");
+        MLLog.i("Activity onResume");
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         mActivity = this;
-        MLLog.d("onStart");
+        MLLog.i("Activity onStart");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        MLLog.d("onStop");
+        MLLog.i("Activity onStop");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        MLLog.d("onDestroy");
+        MLLog.i("Activity onDestroy");
     }
 }

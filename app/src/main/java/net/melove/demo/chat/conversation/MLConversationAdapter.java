@@ -30,7 +30,9 @@ public class MLConversationAdapter extends BaseAdapter {
     // 会话列表的数据源
     private List<EMConversation> mList;
 
-    private final int HANDLER_MSG_REFRESH = 0;
+    // 刷新会话列表
+    private final int HANDLER_CONVERSATION_REFRESH = 0;
+    private MLHandler mHandler;
 
     /**
      * 构造方法，需传递过来上下文对象和数据源
@@ -41,6 +43,7 @@ public class MLConversationAdapter extends BaseAdapter {
     public MLConversationAdapter(Context context, List<EMConversation> list) {
         mContext = context;
         mList = list;
+        mHandler = new MLHandler();
     }
 
     @Override
@@ -60,10 +63,8 @@ public class MLConversationAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
         ViewHolder viewHolder = null;
         EMConversation conversation = (EMConversation) getItem(position);
-
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_conversation, null);
             viewHolder = new ViewHolder(convertView);
@@ -114,14 +115,14 @@ public class MLConversationAdapter extends BaseAdapter {
      */
     public void refreshList() {
         Message msg = mHandler.obtainMessage();
-        msg.what = HANDLER_MSG_REFRESH;
+        msg.what = HANDLER_CONVERSATION_REFRESH;
         mHandler.sendMessage(msg);
     }
 
     /**
      * 自定义Handler，用来处理消息的刷新等
      */
-    Handler mHandler = new Handler() {
+    private class MLHandler extends Handler{
         private void refresh() {
             notifyDataSetChanged();
         }
@@ -130,7 +131,7 @@ public class MLConversationAdapter extends BaseAdapter {
         public void handleMessage(Message msg) {
             //            super.handleMessage(msg);
             switch (msg.what) {
-                case HANDLER_MSG_REFRESH:
+                case HANDLER_CONVERSATION_REFRESH:
                     refresh();
                     break;
             }

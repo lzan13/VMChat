@@ -570,9 +570,9 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 break;
             case R.id.ml_action_delete:
                 // 清空会话信息
-                MLToast.makeToast("清空会话").show();
+//                MLToast.makeToast("清空会话").show();
                 // 此方法只清除内存中加载的消息，并没有清除数据库中保存的消息
-                // mConversation.clear();
+//                 mConversation.clear();
                 // 清除全部信息，包括数据库中的
                 mConversation.clearAllMessages();
                 refreshChatUI();

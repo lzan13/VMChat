@@ -154,7 +154,7 @@ public class MLUserInfoActivity extends MLBaseActivity {
                             invitedEntity.setReason(reason);
                             invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.APPLYFOR);
                             invitedEntity.setType(0);
-                            invitedEntity.setTime(MLDate.getCurrentMillisecond());
+                            invitedEntity.setCreateTime(MLDate.getCurrentMillisecond());
                             invitedEntity.setObjId(MLCrypto.cryptoStr2MD5(invitedEntity.getUserName() + invitedEntity.getType()));
 
                             // 这里进行一下筛选，如果已存在则去更新本地内容

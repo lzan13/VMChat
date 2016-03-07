@@ -27,24 +27,24 @@ public class MLBaseFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        MLLog.d("onPause");
+        MLLog.i("Fragment onPause");
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        MLLog.d("onStart");
+        MLLog.i("Fragment onStart");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        MLLog.d("onStop");
+        MLLog.i("Fragment onStop");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        MLLog.d("onResume");
+        MLLog.i("Fragment onResume");
     }
 }
