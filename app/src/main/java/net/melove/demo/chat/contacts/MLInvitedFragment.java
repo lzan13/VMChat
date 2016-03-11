@@ -136,6 +136,9 @@ public class MLInvitedFragment extends MLBaseFragment {
     }
 
 
+    /**
+     * 刷新申请请求列表
+     */
     private void refreshInvited() {
 
     }
