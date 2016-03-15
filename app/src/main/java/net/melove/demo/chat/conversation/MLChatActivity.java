@@ -9,7 +9,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -43,13 +46,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class ${FILE_NAME}
- * <p/>
  * Created by lzan13 on 2015/10/12 15:00.
  */
 public class MLChatActivity extends MLBaseActivity implements EMMessageListener {
+    // 界面控件
     private Toolbar mToolbar;
-
     // 消息监听器
     private EMMessageListener mMessageListener;
     // 当前聊天的 ID
@@ -57,14 +58,22 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     // 当前会话对象
     private EMConversation mConversation;
 
+    // 下拉刷新控件
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     // ListView 用来显示消息
     private ListView mListView;
     private MLMessageAdapter mAdapter;
+
+    //自定义 Handler
+    private MLHandler mHandler;
 
     // 聊天扩展菜单
     private LinearLayout mAttachMenuLayout;
     // 是否为阅后即焚
     private boolean isBurn;
+
+    // 设置每次下拉分页加载多少条
+    private int mPageSize = 5;
 
     // 聊天内容输入框
     private EditText mEditText;
@@ -81,62 +90,40 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        init();
-        initToolbar();
         initView();
+        initToolbar();
+        initConversation();
         initListView();
-    }
-
-    private void init() {
-        mActivity = this;
-        mMessageListener = this;
-        mChatId = getIntent().getStringExtra(MLConstants.ML_EXTRA_CHAT_ID);
-
-        /**
-         * 初始化会话对象，这里有三个参数么，
-         * 第一个表示会话的当前聊天的 useranme 或者 groupid
-         * 第二个是绘画类型可以为空
-         * 第三个表示如果会话不存在是否创建
-         */
-        mConversation = EMClient.getInstance().chatManager().getConversation(mChatId, null, true);
-        // 设置当前会话未读数为 0
-        mConversation.markAllMessagesAsRead();
-    }
-
-    /**
-     * 初始化 Toolbar 控件
-     */
-    private void initToolbar() {
-        mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
-        mToolbar.setTitle(mChatId);
-        setSupportActionBar(mToolbar);
-        mToolbar.setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
-        mToolbar.setNavigationOnClickListener(viewListener);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mActivity.finish();
-            }
-        });
+        initSwipeRefreshLayout();
     }
 
     /**
      * 初始化界面控件
      */
     private void initView() {
+        mActivity = this;
+        mMessageListener = this;
+        mHandler = new MLHandler();
+        // 获取当前聊天对象的id
+        mChatId = getIntent().getStringExtra(MLConstants.ML_EXTRA_CHAT_ID);
+
         // 初始化输入框控件，并添加输入框监听
         mEditText = (EditText) findViewById(R.id.ml_edit_chat_input);
-        mEditText.addTextChangedListener(textWatcher);
+        setTextWatcher();
 
-        // 获取控件对象
+        // 获取输入按钮控件对象
         mEmotionView = findViewById(R.id.ml_img_chat_emotion);
         mSendView = findViewById(R.id.ml_img_chat_send);
         mVoiceView = findViewById(R.id.ml_img_chat_voice);
-
-        // 设置控件的点击监听
+        // 设置输入按钮控件的点击监听
         mEmotionView.setOnClickListener(viewListener);
         mVoiceView.setOnClickListener(viewListener);
         mSendView.setOnClickListener(viewListener);
+
+        // 初始化下拉刷新控件对象
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.ml_widget_chat_refreshlayout);
+        // 初始化ListView控件对象
+        mListView = (ListView) findViewById(R.id.ml_listview_chat_messages);
 
         // 设置扩展菜单点击监听
         mAttachMenuLayout = (LinearLayout) findViewById(R.id.ml_layout_attach_menu);
@@ -156,43 +143,107 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
 
     }
 
+    /**
+     * 初始化 Toolbar 控件
+     */
+    private void initToolbar() {
+        mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
+        mToolbar.setTitle(mChatId);
+        setSupportActionBar(mToolbar);
+        // 设置toolbar图标
+        mToolbar.setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
+        // 设置Toolbar图标点击事件，Toolbar上图标的id是 -1
+        mToolbar.setNavigationOnClickListener(viewListener);
+
+    }
+
+    /**
+     * 初始化会话对象，并且根据需要加载更多消息
+     */
+    private void initConversation() {
+        /**
+         * 初始化会话对象，这里有三个参数么，
+         * 第一个表示会话的当前聊天的 useranme 或者 groupid
+         * 第二个是绘画类型可以为空
+         * 第三个表示如果会话不存在是否创建
+         */
+        mConversation = EMClient.getInstance().chatManager().getConversation(mChatId, null, true);
+        // 设置当前会话未读数为 0
+        mConversation.markAllMessagesAsRead();
+        int count = mConversation.getAllMessages().size();
+        if (count < mConversation.getAllMsgCount() && count < mPageSize) {
+            String msgId = mConversation.getAllMessages().get(0).getMsgId();
+            mConversation.loadMoreMsgFromDB(msgId, mPageSize - count);
+        }
+    }
+
 
     /**
      * 初始化 ListView
      */
     private void initListView() {
-        mListView = (ListView) findViewById(R.id.ml_listview_message);
+        // 实例化消息适配器
         mAdapter = new MLMessageAdapter(mActivity, mChatId, mListView);
         mListView.setAdapter(mAdapter);
+        // 设置消息点击监听
         setItemClickListener();
+        // 设置消息常按监听
         setItemLongClickListener();
     }
 
-    private TextWatcher textWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
+    private void initSwipeRefreshLayout() {
+        mSwipeRefreshLayout.setColorSchemeColors(R.color.ml_red_100, R.color.ml_blue_100);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        List<EMMessage> messages = mConversation.loadMoreMsgFromDB(mConversation.getAllMessages().get(0).getMsgId(), mPageSize);
+                        if (messages.size() > 0) {
+                            Message msg = mHandler.obtainMessage();
+                            msg.what = 0;
+                            msg.arg1 = messages.size();
+                            mHandler.sendMessage(msg);
+                        }
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
+                }, 500);
 
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-        }
-
-        /**
-         * 检测输入框内容变化
-         *
-         * @param s 输入框内容
-         */
-        @Override
-        public void afterTextChanged(Editable s) {
-            if (s.toString().equals("")) {
-                mSendView.setVisibility(View.GONE);
-                mVoiceView.setVisibility(View.VISIBLE);
-            } else {
-                mSendView.setVisibility(View.VISIBLE);
-                mVoiceView.setVisibility(View.GONE);
             }
-        }
-    };
+        });
+    }
+
+    /**
+     * 设置输入框监听
+     */
+    private void setTextWatcher() {
+        mEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            /**
+             * 检测输入框内容变化
+             *
+             * @param s 输入框内容
+             */
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().equals("")) {
+                    mSendView.setVisibility(View.GONE);
+                    mVoiceView.setVisibility(View.VISIBLE);
+                } else {
+                    mSendView.setVisibility(View.VISIBLE);
+                    mVoiceView.setVisibility(View.GONE);
+                }
+            }
+        });
+    }
 
     /**
      * 设置ListView 的点击监听
@@ -344,8 +395,6 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                             MLToast.errorToast("发送内容包含敏感词汇").show();
                         } else if (message.getError() == EMError.GROUP_PERMISSION_DENIED) {
                             MLToast.errorToast("不属于当前群组，不能给群组发送消息").show();
-                            //                        } else if (message.getError() == EMError.MESSAGE_SEND_TRAFFIC_LIMIT) {
-                            //                            MLToast.errorToast("发送文件大小超过限制了").show();
                         } else {
                             MLToast.errorToast("发送失败，稍后重试").show();
                         }
@@ -456,6 +505,9 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
+                case -1:
+                    onBack();
+                    break;
                 // 表情按钮
                 case R.id.ml_img_chat_emotion:
 
@@ -536,6 +588,9 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         mActivity.startActivityForResult(intent, MLConstants.ML_REQUEST_CODE_PHOTO);
     }
 
+    /**
+     * 刷新聊天界面ui
+     */
     private void refreshChatUI() {
         mAdapter.refreshList();
     }
@@ -570,9 +625,9 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 break;
             case R.id.ml_action_delete:
                 // 清空会话信息
-//                MLToast.makeToast("清空会话").show();
+                // MLToast.makeToast("清空会话").show();
                 // 此方法只清除内存中加载的消息，并没有清除数据库中保存的消息
-//                 mConversation.clear();
+                // mConversation.clear();
                 // 清除全部信息，包括数据库中的
                 mConversation.clearAllMessages();
                 refreshChatUI();
@@ -587,16 +642,54 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * 重写父类的onNewIntent方法，防止打开两个聊天界面
+     *
+     * @param intent
+     */
     @Override
     protected void onNewIntent(Intent intent) {
         String chatId = intent.getStringExtra(MLConstants.ML_EXTRA_CHAT_ID);
         if (mChatId.equals(chatId)) {
             super.onNewIntent(intent);
         } else {
-            finish();
+            onBack();
             startActivity(intent);
         }
     }
+
+    /**
+     * 自定义返回方法，做一些不能在 onDestroy 里做的操作
+     */
+    @Override
+    protected void onBack() {
+        /**
+         * 当会话聊天界面销毁的时候，
+         * 通过{@link MLConversationExtUtils#setConversationLastTime(EMConversation)}设置会话的最后时间
+         */
+        MLConversationExtUtils.setConversationLastTime(mConversation);
+        /**
+         * 防止清空消息后 getLastMessage 空指针异常，这里直接设置为当前会话内存中多于5条时才清除内存中的消息
+         */
+        if (mConversation.getAllMessages().size() > 5) {
+            // 将会话内的消息从内存中清除，节省内存，但是还要在重新加载一条
+            List<String> list = new ArrayList<String>();
+            list.add(mConversation.getLastMessage().getMsgId());
+            mConversation.clear();
+            mConversation.loadMessages(list);
+        }
+        mActivity.finish();
+
+        // 这里将父类的方法在后边调用
+        super.onBack();
+    }
+
+    @Override
+    public void onBackPressed() {
+        // super.onBackPressed();
+        onBack();
+    }
+
 
     @Override
     protected void onResume() {
@@ -619,8 +712,26 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         // 再当前界面处于非活动状态时 移除消息监听
         EMClient.getInstance().chatManager().removeMessageListener(mMessageListener);
     }
+
     /**
-     * ----------------------------------------------------------------------
+     * --------------------------------- Custom Handler -------------------------------------
+     */
+    class MLHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            int what = msg.what;
+            switch (what) {
+                case 0:
+                    mAdapter.refreshList(msg.arg1);
+                    mListView.smoothScrollToPosition(msg.arg1);
+                    break;
+            }
+        }
+    }
+
+
+    /**
+     * --------------------------------- Message Listener -------------------------------------
      * 环信消息监听主要方法
      */
     /**

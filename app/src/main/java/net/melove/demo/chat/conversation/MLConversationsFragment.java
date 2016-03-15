@@ -22,10 +22,10 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 
 import net.melove.demo.chat.R;
+import net.melove.demo.chat.common.util.MLDate;
 import net.melove.demo.chat.common.util.MLLog;
 import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.common.base.MLBaseFragment;
-import net.melove.demo.chat.common.widget.MLToast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 单聊会话列表界面Fragment
+ * 会话列表界面Fragment
  */
 public class MLConversationsFragment extends MLBaseFragment {
 
@@ -92,12 +92,13 @@ public class MLConversationsFragment extends MLBaseFragment {
      */
     private void initView() {
         // 加载会话到list集合
-        mConversationList.addAll(loadConversationList());
+        loadConversationList();
         // 实例化会话列表的 Adapter 对象
         mAdapter = new MLConversationAdapter(mActivity, mConversationList);
         // 初始化会话列表的 ListView 控件
         mListView = (ListView) getView().findViewById(R.id.ml_listview_conversation);
         mListView.setAdapter(mAdapter);
+        mListView.setSelection(0);
 
         // 设置列表项点击监听
         setItemClickListener();
@@ -110,7 +111,7 @@ public class MLConversationsFragment extends MLBaseFragment {
      */
     public void refreshConversation() {
         mConversationList.clear();
-        mConversationList.addAll(loadConversationList());
+        loadConversationList();
         if (mAdapter != null) {
             mAdapter.refreshList();
         }
@@ -119,7 +120,7 @@ public class MLConversationsFragment extends MLBaseFragment {
     /**
      * 加载会话对象到 List 集合，并根据最后一条消息时间进行排序
      */
-    public List<EMConversation> loadConversationList() {
+    public void loadConversationList() {
         Map<String, EMConversation> conversations = EMClient.getInstance().chatManager().getAllConversations();
         List<EMConversation> list = new ArrayList<EMConversation>();
         synchronized (conversations) {
@@ -127,30 +128,37 @@ public class MLConversationsFragment extends MLBaseFragment {
                 list.add(temp);
             }
         }
-
+        MLLog.i("sort - 1 - %d", MLDate.getCurrentMillisecond());
         // 使用Collectons的sort()方法 对会话列表进行排序
         Collections.sort(list, new Comparator<EMConversation>() {
             @Override
             public int compare(EMConversation lhs, EMConversation rhs) {
-                // 首先判断的是某一个会话消息为空的情况下，尽量把空值的一方挪到下边，让有消息的一方排在上边，
-                // 防止空值的某一项一直处在最上方
-                if (lhs.getAllMessages().size() == 0 && rhs.getAllMessages().size() == 0) {
-                    return 0;
-                } else if (lhs.getAllMessages().size() > 0 && rhs.getAllMessages().size() == 0) {
+                /**
+                 * 根据会话扩展中的时间进行排序
+                 * 通过{@link MLConversationExtUtils#getConversationLastTime(EMConversation)} 获取时间
+                 */
+                if (MLConversationExtUtils.getConversationLastTime(lhs)
+                        > MLConversationExtUtils.getConversationLastTime(rhs)) {
                     return -1;
-                } else if (lhs.getAllMessages().size() == 0 && rhs.getAllMessages().size() > 0) {
-                    return 1;
-                }
-                // 接着判断所有回话都有消息的情况，判断需要排序的两项的顺序
-                if (lhs.getLastMessage().getMsgTime() > rhs.getLastMessage().getMsgTime()) {
-                    return -1;
-                } else if (lhs.getLastMessage().getMsgTime() > rhs.getLastMessage().getMsgTime()) {
+                } else if (MLConversationExtUtils.getConversationLastTime(lhs)
+                        < MLConversationExtUtils.getConversationLastTime(rhs)) {
                     return 1;
                 }
                 return 0;
             }
         });
-        return list;
+
+        // 将列表排序之后，要重新将置顶的item设置到顶部
+        int count = 0;
+        for (int i = 0; i < list.size(); i++) {
+            if (MLConversationExtUtils.getConversationTop(list.get(i))) {
+                mConversationList.add(count, list.get(i));
+                count++;
+            } else {
+                mConversationList.add(list.get(i));
+            }
+        }
+        MLLog.i("sort - 2 - %d", MLDate.getCurrentMillisecond());
     }
 
     /**
@@ -174,15 +182,27 @@ public class MLConversationsFragment extends MLBaseFragment {
      * ListView 列表项的长按监听
      */
     private void setItemLongClickListener() {
-        mMenus = new String[]{
-                mActivity.getResources().getString(R.string.ml_menu_conversation_top),
-                mActivity.getResources().getString(R.string.ml_menu_conversation_clear),
-                mActivity.getResources().getString(R.string.ml_menu_conversation_delete)
-        };
+
         // ListView 的长按监听
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                final EMConversation conversation = mConversationList.get(position);
+                final boolean isTop = MLConversationExtUtils.getConversationTop(conversation);
+                // 根据当前会话不同的状态来显示不同的长按菜单
+                if (isTop) {
+                    mMenus = new String[]{
+                            mActivity.getResources().getString(R.string.ml_menu_conversation_cancel_top),
+                            mActivity.getResources().getString(R.string.ml_menu_conversation_clear),
+                            mActivity.getResources().getString(R.string.ml_menu_conversation_delete)
+                    };
+                } else {
+                    mMenus = new String[]{
+                            mActivity.getResources().getString(R.string.ml_menu_conversation_top),
+                            mActivity.getResources().getString(R.string.ml_menu_conversation_clear),
+                            mActivity.getResources().getString(R.string.ml_menu_conversation_delete)
+                    };
+                }
                 // 创建并显示 ListView 的长按弹出菜单，并设置弹出菜单 Item的点击监听
                 new AlertDialog.Builder(mActivity)
                         .setTitle(R.string.ml_dialog_title_conversation)
@@ -191,13 +211,23 @@ public class MLConversationsFragment extends MLBaseFragment {
                             public void onClick(DialogInterface dialog, int which) {
                                 switch (which) {
                                     case 0:
-                                        MLToast.makeToast(R.string.ml_menu_conversation_top).show();
+                                        // 根据当前状态设置会话是否置顶
+                                        if (isTop) {
+                                            MLConversationExtUtils.setConversationTop(conversation, false);
+                                        } else {
+                                            MLConversationExtUtils.setConversationTop(conversation, true);
+                                        }
+                                        refreshConversation();
                                         break;
                                     case 1:
-                                        MLToast.makeToast(R.string.ml_menu_conversation_clear).show();
+                                        // 清空当前会话的消息，同时删除了内存中和数据库中的数据
+                                        mConversationList.get(position).clearAllMessages();
+                                        refreshConversation();
                                         break;
                                     case 2:
-                                        MLToast.makeToast(R.string.ml_menu_conversation_delete).show();
+                                        // 删除当前会话，第二个参数表示是否删除此会话的消息
+                                        EMClient.getInstance().chatManager().deleteConversation(conversation.getUserName(), false);
+                                        refreshConversation();
                                         break;
                                 }
                             }
@@ -208,7 +238,7 @@ public class MLConversationsFragment extends MLBaseFragment {
     }
 
     /**
-     * 注册广播接收器，用来监听全局监听监听到新消息之后发送的广播
+     * 注册广播接收器，用来监听全局监听监听到新消息之后发送的广播，然后刷新界面
      */
     private void registerBroadcastReceiver() {
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(mActivity);

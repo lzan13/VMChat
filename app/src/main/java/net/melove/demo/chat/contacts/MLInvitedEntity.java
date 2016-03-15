@@ -1,7 +1,7 @@
 package net.melove.demo.chat.contacts;
 
 /**
- * Created by lzan13 on 2015/7/21.
+ * Created by lzan13 on 2015/8/21.
  * 好友邀请与申请实体类，主要表示一条好友请求与申请、群组邀请与申请类型的消息
  */
 public class MLInvitedEntity {

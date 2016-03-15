@@ -68,7 +68,7 @@ public class MLDBConstants {
             + COL_UPDATE_AT + " integer"
             + ")";
 
-    /*创建用户好友信息表*/
+    /*创建用户信息表*/
     public static final String SQL_USER = "create table if not exists '"
             + TB_USER + "' ("
             + COL_USERNAME + " varchar(128) primary key, "

@@ -11,6 +11,7 @@
         fadingEdge      listview上下黑色阴影，（在5.0以上没有）
         listSelector    listview项选中时的颜色 建议设置透明（5.0为涟漪效果）
         scrollingCache  滑动时是否缓存颜色
+        transcriptMode  设置是否能自动滚动，让新加入的item进入可是范围
     -->
     <ListView
         android:id="@+id/ml_listview_conversation"
@@ -23,5 +24,5 @@
         android:fadingEdge="none"
         android:listSelector="@color/ml_transparent"
         android:scrollingCache="false"
-        android:transcriptMode="alwaysScroll" />
+        android:transcriptMode="normal" />
 </FrameLayout>

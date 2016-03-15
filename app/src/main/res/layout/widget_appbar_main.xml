@@ -7,7 +7,7 @@
     android:layout_gravity="center_horizontal">
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/ml_layout_appbar"
+        android:id="@+id/ml_widget_appbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/ml_dimen_56"
         android:fitsSystemWindows="false"

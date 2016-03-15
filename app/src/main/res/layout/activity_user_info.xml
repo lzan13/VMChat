@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/ml_layout_appbar"
+        android:id="@+id/ml_widget_appbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/ml_dimen_192"
         android:fitsSystemWindows="true"
@@ -103,7 +103,7 @@
         android:src="@mipmap/ic_chat_white_24dp"
         android:visibility="visible"
         app:fabSize="normal"
-        app:layout_anchor="@id/ml_layout_appbar"
+        app:layout_anchor="@id/ml_widget_appbar"
         app:layout_anchorGravity="bottom|end" />
 
 </android.support.design.widget.CoordinatorLayout>

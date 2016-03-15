@@ -81,8 +81,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!--启动界面-->
-        <!-- 测试界面 -->
         <!-- 登录界面 -->
         <activity
             android:name=".authentication.MLSigninActivity"

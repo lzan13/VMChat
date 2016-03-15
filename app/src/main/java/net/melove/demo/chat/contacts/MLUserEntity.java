@@ -1,7 +1,7 @@
 package net.melove.demo.chat.contacts;
 
 /**
- * Created by lzan13 on 2015/7/21.
+ * Created by lzan13 on 2015/8/21.
  * 用户信息实体类
  */
 public class MLUserEntity {

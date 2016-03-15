@@ -42,7 +42,9 @@ public class MLMessageAdapter extends BaseAdapter {
     // 系统级消息类型
     private final int MSG_TYPE_SYS_RECALL = 4;
 
+    // 刷新类型
     private final int HANDLER_MSG_REFRESH = 0;
+    private final int HANDLER_MSG_REFRESH_MORE = 1;
 
     private Context mContext;
 
@@ -257,16 +259,27 @@ public class MLMessageAdapter extends BaseAdapter {
         mHandler.sendMessage(msg);
     }
 
+    public void refreshList(int position) {
+        Message msg = mHandler.obtainMessage();
+        msg.what = HANDLER_MSG_REFRESH_MORE;
+        msg.arg1 = position;
+        mHandler.sendMessage(msg);
+    }
+
     /**
      * 自定义Handler，用来处理消息的刷新等
      */
     private class MLHandler extends Handler {
 
+        /**
+         * 刷新聊天信息列表，并滚动到底部
+         */
         private void refresh() {
             messages.clear();
             messages = mConversation.getAllMessages();
             notifyDataSetChanged();
-            mListView.setSelection(messages.size() - 1);
+            // 平滑滚动到最后一条
+            mListView.smoothScrollToPosition(messages.size() - 1);
         }
 
         @Override
@@ -274,6 +287,11 @@ public class MLMessageAdapter extends BaseAdapter {
             switch (msg.what) {
                 case HANDLER_MSG_REFRESH:
                     refresh();
+                    break;
+                case HANDLER_MSG_REFRESH_MORE:
+                    refresh();
+                    // 平滑滚动到指定位置
+                    mListView.smoothScrollToPosition(msg.arg1);
                     break;
             }
         }

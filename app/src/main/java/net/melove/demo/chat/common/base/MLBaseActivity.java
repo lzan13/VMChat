@@ -32,6 +32,13 @@ public class MLBaseActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * 自定义返回方法
+     */
+    protected void onBack() {
+
+    }
+
     @Override
     protected void onPause() {
         super.onPause();

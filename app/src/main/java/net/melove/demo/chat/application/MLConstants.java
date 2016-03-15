@@ -15,6 +15,8 @@ public class MLConstants {
     public static final String ML_ATTR_RECALL = "ml_recall";
     public static final String ML_ATTR_TYPE = "ml_type";
     public static final String ML_ATTR_AT = "ml_at";
+    public static final String ML_ATTR_TOP = "ml_top";
+    public static final String ML_ATTR_LAST_TIME = "ml_list_time";
 
 
     // 界面跳转传递 username/groupid 参数的 key
@@ -24,7 +26,6 @@ public class MLConstants {
     public static final String ML_ACTION_INVITED = "ml_action_invited";
     public static final String ML_ACTION_CONTACT = "ml_action_contact";
     public static final String ML_ACTION_MESSAGE = "ml_action_message";
-
 
 
     // SharedPreference 保存内容的 key

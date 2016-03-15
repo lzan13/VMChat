@@ -15,6 +15,7 @@ import com.hyphenate.EMGroupChangeListener;
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCmdMessageBody;
+import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMOptions;
 import com.hyphenate.chat.EMTextMessageBody;
@@ -26,6 +27,7 @@ import net.melove.demo.chat.common.util.MLLog;
 import net.melove.demo.chat.common.util.MLSPUtil;
 import net.melove.demo.chat.contacts.MLInvitedEntity;
 import net.melove.demo.chat.contacts.MLUserEntity;
+import net.melove.demo.chat.conversation.MLConversationExtUtils;
 import net.melove.demo.chat.database.MLInvitedDao;
 import net.melove.demo.chat.database.MLUserDao;
 import net.melove.demo.chat.notification.MLNotifier;
@@ -204,15 +206,25 @@ public class MLEasemobHelper {
     protected void setMessageListener() {
         mMessageListener = new EMMessageListener() {
             /**
-             * 收到新消息
-             * TODO 离线消息（未确定）
+             * 收到新消息，离线消息也都是在这里获取
+             * 这里在处理消息监听时根据收到的消息修改了会话对象的最后时间，是为了在会话列表中当清空了会话内容时，
+             * 不用过滤掉空会话，并且能显示会话时间
+             * {@link MLConversationExtUtils#setConversationLastTime(EMConversation)}
              *
              * @param list 收到的新消息集合
              */
             @Override
             public void onMessageReceived(List<EMMessage> list) {
+                EMConversation conversation = null;
                 for (EMMessage message : list) {
-                    MLLog.d("msgId-%s, msgTime-%d, msgFrom-%s", message.getMsgId(), message.getMsgTime(), message.getFrom());
+                    // 根据消息类型来获取回话对象
+                    if (message.getChatType() == EMMessage.ChatType.Chat) {
+                        conversation = EMClient.getInstance().chatManager().getConversation(message.getFrom());
+                    } else {
+                        conversation = EMClient.getInstance().chatManager().getConversation(message.getTo());
+                    }
+                    // 设置会话的最后时间
+                    MLConversationExtUtils.setConversationLastTime(conversation);
                 }
                 // 发送广播，通知需要刷新UI等操作的地方
                 mLocalBroadcastManager.sendBroadcast(new Intent(MLConstants.ML_ACTION_MESSAGE));
@@ -484,7 +496,7 @@ public class MLEasemobHelper {
         // 因为如果接收方之前不在线，很久之后才收到消息，将导致撤回失败
         long currTime = MLDate.getCurrentMillisecond();
         long msgTime = message.getMsgTime();
-        if (currTime - msgTime > 120000) {
+        if (currTime < msgTime || (currTime - msgTime > 120000)) {
             callBack.onError(0, "time");
             return;
         }

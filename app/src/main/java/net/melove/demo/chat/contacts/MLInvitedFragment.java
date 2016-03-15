@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by lzan13 on 2015/3/28.
+ * Created by lzan13 on 2015/8/28.
  */
 public class MLInvitedFragment extends MLBaseFragment {
 
