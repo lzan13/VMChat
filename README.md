@@ -29,7 +29,6 @@ compile files('libs/hyphenatechat_3.1.0.jar')
 - 消息监听与聊天界面刷新
 - 消息的下拉平滑加载
 - 好友申请监听与更新
-- 
 
 
 ##### 扩展模块
