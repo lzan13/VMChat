@@ -7,20 +7,20 @@ MLChatDemo
 ### 首先说下此Demo开发环境
 如果大家的开发环境版本过低建议及时进行更新，因为最新的sdk已经不需要翻墙就可以更新了，开发工具就像我们的武器，
 可以免费更换好武器，你还一直抱着你的老三八大盖不放，你打不好仗 :smirk:
->AndroidStudio 1.5.1
-Android SDK Tools 24.4.1
-Android SDK Build-tools 23.0.2
-Android SDK compileSdkVersion 23
-Android SDK targetSdkVersion 22
-Android SDK minSdkVersion 22
+>AndroidStudio 1.5.1  
+Android SDK Tools 24.4.1  
+Android SDK Build-tools 23.0.2  
+Android SDK compileSdkVersion 23  
+Android SDK targetSdkVersion 22  
+Android SDK minSdkVersion 22  
 Gradle 2.8
     
 ### 所使用库的版本
->compile 'com.android.support:design:23.+'
-compile 'com.android.support:palette-v7:23.+'
-compile 'com.android.support:support-v4:23.+'
-compile 'com.android.support:appcompat-v7:23.+'
-compile files('libs/hyphenatechat_3.1.0.jar')
+>compile 'com.android.support:design:23.+'  
+compile 'com.android.support:palette-v7:23.+'  
+compile 'com.android.support:support-v4:23.+'  
+compile 'com.android.support:appcompat-v7:23.+'  
+compile files('libs/hyphenatechat_3.1.0.jar')  
 
 已实现模块儿
 -----------------
