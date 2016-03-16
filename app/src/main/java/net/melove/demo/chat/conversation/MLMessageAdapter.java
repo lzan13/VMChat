@@ -282,6 +282,25 @@ public class MLMessageAdapter extends BaseAdapter {
             mListView.smoothScrollToPosition(messages.size() - 1);
         }
 
+        /**
+         * 刷新界面并平滑滚动到新加载的记录位置
+         *
+         * @param position 新加载的内容的最后一个位置
+         */
+        private void refresh(int position) {
+            messages.clear();
+            messages = mConversation.getAllMessages();
+            notifyDataSetChanged();
+            /**
+             * 平滑滚动到最后一条，这里使用了ListView的两个方法:setSelection()/smoothScrollToPosition();
+             * 如果单独使用setSelection()就会直接跳转到指定位置，没有平滑的效果
+             * 如果单独使用smoothScrollToPosition() 就会因为我们的item高度不同导致滚动有偏差
+             * 所以我们要先使用setSelection()跳转到指定位置，然后再用smoothScrollToPosition()平滑滚动到上一个
+             */
+            mListView.setSelection(position);
+            mListView.smoothScrollToPosition(position - 1);
+        }
+
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -289,9 +308,7 @@ public class MLMessageAdapter extends BaseAdapter {
                     refresh();
                     break;
                 case HANDLER_MSG_REFRESH_MORE:
-                    refresh();
-                    // 平滑滚动到指定位置
-                    mListView.smoothScrollToPosition(msg.arg1);
+                    refresh(msg.arg1);
                     break;
             }
         }

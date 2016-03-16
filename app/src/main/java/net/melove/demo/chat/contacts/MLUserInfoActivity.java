@@ -7,6 +7,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -28,18 +29,23 @@ import net.melove.demo.chat.common.widget.MLToast;
 
 /**
  * Created by lzan13 on 2015/8/29.
+ * 用户信息展示界面，主要用于显示用户信息，可以显示好友以及陌生人，如果是陌生人就显示添加好友按钮
  */
 public class MLUserInfoActivity extends MLBaseActivity {
 
     private String mChatId;
 
+    //
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
     private Toolbar mToolbar;
 
     private FloatingActionButton mFab;
 
+    // 申请与邀请数据库操作类
     private MLInvitedDao mInvitedDao;
+    // 用户信息数据库操作类
     private MLUserDao mUserDao;
+    // 用户信息实体类
     private MLUserEntity mUserEntity;
 
 
@@ -49,20 +55,30 @@ public class MLUserInfoActivity extends MLBaseActivity {
 
         setContentView(R.layout.activity_user_info);
 
-        init();
+        initView();
         initToolbar();
     }
 
     /**
      * 界面的初始化
      */
-    private void init() {
+    private void initView() {
         mActivity = this;
         mChatId = getIntent().getStringExtra(MLConstants.ML_EXTRA_CHAT_ID);
         mInvitedDao = new MLInvitedDao(mActivity);
         mUserDao = new MLUserDao(mActivity);
         // 查询本地User对象
         mUserEntity = mUserDao.getContact(mChatId);
+
+        mFab = (FloatingActionButton) findViewById(R.id.ml_btn_fab_user_info);
+        mFab.setOnClickListener(viewListener);
+
+        // 根据本地查询到的用户情况来确定是显示 添加好友 还是显示 发送消息
+        if (mUserEntity != null && mUserEntity.getUserName() != null) {
+            mFab.setImageResource(R.mipmap.ic_chat_white_24dp);
+        } else {
+            mFab.setImageResource(R.mipmap.ic_add_contacts_white_24dp);
+        }
     }
 
     /**
@@ -70,6 +86,7 @@ public class MLUserInfoActivity extends MLBaseActivity {
      */
     private void initToolbar() {
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.ml_widget_collapsing);
+        // 设置Toolbar标题为用户名称
         mCollapsingToolbarLayout.setTitle(mChatId);
 
         mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
@@ -81,22 +98,6 @@ public class MLUserInfoActivity extends MLBaseActivity {
                 mActivity.finish();
             }
         });
-
-    }
-
-    /**
-     * 控件的初始化
-     */
-    private void initView() {
-        mFab = (FloatingActionButton) findViewById(R.id.ml_btn_fab_user_info);
-        mFab.setOnClickListener(viewListener);
-
-        // 根据本地查询到的用户情况来确定是显示 添加好友 还是显示 发送消息
-        if (mUserEntity != null && mUserEntity.getUserName() != null) {
-            mFab.setImageResource(R.mipmap.ic_chat_white_24dp);
-        } else {
-            mFab.setImageResource(R.mipmap.ic_add_contacts_white_24dp);
-        }
 
     }
 
@@ -141,7 +142,7 @@ public class MLUserInfoActivity extends MLBaseActivity {
                     public void run() {
                         // 获取输入的添加好友理由，并除去首尾空格，然后判断，如果为空就设置默认值
                         String reason = editText.getText().toString().trim();
-                        if (reason.equals("")) {
+                        if (TextUtils.isEmpty(reason)) {
                             reason = mActivity.getResources().getString(R.string.ml_add_contact_reason);
                         }
                         try {
@@ -150,11 +151,13 @@ public class MLUserInfoActivity extends MLBaseActivity {
                             // 创建一条好友申请数据，自己发送好友请求也保存
                             MLInvitedEntity invitedEntity = new MLInvitedEntity();
                             invitedEntity.setUserName(mChatId);
-//                            invitedEntity.setNickName(mUserEntity.getNickName());
+                            //invitedEntity.setNickName(mUserEntity.getNickName());
                             invitedEntity.setReason(reason);
                             invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.APPLYFOR);
-                            invitedEntity.setType(0);
+                            invitedEntity.setType(MLInvitedEntity.InvitedType.CONTACTS);
+                            // 设置此信息创建时间
                             invitedEntity.setCreateTime(MLDate.getCurrentMillisecond());
+                            // 设置邀请信息的唯一id
                             invitedEntity.setObjId(MLCrypto.cryptoStr2MD5(invitedEntity.getUserName() + invitedEntity.getType()));
 
                             // 这里进行一下筛选，如果已存在则去更新本地内容

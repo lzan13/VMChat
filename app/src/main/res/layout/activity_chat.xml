@@ -4,7 +4,6 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@color/ml_theme_background"
-              android:clipChildren="false"
               android:orientation="vertical">
 
     <include layout="@layout/widget_toolbar_communal"/>
@@ -19,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@mipmap/bg_top"/>
+            android:src="@mipmap/bg_chat"/>
 
         <LinearLayout
             android:id="@+id/ml_layout_chat_input"
@@ -165,7 +164,8 @@
                     android:fadeScrollbars="true"
                     android:fadingEdge="none"
                     android:listSelector="@color/ml_transparent"
-                    android:scrollingCache="false"/>
+                    android:scrollingCache="false"
+                    android:smoothScrollbar="true"/>
             </android.support.v4.widget.SwipeRefreshLayout>
         </LinearLayout>
         <!--扩展菜单布局-->

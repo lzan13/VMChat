@@ -252,12 +252,12 @@ public class MLMainActivity extends MLBaseActivity implements
         switch (id) {
             case R.id.ml_nav_home:
                 mMenuType = 0;
-                mCurrentFragment = new MLMainFragment();
+                mCurrentFragment = MLMainFragment.newInstance();
                 mToolbar.setTitle(R.string.ml_chat);
                 break;
             case R.id.ml_nav_group:
                 mMenuType = 0;
-                mCurrentFragment = new MLOtherFragment();
+                mCurrentFragment = MLOtherFragment.newInstance();
                 mToolbar.setTitle(R.string.ml_group);
                 break;
             case R.id.ml_nav_room:
@@ -267,7 +267,7 @@ public class MLMainActivity extends MLBaseActivity implements
                 break;
             case R.id.ml_nav_notification:
                 mMenuType = 0;
-                mCurrentFragment = new MLInvitedFragment();
+                mCurrentFragment = MLInvitedFragment.newInstance();
                 mToolbar.setTitle(R.string.ml_apply_for);
                 break;
             case R.id.ml_nav_help:
@@ -406,10 +406,10 @@ public class MLMainActivity extends MLBaseActivity implements
                 break;
             // 0x2x 暂时表示Test
             case 0x20:
-                Intent intent = new Intent();
-                intent.setClass(mActivity, MLUserInfoActivity.class);
-                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity);
-                ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
+//                Intent intent = new Intent();
+//                intent.setClass(mActivity, MLUserInfoActivity.class);
+//                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity);
+//                ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
                 break;
             default:
                 MLToast.makeToast(mActivity.getResources().getString(R.string.ml_test)).show();

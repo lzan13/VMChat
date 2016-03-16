@@ -41,12 +41,19 @@ public class MLInvitedFragment extends MLBaseFragment {
     // 会话界面监听会话变化的广播接收器
     private BroadcastReceiver mBroadcastReceiver;
 
-    public MLInvitedFragment() {
+    /**
+     * 工厂方法，用来创建一个Fragment的实例
+     *
+     * @return MLInvitedFragment
+     */
+    public static MLInvitedFragment newInstance() {
+        MLInvitedFragment fragment = new MLInvitedFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public MLInvitedFragment() {
     }
 
     @Nullable
@@ -58,22 +65,26 @@ public class MLInvitedFragment extends MLBaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        init();
+
         initView();
+        initListView();
     }
-
-    private void init() {
-        mActivity = getActivity();
-        mInvitedDao = new MLInvitedDao(mActivity);
-    }
-
 
     /**
      * 初始化界面控件等
      */
     private void initView() {
+        mActivity = getActivity();
+        mInvitedDao = new MLInvitedDao(mActivity);
 
+    }
+
+    /**
+     * 初始化邀请信息列表
+     */
+    private void initListView() {
         mInvitedList = mInvitedDao.getInvitedList();
+        // 实例化适配器
         mInvitedAdapter = new MLInvitedAdapter(mActivity, mInvitedList);
         // 初始化ListView
         mListView = (ListView) getView().findViewById(R.id.ml_listview_invited);
@@ -85,6 +96,17 @@ public class MLInvitedFragment extends MLBaseFragment {
         setItemLongClickListener();
         // 设置当前界面数据为空的状态
         mListView.setEmptyView(getView().findViewById(R.id.ml_layout_empty));
+    }
+
+    /**
+     * 刷新邀请信息列表
+     */
+    private void refreshInvited() {
+        mInvitedList.clear();
+        mInvitedList.addAll(mInvitedDao.getInvitedList());
+        if (mInvitedAdapter != null) {
+            mInvitedAdapter.refreshList();
+        }
     }
 
     /**
@@ -107,12 +129,13 @@ public class MLInvitedFragment extends MLBaseFragment {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
-                dialog.setTitle(mActivity.getResources().getString(R.string.ml_dialog_title_apply_for));
-                dialog.setMessage(mActivity.getResources().getString(R.string.ml_dialog_content_add_contact));
+                dialog.setTitle(mActivity.getResources().getString(R.string.ml_dialog_title_invited));
+                dialog.setMessage(mActivity.getResources().getString(R.string.ml_dialog_content_delete_invited));
                 dialog.setPositiveButton(R.string.ml_btn_ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        mInvitedDao.deleteInvited(mInvitedList.get(which).getObjId());
+                        mInvitedAdapter.refreshList();
                     }
                 });
                 dialog.setNegativeButton(R.string.ml_btn_cancel, new DialogInterface.OnClickListener() {
@@ -125,22 +148,6 @@ public class MLInvitedFragment extends MLBaseFragment {
                 return false;
             }
         });
-    }
-
-    /**
-     * @return 返回本地申请与邀请的信息
-     */
-    private List<MLInvitedEntity> loadInvitedList() {
-        List<MLInvitedEntity> list = mInvitedDao.getInvitedList();
-        return list;
-    }
-
-
-    /**
-     * 刷新申请请求列表
-     */
-    private void refreshInvited() {
-
     }
 
     /**
@@ -172,6 +179,7 @@ public class MLInvitedFragment extends MLBaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        refreshInvited();
         // 注册广播监听
         registerBroadcastReceiver();
     }

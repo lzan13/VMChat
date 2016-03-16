@@ -17,7 +17,11 @@ import net.melove.demo.chat.common.base.MLBaseFragment;
  */
 public class MLOtherFragment extends MLBaseFragment {
 
-
+    /**
+     * 工厂方法，用来创建一个Fragment的实例
+     *
+     * @return MLOtherFragment
+     */
     public static MLOtherFragment newInstance() {
         MLOtherFragment fragment = new MLOtherFragment();
         Bundle args = new Bundle();

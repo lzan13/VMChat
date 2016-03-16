@@ -6,6 +6,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -73,7 +74,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     private boolean isBurn;
 
     // 设置每次下拉分页加载多少条
-    private int mPageSize = 5;
+    private int mPageSize = 10;
 
     // 聊天内容输入框
     private EditText mEditText;
@@ -192,19 +193,18 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     }
 
     private void initSwipeRefreshLayout() {
-        mSwipeRefreshLayout.setColorSchemeColors(R.color.ml_red_100, R.color.ml_blue_100);
+        mSwipeRefreshLayout.setColorSchemeColors(0xffe62f17, 0xff2384fe);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        // 加载更多消息到当前会话的内存中
                         List<EMMessage> messages = mConversation.loadMoreMsgFromDB(mConversation.getAllMessages().get(0).getMsgId(), mPageSize);
                         if (messages.size() > 0) {
-                            Message msg = mHandler.obtainMessage();
-                            msg.what = 0;
-                            msg.arg1 = messages.size();
-                            mHandler.sendMessage(msg);
+                            // 调用自定义的 Adapter 刷新方法
+                            mAdapter.refreshList(messages.size());
                         }
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
@@ -246,7 +246,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     }
 
     /**
-     * 设置ListView 的点击监听
+     * 设置ListView 的点击监听，以及每一项点击监听
      */
     private void setItemClickListener() {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -258,6 +258,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
 
 
                 }
+                MLLog.i("item position - %d, id - %d", position, id);
             }
         });
     }
@@ -671,7 +672,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         /**
          * 防止清空消息后 getLastMessage 空指针异常，这里直接设置为当前会话内存中多于5条时才清除内存中的消息
          */
-        if (mConversation.getAllMessages().size() > 5) {
+        if (mConversation.getAllMessages().size() > 2) {
             // 将会话内的消息从内存中清除，节省内存，但是还要在重新加载一条
             List<String> list = new ArrayList<String>();
             list.add(mConversation.getLastMessage().getMsgId());
@@ -722,8 +723,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             int what = msg.what;
             switch (what) {
                 case 0:
-                    mAdapter.refreshList(msg.arg1);
-                    mListView.smoothScrollToPosition(msg.arg1);
+
                     break;
             }
         }

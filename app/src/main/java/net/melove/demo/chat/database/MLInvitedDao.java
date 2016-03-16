@@ -11,10 +11,15 @@ import java.util.List;
 
 /**
  * Created by lzan13 on 2015/7/21.
+ * 邀请信息数据库操作类
  */
 public class MLInvitedDao {
 
-
+    /**
+     * 构造方法，初始化数据库操作类
+     *
+     * @param context
+     */
     public MLInvitedDao(Context context) {
         MLDBManager.getInstance().init(context);
     }
@@ -34,7 +39,7 @@ public class MLInvitedDao {
         values.put(MLDBConstants.COL_GROUP_NAME, invitedEntity.getGroupName());
         values.put(MLDBConstants.COL_REASON, invitedEntity.getReason());
         values.put(MLDBConstants.COL_STATUS, invitedEntity.getStatus().ordinal());
-        values.put(MLDBConstants.COL_TYPE, invitedEntity.getType());
+        values.put(MLDBConstants.COL_TYPE, invitedEntity.getType().ordinal());
         values.put(MLDBConstants.COL_TIME, invitedEntity.getCreateTime());
 
         MLDBManager.getInstance().insterData(MLDBConstants.TB_INVITED, values);
@@ -43,7 +48,7 @@ public class MLInvitedDao {
     /**
      * 删除一条申请与通知
      *
-     * @param objId
+     * @param objId 需要删除的记录的id
      */
     public synchronized void deleteInvited(String objId) {
         MLDBManager.getInstance().delete(
@@ -55,7 +60,7 @@ public class MLInvitedDao {
     /**
      * 更新一条申请与通知消息
      *
-     * @param invitedEntity
+     * @param invitedEntity 需要添加的邀请信息对象
      */
     public synchronized void updateInvited(MLInvitedEntity invitedEntity) {
         ContentValues values = new ContentValues();
@@ -66,7 +71,7 @@ public class MLInvitedDao {
         values.put(MLDBConstants.COL_GROUP_NAME, invitedEntity.getGroupName());
         values.put(MLDBConstants.COL_REASON, invitedEntity.getReason());
         values.put(MLDBConstants.COL_STATUS, invitedEntity.getStatus().ordinal());
-        values.put(MLDBConstants.COL_TYPE, invitedEntity.getType());
+        values.put(MLDBConstants.COL_TYPE, invitedEntity.getType().ordinal());
         values.put(MLDBConstants.COL_TIME, invitedEntity.getCreateTime());
 
         String whereClause = MLDBConstants.COL_OBJ_ID + "=?";
@@ -123,7 +128,12 @@ public class MLInvitedDao {
             } else if (status == MLInvitedEntity.InvitedStatus.GROUPAPPLYFOR.ordinal()) {
                 invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.GROUPAPPLYFOR);
             }
-            invitedEntity.setType(type);
+            // 设置申请类型，有好友申请，和群组申请两种
+            if (type == MLInvitedEntity.InvitedType.GROUP.ordinal()) {
+                invitedEntity.setType(MLInvitedEntity.InvitedType.CONTACTS);
+            } else if (type == MLInvitedEntity.InvitedType.CONTACTS.ordinal()) {
+                invitedEntity.setType(MLInvitedEntity.InvitedType.CONTACTS);
+            }
             invitedEntity.setCreateTime(Long.valueOf(time));
         }
         return invitedEntity;
@@ -172,7 +182,12 @@ public class MLInvitedDao {
             } else if (status == MLInvitedEntity.InvitedStatus.GROUPAPPLYFOR.ordinal()) {
                 invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.GROUPAPPLYFOR);
             }
-            invitedEntity.setType(type);
+            // 设置申请类型，有好友申请，和群组申请两种
+            if (type == MLInvitedEntity.InvitedType.GROUP.ordinal()) {
+                invitedEntity.setType(MLInvitedEntity.InvitedType.CONTACTS);
+            } else if (type == MLInvitedEntity.InvitedType.CONTACTS.ordinal()) {
+                invitedEntity.setType(MLInvitedEntity.InvitedType.CONTACTS);
+            }
             invitedEntity.setCreateTime(Long.valueOf(time));
 
             invitedEntities.add(invitedEntity);

@@ -23,8 +23,7 @@
         android:fadeScrollbars="true"
         android:fadingEdge="none"
         android:listSelector="@color/ml_transparent"
-        android:scrollingCache="false"
-        android:transcriptMode="alwaysScroll" />
+        android:scrollingCache="false"/>
 
     <!--空数据时显示的布局-->
     <RelativeLayout

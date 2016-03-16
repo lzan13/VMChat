@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ListView;
 
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
@@ -19,6 +21,11 @@ import net.melove.demo.chat.common.util.MLDate;
 import net.melove.demo.chat.common.util.MLLog;
 import net.melove.demo.chat.common.widget.MLToast;
 import net.melove.demo.chat.common.widget.MLViewGroup;
+import net.melove.demo.chat.contacts.MLInvitedAdapter;
+import net.melove.demo.chat.contacts.MLInvitedEntity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 测试Fragment，
@@ -27,7 +34,6 @@ import net.melove.demo.chat.common.widget.MLViewGroup;
  * 定义创建实例的工厂方法 {@link MLTestFragment#newInstance}，可使用此方法创建实例
  */
 public class MLTestFragment extends MLBaseFragment {
-
 
     private OnMLFragmentListener mListener;
     private MLViewGroup viewGroup;
@@ -67,16 +73,16 @@ public class MLTestFragment extends MLBaseFragment {
     }
 
     private void init() {
+        String[] btns = {"登出", "导入消息", "更新消息", "TestAdapter"};
         viewGroup = (MLViewGroup) getView().findViewById(R.id.ml_view_custom_viewgroup);
+        for (int i = 0; i < btns.length; i++) {
+            Button btn = new Button(mActivity);
+            btn.setText(btns[i]);
+            btn.setId(100 + i);
+            btn.setOnClickListener(viewListener);
+            viewGroup.addView(btn);
+        }
 
-        getView().findViewById(R.id.ml_btn_test_signout).setOnClickListener(viewListener);
-        getView().findViewById(R.id.ml_btn_test_jump).setOnClickListener(viewListener);
-        getView().findViewById(R.id.ml_btn_test_toast).setOnClickListener(viewListener);
-        getView().findViewById(R.id.ml_btn_test_delete_conversation).setOnClickListener(viewListener);
-        getView().findViewById(R.id.ml_btn_test_import_message).setOnClickListener(viewListener);
-        getView().findViewById(R.id.ml_btn_test_signup).setOnClickListener(viewListener);
-        getView().findViewById(R.id.ml_btn_test_signin).setOnClickListener(viewListener);
-        getView().findViewById(R.id.ml_btn_test_record).setOnClickListener(viewListener);
 
     }
 
@@ -110,9 +116,12 @@ public class MLTestFragment extends MLBaseFragment {
         EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
         EMTextMessageBody textMessageBody = new EMTextMessageBody("导入消息" + MLDate.getCurrentDate());
         message.addBody(textMessageBody);
-        message.setFrom("lz0");
+        message.setFrom("lz8");
         EMClient.getInstance().chatManager().saveMessage(message);
 
+    }
+
+    private void updateMessage() {
     }
 
     @Override
@@ -126,33 +135,23 @@ public class MLTestFragment extends MLBaseFragment {
         }
     }
 
+    /**
+     * 测试按钮的监听事件
+     */
     private View.OnClickListener viewListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.ml_btn_test_signout:
+                case 100:
                     signOut();
                     break;
-                case R.id.ml_btn_test_jump:
-                    mListener.onFragmentClick(0x20, 0x00, null);
-                    break;
-                case R.id.ml_btn_test_toast:
-                    MLToast.makeToast(1, "Test Toast").show();
-                    break;
-                case R.id.ml_btn_test_delete_conversation:
-                    EMClient.getInstance().chatManager().deleteConversation("lz0", false);
-                    break;
-                case R.id.ml_btn_test_import_message:
+                case 101:
                     importMessage();
                     break;
-                case R.id.ml_btn_test_signup:
+                case 102:
+                    updateMessage();
                     break;
-                case R.id.ml_btn_test_signin:
-                    break;
-                case R.id.ml_btn_test_send_message:
-                    break;
-                case R.id.ml_btn_test_record:
-
+                case 103:
                     break;
             }
         }

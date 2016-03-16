@@ -98,7 +98,6 @@ public class MLConversationsFragment extends MLBaseFragment {
         // 初始化会话列表的 ListView 控件
         mListView = (ListView) getView().findViewById(R.id.ml_listview_conversation);
         mListView.setAdapter(mAdapter);
-        mListView.setSelection(0);
 
         // 设置列表项点击监听
         setItemClickListener();
@@ -137,11 +136,9 @@ public class MLConversationsFragment extends MLBaseFragment {
                  * 根据会话扩展中的时间进行排序
                  * 通过{@link MLConversationExtUtils#getConversationLastTime(EMConversation)} 获取时间
                  */
-                if (MLConversationExtUtils.getConversationLastTime(lhs)
-                        > MLConversationExtUtils.getConversationLastTime(rhs)) {
+                if (MLConversationExtUtils.getConversationLastTime(lhs) > MLConversationExtUtils.getConversationLastTime(rhs)) {
                     return -1;
-                } else if (MLConversationExtUtils.getConversationLastTime(lhs)
-                        < MLConversationExtUtils.getConversationLastTime(rhs)) {
+                } else if (MLConversationExtUtils.getConversationLastTime(lhs) < MLConversationExtUtils.getConversationLastTime(rhs)) {
                     return 1;
                 }
                 return 0;

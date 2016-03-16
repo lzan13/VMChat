@@ -26,49 +26,38 @@ import java.util.List;
  */
 public class MLInvitedAdapter extends BaseAdapter implements View.OnClickListener {
 
+    // 上下文对象
     private Context mContext;
     private LayoutInflater mInflater;
-    private List<MLInvitedEntity> mList;
+    private List<MLInvitedEntity> mInvitedList;
 
+    // 邀请与申请信息数据库操作类
     private MLInvitedDao mInvitedDao;
+    // 自定义Handler
+    private MLHandler mHandler;
 
 
     public MLInvitedAdapter(Context context, List<MLInvitedEntity> list) {
         mContext = context;
-        mList = list;
+        mInvitedList = list;
         mInflater = LayoutInflater.from(mContext);
         mInvitedDao = new MLInvitedDao(mContext);
+        mHandler = new MLHandler();
     }
-
-    /**
-     * 处理申请与通知列表的刷新操作
-     */
-    Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            int what = msg.what;
-            switch (what) {
-                case 0:
-                    notifyDataSetChanged();
-                    break;
-            }
-        }
-    };
 
     @Override
     public int getCount() {
-        return mList.size();
+        return mInvitedList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mList.get(position);
+        return mInvitedList.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     @Override
@@ -145,8 +134,9 @@ public class MLInvitedAdapter extends BaseAdapter implements View.OnClickListene
                 try {
                     EMClient.getInstance().contactManager().acceptInvitation(invitedEntity.getUserName());
                     invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.AGREED);
+                    mInvitedDao.updateInvited(invitedEntity);
                     dialog.dismiss();
-                    refreshList(invitedEntity);
+                    refreshList();
                 } catch (HyphenateException e) {
                     e.printStackTrace();
                 }
@@ -171,8 +161,9 @@ public class MLInvitedAdapter extends BaseAdapter implements View.OnClickListene
                 try {
                     EMClient.getInstance().contactManager().declineInvitation(invitedEntity.getUserName());
                     invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.REFUSED);
+                    mInvitedDao.updateInvited(invitedEntity);
                     dialog.dismiss();
-                    refreshList(invitedEntity);
+                    refreshList();
                 } catch (HyphenateException e) {
                     e.printStackTrace();
                 }
@@ -199,24 +190,33 @@ public class MLInvitedAdapter extends BaseAdapter implements View.OnClickListene
 
     /**
      * 刷新申请与通知列表
-     *
-     * @param invitedEntity
      */
-    private void refreshList(MLInvitedEntity invitedEntity) {
-        // 这里进行一下筛选，如果已存在则去更新本地内容
-        MLInvitedEntity temp = mInvitedDao.getInvitedEntiry(invitedEntity.getObjId());
-        if (temp != null) {
-            mInvitedDao.updateInvited(invitedEntity);
-        } else {
-            mInvitedDao.saveInvited(invitedEntity);
+    public void refreshList() {
+        Message msg = mHandler.obtainMessage();
+        msg.what = 0;
+        mHandler.sendMessage(msg);
+    }
+
+    /**
+     * 处理申请与通知列表的刷新操作
+     */
+    class MLHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            int what = msg.what;
+            switch (what) {
+                case 0:
+                    notifyDataSetChanged();
+                    break;
+            }
         }
-        mHandler.sendMessage(mHandler.obtainMessage(0));
     }
 
     /**
      * 用户申请与通知的 ViewHolder
      */
-    private class ViewHolder {
+    static class ViewHolder {
         MLImageView imageViewAvatar;
         TextView textViewUsername;
         TextView textViewReason;

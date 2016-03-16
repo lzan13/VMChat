@@ -21,32 +21,18 @@ public class MLInvitedEntity {
     // 本条申请消息的状态
     private InvitedStatus status;
     // 消息类型，有群申请和好友申请两种
-    private int type;
+    private InvitedType type;
     // 消息创建的时间
     private long createTime;
+    // 消息更新时间
+    private long updateTime;
 
-    public String getObjId() {
-        return objId;
+    public long getCreateTime() {
+        return createTime;
     }
 
-    public void setObjId(String objId) {
-        this.objId = objId;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getNickName() {
-        return nickName;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
+    public void setCreateTime(long createTime) {
+        this.createTime = createTime;
     }
 
     public String getGroupId() {
@@ -65,28 +51,28 @@ public class MLInvitedEntity {
         this.groupName = groupName;
     }
 
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public String getObjId() {
+        return objId;
+    }
+
+    public void setObjId(String objId) {
+        this.objId = objId;
+    }
+
     public String getReason() {
         return reason;
     }
 
     public void setReason(String reason) {
         this.reason = reason;
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
-    }
-
-    public long getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(long createTime) {
-        this.createTime = createTime;
     }
 
     public InvitedStatus getStatus() {
@@ -97,13 +83,42 @@ public class MLInvitedEntity {
         this.status = status;
     }
 
+    public InvitedType getType() {
+        return type;
+    }
+
+    public void setType(InvitedType type) {
+        this.type = type;
+    }
+
+    public long getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(long updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     public enum InvitedStatus {
         AGREED,         // 同意
-        REFUSED,        // 据绝
+        REFUSED,        // 拒绝
         BEAGREED,       // 对方同意
         BEREFUSED,      // 对方拒绝
         APPLYFOR,       // 自己申请
         BEAPPLYFOR,     // 对方申请
         GROUPAPPLYFOR   // 加群申请
+    }
+
+    public enum InvitedType {
+        GROUP,      // 群组邀请
+        CONTACTS     // 联系人申请
     }
 }

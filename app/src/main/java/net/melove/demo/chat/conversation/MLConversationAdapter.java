@@ -1,7 +1,6 @@
 package net.melove.demo.chat.conversation;
 
 import android.content.Context;
-import android.media.Image;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
@@ -12,12 +11,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hyphenate.chat.EMConversation;
-import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.common.util.MLDate;
-import net.melove.demo.chat.common.util.MLLog;
 import net.melove.demo.chat.common.widget.MLImageView;
 
 import java.util.List;
@@ -30,6 +27,7 @@ public class MLConversationAdapter extends BaseAdapter {
 
     // 当前 Adapter 的上下文对象
     private Context mContext;
+    private LayoutInflater mInflater;
     // 会话列表的数据源
     private List<EMConversation> mList;
 
@@ -46,6 +44,7 @@ public class MLConversationAdapter extends BaseAdapter {
     public MLConversationAdapter(Context context, List<EMConversation> list) {
         mContext = context;
         mList = list;
+        mInflater = LayoutInflater.from(mContext);
         mHandler = new MLHandler();
     }
 
@@ -69,7 +68,7 @@ public class MLConversationAdapter extends BaseAdapter {
         ViewHolder viewHolder = null;
         EMConversation conversation = (EMConversation) getItem(position);
         if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_conversation, null);
+            convertView = mInflater.inflate(R.layout.item_conversation, null);
             viewHolder = new ViewHolder(convertView);
             convertView.setTag(viewHolder);
         } else {
@@ -113,7 +112,7 @@ public class MLConversationAdapter extends BaseAdapter {
                     break;
             }
         } else {
-            content = "-空-";
+            content = mContext.getString(R.string.ml_hint_empty);
         }
         viewHolder.contentView.setText(content);
         // 设置当前会话联系人名称
@@ -155,7 +154,7 @@ public class MLConversationAdapter extends BaseAdapter {
     /**
      * 自定义Handler，用来处理消息的刷新等
      */
-    private class MLHandler extends Handler {
+    class MLHandler extends Handler {
         private void refresh() {
             notifyDataSetChanged();
         }
@@ -176,7 +175,7 @@ public class MLConversationAdapter extends BaseAdapter {
     /**
      * 自定义会话列表项的 ViewHolder 用来显示会话列表项的内容
      */
-    class ViewHolder {
+    static class ViewHolder {
         public MLImageView avatarView;
         public TextView usernameView;
         public TextView contentView;

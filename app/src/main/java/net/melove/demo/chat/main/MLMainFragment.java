@@ -47,7 +47,7 @@ public class MLMainFragment extends MLBaseFragment{
     /**
      * 工厂方法，用来创建一个Fragment的实例
      *
-     * @return MLSingleFragment
+     * @return MLMainFragment
      */
     public static MLMainFragment newInstance() {
         MLMainFragment fragment = new MLMainFragment();

@@ -47,15 +47,17 @@
     <string name="ml_add_group">添加群组</string>
     <string name="ml_create_group">新建群组</string>
     <string name="ml_create_conversation">创建新会话</string>
-    <string name="ml_add_contact_reason">Hi 加个好友吧 ^_^~</string>
+    <string name="ml_add_contact_reason">嗨！加个好友吧 ^_^~</string>
 
     <!--Dialog-->
     <string name="ml_dialog_title_conversation">会话操作</string>
     <string name="ml_dialog_title_apply_for">申请操作</string>
     <string name="ml_dialog_title_chat">Message 操作</string>
-    <string name="ml_dialog_message_waiting">正在处理，请稍候……</string>
-    <string name="ml_dialog_content_create_conversation">演示环信不需要互为好友就能发起会话，只需要知道对方环信账户，即可跳转到聊天界面进行聊天，请输入对方的username</string>
+    <string name="ml_dialog_title_invited">Invited 操作</string>
     <string name="ml_dialog_content_add_contact">输入你的申请理由，让对方容易通过你的请求，也可以输入你的姓名，让对方知道你是谁，更容易通过请求</string>
+    <string name="ml_dialog_content_create_conversation">演示环信不需要互为好友就能发起会话，只需要知道对方环信账户，即可跳转到聊天界面进行聊天，请输入对方的username</string>
+    <string name="ml_dialog_content_delete_invited">确定要删除用户申请么</string>
+    <string name="ml_dialog_message_waiting">正在处理，请稍候……</string>
 
     <!--导航菜单 Title Action 等-->
     <string name="ml_chat">聊天</string>
@@ -102,6 +104,7 @@
     <string name="ml_hint_count">数量</string>
     <string name="ml_hint_reason">申请理由</string>
     <string name="ml_hint_loading">加载中...</string>
+    <string name="ml_hint_empty">- 空 -</string>
 
     <!--Error 文字内容-->
     <string name="ml_error_field_required">此项是必须的</string>

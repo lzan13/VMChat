@@ -14,7 +14,6 @@ import android.widget.ListView;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLConstants;
-import net.melove.demo.chat.common.util.MLLog;
 import net.melove.demo.chat.database.MLUserDao;
 import net.melove.demo.chat.common.base.MLBaseFragment;
 
@@ -73,22 +72,30 @@ public class MLContactsFragment extends MLBaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mActivity = getParentFragment().getActivity();
 
-        init();
+        initView();
 
     }
 
     /**
      * 初始化联系人列表界面
      */
-    private void init() {
+    private void initView() {
+        mActivity = getParentFragment().getActivity();
+    }
+
+    /**
+     * 初始化联系人界面ListView
+     */
+    private void initListView() {
+        mListView = (ListView) getView().findViewById(R.id.ml_list_contacts);
+        mUserDao = new MLUserDao(mActivity);
+
         // 加载所有联系人
         loadUserList();
 
         // 实例化联系人列表的适配器
         mAdapter = new MLContactsAdapter(mActivity, mUserList);
-        mListView = (ListView) getView().findViewById(R.id.ml_list_contacts);
 
         mListView.setAdapter(mAdapter);
 
@@ -98,10 +105,11 @@ public class MLContactsFragment extends MLBaseFragment {
      * 刷新邀请信息界面
      */
     private void refreshContacts() {
-        MLLog.i("refresh constacs");
         mUserList.clear();
         mUserList.addAll(loadUserList());
-        mAdapter.notifyDataSetChanged();
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     /**

@@ -129,7 +129,7 @@ public class MLEasemobHelper {
         // 设置是否需要发送回执
         options.setRequireDeliveryAck(true);
         // 设置初始化数据库DB时，每个会话要加载的Message数量
-        options.setNumberOfMessagesLoaded(1);
+        //        options.setNumberOfMessagesLoaded(1);
         // 添加好友是否自动同意，如果是自动同意就不会收到好友请求，因为sdk会自动处理
         options.setAcceptInvitationAlways(false);
         // 设置集成小米推送的appid和appkey
@@ -306,7 +306,7 @@ public class MLEasemobHelper {
              */
             @Override
             public void onContactDeleted(String username) {
-
+                mUserDao.deleteContacts(username);
             }
 
             /**
@@ -325,7 +325,7 @@ public class MLEasemobHelper {
                 //                invitedEntity.setNickName(mUserEntity.getNickName());
                 invitedEntity.setReason(reason);
                 invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.BEAPPLYFOR);
-                invitedEntity.setType(0);
+                invitedEntity.setType(MLInvitedEntity.InvitedType.CONTACTS);
                 invitedEntity.setCreateTime(MLDate.getCurrentMillisecond());
                 invitedEntity.setObjId(MLCrypto.cryptoStr2MD5(invitedEntity.getUserName() + invitedEntity.getType()));
 
@@ -348,6 +348,8 @@ public class MLEasemobHelper {
                 // 调用发送通知栏提醒方法，提醒用户查看申请通知
                 MLNotifier.getInstance(MLApplication.getContext()).sendInvitedNotification(invitedEntity);
                 mLocalBroadcastManager.sendBroadcast(new Intent(MLConstants.ML_ACTION_INVITED));
+                // 发送广播，通知需要刷新UI等操作的地方
+                mLocalBroadcastManager.sendBroadcast(new Intent(MLConstants.ML_ACTION_CONTACT));
             }
 
             /**
@@ -371,7 +373,7 @@ public class MLEasemobHelper {
                     //                invitedEntity.setNickName(mUserEntity.getNickName());
                     invitedEntity.setReason(MLApplication.getContext().getString(R.string.ml_add_contact_reason));
                     invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.BEAGREED);
-                    invitedEntity.setType(0);
+                    invitedEntity.setType(MLInvitedEntity.InvitedType.CONTACTS);
                     invitedEntity.setCreateTime(MLDate.getCurrentMillisecond());
                     invitedEntity.setObjId(MLCrypto.cryptoStr2MD5(invitedEntity.getUserName() + invitedEntity.getType()));
                     mInvitedDao.saveInvited(invitedEntity);
@@ -401,7 +403,7 @@ public class MLEasemobHelper {
                     //                invitedEntity.setNickName(mUserEntity.getNickName());
                     invitedEntity.setReason(MLApplication.getContext().getString(R.string.ml_add_contact_reason));
                     invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.BEREFUSED);
-                    invitedEntity.setType(0);
+                    invitedEntity.setType(MLInvitedEntity.InvitedType.CONTACTS);
                     invitedEntity.setCreateTime(MLDate.getCurrentMillisecond());
                     invitedEntity.setObjId(MLCrypto.cryptoStr2MD5(invitedEntity.getUserName() + invitedEntity.getType()));
                     mInvitedDao.saveInvited(invitedEntity);
@@ -411,6 +413,7 @@ public class MLEasemobHelper {
                 mLocalBroadcastManager.sendBroadcast(new Intent(MLConstants.ML_ACTION_INVITED));
             }
         };
+        EMClient.getInstance().contactManager().setContactListener(mContactListener);
     }
 
     /**
@@ -446,42 +449,87 @@ public class MLEasemobHelper {
 
             }
 
+            /**
+             * 加群申请被对方接受
+             * @param groupId 申请加入的群组id
+             * @param groupName 申请加入的群组名称
+             * @param accepter 同意申请的用户名（一般就是群主）
+             */
             @Override
-            public void onApplicationAccept(String s, String s1, String s2) {
+            public void onApplicationAccept(String groupId, String groupName, String accepter) {
 
             }
 
+            /**
+             * 加群申请被拒绝
+             * @param groupId 申请加入的群组id
+             * @param groupName 申请加入的群组名称
+             * @param decliner 拒绝者的用户名（一般就是群主）
+             * @param reason 拒绝理由
+             */
             @Override
-            public void onApplicationDeclined(String s, String s1, String s2, String s3) {
+            public void onApplicationDeclined(String groupId, String groupName, String decliner, String reason) {
 
             }
 
+            /**
+             * 对方接受群组邀请
+             * @param groupId 邀请对方加入的群组
+             * @param invitee 被邀请者
+             * @param reason 理由
+             */
             @Override
-            public void onInvitationAccpted(String s, String s1, String s2) {
+            public void onInvitationAccpted(String groupId, String invitee, String reason) {
 
             }
 
+            /**
+             * 对方拒绝群组邀请
+             * @param groupId 邀请对方加入的群组
+             * @param invitee 被邀请的人（拒绝群组邀请的人）
+             * @param reason 拒绝理由
+             */
             @Override
-            public void onInvitationDeclined(String s, String s1, String s2) {
+            public void onInvitationDeclined(String groupId, String invitee, String reason) {
 
             }
 
+            /**
+             * 当前登录用户被管理员移除出群组
+             * @param groupId 被移出的群组id
+             * @param groupName 被移出的群组名称
+             */
             @Override
-            public void onUserRemoved(String s, String s1) {
+            public void onUserRemoved(String groupId, String groupName) {
 
             }
 
+            /**
+             * 群组被解散。 sdk 会先删除本地的这个群组，之后通过此回调通知应用，此群组被删除了
+             *
+             * @param groupId 解散的群组id
+             * @param groupName 解散的群组名称
+             */
             @Override
-            public void onGroupDestroy(String s, String s1) {
+            public void onGroupDestroy(String groupId, String groupName) {
 
             }
 
 
+            /**
+             * 自动同意加入群组 sdk会先加入这个群组，并通过此回调通知应用
+             *
+             * @param groupId 收到邀请加入的群组id
+             * @param inviter 邀请者
+             * @param inviteMessage 邀请信息
+             */
             @Override
-            public void onAutoAcceptInvitationFromGroup(String s, String s1, String s2) {
+            public void onAutoAcceptInvitationFromGroup(String groupId, String inviter, String inviteMessage) {
 
             }
         };
+        // 添加群组改变监听
+        EMClient.getInstance().groupManager().addGroupChangeListener(mGroupChangeListener);
     }
 
     /**
