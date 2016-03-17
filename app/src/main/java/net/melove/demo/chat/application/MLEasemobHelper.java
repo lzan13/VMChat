@@ -312,17 +312,17 @@ public class MLEasemobHelper {
             /**
              * 收到对方联系人申请
              *
-             * @param username
-             * @param reason
+             * @param username 发送好友申请者username
+             * @param reason 申请理由
              */
             @Override
             public void onContactInvited(String username, String reason) {
-                MLLog.d("onContactInvited");
+                MLLog.d("onContactInvited - username:%s, reaseon:%s", username, reason);
 
                 // 创建一条好友申请数据
                 MLInvitedEntity invitedEntity = new MLInvitedEntity();
                 invitedEntity.setUserName(username);
-                //                invitedEntity.setNickName(mUserEntity.getNickName());
+                // invitedEntity.setNickName(mUserEntity.getNickName());
                 invitedEntity.setReason(reason);
                 invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.BEAPPLYFOR);
                 invitedEntity.setType(MLInvitedEntity.InvitedType.CONTACTS);
@@ -359,7 +359,7 @@ public class MLEasemobHelper {
              */
             @Override
             public void onContactAgreed(String username) {
-                MLLog.d("onContactAgreed %", username);
+                MLLog.d("onContactAgreed - username:%s", username);
 
                 // 这里进行一下筛选，如果已存在则去更新本地内容
                 MLInvitedEntity temp = mInvitedDao.getInvitedEntiry(MLCrypto.cryptoStr2MD5(username + 0));
@@ -390,7 +390,7 @@ public class MLEasemobHelper {
              */
             @Override
             public void onContactRefused(String username) {
-                MLLog.d("onContactRefused");
+                MLLog.d("onContactRefused - username:%s", username);
                 // 这里进行一下筛选，如果已存在则去更新本地内容
                 MLInvitedEntity temp = mInvitedDao.getInvitedEntiry(MLCrypto.cryptoStr2MD5(username + 0));
                 if (temp != null) {
@@ -451,6 +451,7 @@ public class MLEasemobHelper {
 
             /**
              * 加群申请被对方接受
+             *
              * @param groupId 申请加入的群组id
              * @param groupName 申请加入的群组名称
              * @param accepter 同意申请的用户名（一般就是群主）
@@ -462,6 +463,7 @@ public class MLEasemobHelper {
 
             /**
              * 加群申请被拒绝
+             *
              * @param groupId 申请加入的群组id
              * @param groupName 申请加入的群组名称
              * @param decliner 拒绝者的用户名（一般就是群主）
@@ -474,6 +476,7 @@ public class MLEasemobHelper {
 
             /**
              * 对方接受群组邀请
+             *
              * @param groupId 邀请对方加入的群组
              * @param invitee 被邀请者
              * @param reason 理由
@@ -496,6 +499,7 @@ public class MLEasemobHelper {
 
             /**
              * 当前登录用户被管理员移除出群组
+             *
              * @param groupId 被移出的群组id
              * @param groupName 被移出的群组名称
              */

@@ -3,16 +3,16 @@ package net.melove.demo.chat.conversation;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
+import com.hyphenate.chat.EMImageMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 
@@ -29,7 +29,7 @@ import java.util.List;
  * <p/>
  * Created by lzan13 on 2016/1/6 18:51.
  */
-public class MLMessageAdapter extends BaseAdapter {
+public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.MessageViewHolder> {
 
     // 消息类型数
     private final int MSG_TYPE_COUNT = 5;
@@ -40,6 +40,7 @@ public class MLMessageAdapter extends BaseAdapter {
     private final int MSG_TYPE_IMAGE_RECEIVED = 3;
 
     // 系统级消息类型
+    // 撤回类型消息
     private final int MSG_TYPE_SYS_RECALL = 4;
 
     // 刷新类型
@@ -50,10 +51,12 @@ public class MLMessageAdapter extends BaseAdapter {
 
     private LayoutInflater mInflater;
 
-    private ListView mListView;
+    private RecyclerView mRecyclerView;
     private EMConversation mConversation;
-    private List<EMMessage> messages;
+    private List<EMMessage> mMessages;
 
+    // 自定义的回调接口
+    private MLOnItemClickListener mOnItemClickListener;
     private MLHandler mHandler;
 
     /**
@@ -61,12 +64,12 @@ public class MLMessageAdapter extends BaseAdapter {
      *
      * @param context
      * @param chatId
-     * @param listView
+     * @param recyclerView
      */
-    public MLMessageAdapter(Context context, String chatId, ListView listView) {
+    public MLMessageAdapter(Context context, String chatId, RecyclerView recyclerView) {
         mContext = context;
         mInflater = LayoutInflater.from(mContext);
-        mListView = listView;
+        mRecyclerView = recyclerView;
 
         mHandler = new MLHandler();
 
@@ -77,26 +80,19 @@ public class MLMessageAdapter extends BaseAdapter {
          * 第三个表示如果会话不存在是否创建
          */
         mConversation = EMClient.getInstance().chatManager().getConversation(chatId, null, true);
-        messages = mConversation.getAllMessages();
+        mMessages = mConversation.getAllMessages();
 
     }
 
-    @Override
-    public int getCount() {
-        return messages == null ? 0 : messages.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        if (messages != null && position < messages.size()) {
-            return messages.get(position);
-        }
-        return null;
-    }
 
     @Override
     public long getItemId(int position) {
         return position;
+    }
+
+    @Override
+    public int getItemCount() {
+        return mMessages.size();
     }
 
     /**
@@ -104,9 +100,94 @@ public class MLMessageAdapter extends BaseAdapter {
      *
      * @return 返回当前 adapter 当前 ListView 最多显示的 Item 类型数
      */
+
+
     @Override
-    public int getViewTypeCount() {
-        return MSG_TYPE_COUNT;
+    public MessageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = createItemView(parent, viewType);
+        MessageViewHolder holder = new MessageViewHolder(view);
+        switch (viewType) {
+            // 文字类消息
+            case MSG_TYPE_TXT_SEND:
+            case MSG_TYPE_TXT_RECEIVED:
+                holder.avatarView = (MLImageView) view.findViewById(R.id.ml_img_msg_avatar);
+                holder.contentView = (TextView) view.findViewById(R.id.ml_text_msg_content);
+                holder.usernameView = (TextView) view.findViewById(R.id.ml_text_msg_username);
+                holder.timeView = (TextView) view.findViewById(R.id.ml_text_msg_time);
+                holder.msgState = (ImageView) view.findViewById(R.id.ml_img_msg_state);
+                break;
+            case MSG_TYPE_IMAGE_SEND:
+            case MSG_TYPE_IMAGE_RECEIVED:
+                holder.avatarView = (MLImageView) view.findViewById(R.id.ml_img_msg_avatar);
+                holder.imageView = (MLImageView) view.findViewById(R.id.ml_img_msg_image);
+                holder.usernameView = (TextView) view.findViewById(R.id.ml_text_msg_username);
+                holder.timeView = (TextView) view.findViewById(R.id.ml_text_msg_time);
+                holder.msgState = (ImageView) view.findViewById(R.id.ml_img_msg_state);
+                break;
+            // 自定义类型的消息
+            case MSG_TYPE_SYS_RECALL:
+                holder.timeView = (TextView) view.findViewById(R.id.ml_text_msg_time);
+                holder.contentView = (TextView) view.findViewById(R.id.ml_text_msg_content);
+                break;
+        }
+        return holder;
+    }
+
+    @Override
+    public void onBindViewHolder(MessageViewHolder holder, final int position) {
+        // 获取当前要显示的 message 对象
+        EMMessage message = mMessages.get(position);
+
+        // viewHolder.avatarView.setImageBitmap();
+        holder.usernameView.setText(message.getFrom());
+        holder.timeView.setText(MLDate.long2Time(message.getMsgTime()));
+        switch (message.getType()) {
+            case TXT:
+                handleTextMessage(message, holder);
+                break;
+            case IMAGE:
+                handleImageMessage(message, holder);
+                break;
+            case FILE:
+                break;
+            case LOCATION:
+                break;
+            case VIDEO:
+                break;
+            case VOICE:
+                break;
+            default:
+                break;
+        }
+
+        // 判断消息的状态，如果发送失败就显示重发按钮，并设置重发按钮的监听
+        if (message.status() == EMMessage.Status.FAIL) {
+            holder.msgState.setVisibility(View.VISIBLE);
+            holder.msgState.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // 重新发送  在这里实现重发逻辑
+                }
+            });
+        } else {
+            holder.msgState.setVisibility(View.GONE);
+        }
+        /**
+         * 为每个Item设置点击与长按监听
+         */
+        holder.timeView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOnItemClickListener.onItemClick(v, position);
+            }
+        });
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                mOnItemClickListener.onItemLongClick(v, position);
+                return false;
+            }
+        });
     }
 
     /**
@@ -117,7 +198,7 @@ public class MLMessageAdapter extends BaseAdapter {
      */
     @Override
     public int getItemViewType(int position) {
-        EMMessage message = (EMMessage) getItem(position);
+        EMMessage message = mMessages.get(position);
         int itemType = -1;
         switch (message.getType()) {
             case TXT:
@@ -127,6 +208,9 @@ public class MLMessageAdapter extends BaseAdapter {
                 } else {
                     itemType = message.direct() == EMMessage.Direct.SEND ? MSG_TYPE_TXT_SEND : MSG_TYPE_TXT_RECEIVED;
                 }
+                break;
+            case IMAGE:
+                itemType = message.direct() == EMMessage.Direct.SEND ? MSG_TYPE_IMAGE_SEND : MSG_TYPE_IMAGE_RECEIVED;
                 break;
             default:
                 // 默认返回txt类型
@@ -139,98 +223,33 @@ public class MLMessageAdapter extends BaseAdapter {
     /**
      * 获取 item 的布局，根据传入的消息类型不同，返回不同的布局
      *
-     * @param message 要展示的消息
+     * @param viewType 消息类型
      * @return 要显示的布局
      */
-    private View createItemView(EMMessage message) {
+    private View createItemView(ViewGroup parent, int viewType) {
         View itemView = null;
-        switch (message.getType()) {
-            case TXT:
-                if (message.getBooleanAttribute(MLConstants.ML_ATTR_TYPE, false)) {
-                    itemView = mInflater.inflate(R.layout.item_msg_recall, null);
-                } else {
-                    itemView = message.direct() == EMMessage.Direct.SEND
-                            ? mInflater.inflate(R.layout.item_msg_text_send, null)
-                            : mInflater.inflate(R.layout.item_msg_text_received, null);
-                }
+        switch (viewType) {
+            case MSG_TYPE_SYS_RECALL:
+                itemView = mInflater.inflate(R.layout.item_msg_recall, parent, false);
+                break;
+            case MSG_TYPE_TXT_SEND:
+                itemView = mInflater.inflate(R.layout.item_msg_text_send, parent, false);
+                break;
+            case MSG_TYPE_TXT_RECEIVED:
+                itemView = mInflater.inflate(R.layout.item_msg_text_received, parent, false);
+                break;
+            case MSG_TYPE_IMAGE_SEND:
+                itemView = mInflater.inflate(R.layout.item_msg_image_send, parent, false);
+                break;
+            case MSG_TYPE_IMAGE_RECEIVED:
+                itemView = mInflater.inflate(R.layout.item_msg_image_received, parent, false);
                 break;
             default:
-                itemView = message.direct() == EMMessage.Direct.SEND
-                        ? mInflater.inflate(R.layout.item_msg_text_send, null)
-                        : mInflater.inflate(R.layout.item_msg_text_received, null);
+                itemView = mInflater.inflate(R.layout.item_msg_recall, parent, false);
                 break;
         }
         return itemView;
     }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        // 获取当前要显示的 message 对象
-        EMMessage message = (EMMessage) getItem(position);
-        ViewHolder viewHolder = null;
-        if (convertView == null) {
-            convertView = createItemView(message);
-            viewHolder = new ViewHolder();
-            if (message.getType() == EMMessage.Type.TXT) {
-                if (message.getBooleanAttribute(MLConstants.ML_ATTR_TYPE, false)) {
-                    viewHolder.timeView = (TextView) convertView.findViewById(R.id.ml_text_msg_time);
-                    viewHolder.contentView = (TextView) convertView.findViewById(R.id.ml_text_msg_content);
-                } else {
-                    viewHolder.avatarView = (MLImageView) convertView.findViewById(R.id.ml_img_msg_avatar);
-                    viewHolder.contentView = (TextView) convertView.findViewById(R.id.ml_text_msg_content);
-                    viewHolder.usernameView = (TextView) convertView.findViewById(R.id.ml_text_msg_username);
-                    viewHolder.timeView = (TextView) convertView.findViewById(R.id.ml_text_msg_time);
-                    viewHolder.msgState = (ImageView) convertView.findViewById(R.id.ml_img_msg_state);
-                }
-            }
-            convertView.setTag(viewHolder);
-        } else {
-            viewHolder = (ViewHolder) convertView.getTag();
-        }
-
-
-        if (message.getBooleanAttribute(MLConstants.ML_ATTR_TYPE, false)) {
-            String messageStr = ((EMTextMessageBody) message.getBody()).getMessage().toString();
-            viewHolder.contentView.setText(messageStr);
-            viewHolder.timeView.setText(MLDate.long2Time(message.getMsgTime()));
-        } else {
-            //            viewHolder.avatarView.setImageBitmap();
-            viewHolder.usernameView.setText(message.getFrom());
-            viewHolder.timeView.setText(MLDate.long2Time(message.getMsgTime()));
-            switch (message.getType()) {
-                case TXT:
-                    handleTextMessage(message, viewHolder);
-                    break;
-                case IMAGE:
-                    break;
-                case FILE:
-                    break;
-                case LOCATION:
-                    break;
-                case VIDEO:
-                    break;
-                case VOICE:
-                    break;
-                default:
-                    break;
-            }
-
-            // 判断消息的状态，如果发送失败就显示重发按钮，并设置重发按钮的监听
-            if (message.status() == EMMessage.Status.FAIL) {
-                viewHolder.msgState.setVisibility(View.VISIBLE);
-                viewHolder.msgState.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // 重新发送  在这里实现重发逻辑
-                    }
-                });
-            } else {
-                viewHolder.msgState.setVisibility(View.GONE);
-            }
-        }
-        return convertView;
-    }
-
 
     /**
      * 处理文字类消息
@@ -238,7 +257,7 @@ public class MLMessageAdapter extends BaseAdapter {
      * @param message    要展示的消息对象
      * @param viewHolder 展示消息内容的 ViewHolder
      */
-    private void handleTextMessage(EMMessage message, ViewHolder viewHolder) {
+    private void handleTextMessage(EMMessage message, MessageViewHolder viewHolder) {
         EMTextMessageBody body = (EMTextMessageBody) message.getBody();
         String messageStr = body.getMessage().toString();
         // 判断是不是阅后即焚的消息
@@ -247,6 +266,11 @@ public class MLMessageAdapter extends BaseAdapter {
         } else {
             viewHolder.contentView.setText(messageStr);
         }
+    }
+
+    private void handleImageMessage(EMMessage message, MessageViewHolder viewHolder) {
+        EMImageMessageBody body = (EMImageMessageBody) message.getBody();
+
     }
 
 
@@ -267,6 +291,24 @@ public class MLMessageAdapter extends BaseAdapter {
     }
 
     /**
+     * 自定义回调接口，用来实现 RecyclerView 中 Item 长按和点击事件监听
+     */
+    protected interface MLOnItemClickListener {
+        public void onItemClick(View view, int position);
+
+        public void onItemLongClick(View view, int position);
+    }
+
+    /**
+     * 设置回调监听
+     *
+     * @param listener 自定义回调接口
+     */
+    public void setOnItemClickListener(MLOnItemClickListener listener) {
+        mOnItemClickListener = listener;
+    }
+
+    /**
      * 自定义Handler，用来处理消息的刷新等
      */
     private class MLHandler extends Handler {
@@ -275,11 +317,11 @@ public class MLMessageAdapter extends BaseAdapter {
          * 刷新聊天信息列表，并滚动到底部
          */
         private void refresh() {
-            messages.clear();
-            messages = mConversation.getAllMessages();
+            mMessages.clear();
+            mMessages = mConversation.getAllMessages();
             notifyDataSetChanged();
             // 平滑滚动到最后一条
-            mListView.smoothScrollToPosition(messages.size() - 1);
+            mRecyclerView.smoothScrollToPosition(mMessages.size() - 1);
         }
 
         /**
@@ -288,8 +330,8 @@ public class MLMessageAdapter extends BaseAdapter {
          * @param position 新加载的内容的最后一个位置
          */
         private void refresh(int position) {
-            messages.clear();
-            messages = mConversation.getAllMessages();
+            mMessages.clear();
+            mMessages = mConversation.getAllMessages();
             notifyDataSetChanged();
             /**
              * 平滑滚动到最后一条，这里使用了ListView的两个方法:setSelection()/smoothScrollToPosition();
@@ -297,8 +339,8 @@ public class MLMessageAdapter extends BaseAdapter {
              * 如果单独使用smoothScrollToPosition() 就会因为我们的item高度不同导致滚动有偏差
              * 所以我们要先使用setSelection()跳转到指定位置，然后再用smoothScrollToPosition()平滑滚动到上一个
              */
-            mListView.setSelection(position);
-            mListView.smoothScrollToPosition(position - 1);
+            //            mRecyclerView.setSelection(position);
+            mRecyclerView.smoothScrollToPosition(position - 1);
         }
 
         @Override
@@ -325,12 +367,17 @@ public class MLMessageAdapter extends BaseAdapter {
      * 那么如果ViewHolder是非静态内部类的话，就很容易出现内存泄露。如果是静态的话，
      * 你就不能直接引用外部类，迫使你关注如何避免相互引用。 所以将 ViewHolder 定义为静态的
      */
-    static class ViewHolder {
+    static class MessageViewHolder extends RecyclerView.ViewHolder {
         MLImageView avatarView;
+        MLImageView imageView;
         TextView usernameView;
         TextView contentView;
         TextView timeView;
         ImageView msgState;
 
+        public MessageViewHolder(View itemView) {
+            super(itemView);
+
+        }
     }
 }

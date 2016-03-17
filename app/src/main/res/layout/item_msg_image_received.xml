@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:melove="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/ml_dimen_8"
+        android:gravity="bottom|left"
+        android:orientation="horizontal">
+
+        <net.melove.demo.chat.common.widget.MLImageView
+            android:id="@+id/ml_img_msg_avatar"
+            android:layout_width="@dimen/ml_dimen_40"
+            android:layout_height="@dimen/ml_dimen_40"
+            android:src="@mipmap/ic_character_blackcat"
+            melove:ml_border_color="@color/ml_white_87"
+            melove:ml_border_width="@dimen/ml_dimen_2"
+            melove:ml_shape_type="round"/>
+
+        <LinearLayout
+            android:id="@+id/ml_layout_bubble"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bubble_msg_received">
+
+                <net.melove.demo.chat.common.widget.MLImageView
+                    android:id="@+id/ml_img_msg_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/ml_dimen_2"
+                    android:maxWidth="@dimen/ml_dimen_144"
+                    android:src="@mipmap/image_default"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/ml_dimen_1"
+                android:background="@drawable/ml_shape_time_username"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/ml_dimen_2"
+                android:paddingRight="@dimen/ml_dimen_2">
+
+                <TextView
+                    android:id="@+id/ml_text_msg_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/ml_dimen_8"
+                    android:text="@string/ml_hint_username"
+                    android:textColor="@color/ml_white_54"
+                    android:textSize="@dimen/ml_size_8"/>
+
+                <TextView
+                    android:id="@+id/ml_text_msg_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ml_hint_time"
+                    android:textColor="@color/ml_white_54"
+                    android:textSize="@dimen/ml_size_8"/>
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <ImageView
+            android:id="@+id/ml_img_msg_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/ml_dimen_4"
+            android:src="@mipmap/ic_retry_normal"
+            android:visibility="gone"/>
+    </LinearLayout>
+</LinearLayout>

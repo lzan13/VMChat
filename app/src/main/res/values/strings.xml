@@ -156,20 +156,20 @@
     <string name="ml_error_message_invalid">消息不合法</string>
     <string name="ml_error_message_send_traffic_limit">消息发送过快，触发限流</string>
     <!--群组错误 6xx-->
-    <string name="ml_error_GROUP_ALREADY_JOINED">已经加入的群组</string>
-    <string name="ml_error_GROUP_INVALID_ID">群id不正确</string>
-    <string name="ml_error_GROUP_MEMBERS_FULL">群成员已满</string>
-    <string name="ml_error_GROUP_NOT_EXIST">群组不存在</string>
-    <string name="ml_error_GROUP_NOT_JOINED">尚未加入此群组</string>
-    <string name="ml_error_GROUP_PERMISSION_DENIED">群组权限不够</string>
+    <string name="ml_error_group_already_joined">已经加入的群组</string>
+    <string name="ml_error_group_invalid_id">群id不正确</string>
+    <string name="ml_error_group_members_full">群成员已满</string>
+    <string name="ml_error_group_not_exist">群组不存在</string>
+    <string name="ml_error_group_not_joined">尚未加入此群组</string>
+    <string name="ml_error_group_permission_denied">群组权限不够</string>
 
     <!--聊天室错误 7xx-->
-    <string name="ml_error_CHATROOM_ALREADY_JOINED">已经在此聊天室里</string>
-    <string name="ml_error_CHATROOM_INVALID_ID">聊天室id不正确</string>
-    <string name="ml_error_CHATROOM_MEMBERS_FULL">聊天室成员已满</string>
-    <string name="ml_error_CHATROOM_NOT_EXIST">聊天室不存在</string>
-    <string name="ml_error_CHATROOM_NOT_JOINED">尚未加入此聊天室</string>
-    <string name="ml_error_CHATROOM_PERMISSION_DENIED">聊天室权限不够</string>
+    <string name="ml_error_chatroom_already_joined">已经在此聊天室里</string>
+    <string name="ml_error_chatroom_invalid_id">聊天室id不正确</string>
+    <string name="ml_error_chatroom_members_full">聊天室成员已满</string>
+    <string name="ml_error_chatroom_not_exist">聊天室不存在</string>
+    <string name="ml_error_chatroom_not_joined">尚未加入此聊天室</string>
+    <string name="ml_error_chatroom_permission_denied">聊天室权限不够</string>
 
     <!--Toast 提示内容-->
     <string name="ml_toast_add_contacts_success">"发送好友请求成功，等待对方同意^_^"</string>

@@ -9,11 +9,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListView;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLConstants;
@@ -33,7 +34,8 @@ public class MLInvitedFragment extends MLBaseFragment {
     private MLInvitedDao mInvitedDao;
     // 申请信息集合
     private List<MLInvitedEntity> mInvitedList = new ArrayList<MLInvitedEntity>();
-    private ListView mListView;
+    //    private ListView mListView;
+    private RecyclerView mRecyclerView;
     private MLInvitedAdapter mInvitedAdapter;
 
     // 应用内广播管理器，为了完全这里使用局域广播
@@ -83,19 +85,31 @@ public class MLInvitedFragment extends MLBaseFragment {
      * 初始化邀请信息列表
      */
     private void initListView() {
+        // 获取数据源
         mInvitedList = mInvitedDao.getInvitedList();
         // 实例化适配器
         mInvitedAdapter = new MLInvitedAdapter(mActivity, mInvitedList);
-        // 初始化ListView
-        mListView = (ListView) getView().findViewById(R.id.ml_listview_invited);
-        mListView.setAdapter(mInvitedAdapter);
+        mRecyclerView = (RecyclerView) getView().findViewById(R.id.ml_recyclerview_invited);
 
-        // 设置申请列表项的点击事件
+        /**
+         * 为RecyclerView 设置布局管理器，这里使用线性布局
+         * RececlerView 默认的布局管理器：
+         * LinearLayoutManager          显示垂直滚动列表或水平的项目
+         * GridLayoutManager            显示在一个网格项目
+         * StaggeredGridLayoutManager   显示在交错网格项目
+         * 自定义的布局管理器，需要继承 {@link android.support.v7.widget.RecyclerView.LayoutManager}
+         *
+         * add/remove items时的动画是默认启用的。
+         * 自定义这些动画需要继承{@link android.support.v7.widget.RecyclerView.ItemAnimator}，
+         * 并实现{@link RecyclerView#setItemAnimator(RecyclerView.ItemAnimator)}
+         */
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+
+        // 设置适配器
+        mRecyclerView.setAdapter(mInvitedAdapter);
+
+        // 通过自定义接口来实现RecyclerView item的点击和长按事件
         setItemClickListener();
-        // 设置申请与邀请列表项长按事件监听
-        setItemLongClickListener();
-        // 设置当前界面数据为空的状态
-        mListView.setEmptyView(getView().findViewById(R.id.ml_layout_empty));
     }
 
     /**
@@ -103,39 +117,44 @@ public class MLInvitedFragment extends MLBaseFragment {
      */
     private void refreshInvited() {
         mInvitedList.clear();
+        // 这里清空之后要使用addAll的方式填充数据，不能直接 = ，否则Adapter的数据源将改变
         mInvitedList.addAll(mInvitedDao.getInvitedList());
         if (mInvitedAdapter != null) {
-            mInvitedAdapter.refreshList();
+            mInvitedAdapter.notifyDataSetChanged();
         }
     }
 
     /**
-     * 设置列表项点击事件监听
+     * 设置列表项的点击监听，因为这里使用的是RecyclerView控件，所以长按和点击事件都需要去自己实现，这里通过回调接口实现
      */
     private void setItemClickListener() {
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mInvitedAdapter.setOnItemClickListener(new MLInvitedAdapter.MLOnItemClickListener() {
+            /**
+             * 实现 RecyclerView item点击事件
+             * @param view 触发点击事件的view
+             * @param position 触发点击事件的位置
+             */
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(View view, int position) {
                 MLToast.makeToast("item " + position).show();
             }
-        });
-    }
 
-    /**
-     * 设置列表项的长按监听
-     */
-    private void setItemLongClickListener() {
-        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            /**
+             * 实现 RecyclerView item 长按事件
+             * @param view 触发长按事件的 item
+             * @param position 触发长按事件的position
+             */
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemLongClick(View view, int position) {
+                final int index = position;
                 AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
                 dialog.setTitle(mActivity.getResources().getString(R.string.ml_dialog_title_invited));
                 dialog.setMessage(mActivity.getResources().getString(R.string.ml_dialog_content_delete_invited));
                 dialog.setPositiveButton(R.string.ml_btn_ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mInvitedDao.deleteInvited(mInvitedList.get(which).getObjId());
-                        mInvitedAdapter.refreshList();
+                        mInvitedDao.deleteInvited(mInvitedList.get(index).getObjId());
+                        refreshInvited();
                     }
                 });
                 dialog.setNegativeButton(R.string.ml_btn_cancel, new DialogInterface.OnClickListener() {
@@ -145,7 +164,6 @@ public class MLInvitedFragment extends MLBaseFragment {
                     }
                 });
                 dialog.show();
-                return false;
             }
         });
     }

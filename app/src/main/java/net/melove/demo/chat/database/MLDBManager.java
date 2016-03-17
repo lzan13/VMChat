@@ -29,9 +29,9 @@ public class MLDBManager {
         mDBHelper = MLDBHelper.getInstance(context);
     }
 
-/**
- * ------------- 数据库的增删改查操作 ----------------
- */
+    /**
+     * ------------- 数据库的增删改查操作 ----------------
+     */
     /**
      * sql语句方式插入数据
      * sqlStr = "insert into table(col1, col2, ... coln) values('value1', 'value2', ... valuen)";
@@ -96,7 +96,7 @@ public class MLDBManager {
     public long delete(String table, String whereClause, String[] args) {
         SQLiteDatabase db = mDBHelper.getReadableDatabase();
         if (db.isOpen()) {
-            long result = db.delete(table, whereClause, args);
+            long result = db.delete(table, whereClause + "=?", args);
             return result;
         }
         return -1;

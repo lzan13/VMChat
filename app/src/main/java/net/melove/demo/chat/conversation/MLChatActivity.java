@@ -6,7 +6,6 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +14,8 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -24,7 +25,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMError;
@@ -62,8 +62,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     // 下拉刷新控件
     private SwipeRefreshLayout mSwipeRefreshLayout;
     // ListView 用来显示消息
-    private ListView mListView;
-    private MLMessageAdapter mAdapter;
+    private RecyclerView mRecyclerView;
+    private MLMessageAdapter mMessageAdapter;
 
     //自定义 Handler
     private MLHandler mHandler;
@@ -93,8 +93,6 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
 
         initView();
         initToolbar();
-        initConversation();
-        initListView();
         initSwipeRefreshLayout();
     }
 
@@ -121,11 +119,6 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         mVoiceView.setOnClickListener(viewListener);
         mSendView.setOnClickListener(viewListener);
 
-        // 初始化下拉刷新控件对象
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.ml_widget_chat_refreshlayout);
-        // 初始化ListView控件对象
-        mListView = (ListView) findViewById(R.id.ml_listview_chat_messages);
-
         // 设置扩展菜单点击监听
         mAttachMenuLayout = (LinearLayout) findViewById(R.id.ml_layout_attach_menu);
         mAttachMenuLayout.setOnClickListener(viewListener);
@@ -141,6 +134,29 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         findViewById(R.id.ml_img_attach_gift).setOnClickListener(viewListener);
         findViewById(R.id.ml_attach_contacts).setOnClickListener(viewListener);
         findViewById(R.id.ml_img_attach_contacts).setOnClickListener(viewListener);
+
+        initConversation();
+
+        // 初始化ListView控件对象
+        mRecyclerView = (RecyclerView) findViewById(R.id.ml_recyclerview_message);
+        // 实例化消息适配器
+        mMessageAdapter = new MLMessageAdapter(mActivity, mChatId, mRecyclerView);
+        /**
+         * 为RecyclerView 设置布局管理器，这里使用线性布局
+         * RececlerView 默认的布局管理器：
+         * LinearLayoutManager          显示垂直滚动列表或水平的项目
+         * GridLayoutManager            显示在一个网格项目
+         * StaggeredGridLayoutManager   显示在交错网格项目
+         * 自定义的布局管理器，需要继承 {@link android.support.v7.widget.RecyclerView.LayoutManager}
+         *
+         * add/remove items时的动画是默认启用的。
+         * 自定义这些动画需要继承{@link android.support.v7.widget.RecyclerView.ItemAnimator}，
+         * 并实现{@link RecyclerView#setItemAnimator(RecyclerView.ItemAnimator)}
+         */
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+        mRecyclerView.setAdapter(mMessageAdapter);
+        // 设置消息点击监听
+        setItemClickListener();
 
     }
 
@@ -178,22 +194,10 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         }
     }
 
-
-    /**
-     * 初始化 ListView
-     */
-    private void initListView() {
-        // 实例化消息适配器
-        mAdapter = new MLMessageAdapter(mActivity, mChatId, mListView);
-        mListView.setAdapter(mAdapter);
-        // 设置消息点击监听
-        setItemClickListener();
-        // 设置消息常按监听
-        setItemLongClickListener();
-    }
-
     private void initSwipeRefreshLayout() {
-        mSwipeRefreshLayout.setColorSchemeColors(0xffe62f17, 0xff2384fe);
+        // 初始化下拉刷新控件对象
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.ml_widget_chat_refreshlayout);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.ml_red_100, R.color.ml_blue_100);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -204,7 +208,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                         List<EMMessage> messages = mConversation.loadMoreMsgFromDB(mConversation.getAllMessages().get(0).getMsgId(), mPageSize);
                         if (messages.size() > 0) {
                             // 调用自定义的 Adapter 刷新方法
-                            mAdapter.refreshList(messages.size());
+                            mMessageAdapter.refreshList(messages.size());
                         }
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
@@ -249,28 +253,20 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      * 设置ListView 的点击监听，以及每一项点击监听
      */
     private void setItemClickListener() {
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mMessageAdapter.setOnItemClickListener(new MLMessageAdapter.MLOnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(View view, int position) {
                 final EMMessage message = mConversation.getAllMessages().get(position);
                 // 判断当前消息是否为【阅后即焚】类型
                 if (message.getBooleanAttribute(MLConstants.ML_ATTR_TYPE, false)) {
 
 
                 }
-                MLLog.i("item position - %d, id - %d", position, id);
+                MLLog.i("item position - %d", position);
             }
-        });
-    }
 
-    /**
-     * ListView 列表项的长按监听
-     */
-    private void setItemLongClickListener() {
-        // ListView 的长按监听
-        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, final long id) {
+            public void onItemLongClick(View view, int position) {
                 final EMMessage message = mConversation.getAllMessages().get(position);
                 // 这里要根据消息的类型去判断要弹出的菜单
                 List<String> mMenuList = new ArrayList<String>();
@@ -309,9 +305,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                                         break;
                                 }
                             }
-                        })
-                        .show();
-                return true;
+                        }).show();
             }
         });
     }
@@ -593,7 +587,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      * 刷新聊天界面ui
      */
     private void refreshChatUI() {
-        mAdapter.refreshList();
+        mMessageAdapter.refreshList();
     }
 
     /**

@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:melove="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/ml_click_rectangle_white"
-                android:gravity="center_vertical"
-                android:orientation="vertical"
-                android:paddingLeft="@dimen/ml_dimen_16"
-                android:paddingRight="@dimen/ml_dimen_16">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:melove="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="@dimen/ml_dimen_1"
+              android:background="@drawable/ml_click_rectangle_white"
+              android:gravity="center_vertical"
+              android:orientation="vertical"
+              android:paddingLeft="@dimen/ml_dimen_16"
+              android:paddingRight="@dimen/ml_dimen_16">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -19,6 +20,7 @@
             android:id="@+id/ml_img_conversation_avatar"
             android:layout_width="@dimen/ml_dimen_40"
             android:layout_height="@dimen/ml_dimen_40"
+            android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:src="@mipmap/ic_character_blackcat"
             melove:ml_border_color="@color/ml_white_87"
@@ -95,4 +97,4 @@
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
-</RelativeLayout>
+</LinearLayout>

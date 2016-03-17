@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ListView;
 
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
@@ -19,13 +18,7 @@ import net.melove.demo.chat.application.MLEasemobHelper;
 import net.melove.demo.chat.common.base.MLBaseFragment;
 import net.melove.demo.chat.common.util.MLDate;
 import net.melove.demo.chat.common.util.MLLog;
-import net.melove.demo.chat.common.widget.MLToast;
 import net.melove.demo.chat.common.widget.MLViewGroup;
-import net.melove.demo.chat.contacts.MLInvitedAdapter;
-import net.melove.demo.chat.contacts.MLInvitedEntity;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 测试Fragment，

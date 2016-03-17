@@ -15,6 +15,7 @@ import com.hyphenate.exceptions.HyphenateException;
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.common.base.MLBaseActivity;
 import net.melove.demo.chat.application.MLConstants;
+import net.melove.demo.chat.common.util.MLLog;
 import net.melove.demo.chat.common.util.MLSPUtil;
 import net.melove.demo.chat.common.widget.MLToast;
 
@@ -161,6 +162,7 @@ public class MLSignupActivity extends MLBaseActivity {
                                 mDialog.dismiss();
                             }
                             int errorCode = e.getErrorCode();
+                            MLLog.d("MLSignupActivity - signup - errorCode:%d, errorMsg:%s", errorCode, e.getMessage());
                             switch (errorCode) {
                                 // 网络错误
                                 case EMError.NETWORK_ERROR:
@@ -177,6 +179,9 @@ public class MLSignupActivity extends MLBaseActivity {
                                 // 服务器未知错误
                                 case EMError.SERVER_UNKNOWN_ERROR:
                                     MLToast.errorToast(res.getString(R.string.ml_error_server_unknown_error) + "-" + errorCode).show();
+                                    break;
+                                case EMError.USER_REG_FAILED:
+                                    MLToast.errorToast(res.getString(R.string.ml_error_user_reg_failed) + "-" + errorCode).show();
                                     break;
                                 default:
                                     MLToast.errorToast(res.getString(R.string.ml_signup_failed) + "-" + errorCode).show();

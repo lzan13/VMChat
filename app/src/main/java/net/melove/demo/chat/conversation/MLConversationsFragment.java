@@ -11,19 +11,18 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListView;
 
 
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 
 import net.melove.demo.chat.R;
-import net.melove.demo.chat.common.util.MLDate;
-import net.melove.demo.chat.common.util.MLLog;
 import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.common.base.MLBaseFragment;
 
@@ -39,12 +38,12 @@ import java.util.Map;
 public class MLConversationsFragment extends MLBaseFragment {
 
     // 保存会话对象的集合
-    private List<EMConversation> mConversationList = new ArrayList<EMConversation>();
+    private List<EMConversation> mConversations = new ArrayList<EMConversation>();
 
     private String[] mMenus = null;
     // 用来显示会话列表的控件
-    private ListView mListView;
-    private MLConversationAdapter mAdapter;
+    private RecyclerView mRecyclerView;
+    private MLConversationAdapter mConversationAdapter;
 
     // 应用内广播管理器，为了完全这里使用局域广播
     private LocalBroadcastManager mLocalBroadcastManager;
@@ -94,25 +93,36 @@ public class MLConversationsFragment extends MLBaseFragment {
         // 加载会话到list集合
         loadConversationList();
         // 实例化会话列表的 Adapter 对象
-        mAdapter = new MLConversationAdapter(mActivity, mConversationList);
+        mConversationAdapter = new MLConversationAdapter(mActivity, mConversations);
         // 初始化会话列表的 ListView 控件
-        mListView = (ListView) getView().findViewById(R.id.ml_listview_conversation);
-        mListView.setAdapter(mAdapter);
+        mRecyclerView = (RecyclerView) getView().findViewById(R.id.ml_recyclerview_conversation);
+        /**
+         * 为RecyclerView 设置布局管理器，这里使用线性布局
+         * RececlerView 默认的布局管理器：
+         * LinearLayoutManager          显示垂直滚动列表或水平的项目
+         * GridLayoutManager            显示在一个网格项目
+         * StaggeredGridLayoutManager   显示在交错网格项目
+         * 自定义的布局管理器，需要继承 {@link android.support.v7.widget.RecyclerView.LayoutManager}
+         *
+         * add/remove items时的动画是默认启用的。
+         * 自定义这些动画需要继承{@link android.support.v7.widget.RecyclerView.ItemAnimator}，
+         * 并实现{@link RecyclerView#setItemAnimator(RecyclerView.ItemAnimator)}
+         */
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+        mRecyclerView.setAdapter(mConversationAdapter);
 
-        // 设置列表项点击监听
+        // 通过自定义接口来实现RecyclerView item的点击和长按事件
         setItemClickListener();
-        // 设置列表项长按监听
-        setItemLongClickListener();
     }
 
     /**
      * 刷新会话列表，重新加载会话列表到list集合，然后刷新adapter
      */
     public void refreshConversation() {
-        mConversationList.clear();
+        mConversations.clear();
         loadConversationList();
-        if (mAdapter != null) {
-            mAdapter.refreshList();
+        if (mConversationAdapter != null) {
+            mConversationAdapter.refreshList();
         }
     }
 
@@ -127,7 +137,6 @@ public class MLConversationsFragment extends MLBaseFragment {
                 list.add(temp);
             }
         }
-        MLLog.i("sort - 1 - %d", MLDate.getCurrentMillisecond());
         // 使用Collectons的sort()方法 对会话列表进行排序
         Collections.sort(list, new Comparator<EMConversation>() {
             @Override
@@ -149,42 +158,42 @@ public class MLConversationsFragment extends MLBaseFragment {
         int count = 0;
         for (int i = 0; i < list.size(); i++) {
             if (MLConversationExtUtils.getConversationTop(list.get(i))) {
-                mConversationList.add(count, list.get(i));
+                mConversations.add(count, list.get(i));
                 count++;
             } else {
-                mConversationList.add(list.get(i));
+                mConversations.add(list.get(i));
             }
         }
-        MLLog.i("sort - 2 - %d", MLDate.getCurrentMillisecond());
     }
 
     /**
-     * ListView 控件点击监听
+     * 设置列表项的点击监听，因为这里使用的是RecyclerView控件，所以长按和点击事件都需要去自己实现，这里通过回调接口实现
      */
     private void setItemClickListener() {
-        // ListView 的点击监听
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+        mConversationAdapter.setOnItemClickListener(new MLConversationAdapter.MLOnItemClickListener() {
+            /**
+             * 会话列表想的点击监听
+             * @param view
+             * @param position
+             */
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(View view, int position) {
                 Intent intent = new Intent();
                 intent.setClass(mActivity, MLChatActivity.class);
-                intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mConversationList.get(position).getUserName());
+                intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mConversations.get(position).getUserName());
                 ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity);
                 ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
             }
-        });
-    }
 
-    /**
-     * ListView 列表项的长按监听
-     */
-    private void setItemLongClickListener() {
-
-        // ListView 的长按监听
-        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            /**
+             * 实现 RecyclerView item 长按事件
+             * @param view 触发长按事件的 item
+             * @param position 触发长按事件的 position
+             */
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-                final EMConversation conversation = mConversationList.get(position);
+            public void onItemLongClick(View view, final int position) {
+                final EMConversation conversation = mConversations.get(position);
                 final boolean isTop = MLConversationExtUtils.getConversationTop(conversation);
                 // 根据当前会话不同的状态来显示不同的长按菜单
                 if (isTop) {
@@ -218,7 +227,7 @@ public class MLConversationsFragment extends MLBaseFragment {
                                         break;
                                     case 1:
                                         // 清空当前会话的消息，同时删除了内存中和数据库中的数据
-                                        mConversationList.get(position).clearAllMessages();
+                                        mConversations.get(position).clearAllMessages();
                                         refreshConversation();
                                         break;
                                     case 2:
@@ -229,7 +238,6 @@ public class MLConversationsFragment extends MLBaseFragment {
                                 }
                             }
                         }).show();
-                return true;
             }
         });
     }
