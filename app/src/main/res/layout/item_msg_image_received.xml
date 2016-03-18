@@ -36,8 +36,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/ml_dimen_2"
-                    android:maxWidth="@dimen/ml_dimen_144"
-                    android:src="@mipmap/image_default"/>
+                    android:src="@mipmap/image_default"
+                    melove:ml_border_width="@dimen/ml_dimen_0"/>
             </LinearLayout>
 
             <LinearLayout

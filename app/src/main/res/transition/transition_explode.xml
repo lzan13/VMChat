@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <transitionSet xmlns:android="http://schemas.android.com/apk/res/android">
-    <explode android:duration="@integer/ml_time_activity"
+    <explode
+        android:duration="@integer/ml_time_transition"
         android:interpolator="@android:interpolator/anticipate_overshoot"/>
+    <fade
+        android:duration="@integer/ml_time_transition"
+        android:fadingMode="fade_in_out"/>
 </transitionSet>

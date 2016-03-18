@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:melove="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/ml_white_100"
-    android:fitsSystemWindows="false"
     android:orientation="vertical"
     tools:Content=".activity.MLSignupActivity">
 
     <!--公共的 Toolbar 控件-->
-    <include layout="@layout/widget_toolbar_communal" />
+    <include layout="@layout/widget_toolbar_communal"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -36,7 +36,7 @@
                     android:src="@mipmap/ic_character_blackcat"
                     melove:ml_border_color="@color/ml_border_white"
                     melove:ml_border_width="@dimen/ml_dimen_2"
-                    melove:ml_shape_type="round" />
+                    melove:ml_shape_type="round"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -59,7 +59,7 @@
                             android:inputType="textCapCharacters"
                             android:maxLines="1"
                             android:singleLine="true"
-                            android:textSize="@dimen/ml_size_16" />
+                            android:textSize="@dimen/ml_size_16"/>
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
@@ -77,7 +77,7 @@
                             android:inputType="textCapCharacters"
                             android:maxLines="1"
                             android:singleLine="true"
-                            android:textSize="@dimen/ml_size_16" />
+                            android:textSize="@dimen/ml_size_16"/>
                     </android.support.design.widget.TextInputLayout>
 
                     <LinearLayout
@@ -94,7 +94,7 @@
                             android:background="@drawable/ml_click_rectangle_red"
                             android:text="@string/ml_signup"
                             android:textColor="@color/ml_white_87"
-                            android:textSize="@dimen/ml_size_18" />
+                            android:textSize="@dimen/ml_size_18"/>
 
                         <CheckBox
                             android:id="@+id/ml_checkbox"
@@ -103,7 +103,7 @@
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="@dimen/ml_dimen_24"
                             android:text="我同意《集成聊天Demo开源协议》"
-                            android:textColor="@color/ml_red_87" />
+                            android:textColor="@color/ml_red_87"/>
 
                     </LinearLayout>
                 </LinearLayout>
@@ -122,7 +122,7 @@
                     android:layout_marginBottom="@dimen/ml_dimen_16"
                     android:layout_marginTop="@dimen/ml_dimen_96"
                     android:text="@string/ml_copy_right"
-                    android:textColor="@color/ml_red_54" />
+                    android:textColor="@color/ml_red_54"/>
             </LinearLayout>
         </RelativeLayout>
     </ScrollView>

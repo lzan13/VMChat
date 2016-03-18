@@ -1,5 +1,6 @@
 package net.melove.demo.chat.conversation;
 
+import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -59,11 +60,13 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     // 当前会话对象
     private EMConversation mConversation;
 
-    // 下拉刷新控件
-    private SwipeRefreshLayout mSwipeRefreshLayout;
     // ListView 用来显示消息
     private RecyclerView mRecyclerView;
     private MLMessageAdapter mMessageAdapter;
+    // RecyclerView 的布局管理器
+    private LinearLayoutManager mLayoutManger;
+    // 下拉刷新控件
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     //自定义 Handler
     private MLHandler mHandler;
@@ -153,7 +156,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
          * 自定义这些动画需要继承{@link android.support.v7.widget.RecyclerView.ItemAnimator}，
          * 并实现{@link RecyclerView#setItemAnimator(RecyclerView.ItemAnimator)}
          */
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+        mLayoutManger = new LinearLayoutManager(mActivity);
+        mRecyclerView.setLayoutManager(mLayoutManger);
         mRecyclerView.setAdapter(mMessageAdapter);
         // 设置消息点击监听
         setItemClickListener();
@@ -207,8 +211,9 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                         // 加载更多消息到当前会话的内存中
                         List<EMMessage> messages = mConversation.loadMoreMsgFromDB(mConversation.getAllMessages().get(0).getMsgId(), mPageSize);
                         if (messages.size() > 0) {
+                            final int position = messages.size();
                             // 调用自定义的 Adapter 刷新方法
-                            mMessageAdapter.refreshList(messages.size());
+                            mMessageAdapter.refreshList(position);
                         }
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
@@ -656,6 +661,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     /**
      * 自定义返回方法，做一些不能在 onDestroy 里做的操作
      */
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onBack() {
         /**
@@ -673,8 +679,11 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             mConversation.clear();
             mConversation.loadMessages(list);
         }
-        mActivity.finish();
-
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+            mActivity.finish();
+        } else {
+            mActivity.finishAfterTransition();
+        }
         // 这里将父类的方法在后边调用
         super.onBack();
     }
@@ -689,9 +698,10 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     @Override
     protected void onResume() {
         super.onResume();
+        // 刷新界面
+        refreshChatUI();
         // 注册环信的消息监听器
         EMClient.getInstance().chatManager().addMessageListener(mMessageListener);
-        refreshChatUI();
     }
 
     @Override

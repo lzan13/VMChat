@@ -5,25 +5,30 @@
     <style name="MLTheme.Launcher" parent="MLTheme.Base">
         <!--防止启动瞬间黑屏或白屏，程序启动时的背景图，可以设置为一张代表性的logo，或者设置app框架类图-->
         <item name="android:windowBackground">@mipmap/bg_launcher_statusbar_toolbar</item>
-        5.0以上的系统可以设置状态栏是否透明
-        <item name="android:statusBarColor">@color/ml_transparent</item>
+        <!--5.0以上的系统可以设置状态栏是否透明-->
+        <item name="android:statusBarColor">@color/ml_theme_primary_dark</item>
     </style>
 
     <!-- 适配 Android SDK版本大于21的主题 -->
     <style name="MLTheme.Default" parent="MLTheme.Base">
-
+        <!-- 默认主要颜色，一般是 Toolbar 等颜色 -->
+        <item name="android:colorPrimary">@color/ml_theme_primary</item>
+        <!-- 深一些的主要色，一般是状态栏等颜色 -->
+        <item name="android:colorPrimaryDark">@color/ml_theme_primary_dark</item>
+        <!--各控件激活时的颜色，一般是 CheckBox、EditText、Switch、Spinner、RadioButton 等控件激活的颜色-->
+        <item name="android:colorAccent">@color/ml_theme_accent</item>
         <!-- 设置允许修改系统栏的背景色 比如导航栏 状态栏等-->
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <!--设置状态栏为透明-->
-        <item name="android:statusBarColor">@color/ml_theme_primary_dark</item>
-        <!--<item name="android:windowTranslucentStatus">true</item>-->
-
+        <item name="android:statusBarColor">@color/ml_transparent</item>
+        <!--设置导航栏背景色-->
+        <!--<item name="android:navigationBarColor">@color/ml_theme_primary_dark</item>-->
 
         <!--设置是否允许使用 Transitions 动画-->
         <item name="android:windowContentTransitions">true</item>
         <!--指定进入和退出的 Transitions-->
-        <item name="android:windowEnterTransition">@transition/transition_fade_in</item>
-        <item name="android:windowExitTransition">@transition/transition_fade_out</item>
+        <item name="android:windowEnterTransition">@transition/transition_slide_up</item>
+        <item name="android:windowExitTransition">@transition/transition_slide_down</item>
         <!--指定界面共享元素的 Transitions-->
         <item name="android:windowSharedElementEnterTransition">@transition/transition_fade_in
         </item>

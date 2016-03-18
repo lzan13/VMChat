@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:melove="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/ml_white_100"
-    android:fitsSystemWindows="false"
     android:orientation="vertical"
     tools:Content=".activity.MLSigninActivity">
 
     <!--公共的 Toolbar 控件-->
-    <include layout="@layout/widget_toolbar_communal" />
+    <include layout="@layout/widget_toolbar_communal"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -36,7 +36,7 @@
                     android:src="@mipmap/ic_character_blackcat"
                     melove:ml_border_color="@color/ml_border_white"
                     melove:ml_border_width="@dimen/ml_dimen_2"
-                    melove:ml_shape_type="round" />
+                    melove:ml_shape_type="round"/>
 
                 <LinearLayout
                     android:id="@+id/layout_login_form"
@@ -61,7 +61,7 @@
                             android:singleLine="true"
                             android:textColor="@color/ml_black_87"
                             android:textColorHint="@color/ml_black_26"
-                            android:textSize="@dimen/ml_size_16" />
+                            android:textSize="@dimen/ml_size_16"/>
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
@@ -78,7 +78,7 @@
                             android:inputType="textPassword"
                             android:maxLines="1"
                             android:singleLine="true"
-                            android:textSize="@dimen/ml_size_16" />
+                            android:textSize="@dimen/ml_size_16"/>
                     </android.support.design.widget.TextInputLayout>
                 </LinearLayout>
 
@@ -95,7 +95,7 @@
                         android:background="@drawable/ml_click_rectangle_red"
                         android:text="@string/ml_signin"
                         android:textColor="@color/ml_white_87"
-                        android:textSize="@dimen/ml_size_16" />
+                        android:textSize="@dimen/ml_size_16"/>
 
                 </LinearLayout>
 
@@ -115,13 +115,13 @@
                         android:padding="@dimen/ml_dimen_12"
                         android:text="@string/ml_signup"
                         android:textColor="@color/ml_red_54"
-                        android:textSize="@dimen/ml_size_14" />
+                        android:textSize="@dimen/ml_size_14"/>
 
                     <View
                         android:layout_width="@dimen/ml_dimen_2"
                         android:layout_height="match_parent"
                         android:layout_margin="@dimen/ml_dimen_12"
-                        android:background="@color/ml_red_54" />
+                        android:background="@color/ml_red_54"/>
 
                     <TextView
                         android:id="@+id/ml_btn_forget_password"
@@ -133,7 +133,7 @@
                         android:padding="@dimen/ml_dimen_12"
                         android:text="@string/ml_forget_password"
                         android:textColor="@color/ml_red_54"
-                        android:textSize="@dimen/ml_size_14" />
+                        android:textSize="@dimen/ml_size_14"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -150,7 +150,7 @@
                     android:layout_marginBottom="@dimen/ml_dimen_16"
                     android:layout_marginTop="@dimen/ml_dimen_96"
                     android:text="@string/ml_copy_right"
-                    android:textColor="@color/ml_red_54" />
+                    android:textColor="@color/ml_red_54"/>
             </LinearLayout>
         </RelativeLayout>
     </ScrollView>

@@ -1,8 +1,11 @@
 package net.melove.demo.chat.conversation;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,11 +13,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMImageMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
+import com.hyphenate.util.PathUtil;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLConstants;
@@ -26,7 +31,7 @@ import java.util.List;
 
 /**
  * Class ${FILE_NAME}
- * <p/>
+ * <p>
  * Created by lzan13 on 2016/1/6 18:51.
  */
 public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.MessageViewHolder> {
@@ -58,6 +63,7 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
     // 自定义的回调接口
     private MLOnItemClickListener mOnItemClickListener;
     private MLHandler mHandler;
+    private boolean isMove = false;
 
     /**
      * 构造方法
@@ -270,24 +276,18 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
 
     private void handleImageMessage(EMMessage message, MessageViewHolder viewHolder) {
         EMImageMessageBody body = (EMImageMessageBody) message.getBody();
-
-    }
-
-
-    /**
-     * 供界面调用的刷新 Adapter 的方法
-     */
-    public void refreshList() {
-        Message msg = mHandler.obtainMessage();
-        msg.what = HANDLER_MSG_REFRESH;
-        mHandler.sendMessage(msg);
-    }
-
-    public void refreshList(int position) {
-        Message msg = mHandler.obtainMessage();
-        msg.what = HANDLER_MSG_REFRESH_MORE;
-        msg.arg1 = position;
-        mHandler.sendMessage(msg);
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        // 开始读入图片，此时把options.inJustDecodeBounds 设为true了
+        // 这个参数的意义是仅仅解析边缘区域，从而可以得到图片的一些信息，比如大小，而不会整个解析图片，防止OOM
+        options.inJustDecodeBounds = true;
+        // 此时bitmap还是为空的
+        String thumbName = body.getThumbnailUrl().substring(body.getThumbnailUrl().indexOf("/") + 1, body.getThumbnailUrl().length());
+        Bitmap bitmap = BitmapFactory.decodeFile(PathUtil.imagePathName + thumbName, options);
+        int actualWidth = options.outWidth;
+        int actualHeight = options.outHeight;
+        options.inJustDecodeBounds = false;
+        viewHolder.imageView.setLayoutParams(new ViewGroup.LayoutParams(actualWidth, actualHeight));
+        viewHolder.imageView.setImageBitmap(bitmap);
     }
 
     /**
@@ -309,6 +309,27 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
     }
 
     /**
+     * 供界面调用的刷新 Adapter 的方法
+     */
+    public void refreshList() {
+        Message msg = mHandler.obtainMessage();
+        msg.what = HANDLER_MSG_REFRESH;
+        mHandler.sendMessage(msg);
+    }
+
+    /**
+     * 刷新列表，并滚动到指定位置
+     *
+     * @param position 要滚动到的位置
+     */
+    public void refreshList(int position) {
+        Message msg = mHandler.obtainMessage();
+        msg.what = HANDLER_MSG_REFRESH_MORE;
+        msg.arg1 = position;
+        mHandler.sendMessage(msg);
+    }
+
+    /**
      * 自定义Handler，用来处理消息的刷新等
      */
     private class MLHandler extends Handler {
@@ -320,8 +341,10 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
             mMessages.clear();
             mMessages = mConversation.getAllMessages();
             notifyDataSetChanged();
-            // 平滑滚动到最后一条
-            mRecyclerView.smoothScrollToPosition(mMessages.size() - 1);
+            if (mMessages.size() > 1) {
+                // 平滑滚动到最后一条
+                mRecyclerView.smoothScrollToPosition(mMessages.size() - 1);
+            }
         }
 
         /**
@@ -329,7 +352,7 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
          *
          * @param position 新加载的内容的最后一个位置
          */
-        private void refresh(int position) {
+        private void refresh(final int position) {
             mMessages.clear();
             mMessages = mConversation.getAllMessages();
             notifyDataSetChanged();
@@ -339,8 +362,29 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
              * 如果单独使用smoothScrollToPosition() 就会因为我们的item高度不同导致滚动有偏差
              * 所以我们要先使用setSelection()跳转到指定位置，然后再用smoothScrollToPosition()平滑滚动到上一个
              */
-            //            mRecyclerView.setSelection(position);
-            mRecyclerView.smoothScrollToPosition(position - 1);
+            /**
+             * 平滑滚动到指定条目，在 RecyclerView 控件中，scrollToPosition() 方法可以将指定条目滚动到底部，
+             * 需要自己实现滚动的监听
+             */
+            mRecyclerView.scrollToPosition(position);
+            final LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
+            // 设置设置为 true 表示需要检测 RecyclerView 的滚动
+            isMove = true;
+            mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    // 这里必须加上一个判断，不然 RecyclerView 每次滑动都会触发这个事件
+                    if (isMove) {
+                        int index = position - layoutManager.findFirstCompletelyVisibleItemPosition() - 1;
+                        if (index > 0 && index < mRecyclerView.getChildCount()) {
+                            int top = mRecyclerView.getChildAt(index).getTop();
+                            mRecyclerView.scrollBy(0, top);
+                        }
+                        isMove = false;
+                    }
+                }
+            });
         }
 
         @Override
@@ -377,7 +421,6 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
 
         public MessageViewHolder(View itemView) {
             super(itemView);
-
         }
     }
 }

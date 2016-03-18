@@ -14,8 +14,8 @@
         <!--设置主题不需要Title-->
         <item name="windowNoTitle">true</item>
 
-        <!--menu anim style-->
-        <item name="drawerArrowStyle">@style/MLTheme.DrawerArrowToggle</item>
+        <!--&lt;!&ndash;menu anim style&ndash;&gt;-->
+        <!--<item name="drawerArrowStyle">@style/MLTheme.DrawerArrowToggle</item>-->
 
         <!--设置 Toolbar 样式-->
         <item name="toolbarStyle">@style/MLTheme.Toolbar</item>
@@ -33,7 +33,7 @@
     <!--默认主题-->
     <style name="MLTheme.Default" parent="MLTheme.Base">
         <!--定义Activity切换动画-->
-        <item name="android:windowAnimationStyle">@style/AnimFade</item>
+        <item name="android:windowAnimationStyle">@style/AnimSlide</item>
     </style>
 
 
