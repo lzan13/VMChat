@@ -33,7 +33,9 @@ public class MLConstants {
     public static final String ML_SHARED_PASSWORD = "ml_password";
 
 
-    // 请求码
+    /**
+     * 当界面跳转需要返回结果时，定义跳转请求码
+     */
     public static final int ML_REQUEST_CODE_PHOTO = 0x01;
     public static final int ML_REQUEST_CODE_GALLERY = 0x02;
     public static final int ML_REQUEST_CODE_VIDEO = 0x03;
@@ -42,5 +44,19 @@ public class MLConstants {
     public static final int ML_REQUEST_CODE_GIFT = 0x06;
     public static final int ML_REQUEST_CODE_CONTACTS = 0x07;
 
+    /**
+     * 聊天消息类型
+     * 首先是SDK支持的正常的消息类型
+     */
+    public static final int MSG_TYPE_TXT_SEND = 0;
+    public static final int MSG_TYPE_TXT_RECEIVED = 1;
+    public static final int MSG_TYPE_IMAGE_SEND = 2;
+    public static final int MSG_TYPE_IMAGE_RECEIVED = 3;
+
+    /**
+     * 系统级消息类型
+     */
+    // 撤回类型消息
+    public static final int MSG_TYPE_SYS_RECALL = 10;
 
 }

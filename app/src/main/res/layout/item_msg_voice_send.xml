@@ -8,8 +8,67 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/ml_dimen_8"
-        android:gravity="bottom|left"
+        android:gravity="bottom|right"
         android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/ml_img_msg_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/ml_dimen_4"
+            android:src="@mipmap/ic_retry_normal"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/ml_layout_bubble"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/ml_text_msg_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bubble_msg_send"
+                android:maxWidth="@dimen/ml_dimen_264"
+                android:paddingBottom="@dimen/ml_dimen_8"
+                android:paddingLeft="@dimen/ml_dimen_12"
+                android:paddingRight="@dimen/ml_dimen_12"
+                android:paddingTop="@dimen/ml_dimen_8"
+                android:text="@string/ml_app_name"
+                android:textColor="@color/ml_white_87"
+                android:textSize="@dimen/ml_size_14" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/ml_dimen_1"
+                android:background="@drawable/ml_shape_time_username"
+                android:gravity="right"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/ml_dimen_2"
+                android:paddingRight="@dimen/ml_dimen_2">
+
+                <TextView
+                    android:id="@+id/ml_text_msg_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ml_hint_time"
+                    android:textColor="@color/ml_white_87"
+                    android:textSize="@dimen/ml_size_8" />
+
+                <TextView
+                    android:id="@+id/ml_text_msg_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/ml_dimen_8"
+                    android:text="@string/ml_hint_username"
+                    android:textColor="@color/ml_white_87"
+                    android:textSize="@dimen/ml_size_8" />
+
+            </LinearLayout>
+        </LinearLayout>
 
         <net.melove.demo.chat.common.widget.MLImageView
             android:id="@+id/ml_img_msg_avatar"
@@ -19,53 +78,5 @@
             melove:ml_border_color="@color/ml_white_87"
             melove:ml_border_width="@dimen/ml_dimen_2"
             melove:ml_shape_type="round" />
-
-        <LinearLayout
-            android:id="@+id/ml_layout_bubble"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/ml_text_msg_content"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bubble_msg_received"
-                android:maxWidth="@dimen/ml_dimen_264"
-                android:paddingBottom="@dimen/ml_dimen_8"
-                android:paddingLeft="@dimen/ml_dimen_12"
-                android:paddingRight="@dimen/ml_dimen_12"
-                android:paddingTop="@dimen/ml_dimen_8"
-                android:text="@string/ml_app_name"
-                android:textColor="@color/ml_black_87"
-                android:textSize="@dimen/ml_size_14" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/ml_dimen_1"
-                android:background="@drawable/ml_shape_time_username"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/ml_dimen_2"
-                android:paddingRight="@dimen/ml_dimen_2">
-
-                <TextView
-                    android:id="@+id/ml_text_msg_username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/ml_dimen_8"
-                    android:text="@string/ml_hint_username"
-                    android:textColor="@color/ml_white_54"
-                    android:textSize="@dimen/ml_size_8" />
-
-                <TextView
-                    android:id="@+id/ml_text_msg_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/ml_hint_time"
-                    android:textColor="@color/ml_white_54"
-                    android:textSize="@dimen/ml_size_8" />
-            </LinearLayout>
-        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

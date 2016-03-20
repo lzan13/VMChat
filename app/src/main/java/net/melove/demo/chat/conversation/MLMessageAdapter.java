@@ -25,28 +25,20 @@ import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.common.util.MLDate;
 import net.melove.demo.chat.common.widget.MLImageView;
+import net.melove.demo.chat.conversation.item.MLImageMessageItem;
+import net.melove.demo.chat.conversation.item.MLMessageItem;
+import net.melove.demo.chat.conversation.item.MLRecallMessageItem;
+import net.melove.demo.chat.conversation.item.MLTextMessageItem;
 
 import java.util.List;
 
 
 /**
  * Class ${FILE_NAME}
- * <p>
+ * <p/>
  * Created by lzan13 on 2016/1/6 18:51.
  */
 public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.MessageViewHolder> {
-
-    // 消息类型数
-    private final int MSG_TYPE_COUNT = 5;
-    // 正常的消息类型
-    private final int MSG_TYPE_TXT_SEND = 0;
-    private final int MSG_TYPE_TXT_RECEIVED = 1;
-    private final int MSG_TYPE_IMAGE_SEND = 2;
-    private final int MSG_TYPE_IMAGE_RECEIVED = 3;
-
-    // 系统级消息类型
-    // 撤回类型消息
-    private final int MSG_TYPE_SYS_RECALL = 4;
 
     // 刷新类型
     private final int HANDLER_MSG_REFRESH = 0;
@@ -102,38 +94,65 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
     }
 
     /**
-     * 重写 Adapter 的 view 类型数目方法（此方法必须重写，否则在不同类型的 Item 重用时会出现错误）
+     * 重写 Adapter 的获取当前 Item 类型的方法（必须重写，同上）
      *
-     * @return 返回当前 adapter 当前 ListView 最多显示的 Item 类型数
+     * @param position 当前 Item 位置
+     * @return 当前 Item 的类型
      */
+    @Override
+    public int getItemViewType(int position) {
+        EMMessage message = mMessages.get(position);
+        int itemType = -1;
+        switch (message.getType()) {
+            case TXT:
+                // 判断是否为撤回类型的消息
+                if (message.getBooleanAttribute(MLConstants.ML_ATTR_TYPE, false)) {
+                    itemType = MLConstants.MSG_TYPE_SYS_RECALL;
+                } else {
+                    itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_TXT_SEND : MLConstants.MSG_TYPE_TXT_RECEIVED;
+                }
+                break;
+            case IMAGE:
+                itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_IMAGE_SEND : MLConstants.MSG_TYPE_IMAGE_RECEIVED;
+                break;
+            default:
+                // 默认返回txt类型
+                itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_TXT_SEND : MLConstants.MSG_TYPE_TXT_RECEIVED;
+                break;
+        }
+        return itemType;
+    }
 
-
+    /**
+     * 重写RecyclerView.Adapter 创建ViewHolder方法，这里根据消息类型不同创建不同的 itemView 类
+     *
+     * @param parent   itemView的父控件
+     * @param viewType itemView要显示的消息类型
+     * @return 返回 自定义的 MessageViewHolder
+     */
     @Override
     public MessageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = createItemView(parent, viewType);
-        MessageViewHolder holder = new MessageViewHolder(view);
+        MessageViewHolder holder = null;
         switch (viewType) {
+            /**
+             *  SDK默认类型的消息
+             */
             // 文字类消息
-            case MSG_TYPE_TXT_SEND:
-            case MSG_TYPE_TXT_RECEIVED:
-                holder.avatarView = (MLImageView) view.findViewById(R.id.ml_img_msg_avatar);
-                holder.contentView = (TextView) view.findViewById(R.id.ml_text_msg_content);
-                holder.usernameView = (TextView) view.findViewById(R.id.ml_text_msg_username);
-                holder.timeView = (TextView) view.findViewById(R.id.ml_text_msg_time);
-                holder.msgState = (ImageView) view.findViewById(R.id.ml_img_msg_state);
+            case MLConstants.MSG_TYPE_TXT_SEND:
+            case MLConstants.MSG_TYPE_TXT_RECEIVED:
+                holder = new MessageViewHolder(new MLTextMessageItem(mContext, viewType));
                 break;
-            case MSG_TYPE_IMAGE_SEND:
-            case MSG_TYPE_IMAGE_RECEIVED:
-                holder.avatarView = (MLImageView) view.findViewById(R.id.ml_img_msg_avatar);
-                holder.imageView = (MLImageView) view.findViewById(R.id.ml_img_msg_image);
-                holder.usernameView = (TextView) view.findViewById(R.id.ml_text_msg_username);
-                holder.timeView = (TextView) view.findViewById(R.id.ml_text_msg_time);
-                holder.msgState = (ImageView) view.findViewById(R.id.ml_img_msg_state);
+            // 图片类消息
+            case MLConstants.MSG_TYPE_IMAGE_SEND:
+            case MLConstants.MSG_TYPE_IMAGE_RECEIVED:
+                holder = new MessageViewHolder(new MLImageMessageItem(mContext, viewType));
                 break;
-            // 自定义类型的消息
-            case MSG_TYPE_SYS_RECALL:
-                holder.timeView = (TextView) view.findViewById(R.id.ml_text_msg_time);
-                holder.contentView = (TextView) view.findViewById(R.id.ml_text_msg_content);
+            /**
+             * 自定义类型的消息
+             */
+            // 回撤类消息
+            case MLConstants.MSG_TYPE_SYS_RECALL:
+                holder = new MessageViewHolder(new MLRecallMessageItem(mContext, viewType));
                 break;
         }
         return holder;
@@ -143,45 +162,15 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
     public void onBindViewHolder(MessageViewHolder holder, final int position) {
         // 获取当前要显示的 message 对象
         EMMessage message = mMessages.get(position);
+        /**
+         *  调用自定义{@link MLMessageItem#onSetupView(EMMessage)}来填充数据
+         */
+        ((MLMessageItem) holder.itemView).onSetupView(message);
 
-        // viewHolder.avatarView.setImageBitmap();
-        holder.usernameView.setText(message.getFrom());
-        holder.timeView.setText(MLDate.long2Time(message.getMsgTime()));
-        switch (message.getType()) {
-            case TXT:
-                handleTextMessage(message, holder);
-                break;
-            case IMAGE:
-                handleImageMessage(message, holder);
-                break;
-            case FILE:
-                break;
-            case LOCATION:
-                break;
-            case VIDEO:
-                break;
-            case VOICE:
-                break;
-            default:
-                break;
-        }
-
-        // 判断消息的状态，如果发送失败就显示重发按钮，并设置重发按钮的监听
-        if (message.status() == EMMessage.Status.FAIL) {
-            holder.msgState.setVisibility(View.VISIBLE);
-            holder.msgState.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // 重新发送  在这里实现重发逻辑
-                }
-            });
-        } else {
-            holder.msgState.setVisibility(View.GONE);
-        }
         /**
          * 为每个Item设置点击与长按监听
          */
-        holder.timeView.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mOnItemClickListener.onItemClick(v, position);
@@ -196,99 +185,6 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
         });
     }
 
-    /**
-     * 重写 Adapter 的获取当前 Item 类型的方法（必须重写，同上）
-     *
-     * @param position 当前 Item 位置
-     * @return 当前 Item 的类型
-     */
-    @Override
-    public int getItemViewType(int position) {
-        EMMessage message = mMessages.get(position);
-        int itemType = -1;
-        switch (message.getType()) {
-            case TXT:
-                // 判断是否为撤回类型的消息
-                if (message.getBooleanAttribute(MLConstants.ML_ATTR_TYPE, false)) {
-                    itemType = MSG_TYPE_SYS_RECALL;
-                } else {
-                    itemType = message.direct() == EMMessage.Direct.SEND ? MSG_TYPE_TXT_SEND : MSG_TYPE_TXT_RECEIVED;
-                }
-                break;
-            case IMAGE:
-                itemType = message.direct() == EMMessage.Direct.SEND ? MSG_TYPE_IMAGE_SEND : MSG_TYPE_IMAGE_RECEIVED;
-                break;
-            default:
-                // 默认返回txt类型
-                itemType = message.direct() == EMMessage.Direct.SEND ? MSG_TYPE_TXT_SEND : MSG_TYPE_TXT_RECEIVED;
-                break;
-        }
-        return itemType;
-    }
-
-    /**
-     * 获取 item 的布局，根据传入的消息类型不同，返回不同的布局
-     *
-     * @param viewType 消息类型
-     * @return 要显示的布局
-     */
-    private View createItemView(ViewGroup parent, int viewType) {
-        View itemView = null;
-        switch (viewType) {
-            case MSG_TYPE_SYS_RECALL:
-                itemView = mInflater.inflate(R.layout.item_msg_recall, parent, false);
-                break;
-            case MSG_TYPE_TXT_SEND:
-                itemView = mInflater.inflate(R.layout.item_msg_text_send, parent, false);
-                break;
-            case MSG_TYPE_TXT_RECEIVED:
-                itemView = mInflater.inflate(R.layout.item_msg_text_received, parent, false);
-                break;
-            case MSG_TYPE_IMAGE_SEND:
-                itemView = mInflater.inflate(R.layout.item_msg_image_send, parent, false);
-                break;
-            case MSG_TYPE_IMAGE_RECEIVED:
-                itemView = mInflater.inflate(R.layout.item_msg_image_received, parent, false);
-                break;
-            default:
-                itemView = mInflater.inflate(R.layout.item_msg_recall, parent, false);
-                break;
-        }
-        return itemView;
-    }
-
-    /**
-     * 处理文字类消息
-     *
-     * @param message    要展示的消息对象
-     * @param viewHolder 展示消息内容的 ViewHolder
-     */
-    private void handleTextMessage(EMMessage message, MessageViewHolder viewHolder) {
-        EMTextMessageBody body = (EMTextMessageBody) message.getBody();
-        String messageStr = body.getMessage().toString();
-        // 判断是不是阅后即焚的消息
-        if (message.getBooleanAttribute(MLConstants.ML_ATTR_BURN, false)) {
-            viewHolder.contentView.setText(String.format("【内容长度%d】点击阅读", messageStr.length()));
-        } else {
-            viewHolder.contentView.setText(messageStr);
-        }
-    }
-
-    private void handleImageMessage(EMMessage message, MessageViewHolder viewHolder) {
-        EMImageMessageBody body = (EMImageMessageBody) message.getBody();
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        // 开始读入图片，此时把options.inJustDecodeBounds 设为true了
-        // 这个参数的意义是仅仅解析边缘区域，从而可以得到图片的一些信息，比如大小，而不会整个解析图片，防止OOM
-        options.inJustDecodeBounds = true;
-        // 此时bitmap还是为空的
-        String thumbName = body.getThumbnailUrl().substring(body.getThumbnailUrl().indexOf("/") + 1, body.getThumbnailUrl().length());
-        Bitmap bitmap = BitmapFactory.decodeFile(PathUtil.imagePathName + thumbName, options);
-        int actualWidth = options.outWidth;
-        int actualHeight = options.outHeight;
-        options.inJustDecodeBounds = false;
-        viewHolder.imageView.setLayoutParams(new ViewGroup.LayoutParams(actualWidth, actualHeight));
-        viewHolder.imageView.setImageBitmap(bitmap);
-    }
 
     /**
      * 自定义回调接口，用来实现 RecyclerView 中 Item 长按和点击事件监听
@@ -412,12 +308,6 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
      * 你就不能直接引用外部类，迫使你关注如何避免相互引用。 所以将 ViewHolder 定义为静态的
      */
     static class MessageViewHolder extends RecyclerView.ViewHolder {
-        MLImageView avatarView;
-        MLImageView imageView;
-        TextView usernameView;
-        TextView contentView;
-        TextView timeView;
-        ImageView msgState;
 
         public MessageViewHolder(View itemView) {
             super(itemView);

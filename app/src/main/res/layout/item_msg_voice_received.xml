@@ -67,5 +67,14 @@
                     android:textSize="@dimen/ml_size_8" />
             </LinearLayout>
         </LinearLayout>
+
+
+        <ImageView
+            android:id="@+id/ml_img_msg_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/ml_dimen_4"
+            android:src="@mipmap/ic_retry_normal"
+            android:visibility="gone" />
     </LinearLayout>
 </LinearLayout>
