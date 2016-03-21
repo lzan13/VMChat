@@ -1,8 +1,6 @@
 package net.melove.demo.chat.conversation;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,32 +8,25 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
-import com.hyphenate.chat.EMImageMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
-import com.hyphenate.util.PathUtil;
 
-import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLConstants;
-import net.melove.demo.chat.common.util.MLDate;
-import net.melove.demo.chat.common.widget.MLImageView;
-import net.melove.demo.chat.conversation.item.MLImageMessageItem;
-import net.melove.demo.chat.conversation.item.MLMessageItem;
-import net.melove.demo.chat.conversation.item.MLRecallMessageItem;
-import net.melove.demo.chat.conversation.item.MLTextMessageItem;
+import net.melove.demo.chat.conversation.messageitem.MLImageMessageItem;
+import net.melove.demo.chat.conversation.messageitem.MLMessageItem;
+import net.melove.demo.chat.conversation.messageitem.MLRecallMessageItem;
+import net.melove.demo.chat.conversation.messageitem.MLTextMessageItem;
 
 import java.util.List;
 
 
 /**
  * Class ${FILE_NAME}
- * <p/>
+ * <p>
  * Created by lzan13 on 2016/1/6 18:51.
  */
 public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.MessageViewHolder> {
@@ -140,26 +131,26 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
             // 文字类消息
             case MLConstants.MSG_TYPE_TXT_SEND:
             case MLConstants.MSG_TYPE_TXT_RECEIVED:
-                holder = new MessageViewHolder(new MLTextMessageItem(mContext, viewType));
+                holder = new MessageViewHolder(new MLTextMessageItem(mContext, this, viewType));
                 break;
             // 图片类消息
             case MLConstants.MSG_TYPE_IMAGE_SEND:
             case MLConstants.MSG_TYPE_IMAGE_RECEIVED:
-                holder = new MessageViewHolder(new MLImageMessageItem(mContext, viewType));
+                holder = new MessageViewHolder(new MLImageMessageItem(mContext, this, viewType));
                 break;
             /**
              * 自定义类型的消息
              */
             // 回撤类消息
             case MLConstants.MSG_TYPE_SYS_RECALL:
-                holder = new MessageViewHolder(new MLRecallMessageItem(mContext, viewType));
+                holder = new MessageViewHolder(new MLRecallMessageItem(mContext, this, viewType));
                 break;
         }
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(MessageViewHolder holder, final int position) {
+    public void onBindViewHolder(MessageViewHolder holder, int position) {
         // 获取当前要显示的 message 对象
         EMMessage message = mMessages.get(position);
         /**
@@ -167,31 +158,42 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
          */
         ((MLMessageItem) holder.itemView).onSetupView(message);
 
-        /**
-         * 为每个Item设置点击与长按监听
-         */
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+    }
+
+    /**
+     * 重发消息方法
+     */
+    public void resendMessage(String msgId) {
+        EMMessage failedMessage = mConversation.getMessage(msgId, true);
+        final EMMessage message = EMMessage.createTxtSendMessage(((EMTextMessageBody) failedMessage.getBody()).getMessage(), failedMessage.getTo());
+        EMClient.getInstance().chatManager().sendMessage(message);
+        mConversation.removeMessage(msgId);
+        message.setMessageStatusCallback(new EMCallBack() {
             @Override
-            public void onClick(View v) {
-                mOnItemClickListener.onItemClick(v, position);
+            public void onSuccess() {
+                refreshList();
             }
-        });
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+
             @Override
-            public boolean onLongClick(View v) {
-                mOnItemClickListener.onItemLongClick(v, position);
-                return false;
+            public void onError(int i, String s) {
+                refreshList(mConversation.getMessagePosition(message));
+            }
+
+            @Override
+            public void onProgress(int i, String s) {
+
             }
         });
     }
-
 
     /**
      * 自定义回调接口，用来实现 RecyclerView 中 Item 长按和点击事件监听
      */
     protected interface MLOnItemClickListener {
+        // 点击回调
         public void onItemClick(View view, int position);
 
+        // 长按回调
         public void onItemLongClick(View view, int position);
     }
 
@@ -202,6 +204,28 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
      */
     public void setOnItemClickListener(MLOnItemClickListener listener) {
         mOnItemClickListener = listener;
+    }
+
+    /**
+     * 为每个Item设置点击与长按监听
+     *
+     * @param view     需要设置监听的view
+     * @param position 需要设置监听的position
+     */
+    public void setOnItemClick(View view, final int position) {
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOnItemClickListener.onItemClick(v, position);
+            }
+        });
+        view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                mOnItemClickListener.onItemLongClick(v, position);
+                return false;
+            }
+        });
     }
 
     /**

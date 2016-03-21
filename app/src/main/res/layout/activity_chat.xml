@@ -158,175 +158,22 @@
         </LinearLayout>
         <!--扩展菜单布局-->
         <LinearLayout
-            android:id="@+id/ml_layout_attach_menu"
+            android:id="@+id/ml_layout_chat_attach_menu"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/ml_black_54"
             android:orientation="vertical"
             android:visibility="gone">
 
-            <LinearLayout
+            <GridView
+                android:id="@+id/ml_gridview_chat_attach_menu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/ml_white_87"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal"
-                android:paddingBottom="@dimen/ml_dimen_8"
+                android:numColumns="4"
                 android:paddingLeft="@dimen/ml_dimen_12"
-                android:paddingRight="@dimen/ml_dimen_12"
-                android:paddingTop="@dimen/ml_dimen_16">
+                android:paddingRight="@dimen/ml_dimen_12"/>
 
-                <LinearLayout
-                    android:id="@+id/ml_attach_photo"
-                    android:layout_width="@dimen/ml_dimen_84"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <net.melove.demo.chat.common.widget.MLImageView
-                        android:id="@+id/ml_img_attch_photo"
-                        android:layout_width="@dimen/ml_dimen_52"
-                        android:layout_height="@dimen/ml_dimen_52"
-                        android:layout_marginBottom="@dimen/ml_dimen_8"
-                        android:clickable="false"
-                        android:src="@mipmap/ic_attach_photo"
-                        melove:ml_border_color="@color/ml_white_87"
-                        melove:ml_border_width="@dimen/ml_dimen_2"
-                        melove:ml_radius="@dimen/ml_dimen_8"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/ml_photo"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/ml_attach_video"
-                    android:layout_width="@dimen/ml_dimen_84"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <net.melove.demo.chat.common.widget.MLImageView
-                        android:id="@+id/ml_img_attach_video"
-                        android:layout_width="@dimen/ml_dimen_52"
-                        android:layout_height="@dimen/ml_dimen_52"
-                        android:layout_marginBottom="@dimen/ml_dimen_8"
-                        android:clickable="false"
-                        android:src="@mipmap/ic_attach_video"
-                        melove:ml_border_color="@color/ml_white_87"
-                        melove:ml_border_width="@dimen/ml_dimen_2"
-                        melove:ml_radius="@dimen/ml_dimen_8"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/ml_video"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/ml_attach_file"
-                    android:layout_width="@dimen/ml_dimen_84"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <net.melove.demo.chat.common.widget.MLImageView
-                        android:id="@+id/ml_img_attach_file"
-                        android:layout_width="@dimen/ml_dimen_52"
-                        android:layout_height="@dimen/ml_dimen_52"
-                        android:layout_marginBottom="@dimen/ml_dimen_8"
-                        android:src="@mipmap/ic_attach_file"
-                        melove:ml_border_color="@color/ml_white_87"
-                        melove:ml_border_width="@dimen/ml_dimen_2"
-                        melove:ml_radius="@dimen/ml_dimen_8"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/ml_file"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/ml_attach_location"
-                    android:layout_width="@dimen/ml_dimen_84"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <net.melove.demo.chat.common.widget.MLImageView
-                        android:id="@+id/ml_img_attach_location"
-                        android:layout_width="@dimen/ml_dimen_52"
-                        android:layout_height="@dimen/ml_dimen_52"
-                        android:layout_marginBottom="@dimen/ml_dimen_8"
-                        android:src="@mipmap/ic_attach_location"
-                        melove:ml_border_color="@color/ml_white_87"
-                        melove:ml_border_width="@dimen/ml_dimen_2"
-                        melove:ml_radius="@dimen/ml_dimen_8"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/ml_location"/>
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/ml_white_87"
-                android:orientation="horizontal"
-                android:paddingBottom="@dimen/ml_dimen_16"
-                android:paddingLeft="@dimen/ml_dimen_12"
-                android:paddingRight="@dimen/ml_dimen_12"
-                android:paddingTop="@dimen/ml_dimen_8">
-
-                <LinearLayout
-                    android:id="@+id/ml_attach_gift"
-                    android:layout_width="@dimen/ml_dimen_84"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <net.melove.demo.chat.common.widget.MLImageView
-                        android:id="@+id/ml_img_attach_gift"
-                        android:layout_width="@dimen/ml_dimen_52"
-                        android:layout_height="@dimen/ml_dimen_52"
-                        android:layout_marginBottom="@dimen/ml_dimen_8"
-                        android:src="@mipmap/ic_attach_gift"
-                        melove:ml_border_color="@color/ml_white_87"
-                        melove:ml_border_width="@dimen/ml_dimen_2"
-                        melove:ml_radius="@dimen/ml_dimen_8"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/ml_gift"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/ml_attach_contacts"
-                    android:layout_width="@dimen/ml_dimen_84"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <net.melove.demo.chat.common.widget.MLImageView
-                        android:id="@+id/ml_img_attach_contacts"
-                        android:layout_width="@dimen/ml_dimen_52"
-                        android:layout_height="@dimen/ml_dimen_52"
-                        android:layout_marginBottom="@dimen/ml_dimen_8"
-                        android:src="@mipmap/ic_attach_contacts"
-                        melove:ml_border_color="@color/ml_white_87"
-                        melove:ml_border_width="@dimen/ml_dimen_2"
-                        melove:ml_radius="@dimen/ml_dimen_8"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/ml_contacts"/>
-                </LinearLayout>
-            </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

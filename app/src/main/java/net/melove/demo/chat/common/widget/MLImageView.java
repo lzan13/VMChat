@@ -45,6 +45,8 @@ public class MLImageView extends ImageView {
     private int radius;
     // 图片类型（矩形，圆形）
     private int shapeType;
+    // 当前控件是否继续分发触摸事件，默认继续分发，即不拦截触摸事件
+    private boolean isDispatchTouchEvent = true;
 
     public MLImageView(Context context) {
         super(context);
@@ -79,6 +81,7 @@ public class MLImageView extends ImageView {
             pressColor = array.getColor(R.styleable.MLImageView_ml_press_color, pressColor);
             radius = array.getDimensionPixelOffset(R.styleable.MLImageView_ml_radius, radius);
             shapeType = array.getInteger(R.styleable.MLImageView_ml_shape_type, shapeType);
+            isDispatchTouchEvent = array.getBoolean(R.styleable.MLImageView_ml_dispatch_touch_event, isDispatchTouchEvent);
             array.recycle();
         }
 
@@ -116,6 +119,9 @@ public class MLImageView extends ImageView {
         // drawable).getCurrent()).getBitmap();
         // 这里参考赵鹏的获取 bitmap 方式，因为上边的获取会导致 Glide 加载的drawable 强转为 BitmapDrawable 出错
         Bitmap bitmap = getBitmapFromDrawable(drawable);
+        if (bitmap == null) {
+            return;
+        }
         drawDrawable(canvas, bitmap);
 
         drawPress(canvas);
@@ -215,10 +221,10 @@ public class MLImageView extends ImageView {
     /**
      * 重写父类的 onSizeChanged 方法，检测控件宽高的变化
      *
-     * @param w
-     * @param h
-     * @param oldw
-     * @param oldh
+     * @param w    控件当前宽
+     * @param h    控件当前高
+     * @param oldw 控件原来的宽
+     * @param oldh 控件原来的高
      */
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -228,7 +234,21 @@ public class MLImageView extends ImageView {
     }
 
     /**
-     * 重写 onTouchEvent 监听方法，用来监听自定义控件是否被触摸
+     * View 的事件分发
+     *
+     * @param event
+     * @return
+     */
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        if (isDispatchTouchEvent) {
+            return false;
+        }
+        return super.dispatchTouchEvent(event);
+    }
+
+    /**
+     * 重写 onTouchEvent 监听方法，用来响应控件触摸
      *
      * @param event
      * @return

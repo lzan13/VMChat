@@ -53,6 +53,8 @@ public class MLMainActivity extends MLBaseActivity implements
     private NavigationView mNavigationView;
     private Toolbar mToolbar;
 
+    private MLImageView mAvatarView;
+
     // fab按钮
     private boolean isActivateFab;
     // 定义的包含Fab按钮的一个Layout布局，控制其他的Fab按钮的显示和隐藏
@@ -120,7 +122,7 @@ public class MLMainActivity extends MLBaseActivity implements
     private void initView() {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.ml_layout_drawer);
         mNavigationView = (NavigationView) findViewById(R.id.ml_widget_navigation);
-        MLImageView imageView = (MLImageView) mNavigationView.getHeaderView(0).findViewById(R.id.ml_img_nav_avatar);
+        mAvatarView =(MLImageView) mNavigationView.getHeaderView(0).findViewById(R.id.ml_img_nav_avatar);
 
         mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
         mToolbar.setTitle(mActivity.getResources().getString(R.string.ml_dialog_title_chat));
@@ -231,7 +233,7 @@ public class MLMainActivity extends MLBaseActivity implements
                 case R.id.ml_text_fab_add_group:
                 case R.id.ml_btn_fab_add_group:
                     fabChange();
-                    //                    startSearch();
+                    // startSearch();
                     break;
                 case R.id.ml_btn_fab_menu_layout:
                     fabChange();
@@ -406,10 +408,10 @@ public class MLMainActivity extends MLBaseActivity implements
                 break;
             // 0x2x 暂时表示Test
             case 0x20:
-//                Intent intent = new Intent();
-//                intent.setClass(mActivity, MLUserInfoActivity.class);
-//                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity);
-//                ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
+                //                Intent intent = new Intent();
+                //                intent.setClass(mActivity, MLUserInfoActivity.class);
+                //                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity);
+                //                ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
                 break;
             default:
                 MLToast.makeToast(mActivity.getResources().getString(R.string.ml_test)).show();

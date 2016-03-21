@@ -17,10 +17,15 @@ Gradle 2.8
     
 ### 所使用库的版本
 >compile fileTree(include: ['*.jar'], dir: 'libs')  
-compile 'com.android.support:appcompat-v7:24.0.0-alpha1'  
-compile 'com.android.support:design:24.0.0-alpha1'  
-compile 'com.android.support:recyclerview-v7:24.0.0-alpha1'  
+// Android V7库，因为已经包含了V4库，所以这里不需要再引入V4库了  
+compile 'com.android.support:appcompat-v7:23.2.1'  
+compile 'com.android.support:design:23.2.1'  
+// Android 官方提供的替代 ListView  
+compile 'com.android.support:recyclerview-v7:23.2.1'  
+// 第三方图片加载库  
 compile 'com.github.bumptech.glide:glide:3.7.0'  
+// 环信sdk  
+compile files('libs/hyphenatechat_3.1.0.jar')  
 
 已实现模块儿
 -----------------
@@ -50,5 +55,6 @@ compile 'com.github.bumptech.glide:glide:3.7.0'
 更新记录
 -------------------
 更改`ListView`为`RecyclerView` 2016-3-17
+实现消息重发，修改扩展菜单为`GridView` 2016-3-21 
 
 

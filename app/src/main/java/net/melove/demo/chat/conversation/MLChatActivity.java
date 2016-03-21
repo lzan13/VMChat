@@ -24,8 +24,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.SimpleAdapter;
 
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMError;
@@ -45,12 +48,16 @@ import net.melove.demo.chat.common.util.MLLog;
 import net.melove.demo.chat.common.widget.MLToast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lzan13 on 2015/10/12 15:00.
+ * 聊天界面，处理并显示聊天双方信息
  */
 public class MLChatActivity extends MLBaseActivity implements EMMessageListener {
+
     // 界面控件
     private Toolbar mToolbar;
     // 消息监听器
@@ -73,11 +80,13 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
 
     // 聊天扩展菜单
     private LinearLayout mAttachMenuLayout;
+    private GridView mAttachMenuGridView;
+
     // 是否为阅后即焚
     private boolean isBurn;
 
     // 设置每次下拉分页加载多少条
-    private int mPageSize = 10;
+    private int mPageSize = 15;
 
     // 聊天内容输入框
     private EditText mEditText;
@@ -96,7 +105,16 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
 
         initView();
         initToolbar();
+        // 初始化下拉刷新
         initSwipeRefreshLayout();
+        // 初始化扩展菜单
+        initAttachMenuGridView();
+
+        // 初始化当前会话对象
+        initConversation();
+
+        // 设置消息点击监听
+        setItemClickListener();
     }
 
     /**
@@ -121,47 +139,9 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         mEmotionView.setOnClickListener(viewListener);
         mVoiceView.setOnClickListener(viewListener);
         mSendView.setOnClickListener(viewListener);
-
         // 设置扩展菜单点击监听
-        mAttachMenuLayout = (LinearLayout) findViewById(R.id.ml_layout_attach_menu);
+        mAttachMenuLayout = (LinearLayout) findViewById(R.id.ml_layout_chat_attach_menu);
         mAttachMenuLayout.setOnClickListener(viewListener);
-        findViewById(R.id.ml_attach_photo).setOnClickListener(viewListener);
-        findViewById(R.id.ml_img_attch_photo).setOnClickListener(viewListener);
-        findViewById(R.id.ml_attach_video).setOnClickListener(viewListener);
-        findViewById(R.id.ml_img_attach_video).setOnClickListener(viewListener);
-        findViewById(R.id.ml_attach_file).setOnClickListener(viewListener);
-        findViewById(R.id.ml_img_attach_file).setOnClickListener(viewListener);
-        findViewById(R.id.ml_attach_location).setOnClickListener(viewListener);
-        findViewById(R.id.ml_img_attach_location).setOnClickListener(viewListener);
-        findViewById(R.id.ml_attach_gift).setOnClickListener(viewListener);
-        findViewById(R.id.ml_img_attach_gift).setOnClickListener(viewListener);
-        findViewById(R.id.ml_attach_contacts).setOnClickListener(viewListener);
-        findViewById(R.id.ml_img_attach_contacts).setOnClickListener(viewListener);
-
-        initConversation();
-
-        // 初始化ListView控件对象
-        mRecyclerView = (RecyclerView) findViewById(R.id.ml_recyclerview_message);
-        // 实例化消息适配器
-        mMessageAdapter = new MLMessageAdapter(mActivity, mChatId, mRecyclerView);
-        /**
-         * 为RecyclerView 设置布局管理器，这里使用线性布局
-         * RececlerView 默认的布局管理器：
-         * LinearLayoutManager          显示垂直滚动列表或水平的项目
-         * GridLayoutManager            显示在一个网格项目
-         * StaggeredGridLayoutManager   显示在交错网格项目
-         * 自定义的布局管理器，需要继承 {@link android.support.v7.widget.RecyclerView.LayoutManager}
-         *
-         * add/remove items时的动画是默认启用的。
-         * 自定义这些动画需要继承{@link android.support.v7.widget.RecyclerView.ItemAnimator}，
-         * 并实现{@link RecyclerView#setItemAnimator(RecyclerView.ItemAnimator)}
-         */
-        mLayoutManger = new LinearLayoutManager(mActivity);
-        mRecyclerView.setLayoutManager(mLayoutManger);
-        mRecyclerView.setAdapter(mMessageAdapter);
-        // 设置消息点击监听
-        setItemClickListener();
-
     }
 
     /**
@@ -196,6 +176,27 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             String msgId = mConversation.getAllMessages().get(0).getMsgId();
             mConversation.loadMoreMsgFromDB(msgId, mPageSize - count);
         }
+
+        // 初始化ListView控件对象
+        mRecyclerView = (RecyclerView) findViewById(R.id.ml_recyclerview_message);
+        // 实例化消息适配器
+        mMessageAdapter = new MLMessageAdapter(mActivity, mChatId, mRecyclerView);
+        /**
+         * 为RecyclerView 设置布局管理器，这里使用线性布局
+         * RececlerView 默认的布局管理器：
+         * LinearLayoutManager          显示垂直滚动列表或水平的项目
+         * GridLayoutManager            显示在一个网格项目
+         * StaggeredGridLayoutManager   显示在交错网格项目
+         * 自定义的布局管理器，需要继承 {@link android.support.v7.widget.RecyclerView.LayoutManager}
+         *
+         * add/remove items时的动画是默认启用的。
+         * 自定义这些动画需要继承{@link android.support.v7.widget.RecyclerView.ItemAnimator}，
+         * 并实现{@link RecyclerView#setItemAnimator(RecyclerView.ItemAnimator)}
+         */
+        mLayoutManger = new LinearLayoutManager(mActivity);
+        mRecyclerView.setLayoutManager(mLayoutManger);
+        mRecyclerView.setAdapter(mMessageAdapter);
+
     }
 
     private void initSwipeRefreshLayout() {
@@ -219,6 +220,47 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                     }
                 }, 500);
 
+            }
+        });
+    }
+
+    /**
+     * 初始化附件菜单网格列表，并设置网格点击监听
+     */
+    private void initAttachMenuGridView() {
+        mAttachMenuGridView = (GridView) findViewById(R.id.ml_gridview_chat_attach_menu);
+        int[] menuPhotos = {
+                R.mipmap.ic_attach_photo,
+                R.mipmap.ic_attach_location,
+                R.mipmap.ic_attach_video,
+                R.mipmap.ic_attach_file,
+                R.mipmap.ic_attach_gift,
+                R.mipmap.ic_attach_contacts
+        };
+        String[] menuTitles = {
+                mActivity.getString(R.string.ml_photo),
+                mActivity.getString(R.string.ml_location),
+                mActivity.getString(R.string.ml_video),
+                mActivity.getString(R.string.ml_file),
+                mActivity.getString(R.string.ml_gift),
+                mActivity.getString(R.string.ml_contacts)
+        };
+        String[] from = {"photo", "title"};
+        int[] to = {R.id.ml_img_menu_photo, R.id.ml_text_menu_title};
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+        Map<String, Object> map = null;
+        for (int i = 0; i < menuPhotos.length; i++) {
+            map = new HashMap<String, Object>();
+            map.put("photo", menuPhotos[i]);
+            map.put("title", menuTitles[i]);
+            list.add(map);
+        }
+        SimpleAdapter adapter = new SimpleAdapter(mActivity, list, R.layout.item_gridview_menu, from, to);
+        mAttachMenuGridView.setAdapter(adapter);
+        mAttachMenuGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                onAttachMenu();
             }
         });
     }
@@ -265,7 +307,6 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 // 判断当前消息是否为【阅后即焚】类型
                 if (message.getBooleanAttribute(MLConstants.ML_ATTR_TYPE, false)) {
 
-
                 }
                 MLLog.i("item position - %d", position);
             }
@@ -283,12 +324,12 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                         && message.status() == EMMessage.Status.SUCCESS) {
                     mMenuList.add(mActivity.getResources().getString(R.string.ml_menu_chat_recall));
                 }
-                String[] mMenus = new String[mMenuList.size()];
-                mMenuList.toArray(mMenus);
+                String[] menus = new String[mMenuList.size()];
+                mMenuList.toArray(menus);
                 // 创建并显示 ListView 的长按弹出菜单，并设置弹出菜单 Item的点击监听
                 new AlertDialog.Builder(mActivity)
                         .setTitle(R.string.ml_dialog_title_conversation)
-                        .setItems(mMenus, new DialogInterface.OnClickListener() {
+                        .setItems(menus, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 switch (which) {
@@ -375,8 +416,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      * @param message
      */
     private void sendMessage(final EMMessage message) {
+        // 调用设置消息扩展方法
         setMessageAttribute(message);
-        refreshChatUI();
         // 设置消息状态回调
         message.setMessageStatusCallback(new EMCallBack() {
             @Override
@@ -392,11 +433,11 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                     @Override
                     public void run() {
                         if (message.getError() == EMError.MESSAGE_INCLUDE_ILLEGAL_CONTENT) {
-                            MLToast.errorToast("发送内容包含敏感词汇").show();
+                            MLToast.errorToast(R.string.ml_toast_msg_have_illegal).show();
                         } else if (message.getError() == EMError.GROUP_PERMISSION_DENIED) {
-                            MLToast.errorToast("不属于当前群组，不能给群组发送消息").show();
+                            MLToast.errorToast(R.string.ml_toast_msg_not_join_group).show();
                         } else {
-                            MLToast.errorToast("发送失败，稍后重试").show();
+                            MLToast.errorToast(R.string.ml_toast_msg_send_faild).show();
                         }
                         refreshChatUI();
                     }
@@ -405,11 +446,13 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
 
             @Override
             public void onProgress(int i, String s) {
-
+                MLLog.i("消息发送中 %d - %s", i, s);
             }
         });
         // 调用sdk的消息发送方法，发送消息
         EMClient.getInstance().chatManager().sendMessage(message);
+        // 点击发送后马上刷新界面，无论消息有没有成功，先显示
+        refreshChatUI();
     }
 
     /**
@@ -520,39 +563,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 case R.id.ml_img_chat_voice:
                     MLToast.makeToast(R.string.ml_voice).show();
                     break;
-                // 附件菜单
-                case R.id.ml_attach_photo:
-                case R.id.ml_img_attch_photo:
-                    // 选择图片
-                    openSelectPhoto();
-                    break;
-                case R.id.ml_attach_video:
-                case R.id.ml_img_attach_video:
-                    // 选择视频文件
-
-                    break;
-                case R.id.ml_attach_file:
-                case R.id.ml_img_attach_file:
-                    // 选择文件
-                    openSelectFile();
-                    break;
-                case R.id.ml_attach_location:
-                case R.id.ml_img_attach_location:
-                    // 选择位置
-
-                    break;
-                case R.id.ml_attach_gift:
-                case R.id.ml_img_attach_gift:
-                    // 选择选择礼物
-
-                    break;
-                case R.id.ml_attach_contacts:
-                case R.id.ml_img_attach_contacts:
-                    // 选择联系人
-
-                    break;
                 // 附件菜单背景，用来关闭菜单
-                case R.id.ml_layout_attach_menu:
+                case R.id.ml_layout_chat_attach_menu:
                     onAttachMenu();
                     break;
             }
