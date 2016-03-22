@@ -115,6 +115,19 @@ public class MLTestFragment extends MLBaseFragment {
     }
 
     private void updateMessage() {
+        // 更改要撤销的消息的内容，替换为消息已经撤销的提示内容
+//        EMMessage recallMessage = EMMessage.createSendMessage(EMMessage.Type.TXT);
+//        EMTextMessageBody body = new EMTextMessageBody(String.format(context.getString(R.string.ml_hint_msg_recall_by_user), message.getUserName()));
+//        recallMessage.addBody(body);
+//        recallMessage.setReceipt(message.getFrom());
+//        // 设置新消息的 msgId为撤销消息的 msgId
+//        recallMessage.setMsgId(message.getMsgId());
+//        // 设置新消息的 msgTime 为撤销消息的 mstTime
+//        recallMessage.setMsgTime(message.getMsgTime());
+//        // 设置扩展为撤回消息类型，是为了区分消息的显示
+//        recallMessage.setAttribute(MLConstants.ML_ATTR_RECALL, true);
+//        // 返回修改消息结果
+//        result = EMClient.getInstance().chatManager().updateMessage(recallMessage);
     }
 
     @Override
@@ -145,6 +158,7 @@ public class MLTestFragment extends MLBaseFragment {
                     updateMessage();
                     break;
                 case 103:
+
                     break;
             }
         }

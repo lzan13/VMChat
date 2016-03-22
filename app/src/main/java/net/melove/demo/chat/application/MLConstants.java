@@ -18,6 +18,14 @@ public class MLConstants {
     public static final String ML_ATTR_TOP = "ml_top";
     public static final String ML_ATTR_LAST_TIME = "ml_list_time";
 
+    /**
+     * 自定义一些错误码，表示一些固定的错误
+     */
+    // 撤回消息错误码，超过时间限制
+    public static final int ML_ERROR_I_RECALL_TIME = 5001;
+    // 撤回消息错误文字描述
+    public static final String ML_ERROR_S_RECALL_TIME = "ml_max_time";
+
 
     // 界面跳转传递 username/groupid 参数的 key
     public static final String ML_EXTRA_CHAT_ID = "ml_chat_id";
@@ -31,6 +39,8 @@ public class MLConstants {
     // SharedPreference 保存内容的 key
     public static final String ML_SHARED_USERNAME = "ml_username";
     public static final String ML_SHARED_PASSWORD = "ml_password";
+
+    public static final int ML_TIME_RECALL = 300000;
 
 
     /**

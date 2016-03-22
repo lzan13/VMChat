@@ -31,6 +31,8 @@ public abstract class MLMessageItem extends LinearLayout {
 
     // 当前 Item 需要处理的 EMMessage 对象
     protected EMMessage mMessage;
+    protected int mPosition;
+
     // 显示聊天头像的 ImageView 控件
     protected MLImageView mAvatarView;
     protected MLImageView mImageView;
@@ -54,7 +56,7 @@ public abstract class MLMessageItem extends LinearLayout {
      *
      * @param message 需要展示的 EMMessage 对象
      */
-    public abstract void onSetupView(EMMessage message);
+    public abstract void onSetupView(EMMessage message, int position);
 
     /**
      * 抽象方法，填充当前 Item，子类必须实现

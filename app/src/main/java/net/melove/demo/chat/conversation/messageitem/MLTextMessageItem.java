@@ -30,11 +30,19 @@ public class MLTextMessageItem extends MLMessageItem {
     /**
      * 实现数据的填充
      *
-     * @param message 需要展示的 EMMessage 对象
+     * @param message  需要展示的 EMMessage 对象
+     * @param position 当前item 在列表中的位置
      */
     @Override
-    public void onSetupView(EMMessage message) {
+    public void onSetupView(EMMessage message, int position) {
         mMessage = message;
+        mPosition = position;
+
+        // 这里先加一个判断，疑问 SDK 在发送 CMD 消息后会把 CMD 消息加入到内存，导致出错
+        if (mMessage.getType() == EMMessage.Type.CMD) {
+            return;
+        }
+
         // 设置消息消息发送者的名称
         mUsernameView.setText(message.getFrom());
         // 设置消息时间
@@ -64,8 +72,6 @@ public class MLTextMessageItem extends MLMessageItem {
                         mAdapter.resendMessage(mMessage.getMsgId());
                     }
                 });
-
-
                 // 当消息在发送过程中被Kill，消息的状态会变成Create，而且永远不会发送成功，这里调用重发
                 // mAdapter.resendMessage(mMessage.getMsgId());
                 break;
@@ -74,6 +80,8 @@ public class MLTextMessageItem extends MLMessageItem {
                 mProgressBar.setVisibility(View.VISIBLE);
                 break;
         }
+        // 给当前item 设置点击与长按事件监听
+        mAdapter.setOnItemClick(this, mPosition);
     }
 
     /**

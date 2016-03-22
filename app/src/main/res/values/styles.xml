@@ -69,29 +69,37 @@
         <item name="android:textColor">@color/ml_white_100</item>
         <item name="android:textSize">@dimen/ml_size_18</item>
         <item name="android:textStyle">normal</item>
+        <!--更改菜单按钮样式 此菜单直的是当 action过多显示不全，会有三个小点儿样式-->
+        <item name="android:actionOverflowButtonStyle">@style/MLTheme.Overflow</item>
+    </style>
+
+    <!--自定义溢出菜单图标样式-->
+    <style name="MLTheme.Overflow" parent="@android:style/Widget.ActionButton.Overflow">
+        <item name="android:src">@mipmap/ic_add_white_24dp</item>
     </style>
 
     <!--自定 Toolbar 弹出 PopupMenu 样式，要想此设置生肖，在布局文件必须要自定义命名空间 xmlns：app-->
-    <style name="MLTheme.PupopMenu" parent="@style/ThemeOverlay.AppCompat">
+    <style name="MLTheme.PupopMenu" parent="@style/ThemeOverlay.AppCompat.ActionBar">
         <!--设置菜单项文字的背景-->
         <!--<item name="android:background">@drawable/ml_popup_backaground</item>-->
         <!--弹出菜单背景颜色-->
         <item name="android:colorBackground">@color/ml_white_87</item>
         <!--弹出菜单项的背景设置 主要是为了添加点击效果-->
         <item name="android:itemBackground">@drawable/ml_click_rectangle_white</item>
+        <!--设置弹出 PopupWindow 背景 这里使用了系统的资源-->
+        <!--<item name="android:popupBackground">@drawable/abc_popup_background_mtrl_mult</item>-->
         <!--弹出菜单的文字颜色和大小-->
         <item name="android:textColor">@color/ml_black_87</item>
         <item name="android:textSize">@dimen/ml_size_16</item>
     </style>
 
     <!--自定义 Toolbar 样式-->
-    <style name="MLTheme.Toolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+    <style name="MLTheme.Toolbar" parent="ThemeOverlay.AppCompat.ActionBar">
         <!--Toolbar字体颜色-->
         <item name="colorControlNormal">@color/ml_white_100</item>
         <item name="android:textColor">@color/ml_white_100</item>
         <item name="android:textSize">@dimen/ml_size_18</item>
         <item name="android:textStyle">normal</item>
     </style>
-    <!--自定义 TabLayout 的字体样式-->
-    <style name="MLCustomTabTextAppearance" parent="TextAppearance.Design.Tab"></style>
+
 </resources>

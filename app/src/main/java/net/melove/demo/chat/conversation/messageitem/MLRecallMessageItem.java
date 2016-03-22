@@ -17,9 +17,6 @@ import net.melove.demo.chat.conversation.MLMessageAdapter;
  */
 public class MLRecallMessageItem extends MLMessageItem {
 
-    // 当前 Item 需要处理的 EMMessage 对象
-    private EMMessage mMessage;
-
     public MLRecallMessageItem(Context context, MLMessageAdapter adapter, int viewType) {
         super(context, adapter, viewType);
         onInflateView();
@@ -31,7 +28,9 @@ public class MLRecallMessageItem extends MLMessageItem {
      * @param message 需要展示的 EMMessage 对象
      */
     @Override
-    public void onSetupView(EMMessage message) {
+    public void onSetupView(EMMessage message, int position) {
+        mMessage = message;
+        mPosition = position;
         // 设置消息时间
         mTimeView.setText(MLDate.long2Time(message.getMsgTime()));
 

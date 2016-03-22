@@ -34,11 +34,13 @@ public class MLImageMessageItem extends MLMessageItem {
     /**
      * 实现数据的填充
      *
-     * @param message 需要展示的 EMMessage 对象
+     * @param message  需要展示的 EMMessage 对象
+     * @param position 当前item 在列表中的位置
      */
     @Override
-    public void onSetupView(EMMessage message) {
+    public void onSetupView(EMMessage message, int position) {
         mMessage = message;
+        mPosition = position;
         // 设置消息消息发送者的名称
         mUsernameView.setText(message.getFrom());
         // 设置消息时间
@@ -57,11 +59,12 @@ public class MLImageMessageItem extends MLMessageItem {
                 mProgressBar.setVisibility(View.GONE);
                 break;
             case FAIL:
-                mProgressBar.setVisibility(View.GONE);
                 mMessageState.setVisibility(View.VISIBLE);
+                mProgressBar.setVisibility(View.GONE);
                 mMessageState.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        mAdapter.resendMessage(mMessage.getMsgId());
                     }
                 });
                 break;
@@ -74,6 +77,8 @@ public class MLImageMessageItem extends MLMessageItem {
                 mMessageState.setVisibility(View.GONE);
                 break;
         }
+        // 给当前item 设置点击与长按事件监听
+        mAdapter.setOnItemClick(this, mPosition);
     }
 
     /**

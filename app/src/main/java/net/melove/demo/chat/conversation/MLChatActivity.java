@@ -43,6 +43,7 @@ import net.melove.demo.chat.R;
 import net.melove.demo.chat.common.base.MLBaseActivity;
 import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.application.MLEasemobHelper;
+import net.melove.demo.chat.common.util.MLMessageUtils;
 import net.melove.demo.chat.notification.MLNotifier;
 import net.melove.demo.chat.common.util.MLLog;
 import net.melove.demo.chat.common.widget.MLToast;
@@ -372,32 +373,53 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     }
 
     /**
-     * 撤回消息
+     * 撤回消息，将已经发送成功的消息进行撤回
      *
      * @param message 需要撤回的消息
      */
-    private void recallMessage(EMMessage message) {
+    private void recallMessage(final EMMessage message) {
         // 显示撤回消息操作的 dialog
         final ProgressDialog pd = new ProgressDialog(mActivity);
         pd.setMessage("正在撤回 请稍候……");
         pd.show();
-        MLEasemobHelper.getInstance().sendRecallMessage(message, new EMCallBack() {
+        MLMessageUtils.sendRecallMessage(message, new EMCallBack() {
             @Override
             public void onSuccess() {
+                // 关闭进度对话框
                 pd.dismiss();
-                refreshChatUI();
+                // 更改要撤销的消息的内容，替换为消息已经撤销的提示内容
+                EMMessage recallMessage = EMMessage.createSendMessage(EMMessage.Type.TXT);
+                EMTextMessageBody body = new EMTextMessageBody(mActivity.getString(R.string.ml_hint_msg_recall_by_self));
+                recallMessage.addBody(body);
+                recallMessage.setReceipt(message.getTo());
+                // 设置新消息的 msgId为撤销消息的 msgId
+                recallMessage.setMsgId(message.getMsgId());
+                // 设置新消息的 msgTime 为撤销消息的 mstTime
+                recallMessage.setMsgTime(message.getMsgTime());
+                // 设置扩展为撤回消息类型，是为了区分消息的显示
+                recallMessage.setAttribute(MLConstants.ML_ATTR_RECALL, true);
+                // 保存新消息
+                EMClient.getInstance().chatManager().updateMessage(recallMessage);
+                // 更新UI
+                mHandler.sendMessage(mHandler.obtainMessage(0));
             }
 
+            /**
+             * 撤回消息失败
+             * @param i 失败的错误码
+             * @param s 失败的错误信息
+             */
             @Override
             public void onError(final int i, final String s) {
                 pd.dismiss();
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (s.equals("time")) {
-                            MLToast.errorToast("消息已经超过两分钟 无法撤回").show();
+                        // 弹出错误提示
+                        if (s.equals(MLConstants.ML_ERROR_S_RECALL_TIME)) {
+                            MLToast.errorToast(R.string.ml_toast_msg_recall_faild_max_time).show();
                         } else {
-                            MLToast.errorToast("撤回失败 失败错误码（" + i + " " + s + ")").show();
+                            MLToast.errorToast(mActivity.getResources().getString(R.string.ml_toast_msg_recall_faild) + i + "-" + s).show();
                         }
                     }
                 });
@@ -739,7 +761,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             int what = msg.what;
             switch (what) {
                 case 0:
-
+                    refreshChatUI();
                     break;
             }
         }
@@ -780,7 +802,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             EMCmdMessageBody body = (EMCmdMessageBody) cmdMessage.getBody();
             // 判断是不是撤回消息的透传
             if (body.action().equals(MLConstants.ML_ATTR_RECALL)) {
-                MLEasemobHelper.getInstance().receiveRecallMessage(cmdMessage);
+                MLMessageUtils.receiveRecallMessage(mActivity, cmdMessage);
                 refreshChatUI();
             }
         }

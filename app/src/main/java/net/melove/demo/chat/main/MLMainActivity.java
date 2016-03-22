@@ -58,10 +58,6 @@ public class MLMainActivity extends MLBaseActivity implements
     // fab按钮
     private boolean isActivateFab;
     // 定义的包含Fab按钮的一个Layout布局，控制其他的Fab按钮的显示和隐藏
-    private View mFabMenuLayout;
-    private FloatingActionButton mFabCreateConversationBtn;
-    private FloatingActionButton mFabAddContactBtn;
-    private FloatingActionButton mFabAddGroupBtn;
     private FloatingActionButton mFabBtn;
 
     // Fragment 切换
@@ -122,26 +118,13 @@ public class MLMainActivity extends MLBaseActivity implements
     private void initView() {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.ml_layout_drawer);
         mNavigationView = (NavigationView) findViewById(R.id.ml_widget_navigation);
-        mAvatarView =(MLImageView) mNavigationView.getHeaderView(0).findViewById(R.id.ml_img_nav_avatar);
+        mAvatarView = (MLImageView) mNavigationView.getHeaderView(0).findViewById(R.id.ml_img_nav_avatar);
 
         mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
         mToolbar.setTitle(mActivity.getResources().getString(R.string.ml_dialog_title_chat));
         setSupportActionBar(mToolbar);
 
-        // 定义的包含Fab按钮的一个Layout布局，控制其他的Fab按钮的显示和隐藏
-        mFabMenuLayout = findViewById(R.id.ml_btn_fab_menu_layout);
-        mFabCreateConversationBtn = (FloatingActionButton) findViewById(R.id.ml_btn_fab_create_conversation);
-        mFabAddContactBtn = (FloatingActionButton) findViewById(R.id.ml_btn_fab_add_contact);
-        mFabAddGroupBtn = (FloatingActionButton) findViewById(R.id.ml_btn_fab_add_group);
         mFabBtn = (FloatingActionButton) findViewById(R.id.ml_btn_fab);
-
-        findViewById(R.id.ml_btn_fab_menu_layout).setOnClickListener(viewListener);
-        findViewById(R.id.ml_text_fab_create_conversation).setOnClickListener(viewListener);
-        findViewById(R.id.ml_text_fab_add_contact).setOnClickListener(viewListener);
-        findViewById(R.id.ml_text_fab_add_group).setOnClickListener(viewListener);
-        mFabCreateConversationBtn.setOnClickListener(viewListener);
-        mFabAddContactBtn.setOnClickListener(viewListener);
-        mFabAddGroupBtn.setOnClickListener(viewListener);
         mFabBtn.setOnClickListener(viewListener);
 
         initDrawer();
@@ -192,7 +175,7 @@ public class MLMainActivity extends MLBaseActivity implements
                 super.onDrawerStateChanged(newState);
             }
         };
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
     }
 
@@ -218,25 +201,9 @@ public class MLMainActivity extends MLBaseActivity implements
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.ml_btn_fab:
-                    fabChange();
                     break;
-                case R.id.ml_text_fab_create_conversation:
-                case R.id.ml_btn_fab_create_conversation:
-                    fabChange();
-                    createNewConversation();
-                    break;
-                case R.id.ml_text_fab_add_contact:
-                case R.id.ml_btn_fab_add_contact:
-                    fabChange();
-                    startSearch();
-                    break;
-                case R.id.ml_text_fab_add_group:
-                case R.id.ml_btn_fab_add_group:
-                    fabChange();
-                    // startSearch();
-                    break;
-                case R.id.ml_btn_fab_menu_layout:
-                    fabChange();
+                case R.id.ml_img_nav_avatar:
+
                     break;
             }
         }
@@ -286,51 +253,6 @@ public class MLMainActivity extends MLBaseActivity implements
         }
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    /**
-     * 悬浮按钮的变化
-     */
-    private void fabChange() {
-        if (isActivateFab) {
-            isActivateFab = false;
-            Animator animator = AnimatorInflater.loadAnimator(mActivity, R.animator.ml_animator_fab_rotate_left);
-            animator.setTarget(mFabBtn);
-            animator.start();
-            Animator animator2 = AnimatorInflater.loadAnimator(mActivity, R.animator.ml_animator_fab_alpha_out);
-            animator2.setTarget(mFabMenuLayout);
-            animator2.start();
-            animator2.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animation) {
-
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mFabMenuLayout.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation) {
-
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animation) {
-
-                }
-            });
-        } else {
-            isActivateFab = true;
-            mFabMenuLayout.setVisibility(View.VISIBLE);
-            Animator animator = AnimatorInflater.loadAnimator(mActivity, R.animator.ml_animator_fab_rotate_right);
-            animator.setTarget(mFabBtn);
-            animator.start();
-            Animator animator2 = AnimatorInflater.loadAnimator(mActivity, R.animator.ml_animator_fab_alpha_in);
-            animator2.setTarget(mFabMenuLayout);
-            animator2.start();
-        }
     }
 
     /**
@@ -436,6 +358,13 @@ public class MLMainActivity extends MLBaseActivity implements
         switch (item.getItemId()) {
             case R.id.ml_action_search:
 
+                break;
+            case R.id.ml_action_add_conversation:
+                createNewConversation();
+                break;
+            case R.id.ml_action_add_contacts:
+                break;
+            case R.id.ml_action_add_group:
                 break;
         }
         return super.onOptionsItemSelected(item);

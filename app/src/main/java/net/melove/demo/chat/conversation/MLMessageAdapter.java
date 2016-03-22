@@ -3,7 +3,6 @@ package net.melove.demo.chat.conversation;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +25,7 @@ import java.util.List;
 
 /**
  * Class ${FILE_NAME}
- * <p>
+ * <p/>
  * Created by lzan13 on 2016/1/6 18:51.
  */
 public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.MessageViewHolder> {
@@ -39,14 +38,14 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
 
     private LayoutInflater mInflater;
 
-    private RecyclerView mRecyclerView;
+    private String mChatId;
     private EMConversation mConversation;
     private List<EMMessage> mMessages;
+    private RecyclerView mRecyclerView;
 
     // 自定义的回调接口
     private MLOnItemClickListener mOnItemClickListener;
     private MLHandler mHandler;
-    private boolean isMove = false;
 
     /**
      * 构造方法
@@ -57,6 +56,7 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
      */
     public MLMessageAdapter(Context context, String chatId, RecyclerView recyclerView) {
         mContext = context;
+        mChatId = chatId;
         mInflater = LayoutInflater.from(mContext);
         mRecyclerView = recyclerView;
 
@@ -68,7 +68,7 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
          * 第二个是绘画类型可以为空
          * 第三个表示如果会话不存在是否创建
          */
-        mConversation = EMClient.getInstance().chatManager().getConversation(chatId, null, true);
+        mConversation = EMClient.getInstance().chatManager().getConversation(mChatId, null, true);
         mMessages = mConversation.getAllMessages();
 
     }
@@ -97,7 +97,7 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
         switch (message.getType()) {
             case TXT:
                 // 判断是否为撤回类型的消息
-                if (message.getBooleanAttribute(MLConstants.ML_ATTR_TYPE, false)) {
+                if (message.getBooleanAttribute(MLConstants.ML_ATTR_RECALL, false)) {
                     itemType = MLConstants.MSG_TYPE_SYS_RECALL;
                 } else {
                     itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_TXT_SEND : MLConstants.MSG_TYPE_TXT_RECEIVED;
@@ -156,7 +156,7 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
         /**
          *  调用自定义{@link MLMessageItem#onSetupView(EMMessage)}来填充数据
          */
-        ((MLMessageItem) holder.itemView).onSetupView(message);
+        ((MLMessageItem) holder.itemView).onSetupView(message, position);
 
     }
 
@@ -262,7 +262,7 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
             mMessages = mConversation.getAllMessages();
             notifyDataSetChanged();
             if (mMessages.size() > 1) {
-                // 平滑滚动到最后一条
+                // 滚动到最后一条
                 mRecyclerView.smoothScrollToPosition(mMessages.size() - 1);
             }
         }
@@ -276,35 +276,8 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
             mMessages.clear();
             mMessages = mConversation.getAllMessages();
             notifyDataSetChanged();
-            /**
-             * 平滑滚动到最后一条，这里使用了ListView的两个方法:setSelection()/smoothScrollToPosition();
-             * 如果单独使用setSelection()就会直接跳转到指定位置，没有平滑的效果
-             * 如果单独使用smoothScrollToPosition() 就会因为我们的item高度不同导致滚动有偏差
-             * 所以我们要先使用setSelection()跳转到指定位置，然后再用smoothScrollToPosition()平滑滚动到上一个
-             */
-            /**
-             * 平滑滚动到指定条目，在 RecyclerView 控件中，scrollToPosition() 方法可以将指定条目滚动到底部，
-             * 需要自己实现滚动的监听
-             */
-            mRecyclerView.scrollToPosition(position);
-            final LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
-            // 设置设置为 true 表示需要检测 RecyclerView 的滚动
-            isMove = true;
-            mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                    super.onScrolled(recyclerView, dx, dy);
-                    // 这里必须加上一个判断，不然 RecyclerView 每次滑动都会触发这个事件
-                    if (isMove) {
-                        int index = position - layoutManager.findFirstCompletelyVisibleItemPosition() - 1;
-                        if (index > 0 && index < mRecyclerView.getChildCount()) {
-                            int top = mRecyclerView.getChildAt(index).getTop();
-                            mRecyclerView.scrollBy(0, top);
-                        }
-                        isMove = false;
-                    }
-                }
-            });
+            // 滚动到相应的位置
+            mRecyclerView.scrollToPosition(position - 1);
         }
 
         @Override

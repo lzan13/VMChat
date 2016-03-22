@@ -54,7 +54,7 @@ compile files('libs/hyphenatechat_3.1.0.jar')
 
 更新记录
 -------------------
-更改`ListView`为`RecyclerView` 2016-3-17
+更改`ListView`为`RecyclerView` 2016-3-17  
 实现消息重发，修改扩展菜单为`GridView` 2016-3-21 
 
 

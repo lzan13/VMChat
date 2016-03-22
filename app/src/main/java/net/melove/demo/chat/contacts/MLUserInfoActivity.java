@@ -126,7 +126,7 @@ public class MLUserInfoActivity extends MLBaseActivity {
      */
     private void addContact() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
-        dialog.setTitle(R.string.ml_add_contact);
+        dialog.setTitle(R.string.ml_add_contacts);
         View view = mActivity.getLayoutInflater().inflate(R.layout.dialog_communal, null);
         TextView textView = (TextView) view.findViewById(R.id.ml_dialog_text_message);
         textView.setText(R.string.ml_dialog_content_add_contact);

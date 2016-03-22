@@ -1,36 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/ml_dimen_8"
-        android:background="@drawable/ml_shape_system_message"
         android:gravity="center"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/ml_dimen_4"
-        android:paddingLeft="@dimen/ml_dimen_8"
-        android:paddingRight="@dimen/ml_dimen_8"
-        android:paddingTop="@dimen/ml_dimen_4">
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/ml_text_msg_content"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxWidth="@dimen/ml_dimen_264"
-            android:text="@string/ml_app_name"
-            android:textColor="@color/ml_white_87"
-            android:textSize="@dimen/ml_size_12" />
+            android:layout_margin="@dimen/ml_dimen_8"
+            android:background="@drawable/ml_shape_system_message"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/ml_dimen_4"
+            android:paddingLeft="@dimen/ml_dimen_8"
+            android:paddingRight="@dimen/ml_dimen_8"
+            android:paddingTop="@dimen/ml_dimen_4">
 
-        <TextView
-            android:id="@+id/ml_text_msg_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/ml_hint_time"
-            android:textColor="@color/ml_white_54"
-            android:textSize="@dimen/ml_size_8" />
+            <TextView
+                android:id="@+id/ml_text_msg_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="@dimen/ml_dimen_264"
+                android:text="@string/ml_app_name"
+                android:textColor="@color/ml_white_54"
+                android:textSize="@dimen/ml_size_12"/>
+
+            <TextView
+                android:id="@+id/ml_text_msg_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ml_hint_time"
+                android:textColor="@color/ml_white_54"
+                android:textSize="@dimen/ml_size_8"/>
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>
