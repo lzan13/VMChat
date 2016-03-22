@@ -35,7 +35,7 @@ public class MLRecallMessageItem extends MLMessageItem {
         mTimeView.setText(MLDate.long2Time(message.getMsgTime()));
 
         EMTextMessageBody body = (EMTextMessageBody) message.getBody();
-        String messageStr = body.getMessage().toString();
+        String messageStr = body.getMessage();
         mContentView.setText(messageStr);
     }
 

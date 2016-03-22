@@ -98,19 +98,28 @@ public class MLMessageUtils {
          * 创建一条接收方的消息，因为最新版SDK不支持setType，所以其他类型消息无法更新为TXT类型，
          * 这里只能新建消息，并且设置消息类型为TXT，
          */
-        // 更改要撤销的消息的内容，替换为消息已经撤销的提示内容
-        EMMessage recallMessage = EMMessage.createSendMessage(EMMessage.Type.TXT);
+        // 更改要撤销的消息的内容，替换为消息已经撤销的提示内容，因为自己是接收方，所以创建一条接收的消息
+        EMMessage recallMessage = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
         EMTextMessageBody body = new EMTextMessageBody(String.format(context.getString(R.string.ml_hint_msg_recall_by_user), oldMessage.getUserName()));
         recallMessage.addBody(body);
-        recallMessage.setReceipt(oldMessage.getFrom());
+        // 设置发送方和接收方
+        recallMessage.setFrom(oldMessage.getFrom());
+        if (oldMessage.getChatType() == EMMessage.ChatType.Chat) {
+            recallMessage.setReceipt(EMClient.getInstance().getCurrentUser());
+        } else {
+            recallMessage.setReceipt(chatId);
+        }
         // 设置新消息的 msgId为撤销消息的 msgId
-        recallMessage.setMsgId(oldMessage.getMsgId());
+        recallMessage.setMsgId(msgId);
         // 设置新消息的 msgTime 为撤销消息的 mstTime
         recallMessage.setMsgTime(oldMessage.getMsgTime());
         // 设置扩展为撤回消息类型，是为了区分消息的显示
         recallMessage.setAttribute(MLConstants.ML_ATTR_RECALL, true);
-        // 返回修改消息结果
-        result = EMClient.getInstance().chatManager().updateMessage(recallMessage);
+        // 删除旧消息
+        EMClient.getInstance().chatManager().getConversation(chatId).removeMessage(msgId);
+        // 保存消息到本地
+        EMClient.getInstance().chatManager().saveMessage(recallMessage);
+
         return result;
     }
 }

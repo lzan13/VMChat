@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:maxWidth="@dimen/ml_dimen_264"
                 android:text="@string/ml_app_name"
-                android:textColor="@color/ml_white_54"
+                android:textColor="@color/ml_white_87"
                 android:textSize="@dimen/ml_size_12"/>
 
             <TextView

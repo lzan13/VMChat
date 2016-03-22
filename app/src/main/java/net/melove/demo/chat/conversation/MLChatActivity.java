@@ -67,6 +67,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     private String mChatId;
     // 当前会话对象
     private EMConversation mConversation;
+    private List<EMMessage> mMessages;
 
     // ListView 用来显示消息
     private RecyclerView mRecyclerView;
@@ -178,6 +179,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             mConversation.loadMoreMsgFromDB(msgId, mPageSize - count);
         }
 
+        mMessages = mConversation.getAllMessages();
         // 初始化ListView控件对象
         mRecyclerView = (RecyclerView) findViewById(R.id.ml_recyclerview_message);
         // 实例化消息适配器
@@ -238,14 +240,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 R.mipmap.ic_attach_gift,
                 R.mipmap.ic_attach_contacts
         };
-        String[] menuTitles = {
-                mActivity.getString(R.string.ml_photo),
-                mActivity.getString(R.string.ml_location),
-                mActivity.getString(R.string.ml_video),
-                mActivity.getString(R.string.ml_file),
-                mActivity.getString(R.string.ml_gift),
-                mActivity.getString(R.string.ml_contacts)
-        };
+        String[] menuTitles = {mActivity.getString(R.string.ml_photo), mActivity.getString(R.string.ml_location), mActivity.getString(R.string.ml_video), mActivity.getString(R.string.ml_file), mActivity.getString(R.string.ml_gift), mActivity.getString(R.string.ml_contacts)};
         String[] from = {"photo", "title"};
         int[] to = {R.id.ml_img_menu_photo, R.id.ml_text_menu_title};
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
@@ -321,38 +316,35 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 mMenuList.add(mActivity.getResources().getString(R.string.ml_menu_chat_delete));
                 mMenuList.add(mActivity.getResources().getString(R.string.ml_menu_chat_forward));
                 // 判断当前消息是否是发送方，并且是发送成功才能撤回
-                if (message.direct() == EMMessage.Direct.SEND
-                        && message.status() == EMMessage.Status.SUCCESS) {
+                if (message.direct() == EMMessage.Direct.SEND && message.status() == EMMessage.Status.SUCCESS) {
                     mMenuList.add(mActivity.getResources().getString(R.string.ml_menu_chat_recall));
                 }
                 String[] menus = new String[mMenuList.size()];
                 mMenuList.toArray(menus);
                 // 创建并显示 ListView 的长按弹出菜单，并设置弹出菜单 Item的点击监听
-                new AlertDialog.Builder(mActivity)
-                        .setTitle(R.string.ml_dialog_title_conversation)
-                        .setItems(menus, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                switch (which) {
-                                    case 0:
-                                        // 复制消息到剪切板
-                                        copyMessage(message);
-                                        break;
-                                    case 1:
-                                        MLToast.makeToast(R.string.ml_menu_chat_delete).show();
-                                        mConversation.removeMessage(message.getMsgId());
-                                        refreshChatUI();
-                                        break;
-                                    case 2:
-                                        MLToast.makeToast(R.string.ml_menu_chat_forward).show();
-                                        break;
-                                    case 3:
-                                        // 撤回消息
-                                        recallMessage(message);
-                                        break;
-                                }
-                            }
-                        }).show();
+                new AlertDialog.Builder(mActivity).setTitle(R.string.ml_dialog_title_conversation).setItems(menus, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                        case 0:
+                            // 复制消息到剪切板
+                            copyMessage(message);
+                            break;
+                        case 1:
+                            MLToast.makeToast(R.string.ml_menu_chat_delete).show();
+                            mConversation.removeMessage(message.getMsgId());
+                            refreshChatUI();
+                            break;
+                        case 2:
+                            MLToast.makeToast(R.string.ml_menu_chat_forward).show();
+                            break;
+                        case 3:
+                            // 撤回消息
+                            recallMessage(message);
+                            break;
+                        }
+                    }
+                }).show();
             }
         });
     }
@@ -398,8 +390,10 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 recallMessage.setMsgTime(message.getMsgTime());
                 // 设置扩展为撤回消息类型，是为了区分消息的显示
                 recallMessage.setAttribute(MLConstants.ML_ATTR_RECALL, true);
+                // 删除旧消息
+                mConversation.removeMessage(message.getMsgId());
                 // 保存新消息
-                EMClient.getInstance().chatManager().updateMessage(recallMessage);
+                EMClient.getInstance().chatManager().saveMessage(recallMessage);
                 // 更新UI
                 mHandler.sendMessage(mHandler.obtainMessage(0));
             }
@@ -527,38 +521,38 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         super.onActivityResult(requestCode, resultCode, data);
         MLLog.d("onActivityResult requestCode %d, resultCode %d", requestCode, resultCode);
         switch (requestCode) {
-            case MLConstants.ML_REQUEST_CODE_PHOTO:
-                if (data != null) {
-                    Uri imageUri = data.getData();
-                    String imagePath = imageUri.getPath();
-                    String imageAuthority = imageUri.getAuthority();
-                    MLLog.d("imageUri %s", imageUri);
-                    MLLog.d("imagePath %s", imagePath);
-                    MLLog.d("imageAuthority %s", imageAuthority);
-                    sendImageMessage(imagePath);
-                }
-                break;
-            case MLConstants.ML_REQUEST_CODE_VIDEO:
-                break;
-            case MLConstants.ML_REQUEST_CODE_FILE:
-                if (data != null) {
-                    Uri fileUri = data.getData();
-                    String filePath = fileUri.getPath();
-                    String fileAuthority = fileUri.getAuthority();
-                    MLLog.d("fileUri %s", fileUri);
-                    MLLog.d("filePath %s", filePath);
-                    MLLog.d("fileAuthority %s", fileAuthority);
-                }
-                break;
-            case MLConstants.ML_REQUEST_CODE_LOCATION:
-                break;
-            case MLConstants.ML_REQUEST_CODE_GIFT:
-                break;
-            case MLConstants.ML_REQUEST_CODE_CONTACTS:
+        case MLConstants.ML_REQUEST_CODE_PHOTO:
+            if (data != null) {
+                Uri imageUri = data.getData();
+                String imagePath = imageUri.getPath();
+                String imageAuthority = imageUri.getAuthority();
+                MLLog.d("imageUri %s", imageUri);
+                MLLog.d("imagePath %s", imagePath);
+                MLLog.d("imageAuthority %s", imageAuthority);
+                sendImageMessage(imagePath);
+            }
+            break;
+        case MLConstants.ML_REQUEST_CODE_VIDEO:
+            break;
+        case MLConstants.ML_REQUEST_CODE_FILE:
+            if (data != null) {
+                Uri fileUri = data.getData();
+                String filePath = fileUri.getPath();
+                String fileAuthority = fileUri.getAuthority();
+                MLLog.d("fileUri %s", fileUri);
+                MLLog.d("filePath %s", filePath);
+                MLLog.d("fileAuthority %s", fileAuthority);
+            }
+            break;
+        case MLConstants.ML_REQUEST_CODE_LOCATION:
+            break;
+        case MLConstants.ML_REQUEST_CODE_GIFT:
+            break;
+        case MLConstants.ML_REQUEST_CODE_CONTACTS:
 
-                break;
-            default:
-                break;
+            break;
+        default:
+            break;
         }
     }
 
@@ -570,25 +564,25 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case -1:
-                    onBack();
-                    break;
-                // 表情按钮
-                case R.id.ml_img_chat_emotion:
+            case -1:
+                onBack();
+                break;
+            // 表情按钮
+            case R.id.ml_img_chat_emotion:
 
-                    break;
-                // 发送按钮
-                case R.id.ml_img_chat_send:
-                    sendTextMessage();
-                    break;
-                // 语音按钮
-                case R.id.ml_img_chat_voice:
-                    MLToast.makeToast(R.string.ml_voice).show();
-                    break;
-                // 附件菜单背景，用来关闭菜单
-                case R.id.ml_layout_chat_attach_menu:
-                    onAttachMenu();
-                    break;
+                break;
+            // 发送按钮
+            case R.id.ml_img_chat_send:
+                sendTextMessage();
+                break;
+            // 语音按钮
+            case R.id.ml_img_chat_voice:
+                MLToast.makeToast(R.string.ml_voice).show();
+                break;
+            // 附件菜单背景，用来关闭菜单
+            case R.id.ml_layout_chat_attach_menu:
+                onAttachMenu();
+                break;
             }
         }
     };
@@ -626,7 +620,10 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      * 刷新聊天界面ui
      */
     private void refreshChatUI() {
-        mMessageAdapter.refreshList();
+        // mMessageAdapter.refreshList();
+        if (mMessageAdapter != null) {
+            mMessageAdapter.refreshList();
+        }
     }
 
     /**
@@ -650,22 +647,22 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.ml_action_call:
-                MLToast.makeToast("还未实现语音通话功能").show();
-                break;
-            case R.id.ml_action_attachment:
-                // 打开或关闭附件菜单
-                onAttachMenu();
-                break;
-            case R.id.ml_action_delete:
-                // 清空会话信息
-                // MLToast.makeToast("清空会话").show();
-                // 此方法只清除内存中加载的消息，并没有清除数据库中保存的消息
-                // mConversation.clear();
-                // 清除全部信息，包括数据库中的
-                mConversation.clearAllMessages();
-                refreshChatUI();
-                break;
+        case R.id.ml_action_call:
+            MLToast.makeToast("还未实现语音通话功能").show();
+            break;
+        case R.id.ml_action_attachment:
+            // 打开或关闭附件菜单
+            onAttachMenu();
+            break;
+        case R.id.ml_action_delete:
+            // 清空会话信息
+            // MLToast.makeToast("清空会话").show();
+            // 此方法只清除内存中加载的消息，并没有清除数据库中保存的消息
+            // mConversation.clear();
+            // 清除全部信息，包括数据库中的
+            mConversation.clearAllMessages();
+            refreshChatUI();
+            break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -760,9 +757,9 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         public void handleMessage(Message msg) {
             int what = msg.what;
             switch (what) {
-                case 0:
-                    refreshChatUI();
-                    break;
+            case 0:
+                refreshChatUI();
+                break;
             }
         }
     }

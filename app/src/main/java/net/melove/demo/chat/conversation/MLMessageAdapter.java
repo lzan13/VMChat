@@ -95,21 +95,21 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
         EMMessage message = mMessages.get(position);
         int itemType = -1;
         switch (message.getType()) {
-            case TXT:
-                // 判断是否为撤回类型的消息
-                if (message.getBooleanAttribute(MLConstants.ML_ATTR_RECALL, false)) {
-                    itemType = MLConstants.MSG_TYPE_SYS_RECALL;
-                } else {
-                    itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_TXT_SEND : MLConstants.MSG_TYPE_TXT_RECEIVED;
-                }
-                break;
-            case IMAGE:
-                itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_IMAGE_SEND : MLConstants.MSG_TYPE_IMAGE_RECEIVED;
-                break;
-            default:
-                // 默认返回txt类型
+        case TXT:
+            // 判断是否为撤回类型的消息
+            if (message.getBooleanAttribute(MLConstants.ML_ATTR_RECALL, false)) {
+                itemType = MLConstants.MSG_TYPE_SYS_RECALL;
+            } else {
                 itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_TXT_SEND : MLConstants.MSG_TYPE_TXT_RECEIVED;
-                break;
+            }
+            break;
+        case IMAGE:
+            itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_IMAGE_SEND : MLConstants.MSG_TYPE_IMAGE_RECEIVED;
+            break;
+        default:
+            // 默认返回txt类型
+            itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_TXT_SEND : MLConstants.MSG_TYPE_TXT_RECEIVED;
+            break;
         }
         return itemType;
     }
@@ -125,26 +125,26 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
     public MessageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         MessageViewHolder holder = null;
         switch (viewType) {
-            /**
-             *  SDK默认类型的消息
-             */
-            // 文字类消息
-            case MLConstants.MSG_TYPE_TXT_SEND:
-            case MLConstants.MSG_TYPE_TXT_RECEIVED:
-                holder = new MessageViewHolder(new MLTextMessageItem(mContext, this, viewType));
-                break;
-            // 图片类消息
-            case MLConstants.MSG_TYPE_IMAGE_SEND:
-            case MLConstants.MSG_TYPE_IMAGE_RECEIVED:
-                holder = new MessageViewHolder(new MLImageMessageItem(mContext, this, viewType));
-                break;
-            /**
-             * 自定义类型的消息
-             */
-            // 回撤类消息
-            case MLConstants.MSG_TYPE_SYS_RECALL:
-                holder = new MessageViewHolder(new MLRecallMessageItem(mContext, this, viewType));
-                break;
+        /**
+         *  SDK默认类型的消息
+         */
+        // 文字类消息
+        case MLConstants.MSG_TYPE_TXT_SEND:
+        case MLConstants.MSG_TYPE_TXT_RECEIVED:
+            holder = new MessageViewHolder(new MLTextMessageItem(mContext, this, viewType));
+            break;
+        // 图片类消息
+        case MLConstants.MSG_TYPE_IMAGE_SEND:
+        case MLConstants.MSG_TYPE_IMAGE_RECEIVED:
+            holder = new MessageViewHolder(new MLImageMessageItem(mContext, this, viewType));
+            break;
+        /**
+         * 自定义类型的消息
+         */
+        // 回撤类消息
+        case MLConstants.MSG_TYPE_SYS_RECALL:
+            holder = new MessageViewHolder(new MLRecallMessageItem(mContext, this, viewType));
+            break;
         }
         return holder;
     }
@@ -259,7 +259,7 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
          */
         private void refresh() {
             mMessages.clear();
-            mMessages = mConversation.getAllMessages();
+            mMessages.addAll(mConversation.getAllMessages());
             notifyDataSetChanged();
             if (mMessages.size() > 1) {
                 // 滚动到最后一条
@@ -274,7 +274,7 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
          */
         private void refresh(final int position) {
             mMessages.clear();
-            mMessages = mConversation.getAllMessages();
+            mMessages.addAll(mConversation.getAllMessages());
             notifyDataSetChanged();
             // 滚动到相应的位置
             mRecyclerView.scrollToPosition(position - 1);
@@ -283,12 +283,12 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case HANDLER_MSG_REFRESH:
-                    refresh();
-                    break;
-                case HANDLER_MSG_REFRESH_MORE:
-                    refresh(msg.arg1);
-                    break;
+            case HANDLER_MSG_REFRESH:
+                refresh();
+                break;
+            case HANDLER_MSG_REFRESH_MORE:
+                refresh(msg.arg1);
+                break;
             }
         }
     }
