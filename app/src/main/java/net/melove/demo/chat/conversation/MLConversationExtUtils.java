@@ -13,7 +13,7 @@ import org.json.JSONObject;
 
 /**
  * Created by lzan13 on 2015/12/14 15:27.
- * 会话扩展处理类，用来处理会话对象的扩展信息，比如群组@标志，会话置顶
+ * 会话扩展处理类，用来处理会话对象的扩展信息，比如群组@，会话置顶
  */
 public class MLConversationExtUtils {
 
@@ -63,7 +63,7 @@ public class MLConversationExtUtils {
                 jsonObject = new JSONObject(ext);
             }
             jsonObject.put(MLConstants.ML_ATTR_TOP, top);
-            // 这里现在必须调用两次 setExtField() 方法，这应该是3.x sdk 的一个bug
+            // TODO 这里现在必须调用两次 setExtField() 方法，这应该是3.x sdk 的一个bug
             conversation.setExtField(jsonObject.toString());
             conversation.setExtField(jsonObject.toString());
         } catch (JSONException e) {
@@ -91,7 +91,7 @@ public class MLConversationExtUtils {
             } else {
                 jsonObject.put(MLConstants.ML_ATTR_LAST_TIME, conversation.getLastMessage().getMsgTime());
             }
-            // 这里现在必须调用两次 setExtField() 方法，这应该是3.x sdk 的一个bug
+            // TODO 这里现在必须调用两次 setExtField() 方法，这是3.x sdk 的一个bug
             conversation.setExtField(jsonObject.toString());
             conversation.setExtField(jsonObject.toString());
         } catch (JSONException e) {

@@ -129,8 +129,8 @@ public class MLEasemobHelper {
         options.setRequireAck(true);
         // 设置是否需要发送回执
         options.setRequireDeliveryAck(true);
-        // 设置初始化数据库DB时，每个会话要加载的Message数量
-        //        options.setNumberOfMessagesLoaded(1);
+        // TODO 设置初始化数据库DB时，每个会话要加载的Message数量，这个在后期会删除
+        // options.setNumberOfMessagesLoaded(1);
         // 添加好友是否自动同意，如果是自动同意就不会收到好友请求，因为sdk会自动处理
         options.setAcceptInvitationAlways(false);
         // 设置集成小米推送的appid和appkey

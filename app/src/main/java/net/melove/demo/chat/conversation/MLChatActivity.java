@@ -43,6 +43,7 @@ import net.melove.demo.chat.R;
 import net.melove.demo.chat.common.base.MLBaseActivity;
 import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.application.MLEasemobHelper;
+import net.melove.demo.chat.common.util.MLDate;
 import net.melove.demo.chat.common.util.MLMessageUtils;
 import net.melove.demo.chat.notification.MLNotifier;
 import net.melove.demo.chat.common.util.MLLog;
@@ -52,6 +53,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
 
 /**
  * Created by lzan13 on 2015/10/12 15:00.
@@ -288,6 +290,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                     mSendView.setVisibility(View.VISIBLE);
                     mVoiceView.setVisibility(View.GONE);
                 }
+                Timer timer = new Timer();
+                timer.purge();
             }
         });
     }
@@ -780,7 +784,10 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         for (EMMessage message : list) {
             if (mChatId.equals(message.getFrom())) {
                 refreshChatUI();
+                // 设置消息为已读
+                mConversation.markMessageAsRead(message.getMsgId());
             } else {
+                // 如果消息不是当前会话的消息发送通知栏通知
                 MLNotifier.getInstance(mActivity).sendMessageNotification(message);
             }
         }

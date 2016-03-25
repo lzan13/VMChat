@@ -147,6 +147,7 @@
     <string name="ml_error_server_busy">服务器繁忙，请稍候再试</string>
     <string name="ml_error_server_not_reachable">无法链接到服务器</string>
     <string name="ml_error_server_timeout">等待服务器响应超时</string>
+    <!--303 一般连接不到服务器就会这样-->
     <string name="ml_error_server_unknown_error">未知的 Server 异常</string>
 
     <!--文件错误 4xx-->

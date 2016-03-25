@@ -24,26 +24,56 @@
         android:layout_toRightOf="@id/ml_img_msg_avatar"
         android:orientation="vertical">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/bubble_msg_received">
+            android:gravity="bottom"
+            android:orientation="horizontal">
 
-            <net.melove.demo.chat.common.widget.MLImageView
-                android:id="@+id/ml_img_msg_image"
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/ml_dimen_2"
-                android:src="@mipmap/image_default"
-                melove:ml_border_width="@dimen/ml_dimen_0"/>
+                android:background="@drawable/bubble_msg_received">
 
-            <ProgressBar
-                android:id="@+id/ml_progressbar_msg"
-                android:layout_width="@dimen/ml_dimen_16"
-                android:layout_height="@dimen/ml_dimen_16"
-                android:layout_centerInParent="true"
-                android:visibility="visible"/>
-        </RelativeLayout>
+                <net.melove.demo.chat.common.widget.MLImageView
+                    android:id="@+id/ml_img_msg_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/ml_dimen_2"
+                    android:src="@mipmap/image_default"
+                    melove:ml_border_width="@dimen/ml_dimen_0"/>
+
+                <ProgressBar
+                    android:id="@+id/ml_progressbar_msg"
+                    android:layout_width="@dimen/ml_dimen_16"
+                    android:layout_height="@dimen/ml_dimen_16"
+                    android:layout_centerInParent="true"
+                    android:visibility="visible"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="@dimen/ml_dimen_4"
+                android:layout_toLeftOf="@id/ml_layout_bubble">
+
+                <ImageView
+                    android:id="@+id/ml_img_msg_resend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_retry_normal"
+                    android:visibility="gone"/>
+
+                <ImageView
+                    android:id="@+id/ml_img_msg_ack"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_done_white_18dp"
+                    android:tint="@color/ml_orange_100"
+                    android:visibility="gone"/>
+            </RelativeLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -72,20 +102,4 @@
                 android:textSize="@dimen/ml_size_8"/>
         </LinearLayout>
     </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/ml_dimen_12"
-        android:layout_marginRight="@dimen/ml_dimen_4"
-        android:layout_toRightOf="@id/ml_layout_bubble">
-
-        <ImageView
-            android:id="@+id/ml_img_msg_state"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/ic_retry_normal"
-            android:visibility="visible"/>
-    </RelativeLayout>
 </RelativeLayout>

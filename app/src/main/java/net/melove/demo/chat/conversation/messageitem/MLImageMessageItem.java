@@ -3,7 +3,6 @@ package net.melove.demo.chat.conversation.messageitem;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -51,32 +50,9 @@ public class MLImageMessageItem extends MLMessageItem {
         String thumbPath = body.thumbnailLocalPath();
         Bitmap bitmap = BitmapFactory.decodeFile(thumbPath);
         mImageView.setImageBitmap(bitmap);
+        // 设置消息ACK 状态
+        setAckStatusView();
 
-        // 判断消息的状态，如果发送失败就显示重发按钮，并设置重发按钮的监听
-        switch (message.status()) {
-            case SUCCESS:
-                mMessageState.setVisibility(View.GONE);
-                mProgressBar.setVisibility(View.GONE);
-                break;
-            case FAIL:
-                mMessageState.setVisibility(View.VISIBLE);
-                mProgressBar.setVisibility(View.GONE);
-                mMessageState.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mAdapter.resendMessage(mMessage.getMsgId());
-                    }
-                });
-                break;
-            case INPROGRESS:
-                mProgressBar.setVisibility(View.VISIBLE);
-                mMessageState.setVisibility(View.GONE);
-                break;
-            case CREATE:
-                mProgressBar.setVisibility(View.VISIBLE);
-                mMessageState.setVisibility(View.GONE);
-                break;
-        }
         // 给当前item 设置点击与长按事件监听
         mAdapter.setOnItemClick(this, mPosition);
     }
@@ -96,7 +72,7 @@ public class MLImageMessageItem extends MLMessageItem {
         mImageView = (MLImageView) findViewById(R.id.ml_img_msg_image);
         mUsernameView = (TextView) findViewById(R.id.ml_text_msg_username);
         mTimeView = (TextView) findViewById(R.id.ml_text_msg_time);
-        mMessageState = (ImageView) findViewById(R.id.ml_img_msg_state);
+        mResendView = (ImageView) findViewById(R.id.ml_img_msg_resend);
         mProgressBar = (ProgressBar) findViewById(R.id.ml_progressbar_msg);
     }
 

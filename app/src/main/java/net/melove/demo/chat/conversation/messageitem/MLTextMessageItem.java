@@ -38,7 +38,7 @@ public class MLTextMessageItem extends MLMessageItem {
         mMessage = message;
         mPosition = position;
 
-        // 这里先加一个判断，疑问 SDK 在发送 CMD 消息后会把 CMD 消息加入到内存，导致出错
+        // TODO 这里先加一个判断，疑问 SDK 在发送 CMD 消息后会把 CMD 消息加入到内存，导致出错
         if (mMessage.getType() == EMMessage.Type.CMD) {
             return;
         }
@@ -58,28 +58,33 @@ public class MLTextMessageItem extends MLMessageItem {
         }
         // 判断消息的状态，如果发送失败就显示重发按钮，并设置重发按钮的监听
         switch (message.status()) {
-            case SUCCESS:
-                mMessageState.setVisibility(View.GONE);
-                mProgressBar.setVisibility(View.GONE);
-                break;
-            case FAIL:
-            case CREATE:
-                mMessageState.setVisibility(View.VISIBLE);
-                mProgressBar.setVisibility(View.GONE);
-                mMessageState.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mAdapter.resendMessage(mMessage.getMsgId());
-                    }
-                });
-                // 当消息在发送过程中被Kill，消息的状态会变成Create，而且永远不会发送成功，这里调用重发
-                // mAdapter.resendMessage(mMessage.getMsgId());
-                break;
-            case INPROGRESS:
-                mMessageState.setVisibility(View.GONE);
-                mProgressBar.setVisibility(View.VISIBLE);
-                break;
+        case SUCCESS:
+            mAckStatusView.setVisibility(View.VISIBLE);
+            mProgressBar.setVisibility(View.GONE);
+            mResendView.setVisibility(View.GONE);
+            break;
+        case FAIL:
+        case CREATE:
+            mAckStatusView.setVisibility(View.GONE);
+            mProgressBar.setVisibility(View.GONE);
+            mResendView.setVisibility(View.VISIBLE);
+            mResendView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mAdapter.resendMessage(mMessage.getMsgId());
+                }
+            });
+            // 当消息在发送过程中被Kill，消息的状态会变成Create，而且永远不会发送成功，这里调用重发
+            // mAdapter.resendMessage(mMessage.getMsgId());
+            break;
+        case INPROGRESS:
+            mAckStatusView.setVisibility(View.GONE);
+            mProgressBar.setVisibility(View.VISIBLE);
+            mResendView.setVisibility(View.GONE);
+            break;
         }
+        // 设置消息ACK 状态
+        setAckStatusView();
         // 给当前item 设置点击与长按事件监听
         mAdapter.setOnItemClick(this, mPosition);
     }
@@ -99,9 +104,9 @@ public class MLTextMessageItem extends MLMessageItem {
         mContentView = (TextView) findViewById(R.id.ml_text_msg_content);
         mUsernameView = (TextView) findViewById(R.id.ml_text_msg_username);
         mTimeView = (TextView) findViewById(R.id.ml_text_msg_time);
-        // 文字消息中接收方没有接收失败的情况，也不存在接收进度问题
-        mMessageState = (ImageView) findViewById(R.id.ml_img_msg_state);
+        mResendView = (ImageView) findViewById(R.id.ml_img_msg_resend);
         mProgressBar = (ProgressBar) findViewById(R.id.ml_progressbar_msg);
+        mAckStatusView = (ImageView) findViewById(R.id.ml_img_msg_ack);
     }
 
 }

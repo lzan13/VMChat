@@ -26,19 +26,54 @@
         android:gravity="right"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/ml_text_msg_content"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/bubble_msg_send"
-            android:maxWidth="@dimen/ml_dimen_264"
-            android:paddingBottom="@dimen/ml_dimen_8"
-            android:paddingLeft="@dimen/ml_dimen_12"
-            android:paddingRight="@dimen/ml_dimen_12"
-            android:paddingTop="@dimen/ml_dimen_8"
-            android:text="@string/ml_app_name"
-            android:textColor="@color/ml_white_87"
-            android:textSize="@dimen/ml_size_14"/>
+            android:gravity="bottom"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/ml_dimen_4">
+
+                <ImageView
+                    android:id="@+id/ml_img_msg_resend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_retry_normal"
+                    android:visibility="gone"/>
+
+                <ProgressBar
+                    android:id="@+id/ml_progressbar_msg"
+                    android:layout_width="@dimen/ml_dimen_16"
+                    android:layout_height="@dimen/ml_dimen_16"
+                    android:layout_centerInParent="true"
+                    android:visibility="gone"/>
+
+                <ImageView
+                    android:id="@+id/ml_img_msg_ack"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_done_white_18dp"
+                    android:tint="@color/ml_orange_100"
+                    android:visibility="gone"/>
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/ml_text_msg_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bubble_msg_send"
+                android:maxWidth="@dimen/ml_dimen_264"
+                android:paddingBottom="@dimen/ml_dimen_8"
+                android:paddingLeft="@dimen/ml_dimen_12"
+                android:paddingRight="@dimen/ml_dimen_12"
+                android:paddingTop="@dimen/ml_dimen_8"
+                android:text="@string/ml_app_name"
+                android:textColor="@color/ml_white_87"
+                android:textSize="@dimen/ml_size_14"/>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -55,7 +90,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/ml_hint_time"
-                android:textColor="@color/ml_white_87"
+                android:textColor="@color/ml_white_54"
                 android:textSize="@dimen/ml_size_8"/>
 
             <TextView
@@ -64,32 +99,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/ml_dimen_8"
                 android:text="@string/ml_hint_username"
-                android:textColor="@color/ml_white_87"
+                android:textColor="@color/ml_white_54"
                 android:textSize="@dimen/ml_size_8"/>
 
         </LinearLayout>
     </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/ml_dimen_12"
-        android:layout_marginRight="@dimen/ml_dimen_4"
-        android:layout_toLeftOf="@id/ml_layout_bubble">
-
-        <ImageView
-            android:id="@+id/ml_img_msg_state"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/ic_retry_normal"
-            android:visibility="visible"/>
-
-        <ProgressBar
-            android:id="@+id/ml_progressbar_msg"
-            android:layout_width="@dimen/ml_dimen_16"
-            android:layout_height="@dimen/ml_dimen_16"
-            android:layout_centerInParent="true"
-            android:visibility="visible"/>
-    </RelativeLayout>
 </RelativeLayout>
