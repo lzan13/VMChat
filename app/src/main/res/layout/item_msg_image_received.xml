@@ -49,6 +49,19 @@
                     android:layout_height="@dimen/ml_dimen_16"
                     android:layout_centerInParent="true"
                     android:visibility="visible"/>
+
+                <TextView
+                    android:id="@+id/ml_text_msg_progress_percent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/ml_progressbar_msg"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/ml_shape_text_background_black"
+                    android:paddingLeft="@dimen/ml_dimen_2"
+                    android:paddingRight="@dimen/ml_dimen_2"
+                    android:text="%0"
+                    android:textColor="@color/ml_white_54"
+                    android:textSize="@dimen/ml_size_10"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -79,7 +92,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/ml_dimen_1"
-            android:background="@drawable/ml_shape_time_username"
+            android:background="@drawable/ml_shape_text_background_black"
             android:orientation="horizontal"
             android:paddingLeft="@dimen/ml_dimen_2"
             android:paddingRight="@dimen/ml_dimen_2">

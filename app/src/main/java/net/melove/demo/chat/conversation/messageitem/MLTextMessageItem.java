@@ -1,18 +1,24 @@
 package net.melove.demo.chat.conversation.messageitem;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.hyphenate.EMCallBack;
+import com.hyphenate.EMError;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.common.util.MLDate;
+import net.melove.demo.chat.common.util.MLLog;
 import net.melove.demo.chat.common.widget.MLImageView;
+import net.melove.demo.chat.common.widget.MLToast;
 import net.melove.demo.chat.conversation.MLMessageAdapter;
 
 /**
@@ -21,10 +27,14 @@ import net.melove.demo.chat.conversation.MLMessageAdapter;
  */
 public class MLTextMessageItem extends MLMessageItem {
 
+    private MLHandler mHandler;
+
     public MLTextMessageItem(Context context, MLMessageAdapter adapter, int viewType) {
         super(context, adapter, viewType);
 
         onInflateView();
+
+        mHandler = new MLHandler();
     }
 
     /**
@@ -48,16 +58,47 @@ public class MLTextMessageItem extends MLMessageItem {
         // 设置消息时间
         mTimeView.setText(MLDate.long2Time(message.getMsgTime()));
 
-        EMTextMessageBody body = (EMTextMessageBody) message.getBody();
+        EMTextMessageBody body = (EMTextMessageBody) mMessage.getBody();
         String messageStr = body.getMessage().toString();
         // 判断是不是阅后即焚的消息
-        if (message.getBooleanAttribute(MLConstants.ML_ATTR_BURN, false)) {
+        if (mMessage.getBooleanAttribute(MLConstants.ML_ATTR_BURN, false)) {
             mContentView.setText(String.format("", messageStr.length()));
         } else {
             mContentView.setText(messageStr);
         }
+
+        // 给当前item 设置点击与长按事件监听
+        mAdapter.setOnItemClick(this, mPosition);
+        setCallback();
+    }
+
+    /**
+     * 设置当前消息的callback回调
+     */
+    protected void setCallback() {
+        setMessageCallback(new EMCallBack() {
+            @Override
+            public void onSuccess() {
+                mHandler.sendMessage(mHandler.obtainMessage(CALLBACK_STATUS_SUCCESS));
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                mHandler.sendMessage(mHandler.obtainMessage(CALLBACK_STATUS_ERROR));
+            }
+
+            @Override
+            public void onProgress(int i, String s) {
+                Message msg = mHandler.obtainMessage(CALLBACK_STATUS_PROGRESS);
+                msg.arg1 = i;
+                mHandler.sendMessage(msg);
+            }
+        });
+    }
+
+    protected void refreshView() {
         // 判断消息的状态，如果发送失败就显示重发按钮，并设置重发按钮的监听
-        switch (message.status()) {
+        switch (mMessage.status()) {
         case SUCCESS:
             mAckStatusView.setVisibility(View.VISIBLE);
             mProgressBar.setVisibility(View.GONE);
@@ -85,10 +126,23 @@ public class MLTextMessageItem extends MLMessageItem {
         }
         // 设置消息ACK 状态
         setAckStatusView();
-        // 给当前item 设置点击与长按事件监听
-        mAdapter.setOnItemClick(this, mPosition);
     }
 
+    class MLHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+            case CALLBACK_STATUS_SUCCESS:
+                refreshView();
+                break;
+            case CALLBACK_STATUS_ERROR:
+                refreshView();
+                break;
+            case CALLBACK_STATUS_PROGRESS:
+                break;
+            }
+        }
+    }
     /**
      * 解析对应的xml 布局，填充当前 ItemView，并初始化控件
      */

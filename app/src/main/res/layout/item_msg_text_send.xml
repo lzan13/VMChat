@@ -79,7 +79,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/ml_dimen_1"
-            android:background="@drawable/ml_shape_time_username"
+            android:background="@drawable/ml_shape_text_background_black"
             android:gravity="right"
             android:orientation="horizontal"
             android:paddingLeft="@dimen/ml_dimen_2"

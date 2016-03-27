@@ -44,6 +44,7 @@ import net.melove.demo.chat.common.base.MLBaseActivity;
 import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.application.MLEasemobHelper;
 import net.melove.demo.chat.common.util.MLDate;
+import net.melove.demo.chat.common.util.MLFile;
 import net.melove.demo.chat.common.util.MLMessageUtils;
 import net.melove.demo.chat.notification.MLNotifier;
 import net.melove.demo.chat.common.util.MLLog;
@@ -258,6 +259,13 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         mAttachMenuGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                case 0:
+                    openSelectPhoto();
+                    break;
+                case 1:
+                    break;
+                }
                 onAttachMenu();
             }
         });
@@ -438,37 +446,6 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     private void sendMessage(final EMMessage message) {
         // 调用设置消息扩展方法
         setMessageAttribute(message);
-        // 设置消息状态回调
-        message.setMessageStatusCallback(new EMCallBack() {
-            @Override
-            public void onSuccess() {
-                MLLog.i("消息发送成功 %s", message.getMsgId());
-                refreshChatUI();
-            }
-
-            @Override
-            public void onError(int i, String s) {
-                MLLog.i("消息发送失败 code: %d, error: %s", i, s);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (message.getError() == EMError.MESSAGE_INCLUDE_ILLEGAL_CONTENT) {
-                            MLToast.errorToast(R.string.ml_toast_msg_have_illegal).show();
-                        } else if (message.getError() == EMError.GROUP_PERMISSION_DENIED) {
-                            MLToast.errorToast(R.string.ml_toast_msg_not_join_group).show();
-                        } else {
-                            MLToast.errorToast(R.string.ml_toast_msg_send_faild).show();
-                        }
-                        refreshChatUI();
-                    }
-                });
-            }
-
-            @Override
-            public void onProgress(int i, String s) {
-                MLLog.i("消息发送中 %d - %s", i, s);
-            }
-        });
         // 调用sdk的消息发送方法，发送消息
         EMClient.getInstance().chatManager().sendMessage(message);
         // 点击发送后马上刷新界面，无论消息有没有成功，先显示
@@ -484,12 +461,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
 
         mSendView.setVisibility(View.GONE);
         mVoiceView.setVisibility(View.VISIBLE);
-        final EMMessage message = EMMessage.createSendMessage(EMMessage.Type.TXT);
-        EMTextMessageBody txtBody = new EMTextMessageBody(content);
-        // 设置消息body
-        message.addBody(txtBody);
-        // 设置消息接收者
-        message.setReceipt(mChatId);
+        EMMessage message = EMMessage.createTxtSendMessage(content, mChatId);
         sendMessage(message);
     }
 
@@ -509,7 +481,24 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      * @param path 要发送的图片的路径
      */
     private void sendImageMessage(String path) {
-        // 根据图片路径创建一条图片消息
+        /**
+         * 根据图片路径创建一条图片消息，需要三个参数，
+         * path 图片路径
+         * true 是否发送原图
+         * mChatId 接收者
+         */
+        EMMessage message = EMMessage.createImageSendMessage(path, true, mChatId);
+        sendMessage(message);
+
+    }
+
+    /**
+     * 发送文件消息
+     *
+     * @param path 要发送的文件的路径
+     */
+    private void sendFileMessage(String path) {
+        // 根据文件路径创建一条文件消息
     }
 
 
@@ -527,12 +516,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         switch (requestCode) {
         case MLConstants.ML_REQUEST_CODE_PHOTO:
             if (data != null) {
-                Uri imageUri = data.getData();
-                String imagePath = imageUri.getPath();
-                String imageAuthority = imageUri.getAuthority();
-                MLLog.d("imageUri %s", imageUri);
-                MLLog.d("imagePath %s", imagePath);
-                MLLog.d("imageAuthority %s", imageAuthority);
+                String imagePath = MLFile.getPath(mActivity, data.getData());
                 sendImageMessage(imagePath);
             }
             break;
@@ -540,12 +524,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             break;
         case MLConstants.ML_REQUEST_CODE_FILE:
             if (data != null) {
-                Uri fileUri = data.getData();
-                String filePath = fileUri.getPath();
-                String fileAuthority = fileUri.getAuthority();
-                MLLog.d("fileUri %s", fileUri);
-                MLLog.d("filePath %s", filePath);
-                MLLog.d("fileAuthority %s", fileAuthority);
+                String filePath = MLFile.getPath(mActivity, data.getData());
+                sendFileMessage(filePath);
             }
             break;
         case MLConstants.ML_REQUEST_CODE_LOCATION:
@@ -592,18 +572,6 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     };
 
     /**
-     * 打开系统文件选择器，去选择文件
-     */
-    private void openSelectFile() {
-        // 设置intent属性，跳转到系统文件选择界面
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        // 设置intent要选择的文件类型，这里用 * 表示选择全部类型
-        intent.setType("*/*");
-        startActivityForResult(intent, MLConstants.ML_REQUEST_CODE_FILE);
-    }
-
-    /**
      * 打开系统图片选择器，去进行选择图片
      */
     private void openSelectPhoto() {
@@ -621,13 +589,15 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     }
 
     /**
-     * 刷新聊天界面ui
+     * 打开系统文件选择器，去选择文件
      */
-    private void refreshChatUI() {
-        // mMessageAdapter.refreshList();
-        if (mMessageAdapter != null) {
-            mMessageAdapter.refreshList();
-        }
+    private void openSelectFile() {
+        // 设置intent属性，跳转到系统文件选择界面
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        // 设置intent要选择的文件类型，这里用 * 表示选择全部类型
+        intent.setType("*/*");
+        startActivityForResult(intent, MLConstants.ML_REQUEST_CODE_FILE);
     }
 
     /**
@@ -639,6 +609,16 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             mAttachMenuLayout.setVisibility(View.GONE);
         } else {
             mAttachMenuLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
+     * 刷新聊天界面ui
+     */
+    private void refreshChatUI() {
+        // mMessageAdapter.refreshList();
+        if (mMessageAdapter != null) {
+            mMessageAdapter.refreshList();
         }
     }
 
@@ -824,6 +804,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
 
     /**
      * 收到新的发送回执
+     * TODO 好像无效
      *
      * @param list 收到发送回执的消息集合
      */

@@ -2,6 +2,7 @@ package net.melove.demo.chat.conversation.messageitem;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -9,13 +10,17 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.hyphenate.EMCallBack;
+import com.hyphenate.EMError;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.exceptions.HyphenateException;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLConstants;
+import net.melove.demo.chat.common.util.MLLog;
 import net.melove.demo.chat.common.widget.MLImageView;
+import net.melove.demo.chat.common.widget.MLToast;
 import net.melove.demo.chat.conversation.MLMessageAdapter;
 
 /**
@@ -31,6 +36,13 @@ public abstract class MLMessageItem extends LinearLayout {
     // 布局内容填充者，将xml布局文件解析为view
     protected LayoutInflater mInflater;
     protected MLMessageAdapter mAdapter;
+
+    // 消息Callback结果
+    protected final int CALLBACK_STATUS_SUCCESS = 0;
+    protected final int CALLBACK_STATUS_ERROR = 1;
+    protected final int CALLBACK_STATUS_PROGRESS = 2;
+
+
     // item 类型
     protected int mViewType;
 
@@ -56,6 +68,7 @@ public abstract class MLMessageItem extends LinearLayout {
     protected ImageView mResendView;
     // 消息进度
     protected ProgressBar mProgressBar;
+    protected TextView mPercentView;
     // Ack状态显示
     protected ImageView mAckStatusView;
 
@@ -70,18 +83,19 @@ public abstract class MLMessageItem extends LinearLayout {
 
     /**
      * 设置ACK的状态显示，包括消息送达，消息已读
+     * 这个在弱网环境下ack状态会失败，
      */
     protected void setAckStatusView() {
-        // 判断是否需要消息已读ACK，以及消息收发状态
-        if (!EMClient.getInstance().getOptions().getRequireAck() || !EMClient.getInstance().getOptions().getRequireDeliveryAck()) {
-            return;
-        }
-        // 如果不是单聊会话就不设置ack
+        // 需要先判断下是不是单聊的消息，如果不是单聊会话就不发送和展示ACK状态
         if (mMessage.getChatType() != EMMessage.ChatType.Chat) {
             return;
         }
-        // 需要先判断下是不是单聊的消息，以及是否是接收方的消息，如果是发送ACK给消息发送者
-        if (mMessage.getChatType() == EMMessage.ChatType.Chat && mViewType == MLConstants.MSG_TYPE_TXT_RECEIVED) {
+        // 判断是否需要消息已读ACK，以及消息发送状态
+        if (!EMClient.getInstance().getOptions().getRequireAck() || !EMClient.getInstance().getOptions().getRequireDeliveryAck()) {
+            return;
+        }
+        // 判断是否是接收方的消息，是则发送ACK给消息发送者
+        if (mViewType == MLConstants.MSG_TYPE_TXT_RECEIVED) {
             try {
                 EMClient.getInstance().chatManager().ackMessageRead(mMessage.getFrom(), mMessage.getMsgId());
             } catch (HyphenateException e) {
@@ -89,7 +103,7 @@ public abstract class MLMessageItem extends LinearLayout {
             }
         }
         // 设置ACK 的状态显示
-//        if (mViewType == MLConstants.MSG_TYPE_TXT_SEND) {
+        if (mViewType == MLConstants.MSG_TYPE_TXT_SEND) {
             if (mMessage.isAcked()) {
                 // 表示对方已读消息，用两个对号表示
                 mAckStatusView.setImageResource(R.mipmap.ic_done_all_white_18dp);
@@ -99,7 +113,47 @@ public abstract class MLMessageItem extends LinearLayout {
             } else {
                 mAckStatusView.setVisibility(View.GONE);
             }
-//        }
+        } else {
+            mAckStatusView.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * 设置消息的callback回调
+     */
+    protected void setMessageCallback(@Nullable final EMCallBack callback) {
+        // 设置消息状态回调
+        mMessage.setMessageStatusCallback(new EMCallBack() {
+            @Override
+            public void onSuccess() {
+                MLLog.i("消息发送成功 %s", mMessage.getMsgId());
+                callback.onSuccess();
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                MLLog.i("消息发送失败 code: %d, error: %s", i, s);
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mMessage.getError() == EMError.MESSAGE_INCLUDE_ILLEGAL_CONTENT) {
+                            MLToast.errorToast(R.string.ml_toast_msg_have_illegal).show();
+                        } else if (mMessage.getError() == EMError.GROUP_PERMISSION_DENIED) {
+                            MLToast.errorToast(R.string.ml_toast_msg_not_join_group).show();
+                        } else {
+                            MLToast.errorToast(R.string.ml_toast_msg_send_faild).show();
+                        }
+                    }
+                });
+                callback.onError(i, s);
+            }
+
+            @Override
+            public void onProgress(int i, String s) {
+                MLLog.i("消息发送中 %d - %s", i, s);
+                callback.onProgress(i, s);
+            }
+        });
     }
 
     /**
