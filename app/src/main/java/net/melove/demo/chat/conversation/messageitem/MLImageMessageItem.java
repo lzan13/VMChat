@@ -17,6 +17,8 @@ import com.hyphenate.chat.EMMessage;
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.common.util.MLDate;
+import net.melove.demo.chat.common.util.MLLog;
+import net.melove.demo.chat.common.util.MLMessageUtils;
 import net.melove.demo.chat.common.widget.MLImageView;
 import net.melove.demo.chat.conversation.MLMessageAdapter;
 
@@ -44,21 +46,21 @@ public class MLImageMessageItem extends MLMessageItem {
     public void onSetupView(EMMessage message, int position) {
         mMessage = message;
         mPosition = position;
-        setCallback();
         // 设置消息消息发送者的名称
         mUsernameView.setText(message.getFrom());
         // 设置消息时间
         mTimeView.setText(MLDate.long2Time(message.getMsgTime()));
 
         EMImageMessageBody body = (EMImageMessageBody) message.getBody();
-
-        String thumbPath = body.thumbnailLocalPath();
-        Bitmap bitmap = BitmapFactory.decodeFile(thumbPath);
-        mImageView.setImageBitmap(bitmap);
+        String thumbImagePath = "";
+        if (mViewType == MLConstants.MSG_TYPE_IMAGE_RECEIVED) {
+            thumbImagePath = MLMessageUtils.getThumbImagePath(body.getThumbnailUrl());
+        }
 
         // 给当前item 设置点击与长按事件监听
         mAdapter.setOnItemClick(this, mPosition);
 
+        setCallback();
         refreshView();
     }
 
@@ -101,6 +103,12 @@ public class MLImageMessageItem extends MLMessageItem {
         }
         // 设置消息ACK 状态
         setAckStatusView();
+    }
+
+
+    private void showImage(String path){
+        Bitmap bitmap = BitmapFactory.decodeFile(path);
+        mImageView.setImageBitmap(bitmap);
     }
 
     /**

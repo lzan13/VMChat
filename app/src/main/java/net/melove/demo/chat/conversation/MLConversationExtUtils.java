@@ -13,7 +13,7 @@ import org.json.JSONObject;
 
 /**
  * Created by lzan13 on 2015/12/14 15:27.
- * 会话扩展处理类，用来处理会话对象的扩展信息，比如群组@，会话置顶
+ * 会话扩展处理类，用来处理会话对象的扩展信息，比如群组@，会话置顶，会话最后操作时间
  */
 public class MLConversationExtUtils {
 
@@ -33,6 +33,7 @@ public class MLConversationExtUtils {
      * @return 返回当前会话是否置顶
      */
     public static boolean getConversationTop(EMConversation conversation) {
+        // 获取当前会话对象的扩展
         String ext = conversation.getExtField();
         if (TextUtils.isEmpty(ext)) {
             return false;
@@ -54,6 +55,7 @@ public class MLConversationExtUtils {
      * @param top          设置会话是否置顶
      */
     public static void setConversationTop(EMConversation conversation, boolean top) {
+        // 获取当前会话对象的扩展
         String ext = conversation.getExtField();
         JSONObject jsonObject = null;
         try {
@@ -62,9 +64,9 @@ public class MLConversationExtUtils {
             } else {
                 jsonObject = new JSONObject(ext);
             }
+            // 将扩展信息设置给外层的 JSONObject 对象
             jsonObject.put(MLConstants.ML_ATTR_TOP, top);
-            // TODO 这里现在必须调用两次 setExtField() 方法，这应该是3.x sdk 的一个bug
-            conversation.setExtField(jsonObject.toString());
+            // 将扩展信息保存到 Conversation 对象的扩展中去
             conversation.setExtField(jsonObject.toString());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -77,6 +79,7 @@ public class MLConversationExtUtils {
      * @param conversation 要设置的会话对象
      */
     public static void setConversationLastTime(EMConversation conversation) {
+        // 获取当前会话对象的扩展
         String ext = conversation.getExtField();
         JSONObject jsonObject = null;
         try {
@@ -91,8 +94,7 @@ public class MLConversationExtUtils {
             } else {
                 jsonObject.put(MLConstants.ML_ATTR_LAST_TIME, conversation.getLastMessage().getMsgTime());
             }
-            // TODO 这里现在必须调用两次 setExtField() 方法，这是3.x sdk 的一个bug
-            conversation.setExtField(jsonObject.toString());
+            // 将扩展信息保存到 Conversation 对象的扩展中去
             conversation.setExtField(jsonObject.toString());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -106,6 +108,7 @@ public class MLConversationExtUtils {
      * @return 返回此会话最后的时间
      */
     public static long getConversationLastTime(EMConversation conversation) {
+        // 获取当前会话对象的扩展
         String ext = conversation.getExtField();
         JSONObject jsonObject = null;
         try {
@@ -114,6 +117,7 @@ public class MLConversationExtUtils {
             } else {
                 jsonObject = new JSONObject(ext);
             }
+            // 根据扩展的key获取扩展的值
             return jsonObject.optLong(MLConstants.ML_ATTR_LAST_TIME);
         } catch (JSONException e) {
             e.printStackTrace();

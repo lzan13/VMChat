@@ -7,6 +7,7 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
+import com.hyphenate.util.PathUtil;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLConstants;
@@ -119,7 +120,20 @@ public class MLMessageUtils {
         EMClient.getInstance().chatManager().getConversation(chatId).removeMessage(msgId);
         // 保存消息到本地
         EMClient.getInstance().chatManager().saveMessage(recallMessage);
-
+        // 设置此条消息为已读
+        EMClient.getInstance().chatManager().getConversation(chatId).markMessageAsRead(recallMessage.getMsgId());
         return result;
+    }
+
+    /**
+     * 获取图片消息的缩略图本地保存的路径
+     *
+     * @param thumbPath 缩略图的远程路径
+     * @return 返回本地路径
+     */
+    public static String getThumbImagePath(String thumbPath) {
+        String thumbImageName = thumbPath.substring(thumbPath.lastIndexOf("/") + 1, thumbPath.length());
+        String path = PathUtil.getInstance().getImagePath() + "/" + "thumb_" + thumbImageName;
+        return path;
     }
 }

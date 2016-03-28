@@ -70,6 +70,7 @@ public class MLTextMessageItem extends MLMessageItem {
         // 给当前item 设置点击与长按事件监听
         mAdapter.setOnItemClick(this, mPosition);
         setCallback();
+        refreshView();
     }
 
     /**
@@ -96,6 +97,9 @@ public class MLTextMessageItem extends MLMessageItem {
         });
     }
 
+    /**
+     * 刷新当前 ItemView
+     */
     protected void refreshView() {
         // 判断消息的状态，如果发送失败就显示重发按钮，并设置重发按钮的监听
         switch (mMessage.status()) {
@@ -143,6 +147,7 @@ public class MLTextMessageItem extends MLMessageItem {
             }
         }
     }
+
     /**
      * 解析对应的xml 布局，填充当前 ItemView，并初始化控件
      */

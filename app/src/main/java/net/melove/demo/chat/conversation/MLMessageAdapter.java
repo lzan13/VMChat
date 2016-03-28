@@ -50,9 +50,9 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
     /**
      * 构造方法
      *
-     * @param context
-     * @param chatId
-     * @param recyclerView
+     * @param context      上下文对象，在解析布局的时候需要用到
+     * @param chatId       当前会话者的id，为username/groupId
+     * @param recyclerView 当前聊天信息展示列表
      */
     public MLMessageAdapter(Context context, String chatId, RecyclerView recyclerView) {
         mContext = context;
@@ -64,9 +64,9 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
 
         /**
          * 初始化会话对象，这里有三个参数么，
-         * 第一个表示会话的当前聊天的 useranme 或者 groupid
-         * 第二个是绘画类型可以为空
-         * 第三个表示如果会话不存在是否创建
+         * mChatid 第一个表示会话的当前聊天的 useranme 或者 groupid
+         * null 第二个是会话类型可以为空
+         * true 第三个表示如果会话不存在是否创建
          */
         mConversation = EMClient.getInstance().chatManager().getConversation(mChatId, null, true);
         mMessages = mConversation.getAllMessages();
@@ -277,7 +277,7 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
             mMessages.addAll(mConversation.getAllMessages());
             notifyDataSetChanged();
             // 滚动到相应的位置
-            mRecyclerView.scrollToPosition(position - 1);
+            mRecyclerView.scrollToPosition(position);
         }
 
         @Override
