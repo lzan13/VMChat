@@ -24,6 +24,10 @@ android {
 //    }
     productFlavors {
     }
+    // 打开增量编译（实验功能）
+    dexOptions {
+        incremental true
+    }
 }
 
 dependencies {
@@ -40,3 +44,4 @@ dependencies {
     // 环信sdk
     compile files('libs/hyphenatechat_3.1.0.jar')
 }
+

@@ -132,8 +132,9 @@ public class MLMessageUtils {
      * @return 返回本地路径
      */
     public static String getThumbImagePath(String thumbPath) {
-        String thumbImageName = thumbPath.substring(thumbPath.lastIndexOf("/") + 1, thumbPath.length());
-        String path = PathUtil.getInstance().getImagePath() + "/" + "thumb_" + thumbImageName;
+        String thumbImageName1 = MLCrypto.cryptoStr2MD5(thumbPath);
+        String thumbImageName2 = MLCrypto.cryptoStr2SHA1(thumbPath);
+        String path = PathUtil.getInstance().getImagePath() + "/" + "thumb_" + thumbImageName1;
         return path;
     }
 }

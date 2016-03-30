@@ -15,6 +15,7 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 
 import net.melove.demo.chat.application.MLConstants;
+import net.melove.demo.chat.common.util.MLDate;
 import net.melove.demo.chat.conversation.messageitem.MLImageMessageItem;
 import net.melove.demo.chat.conversation.messageitem.MLMessageItem;
 import net.melove.demo.chat.conversation.messageitem.MLRecallMessageItem;
@@ -25,7 +26,7 @@ import java.util.List;
 
 /**
  * Class ${FILE_NAME}
- * <p/>
+ * <p>
  * Created by lzan13 on 2016/1/6 18:51.
  */
 public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.MessageViewHolder> {
@@ -164,11 +165,14 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
      * 重发消息方法
      */
     public void resendMessage(String msgId) {
+        // 获取需要重发的消息
         EMMessage failedMessage = mConversation.getMessage(msgId, true);
-        final EMMessage message = EMMessage.createTxtSendMessage(((EMTextMessageBody) failedMessage.getBody()).getMessage(), failedMessage.getTo());
-        EMClient.getInstance().chatManager().sendMessage(message);
-        mConversation.removeMessage(msgId);
-        message.setMessageStatusCallback(new EMCallBack() {
+        // 更新消息时间为当前时间
+        failedMessage.setMsgTime(MLDate.getCurrentMillisecond());
+        // 发送消息
+        EMClient.getInstance().chatManager().sendMessage(failedMessage);
+        final int position = mConversation.getMessagePosition(failedMessage);
+        failedMessage.setMessageStatusCallback(new EMCallBack() {
             @Override
             public void onSuccess() {
                 refreshList();
@@ -176,7 +180,7 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
 
             @Override
             public void onError(int i, String s) {
-                refreshList(mConversation.getMessagePosition(message));
+                refreshList(position);
             }
 
             @Override

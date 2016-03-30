@@ -48,11 +48,6 @@ public class MLTextMessageItem extends MLMessageItem {
         mMessage = message;
         mPosition = position;
 
-        // TODO 这里先加一个判断，疑问 SDK 在发送 CMD 消息后会把 CMD 消息加入到内存，导致出错
-        if (mMessage.getType() == EMMessage.Type.CMD) {
-            return;
-        }
-
         // 设置消息消息发送者的名称
         mUsernameView.setText(message.getFrom());
         // 设置消息时间
@@ -60,12 +55,7 @@ public class MLTextMessageItem extends MLMessageItem {
 
         EMTextMessageBody body = (EMTextMessageBody) mMessage.getBody();
         String messageStr = body.getMessage().toString();
-        // 判断是不是阅后即焚的消息
-        if (mMessage.getBooleanAttribute(MLConstants.ML_ATTR_BURN, false)) {
-            mContentView.setText(String.format("", messageStr.length()));
-        } else {
-            mContentView.setText(messageStr);
-        }
+        mContentView.setText(messageStr);
 
         // 给当前item 设置点击与长按事件监听
         mAdapter.setOnItemClick(this, mPosition);

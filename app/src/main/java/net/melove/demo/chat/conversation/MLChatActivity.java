@@ -81,6 +81,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     // 聊天扩展菜单
     private LinearLayout mAttachMenuLayout;
     private GridView mAttachMenuGridView;
+    // 是否发送原图
+    private boolean isOrigin = true;
 
     // 是否为阅后即焚
     private boolean isBurn;
@@ -448,6 +450,16 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     }
 
     /**
+     * 设置消息扩展
+     */
+    private void setMessageAttribute(EMMessage message) {
+        if (isBurn) {
+            // 设置消息扩展类型为阅后即焚
+            message.setAttribute(MLConstants.ML_ATTR_BURN, true);
+        }
+    }
+
+    /**
      * 发送文本消息
      */
     private void sendTextMessage() {
@@ -461,16 +473,6 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     }
 
     /**
-     * 发送阅后即焚类型的消息
-     */
-    private void setMessageAttribute(EMMessage message) {
-        if (isBurn) {
-            // 设置消息扩展类型为阅后即焚
-            message.setAttribute(MLConstants.ML_ATTR_BURN, true);
-        }
-    }
-
-    /**
      * 发送图片消息
      *
      * @param path 要发送的图片的路径
@@ -479,12 +481,11 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         /**
          * 根据图片路径创建一条图片消息，需要三个参数，
          * path 图片路径
-         * true 是否发送原图
+         * isOrigin 是否发送原图
          * mChatId 接收者
          */
-        EMMessage message = EMMessage.createImageSendMessage(path, true, mChatId);
+        EMMessage message = EMMessage.createImageSendMessage(path, isOrigin, mChatId);
         sendMessage(message);
-
     }
 
     /**
@@ -500,9 +501,9 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     /**
      * 处理Activity的返回值得方法
      *
-     * @param requestCode
-     * @param resultCode
-     * @param data
+     * @param requestCode 请求码
+     * @param resultCode  返回码
+     * @param data        返回的数据
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

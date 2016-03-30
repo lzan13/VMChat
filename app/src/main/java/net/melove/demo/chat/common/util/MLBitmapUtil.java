@@ -5,6 +5,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.util.Base64;
 
+import net.melove.demo.chat.R;
+
 import java.io.ByteArrayOutputStream;
 
 /**
@@ -13,8 +15,8 @@ import java.io.ByteArrayOutputStream;
  */
 public class MLBitmapUtil {
 
-    private static int maxWidth = 1200;
-    private static int maxHeight = 1920;
+    private static int maxWidth = MLDimen.dp2px(R.dimen.ml_dimen_192);
+    private static int maxHeight = MLDimen.dp2px(R.dimen.ml_dimen_192);
 
     /**
      * 将Bitmap 转为 base64 字符串
@@ -46,14 +48,16 @@ public class MLBitmapUtil {
     }
 
     /**
-     * 压缩图片 通过
+     * 压缩图片
      *
-     * @param path 要压缩的图片路径
-     * @return
+     * @param path        要压缩的图片路径
+     * @param thumbWidth  压缩后的宽
+     * @param thumbHeight 压缩后的高
+     * @return 返回压缩过的图片缩略图
      */
     public static Bitmap compressBitmap(String path, int thumbWidth, int thumbHeight) {
         BitmapFactory.Options options = new BitmapFactory.Options();
-        // 开始读入图片，此时把options.inJustDecodeBounds 设为true了
+        // 开始读入图片，此时把options.inJustDecodeBounds 设为true
         // 这个参数的意义是仅仅解析边缘区域，从而可以得到图片的一些信息，比如大小，而不会整个解析图片，防止OOM
         options.inJustDecodeBounds = true;
 
@@ -64,11 +68,11 @@ public class MLBitmapUtil {
         int actualHeight = options.outHeight;
 
         // 根据宽高计算缩放比例
-        int scale = getZoomScale(actualWidth, actualHeight);
-        if (scale <= 0) {
-            scale = 1;
+        float scale = getZoomScale(actualWidth, actualHeight);
+        if (scale % 2 > 0.4) {
+            scale += 1;
         }
-        options.inSampleSize = scale;
+        options.inSampleSize = (int) scale;
         options.inJustDecodeBounds = false;
 
         bitmap = BitmapFactory.decodeFile(path, options);
@@ -79,8 +83,8 @@ public class MLBitmapUtil {
      * 获取bitmap的缩略图
      *
      * @param bitmap      需要获取缩略图的Bitmap对象
-     * @param thumbWidth  缩略图的最大宽
-     * @param thumbHeight 缩略图的高最大高
+     * @param thumbWidth  缩略图的最大宽度
+     * @param thumbHeight 缩略图的最大高度
      * @return 返回缩略图对象
      */
     private static Bitmap getThumbImage(Bitmap bitmap, int thumbWidth, int thumbHeight) {
@@ -103,23 +107,24 @@ public class MLBitmapUtil {
      *
      * @param actualWidth  Bitmap的实际宽度
      * @param actualHeight Bitmap的实际高度
-     * @return
+     * @return 返回最佳缩放比例
      */
-    private static int getZoomScale(int actualWidth, int actualHeight) {
-        float scale = 1;
+    private static float getZoomScale(int actualWidth, int actualHeight) {
+        float scale = 1.0f;
         if (actualWidth > actualHeight) {
-            float ws = actualWidth / maxHeight;
-            float hs = actualHeight / maxWidth;
-            scale = ((ws + hs) / 2);
+            scale = (float) actualWidth / maxHeight;
         } else {
-            float ws = actualWidth / maxWidth;
-            float hs = actualHeight / maxHeight;
-            scale = ((ws + hs) / 2);
+            scale = (float) actualHeight / maxHeight;
         }
-        if (scale % 2 > 0.4) {
-            scale += 1;
-        }
-        return (int) scale;
+        return scale;
+    }
+
+    public static int[] getImageSize(int w, int h) {
+        int[] array = {0, 0};
+        float scale = getZoomScale(w, h);
+        array[0] = (int) (w / scale);
+        array[1] = (int) (h / scale);
+        return array;
     }
 
 
