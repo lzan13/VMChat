@@ -1,15 +1,16 @@
 package net.melove.demo.chat.conversation.messageitem;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hyphenate.EMCallBack;
@@ -35,7 +36,7 @@ import java.io.File;
  * Created by lz on 2016/3/20.
  * 图片消息处理类
  */
-public class MLImageMessageItem extends MLMessageItem {
+public class MLImageMessageItem extends MLMessageItem implements View.OnLongClickListener {
 
     private int thumbnailsMax = MLDimen.dp2px(R.dimen.ml_dimen_192);
     private MLHandler mHandler;
@@ -74,6 +75,7 @@ public class MLImageMessageItem extends MLMessageItem {
                 mImageView.setImageResource(R.mipmap.image_default);
             }
         }
+
         /**
          * 获取当前图片的缩略图地址，以及原图地址
          * TODO 因为SDK在发送图片的时候把 LocalPath设置为了压缩后的临时图片的地址，这里暂时使用缩略图保存的的原始图片地址作为原始图片地址
@@ -82,12 +84,15 @@ public class MLImageMessageItem extends MLMessageItem {
         String fullSizePath = "";
         if (mViewType == MLConstants.MSG_TYPE_IMAGE_RECEIVED) {
             // 接收方获取缩略图的路径
-            thumbnailsPath = imgBody.thumbnailLocalPath();
             fullSizePath = imgBody.getLocalUrl();
+            thumbnailsPath = imgBody.thumbnailLocalPath();
         } else {
-            thumbnailsPath = MLMessageUtils.getThumbImagePath(fullSizePath);
             fullSizePath = imgBody.thumbnailLocalPath();
+            thumbnailsPath = MLMessageUtils.getThumbImagePath(fullSizePath);
         }
+
+        // 为图片显示控件设置tag，在设置图片显示的时候，先判断下当前的tag是否是当前item的，是则显示图片
+        mImageView.setTag(thumbnailsPath);
 
         // 设置缩略图的显示
         showThumbnailsImage(thumbnailsPath, fullSizePath, imgBody.getWidth(), imgBody.getHeight());
@@ -108,7 +113,9 @@ public class MLImageMessageItem extends MLMessageItem {
     private void showThumbnailsImage(final String thumbnailsPath, final String fullSizePath, final int width, final int height) {
         Bitmap bitmap = MLCacheUtils.getInstance().optBitmap(thumbnailsPath);
         if (bitmap != null) {
-            mImageView.setImageBitmap(bitmap);
+            if (mImageView.getTag().equals(thumbnailsPath)) {
+                mImageView.setImageBitmap(bitmap);
+            }
         } else {
             new AsyncTask<Object, Integer, Bitmap>() {
                 @Override
@@ -116,16 +123,19 @@ public class MLImageMessageItem extends MLMessageItem {
                     File thumbnailsFile = new File(thumbnailsPath);
                     File fullSizeFile = new File(fullSizePath);
                     Bitmap tempBitmap = null;
-                    // 首先判断原图文件存在，同时缩略图不存在，或者存在缩略图大小比较小，图片不是很清晰时，通过原图重新生成缩略图
-                    if (fullSizeFile.exists() && fullSizeFile.length() > 20480
-                            && (!thumbnailsFile.exists() || thumbnailsFile.length() < 10240)) {
-                        // 根据原图获取指定大小的缩略图
+
+                    // 首先判断原图以及缩略图是否都存在，如果不存在直接返回
+                    if (!fullSizeFile.exists() && !thumbnailsFile.exists()) {
+                        return tempBitmap;
+                    } else if (!fullSizeFile.exists() || thumbnailsFile.exists() && thumbnailsFile.length() > 1024 * 10 * 2) {
+                        // 然后判断缩略图是否存在，并且足够清晰，则根据缩略图路径直接获取Bitmap
+                        tempBitmap = MLBitmapUtil.compressBitmap(thumbnailsPath, thumbnailsMax, thumbnailsMax);
+                    } else if (fullSizeFile.exists() && fullSizeFile.length() > 1024 * 10 * 5
+                            && (width > thumbnailsMax || height > thumbnailsMax)) {
+                        // 然后判断原图是否存在，通过原图重新生成缩略图
                         tempBitmap = MLBitmapUtil.compressBitmap(fullSizePath, thumbnailsMax, thumbnailsMax);
                         // 文件生成成功之后，把新的Bitmap保存到本地磁盘中
                         MLFile.saveBitmapToSDCard(tempBitmap, thumbnailsPath);
-                    } else if (width > thumbnailsMax || height > thumbnailsMax) {
-                        // 根据缩略图路径直接获取Bitmap
-                        tempBitmap = MLBitmapUtil.compressBitmap(thumbnailsPath, thumbnailsMax, thumbnailsMax);
                     } else {
                         // 当图片本身就很小时，直接加在图片
                         tempBitmap = BitmapFactory.decodeFile(thumbnailsPath);
@@ -137,7 +147,9 @@ public class MLImageMessageItem extends MLMessageItem {
                 protected void onPostExecute(Bitmap bitmap) {
                     if (bitmap != null) {
                         // 设置图片控件为当前bitmap
-                        mImageView.setImageBitmap(bitmap);
+                        if (mImageView.getTag().equals(thumbnailsPath)) {
+                            mImageView.setImageBitmap(bitmap);
+                        }
                         // 将Bitmap对象添加到缓存中去
                         MLCacheUtils.getInstance().putBitmap(thumbnailsPath, bitmap);
                     } else {
@@ -222,6 +234,50 @@ public class MLImageMessageItem extends MLMessageItem {
         });
     }
 
+    @Override
+    public boolean onLongClick(View v) {
+        String[] menus = null;
+        // 这里要根据消息的类型去判断要弹出的菜单，是否是发送方，并且是发送成功才能撤回
+        if (mViewType == MLConstants.MSG_TYPE_IMAGE_RECEIVED) {
+            menus = new String[]{
+                    mActivity.getResources().getString(R.string.ml_menu_chat_forward),
+                    mActivity.getResources().getString(R.string.ml_menu_chat_delete)
+            };
+        } else {
+            menus = new String[]{
+                    mActivity.getResources().getString(R.string.ml_menu_chat_forward),
+                    mActivity.getResources().getString(R.string.ml_menu_chat_delete),
+                    mActivity.getResources().getString(R.string.ml_menu_chat_recall)
+            };
+        }
+
+        // 创建并显示 ListView 的长按弹出菜单，并设置弹出菜单 Item的点击监听
+        AlertDialog.Builder menuDialog = new AlertDialog.Builder(mActivity);
+        menuDialog.setTitle(R.string.ml_dialog_title_conversation);
+        menuDialog.setItems(menus, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                case 0:
+                    mAdapter.onLongItemClick(mPosition, MLConstants.ML_MSG_ACTION_FORWARD);
+                    break;
+                case 1:
+                    mAdapter.onLongItemClick(mPosition, MLConstants.ML_MSG_ACTION_DELETE);
+                    break;
+                case 2:
+                    mAdapter.onLongItemClick(mPosition, MLConstants.ML_MSG_ACTION_RECALL);
+                    break;
+                }
+            }
+        });
+        menuDialog.show();
+        return true;
+    }
+
+
+    /**
+     * 自定义Handler，用来处理界面的刷新
+     */
     class MLHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {

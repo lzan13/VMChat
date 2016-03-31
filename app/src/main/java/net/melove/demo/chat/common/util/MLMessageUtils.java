@@ -128,13 +128,12 @@ public class MLMessageUtils {
     /**
      * 获取图片消息的缩略图本地保存的路径
      *
-     * @param thumbPath 缩略图的远程路径
+     * @param fullSizePath 缩略图的原始路径
      * @return 返回本地路径
      */
-    public static String getThumbImagePath(String thumbPath) {
-        String thumbImageName1 = MLCrypto.cryptoStr2MD5(thumbPath);
-        String thumbImageName2 = MLCrypto.cryptoStr2SHA1(thumbPath);
-        String path = PathUtil.getInstance().getImagePath() + "/" + "thumb_" + thumbImageName1;
+    public static String getThumbImagePath(String fullSizePath) {
+        String thumbImageName = MLCrypto.cryptoStr2SHA1(fullSizePath);
+        String path = PathUtil.getInstance().getHistoryPath() + "/" + "thumb_" + thumbImageName;
         return path;
     }
 }

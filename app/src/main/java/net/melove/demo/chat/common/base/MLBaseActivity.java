@@ -6,6 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.squareup.leakcanary.RefWatcher;
+
+import net.melove.demo.chat.application.MLApplication;
 import net.melove.demo.chat.common.util.MLLog;
 
 /**
@@ -74,5 +77,7 @@ public class MLBaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         MLLog.i("Activity onDestroy");
+        RefWatcher refWatcher = MLApplication.getRefWatcher();
+        refWatcher.watch(this);
     }
 }

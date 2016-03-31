@@ -27,6 +27,7 @@ import java.util.List;
 
 /**
  * Created by lzan13 on 2015/8/28.
+ * 好友申请通知界面
  */
 public class MLInvitedFragment extends MLBaseFragment {
 

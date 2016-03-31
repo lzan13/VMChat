@@ -4,6 +4,9 @@ package net.melove.demo.chat.common.base;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 
+import com.squareup.leakcanary.RefWatcher;
+
+import net.melove.demo.chat.application.MLApplication;
 import net.melove.demo.chat.common.util.MLLog;
 
 /**
@@ -46,5 +49,13 @@ public class MLBaseFragment extends Fragment {
     public void onResume() {
         super.onResume();
         MLLog.i("Fragment onResume");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        MLLog.i("Fragment onDestroy");
+        RefWatcher refWatcher = MLApplication.getRefWatcher();
+        refWatcher.watch(this);
     }
 }

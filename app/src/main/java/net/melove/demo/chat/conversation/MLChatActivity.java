@@ -258,9 +258,21 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                 case 0:
+                    // 打开选择图片界面
                     openSelectPhoto();
                     break;
                 case 1:
+                    // 发送位置
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    // 发送文件
+                    openSelectFile();
+                    break;
+                case 4:
+                    break;
+                case 5:
                     break;
                 }
                 onAttachMenu();
@@ -302,7 +314,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     }
 
     /**
-     * 设置ListView 的点击监听，以及每一项点击监听
+     * 因为RecyclerView 不支持直接设置长按和点击监听，这里通过回调的方式去进行实现
      */
     private void setItemClickListener() {
         mMessageAdapter.setOnItemClickListener(new MLMessageAdapter.MLOnItemClickListener() {
@@ -311,49 +323,36 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 final EMMessage message = mConversation.getAllMessages().get(position);
                 // 判断当前消息是否为【阅后即焚】类型
                 if (message.getBooleanAttribute(MLConstants.ML_ATTR_TYPE, false)) {
-
                 }
+                MLToast.makeToast("item " + position).show();
                 MLLog.i("item position - %d", position);
             }
 
+            /**
+             * 长按事件的处理
+             * 这里菜单的弹出在 ItemView 里实现，然后通过回调将每一项的点击操作传递过去，因为聊天界面的 ItemView
+             * 有多种多样的，每一个Item弹出菜单不同，
+             *
+             * @param position 需要操作的Item的位置
+             * @param action   长按菜单需要处理的动作，比如 复制、转发、删除、撤回等
+             */
             @Override
-            public void onItemLongClick(View view, int position) {
-                final EMMessage message = mConversation.getAllMessages().get(position);
-                // 这里要根据消息的类型去判断要弹出的菜单
-                List<String> mMenuList = new ArrayList<String>();
-                mMenuList.add(mActivity.getResources().getString(R.string.ml_menu_chat_copy));
-                mMenuList.add(mActivity.getResources().getString(R.string.ml_menu_chat_delete));
-                mMenuList.add(mActivity.getResources().getString(R.string.ml_menu_chat_forward));
-                // 判断当前消息是否是发送方，并且是发送成功才能撤回
-                if (message.direct() == EMMessage.Direct.SEND && message.status() == EMMessage.Status.SUCCESS) {
-                    mMenuList.add(mActivity.getResources().getString(R.string.ml_menu_chat_recall));
+            public void onItemLongClick(int position, int action) {
+                EMMessage message = mConversation.getAllMessages().get(position);
+                switch (action) {
+                case MLConstants.ML_MSG_ACTION_COPY:
+                    copyMessage(message);
+                    break;
+                case MLConstants.ML_MSG_ACTION_FORWARD:
+
+                    break;
+                case MLConstants.ML_MSG_ACTION_DELETE:
+                    mConversation.removeMessage(message.getMsgId());
+                    break;
+                case MLConstants.ML_MSG_ACTION_RECALL:
+                    recallMessage(message);
+                    break;
                 }
-                String[] menus = new String[mMenuList.size()];
-                mMenuList.toArray(menus);
-                // 创建并显示 ListView 的长按弹出菜单，并设置弹出菜单 Item的点击监听
-                new AlertDialog.Builder(mActivity).setTitle(R.string.ml_dialog_title_conversation).setItems(menus, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                        case 0:
-                            // 复制消息到剪切板
-                            copyMessage(message);
-                            break;
-                        case 1:
-                            MLToast.makeToast(R.string.ml_menu_chat_delete).show();
-                            mConversation.removeMessage(message.getMsgId());
-                            refreshChatUI();
-                            break;
-                        case 2:
-                            MLToast.makeToast(R.string.ml_menu_chat_forward).show();
-                            break;
-                        case 3:
-                            // 撤回消息
-                            recallMessage(message);
-                            break;
-                        }
-                    }
-                }).show();
             }
         });
     }
@@ -468,8 +467,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
 
         mSendView.setVisibility(View.GONE);
         mVoiceView.setVisibility(View.VISIBLE);
-        EMMessage message = EMMessage.createTxtSendMessage(content, mChatId);
-        sendMessage(message);
+        EMMessage textMessage = EMMessage.createTxtSendMessage(content, mChatId);
+        sendMessage(textMessage);
     }
 
     /**
@@ -484,8 +483,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
          * isOrigin 是否发送原图
          * mChatId 接收者
          */
-        EMMessage message = EMMessage.createImageSendMessage(path, isOrigin, mChatId);
-        sendMessage(message);
+        EMMessage imgMessage = EMMessage.createImageSendMessage(path, isOrigin, mChatId);
+        sendMessage(imgMessage);
     }
 
     /**
@@ -494,7 +493,12 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      * @param path 要发送的文件的路径
      */
     private void sendFileMessage(String path) {
-        // 根据文件路径创建一条文件消息
+        /**
+         * 根据文件路径创建一条文件消息
+         */
+        EMMessage fileMessage = EMMessage.createFileSendMessage(path, mChatId);
+        sendMessage(fileMessage);
+
     }
 
 
@@ -511,6 +515,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         MLLog.d("onActivityResult requestCode %d, resultCode %d", requestCode, resultCode);
         switch (requestCode) {
         case MLConstants.ML_REQUEST_CODE_PHOTO:
+            // 选择图片后返回获取返回的图片路径，然后发送图片
             if (data != null) {
                 String imagePath = MLFile.getPath(mActivity, data.getData());
                 sendImageMessage(imagePath);
@@ -519,6 +524,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         case MLConstants.ML_REQUEST_CODE_VIDEO:
             break;
         case MLConstants.ML_REQUEST_CODE_FILE:
+            // 选择文件后返回获取返回的文件路径，然后发送文件
             if (data != null) {
                 String filePath = MLFile.getPath(mActivity, data.getData());
                 sendFileMessage(filePath);
@@ -690,6 +696,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             mConversation.clear();
             mConversation.loadMessages(list);
         }
+        // 根据不同的系统版本选择不同的 finish 方法
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
             mActivity.finish();
         } else {

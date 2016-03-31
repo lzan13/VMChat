@@ -55,6 +55,14 @@ public class MLConstants {
     public static final int ML_REQUEST_CODE_CONTACTS = 0x07;
 
     /**
+     * 长按菜单回调的动作
+     */
+    public static final int ML_MSG_ACTION_COPY = 0X00;
+    public static final int ML_MSG_ACTION_FORWARD = 0X01;
+    public static final int ML_MSG_ACTION_DELETE = 0X02;
+    public static final int ML_MSG_ACTION_RECALL = 0X03;
+
+    /**
      * 聊天消息类型
      * 首先是SDK支持的正常的消息类型
      */
@@ -62,6 +70,8 @@ public class MLConstants {
     public static final int MSG_TYPE_TXT_RECEIVED = 1;
     public static final int MSG_TYPE_IMAGE_SEND = 2;
     public static final int MSG_TYPE_IMAGE_RECEIVED = 3;
+    public static final int MSG_TYPE_FILE_SEND = 4;
+    public static final int MSG_TYPE_FILE_RECEIVED = 5;
 
     /**
      * 系统级消息类型

@@ -56,12 +56,14 @@ public abstract class MLMessageItem extends LinearLayout {
      */
     // 显示聊天头像
     protected MLImageView mAvatarView;
-    // 显示图片
+    // 显示图片、文件消息显示文件图标
     protected MLImageView mImageView;
     // 显示用户名
     protected TextView mUsernameView;
-    // 显示聊天内容
+    // 显示聊天内容、文件消息就显示文件名
     protected TextView mContentView;
+    // 文件消息显示文件大小
+    protected TextView mContentSizeView;
     // 显示时间
     protected TextView mTimeView;
     // 重发按钮

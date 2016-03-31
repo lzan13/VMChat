@@ -16,6 +16,7 @@ import com.hyphenate.chat.EMTextMessageBody;
 
 import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.common.util.MLDate;
+import net.melove.demo.chat.conversation.messageitem.MLFileMessageItem;
 import net.melove.demo.chat.conversation.messageitem.MLImageMessageItem;
 import net.melove.demo.chat.conversation.messageitem.MLMessageItem;
 import net.melove.demo.chat.conversation.messageitem.MLRecallMessageItem;
@@ -26,7 +27,7 @@ import java.util.List;
 
 /**
  * Class ${FILE_NAME}
- * <p>
+ * <p/>
  * Created by lzan13 on 2016/1/6 18:51.
  */
 public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.MessageViewHolder> {
@@ -107,6 +108,9 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
         case IMAGE:
             itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_IMAGE_SEND : MLConstants.MSG_TYPE_IMAGE_RECEIVED;
             break;
+        case FILE:
+            itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_FILE_SEND : MLConstants.MSG_TYPE_FILE_RECEIVED;
+            break;
         default:
             // 默认返回txt类型
             itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_TXT_SEND : MLConstants.MSG_TYPE_TXT_RECEIVED;
@@ -138,6 +142,11 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
         case MLConstants.MSG_TYPE_IMAGE_SEND:
         case MLConstants.MSG_TYPE_IMAGE_RECEIVED:
             holder = new MessageViewHolder(new MLImageMessageItem(mContext, this, viewType));
+            break;
+        // 正常的文件类消息
+        case MLConstants.MSG_TYPE_FILE_SEND:
+        case MLConstants.MSG_TYPE_FILE_RECEIVED:
+            holder = new MessageViewHolder(new MLFileMessageItem(mContext, this, viewType));
             break;
         /**
          * 自定义类型的消息
@@ -197,8 +206,15 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
         // 点击回调
         public void onItemClick(View view, int position);
 
-        // 长按回调
-        public void onItemLongClick(View view, int position);
+        /**
+         * 长按事件的处理
+         * 这里菜单的弹出在 ItemView 里实现，然后通过回调将每一项的点击操作传递过去，因为聊天界面的 ItemView
+         * 有多种多样的，每一个Item弹出菜单不同，
+         *
+         * @param position 需要操作的Item的位置
+         * @param action   长按菜单需要处理的动作，比如 复制、转发、删除、撤回等
+         */
+        public void onItemLongClick(int position, int action);
     }
 
     /**
@@ -218,18 +234,25 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
      */
     public void setOnItemClick(View view, final int position) {
         view.setOnClickListener(new View.OnClickListener() {
+            /**
+             * 点击事件还是去放在展示列表的地方去处理
+             * @param v
+             */
             @Override
             public void onClick(View v) {
                 mOnItemClickListener.onItemClick(v, position);
             }
         });
-        view.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                mOnItemClickListener.onItemLongClick(v, position);
-                return false;
-            }
-        });
+    }
+
+    /**
+     * ItemView 长按事件的点击事件
+     *
+     * @param position 长按的 Item 位置
+     * @param action   长按菜单需要处理的动作，比如 复制、转发、删除、撤回等
+     */
+    public void onLongItemClick(int position, int action) {
+        mOnItemClickListener.onItemLongClick(position, action);
     }
 
     /**
