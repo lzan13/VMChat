@@ -317,13 +317,14 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      * 因为RecyclerView 不支持直接设置长按和点击监听，这里通过回调的方式去进行实现
      */
     private void setItemClickListener() {
+        /**
+         * 这里实现在{@link MLMessageAdapter MLOnItemClickListener}定义的接口，
+         * 实现聊天信息ItemView需要操作的一些方法
+         */
         mMessageAdapter.setOnItemClickListener(new MLMessageAdapter.MLOnItemClickListener() {
             @Override
-            public void onItemClick(View view, int position) {
-                final EMMessage message = mConversation.getAllMessages().get(position);
-                // 判断当前消息是否为【阅后即焚】类型
-                if (message.getBooleanAttribute(MLConstants.ML_ATTR_TYPE, false)) {
-                }
+            public void onItemClick(int position) {
+                EMMessage message = mConversation.getAllMessages().get(position);
                 MLToast.makeToast("item " + position).show();
                 MLLog.i("item position - %d", position);
             }
@@ -341,15 +342,20 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 EMMessage message = mConversation.getAllMessages().get(position);
                 switch (action) {
                 case MLConstants.ML_MSG_ACTION_COPY:
+                    // 复制消息，只有文本类消息才可以复制
                     copyMessage(message);
                     break;
                 case MLConstants.ML_MSG_ACTION_FORWARD:
+                    // 转发消息
 
                     break;
                 case MLConstants.ML_MSG_ACTION_DELETE:
+                    // 删除消息
+                    MLToast.rightToast(R.string.ml_toast_msg_delete_success);
                     mConversation.removeMessage(message.getMsgId());
                     break;
                 case MLConstants.ML_MSG_ACTION_RECALL:
+                    // 撤回消息
                     recallMessage(message);
                     break;
                 }
@@ -370,6 +376,10 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         ClipData clipData = ClipData.newPlainText("message", ((EMTextMessageBody) message.getBody()).getMessage());
         // 将刚创建的数据对象添加到剪切板
         clipboardManager.setPrimaryClip(clipData);
+    }
+
+    private void forwardMessage(EMMessage message) {
+
     }
 
     /**

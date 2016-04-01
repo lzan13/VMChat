@@ -12,7 +12,6 @@ import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
-import com.hyphenate.chat.EMTextMessageBody;
 
 import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.common.util.MLDate;
@@ -27,7 +26,7 @@ import java.util.List;
 
 /**
  * Class ${FILE_NAME}
- * <p/>
+ * <p>
  * Created by lzan13 on 2016/1/6 18:51.
  */
 public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.MessageViewHolder> {
@@ -102,7 +101,7 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
             if (message.getBooleanAttribute(MLConstants.ML_ATTR_RECALL, false)) {
                 itemType = MLConstants.MSG_TYPE_SYS_RECALL;
             } else {
-                itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_TXT_SEND : MLConstants.MSG_TYPE_TXT_RECEIVED;
+                itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_TEXT_SEND : MLConstants.MSG_TYPE_TEXT_RECEIVED;
             }
             break;
         case IMAGE:
@@ -113,7 +112,7 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
             break;
         default:
             // 默认返回txt类型
-            itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_TXT_SEND : MLConstants.MSG_TYPE_TXT_RECEIVED;
+            itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_TEXT_SEND : MLConstants.MSG_TYPE_TEXT_RECEIVED;
             break;
         }
         return itemType;
@@ -134,8 +133,8 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
          *  SDK默认类型的消息
          */
         // 文字类消息
-        case MLConstants.MSG_TYPE_TXT_SEND:
-        case MLConstants.MSG_TYPE_TXT_RECEIVED:
+        case MLConstants.MSG_TYPE_TEXT_SEND:
+        case MLConstants.MSG_TYPE_TEXT_RECEIVED:
             holder = new MessageViewHolder(new MLTextMessageItem(mContext, this, viewType));
             break;
         // 图片类消息
@@ -200,11 +199,25 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
     }
 
     /**
+     * -------------------------------------------------------------------------------------
+     * 为RecyclerView 定义点击和长按的事件回调
+     */
+    /**
+     * 设置回调监听
+     *
+     * @param listener 自定义回调接口
+     */
+    public void setOnItemClickListener(MLOnItemClickListener listener) {
+        mOnItemClickListener = listener;
+    }
+
+    /**
      * 自定义回调接口，用来实现 RecyclerView 中 Item 长按和点击事件监听
      */
     protected interface MLOnItemClickListener {
+
         // 点击回调
-        public void onItemClick(View view, int position);
+        public void onItemClick(int position);
 
         /**
          * 长按事件的处理
@@ -218,31 +231,12 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
     }
 
     /**
-     * 设置回调监听
+     * ItemView 点击事件
      *
-     * @param listener 自定义回调接口
+     * @param position 点击的Item 的位置
      */
-    public void setOnItemClickListener(MLOnItemClickListener listener) {
-        mOnItemClickListener = listener;
-    }
-
-    /**
-     * 为每个Item设置点击与长按监听
-     *
-     * @param view     需要设置监听的view
-     * @param position 需要设置监听的position
-     */
-    public void setOnItemClick(View view, final int position) {
-        view.setOnClickListener(new View.OnClickListener() {
-            /**
-             * 点击事件还是去放在展示列表的地方去处理
-             * @param v
-             */
-            @Override
-            public void onClick(View v) {
-                mOnItemClickListener.onItemClick(v, position);
-            }
-        });
+    public void setOnItemClick(int position) {
+        mOnItemClickListener.onItemClick(position);
     }
 
     /**
@@ -255,6 +249,10 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
         mOnItemClickListener.onItemLongClick(position, action);
     }
 
+    /**
+     * ---------------------------------------------------------------------------------
+     * 自定义Adapter的刷新操作
+     */
     /**
      * 供界面调用的刷新 Adapter 的方法
      */

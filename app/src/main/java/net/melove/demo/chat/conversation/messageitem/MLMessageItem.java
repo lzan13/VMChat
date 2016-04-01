@@ -21,6 +21,7 @@ import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.common.util.MLLog;
 import net.melove.demo.chat.common.widget.MLImageView;
 import net.melove.demo.chat.common.widget.MLToast;
+import net.melove.demo.chat.conversation.MLChatActivity;
 import net.melove.demo.chat.conversation.MLMessageAdapter;
 
 /**
@@ -28,7 +29,7 @@ import net.melove.demo.chat.conversation.MLMessageAdapter;
  * ViewHoler itemView 封装类
  * 不同的消息类型都可以继承此类进行实现消息的展示
  */
-public abstract class MLMessageItem extends LinearLayout {
+public abstract class MLMessageItem extends LinearLayout{
 
     // 上下文对象
     protected Context mContext;
@@ -81,6 +82,20 @@ public abstract class MLMessageItem extends LinearLayout {
         mInflater = LayoutInflater.from(context);
         mAdapter = adapter;
         mViewType = viewType;
+
+        this.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onItemClick();
+            }
+        });
+        this.setOnLongClickListener(new OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                onItemLongClick();
+                return false;
+            }
+        });
     }
 
     /**
@@ -97,7 +112,7 @@ public abstract class MLMessageItem extends LinearLayout {
             return;
         }
         // 判断是否是接收方的消息，是则发送ACK给消息发送者
-        if (mViewType == MLConstants.MSG_TYPE_TXT_RECEIVED) {
+        if (mViewType == MLConstants.MSG_TYPE_TEXT_RECEIVED) {
             try {
                 EMClient.getInstance().chatManager().ackMessageRead(mMessage.getFrom(), mMessage.getMsgId());
             } catch (HyphenateException e) {
@@ -105,7 +120,7 @@ public abstract class MLMessageItem extends LinearLayout {
             }
         }
         // 设置ACK 的状态显示
-        if (mViewType == MLConstants.MSG_TYPE_TXT_SEND) {
+        if (mViewType == MLConstants.MSG_TYPE_TEXT_SEND) {
             if (mMessage.isAcked()) {
                 // 表示对方已读消息，用两个对号表示
                 mAckStatusView.setImageResource(R.mipmap.ic_done_all_white_18dp);
@@ -170,5 +185,21 @@ public abstract class MLMessageItem extends LinearLayout {
      * 解析对应的xml 布局，填充当前 ItemView，并初始化控件
      */
     protected abstract void onInflateView();
+
+    /**
+     * 当前Item 的点击事件
+     */
+    protected void onItemClick(){
+        // 给当前item 设置点击与长按事件监听
+        mAdapter.setOnItemClick(mPosition);
+    }
+
+    /**
+     * 当前Item 长按监听
+     * 实现当前Item 的长按操作，因为各个Item类型不同，需要的实现操作不同，所以长按菜单的弹出在Item中实现，
+     * 然后长按菜单项需要的操作，通过回调的方式传递到{@link MLChatActivity#setItemClickListener()}中去实现
+     * TODO 现在这种实现并不是最优，因为在每一个 Item 中都要去实现弹出一个 Dialog，但是又不想自定义dialog
+     */
+    protected abstract void onItemLongClick();
 
 }

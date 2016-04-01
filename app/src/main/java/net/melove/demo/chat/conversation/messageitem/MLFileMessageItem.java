@@ -1,8 +1,10 @@
 package net.melove.demo.chat.conversation.messageitem;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -19,6 +21,7 @@ import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.common.util.MLDate;
 import net.melove.demo.chat.common.util.MLDimen;
 import net.melove.demo.chat.common.widget.MLImageView;
+import net.melove.demo.chat.conversation.MLChatActivity;
 import net.melove.demo.chat.conversation.MLMessageAdapter;
 
 /**
@@ -60,11 +63,99 @@ public class MLFileMessageItem extends MLMessageItem {
         String fileExtend = filename.substring(filename.lastIndexOf(".") + 1, filename.length());
         mContentSizeView.setText(TextFormater.getDataSize(fileBody.getFileSize()) + "  " + fileExtend);
 
-        // 给当前item 设置点击与长按事件监听
-        mAdapter.setOnItemClick(this, mPosition);
-
         setCallback();
         refreshView();
+    }
+
+    /**
+     * 解析对应的xml 布局，填充当前 ItemView，并初始化控件
+     */
+    @Override
+    protected void onInflateView() {
+        if (mViewType == MLConstants.MSG_TYPE_FILE_SEND) {
+            mInflater.inflate(R.layout.item_msg_file_send, this);
+        } else {
+            mInflater.inflate(R.layout.item_msg_file_received, this);
+        }
+
+        mAvatarView = (MLImageView) findViewById(R.id.ml_img_msg_avatar);
+        mImageView = (MLImageView) findViewById(R.id.ml_img_msg_image);
+        mUsernameView = (TextView) findViewById(R.id.ml_text_msg_username);
+        mTimeView = (TextView) findViewById(R.id.ml_text_msg_time);
+        mContentView = (TextView) findViewById(R.id.ml_text_msg_content);
+        mContentSizeView = (TextView) findViewById(R.id.ml_text_msg_size);
+        mResendView = (ImageView) findViewById(R.id.ml_img_msg_resend);
+        mProgressBar = (ProgressBar) findViewById(R.id.ml_progressbar_msg);
+        mPercentView = (TextView) findViewById(R.id.ml_text_msg_progress_percent);
+        mAckStatusView = (ImageView) findViewById(R.id.ml_img_msg_ack);
+    }
+
+    /**
+     * 实现当前Item 的长按操作，因为各个Item类型不同，需要的实现操作不同，所以长按菜单的弹出在Item中实现，
+     * 然后长按菜单项需要的操作，通过回调的方式传递到{@link MLChatActivity#setItemClickListener()}中去实现
+     * TODO 现在这种实现并不是最优，因为在每一个 Item 中都要去实现弹出一个 Dialog，但是又不想自定义dialog
+     */
+    @Override
+    protected void onItemLongClick() {
+        String[] menus = null;
+        // 这里要根据消息的类型去判断要弹出的菜单，是否是发送方，并且是发送成功才能撤回
+        if (mViewType == MLConstants.MSG_TYPE_FILE_RECEIVED) {
+            menus = new String[]{
+                    mActivity.getResources().getString(R.string.ml_menu_chat_forward),
+                    mActivity.getResources().getString(R.string.ml_menu_chat_delete)
+            };
+        } else {
+            menus = new String[]{
+                    mActivity.getResources().getString(R.string.ml_menu_chat_forward),
+                    mActivity.getResources().getString(R.string.ml_menu_chat_delete),
+                    mActivity.getResources().getString(R.string.ml_menu_chat_recall)
+            };
+        }
+
+        // 创建并显示 ListView 的长按弹出菜单，并设置弹出菜单 Item的点击监听
+        AlertDialog.Builder menuDialog = new AlertDialog.Builder(mActivity);
+        menuDialog.setTitle(R.string.ml_dialog_title_conversation);
+        menuDialog.setItems(menus, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                case 0:
+                    mAdapter.onLongItemClick(mPosition, MLConstants.ML_MSG_ACTION_FORWARD);
+                    break;
+                case 1:
+                    mAdapter.onLongItemClick(mPosition, MLConstants.ML_MSG_ACTION_DELETE);
+                    break;
+                case 2:
+                    mAdapter.onLongItemClick(mPosition, MLConstants.ML_MSG_ACTION_RECALL);
+                    break;
+                }
+            }
+        });
+        menuDialog.show();
+    }
+
+    /**
+     * 设置当前消息的callback回调
+     */
+    protected void setCallback() {
+        setMessageCallback(new EMCallBack() {
+            @Override
+            public void onSuccess() {
+                mHandler.sendMessage(mHandler.obtainMessage(CALLBACK_STATUS_SUCCESS));
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                mHandler.sendMessage(mHandler.obtainMessage(CALLBACK_STATUS_ERROR));
+            }
+
+            @Override
+            public void onProgress(int i, String s) {
+                Message msg = mHandler.obtainMessage(CALLBACK_STATUS_PROGRESS);
+                msg.arg1 = i;
+                mHandler.sendMessage(msg);
+            }
+        });
     }
 
     /**
@@ -108,30 +199,6 @@ public class MLFileMessageItem extends MLMessageItem {
         setAckStatusView();
     }
 
-    /**
-     * 设置当前消息的callback回调
-     */
-    protected void setCallback() {
-        setMessageCallback(new EMCallBack() {
-            @Override
-            public void onSuccess() {
-                mHandler.sendMessage(mHandler.obtainMessage(CALLBACK_STATUS_SUCCESS));
-            }
-
-            @Override
-            public void onError(int i, String s) {
-                mHandler.sendMessage(mHandler.obtainMessage(CALLBACK_STATUS_ERROR));
-            }
-
-            @Override
-            public void onProgress(int i, String s) {
-                Message msg = mHandler.obtainMessage(CALLBACK_STATUS_PROGRESS);
-                msg.arg1 = i;
-                mHandler.sendMessage(msg);
-            }
-        });
-    }
-
     class MLHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
@@ -147,29 +214,7 @@ public class MLFileMessageItem extends MLMessageItem {
                 break;
             }
         }
-    }
 
-    /**
-     * 解析对应的xml 布局，填充当前 ItemView，并初始化控件
-     */
-    @Override
-    protected void onInflateView() {
-        if (mViewType == MLConstants.MSG_TYPE_FILE_SEND) {
-            mInflater.inflate(R.layout.item_msg_file_send, this);
-        } else {
-            mInflater.inflate(R.layout.item_msg_file_received, this);
-        }
-
-        mAvatarView = (MLImageView) findViewById(R.id.ml_img_msg_avatar);
-        mImageView = (MLImageView) findViewById(R.id.ml_img_msg_image);
-        mUsernameView = (TextView) findViewById(R.id.ml_text_msg_username);
-        mTimeView = (TextView) findViewById(R.id.ml_text_msg_time);
-        mContentView = (TextView) findViewById(R.id.ml_text_msg_content);
-        mContentSizeView = (TextView) findViewById(R.id.ml_text_msg_size);
-        mResendView = (ImageView) findViewById(R.id.ml_img_msg_resend);
-        mProgressBar = (ProgressBar) findViewById(R.id.ml_progressbar_msg);
-        mPercentView = (TextView) findViewById(R.id.ml_text_msg_progress_percent);
-        mAckStatusView = (ImageView) findViewById(R.id.ml_img_msg_ack);
     }
 
 }

@@ -186,6 +186,7 @@
     <string name="ml_toast_msg_have_illegal">信息包含非法字符</string>
     <string name="ml_toast_msg_recall_faild_max_time">消息已经超过两分钟，无法撤回</string>
     <string name="ml_toast_msg_recall_faild">撤回失败 失败错误码</string>
+    <string name="ml_toast_msg_delete_success">消息删除成功</string>
 
     <!--输入框限制输入内容-->
     <string name="ml_input_limit">0123456789abcdefghigklmnopqrstuvwxyz-_.</string>

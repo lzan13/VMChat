@@ -48,4 +48,9 @@ public class MLRecallMessageItem extends MLMessageItem {
         mTimeView = (TextView) findViewById(R.id.ml_text_msg_time);
         mContentView = (TextView) findViewById(R.id.ml_text_msg_content);
     }
+
+    @Override
+    protected void onItemLongClick() {
+
+    }
 }

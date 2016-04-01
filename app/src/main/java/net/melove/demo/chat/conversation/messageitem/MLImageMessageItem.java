@@ -2,6 +2,7 @@ package net.melove.demo.chat.conversation.messageitem;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -28,6 +29,8 @@ import net.melove.demo.chat.common.util.MLDimen;
 import net.melove.demo.chat.common.util.MLFile;
 import net.melove.demo.chat.common.util.MLMessageUtils;
 import net.melove.demo.chat.common.widget.MLImageView;
+import net.melove.demo.chat.conversation.MLBigImageActivity;
+import net.melove.demo.chat.conversation.MLChatActivity;
 import net.melove.demo.chat.conversation.MLMessageAdapter;
 
 import java.io.File;
@@ -36,7 +39,7 @@ import java.io.File;
  * Created by lz on 2016/3/20.
  * 图片消息处理类
  */
-public class MLImageMessageItem extends MLMessageItem implements View.OnLongClickListener {
+public class MLImageMessageItem extends MLMessageItem {
 
     private int thumbnailsMax = MLDimen.dp2px(R.dimen.ml_dimen_192);
     private MLHandler mHandler;
@@ -97,8 +100,14 @@ public class MLImageMessageItem extends MLMessageItem implements View.OnLongClic
         // 设置缩略图的显示
         showThumbnailsImage(thumbnailsPath, fullSizePath, imgBody.getWidth(), imgBody.getHeight());
 
-        // 给当前item 设置点击与长按事件监听
-        mAdapter.setOnItemClick(this, mPosition);
+        mImageView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(mActivity, MLBigImageActivity.class);
+
+            }
+        });
 
         setCallback();
         refreshView();
@@ -127,7 +136,8 @@ public class MLImageMessageItem extends MLMessageItem implements View.OnLongClic
                     // 首先判断原图以及缩略图是否都存在，如果不存在直接返回
                     if (!fullSizeFile.exists() && !thumbnailsFile.exists()) {
                         return tempBitmap;
-                    } else if (!fullSizeFile.exists() || thumbnailsFile.exists() && thumbnailsFile.length() > 1024 * 10 * 2) {
+                    } else if ((!fullSizeFile.exists() && (width > thumbnailsMax || height > thumbnailsMax))
+                            || thumbnailsFile.exists() && thumbnailsFile.length() > 1024 * 10 * 2) {
                         // 然后判断缩略图是否存在，并且足够清晰，则根据缩略图路径直接获取Bitmap
                         tempBitmap = MLBitmapUtil.compressBitmap(thumbnailsPath, thumbnailsMax, thumbnailsMax);
                     } else if (fullSizeFile.exists() && fullSizeFile.length() > 1024 * 10 * 5
@@ -138,7 +148,7 @@ public class MLImageMessageItem extends MLMessageItem implements View.OnLongClic
                         MLFile.saveBitmapToSDCard(tempBitmap, thumbnailsPath);
                     } else {
                         // 当图片本身就很小时，直接加在图片
-                        tempBitmap = BitmapFactory.decodeFile(thumbnailsPath);
+                        tempBitmap = MLBitmapUtil.compressBitmap(thumbnailsPath, width, height);
                     }
                     return tempBitmap;
                 }
@@ -167,6 +177,96 @@ public class MLImageMessageItem extends MLMessageItem implements View.OnLongClic
                 }
             }.execute();
         }
+    }
+
+    /**
+     * 解析对应的xml 布局，填充当前 ItemView，并初始化控件
+     */
+    @Override
+    protected void onInflateView() {
+        if (mViewType == MLConstants.MSG_TYPE_IMAGE_SEND) {
+            mInflater.inflate(R.layout.item_msg_image_send, this);
+        } else {
+            mInflater.inflate(R.layout.item_msg_image_received, this);
+        }
+
+        // 通过 findViewById 实例化控件
+        mAvatarView = (MLImageView) findViewById(R.id.ml_img_msg_avatar);
+        mImageView = (MLImageView) findViewById(R.id.ml_img_msg_image);
+        mUsernameView = (TextView) findViewById(R.id.ml_text_msg_username);
+        mTimeView = (TextView) findViewById(R.id.ml_text_msg_time);
+        mResendView = (ImageView) findViewById(R.id.ml_img_msg_resend);
+        mProgressBar = (ProgressBar) findViewById(R.id.ml_progressbar_msg);
+        mPercentView = (TextView) findViewById(R.id.ml_text_msg_progress_percent);
+        mAckStatusView = (ImageView) findViewById(R.id.ml_img_msg_ack);
+    }
+
+    /**
+     * 实现当前Item 的长按操作，因为各个Item类型不同，需要的实现操作不同，所以长按菜单的弹出在Item中实现，
+     * 然后长按菜单项需要的操作，通过回调的方式传递到{@link MLChatActivity#setItemClickListener()}中去实现
+     * TODO 现在这种实现并不是最优，因为在每一个 Item 中都要去实现弹出一个 Dialog，但是又不想自定义dialog
+     */
+    @Override
+    protected void onItemLongClick() {
+        String[] menus = null;
+        // 这里要根据消息的类型去判断要弹出的菜单，是否是发送方，并且是发送成功才能撤回
+        if (mViewType == MLConstants.MSG_TYPE_IMAGE_RECEIVED) {
+            menus = new String[]{
+                    mActivity.getResources().getString(R.string.ml_menu_chat_forward),
+                    mActivity.getResources().getString(R.string.ml_menu_chat_delete)
+            };
+        } else {
+            menus = new String[]{
+                    mActivity.getResources().getString(R.string.ml_menu_chat_forward),
+                    mActivity.getResources().getString(R.string.ml_menu_chat_delete),
+                    mActivity.getResources().getString(R.string.ml_menu_chat_recall)
+            };
+        }
+
+        // 创建并显示 ListView 的长按弹出菜单，并设置弹出菜单 Item的点击监听
+        AlertDialog.Builder menuDialog = new AlertDialog.Builder(mActivity);
+        menuDialog.setTitle(R.string.ml_dialog_title_conversation);
+        menuDialog.setItems(menus, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                case 0:
+                    mAdapter.onLongItemClick(mPosition, MLConstants.ML_MSG_ACTION_FORWARD);
+                    break;
+                case 1:
+                    mAdapter.onLongItemClick(mPosition, MLConstants.ML_MSG_ACTION_DELETE);
+                    break;
+                case 2:
+                    mAdapter.onLongItemClick(mPosition, MLConstants.ML_MSG_ACTION_RECALL);
+                    break;
+                }
+            }
+        });
+        menuDialog.show();
+    }
+
+    /**
+     * 设置当前消息的callback回调
+     */
+    protected void setCallback() {
+        setMessageCallback(new EMCallBack() {
+            @Override
+            public void onSuccess() {
+                mHandler.sendMessage(mHandler.obtainMessage(CALLBACK_STATUS_SUCCESS));
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                mHandler.sendMessage(mHandler.obtainMessage(CALLBACK_STATUS_ERROR));
+            }
+
+            @Override
+            public void onProgress(int i, String s) {
+                Message msg = mHandler.obtainMessage(CALLBACK_STATUS_PROGRESS);
+                msg.arg1 = i;
+                mHandler.sendMessage(msg);
+            }
+        });
     }
 
     /**
@@ -211,71 +311,6 @@ public class MLImageMessageItem extends MLMessageItem implements View.OnLongClic
     }
 
     /**
-     * 设置当前消息的callback回调
-     */
-    protected void setCallback() {
-        setMessageCallback(new EMCallBack() {
-            @Override
-            public void onSuccess() {
-                mHandler.sendMessage(mHandler.obtainMessage(CALLBACK_STATUS_SUCCESS));
-            }
-
-            @Override
-            public void onError(int i, String s) {
-                mHandler.sendMessage(mHandler.obtainMessage(CALLBACK_STATUS_ERROR));
-            }
-
-            @Override
-            public void onProgress(int i, String s) {
-                Message msg = mHandler.obtainMessage(CALLBACK_STATUS_PROGRESS);
-                msg.arg1 = i;
-                mHandler.sendMessage(msg);
-            }
-        });
-    }
-
-    @Override
-    public boolean onLongClick(View v) {
-        String[] menus = null;
-        // 这里要根据消息的类型去判断要弹出的菜单，是否是发送方，并且是发送成功才能撤回
-        if (mViewType == MLConstants.MSG_TYPE_IMAGE_RECEIVED) {
-            menus = new String[]{
-                    mActivity.getResources().getString(R.string.ml_menu_chat_forward),
-                    mActivity.getResources().getString(R.string.ml_menu_chat_delete)
-            };
-        } else {
-            menus = new String[]{
-                    mActivity.getResources().getString(R.string.ml_menu_chat_forward),
-                    mActivity.getResources().getString(R.string.ml_menu_chat_delete),
-                    mActivity.getResources().getString(R.string.ml_menu_chat_recall)
-            };
-        }
-
-        // 创建并显示 ListView 的长按弹出菜单，并设置弹出菜单 Item的点击监听
-        AlertDialog.Builder menuDialog = new AlertDialog.Builder(mActivity);
-        menuDialog.setTitle(R.string.ml_dialog_title_conversation);
-        menuDialog.setItems(menus, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                case 0:
-                    mAdapter.onLongItemClick(mPosition, MLConstants.ML_MSG_ACTION_FORWARD);
-                    break;
-                case 1:
-                    mAdapter.onLongItemClick(mPosition, MLConstants.ML_MSG_ACTION_DELETE);
-                    break;
-                case 2:
-                    mAdapter.onLongItemClick(mPosition, MLConstants.ML_MSG_ACTION_RECALL);
-                    break;
-                }
-            }
-        });
-        menuDialog.show();
-        return true;
-    }
-
-
-    /**
      * 自定义Handler，用来处理界面的刷新
      */
     class MLHandler extends Handler {
@@ -293,27 +328,6 @@ public class MLImageMessageItem extends MLMessageItem implements View.OnLongClic
                 break;
             }
         }
-    }
-
-    /**
-     * 解析对应的xml 布局，填充当前 ItemView，并初始化控件
-     */
-    @Override
-    protected void onInflateView() {
-        if (mViewType == MLConstants.MSG_TYPE_IMAGE_SEND) {
-            mInflater.inflate(R.layout.item_msg_image_send, this);
-        } else {
-            mInflater.inflate(R.layout.item_msg_image_received, this);
-        }
-
-        mAvatarView = (MLImageView) findViewById(R.id.ml_img_msg_avatar);
-        mImageView = (MLImageView) findViewById(R.id.ml_img_msg_image);
-        mUsernameView = (TextView) findViewById(R.id.ml_text_msg_username);
-        mTimeView = (TextView) findViewById(R.id.ml_text_msg_time);
-        mResendView = (ImageView) findViewById(R.id.ml_img_msg_resend);
-        mProgressBar = (ProgressBar) findViewById(R.id.ml_progressbar_msg);
-        mPercentView = (TextView) findViewById(R.id.ml_text_msg_progress_percent);
-        mAckStatusView = (ImageView) findViewById(R.id.ml_img_msg_ack);
     }
 
 }

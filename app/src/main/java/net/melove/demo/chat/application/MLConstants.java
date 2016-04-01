@@ -7,6 +7,12 @@ package net.melove.demo.chat.application;
  */
 public class MLConstants {
 
+    public static final String ML_GCM_NUMBER = "163141467698";
+
+    // 集成小米推送需要的 appid 和 appkey
+    public static final String ML_MI_APP_ID = "2882303761517430984";
+    public static final String ML_MI_APP_KEY = "5191743065984";
+
     // 设置消息中 msgId 扩展的 key
     public static final String ML_ATTR_MSG_ID = "ml_msg_id";
 
@@ -66,8 +72,8 @@ public class MLConstants {
      * 聊天消息类型
      * 首先是SDK支持的正常的消息类型
      */
-    public static final int MSG_TYPE_TXT_SEND = 0;
-    public static final int MSG_TYPE_TXT_RECEIVED = 1;
+    public static final int MSG_TYPE_TEXT_SEND = 0;
+    public static final int MSG_TYPE_TEXT_RECEIVED = 1;
     public static final int MSG_TYPE_IMAGE_SEND = 2;
     public static final int MSG_TYPE_IMAGE_RECEIVED = 3;
     public static final int MSG_TYPE_FILE_SEND = 4;
