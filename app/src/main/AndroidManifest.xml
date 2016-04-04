@@ -124,40 +124,43 @@
             android:name="EASEMOB_APPKEY"
             android:value="lzan13#hxsdkdemo"/>
         <!-- 声明sdk所需的service SDK核心功能-->
-        <service
-            android:name="com.hyphenate.chat.EMChatService"
-            android:exported="true"/>
-        <!-- 声明sdk所需的receiver -->
-        <receiver android:name="com.hyphenate.chat.EMMonitorReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
-                <data android:scheme="package"/>
-            </intent-filter>
-            <!-- 可选filter -->
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <action android:name="android.intent.action.USER_PRESENT"/>
-            </intent-filter>
-        </receiver>
+        <!--<service-->
+            <!--android:name="com.hyphenate.chat.EMChatService"-->
+            <!--android:exported="true"/>-->
+        <!--&lt;!&ndash; 声明sdk所需的receiver &ndash;&gt;-->
+        <!--<receiver android:name="com.hyphenate.chat.EMMonitorReceiver">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.PACKAGE_REMOVED"/>-->
+                <!--<data android:scheme="package"/>-->
+            <!--</intent-filter>-->
+            <!--&lt;!&ndash; 可选filter &ndash;&gt;-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.BOOT_COMPLETED"/>-->
+                <!--<action android:name="android.intent.action.USER_PRESENT"/>-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
+
         <!--配置谷歌推送需要的服务-->
         <receiver
             android:name="com.hyphenate.chat.EMGCMBroadcastReceiver"
             android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND" >
+            android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <category android:name="com.hyphenate.chatuidemo" />
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+                <category android:name="com.hyphenate.chatuidemo"/>
             </intent-filter>
         </receiver>
-
-        <service android:name="com.hyphenate.chat.EMGCMListenerService"
-                 android:exported="false" >
+        <!--Easemob SDK 实现的监听GCM推送的Service-->
+        <service
+            android:name="com.hyphenate.chat.EMGCMListenerService"
+            android:exported="false">
         </service>
 
+        <!--接收Google推送的监听-->
         <receiver
             android:name="net.melove.demo.chat.application.MLGCMBroadCast"
             android:exported="false">
-            <intent-filter >
+            <intent-filter>
                 <action android:name="com.hyphenate.sdk.push"/>
                 <category android:name="net.melove.demo.chat"/>
             </intent-filter>
