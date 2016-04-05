@@ -5,7 +5,11 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
+import android.view.WindowManager;
 
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMConnectionListener;
@@ -31,6 +35,7 @@ import net.melove.demo.chat.contacts.MLUserEntity;
 import net.melove.demo.chat.conversation.MLConversationExtUtils;
 import net.melove.demo.chat.database.MLInvitedDao;
 import net.melove.demo.chat.database.MLUserDao;
+import net.melove.demo.chat.main.MLConflictActivity;
 import net.melove.demo.chat.notification.MLNotifier;
 
 import java.util.ArrayList;
@@ -67,6 +72,9 @@ public class MLEasemobHelper {
     private EMConnectionListener mConnectionListener;
     // 环信群组变化监听
     private EMGroupChangeListener mGroupChangeListener;
+
+    // 表示是否登录成功状态，如果使用了推送，退出时需要要根据这个状态去传递参数
+    private boolean isLogined = true;
 
     // App内广播管理器，为了安全，这里使用本地广播
     private LocalBroadcastManager mLocalBroadcastManager;
@@ -204,13 +212,32 @@ public class MLEasemobHelper {
                 MLLog.d("MLEasemobHelper - onDisconnected - %d", errorCode);
                 if (errorCode == EMError.USER_LOGIN_ANOTHER_DEVICE) {
                     MLLog.d("被踢，多次初始化也可能出现-" + errorCode);
+                    // 被踢了，已经登录成功的要改为false
+                    isLogined = false;
+                    signOut(null);
+                    onGlobalDialog();
                 } else if (errorCode == EMError.USER_REMOVED) {
                     MLLog.d("账户移除-" + errorCode);
+                    isLogined = false;
+                    Intent intent = new Intent();
+                    intent.setClass(mContext, MLConflictActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra(MLConstants.ML_EXTRA_USER_REMOVED, true);
+                    mContext.startActivity(intent);
                 } else {
                     MLLog.d("连接不到服务器-" + errorCode);
                 }
             }
         };
+        EMClient.getInstance().addConnectionListener(mConnectionListener);
+    }
+
+    private void onGlobalDialog() {
+        Activity activity = MLActivityManager.getInstance().getCurrActivity();
+        Intent intent = new Intent();
+        intent.setClass(activity, MLConflictActivity.class);
+        intent.putExtra(MLConstants.ML_EXTRA_USER_LOGIN_OTHER_DIVERS, true);
+        activity.startActivity(intent);
     }
 
     /**
@@ -558,7 +585,7 @@ public class MLEasemobHelper {
     public void signOut(final EMCallBack callback) {
         MLSPUtil.remove(mContext, MLConstants.ML_SHARED_USERNAME);
         MLSPUtil.remove(mContext, MLConstants.ML_SHARED_PASSWORD);
-        EMClient.getInstance().logout(true, new EMCallBack() {
+        EMClient.getInstance().logout(isLogined, new EMCallBack() {
             @Override
             public void onSuccess() {
                 if (callback != null) {

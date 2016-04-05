@@ -1,8 +1,10 @@
 package net.melove.demo.chat.authentication;
 
+import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -93,12 +95,7 @@ public class MLSigninActivity extends MLBaseActivity {
         //        mToolbar.setNavigationIcon(R.drawable.ic_menu_close);
         mToolbar.setNavigationIcon(R.mipmap.ic_close_white_24dp);
         setSupportActionBar(mToolbar);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mActivity.finish();
-            }
-        });
+        mToolbar.setNavigationOnClickListener(viewListener);
     }
 
     /**
@@ -108,13 +105,16 @@ public class MLSigninActivity extends MLBaseActivity {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
+            case -1:
+                onFinish();
+                break;
             case R.id.ml_btn_signin:
                 attemptLogin();
                 break;
             case R.id.ml_btn_signup:
                 Intent intent = new Intent();
                 intent.setClass(mActivity, MLSignupActivity.class);
-                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity);
+                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, mToolbar, "toolbar");
                 ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
                 break;
             case R.id.ml_btn_forget_password:
@@ -178,6 +178,7 @@ public class MLSigninActivity extends MLBaseActivity {
             @Override
             public void onSuccess() {
                 runOnUiThread(new Runnable() {
+                    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
                     @Override
                     public void run() {
                         mDialog.dismiss();
@@ -193,9 +194,14 @@ public class MLSigninActivity extends MLBaseActivity {
 
                         Intent intent = new Intent();
                         intent.setClass(mActivity, MLMainActivity.class);
-                        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity);
+                        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, mToolbar, "toolbar");
                         ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
-                        mActivity.finish();
+                        // 根据不同的系统版本选择不同的 finish 方法
+                        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+                            mActivity.finish();
+                        } else {
+                            mActivity.finishAfterTransition();
+                        }
                     }
                 });
             }

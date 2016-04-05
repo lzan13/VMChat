@@ -1,5 +1,7 @@
 package net.melove.demo.chat.common.base;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +10,7 @@ import android.view.MenuItem;
 
 import com.squareup.leakcanary.RefWatcher;
 
+import net.melove.demo.chat.application.MLActivityManager;
 import net.melove.demo.chat.application.MLApplication;
 import net.melove.demo.chat.common.util.MLLog;
 
@@ -38,8 +41,14 @@ public class MLBaseActivity extends AppCompatActivity {
     /**
      * 自定义返回方法
      */
-    protected void onBack() {
-
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    protected void onFinish() {
+        // 根据不同的系统版本选择不同的 finish 方法
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+            mActivity.finish();
+        } else {
+            mActivity.finishAfterTransition();
+        }
     }
 
     @Override
@@ -58,6 +67,7 @@ public class MLBaseActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         MLLog.i("Activity onResume");
+        MLActivityManager.getInstance().setCurrActivity(this);
     }
 
     @Override

@@ -70,23 +70,21 @@ public class MLSignupActivity extends MLBaseActivity {
         mToolbar.setTitle(R.string.ml_signup);
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mActivity.finish();
-            }
-        });
+        mToolbar.setNavigationOnClickListener(viewListener);
     }
 
     private View.OnClickListener viewListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.ml_btn_signup:
-                    attemptSignup();
-                    break;
-                default:
-                    break;
+            case -1:
+                onFinish();
+                break;
+            case R.id.ml_btn_signup:
+                attemptSignup();
+                break;
+            default:
+                break;
             }
         }
     };
@@ -150,7 +148,8 @@ public class MLSignupActivity extends MLBaseActivity {
                             // 注册成功保存用户名到本地
                             MLSPUtil.put(mActivity, MLConstants.ML_SHARED_USERNAME, mUsername);
                             MLToast.rightToast(res.getString(R.string.ml_signup_success)).show();
-                            finish();
+                            // 注册成功，返回登录界面
+                            onFinish();
                         }
                     });
                 } catch (final HyphenateException e) {
@@ -164,28 +163,28 @@ public class MLSignupActivity extends MLBaseActivity {
                             int errorCode = e.getErrorCode();
                             MLLog.d("MLSignupActivity - signup - errorCode:%d, errorMsg:%s", errorCode, e.getMessage());
                             switch (errorCode) {
-                                // 网络错误
-                                case EMError.NETWORK_ERROR:
-                                    MLToast.errorToast(res.getString(R.string.ml_error_network_error) + "-" + errorCode).show();
-                                    break;
-                                // 用户已存在
-                                case EMError.USER_ALREADY_EXIST:
-                                    MLToast.errorToast(res.getString(R.string.ml_error_user_already_exits) + "-" + errorCode).show();
-                                    break;
-                                // 参数不合法，一般情况是username 使用了uuid导致，不能使用uuid注册
-                                case EMError.USER_ILLEGAL_ARGUMENT:
-                                    MLToast.errorToast(res.getString(R.string.ml_error_user_illegal_argument) + "-" + errorCode).show();
-                                    break;
-                                // 服务器未知错误
-                                case EMError.SERVER_UNKNOWN_ERROR:
-                                    MLToast.errorToast(res.getString(R.string.ml_error_server_unknown_error) + "-" + errorCode).show();
-                                    break;
-                                case EMError.USER_REG_FAILED:
-                                    MLToast.errorToast(res.getString(R.string.ml_error_user_reg_failed) + "-" + errorCode).show();
-                                    break;
-                                default:
-                                    MLToast.errorToast(res.getString(R.string.ml_signup_failed) + "-" + errorCode).show();
-                                    break;
+                            // 网络错误
+                            case EMError.NETWORK_ERROR:
+                                MLToast.errorToast(res.getString(R.string.ml_error_network_error) + "-" + errorCode).show();
+                                break;
+                            // 用户已存在
+                            case EMError.USER_ALREADY_EXIST:
+                                MLToast.errorToast(res.getString(R.string.ml_error_user_already_exits) + "-" + errorCode).show();
+                                break;
+                            // 参数不合法，一般情况是username 使用了uuid导致，不能使用uuid注册
+                            case EMError.USER_ILLEGAL_ARGUMENT:
+                                MLToast.errorToast(res.getString(R.string.ml_error_user_illegal_argument) + "-" + errorCode).show();
+                                break;
+                            // 服务器未知错误
+                            case EMError.SERVER_UNKNOWN_ERROR:
+                                MLToast.errorToast(res.getString(R.string.ml_error_server_unknown_error) + "-" + errorCode).show();
+                                break;
+                            case EMError.USER_REG_FAILED:
+                                MLToast.errorToast(res.getString(R.string.ml_error_user_reg_failed) + "-" + errorCode).show();
+                                break;
+                            default:
+                                MLToast.errorToast(res.getString(R.string.ml_signup_failed) + "-" + errorCode).show();
+                                break;
                             }
                         }
                     });
@@ -195,7 +194,6 @@ public class MLSignupActivity extends MLBaseActivity {
             }
         }).start();
     }
-
 
     @Override
     protected void onDestroy() {

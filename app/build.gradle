@@ -33,13 +33,13 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     // Android V7库，因为已经包含了V4库，所以这里不需要再引入V4库了
-    debugCompile 'com.android.support:appcompat-v7:23.2.0'
-    // 新的遵循 Android  Material design 设计风格库
-    debugCompile 'com.android.support:design:23.2.0'
+//    compile 'com.android.support:appcompat-v7:23.2.0'
+    // 新的遵循 Android  Material design 设计风格库 包含了v7和RecyclerView库
+    compile 'com.android.support:design:23.2.0'
     // Android 官方提供的替代 ListView
-    debugCompile 'com.android.support:recyclerview-v7:23.2.0'
+//    compile 'com.android.support:recyclerview-v7:23.2.0'
     // Google Play Service 库，使用GCM推送需要
-    // debugCompile 'com.google.android.gms:play-services:8.4.0'
+//    compile "com.google.android.gms:play-services-gcm:8.4.0"
 
     // LeakCanary Debug库，开源捕获内存溢出的库
     compile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'

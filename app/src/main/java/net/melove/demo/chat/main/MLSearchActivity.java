@@ -72,31 +72,31 @@ public class MLSearchActivity extends MLBaseActivity {
         final ProgressDialog dialog = new ProgressDialog(mActivity);
         dialog.setMessage("正在搜索，请稍候...");
         dialog.show();
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                // TODO 这里使用线程睡眠 1.5s 来模拟去服务器搜索用户，真实开发应该请求网络去查找用户是否存在，
-//                // 然后在请求的结果中去判断是应该跳转到用户界面，还是提示用户不存在
-//                try {
-//                    Thread.sleep(1500);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//                dialog.dismiss();
-//                // 模拟搜索完成，跳转到用户信息页
-//                String str = mSearchView.getText().toString();
-//                Intent intent = new Intent();
-//                intent.setClass(mActivity, MLUserInfoActivity.class);
-//                intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, str);
-//                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity);
-//                ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
-//                mActivity.finish();
-//            }
-//        }).start();
+        //        new Thread(new Runnable() {
+        //            @Override
+        //            public void run() {
+        //                // TODO 这里使用线程睡眠 1.5s 来模拟去服务器搜索用户，真实开发应该请求网络去查找用户是否存在，
+        //                // 然后在请求的结果中去判断是应该跳转到用户界面，还是提示用户不存在
+        //                try {
+        //                    Thread.sleep(1500);
+        //                } catch (InterruptedException e) {
+        //                    e.printStackTrace();
+        //                }
+        //                dialog.dismiss();
+        //                // 模拟搜索完成，跳转到用户信息页
+        //                String str = mSearchView.getText().toString();
+        //                Intent intent = new Intent();
+        //                intent.setClass(mActivity, MLUserInfoActivity.class);
+        //                intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, str);
+        //                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity);
+        //                ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
+        //                mActivity.finish();
+        //            }
+        //        }).start();
         // TODO 这里使用线程睡眠 1.5s 来模拟去服务器搜索用户，真实开发应该请求网络去查找用户是否存在，
         // 然后在请求的结果中去判断是应该跳转到用户界面，还是提示用户不存在
         try {
-            Thread.sleep(1500);
+            Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -106,9 +106,12 @@ public class MLSearchActivity extends MLBaseActivity {
         Intent intent = new Intent();
         intent.setClass(mActivity, MLUserInfoActivity.class);
         intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, str);
-        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity);
+        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                mActivity, mToolbar, getResources().getString(R.string.ml_shared_element_toolbar));
         ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
-        mActivity.finish();
+
+        onFinish();
+
     }
 
     @Override

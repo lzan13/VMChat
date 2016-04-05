@@ -1,11 +1,9 @@
 package net.melove.demo.chat.conversation;
 
-import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,7 +11,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -561,7 +558,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         public void onClick(View v) {
             switch (v.getId()) {
             case -1:
-                onBack();
+                // 结束当前Activity
+                onFinish();
                 break;
             // 表情按钮
             case R.id.ml_img_chat_emotion:
@@ -628,7 +626,6 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      * 刷新聊天界面ui
      */
     private void refreshChatUI() {
-        // mMessageAdapter.refreshList();
         if (mMessageAdapter != null) {
             mMessageAdapter.refreshList();
         }
@@ -680,7 +677,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         if (mChatId.equals(chatId)) {
             super.onNewIntent(intent);
         } else {
-            onBack();
+            onFinish();
             startActivity(intent);
         }
     }
@@ -688,9 +685,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     /**
      * 自定义返回方法，做一些不能在 onDestroy 里做的操作
      */
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
-    protected void onBack() {
+    protected void onFinish() {
         /**
          * 当会话聊天界面销毁的时候，
          * 通过{@link MLConversationExtUtils#setConversationLastTime(EMConversation)}设置会话的最后时间
@@ -706,20 +702,15 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             mConversation.clear();
             mConversation.loadMessages(list);
         }
-        // 根据不同的系统版本选择不同的 finish 方法
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-            mActivity.finish();
-        } else {
-            mActivity.finishAfterTransition();
-        }
+
         // 这里将父类的方法在后边调用
-        super.onBack();
+        super.onFinish();
     }
 
     @Override
     public void onBackPressed() {
         // super.onBackPressed();
-        onBack();
+        onFinish();
     }
 
 

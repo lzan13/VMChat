@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
@@ -23,7 +22,7 @@ import com.hyphenate.chat.EMMessage;
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.common.util.MLBitmapUtil;
-import net.melove.demo.chat.common.util.MLCacheUtils;
+import net.melove.demo.chat.common.module.MLBitmapCache;
 import net.melove.demo.chat.common.util.MLDate;
 import net.melove.demo.chat.common.util.MLDimen;
 import net.melove.demo.chat.common.util.MLFile;
@@ -120,7 +119,7 @@ public class MLImageMessageItem extends MLMessageItem {
      * @param fullSizePath   原始图片的路径
      */
     private void showThumbnailsImage(final String thumbnailsPath, final String fullSizePath, final int width, final int height) {
-        Bitmap bitmap = MLCacheUtils.getInstance().optBitmap(thumbnailsPath);
+        Bitmap bitmap = MLBitmapCache.getInstance().optBitmap(thumbnailsPath);
         if (bitmap != null) {
             if (mImageView.getTag().equals(thumbnailsPath)) {
                 mImageView.setImageBitmap(bitmap);
@@ -161,7 +160,7 @@ public class MLImageMessageItem extends MLMessageItem {
                             mImageView.setImageBitmap(bitmap);
                         }
                         // 将Bitmap对象添加到缓存中去
-                        MLCacheUtils.getInstance().putBitmap(thumbnailsPath, bitmap);
+                        MLBitmapCache.getInstance().putBitmap(thumbnailsPath, bitmap);
                     } else {
                         // 判断当前消息的状态，如果是失败的消息，则去重新下载缩略图
                         if (mMessage.status() == EMMessage.Status.FAIL) {

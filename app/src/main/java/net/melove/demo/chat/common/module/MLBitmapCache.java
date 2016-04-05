@@ -1,18 +1,19 @@
-package net.melove.demo.chat.common.util;
+package net.melove.demo.chat.common.module;
 
 import android.graphics.Bitmap;
 import android.util.LruCache;
 
 /**
  * Created by lzan13 on 2016/3/28.
+ * 图片资源缓存类，实现加载图片到内存的缓存
  */
-public class MLCacheUtils {
+public class MLBitmapCache {
 
-    private static MLCacheUtils instance;
+    private static MLBitmapCache instance;
     private LruCache<String, Bitmap> cache = null;
 
 
-    private MLCacheUtils() {
+    private MLBitmapCache() {
         cache = new LruCache<String, Bitmap>((int) (Runtime.getRuntime().maxMemory() / 8)) {
             @Override
             protected int sizeOf(String key, Bitmap value) {
@@ -26,9 +27,9 @@ public class MLCacheUtils {
      *
      * @return 返回当前类的实例
      */
-    public static synchronized MLCacheUtils getInstance() {
+    public static synchronized MLBitmapCache getInstance() {
         if (instance == null) {
-            instance = new MLCacheUtils();
+            instance = new MLBitmapCache();
         }
         return instance;
     }

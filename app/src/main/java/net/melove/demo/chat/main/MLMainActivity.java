@@ -1,11 +1,8 @@
 package net.melove.demo.chat.main;
 
-import android.animation.Animator;
-import android.animation.AnimatorInflater;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -32,7 +29,6 @@ import net.melove.demo.chat.authentication.MLSigninActivity;
 import net.melove.demo.chat.common.base.MLBaseActivity;
 import net.melove.demo.chat.common.util.MLLog;
 import net.melove.demo.chat.conversation.MLChatActivity;
-import net.melove.demo.chat.contacts.MLUserInfoActivity;
 import net.melove.demo.chat.database.MLInvitedDao;
 import net.melove.demo.chat.contacts.MLInvitedFragment;
 import net.melove.demo.chat.common.base.MLBaseFragment;
@@ -47,24 +43,27 @@ public class MLMainActivity extends MLBaseActivity implements
         NavigationView.OnNavigationItemSelectedListener,
         MLBaseFragment.OnMLFragmentListener {
 
-    // 主界面的一些系统控件
+    /**
+     * 主界面的一些系统控件
+     */
+    // 当前界面 Toolbar
+    private Toolbar mToolbar;
+    // 侧滑菜单外围布局
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
+    // 侧滑菜单控件
     private NavigationView mNavigationView;
-    private Toolbar mToolbar;
 
+    // 侧滑布局用户头像
     private MLImageView mAvatarView;
 
-    // fab按钮
-    private boolean isActivateFab;
-    // 定义的包含Fab按钮的一个Layout布局，控制其他的Fab按钮的显示和隐藏
-    private FloatingActionButton mFabBtn;
-
-    // Fragment 切换
+    // Fragment 切换事务处理类
     private FragmentTransaction mFragmentTransaction;
+    // 当前 Fragment
     private Fragment mCurrentFragment;
-    private int mMenuType;
 
+    // 菜单操作类型
+    private int mMenuType;
 
     // 申请与通知的 Dao
     private MLInvitedDao mInvitedDao;
@@ -107,8 +106,6 @@ public class MLMainActivity extends MLBaseActivity implements
     private void init() {
         mActivity = this;
         mMenuType = 0;
-        isActivateFab = false;
-
         mInvitedDao = new MLInvitedDao(mActivity);
     }
 
@@ -123,9 +120,6 @@ public class MLMainActivity extends MLBaseActivity implements
         mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
         mToolbar.setTitle(mActivity.getResources().getString(R.string.ml_dialog_title_chat));
         setSupportActionBar(mToolbar);
-
-        mFabBtn = (FloatingActionButton) findViewById(R.id.ml_btn_fab);
-        mFabBtn.setOnClickListener(viewListener);
 
         initDrawer();
     }
@@ -156,17 +150,17 @@ public class MLMainActivity extends MLBaseActivity implements
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
                 switch (mMenuType) {
-                    case 0:
-                        mFragmentTransaction = getSupportFragmentManager().beginTransaction();
-                        mFragmentTransaction.setCustomAnimations(R.anim.ml_anim_fade_in, R.anim.ml_anim_fade_out);
-                        mFragmentTransaction.replace(R.id.ml_framelayout_container, mCurrentFragment);
-                        mFragmentTransaction.commit();
-                        break;
-                    case 1:
+                case 0:
+                    mFragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    mFragmentTransaction.setCustomAnimations(R.anim.ml_anim_fade_in, R.anim.ml_anim_fade_out);
+                    mFragmentTransaction.replace(R.id.ml_framelayout_container, mCurrentFragment);
+                    mFragmentTransaction.commit();
+                    break;
+                case 1:
 
-                        break;
-                    default:
-                        break;
+                    break;
+                default:
+                    break;
                 }
             }
 
@@ -200,11 +194,11 @@ public class MLMainActivity extends MLBaseActivity implements
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.ml_btn_fab:
-                    break;
-                case R.id.ml_img_nav_avatar:
+            case R.id.ml_btn_fab:
+                break;
+            case R.id.ml_img_nav_avatar:
 
-                    break;
+                break;
             }
         }
     };
@@ -219,37 +213,37 @@ public class MLMainActivity extends MLBaseActivity implements
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
-            case R.id.ml_nav_home:
-                mMenuType = 0;
-                mCurrentFragment = MLMainFragment.newInstance();
-                mToolbar.setTitle(R.string.ml_chat);
-                break;
-            case R.id.ml_nav_group:
-                mMenuType = 0;
-                mCurrentFragment = MLOtherFragment.newInstance();
-                mToolbar.setTitle(R.string.ml_group);
-                break;
-            case R.id.ml_nav_room:
-                mMenuType = 1;
-                mToolbar.setTitle(R.string.ml_room);
+        case R.id.ml_nav_home:
+            mMenuType = 0;
+            mCurrentFragment = MLMainFragment.newInstance();
+            mToolbar.setTitle(R.string.ml_chat);
+            break;
+        case R.id.ml_nav_group:
+            mMenuType = 0;
+            mCurrentFragment = MLOtherFragment.newInstance();
+            mToolbar.setTitle(R.string.ml_group);
+            break;
+        case R.id.ml_nav_room:
+            mMenuType = 1;
+            mToolbar.setTitle(R.string.ml_room);
 
-                break;
-            case R.id.ml_nav_notification:
-                mMenuType = 0;
-                mCurrentFragment = MLInvitedFragment.newInstance();
-                mToolbar.setTitle(R.string.ml_apply_for);
-                break;
-            case R.id.ml_nav_help:
-                mMenuType = 1;
+            break;
+        case R.id.ml_nav_notification:
+            mMenuType = 0;
+            mCurrentFragment = MLInvitedFragment.newInstance();
+            mToolbar.setTitle(R.string.ml_apply_for);
+            break;
+        case R.id.ml_nav_help:
+            mMenuType = 1;
 
-                break;
-            case R.id.ml_nav_setting:
-                mMenuType = 1;
+            break;
+        case R.id.ml_nav_setting:
+            mMenuType = 1;
 
-                break;
-            default:
-                mMenuType = 1;
-                break;
+            break;
+        default:
+            mMenuType = 1;
+            break;
         }
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
@@ -273,7 +267,7 @@ public class MLMainActivity extends MLBaseActivity implements
                 Intent intent = new Intent();
                 intent.setClass(mActivity, MLChatActivity.class);
                 intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, editText.getText().toString().trim());
-                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity);
+                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, mToolbar, "toolbar");
                 ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
             }
         });
@@ -292,7 +286,7 @@ public class MLMainActivity extends MLBaseActivity implements
     private void startSearch() {
         Intent intent = new Intent();
         intent.setClass(mActivity, MLSearchActivity.class);
-        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity);
+        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, mToolbar, "toolbar");
         ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
     }
 
@@ -305,39 +299,45 @@ public class MLMainActivity extends MLBaseActivity implements
      */
     @Override
     public void onFragmentClick(int a, int b, String s) {
+        Intent intent = null;
         int w = a | b;
         switch (w) {
-            // 0x0x 表示系统级调用
-            case 0x00:
-                // 设置当前 Toolbar title内容
-                mToolbar.setTitle(s);
-                break;
-            case 0x01:
-                mActivity.finish();
-                break;
-            // 0x1x 表示其他调用
-            case 0x10:
+        // 0x0x 表示系统级调用
+        case 0x00:
+            // 设置当前 Toolbar title内容
+            mToolbar.setTitle(s);
+            break;
+        case 0x01:
+            // 退出登录，跳转到登录界面
+            intent = new Intent();
+            intent.setClass(mActivity, MLSigninActivity.class);
+            ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, mToolbar, "toolbar");
+            ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
+            mActivity.finish();
+            break;
+        // 0x1x 表示其他调用
+        case 0x10:
 
-                break;
-            case 0x11:
+            break;
+        case 0x11:
 
-                break;
-            case 0x12:
+            break;
+        case 0x12:
 
-                break;
-            case 0x13:
+            break;
+        case 0x13:
 
-                break;
-            // 0x2x 暂时表示Test
-            case 0x20:
-                //                Intent intent = new Intent();
-                //                intent.setClass(mActivity, MLUserInfoActivity.class);
-                //                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity);
-                //                ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
-                break;
-            default:
-                MLToast.makeToast(mActivity.getResources().getString(R.string.ml_test)).show();
-                break;
+            break;
+        // 0x2x 暂时表示Test
+        case 0x20:
+            //                Intent intent = new Intent();
+            //                intent.setClass(mActivity, MLUserInfoActivity.class);
+            //                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity);
+            //                ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
+            break;
+        default:
+            MLToast.makeToast(mActivity.getResources().getString(R.string.ml_test)).show();
+            break;
         }
         //        mDrawerLayout.closeDrawer(GravityCompat.START);
     }
@@ -356,16 +356,18 @@ public class MLMainActivity extends MLBaseActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.ml_action_search:
+        case R.id.ml_action_search:
 
-                break;
-            case R.id.ml_action_add_conversation:
-                createNewConversation();
-                break;
-            case R.id.ml_action_add_contacts:
-                break;
-            case R.id.ml_action_add_group:
-                break;
+            break;
+        case R.id.ml_action_add_conversation:
+            // 创建新绘会话
+            createNewConversation();
+            break;
+        case R.id.ml_action_add_contacts:
+            startSearch();
+            break;
+        case R.id.ml_action_add_group:
+            break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -385,8 +387,12 @@ public class MLMainActivity extends MLBaseActivity implements
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-            // mDrawerLayout.closeDrawer(GravityCompat.START);
-            mActivity.finish();
+            if (mNavigationView.isShown()) {
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+            } else {
+                // 结束Activity
+                onFinish();
+            }
             return true;
         }
         return false;

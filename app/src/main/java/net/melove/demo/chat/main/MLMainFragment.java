@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * 单聊模块儿 Fragment
  */
-public class MLMainFragment extends MLBaseFragment{
+public class MLMainFragment extends MLBaseFragment {
 
     private EMMessageListener mMessageListener;
 
@@ -101,7 +101,6 @@ public class MLMainFragment extends MLBaseFragment{
         mViewPager.setAdapter(adapter);
         mViewPager.setCurrentItem(mCurrentTabIndex);
         mTabLayout.setupWithViewPager(mViewPager);
-        mTabLayout.setTabsFromPagerAdapter(adapter);
         mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {

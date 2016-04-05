@@ -66,6 +66,7 @@ public class MLToast {
             "ZWVlZWVlZWX9F/QPd/y65dzlZGQAAAAASUVORK5CYII=\n";
 
 
+    // Toast 默认显示时间
     private int defaultTime = 3500;
     private boolean isShow;
 

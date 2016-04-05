@@ -53,6 +53,8 @@
     <uses-permission android:name="android.permission.READ_PROFILE"/>
     <!-- 读取联系人 -->
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <!--弹出系统级 Dialog 权限-->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
     <!--小米推送的权限-->
     <permission
@@ -61,11 +63,11 @@
     <uses-permission android:name="net.melove.demo.chat.permission.MIPUSH_RECEIVE"/>
 
     <!--配置google推送需要的权限-->
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
-    <permission
-        android:name="net.melove.demo.chat.permission.C2D_MESSAGE"
-        android:protectionLevel="signature"/>
-    <uses-permission android:name="net.melove.demo.chat.permission.C2D_MESSAGE"/>
+    <!--<uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>-->
+    <!--<permission-->
+    <!--android:name="net.melove.demo.chat.permission.C2D_MESSAGE"-->
+    <!--android:protectionLevel="signature"/>-->
+    <!--<uses-permission android:name="net.melove.demo.chat.permission.C2D_MESSAGE"/>-->
 
     <!--程序的入口-->
     <application
@@ -79,6 +81,11 @@
             android:name=".common.base.MLBaseActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Default"/>
+        <!--被踢弹出类-->
+        <activity
+            android:name=".main.MLConflictActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MLTheme.Transparent"/>
         <!-- 主界面 -->
         <activity
             android:name=".main.MLMainActivity"
@@ -125,46 +132,46 @@
             android:value="lzan13#hxsdkdemo"/>
         <!-- 声明sdk所需的service SDK核心功能-->
         <!--<service-->
-            <!--android:name="com.hyphenate.chat.EMChatService"-->
-            <!--android:exported="true"/>-->
+        <!--android:name="com.hyphenate.chat.EMChatService"-->
+        <!--android:exported="true"/>-->
         <!--&lt;!&ndash; 声明sdk所需的receiver &ndash;&gt;-->
         <!--<receiver android:name="com.hyphenate.chat.EMMonitorReceiver">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.PACKAGE_REMOVED"/>-->
-                <!--<data android:scheme="package"/>-->
-            <!--</intent-filter>-->
-            <!--&lt;!&ndash; 可选filter &ndash;&gt;-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.BOOT_COMPLETED"/>-->
-                <!--<action android:name="android.intent.action.USER_PRESENT"/>-->
-            <!--</intent-filter>-->
+        <!--<intent-filter>-->
+        <!--<action android:name="android.intent.action.PACKAGE_REMOVED"/>-->
+        <!--<data android:scheme="package"/>-->
+        <!--</intent-filter>-->
+        <!--&lt;!&ndash; 可选filter &ndash;&gt;-->
+        <!--<intent-filter>-->
+        <!--<action android:name="android.intent.action.BOOT_COMPLETED"/>-->
+        <!--<action android:name="android.intent.action.USER_PRESENT"/>-->
+        <!--</intent-filter>-->
         <!--</receiver>-->
 
         <!--配置谷歌推送需要的服务-->
-        <receiver
-            android:name="com.hyphenate.chat.EMGCMBroadcastReceiver"
-            android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND">
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
-                <category android:name="com.hyphenate.chatuidemo"/>
-            </intent-filter>
-        </receiver>
-        <!--Easemob SDK 实现的监听GCM推送的Service-->
-        <service
-            android:name="com.hyphenate.chat.EMGCMListenerService"
-            android:exported="false">
-        </service>
+        <!--<receiver-->
+        <!--android:name="com.hyphenate.chat.EMGCMBroadcastReceiver"-->
+        <!--android:exported="true"-->
+        <!--android:permission="com.google.android.c2dm.permission.SEND">-->
+        <!--<intent-filter>-->
+        <!--<action android:name="com.google.android.c2dm.intent.RECEIVE"/>-->
+        <!--<category android:name="com.hyphenate.chatuidemo"/>-->
+        <!--</intent-filter>-->
+        <!--</receiver>-->
+        <!--&lt;!&ndash;Easemob SDK 实现的监听GCM推送的Service&ndash;&gt;-->
+        <!--<service-->
+        <!--android:name="com.hyphenate.chat.EMGCMListenerService"-->
+        <!--android:exported="false">-->
+        <!--</service>-->
 
-        <!--接收Google推送的监听-->
-        <receiver
-            android:name="net.melove.demo.chat.application.MLGCMBroadCast"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.hyphenate.sdk.push"/>
-                <category android:name="net.melove.demo.chat"/>
-            </intent-filter>
-        </receiver>
+        <!--&lt;!&ndash;接收Google推送的监听&ndash;&gt;-->
+        <!--<receiver-->
+        <!--android:name="net.melove.demo.chat.application.MLGCMBroadCast"-->
+        <!--android:exported="false">-->
+        <!--<intent-filter>-->
+        <!--<action android:name="com.hyphenate.sdk.push"/>-->
+        <!--<category android:name="net.melove.demo.chat"/>-->
+        <!--</intent-filter>-->
+        <!--</receiver>-->
 
 
         <!--配置小米推送服务-->
