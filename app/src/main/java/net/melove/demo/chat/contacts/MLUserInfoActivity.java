@@ -92,12 +92,7 @@ public class MLUserInfoActivity extends MLBaseActivity {
         mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mActivity.finish();
-            }
-        });
+        mToolbar.setNavigationOnClickListener(viewListener);
 
     }
 
@@ -108,15 +103,18 @@ public class MLUserInfoActivity extends MLBaseActivity {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.ml_btn_fab_user_info:
-                    if (mUserEntity != null && mUserEntity.getUserName() != null) {
-                        startChat();
-                    } else {
-                        addContact();
-                    }
-                    break;
-                default:
-                    break;
+            case -1:
+                onFinish();
+                break;
+            case R.id.ml_btn_fab_user_info:
+                if (mUserEntity != null && mUserEntity.getUserName() != null) {
+                    startChat();
+                } else {
+                    addContact();
+                }
+                break;
+            default:
+                break;
             }
         }
     };
@@ -150,18 +148,26 @@ public class MLUserInfoActivity extends MLBaseActivity {
 
                             // 创建一条好友申请数据，自己发送好友请求也保存
                             MLInvitedEntity invitedEntity = new MLInvitedEntity();
+                            // 当前用户
+                            String currUsername = EMClient.getInstance().getCurrentUser();
+                            // 根据根据对方的名字，加上当前用户的名字，加申请类型按照一定顺序组合，得到当前申请信息的唯一 ID
+                            String objId = MLCrypto.cryptoStr2MD5(currUsername + mChatId + MLInvitedEntity.InvitedType.CONTACTS);
+                            // 设置此条信息的唯一ID
+                            invitedEntity.setObjId(objId);
+                            // 对方的username
                             invitedEntity.setUserName(mChatId);
-                            //invitedEntity.setNickName(mUserEntity.getNickName());
+                            // invitedEntity.setNickName(mUserEntity.getNickName());
+                            // 设置申请理由
                             invitedEntity.setReason(reason);
+                            // 设置申请状态为被申请
                             invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.APPLYFOR);
+                            // 设置申请信息为联系人申请
                             invitedEntity.setType(MLInvitedEntity.InvitedType.CONTACTS);
-                            // 设置此信息创建时间
+                            // 设置申请信息的时间
                             invitedEntity.setCreateTime(MLDate.getCurrentMillisecond());
-                            // 设置邀请信息的唯一id
-                            invitedEntity.setObjId(MLCrypto.cryptoStr2MD5(invitedEntity.getUserName() + invitedEntity.getType()));
 
                             // 这里进行一下筛选，如果已存在则去更新本地内容
-                            MLInvitedEntity temp = mInvitedDao.getInvitedEntiry(invitedEntity.getObjId());
+                            MLInvitedEntity temp = mInvitedDao.getInvitedEntiry(objId);
                             if (temp != null) {
                                 mInvitedDao.updateInvited(invitedEntity);
                             } else {

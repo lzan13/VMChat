@@ -113,16 +113,16 @@ public class MLTextMessageItem extends MLMessageItem {
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                 case 0:
-                    mAdapter.onLongItemClick(mPosition, MLConstants.ML_MSG_ACTION_COPY);
+                    mAdapter.onItemAction(mPosition, MLConstants.ML_ACTION_MSG_COPY);
                     break;
                 case 1:
-                    mAdapter.onLongItemClick(mPosition, MLConstants.ML_MSG_ACTION_FORWARD);
+                    mAdapter.onItemAction(mPosition, MLConstants.ML_ACTION_MSG_FORWARD);
                     break;
                 case 2:
-                    mAdapter.onLongItemClick(mPosition, MLConstants.ML_MSG_ACTION_DELETE);
+                    mAdapter.onItemAction(mPosition, MLConstants.ML_ACTION_MSG_DELETE);
                     break;
                 case 3:
-                    mAdapter.onLongItemClick(mPosition, MLConstants.ML_MSG_ACTION_RECALL);
+                    mAdapter.onItemAction(mPosition, MLConstants.ML_ACTION_MSG_RECALL);
                     break;
                 }
             }

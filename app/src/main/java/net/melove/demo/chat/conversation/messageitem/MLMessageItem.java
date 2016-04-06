@@ -29,7 +29,7 @@ import net.melove.demo.chat.conversation.MLMessageAdapter;
  * ViewHoler itemView 封装类
  * 不同的消息类型都可以继承此类进行实现消息的展示
  */
-public abstract class MLMessageItem extends LinearLayout{
+public abstract class MLMessageItem extends LinearLayout {
 
     // 上下文对象
     protected Context mContext;
@@ -86,7 +86,8 @@ public abstract class MLMessageItem extends LinearLayout{
         this.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                onItemClick();
+                // 设置 Item 项点击的 Action
+                mAdapter.onItemAction(mPosition, MLConstants.ML_ACTION_MSG_CLICK);
             }
         });
         this.setOnLongClickListener(new OnLongClickListener() {
@@ -185,14 +186,6 @@ public abstract class MLMessageItem extends LinearLayout{
      * 解析对应的xml 布局，填充当前 ItemView，并初始化控件
      */
     protected abstract void onInflateView();
-
-    /**
-     * 当前Item 的点击事件
-     */
-    protected void onItemClick(){
-        // 给当前item 设置点击与长按事件监听
-        mAdapter.setOnItemClick(mPosition);
-    }
 
     /**
      * 当前Item 长按监听

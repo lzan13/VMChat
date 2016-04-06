@@ -20,32 +20,16 @@
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
             android:minHeight="?attr/actionBarSize"
-            android:theme="@style/MLTheme.Toolbar"
-            android:transitionName="toolbar"
-            app:popupTheme="@style/MLTheme.PupopMenu">
-
-        </android.support.v7.widget.Toolbar>
+            android:transitionName="@string/ml_shared_element_toolbar"
+            app:popupTheme="@style/MLTheme.PopupMenu"
+            app:theme="@style/MLTheme.ToolbarOverlay"/>
     </android.support.design.widget.AppBarLayout>
 
     <!--中间内容布局-->
     <FrameLayout
         android:id="@+id/ml_framelayout_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-    <!--悬浮按钮-->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/ml_btn_fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_margin="@dimen/ml_dimen_16"
-            android:src="@mipmap/ic_add_white_24dp"/>
-    </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

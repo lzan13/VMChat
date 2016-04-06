@@ -26,7 +26,7 @@ import java.util.List;
 
 /**
  * Class ${FILE_NAME}
- * <p>
+ * <p/>
  * Created by lzan13 on 2016/1/6 18:51.
  */
 public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.MessageViewHolder> {
@@ -215,38 +215,29 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
      * 自定义回调接口，用来实现 RecyclerView 中 Item 长按和点击事件监听
      */
     protected interface MLOnItemClickListener {
-
-        // 点击回调
-        public void onItemClick(int position);
-
         /**
-         * 长按事件的处理
-         * 这里菜单的弹出在 ItemView 里实现，然后通过回调将每一项的点击操作传递过去，因为聊天界面的 ItemView
-         * 有多种多样的，每一个Item弹出菜单不同，
+         * Item 点击及长按事件的处理
+         * 这里Item的点击及长按监听都在自定义的
+         * {@link net.melove.demo.chat.conversation.messageitem.MLMessageItem}里实现，
+         * 然后通过回调将
+         * {@link net.melove.demo.chat.conversation.messageitem.MLMessageItem}的操作以自定义 Action
+         * 的方式传递过过来，因为聊天列表的 Item 有多种多样的，每一个 Item 弹出菜单不同，
          *
          * @param position 需要操作的Item的位置
-         * @param action   长按菜单需要处理的动作，比如 复制、转发、删除、撤回等
+         * @param action   Item 触发的动作，比如 点击、复制、转发、删除、撤回等
          */
-        public void onItemLongClick(int position, int action);
+        public void onItemAction(int position, int action);
     }
 
-    /**
-     * ItemView 点击事件
-     *
-     * @param position 点击的Item 的位置
-     */
-    public void setOnItemClick(int position) {
-        mOnItemClickListener.onItemClick(position);
-    }
 
     /**
-     * ItemView 长按事件的点击事件
+     * Item 项的点击和长按 Action 事件回调
      *
      * @param position 长按的 Item 位置
      * @param action   长按菜单需要处理的动作，比如 复制、转发、删除、撤回等
      */
-    public void onLongItemClick(int position, int action) {
-        mOnItemClickListener.onItemLongClick(position, action);
+    public void onItemAction(int position, int action) {
+        mOnItemClickListener.onItemAction(position, action);
     }
 
     /**

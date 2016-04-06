@@ -131,13 +131,13 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOnItemClickListener.onItemClick(v, position);
+                mOnItemClickListener.onItemClick(position);
             }
         });
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                mOnItemClickListener.onItemLongClick(v, position);
+                mOnItemClickListener.onItemLongClick(position);
                 return true;
             }
         });
@@ -161,9 +161,9 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
      * 自定义回调接口，用来实现 RecyclerView 中 Item 长按和点击事件监听
      */
     protected interface MLOnItemClickListener {
-        public void onItemClick(View view, int position);
+        public void onItemClick(int position);
 
-        public void onItemLongClick(View view, int position);
+        public void onItemLongClick(int position);
     }
 
     /**

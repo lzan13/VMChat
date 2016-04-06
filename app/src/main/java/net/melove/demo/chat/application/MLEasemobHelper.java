@@ -56,9 +56,6 @@ public class MLEasemobHelper {
     // 记录sdk是否初始化
     private boolean isInit;
 
-    // 保存当前Activity列表
-    private List<Activity> mActivityList = new ArrayList<Activity>();
-
     // 环信的消息监听器
     private EMMessageListener mMessageListener;
 
@@ -210,18 +207,21 @@ public class MLEasemobHelper {
             @Override
             public void onDisconnected(final int errorCode) {
                 MLLog.d("MLEasemobHelper - onDisconnected - %d", errorCode);
+                Activity activity = MLActivityManager.getInstance().getCurrActivity();
+                Intent intent = new Intent();
+                if (activity != null) {
+                    intent.setClass(activity, MLConflictActivity.class);
+                }
                 if (errorCode == EMError.USER_LOGIN_ANOTHER_DEVICE) {
                     MLLog.d("被踢，多次初始化也可能出现-" + errorCode);
                     // 被踢了，已经登录成功的要改为false
                     isLogined = false;
                     signOut(null);
-                    onGlobalDialog();
+                    intent.putExtra(MLConstants.ML_EXTRA_USER_LOGIN_OTHER_DIVERS, true);
+                    activity.startActivity(intent);
                 } else if (errorCode == EMError.USER_REMOVED) {
                     MLLog.d("账户移除-" + errorCode);
                     isLogined = false;
-                    Intent intent = new Intent();
-                    intent.setClass(mContext, MLConflictActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra(MLConstants.ML_EXTRA_USER_REMOVED, true);
                     mContext.startActivity(intent);
                 } else {
@@ -230,14 +230,6 @@ public class MLEasemobHelper {
             }
         };
         EMClient.getInstance().addConnectionListener(mConnectionListener);
-    }
-
-    private void onGlobalDialog() {
-        Activity activity = MLActivityManager.getInstance().getCurrActivity();
-        Intent intent = new Intent();
-        intent.setClass(activity, MLConflictActivity.class);
-        intent.putExtra(MLConstants.ML_EXTRA_USER_LOGIN_OTHER_DIVERS, true);
-        activity.startActivity(intent);
     }
 
     /**
@@ -359,16 +351,25 @@ public class MLEasemobHelper {
             @Override
             public void onContactInvited(String username, String reason) {
                 MLLog.d("onContactInvited - username:%s, reaseon:%s", username, reason);
-
                 // 创建一条好友申请数据
                 MLInvitedEntity invitedEntity = new MLInvitedEntity();
+                // 当前用户
+                String currUsername = EMClient.getInstance().getCurrentUser();
+                // 根据根据对方的名字，加上当前用户的名字，加申请类型按照一定顺序组合，得到当前申请信息的唯一 ID
+                String objId = MLCrypto.cryptoStr2MD5(username + currUsername + MLInvitedEntity.InvitedType.CONTACTS);
+                // 设置此条信息的唯一ID
+                invitedEntity.setObjId(objId);
+                // 对方的username
                 invitedEntity.setUserName(username);
                 // invitedEntity.setNickName(mUserEntity.getNickName());
+                // 设置申请理由
                 invitedEntity.setReason(reason);
+                // 设置申请状态为被申请
                 invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.BEAPPLYFOR);
+                // 设置申请信息为联系人申请
                 invitedEntity.setType(MLInvitedEntity.InvitedType.CONTACTS);
+                // 设置申请信息的时间
                 invitedEntity.setCreateTime(MLDate.getCurrentMillisecond());
-                invitedEntity.setObjId(MLCrypto.cryptoStr2MD5(invitedEntity.getUserName() + invitedEntity.getType()));
 
                 /**
                  * 这里先读取本地的申请与通知信息
@@ -401,26 +402,35 @@ public class MLEasemobHelper {
             @Override
             public void onContactAgreed(String username) {
                 MLLog.d("onContactAgreed - username:%s", username);
-
                 // 这里进行一下筛选，如果已存在则去更新本地内容
-                MLInvitedEntity temp = mInvitedDao.getInvitedEntiry(MLCrypto.cryptoStr2MD5(username + 0));
-                if (temp != null) {
-                    temp.setStatus(MLInvitedEntity.InvitedStatus.BEAGREED);
-                    mInvitedDao.updateInvited(temp);
+                String currUsername = EMClient.getInstance().getCurrentUser();
+                // 根据申请者的名字，加上当前用户的名字，加申请类型按照一定顺序组合，得到当前申请信息的唯一 ID
+                String objId = MLCrypto.cryptoStr2MD5(currUsername + username + MLInvitedEntity.InvitedType.CONTACTS);
+                // 先去数据库查找一下，有没有这一条申请信息，如果有直接修改，没有才新建插入
+                MLInvitedEntity invitedEntity = mInvitedDao.getInvitedEntiry(objId);
+                if (invitedEntity != null) {
+                    invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.BEAGREED);
+                    mInvitedDao.updateInvited(invitedEntity);
                 } else {
                     // 创建一条好友申请数据
-                    MLInvitedEntity invitedEntity = new MLInvitedEntity();
+                    invitedEntity = new MLInvitedEntity();
+                    // 设置此条信息的唯一ID
+                    invitedEntity.setObjId(objId);
+                    // 对方的username
                     invitedEntity.setUserName(username);
-                    //                invitedEntity.setNickName(mUserEntity.getNickName());
+                    // invitedEntity.setNickName(mUserEntity.getNickName());
                     invitedEntity.setReason(MLApplication.getContext().getString(R.string.ml_add_contact_reason));
+                    // 设置申请状态为被同意
                     invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.BEAGREED);
+                    // 设置申请信息为联系人申请
                     invitedEntity.setType(MLInvitedEntity.InvitedType.CONTACTS);
+                    // 设置申请信息的时间
                     invitedEntity.setCreateTime(MLDate.getCurrentMillisecond());
-                    invitedEntity.setObjId(MLCrypto.cryptoStr2MD5(invitedEntity.getUserName() + invitedEntity.getType()));
+
                     mInvitedDao.saveInvited(invitedEntity);
                 }
                 // 调用发送通知栏提醒方法，提醒用户查看申请通知
-                MLNotifier.getInstance(MLApplication.getContext()).sendInvitedNotification(temp);
+                MLNotifier.getInstance(MLApplication.getContext()).sendInvitedNotification(invitedEntity);
                 mLocalBroadcastManager.sendBroadcast(new Intent(MLConstants.ML_ACTION_INVITED));
             }
 
@@ -433,24 +443,34 @@ public class MLEasemobHelper {
             public void onContactRefused(String username) {
                 MLLog.d("onContactRefused - username:%s", username);
                 // 这里进行一下筛选，如果已存在则去更新本地内容
-                MLInvitedEntity temp = mInvitedDao.getInvitedEntiry(MLCrypto.cryptoStr2MD5(username + 0));
-                if (temp != null) {
-                    temp.setStatus(MLInvitedEntity.InvitedStatus.BEREFUSED);
-                    mInvitedDao.updateInvited(temp);
+                String currUsername = EMClient.getInstance().getCurrentUser();
+                // 根据申请者的名字，加上当前用户的名字，加申请类型按照一定顺序组合，得到当前申请信息的唯一 ID
+                String objId = MLCrypto.cryptoStr2MD5(currUsername + username + MLInvitedEntity.InvitedType.CONTACTS);
+                // 先去数据库查找一下，有没有这一条申请信息，如果有直接修改，没有才新建插入
+                MLInvitedEntity invitedEntity = mInvitedDao.getInvitedEntiry(objId);
+                if (invitedEntity != null) {
+                    invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.BEREFUSED);
+                    mInvitedDao.updateInvited(invitedEntity);
                 } else {
                     // 创建一条好友申请数据
-                    MLInvitedEntity invitedEntity = new MLInvitedEntity();
+                    invitedEntity = new MLInvitedEntity();
+                    // 设置此条信息的唯一ID
+                    invitedEntity.setObjId(objId);
+                    // 对方的username
                     invitedEntity.setUserName(username);
-                    //                invitedEntity.setNickName(mUserEntity.getNickName());
+                    // invitedEntity.setNickName(mUserEntity.getNickName());
                     invitedEntity.setReason(MLApplication.getContext().getString(R.string.ml_add_contact_reason));
+                    // 设置申请状态为被同意
                     invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.BEREFUSED);
+                    // 设置申请信息为联系人申请
                     invitedEntity.setType(MLInvitedEntity.InvitedType.CONTACTS);
+                    // 设置申请信息的时间
                     invitedEntity.setCreateTime(MLDate.getCurrentMillisecond());
-                    invitedEntity.setObjId(MLCrypto.cryptoStr2MD5(invitedEntity.getUserName() + invitedEntity.getType()));
+
                     mInvitedDao.saveInvited(invitedEntity);
                 }
                 // 调用发送通知栏提醒方法，提醒用户查看申请通知
-                MLNotifier.getInstance(MLApplication.getContext()).sendInvitedNotification(temp);
+                MLNotifier.getInstance(MLApplication.getContext()).sendInvitedNotification(invitedEntity);
                 mLocalBroadcastManager.sendBroadcast(new Intent(MLConstants.ML_ACTION_INVITED));
             }
         };
@@ -616,28 +636,6 @@ public class MLEasemobHelper {
      */
     public boolean isLogined() {
         return EMClient.getInstance().isLoggedInBefore();
-    }
-
-    /**
-     * 添加 Activity 到集合，为了给全局监听用来判断当前是否在 Activity 界面
-     *
-     * @param activity
-     */
-    public void addActivity(Activity activity) {
-        if (!mActivityList.contains(activity)) {
-            mActivityList.add(0, activity);
-        }
-    }
-
-    /**
-     * 将 Activity 从集合中移除
-     *
-     * @param activity
-     */
-    public void removeActivity(Activity activity) {
-        if (mActivityList.contains(activity)) {
-            mActivityList.remove(activity);
-        }
     }
 
     /**

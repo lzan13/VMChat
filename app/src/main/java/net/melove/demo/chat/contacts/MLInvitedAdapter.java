@@ -13,6 +13,7 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.exceptions.HyphenateException;
 
 import net.melove.demo.chat.R;
+import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.common.util.MLLog;
 import net.melove.demo.chat.common.widget.MLImageView;
 import net.melove.demo.chat.database.MLInvitedDao;
@@ -57,7 +58,14 @@ public class MLInvitedAdapter extends RecyclerView.Adapter<MLInvitedAdapter.Invi
         MLLog.i("MLInvitedAdapter - onBindViewHolder - %d", position);
         MLInvitedEntity invitedEntity = mInvitedEntities.get(position);
         holder.imageViewAvatar.setImageResource(R.mipmap.ic_character_blackcat);
+
+        String currUsername = EMClient.getInstance().getCurrentUser();
+        // 设置申请的人
+        if (currUsername.equals(invitedEntity.getUserName())) {
+            holder.textViewUsername.setText(invitedEntity.getUserName());
+        }
         holder.textViewUsername.setText(invitedEntity.getUserName());
+        // 设置申请理由
         holder.textViewReason.setText(invitedEntity.getReason());
 
         // 判断当前的申请与通知的状态，显示不同的提醒文字
@@ -72,12 +80,12 @@ public class MLInvitedAdapter extends RecyclerView.Adapter<MLInvitedAdapter.Invi
             holder.btnAgree.setVisibility(View.GONE);
             holder.btnRefuse.setVisibility(View.GONE);
         } else if (invitedEntity.getStatus() == MLInvitedEntity.InvitedStatus.BEAGREED) {
-            holder.textViewStatus.setText(R.string.ml_agreed);
+            holder.textViewStatus.setText(R.string.ml_be_agreed);
             holder.textViewStatus.setVisibility(View.VISIBLE);
             holder.btnAgree.setVisibility(View.GONE);
             holder.btnRefuse.setVisibility(View.GONE);
         } else if (invitedEntity.getStatus() == MLInvitedEntity.InvitedStatus.BEREFUSED) {
-            holder.textViewStatus.setText(R.string.ml_refused);
+            holder.textViewStatus.setText(R.string.ml_be_refused);
             holder.textViewStatus.setVisibility(View.VISIBLE);
             holder.btnAgree.setVisibility(View.GONE);
             holder.btnRefuse.setVisibility(View.GONE);
@@ -100,16 +108,21 @@ public class MLInvitedAdapter extends RecyclerView.Adapter<MLInvitedAdapter.Invi
         holder.btnRefuse.setTag(position);
         holder.btnAgree.setOnClickListener(viewListener);
         holder.btnRefuse.setOnClickListener(viewListener);
+        /**
+         * 给当前 ItemView 设置点击和长按监听
+         */
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOnItemClickListener.onItemClick(v, position);
+                // 设置点击动作
+                mOnItemClickListener.onItemAction(position, MLConstants.ML_ACTION_INVITED_CLICK);
             }
         });
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                mOnItemClickListener.onItemLongClick(v, position);
+                // 这里直接给长按设置删除操作
+                mOnItemClickListener.onItemAction(position, MLConstants.ML_ACTION_INVITED_DELETE);
                 return true;
             }
         });
@@ -121,56 +134,6 @@ public class MLInvitedAdapter extends RecyclerView.Adapter<MLInvitedAdapter.Invi
     }
 
     /**
-     * 同意好友请求，环信的同意和拒绝好友请求 都需要异步处理，这里新建线程去调用
-     */
-    private void agreeInvited(int position) {
-        final ProgressDialog dialog = new ProgressDialog(mContext);
-        dialog.setMessage(mContext.getResources().getString(R.string.ml_dialog_message_waiting));
-        dialog.show();
-
-        final MLInvitedEntity invitedEntity = mInvitedEntities.get(position);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    EMClient.getInstance().contactManager().acceptInvitation(invitedEntity.getUserName());
-                    invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.AGREED);
-                    mInvitedDao.updateInvited(invitedEntity);
-                    dialog.dismiss();
-                } catch (HyphenateException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-
-
-    }
-
-    /**
-     * 拒绝好友请求，环信的同意和拒绝好友请求 都需要异步处理，这里新建线程去调用
-     */
-    private void refuseInvited(int positon) {
-        final ProgressDialog dialog = new ProgressDialog(mContext);
-        dialog.setMessage(mContext.getResources().getString(R.string.ml_dialog_message_waiting));
-        dialog.show();
-        final MLInvitedEntity invitedEntity = mInvitedEntities.get(positon);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    EMClient.getInstance().contactManager().declineInvitation(invitedEntity.getUserName());
-                    invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.REFUSED);
-                    mInvitedDao.updateInvited(invitedEntity);
-                    dialog.dismiss();
-                } catch (HyphenateException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-
-    }
-
-    /**
      * 申请与通知列表内Button点击事件
      */
     private View.OnClickListener viewListener = new View.OnClickListener() {
@@ -178,12 +141,12 @@ public class MLInvitedAdapter extends RecyclerView.Adapter<MLInvitedAdapter.Invi
         public void onClick(View v) {
             int position = (int) v.getTag();
             switch (v.getId()) {
-                case R.id.ml_btn_invited_agree:
-                    agreeInvited(position);
-                    break;
-                case R.id.ml_btn_invited_refuse:
-                    refuseInvited(position);
-                    break;
+            case R.id.ml_btn_invited_agree:
+                mOnItemClickListener.onItemAction(position, MLConstants.ML_ACTION_INVITED_AGREE);
+                break;
+            case R.id.ml_btn_invited_refuse:
+                mOnItemClickListener.onItemAction(position, MLConstants.ML_ACTION_INVITED_REFUSE);
+                break;
             }
         }
     };
@@ -192,9 +155,14 @@ public class MLInvitedAdapter extends RecyclerView.Adapter<MLInvitedAdapter.Invi
      * 自定义回调接口，用来实现 RecyclerView 中 Item 长按和点击事件监听
      */
     protected interface MLOnItemClickListener {
-        public void onItemClick(View view, int position);
-
-        public void onItemLongClick(View view, int position);
+        /**
+         * Item 点击及长按事件的处理
+         * 这里Item的点击及长按监听都在当前的 MLInvitedAdapter 实现
+         *
+         * @param position 需要操作的Item的位置
+         * @param action   长按菜单需要处理的动作，
+         */
+        public void onItemAction(int position, int action);
     }
 
     /**

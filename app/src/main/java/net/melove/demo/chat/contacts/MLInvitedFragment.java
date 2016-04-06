@@ -1,11 +1,14 @@
 package net.melove.demo.chat.contacts;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
@@ -15,6 +18,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.exceptions.HyphenateException;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLConstants;
@@ -43,6 +49,8 @@ public class MLInvitedFragment extends MLBaseFragment {
     private LocalBroadcastManager mLocalBroadcastManager;
     // 会话界面监听会话变化的广播接收器
     private BroadcastReceiver mBroadcastReceiver;
+
+    private MLHandler mHandler;
 
     /**
      * 工厂方法，用来创建一个Fragment的实例
@@ -77,6 +85,8 @@ public class MLInvitedFragment extends MLBaseFragment {
      * 初始化界面控件等
      */
     private void initView() {
+        mHandler = new MLHandler();
+
         mActivity = getActivity();
         mInvitedDao = new MLInvitedDao(mActivity);
 
@@ -126,47 +136,108 @@ public class MLInvitedFragment extends MLBaseFragment {
     }
 
     /**
-     * 设置列表项的点击监听，因为这里使用的是RecyclerView控件，所以长按和点击事件都需要去自己实现，这里通过回调接口实现
+     * 设置列表项的点击监听，因为这里使用的是RecyclerView控件，所以长按和点击监听都要自己去做，然后通过回调接口实现
      */
     private void setItemClickListener() {
         mInvitedAdapter.setOnItemClickListener(new MLInvitedAdapter.MLOnItemClickListener() {
             /**
-             * 实现 RecyclerView item点击事件
-             * @param view 触发点击事件的view
-             * @param position 触发点击事件的位置
+             * Item 点击及长按事件的处理
+             * 这里Item的点击及长按监听都在 {@link MLInvitedAdapter} 实现，然后通过回调的方式，
+             * 把操作的 Action 传递过来
+             *
+             * @param position 需要操作的Item的位置
+             * @param action   长按菜单需要处理的动作，
              */
             @Override
-            public void onItemClick(View view, int position) {
-                MLToast.makeToast("item " + position).show();
-            }
-
-            /**
-             * 实现 RecyclerView item 长按事件
-             * @param view 触发长按事件的 item
-             * @param position 触发长按事件的position
-             */
-            @Override
-            public void onItemLongClick(View view, int position) {
-                final int index = position;
-                AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
-                dialog.setTitle(mActivity.getResources().getString(R.string.ml_dialog_title_invited));
-                dialog.setMessage(mActivity.getResources().getString(R.string.ml_dialog_content_delete_invited));
-                dialog.setPositiveButton(R.string.ml_btn_ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mInvitedDao.deleteInvited(mInvitedList.get(index).getObjId());
-                        refreshInvited();
-                    }
-                });
-                dialog.setNegativeButton(R.string.ml_btn_cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-                dialog.show();
+            public void onItemAction(int position, int action) {
+                switch (action) {
+                case MLConstants.ML_ACTION_INVITED_CLICK:
+                    break;
+                case MLConstants.ML_ACTION_INVITED_AGREE:
+                    agreeInvited(position);
+                    break;
+                case MLConstants.ML_ACTION_INVITED_REFUSE:
+                    refuseInvited(position);
+                    break;
+                case MLConstants.ML_ACTION_INVITED_DELETE:
+                    deleteInvited(position);
+                    break;
+                }
             }
         });
+    }
+
+    /**
+     * 同意好友请求，环信的同意和拒绝好友请求 都需要异步处理，这里新建线程去调用
+     */
+    private void agreeInvited(int position) {
+        final ProgressDialog dialog = new ProgressDialog(mActivity);
+        dialog.setMessage(mActivity.getResources().getString(R.string.ml_dialog_message_waiting));
+        dialog.show();
+
+        final MLInvitedEntity invitedEntity = mInvitedList.get(position);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    EMClient.getInstance().contactManager().acceptInvitation(invitedEntity.getUserName());
+                    invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.AGREED);
+                    mInvitedDao.updateInvited(invitedEntity);
+                    dialog.dismiss();
+                    mHandler.sendMessage(mHandler.obtainMessage(0));
+                } catch (HyphenateException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+
+    }
+
+    /**
+     * 拒绝好友请求，环信的同意和拒绝好友请求 都需要异步处理，这里新建线程去调用
+     */
+    private void refuseInvited(int positon) {
+        final ProgressDialog dialog = new ProgressDialog(mActivity);
+        dialog.setMessage(mActivity.getResources().getString(R.string.ml_dialog_message_waiting));
+        dialog.show();
+        final MLInvitedEntity invitedEntity = mInvitedList.get(positon);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    EMClient.getInstance().contactManager().declineInvitation(invitedEntity.getUserName());
+                    // 修改当前申请消息的状态
+                    invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.REFUSED);
+                    mInvitedDao.updateInvited(invitedEntity);
+                    dialog.dismiss();
+                    mHandler.sendMessage(mHandler.obtainMessage(0));
+                } catch (HyphenateException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    private void deleteInvited(int position) {
+        final int index = position;
+        AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
+        dialog.setTitle(mActivity.getResources().getString(R.string.ml_dialog_title_invited));
+        dialog.setMessage(mActivity.getResources().getString(R.string.ml_dialog_content_delete_invited));
+        dialog.setPositiveButton(R.string.ml_btn_ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mInvitedDao.deleteInvited(mInvitedList.get(index).getObjId());
+                mHandler.sendMessage(mHandler.obtainMessage(0));
+            }
+        });
+        dialog.setNegativeButton(R.string.ml_btn_cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        dialog.show();
     }
 
     /**
@@ -175,7 +246,7 @@ public class MLInvitedFragment extends MLBaseFragment {
     private void registerBroadcastReceiver() {
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(mActivity);
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(MLConstants.ML_ACTION_MESSAGE);
+        intentFilter.addAction(MLConstants.ML_ACTION_INVITED);
         mBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -190,6 +261,19 @@ public class MLInvitedFragment extends MLBaseFragment {
      */
     private void unregisterBroadcastReceiver() {
         mLocalBroadcastManager.unregisterReceiver(mBroadcastReceiver);
+    }
+
+    class MLHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            int what = msg.what;
+            switch (what) {
+            case 0:
+                // 刷新界面
+                refreshInvited();
+                break;
+            }
+        }
     }
 
     /**

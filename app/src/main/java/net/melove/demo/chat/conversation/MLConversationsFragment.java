@@ -175,11 +175,10 @@ public class MLConversationsFragment extends MLBaseFragment {
         mConversationAdapter.setOnItemClickListener(new MLConversationAdapter.MLOnItemClickListener() {
             /**
              * 会话列表想的点击监听
-             * @param view
-             * @param position
+             * @param position 点击的项
              */
             @Override
-            public void onItemClick(View view, int position) {
+            public void onItemClick(int position) {
                 Intent intent = new Intent();
                 intent.setClass(mActivity, MLChatActivity.class);
                 intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mConversations.get(position).getUserName());
@@ -189,11 +188,10 @@ public class MLConversationsFragment extends MLBaseFragment {
 
             /**
              * 实现 RecyclerView item 长按事件
-             * @param view 触发长按事件的 item
              * @param position 触发长按事件的 position
              */
             @Override
-            public void onItemLongClick(View view, final int position) {
+            public void onItemLongClick(final int position) {
                 final EMConversation conversation = mConversations.get(position);
                 final boolean isTop = MLConversationExtUtils.getConversationTop(conversation);
                 // 根据当前会话不同的状态来显示不同的长按菜单
@@ -217,25 +215,25 @@ public class MLConversationsFragment extends MLBaseFragment {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 switch (which) {
-                                    case 0:
-                                        // 根据当前状态设置会话是否置顶
-                                        if (isTop) {
-                                            MLConversationExtUtils.setConversationTop(conversation, false);
-                                        } else {
-                                            MLConversationExtUtils.setConversationTop(conversation, true);
-                                        }
-                                        refreshConversation();
-                                        break;
-                                    case 1:
-                                        // 清空当前会话的消息，同时删除了内存中和数据库中的数据
-                                        mConversations.get(position).clearAllMessages();
-                                        refreshConversation();
-                                        break;
-                                    case 2:
-                                        // 删除当前会话，第二个参数表示是否删除此会话的消息
-                                        EMClient.getInstance().chatManager().deleteConversation(conversation.getUserName(), false);
-                                        refreshConversation();
-                                        break;
+                                case 0:
+                                    // 根据当前状态设置会话是否置顶
+                                    if (isTop) {
+                                        MLConversationExtUtils.setConversationTop(conversation, false);
+                                    } else {
+                                        MLConversationExtUtils.setConversationTop(conversation, true);
+                                    }
+                                    refreshConversation();
+                                    break;
+                                case 1:
+                                    // 清空当前会话的消息，同时删除了内存中和数据库中的数据
+                                    mConversations.get(position).clearAllMessages();
+                                    refreshConversation();
+                                    break;
+                                case 2:
+                                    // 删除当前会话，第二个参数表示是否删除此会话的消息
+                                    EMClient.getInstance().chatManager().deleteConversation(conversation.getUserName(), false);
+                                    refreshConversation();
+                                    break;
                                 }
                             }
                         }).show();

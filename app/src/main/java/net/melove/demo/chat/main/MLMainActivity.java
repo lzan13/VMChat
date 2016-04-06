@@ -12,6 +12,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +22,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMGroupManager;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLConstants;
@@ -194,8 +196,6 @@ public class MLMainActivity extends MLBaseActivity implements
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-            case R.id.ml_btn_fab:
-                break;
             case R.id.ml_img_nav_avatar:
 
                 break;
@@ -264,6 +264,10 @@ public class MLMainActivity extends MLBaseActivity implements
         dialog.setPositiveButton(R.string.ml_btn_ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                if (TextUtils.isEmpty(editText.getText().toString().trim())) {
+                    MLToast.errorToast(R.string.ml_hint_input).show();
+                    return;
+                }
                 Intent intent = new Intent();
                 intent.setClass(mActivity, MLChatActivity.class);
                 intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, editText.getText().toString().trim());

@@ -6,7 +6,7 @@ android {
     defaultConfig {
         applicationId "net.melove.demo.chat"
         minSdkVersion 15
-        targetSdkVersion 22
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }
@@ -34,7 +34,7 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     // Android V7库，因为已经包含了V4库，所以这里不需要再引入V4库了
 //    compile 'com.android.support:appcompat-v7:23.2.0'
-    // 新的遵循 Android  Material design 设计风格库 包含了v7和RecyclerView库
+    // 新的遵循 Android  Material design 设计风格库 包含了v4 v7和RecyclerView库
     compile 'com.android.support:design:23.2.0'
     // Android 官方提供的替代 ListView
 //    compile 'com.android.support:recyclerview-v7:23.2.0'

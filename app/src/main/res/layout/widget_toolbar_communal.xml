@@ -13,8 +13,8 @@
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
-        android:theme="@style/MLTheme.Toolbar"
-        android:transitionName="toolbar"
-        app:popupTheme="@style/MLTheme.PupopMenu"/>
+        android:transitionName="@string/ml_shared_element_toolbar"
+        app:popupTheme="@style/MLTheme.PopupMenu"
+        app:theme="@style/MLTheme.ToolbarOverlay"/>
 
 </LinearLayout>

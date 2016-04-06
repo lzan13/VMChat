@@ -319,39 +319,41 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
          * 实现聊天信息ItemView需要操作的一些方法
          */
         mMessageAdapter.setOnItemClickListener(new MLMessageAdapter.MLOnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                EMMessage message = mConversation.getAllMessages().get(position);
-                MLToast.makeToast("item " + position).show();
-                MLLog.i("item position - %d", position);
-            }
 
             /**
-             * 长按事件的处理
-             * 这里菜单的弹出在 ItemView 里实现，然后通过回调将每一项的点击操作传递过去，因为聊天界面的 ItemView
-             * 有多种多样的，每一个Item弹出菜单不同，
+             * Item 点击及长按事件的处理
+             * 这里Item的点击及长按监听都在自定义的
+             * {@link net.melove.demo.chat.conversation.messageitem.MLMessageItem}里实现，
+             * 然后通过回调将
+             * {@link net.melove.demo.chat.conversation.messageitem.MLMessageItem}的操作以自定义 Action
+             * 的方式传递过过来，因为聊天列表的 Item 有多种多样的，每一个 Item 弹出菜单不同，
              *
              * @param position 需要操作的Item的位置
              * @param action   长按菜单需要处理的动作，比如 复制、转发、删除、撤回等
              */
             @Override
-            public void onItemLongClick(int position, int action) {
+            public void onItemAction(int position, int action) {
                 EMMessage message = mConversation.getAllMessages().get(position);
                 switch (action) {
-                case MLConstants.ML_MSG_ACTION_COPY:
+                case MLConstants.ML_ACTION_MSG_CLICK:
+                    MLToast.makeToast("item " + position).show();
+                    MLLog.i("item position - %d", position);
+                    break;
+                case MLConstants.ML_ACTION_MSG_COPY:
                     // 复制消息，只有文本类消息才可以复制
                     copyMessage(message);
                     break;
-                case MLConstants.ML_MSG_ACTION_FORWARD:
+                case MLConstants.ML_ACTION_MSG_FORWARD:
                     // 转发消息
-
+                    forwardMessage(message);
                     break;
-                case MLConstants.ML_MSG_ACTION_DELETE:
+                case MLConstants.ML_ACTION_MSG_DELETE:
                     // 删除消息
-                    MLToast.rightToast(R.string.ml_toast_msg_delete_success);
                     mConversation.removeMessage(message.getMsgId());
+                    MLToast.rightToast(R.string.ml_toast_msg_delete_success);
+                    refreshChatUI();
                     break;
-                case MLConstants.ML_MSG_ACTION_RECALL:
+                case MLConstants.ML_ACTION_MSG_RECALL:
                     // 撤回消息
                     recallMessage(message);
                     break;
@@ -361,9 +363,9 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     }
 
     /**
-     * 复制消息到剪切板
+     * 复制消息到剪切板，只有 Text 文本类型的消息才能复制
      *
-     * @param message
+     * @param message 需要复制的消息对象
      */
     private void copyMessage(EMMessage message) {
         //        MLToast.makeToast(R.string.ml_menu_chat_copy).show();
@@ -375,6 +377,11 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         clipboardManager.setPrimaryClip(clipData);
     }
 
+    /**
+     * 转发消息
+     *
+     * @param message 需要转发的消息对象
+     */
     private void forwardMessage(EMMessage message) {
 
     }
@@ -442,6 +449,16 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     }
 
     /**
+     * 设置消息扩展
+     */
+    private void setMessageAttribute(EMMessage message) {
+        if (isBurn) {
+            // 设置消息扩展类型为阅后即焚
+            message.setAttribute(MLConstants.ML_ATTR_BURN, true);
+        }
+    }
+
+    /**
      * 最终调用发送信息方法
      *
      * @param message
@@ -453,16 +470,6 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         EMClient.getInstance().chatManager().sendMessage(message);
         // 点击发送后马上刷新界面，无论消息有没有成功，先显示
         refreshChatUI();
-    }
-
-    /**
-     * 设置消息扩展
-     */
-    private void setMessageAttribute(EMMessage message) {
-        if (isBurn) {
-            // 设置消息扩展类型为阅后即焚
-            message.setAttribute(MLConstants.ML_ATTR_BURN, true);
-        }
     }
 
     /**
@@ -507,7 +514,6 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         sendMessage(fileMessage);
 
     }
-
 
     /**
      * 处理Activity的返回值得方法

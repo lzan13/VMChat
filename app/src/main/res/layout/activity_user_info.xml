@@ -35,8 +35,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:minHeight="?attr/actionBarSize"
-                android:popupTheme="@style/MLTheme.PupopMenu"
-                android:theme="@style/MLTheme.Toolbar"
+                android:popupTheme="@style/MLTheme.PopupMenu"
+                android:theme="@style/MLTheme.ToolbarOverlay"
                 android:transitionName="toolbar"
                 app:layout_collapseMode="pin">
 

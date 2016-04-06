@@ -141,7 +141,7 @@ public class MLContactsFragment extends MLBaseFragment {
     private void registerBroadcastReceiver() {
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(mActivity);
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(MLConstants.ML_ACTION_MESSAGE);
+        intentFilter.addAction(MLConstants.ML_ACTION_CONTACT);
         mBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {

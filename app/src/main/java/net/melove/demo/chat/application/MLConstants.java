@@ -63,12 +63,23 @@ public class MLConstants {
     public static final int ML_REQUEST_CODE_CONTACTS = 0x07;
 
     /**
-     * 长按菜单回调的动作
+     * 自定义会话界面消息列表项的点击与长按 Action
      */
-    public static final int ML_MSG_ACTION_COPY = 0X00;
-    public static final int ML_MSG_ACTION_FORWARD = 0X01;
-    public static final int ML_MSG_ACTION_DELETE = 0X02;
-    public static final int ML_MSG_ACTION_RECALL = 0X03;
+    public static final int ML_ACTION_MSG_CLICK = 0X00;
+    public static final int ML_ACTION_MSG_COPY = 0X10;
+    public static final int ML_ACTION_MSG_FORWARD = 0X11;
+    public static final int ML_ACTION_MSG_DELETE = 0X12;
+    public static final int ML_ACTION_MSG_RECALL = 0X13;
+
+    /**
+     * 自定义申请与请求列表项点击与长按的 Action
+     */
+    public static final int ML_ACTION_INVITED_CLICK = 0X00;
+    public static final int ML_ACTION_INVITED_AGREE = 0X10;
+    public static final int ML_ACTION_INVITED_REFUSE = 0X11;
+    public static final int ML_ACTION_INVITED_DELETE = 0X12;
+
+
 
     /**
      * 聊天消息类型
