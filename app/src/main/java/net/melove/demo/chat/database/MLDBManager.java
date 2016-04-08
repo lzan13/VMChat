@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 /**
  * Created by lzan13 on 2015/7/21.
+ * 数据库管理类，主要实现一套通用的数据库的增删改查
  */
 public class MLDBManager {
 

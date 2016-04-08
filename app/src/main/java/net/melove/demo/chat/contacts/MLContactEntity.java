@@ -2,31 +2,31 @@ package net.melove.demo.chat.contacts;
 
 /**
  * Created by lzan13 on 2015/8/21.
- * 用户信息实体类
+ * 联系人信息实体类
  */
-public class MLUserEntity {
+public class MLContactEntity {
 
-    // 用户对象的头，用来排序和根据字母查找
+    // 联系人对象的头，用来排序和根据字母查找
     public String header;
-    // 用户的username
+    // 联系人的username
     public String userName;
-    // 用户的昵称
+    // 联系人的昵称
     public String nickName;
-    // 用户的email
+    // 联系人的email
     public String email;
-    // 用户头像
+    // 联系人头像
     public String avatar;
-    // 用户封面
+    // 联系人封面
     public String cover;
-    // 用户性别
+    // 联系人性别
     public int gender;
-    // 用户位置
+    // 联系人位置
     public String location;
-    // 用户签名
+    // 联系人签名
     public String signature;
-    // 用户创建时间
+    // 联系人创建时间
     public String createAt;
-    // 用户更新时间
+    // 联系人更新时间
     public String updateAt;
 
     public String getHeader() {
@@ -124,10 +124,10 @@ public class MLUserEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || o instanceof MLUserEntity) {
+        if (o == null || o instanceof MLContactEntity) {
             return false;
         }
-        return userName.equals(((MLUserEntity) o).getUserName());
+        return userName.equals(((MLContactEntity) o).getUserName());
     }
 
     @Override

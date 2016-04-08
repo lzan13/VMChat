@@ -13,7 +13,7 @@ import com.hyphenate.chat.EMTextMessageBody;
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.conversation.MLChatActivity;
 import net.melove.demo.chat.main.MLMainActivity;
-import net.melove.demo.chat.contacts.MLInvitedEntity;
+import net.melove.demo.chat.invited.MLInvitedEntity;
 
 /**
  * Created by lzan13 on 2016/1/13.

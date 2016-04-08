@@ -2,13 +2,13 @@ package net.melove.demo.chat.database;
 
 /**
  * Created by lzan13 on 2015/7/24.
+ * 数据库常量类
  */
 public class MLDBConstants {
 
     public static final String TB_INVITED = "invited";
-    public static final String TB_CONVERSATION = "conversation";
     public static final String TB_GROUP = "group";
-    public static final String TB_USER = "user";
+    public static final String TB_CONTACTS = "contacts";
 
     // column name
     public static final String COL_OBJ_ID = "obj_id";
@@ -35,6 +35,21 @@ public class MLDBConstants {
     public static final String COL_COUNT = "count";
     public static final String COL_OPEN = "open";
 
+
+    /*创建联系人信息表*/
+    public static final String SQL_CONTACTS = "create table if not exists '"
+            + TB_CONTACTS + "' ("
+            + COL_USERNAME + " varchar(128) primary key, "
+            + COL_NICKNAME + " varchar(128), "
+            + COL_EMAIL + " varchar(128), "
+            + COL_AVATAR + " text, "
+            + COL_COVER + " text, "
+            + COL_GENDER + " integer, "
+            + COL_LOCATION + " text, "
+            + COL_SIGNATURE + " text, "
+            + COL_CREATE_AT + " integer, "
+            + COL_UPDATE_AT + " integer"
+            + ")";
 
     /**
      * 创建数据表 sql 语句
@@ -64,21 +79,6 @@ public class MLDBConstants {
             + COL_MAX_COUNT + " integer, "
             + COL_COUNT + " integer, "
             + COL_OPEN + " integer, "
-            + COL_CREATE_AT + " integer, "
-            + COL_UPDATE_AT + " integer"
-            + ")";
-
-    /*创建用户信息表*/
-    public static final String SQL_USER = "create table if not exists '"
-            + TB_USER + "' ("
-            + COL_USERNAME + " varchar(128) primary key, "
-            + COL_NICKNAME + " varchar(128), "
-            + COL_EMAIL + " varchar(128), "
-            + COL_AVATAR + " text, "
-            + COL_COVER + " text, "
-            + COL_GENDER + " integer, "
-            + COL_LOCATION + " text, "
-            + COL_SIGNATURE + " text, "
             + COL_CREATE_AT + " integer, "
             + COL_UPDATE_AT + " integer"
             + ")";

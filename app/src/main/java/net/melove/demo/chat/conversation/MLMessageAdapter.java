@@ -26,18 +26,17 @@ import java.util.List;
 
 /**
  * Class ${FILE_NAME}
- * <p/>
+ * <p>
  * Created by lzan13 on 2016/1/6 18:51.
  */
 public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.MessageViewHolder> {
 
     // 刷新类型
-    private final int HANDLER_MSG_REFRESH = 0;
-    private final int HANDLER_MSG_REFRESH_MORE = 1;
+    private final int MSG_REFRESH_NORMAL = 0;
+    private final int MSG_REFRESH_MORE = 1;
 
     private Context mContext;
 
-    private LayoutInflater mInflater;
 
     private String mChatId;
     private EMConversation mConversation;
@@ -58,7 +57,6 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
     public MLMessageAdapter(Context context, String chatId, RecyclerView recyclerView) {
         mContext = context;
         mChatId = chatId;
-        mInflater = LayoutInflater.from(mContext);
         mRecyclerView = recyclerView;
 
         mHandler = new MLHandler();
@@ -170,35 +168,6 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
     }
 
     /**
-     * 重发消息方法
-     */
-    public void resendMessage(String msgId) {
-        // 获取需要重发的消息
-        EMMessage failedMessage = mConversation.getMessage(msgId, true);
-        // 更新消息时间为当前时间
-        failedMessage.setMsgTime(MLDate.getCurrentMillisecond());
-        // 发送消息
-        EMClient.getInstance().chatManager().sendMessage(failedMessage);
-        final int position = mConversation.getMessagePosition(failedMessage);
-        failedMessage.setMessageStatusCallback(new EMCallBack() {
-            @Override
-            public void onSuccess() {
-                refreshList();
-            }
-
-            @Override
-            public void onError(int i, String s) {
-                refreshList(position);
-            }
-
-            @Override
-            public void onProgress(int i, String s) {
-
-            }
-        });
-    }
-
-    /**
      * -------------------------------------------------------------------------------------
      * 为RecyclerView 定义点击和长按的事件回调
      */
@@ -243,25 +212,16 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
     /**
      * ---------------------------------------------------------------------------------
      * 自定义Adapter的刷新操作
-     */
-    /**
-     * 供界面调用的刷新 Adapter 的方法
-     */
-    public void refreshList() {
-        Message msg = mHandler.obtainMessage();
-        msg.what = HANDLER_MSG_REFRESH;
-        mHandler.sendMessage(msg);
-    }
-
-    /**
-     * 刷新列表，并滚动到指定位置
      *
-     * @param position 要滚动到的位置
+     * @param position    数据改变的位置
+     * @param count       数据改变的数量
+     * @param refreshType 刷新类型，是否滚动到指定位置
      */
-    public void refreshList(int position) {
+    public void refresh(int position, int count, int refreshType) {
         Message msg = mHandler.obtainMessage();
-        msg.what = HANDLER_MSG_REFRESH_MORE;
+        msg.what = refreshType;
         msg.arg1 = position;
+        msg.arg2 = count;
         mHandler.sendMessage(msg);
     }
 
@@ -273,37 +233,25 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
         /**
          * 刷新聊天信息列表，并滚动到底部
          */
-        private void refresh() {
+        private void refresh(int position, int count) {
             mMessages.clear();
             mMessages.addAll(mConversation.getAllMessages());
-            notifyDataSetChanged();
+            notifyItemInserted(position);
             if (mMessages.size() > 1) {
                 // 滚动到最后一条
                 mRecyclerView.smoothScrollToPosition(mMessages.size() - 1);
             }
         }
 
-        /**
-         * 刷新界面并平滑滚动到新加载的记录位置
-         *
-         * @param position 新加载的内容的最后一个位置
-         */
-        private void refresh(final int position) {
-            mMessages.clear();
-            mMessages.addAll(mConversation.getAllMessages());
-            notifyDataSetChanged();
-            // 滚动到相应的位置
-            mRecyclerView.scrollToPosition(position);
-        }
-
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-            case HANDLER_MSG_REFRESH:
-                refresh();
+            case MSG_REFRESH_NORMAL:
+                refresh(msg.arg1, msg.arg2);
                 break;
-            case HANDLER_MSG_REFRESH_MORE:
-                refresh(msg.arg1);
+            case MSG_REFRESH_MORE:
+                refresh(msg.arg1, msg.arg2);
+//                refresh(msg.arg1);
                 break;
             }
         }

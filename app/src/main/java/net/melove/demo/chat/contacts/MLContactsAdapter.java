@@ -19,10 +19,10 @@ public class MLContactsAdapter extends BaseAdapter {
 
     private Context mContext;
     private LayoutInflater mInflater;
-    private List<MLUserEntity> mList;
+    private List<MLContactEntity> mList;
 
 
-    public MLContactsAdapter(Context context, List<MLUserEntity> list) {
+    public MLContactsAdapter(Context context, List<MLContactEntity> list) {
         mContext = context;
         mList = list;
     }
@@ -45,7 +45,7 @@ public class MLContactsAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHendler viewHendler = null;
-        MLUserEntity info = (MLUserEntity) getItem(position);
+        MLContactEntity info = (MLContactEntity) getItem(position);
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.item_contact, null);
             viewHendler = new ViewHendler(convertView);

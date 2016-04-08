@@ -36,6 +36,7 @@ import com.hyphenate.chat.EMTextMessageBody;
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.common.base.MLBaseActivity;
 import net.melove.demo.chat.application.MLConstants;
+import net.melove.demo.chat.common.util.MLDate;
 import net.melove.demo.chat.common.util.MLFile;
 import net.melove.demo.chat.common.util.MLMessageUtils;
 import net.melove.demo.chat.notification.MLNotifier;
@@ -62,7 +63,6 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     private String mChatId;
     // 当前会话对象
     private EMConversation mConversation;
-    private List<EMMessage> mMessages;
 
     // ListView 用来显示消息
     private RecyclerView mRecyclerView;
@@ -175,8 +175,6 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             String msgId = mConversation.getAllMessages().get(0).getMsgId();
             mConversation.loadMoreMsgFromDB(msgId, mPageSize - count);
         }
-
-        mMessages = mConversation.getAllMessages();
         // 初始化ListView控件对象
         mRecyclerView = (RecyclerView) findViewById(R.id.ml_recyclerview_message);
         // 实例化消息适配器
@@ -212,14 +210,12 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                         // 加载更多消息到当前会话的内存中
                         List<EMMessage> messages = mConversation.loadMoreMsgFromDB(mConversation.getAllMessages().get(0).getMsgId(), mPageSize);
                         if (messages.size() > 0) {
-                            final int position = messages.size();
-                            // 调用自定义的 Adapter 刷新方法
-                            mMessageAdapter.refreshList(position);
+                            // 调用 Adapter 刷新方法
+                            refreshChatUIInserted(0, messages.size());
                         }
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
                 }, 500);
-
             }
         });
     }
@@ -339,6 +335,10 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                     MLToast.makeToast("item " + position).show();
                     MLLog.i("item position - %d", position);
                     break;
+                case MLConstants.ML_ACTION_MSG_RESEND:
+                    // 重发消息
+                    resendMessage(position, message.getMsgId());
+                    break;
                 case MLConstants.ML_ACTION_MSG_COPY:
                     // 复制消息，只有文本类消息才可以复制
                     copyMessage(message);
@@ -349,9 +349,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                     break;
                 case MLConstants.ML_ACTION_MSG_DELETE:
                     // 删除消息
-                    mConversation.removeMessage(message.getMsgId());
-                    MLToast.rightToast(R.string.ml_toast_msg_delete_success);
-                    refreshChatUI();
+                    deleteMessage(position, message);
                     break;
                 case MLConstants.ML_ACTION_MSG_RECALL:
                     // 撤回消息
@@ -363,18 +361,34 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     }
 
     /**
+     * 重发消息方法
+     */
+    public void resendMessage(int position, String msgId) {
+        // 获取需要重发的消息
+        EMMessage message = mConversation.getMessage(msgId, true);
+        // 更新消息时间为当前时间
+        message.setMsgTime(MLDate.getCurrentMillisecond());
+        // 重发消息要先删除老的消息，删除后要刷新下界面，然后再重发消息
+        mConversation.removeMessage(message.getMsgId());
+        refreshChatUIRemoved(position);
+        // 调用发送方法
+        sendMessage(message);
+    }
+
+    /**
      * 复制消息到剪切板，只有 Text 文本类型的消息才能复制
      *
      * @param message 需要复制的消息对象
      */
     private void copyMessage(EMMessage message) {
-        //        MLToast.makeToast(R.string.ml_menu_chat_copy).show();
         // 获取剪切板管理者
         ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         // 创建剪切板数据对象
         ClipData clipData = ClipData.newPlainText("message", ((EMTextMessageBody) message.getBody()).getMessage());
         // 将刚创建的数据对象添加到剪切板
         clipboardManager.setPrimaryClip(clipData);
+        // 弹出提醒
+        MLToast.makeToast(R.string.ml_toast_content_copy_success).show();
     }
 
     /**
@@ -384,6 +398,20 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      */
     private void forwardMessage(EMMessage message) {
 
+    }
+
+    /**
+     * 删除一条消息
+     *
+     * @param message 需要删除的消息
+     */
+    private void deleteMessage(int position, EMMessage message) {
+        // 删除消息，此方法会同时删除内存和数据库中的数据
+        mConversation.removeMessage(message.getMsgId());
+        // 刷新界面
+        refreshChatUIRemoved(position);
+        // 弹出操作提示
+        MLToast.rightToast(R.string.ml_toast_msg_delete_success);
     }
 
     /**
@@ -417,7 +445,9 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 // 保存新消息
                 EMClient.getInstance().chatManager().saveMessage(recallMessage);
                 // 更新UI
-                mHandler.sendMessage(mHandler.obtainMessage(0));
+                Message msg = mHandler.obtainMessage(0);
+                msg.arg1 = mConversation.getMessagePosition(message);
+                mHandler.sendMessage(msg);
             }
 
             /**
@@ -450,6 +480,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
 
     /**
      * 设置消息扩展
+     *
+     * @param message 需要发送的消息
      */
     private void setMessageAttribute(EMMessage message) {
         if (isBurn) {
@@ -461,15 +493,18 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     /**
      * 最终调用发送信息方法
      *
-     * @param message
+     * @param message 需要发送的消息
      */
-    private void sendMessage(final EMMessage message) {
+    private void sendMessage(EMMessage message) {
         // 调用设置消息扩展方法
         setMessageAttribute(message);
-        // 调用sdk的消息发送方法，发送消息
+        /**
+         *  调用sdk的消息发送方法，发送消息，这里不进行消息的状态监听
+         *  都在各自的{@link net.melove.demo.chat.conversation.messageitem.MLMessageItem}实现监听
+         */
         EMClient.getInstance().chatManager().sendMessage(message);
-        // 点击发送后马上刷新界面，无论消息有没有成功，先显示
-        refreshChatUI();
+        // 点击发送后马上刷新界面，无论消息有没有成功，先刷新显示
+        refreshChatUIInserted(mConversation.getMessagePosition(message));
     }
 
     /**
@@ -478,10 +513,12 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     private void sendTextMessage() {
         String content = mEditText.getText().toString();
         mEditText.setText("");
-
+        // 设置界面按钮状态
         mSendView.setVisibility(View.GONE);
         mVoiceView.setVisibility(View.VISIBLE);
+        // 创建一条文本消息
         EMMessage textMessage = EMMessage.createTxtSendMessage(content, mChatId);
+        // 调用刷新消息的方法，
         sendMessage(textMessage);
     }
 
@@ -535,6 +572,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             }
             break;
         case MLConstants.ML_REQUEST_CODE_VIDEO:
+            // 视频文件 TODO 可以考录自定义实现录制小视频
             break;
         case MLConstants.ML_REQUEST_CODE_FILE:
             // 选择文件后返回获取返回的文件路径，然后发送文件
@@ -544,11 +582,13 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             }
             break;
         case MLConstants.ML_REQUEST_CODE_LOCATION:
+            // TODO 发送位置消息
             break;
         case MLConstants.ML_REQUEST_CODE_GIFT:
+            // TODO 发送礼物
             break;
         case MLConstants.ML_REQUEST_CODE_CONTACTS:
-
+            // TODO 发送联系人名片
             break;
         default:
             break;
@@ -629,15 +669,6 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     }
 
     /**
-     * 刷新聊天界面ui
-     */
-    private void refreshChatUI() {
-        if (mMessageAdapter != null) {
-            mMessageAdapter.refreshList();
-        }
-    }
-
-    /**
      * 重写菜单项的选择事件
      *
      * @param item 点击的是哪一个菜单项
@@ -660,7 +691,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             // mConversation.clear();
             // 清除全部信息，包括数据库中的
             mConversation.clearAllMessages();
-            refreshChatUI();
+            refreshChatUIRemoved(0, mConversation.getAllMessages().size());
             break;
         }
         return super.onOptionsItemSelected(item);
@@ -724,7 +755,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     protected void onResume() {
         super.onResume();
         // 刷新界面
-        refreshChatUI();
+        //        refreshChatUI();
         // 注册环信的消息监听器
         EMClient.getInstance().chatManager().addMessageListener(mMessageListener);
     }
@@ -745,16 +776,57 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
 
     /**
      * --------------------------------- Custom Handler -------------------------------------
+     * 自定义 Handler 类，主要用于界面的刷新操作
      */
     class MLHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
             int what = msg.what;
+            int arg1 = msg.arg1;
             switch (what) {
             case 0:
-                refreshChatUI();
+                refreshChatUI(arg1, 1, 0);
                 break;
             }
+        }
+    }
+
+    /**
+     * 界面刷新方法
+     */
+    private void refreshChatUI() {
+        if (mMessageAdapter != null) {
+            mMessageAdapter.refresh(mConversation.getAllMessages().size(), 1, 0);
+        }
+    }
+
+    private void refreshChatUI(int position, int count, int refreshType) {
+        if (mMessageAdapter != null) {
+            mMessageAdapter.refresh(position, count, refreshType);
+        }
+    }
+
+    private void refreshChatUIInserted(int position) {
+        if (mMessageAdapter != null) {
+            mMessageAdapter.refresh(position, 1, 1);
+        }
+    }
+
+    private void refreshChatUIInserted(int position, int count) {
+        if (mMessageAdapter != null) {
+            mMessageAdapter.refresh(position, count, 0);
+        }
+    }
+
+    private void refreshChatUIRemoved(int position) {
+        if (mMessageAdapter != null) {
+            mMessageAdapter.refresh(position, 1, 0);
+        }
+    }
+
+    private void refreshChatUIRemoved(int position, int count) {
+        if (mMessageAdapter != null) {
+            mMessageAdapter.refresh(position, count, 0);
         }
     }
 
@@ -773,7 +845,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         // 循环遍历当前收到的消息
         for (EMMessage message : list) {
             if (mChatId.equals(message.getFrom())) {
-                refreshChatUI();
+                refreshChatUIInserted(mConversation.getMessagePosition(message));
                 // 设置消息为已读
                 mConversation.markMessageAsRead(message.getMsgId());
             } else {

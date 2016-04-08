@@ -111,7 +111,7 @@
             android:windowSoftInputMode="adjustResize|stateHidden"/>
         <!-- 账户信息界面 -->
         <activity
-            android:name=".contacts.MLUserInfoActivity"
+            android:name=".contacts.MLContactInfoActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Default"/>
         <!-- 聊天界面 -->

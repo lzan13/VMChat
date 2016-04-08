@@ -63,7 +63,9 @@ public class MLFileMessageItem extends MLMessageItem {
         String fileExtend = filename.substring(filename.lastIndexOf(".") + 1, filename.length());
         mContentSizeView.setText(TextFormater.getDataSize(fileBody.getFileSize()) + "  " + fileExtend);
 
+        // 设置消息回调
         setCallback();
+        // 刷新界面显示
         refreshView();
     }
 
@@ -135,30 +137,6 @@ public class MLFileMessageItem extends MLMessageItem {
     }
 
     /**
-     * 设置当前消息的callback回调
-     */
-    protected void setCallback() {
-        setMessageCallback(new EMCallBack() {
-            @Override
-            public void onSuccess() {
-                mHandler.sendMessage(mHandler.obtainMessage(CALLBACK_STATUS_SUCCESS));
-            }
-
-            @Override
-            public void onError(int i, String s) {
-                mHandler.sendMessage(mHandler.obtainMessage(CALLBACK_STATUS_ERROR));
-            }
-
-            @Override
-            public void onProgress(int i, String s) {
-                Message msg = mHandler.obtainMessage(CALLBACK_STATUS_PROGRESS);
-                msg.arg1 = i;
-                mHandler.sendMessage(msg);
-            }
-        });
-    }
-
-    /**
      * 刷新当前item
      */
     protected void refreshView() {
@@ -184,7 +162,7 @@ public class MLFileMessageItem extends MLMessageItem {
             mResendView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mAdapter.resendMessage(mMessage.getMsgId());
+                    mAdapter.onItemAction(mPosition, MLConstants.ML_ACTION_MSG_RESEND);
                 }
             });
             break;
@@ -199,6 +177,33 @@ public class MLFileMessageItem extends MLMessageItem {
         setAckStatusView();
     }
 
+    /**
+     * 设置当前消息的callback回调
+     */
+    protected void setCallback() {
+        setMessageCallback(new EMCallBack() {
+            @Override
+            public void onSuccess() {
+                mHandler.sendMessage(mHandler.obtainMessage(CALLBACK_STATUS_SUCCESS));
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                mHandler.sendMessage(mHandler.obtainMessage(CALLBACK_STATUS_ERROR));
+            }
+
+            @Override
+            public void onProgress(int i, String s) {
+                Message msg = mHandler.obtainMessage(CALLBACK_STATUS_PROGRESS);
+                msg.arg1 = i;
+                mHandler.sendMessage(msg);
+            }
+        });
+    }
+
+    /**
+     * 自定义 Handler 类，用来刷新当前 ItemView
+     */
     class MLHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
@@ -210,7 +215,9 @@ public class MLFileMessageItem extends MLMessageItem {
                 refreshView();
                 break;
             case CALLBACK_STATUS_PROGRESS:
-                mPercentView.setText(String.format("%%d", msg.arg1));
+                // 设置消息进度百分比
+                mPercentView.setText(msg.arg1 + "%");
+                refreshView();
                 break;
             }
         }

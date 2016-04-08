@@ -22,7 +22,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.hyphenate.chat.EMClient;
-import com.hyphenate.chat.EMGroupManager;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLConstants;
@@ -32,7 +31,7 @@ import net.melove.demo.chat.common.base.MLBaseActivity;
 import net.melove.demo.chat.common.util.MLLog;
 import net.melove.demo.chat.conversation.MLChatActivity;
 import net.melove.demo.chat.database.MLInvitedDao;
-import net.melove.demo.chat.contacts.MLInvitedFragment;
+import net.melove.demo.chat.invited.MLInvitedFragment;
 import net.melove.demo.chat.common.base.MLBaseFragment;
 import net.melove.demo.chat.common.widget.MLImageView;
 import net.melove.demo.chat.common.widget.MLToast;
@@ -335,7 +334,7 @@ public class MLMainActivity extends MLBaseActivity implements
         // 0x2x 暂时表示Test
         case 0x20:
             //                Intent intent = new Intent();
-            //                intent.setClass(mActivity, MLUserInfoActivity.class);
+            //                intent.setClass(mActivity, MLContactInfoActivity.class);
             //                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity);
             //                ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
             break;

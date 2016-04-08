@@ -5,11 +5,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AlertDialog;
-import android.view.WindowManager;
 
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMConnectionListener;
@@ -22,7 +18,6 @@ import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMOptions;
-import com.hyphenate.chat.EMTextMessageBody;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.common.util.MLCrypto;
@@ -30,15 +25,14 @@ import net.melove.demo.chat.common.util.MLDate;
 import net.melove.demo.chat.common.util.MLLog;
 import net.melove.demo.chat.common.util.MLMessageUtils;
 import net.melove.demo.chat.common.util.MLSPUtil;
-import net.melove.demo.chat.contacts.MLInvitedEntity;
-import net.melove.demo.chat.contacts.MLUserEntity;
+import net.melove.demo.chat.invited.MLInvitedEntity;
+import net.melove.demo.chat.contacts.MLContactEntity;
 import net.melove.demo.chat.conversation.MLConversationExtUtils;
 import net.melove.demo.chat.database.MLInvitedDao;
-import net.melove.demo.chat.database.MLUserDao;
+import net.melove.demo.chat.database.MLContactDao;
 import net.melove.demo.chat.main.MLConflictActivity;
 import net.melove.demo.chat.notification.MLNotifier;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -62,7 +56,7 @@ public class MLEasemobHelper {
     // 申请与邀请类消息的数据库操作类
     private MLInvitedDao mInvitedDao;
     // 用户信息数据库操作类
-    private MLUserDao mUserDao;
+    private MLContactDao mUserDao;
     // 环信联系人监听
     private EMContactListener mContactListener;
     // 环信连接监听
@@ -103,7 +97,7 @@ public class MLEasemobHelper {
     public synchronized boolean initEasemob(Context context) {
         mContext = context;
 
-        mUserDao = new MLUserDao(mContext);
+        mUserDao = new MLContactDao(mContext);
         mInvitedDao = new MLInvitedDao(mContext);
 
         // 获取App内广播接收器实例
@@ -202,7 +196,7 @@ public class MLEasemobHelper {
             /**
              * 链接聊天服务器失败
              *
-             * @param errorCode
+             * @param errorCode 连接失败错误码
              */
             @Override
             public void onDisconnected(final int errorCode) {
@@ -258,6 +252,8 @@ public class MLEasemobHelper {
                     }
                     // 设置会话的最后时间
                     MLConversationExtUtils.setConversationLastTime(conversation);
+                    // 收到新消息，发送一条通知
+                    MLNotifier.getInstance(MLApplication.getContext()).sendMessageNotification(message);
                 }
                 // 发送广播，通知需要刷新UI等操作的地方
                 mLocalBroadcastManager.sendBroadcast(new Intent(MLConstants.ML_ACTION_MESSAGE));
@@ -328,7 +324,7 @@ public class MLEasemobHelper {
              */
             @Override
             public void onContactAdded(String username) {
-                MLUserEntity user = new MLUserEntity();
+                MLContactEntity user = new MLContactEntity();
                 user.setUserName(username);
                 mUserDao.saveContacts(user);
             }

@@ -2,7 +2,7 @@ package net.melove.demo.chat.application;
 
 /**
  * Class ${FILE_NAME}
- * <p/>
+ * <p>
  * Created by lzan13 on 2015/9/10 22:04.
  */
 public class MLConstants {
@@ -66,6 +66,7 @@ public class MLConstants {
      * 自定义会话界面消息列表项的点击与长按 Action
      */
     public static final int ML_ACTION_MSG_CLICK = 0X00;
+    public static final int ML_ACTION_MSG_RESEND = 0X01;
     public static final int ML_ACTION_MSG_COPY = 0X10;
     public static final int ML_ACTION_MSG_FORWARD = 0X11;
     public static final int ML_ACTION_MSG_DELETE = 0X12;
@@ -78,7 +79,6 @@ public class MLConstants {
     public static final int ML_ACTION_INVITED_AGREE = 0X10;
     public static final int ML_ACTION_INVITED_REFUSE = 0X11;
     public static final int ML_ACTION_INVITED_DELETE = 0X12;
-
 
 
     /**

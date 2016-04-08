@@ -1,4 +1,4 @@
-package net.melove.demo.chat.contacts;
+package net.melove.demo.chat.invited;
 
 /**
  * Created by lzan13 on 2015/8/21.

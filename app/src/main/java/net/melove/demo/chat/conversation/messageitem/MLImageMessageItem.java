@@ -108,74 +108,10 @@ public class MLImageMessageItem extends MLMessageItem {
             }
         });
 
+        // 设置消息回调
         setCallback();
+        // 刷新界面显示
         refreshView();
-    }
-
-    /**
-     * 设置缩略图的显示，并将缩略图添加到缓存
-     *
-     * @param thumbnailsPath 缩略图的路径
-     * @param fullSizePath   原始图片的路径
-     */
-    private void showThumbnailsImage(final String thumbnailsPath, final String fullSizePath, final int width, final int height) {
-        Bitmap bitmap = MLBitmapCache.getInstance().optBitmap(thumbnailsPath);
-        if (bitmap != null) {
-            if (mImageView.getTag().equals(thumbnailsPath)) {
-                mImageView.setImageBitmap(bitmap);
-            }
-        } else {
-            new AsyncTask<Object, Integer, Bitmap>() {
-                @Override
-                protected Bitmap doInBackground(Object... params) {
-                    File thumbnailsFile = new File(thumbnailsPath);
-                    File fullSizeFile = new File(fullSizePath);
-                    Bitmap tempBitmap = null;
-
-                    // 首先判断原图以及缩略图是否都存在，如果不存在直接返回
-                    if (!fullSizeFile.exists() && !thumbnailsFile.exists()) {
-                        return tempBitmap;
-                    } else if ((!fullSizeFile.exists() && (width > thumbnailsMax || height > thumbnailsMax))
-                            || thumbnailsFile.exists() && thumbnailsFile.length() > 1024 * 10 * 2) {
-                        // 然后判断缩略图是否存在，并且足够清晰，则根据缩略图路径直接获取Bitmap
-                        tempBitmap = MLBitmapUtil.compressBitmap(thumbnailsPath, thumbnailsMax, thumbnailsMax);
-                    } else if (fullSizeFile.exists() && fullSizeFile.length() > 1024 * 10 * 5
-                            && (width > thumbnailsMax || height > thumbnailsMax)) {
-                        // 然后判断原图是否存在，通过原图重新生成缩略图
-                        tempBitmap = MLBitmapUtil.compressBitmap(fullSizePath, thumbnailsMax, thumbnailsMax);
-                        // 文件生成成功之后，把新的Bitmap保存到本地磁盘中
-                        MLFile.saveBitmapToSDCard(tempBitmap, thumbnailsPath);
-                    } else {
-                        // 当图片本身就很小时，直接加在图片
-                        tempBitmap = MLBitmapUtil.compressBitmap(thumbnailsPath, width, height);
-                    }
-                    return tempBitmap;
-                }
-
-                @Override
-                protected void onPostExecute(Bitmap bitmap) {
-                    if (bitmap != null) {
-                        // 设置图片控件为当前bitmap
-                        if (mImageView.getTag().equals(thumbnailsPath)) {
-                            mImageView.setImageBitmap(bitmap);
-                        }
-                        // 将Bitmap对象添加到缓存中去
-                        MLBitmapCache.getInstance().putBitmap(thumbnailsPath, bitmap);
-                    } else {
-                        // 判断当前消息的状态，如果是失败的消息，则去重新下载缩略图
-                        if (mMessage.status() == EMMessage.Status.FAIL) {
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    // 下载缩略图
-                                    EMClient.getInstance().chatManager().downloadThumbnail(mMessage);
-                                }
-                            }).start();
-                        }
-                    }
-                }
-            }.execute();
-        }
     }
 
     /**
@@ -245,6 +181,113 @@ public class MLImageMessageItem extends MLMessageItem {
     }
 
     /**
+     * 设置缩略图的显示，并将缩略图添加到缓存
+     *
+     * @param thumbnailsPath 缩略图的路径
+     * @param fullSizePath   原始图片的路径
+     */
+    private void showThumbnailsImage(final String thumbnailsPath, final String fullSizePath, final int width, final int height) {
+        Bitmap bitmap = MLBitmapCache.getInstance().optBitmap(thumbnailsPath);
+        if (bitmap != null) {
+            if (mImageView.getTag().equals(thumbnailsPath)) {
+                mImageView.setImageBitmap(bitmap);
+            }
+        } else {
+            new AsyncTask<Object, Integer, Bitmap>() {
+                @Override
+                protected Bitmap doInBackground(Object... params) {
+                    File thumbnailsFile = new File(thumbnailsPath);
+                    File fullSizeFile = new File(fullSizePath);
+                    Bitmap tempBitmap = null;
+
+                    // 首先判断原图以及缩略图是否都存在，如果不存在直接返回
+                    if (!fullSizeFile.exists() && !thumbnailsFile.exists()) {
+                        return tempBitmap;
+                    } else if ((!fullSizeFile.exists() && (width > thumbnailsMax || height > thumbnailsMax))
+                            || thumbnailsFile.exists() && thumbnailsFile.length() > 1024 * 10 * 2) {
+                        // 然后判断缩略图是否存在，并且足够清晰，则根据缩略图路径直接获取Bitmap
+                        tempBitmap = MLBitmapUtil.compressBitmap(thumbnailsPath, thumbnailsMax, thumbnailsMax);
+                    } else if (fullSizeFile.exists() && fullSizeFile.length() > 1024 * 10 * 5
+                            && (width > thumbnailsMax || height > thumbnailsMax)) {
+                        // 然后判断原图是否存在，通过原图重新生成缩略图
+                        tempBitmap = MLBitmapUtil.compressBitmap(fullSizePath, thumbnailsMax, thumbnailsMax);
+                        // 文件生成成功之后，把新的Bitmap保存到本地磁盘中
+                        MLFile.saveBitmapToSDCard(tempBitmap, thumbnailsPath);
+                    } else {
+                        // 当图片本身就很小时，直接加在图片
+                        tempBitmap = MLBitmapUtil.compressBitmap(thumbnailsPath, width, height);
+                    }
+                    return tempBitmap;
+                }
+
+                @Override
+                protected void onPostExecute(Bitmap bitmap) {
+                    if (bitmap != null) {
+                        // 设置图片控件为当前bitmap
+                        if (mImageView.getTag().equals(thumbnailsPath)) {
+                            mImageView.setImageBitmap(bitmap);
+                        }
+                        // 将Bitmap对象添加到缓存中去
+                        MLBitmapCache.getInstance().putBitmap(thumbnailsPath, bitmap);
+                    } else {
+                        // 判断当前消息的状态，如果是失败的消息，则去重新下载缩略图
+                        if (mMessage.status() == EMMessage.Status.FAIL) {
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    // 下载缩略图
+                                    EMClient.getInstance().chatManager().downloadThumbnail(mMessage);
+                                }
+                            }).start();
+                        }
+                    }
+                }
+            }.execute();
+        }
+    }
+
+    /**
+     * 刷新当前item
+     */
+    protected void refreshView() {
+        // 判断是不是阅后即焚的消息
+        if (mMessage.getBooleanAttribute(MLConstants.ML_ATTR_BURN, false)) {
+        } else {
+        }
+        // 判断消息的状态，如果发送失败就显示重发按钮，并设置重发按钮的监听
+        switch (mMessage.status()) {
+        case SUCCESS:
+            mAckStatusView.setVisibility(View.VISIBLE);
+            mProgressBar.setVisibility(View.GONE);
+            mPercentView.setVisibility(View.GONE);
+            mResendView.setVisibility(View.GONE);
+            break;
+        // 当消息在发送过程中被Kill，消息的状态会变成Create，而且永远不会发送成功，所以这里把CREATE状态莪要设置为失败
+        case FAIL:
+        case CREATE:
+            mAckStatusView.setVisibility(View.GONE);
+            mProgressBar.setVisibility(View.GONE);
+            mPercentView.setVisibility(View.GONE);
+            mResendView.setVisibility(View.VISIBLE);
+            mResendView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mAdapter.onItemAction(mPosition, MLConstants.ML_ACTION_MSG_RESEND);
+                }
+            });
+            break;
+        case INPROGRESS:
+            mAckStatusView.setVisibility(View.GONE);
+            mProgressBar.setVisibility(View.VISIBLE);
+            mPercentView.setVisibility(View.VISIBLE);
+            mResendView.setVisibility(View.GONE);
+            break;
+        }
+        // 设置消息ACK 状态
+        setAckStatusView();
+    }
+
+    /**
      * 设置当前消息的callback回调
      */
     protected void setCallback() {
@@ -269,48 +312,7 @@ public class MLImageMessageItem extends MLMessageItem {
     }
 
     /**
-     * 刷新当前item
-     */
-    protected void refreshView() {
-        // 判断是不是阅后即焚的消息
-        if (mMessage.getBooleanAttribute(MLConstants.ML_ATTR_BURN, false)) {
-        } else {
-        }
-        // 判断消息的状态，如果发送失败就显示重发按钮，并设置重发按钮的监听
-        switch (mMessage.status()) {
-        case SUCCESS:
-            mAckStatusView.setVisibility(View.VISIBLE);
-            mProgressBar.setVisibility(View.GONE);
-            mPercentView.setVisibility(View.GONE);
-            mResendView.setVisibility(View.GONE);
-            break;
-        case FAIL:
-        case CREATE:
-            // 当消息在发送过程中被Kill，消息的状态会变成Create，而且永远不会发送成功，所以这里把CREATE状态莪要设置为失败
-            mAckStatusView.setVisibility(View.GONE);
-            mProgressBar.setVisibility(View.GONE);
-            mPercentView.setVisibility(View.GONE);
-            mResendView.setVisibility(View.VISIBLE);
-            mResendView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mAdapter.resendMessage(mMessage.getMsgId());
-                }
-            });
-            break;
-        case INPROGRESS:
-            mAckStatusView.setVisibility(View.GONE);
-            mProgressBar.setVisibility(View.VISIBLE);
-            mPercentView.setVisibility(View.VISIBLE);
-            mResendView.setVisibility(View.GONE);
-            break;
-        }
-        // 设置消息ACK 状态
-        setAckStatusView();
-    }
-
-    /**
-     * 自定义Handler，用来处理界面的刷新
+     * 自定义 Handler 类，用来刷新当前 ItemView
      */
     class MLHandler extends Handler {
         @Override
@@ -323,7 +325,9 @@ public class MLImageMessageItem extends MLMessageItem {
                 refreshView();
                 break;
             case CALLBACK_STATUS_PROGRESS:
-                mPercentView.setText(String.format("%%d", msg.arg1));
+                // 设置消息进度百分比
+                mPercentView.setText(msg.arg1 + "%");
+                refreshView();
                 break;
             }
         }

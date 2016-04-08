@@ -57,7 +57,9 @@ public class MLTextMessageItem extends MLMessageItem {
         String messageStr = body.getMessage().toString();
         mContentView.setText(messageStr);
 
+        // 设置消息回调
         setCallback();
+        // 刷新界面显示
         refreshView();
     }
 
@@ -131,6 +133,40 @@ public class MLTextMessageItem extends MLMessageItem {
     }
 
     /**
+     * 刷新当前 ItemView
+     */
+    protected void refreshView() {
+        // 判断消息的状态，如果发送失败就显示重发按钮，并设置重发按钮的监听
+        switch (mMessage.status()) {
+        case SUCCESS:
+            mAckStatusView.setVisibility(View.VISIBLE);
+            mProgressBar.setVisibility(View.GONE);
+            mResendView.setVisibility(View.GONE);
+            break;
+        // 当消息在发送过程中被Kill，消息的状态会变成Create，而且永远不会发送成功，这里把Create和Fail归为同一个状态
+        case FAIL:
+        case CREATE:
+            mAckStatusView.setVisibility(View.GONE);
+            mProgressBar.setVisibility(View.GONE);
+            mResendView.setVisibility(View.VISIBLE);
+            mResendView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mAdapter.onItemAction(mPosition, MLConstants.ML_ACTION_MSG_RESEND);
+                }
+            });
+            break;
+        case INPROGRESS:
+            mAckStatusView.setVisibility(View.GONE);
+            mProgressBar.setVisibility(View.VISIBLE);
+            mResendView.setVisibility(View.GONE);
+            break;
+        }
+        // 设置消息ACK 状态
+        setAckStatusView();
+    }
+
+    /**
      * 设置当前消息的callback回调
      */
     protected void setCallback() {
@@ -152,41 +188,6 @@ public class MLTextMessageItem extends MLMessageItem {
                 mHandler.sendMessage(msg);
             }
         });
-    }
-
-    /**
-     * 刷新当前 ItemView
-     */
-    protected void refreshView() {
-        // 判断消息的状态，如果发送失败就显示重发按钮，并设置重发按钮的监听
-        switch (mMessage.status()) {
-        case SUCCESS:
-            mAckStatusView.setVisibility(View.VISIBLE);
-            mProgressBar.setVisibility(View.GONE);
-            mResendView.setVisibility(View.GONE);
-            break;
-        case FAIL:
-        case CREATE:
-            mAckStatusView.setVisibility(View.GONE);
-            mProgressBar.setVisibility(View.GONE);
-            mResendView.setVisibility(View.VISIBLE);
-            mResendView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mAdapter.resendMessage(mMessage.getMsgId());
-                }
-            });
-            // 当消息在发送过程中被Kill，消息的状态会变成Create，而且永远不会发送成功，这里调用重发
-            // mAdapter.resendMessage(mMessage.getMsgId());
-            break;
-        case INPROGRESS:
-            mAckStatusView.setVisibility(View.GONE);
-            mProgressBar.setVisibility(View.VISIBLE);
-            mResendView.setVisibility(View.GONE);
-            break;
-        }
-        // 设置消息ACK 状态
-        setAckStatusView();
     }
 
     class MLHandler extends Handler {

@@ -1,4 +1,4 @@
-package net.melove.demo.chat.contacts;
+package net.melove.demo.chat.invited;
 
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -17,7 +17,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.exceptions.HyphenateException;
@@ -25,7 +24,6 @@ import com.hyphenate.exceptions.HyphenateException;
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.database.MLInvitedDao;
-import net.melove.demo.chat.common.widget.MLToast;
 import net.melove.demo.chat.common.base.MLBaseFragment;
 
 import java.util.ArrayList;

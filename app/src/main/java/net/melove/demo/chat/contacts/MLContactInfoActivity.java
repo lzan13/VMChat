@@ -20,18 +20,19 @@ import net.melove.demo.chat.common.base.MLBaseActivity;
 import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.conversation.MLChatActivity;
 import net.melove.demo.chat.database.MLInvitedDao;
-import net.melove.demo.chat.database.MLUserDao;
+import net.melove.demo.chat.database.MLContactDao;
 import net.melove.demo.chat.common.util.MLCrypto;
 import net.melove.demo.chat.common.util.MLDate;
 import net.melove.demo.chat.common.util.MLLog;
 import net.melove.demo.chat.common.widget.MLToast;
+import net.melove.demo.chat.invited.MLInvitedEntity;
 
 
 /**
  * Created by lzan13 on 2015/8/29.
- * 用户信息展示界面，主要用于显示用户信息，可以显示好友以及陌生人，如果是陌生人就显示添加好友按钮
+ * 联系人信息展示界面，用于显示联系人的一些详细信息，可以显示好友以及陌生人，如果是陌生人就显示添加好友按钮
  */
-public class MLUserInfoActivity extends MLBaseActivity {
+public class MLContactInfoActivity extends MLBaseActivity {
 
     private String mChatId;
 
@@ -44,9 +45,9 @@ public class MLUserInfoActivity extends MLBaseActivity {
     // 申请与邀请数据库操作类
     private MLInvitedDao mInvitedDao;
     // 用户信息数据库操作类
-    private MLUserDao mUserDao;
+    private MLContactDao mContactDao;
     // 用户信息实体类
-    private MLUserEntity mUserEntity;
+    private MLContactEntity mContactEntity;
 
 
     @Override
@@ -66,15 +67,15 @@ public class MLUserInfoActivity extends MLBaseActivity {
         mActivity = this;
         mChatId = getIntent().getStringExtra(MLConstants.ML_EXTRA_CHAT_ID);
         mInvitedDao = new MLInvitedDao(mActivity);
-        mUserDao = new MLUserDao(mActivity);
+        mContactDao = new MLContactDao(mActivity);
         // 查询本地User对象
-        mUserEntity = mUserDao.getContact(mChatId);
+        mContactEntity = mContactDao.getContact(mChatId);
 
         mFab = (FloatingActionButton) findViewById(R.id.ml_btn_fab_user_info);
         mFab.setOnClickListener(viewListener);
 
         // 根据本地查询到的用户情况来确定是显示 添加好友 还是显示 发送消息
-        if (mUserEntity != null && mUserEntity.getUserName() != null) {
+        if (mContactEntity != null && mContactEntity.getUserName() != null) {
             mFab.setImageResource(R.mipmap.ic_chat_white_24dp);
         } else {
             mFab.setImageResource(R.mipmap.ic_add_contacts_white_24dp);
@@ -107,7 +108,7 @@ public class MLUserInfoActivity extends MLBaseActivity {
                 onFinish();
                 break;
             case R.id.ml_btn_fab_user_info:
-                if (mUserEntity != null && mUserEntity.getUserName() != null) {
+                if (mContactEntity != null && mContactEntity.getUserName() != null) {
                     startChat();
                 } else {
                     addContact();
@@ -156,7 +157,7 @@ public class MLUserInfoActivity extends MLBaseActivity {
                             invitedEntity.setObjId(objId);
                             // 对方的username
                             invitedEntity.setUserName(mChatId);
-                            // invitedEntity.setNickName(mUserEntity.getNickName());
+                            // invitedEntity.setNickName(mContactEntity.getNickName());
                             // 设置申请理由
                             invitedEntity.setReason(reason);
                             // 设置申请状态为被申请

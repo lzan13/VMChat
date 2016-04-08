@@ -100,6 +100,27 @@ public abstract class MLMessageItem extends LinearLayout {
     }
 
     /**
+     * 处理数据显示
+     *
+     * @param message 需要展示的 EMMessage 对象
+     */
+    public abstract void onSetupView(EMMessage message, int position);
+
+    /**
+     * 抽象方法，填充当前 Item，子类必须实现
+     * 解析对应的xml 布局，填充当前 ItemView，并初始化控件
+     */
+    protected abstract void onInflateView();
+
+    /**
+     * 当前Item 长按监听
+     * 实现当前Item 的长按操作，因为各个Item类型不同，需要的实现操作不同，所以长按菜单的弹出在Item中实现，
+     * 然后长按菜单项需要的操作，通过回调的方式传递到{@link MLChatActivity#setItemClickListener()}中去实现
+     * TODO 现在这种实现并不是最优，因为在每一个 Item 中都要去实现弹出一个 Dialog，但是又不想自定义dialog
+     */
+    protected abstract void onItemLongClick();
+
+    /**
      * 设置ACK的状态显示，包括消息送达，消息已读
      * 这个在弱网环境下ack状态会失败，
      */
@@ -173,26 +194,4 @@ public abstract class MLMessageItem extends LinearLayout {
             }
         });
     }
-
-    /**
-     * 处理数据显示
-     *
-     * @param message 需要展示的 EMMessage 对象
-     */
-    public abstract void onSetupView(EMMessage message, int position);
-
-    /**
-     * 抽象方法，填充当前 Item，子类必须实现
-     * 解析对应的xml 布局，填充当前 ItemView，并初始化控件
-     */
-    protected abstract void onInflateView();
-
-    /**
-     * 当前Item 长按监听
-     * 实现当前Item 的长按操作，因为各个Item类型不同，需要的实现操作不同，所以长按菜单的弹出在Item中实现，
-     * 然后长按菜单项需要的操作，通过回调的方式传递到{@link MLChatActivity#setItemClickListener()}中去实现
-     * TODO 现在这种实现并不是最优，因为在每一个 Item 中都要去实现弹出一个 Dialog，但是又不想自定义dialog
-     */
-    protected abstract void onItemLongClick();
-
 }
