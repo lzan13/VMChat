@@ -49,7 +49,6 @@ public abstract class MLMessageItem extends LinearLayout {
 
     // 当前 Item 需要处理的 EMMessage 对象
     protected EMMessage mMessage;
-    protected int mPosition;
 
     /**
      * 聊天界面不同的item 所有要显示的控件，每个item可能显示的个数不同，
@@ -87,7 +86,7 @@ public abstract class MLMessageItem extends LinearLayout {
             @Override
             public void onClick(View v) {
                 // 设置 Item 项点击的 Action
-                mAdapter.onItemAction(mPosition, MLConstants.ML_ACTION_MSG_CLICK);
+                mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_MSG_CLICK);
             }
         });
         this.setOnLongClickListener(new OnLongClickListener() {
@@ -104,7 +103,7 @@ public abstract class MLMessageItem extends LinearLayout {
      *
      * @param message 需要展示的 EMMessage 对象
      */
-    public abstract void onSetupView(EMMessage message, int position);
+    public abstract void onSetupView(EMMessage message);
 
     /**
      * 抽象方法，填充当前 Item，子类必须实现

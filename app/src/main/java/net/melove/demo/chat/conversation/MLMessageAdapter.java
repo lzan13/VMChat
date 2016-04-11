@@ -4,17 +4,14 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 
 import net.melove.demo.chat.application.MLConstants;
-import net.melove.demo.chat.common.util.MLDate;
 import net.melove.demo.chat.conversation.messageitem.MLFileMessageItem;
 import net.melove.demo.chat.conversation.messageitem.MLImageMessageItem;
 import net.melove.demo.chat.conversation.messageitem.MLMessageItem;
@@ -32,13 +29,23 @@ import java.util.List;
 public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.MessageViewHolder> {
 
     // 刷新类型
-    private final int MSG_REFRESH_NORMAL = 0;
-    private final int MSG_REFRESH_MORE = 1;
+    public static final int NOTIFY_ALL = 0x00;
+    public static final int NOTIFY_CHANGED = 0x01;
+    public static final int NOTIFY_MOVED = 0x02;
+    public static final int NOTIFY_INSERTED = 0x03;
+    public static final int NOTIFY_RANGE_CHANGED = 0x04;
+    public static final int NOTIFY_RANGE_INSERTED = 0x05;
+    public static final int NOTIFY_RANGE_REMOVED = 0x06;
+    public static final int NOTIFY_REMOVED = 0x07;
+
 
     private Context mContext;
+    // 当前 Item position
+    private int mCurrPosition;
 
-
+    // 聊天对象的 useranme/groupid
     private String mChatId;
+    // 当前会话对象
     private EMConversation mConversation;
     private List<EMMessage> mMessages;
     private RecyclerView mRecyclerView;
@@ -163,7 +170,7 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
         /**
          *  调用自定义{@link MLMessageItem#onSetupView(EMMessage)}来填充数据
          */
-        ((MLMessageItem) holder.itemView).onSetupView(message, position);
+        ((MLMessageItem) holder.itemView).onSetupView(message);
 
     }
 
@@ -192,66 +199,188 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
          * {@link net.melove.demo.chat.conversation.messageitem.MLMessageItem}的操作以自定义 Action
          * 的方式传递过过来，因为聊天列表的 Item 有多种多样的，每一个 Item 弹出菜单不同，
          *
-         * @param position 需要操作的Item的位置
-         * @param action   Item 触发的动作，比如 点击、复制、转发、删除、撤回等
+         * @param message 需要操作的 Item 的 EMMessage 对象
+         * @param action  Item 触发的动作，比如 点击、复制、转发、删除、撤回等
          */
-        public void onItemAction(int position, int action);
+        public void onItemAction(EMMessage message, int action);
     }
 
 
     /**
      * Item 项的点击和长按 Action 事件回调
      *
-     * @param position 长按的 Item 位置
-     * @param action   长按菜单需要处理的动作，比如 复制、转发、删除、撤回等
+     * @param message 操作的 Item 的 EMMessage 对象
+     * @param action  需要处理的动作，比如 复制、转发、删除、撤回等
      */
-    public void onItemAction(int position, int action) {
-        mOnItemClickListener.onItemAction(position, action);
+    public void onItemAction(EMMessage message, int action) {
+        mOnItemClickListener.onItemAction(message, action);
     }
 
     /**
      * ---------------------------------------------------------------------------------
-     * 自定义Adapter的刷新操作
+     * 刷新整个 Adapter 列表方法
      *
-     * @param position    数据改变的位置
-     * @param count       数据改变的数量
-     * @param refreshType 刷新类型，是否滚动到指定位置
+     * @param notifyType 通知刷新类型
      */
-    public void refresh(int position, int count, int refreshType) {
+    public void refresh(int notifyType) {
         Message msg = mHandler.obtainMessage();
-        msg.what = refreshType;
-        msg.arg1 = position;
-        msg.arg2 = count;
+        msg.what = notifyType;
+        mHandler.sendMessage(msg);
+    }
+
+    /**
+     * 自定义 Adapter 局部刷新方法，需要提供位置，数量，类型
+     *
+     * @param arg1       数据改变的位置
+     * @param arg2       数据改变的数量/移动时目标位置
+     * @param notifyType 刷新类型，包含插入新数据，删除数据，等
+     */
+    public void refresh(int arg1, int arg2, int notifyType) {
+        Message msg = mHandler.obtainMessage();
+        msg.what = notifyType;
+        msg.arg1 = arg1;
+        msg.arg2 = arg2;
         mHandler.sendMessage(msg);
     }
 
     /**
      * 自定义Handler，用来处理消息的刷新等
+     * <p>
+     * 最终还是去调用{@link android.support.v7.widget.RecyclerView.Adapter}已有的 notify 方法
+     * {@link RecyclerView.Adapter#notify()}
+     * {@link RecyclerView.Adapter#notifyAll()}
+     * {@link RecyclerView.Adapter#notifyDataSetChanged()}
+     * 消息的状态改变需要调用 item changed方法
+     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemChanged(int)}
+     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemChanged(int, Object)}
+     * TODO 重发消息的时候需要调用 item move
+     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemMoved(int, int)}
+     * 新插入消息需要调用 item inserted
+     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemInserted(int)}
+     * TODO 改变多条需要 item range changed
+     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRangeChanged(int, int)}
+     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRangeChanged(int, int, Object)}
+     * 插入多条消息需要调用 item range inserted（加载更多消息时需要此刷新）
+     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRangeInserted(int, int)}
+     * 删除多条内容需要 item range removed（TODO 清空或者删除多条消息需要此方法）
+     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRangeRemoved(int, int)}
+     * 删除消息需要 item removed
+     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRemoved(int)}
      */
     private class MLHandler extends Handler {
 
-        /**
-         * 刷新聊天信息列表，并滚动到底部
-         */
-        private void refresh(int position, int count) {
+        private void resumeLoadMessage() {
             mMessages.clear();
             mMessages.addAll(mConversation.getAllMessages());
+        }
+
+        private void refreshAll() {
+            resumeLoadMessage();
+            notifyDataSetChanged();
+        }
+
+        /**
+         * 插入一条 Item 的刷新
+         *
+         * @param position 插入的位置
+         */
+        private void refreshItemInserted(int position) {
+            resumeLoadMessage();
             notifyItemInserted(position);
-            if (mMessages.size() > 1) {
-                // 滚动到最后一条
-                mRecyclerView.smoothScrollToPosition(mMessages.size() - 1);
-            }
+//            if (mMessages.size() > 1) {
+//                mRecyclerView.smoothScrollToPosition(mMessages.size() - 1);
+//            }
+        }
+
+        /**
+         * 插入多条 Item 的刷新
+         *
+         * @param position 开始插入的位置
+         * @param count    插入的数量
+         */
+        private void refreshItemRangeInserted(int position, int count) {
+            resumeLoadMessage();
+            notifyItemRangeInserted(position, count);
+        }
+
+        /**
+         * 删除一条 Item 的刷新
+         *
+         * @param position 删除 Item 的位置
+         */
+        private void refreshItemRemoved(int position) {
+            resumeLoadMessage();
+            notifyItemRemoved(position);
+        }
+
+        /**
+         * 删除多条 Item 的刷新
+         *
+         * @param position 开始删除的位置
+         * @param count    删除的数量
+         */
+        private void refreshItemRangeRemoved(int position, int count) {
+            resumeLoadMessage();
+            notifyItemRangeRemoved(position, count);
+        }
+
+        /**
+         * Item 改变
+         *
+         * @param position 改变的 Item 的位置
+         */
+        private void refreshItemChanged(int position) {
+            resumeLoadMessage();
+            notifyItemChanged(position);
+        }
+
+        /**
+         * 多条 Item 改变的刷新
+         *
+         * @param position 改变的 Item 的位置
+         */
+        private void refreshItemRangeChanged(int position, int count) {
+            resumeLoadMessage();
+            notifyItemChanged(position, count);
+        }
+
+        /**
+         * Item 的位置改变
+         *
+         * @param formPosition Item 开始的位置
+         * @param toPosition   Item 改变后的位置
+         */
+        private void refreshItemMovedd(int formPosition, int toPosition) {
+            resumeLoadMessage();
+            notifyItemMoved(formPosition, toPosition);
         }
 
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-            case MSG_REFRESH_NORMAL:
-                refresh(msg.arg1, msg.arg2);
+            case NOTIFY_ALL:
+                refreshAll();
                 break;
-            case MSG_REFRESH_MORE:
-                refresh(msg.arg1, msg.arg2);
-//                refresh(msg.arg1);
+            case NOTIFY_CHANGED:
+                refreshItemChanged(msg.arg1);
+                break;
+            case NOTIFY_INSERTED:
+                refreshItemInserted(msg.arg1);
+                break;
+            case NOTIFY_MOVED:
+                refreshItemMovedd(msg.arg1, msg.arg2);
+                break;
+            case NOTIFY_RANGE_CHANGED:
+                refreshItemRangeChanged(msg.arg1, msg.arg2);
+                break;
+            case NOTIFY_RANGE_INSERTED:
+                refreshItemRangeInserted(msg.arg1, msg.arg2);
+                break;
+            case NOTIFY_RANGE_REMOVED:
+                refreshItemRangeRemoved(msg.arg1, msg.arg2);
+                break;
+            case NOTIFY_REMOVED:
+                refreshItemRemoved(msg.arg1);
                 break;
             }
         }

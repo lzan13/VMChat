@@ -1,7 +1,8 @@
-package net.melove.demo.chat.fragment;
+package net.melove.demo.chat.test;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,7 +67,7 @@ public class MLTestFragment extends MLBaseFragment {
     }
 
     private void init() {
-        String[] btns = {"登出", "导入消息", "更新消息", "群消息"};
+        String[] btns = {"登出", "导入消息", "更新消息", "群消息", "TestActivity"};
         viewGroup = (MLViewGroup) getView().findViewById(R.id.ml_view_custom_viewgroup);
         for (int i = 0; i < btns.length; i++) {
             Button btn = new Button(mActivity);
@@ -155,6 +156,12 @@ public class MLTestFragment extends MLBaseFragment {
         });
     }
 
+    private void testActivityTheme() {
+        Intent intent = new Intent();
+        intent.setClass(mActivity, MLTestActivity.class);
+        mActivity.startActivity(intent);
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -184,6 +191,9 @@ public class MLTestFragment extends MLBaseFragment {
                 break;
             case 103:
                 sendGroupMessage();
+                break;
+            case 104:
+                testActivityTheme();
                 break;
             }
         }

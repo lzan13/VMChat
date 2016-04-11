@@ -21,6 +21,8 @@
         <item name="android:windowActionModeOverlay">true</item>
         <item name="android:windowActionBarOverlay">true</item>
 
+        <!--定义 Activity 切换动画-->
+        <item name="android:windowAnimationStyle">@style/AnimSlide</item>
     </style>
 
     <!--启动时的主题样式-->
@@ -38,8 +40,6 @@
 
     <!--默认主题-->
     <style name="MLTheme.Default" parent="MLTheme.Base">
-        <!--定义Activity切换动画-->
-        <item name="android:windowAnimationStyle">@style/AnimSlide</item>
     </style>
 
 
@@ -94,7 +94,7 @@
     </style>
 
     <!--自定 Toolbar 弹出 PopupMenu 样式，要想此设置生肖，在布局文件必须要自定义命名空间 xmlns：app-->
-    <style name="MLTheme.PopupMenu" parent="@style/ThemeOverlay.AppCompat.Light">
+    <style name="MLTheme.PopupOverlay" parent="@style/ThemeOverlay.AppCompat.Light">
         <!--设置菜单项文字的背景-->
         <!--<item name="android:background">@drawable/ml_popup_backaground</item>-->
         <!--弹出菜单背景颜色-->

@@ -41,12 +41,10 @@ public class MLTextMessageItem extends MLMessageItem {
      * 实现数据的填充
      *
      * @param message  需要展示的 EMMessage 对象
-     * @param position 当前item 在列表中的位置
      */
     @Override
-    public void onSetupView(EMMessage message, int position) {
+    public void onSetupView(EMMessage message) {
         mMessage = message;
-        mPosition = position;
 
         // 设置消息消息发送者的名称
         mUsernameView.setText(message.getFrom());
@@ -115,16 +113,16 @@ public class MLTextMessageItem extends MLMessageItem {
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                 case 0:
-                    mAdapter.onItemAction(mPosition, MLConstants.ML_ACTION_MSG_COPY);
+                    mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_MSG_COPY);
                     break;
                 case 1:
-                    mAdapter.onItemAction(mPosition, MLConstants.ML_ACTION_MSG_FORWARD);
+                    mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_MSG_FORWARD);
                     break;
                 case 2:
-                    mAdapter.onItemAction(mPosition, MLConstants.ML_ACTION_MSG_DELETE);
+                    mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_MSG_DELETE);
                     break;
                 case 3:
-                    mAdapter.onItemAction(mPosition, MLConstants.ML_ACTION_MSG_RECALL);
+                    mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_MSG_RECALL);
                     break;
                 }
             }
@@ -152,7 +150,7 @@ public class MLTextMessageItem extends MLMessageItem {
             mResendView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mAdapter.onItemAction(mPosition, MLConstants.ML_ACTION_MSG_RESEND);
+                    mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_MSG_RESEND);
                 }
             });
             break;

@@ -211,7 +211,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                         List<EMMessage> messages = mConversation.loadMoreMsgFromDB(mConversation.getAllMessages().get(0).getMsgId(), mPageSize);
                         if (messages.size() > 0) {
                             // 调用 Adapter 刷新方法
-                            refreshChatUIInserted(0, messages.size());
+                            refreshItemRangeInserted(0, messages.size());
                         }
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
@@ -324,12 +324,12 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
              * {@link net.melove.demo.chat.conversation.messageitem.MLMessageItem}的操作以自定义 Action
              * 的方式传递过过来，因为聊天列表的 Item 有多种多样的，每一个 Item 弹出菜单不同，
              *
-             * @param position 需要操作的Item的位置
-             * @param action   长按菜单需要处理的动作，比如 复制、转发、删除、撤回等
+             * @param message 需要操作的 Item 的 EMMessage 对象
+             * @param action  要处理的动作，比如 复制、转发、删除、撤回等
              */
             @Override
-            public void onItemAction(int position, int action) {
-                EMMessage message = mConversation.getAllMessages().get(position);
+            public void onItemAction(EMMessage message, int action) {
+                int position = mConversation.getAllMessages().indexOf(message);
                 switch (action) {
                 case MLConstants.ML_ACTION_MSG_CLICK:
                     MLToast.makeToast("item " + position).show();
@@ -370,7 +370,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         message.setMsgTime(MLDate.getCurrentMillisecond());
         // 重发消息要先删除老的消息，删除后要刷新下界面，然后再重发消息
         mConversation.removeMessage(message.getMsgId());
-        refreshChatUIRemoved(position);
+        refreshItemMoved(position, mConversation.getAllMessages().size() - 1);
         // 调用发送方法
         sendMessage(message);
     }
@@ -409,7 +409,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         // 删除消息，此方法会同时删除内存和数据库中的数据
         mConversation.removeMessage(message.getMsgId());
         // 刷新界面
-        refreshChatUIRemoved(position);
+        refreshItemRemoved(position);
         // 弹出操作提示
         MLToast.rightToast(R.string.ml_toast_msg_delete_success);
     }
@@ -445,7 +445,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 // 保存新消息
                 EMClient.getInstance().chatManager().saveMessage(recallMessage);
                 // 更新UI
-                Message msg = mHandler.obtainMessage(0);
+                Message msg = mHandler.obtainMessage(MLMessageAdapter.NOTIFY_CHANGED);
                 msg.arg1 = mConversation.getMessagePosition(message);
                 mHandler.sendMessage(msg);
             }
@@ -498,13 +498,15 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     private void sendMessage(EMMessage message) {
         // 调用设置消息扩展方法
         setMessageAttribute(message);
+        // 发送一条新消息时插入新消息的位置，这里直接用插入新消息前的消息总数来作为新消息的位置
+        int position = mConversation.getAllMessages().size();
         /**
          *  调用sdk的消息发送方法，发送消息，这里不进行消息的状态监听
          *  都在各自的{@link net.melove.demo.chat.conversation.messageitem.MLMessageItem}实现监听
          */
         EMClient.getInstance().chatManager().sendMessage(message);
         // 点击发送后马上刷新界面，无论消息有没有成功，先刷新显示
-        refreshChatUIInserted(mConversation.getMessagePosition(message));
+        refreshItemInserted(position);
     }
 
     /**
@@ -530,9 +532,9 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     private void sendImageMessage(String path) {
         /**
          * 根据图片路径创建一条图片消息，需要三个参数，
-         * path 图片路径
+         * path     图片路径
          * isOrigin 是否发送原图
-         * mChatId 接收者
+         * mChatId  接收者
          */
         EMMessage imgMessage = EMMessage.createImageSendMessage(path, isOrigin, mChatId);
         sendMessage(imgMessage);
@@ -676,6 +678,9 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // 获取当前会话内存中的消息数量
+        int count = mConversation.getAllMessages().size();
+
         switch (item.getItemId()) {
         case R.id.ml_action_call:
             MLToast.makeToast("还未实现语音通话功能").show();
@@ -691,7 +696,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             // mConversation.clear();
             // 清除全部信息，包括数据库中的
             mConversation.clearAllMessages();
-            refreshChatUIRemoved(0, mConversation.getAllMessages().size());
+            refreshItemRangeRemoved(0, count);
             break;
         }
         return super.onOptionsItemSelected(item);
@@ -782,51 +787,80 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         @Override
         public void handleMessage(Message msg) {
             int what = msg.what;
-            int arg1 = msg.arg1;
             switch (what) {
-            case 0:
-                refreshChatUI(arg1, 1, 0);
+            case MLMessageAdapter.NOTIFY_CHANGED:
+                refreshItemChanged(msg.arg1);
                 break;
             }
         }
     }
 
     /**
-     * 界面刷新方法
+     * 刷新方法
+     * 这里调用下 {@link MLMessageAdapter}里封装的方法
+     * 最终还是去调用{@link android.support.v7.widget.RecyclerView.Adapter}已有的 notify 方法
+     * 消息的状态改变需要调用 item changed方法
+     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemChanged(int)}
+     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemChanged(int, Object)}
+     * TODO 重发消息的时候需要调用 item move
+     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemMoved(int, int)}
+     * 新插入消息需要调用 item inserted
+     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemInserted(int)}
+     * TODO 改变多条需要 item range changed
+     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRangeChanged(int, int)}
+     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRangeChanged(int, int, Object)}
+     * 插入多条消息需要调用 item range inserted（加载更多消息时需要此刷新）
+     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRangeInserted(int, int)}
+     * 删除多条内容需要 item range removed（TODO 清空或者删除多条消息需要此方法）
+     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRangeRemoved(int, int)}
+     * 删除消息需要 item removed
+     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRemoved(int)}
      */
-    private void refreshChatUI() {
+    private void refreshAll() {
         if (mMessageAdapter != null) {
-            mMessageAdapter.refresh(mConversation.getAllMessages().size(), 1, 0);
+            mMessageAdapter.refresh(MLMessageAdapter.NOTIFY_ALL);
         }
     }
 
-    private void refreshChatUI(int position, int count, int refreshType) {
+    private void refreshItemChanged(int position) {
         if (mMessageAdapter != null) {
-            mMessageAdapter.refresh(position, count, refreshType);
+            mMessageAdapter.refresh(position, 1, MLMessageAdapter.NOTIFY_CHANGED);
         }
     }
 
-    private void refreshChatUIInserted(int position) {
+    private void refreshItemRangeChanged(int position, int count) {
         if (mMessageAdapter != null) {
-            mMessageAdapter.refresh(position, 1, 1);
+            mMessageAdapter.refresh(position, count, MLMessageAdapter.NOTIFY_RANGE_CHANGED);
         }
     }
 
-    private void refreshChatUIInserted(int position, int count) {
+    private void refreshItemInserted(int position) {
         if (mMessageAdapter != null) {
-            mMessageAdapter.refresh(position, count, 0);
+            mMessageAdapter.refresh(position, 1, MLMessageAdapter.NOTIFY_INSERTED);
         }
     }
 
-    private void refreshChatUIRemoved(int position) {
+    private void refreshItemRangeInserted(int position, int count) {
         if (mMessageAdapter != null) {
-            mMessageAdapter.refresh(position, 1, 0);
+            mMessageAdapter.refresh(position, count, MLMessageAdapter.NOTIFY_RANGE_INSERTED);
         }
     }
 
-    private void refreshChatUIRemoved(int position, int count) {
+    private void refreshItemRemoved(int position) {
         if (mMessageAdapter != null) {
-            mMessageAdapter.refresh(position, count, 0);
+            mMessageAdapter.refresh(position, 1, MLMessageAdapter.NOTIFY_REMOVED);
+        }
+    }
+
+    private void refreshItemRangeRemoved(int position, int count) {
+        if (mMessageAdapter != null) {
+            mMessageAdapter.refresh(position, count, MLMessageAdapter.NOTIFY_RANGE_REMOVED);
+        }
+    }
+
+    private void refreshItemMoved(int formPosition, int toPosition) {
+        if (mMessageAdapter != null) {
+            mMessageAdapter.refresh(formPosition, toPosition, MLMessageAdapter.NOTIFY_MOVED);
         }
     }
 
@@ -842,17 +876,23 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      */
     @Override
     public void onMessageReceived(List<EMMessage> list) {
+        MLLog.i("onMessageReceived list.size:%d", list.size());
         // 循环遍历当前收到的消息
         for (EMMessage message : list) {
             if (mChatId.equals(message.getFrom())) {
-                refreshChatUIInserted(mConversation.getMessagePosition(message));
                 // 设置消息为已读
                 mConversation.markMessageAsRead(message.getMsgId());
             } else {
                 // 如果消息不是当前会话的消息发送通知栏通知
                 MLNotifier.getInstance(mActivity).sendMessageNotification(message);
             }
+            MLLog.i("message id:%s, from:%s, mseeage:%s", message.getMsgId(), message.getFrom(), message.toString());
         }
+        // 调用刷新方法，因为收到的消息是一个list集合，所以我们调用插入多条 Item 的刷新方法
+        int position = mConversation.getAllMessages().size() - list.size();
+        int count = list.size();
+        refreshItemRangeInserted(position, count);
+
     }
 
     /**
@@ -869,7 +909,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             // 判断是不是撤回消息的透传
             if (body.action().equals(MLConstants.ML_ATTR_RECALL)) {
                 MLMessageUtils.receiveRecallMessage(mActivity, cmdMessage);
-                refreshChatUI();
+                refreshAll();
             }
         }
     }
@@ -881,7 +921,11 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      */
     @Override
     public void onMessageReadAckReceived(List<EMMessage> list) {
-        refreshChatUI();
+        MLLog.i("onMessageReadAckReceived list.size:%d", list.size());
+        // 调用刷新方法，因为收到的消息是一个list集合，所以我们调用多条 Item 改变的刷新方法
+        int position = mConversation.getAllMessages().size() - list.size();
+        int count = list.size();
+        refreshItemRangeChanged(position, count);
     }
 
     /**
@@ -892,7 +936,11 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      */
     @Override
     public void onMessageDeliveryAckReceived(List<EMMessage> list) {
-        refreshChatUI();
+        MLLog.i("onMessageDeliveryAckReceived list.size:%d", list.size());
+        // 调用刷新方法，因为收到的消息是一个list集合，所以我们调用多条 Item 改变的刷新方法
+        int position = mConversation.getAllMessages().size() - list.size();
+        int count = list.size();
+        refreshItemRangeChanged(position, count);
     }
 
     /**
@@ -903,6 +951,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      */
     @Override
     public void onMessageChanged(EMMessage message, Object object) {
-        refreshChatUI();
+        MLLog.i("onMessageChaged message:%s, object:%s", message.toString(), object.toString());
+        refreshItemChanged(mConversation.getMessagePosition(message));
     }
 }

@@ -28,9 +28,8 @@ public class MLRecallMessageItem extends MLMessageItem {
      * @param message 需要展示的 EMMessage 对象
      */
     @Override
-    public void onSetupView(EMMessage message, int position) {
+    public void onSetupView(EMMessage message) {
         mMessage = message;
-        mPosition = position;
         // 设置消息时间
         mTimeView.setText(MLDate.long2Time(message.getMsgTime()));
 

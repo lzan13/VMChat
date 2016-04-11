@@ -1,8 +1,11 @@
 package net.melove.demo.chat.common.base;
 
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -43,12 +46,31 @@ public class MLBaseActivity extends AppCompatActivity {
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     protected void onFinish() {
+
+        mActivity.finish();
+
         // 根据不同的系统版本选择不同的 finish 方法
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-            mActivity.finish();
-        } else {
-            mActivity.finishAfterTransition();
-        }
+        //        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+        //            mActivity.finish();
+        //        } else {
+        //            mActivity.finishAfterTransition();
+        //        }
+    }
+
+    /**
+     * 公用的 Activity 跳转方法
+     * 基类定义并实现的方法，为了以后方便扩展
+     *
+     * @param intent 跳转的意图
+     */
+    public void superJump(Intent intent) {
+        MLBaseActivity fromActivity = MLActivityManager.getInstance().getCurrActivity();
+        fromActivity.startActivity(intent);
+        /**
+         * 5.0以上的跳转方法
+         * ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this);
+         * ActivityCompat.startActivity(this, intent, optionsCompat.toBundle());
+         */
     }
 
     @Override

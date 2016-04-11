@@ -53,5 +53,6 @@
     <dimen name="ml_size_22">22sp</dimen>
     <dimen name="ml_size_24">24sp</dimen>
     <dimen name="ml_size_28">28sp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 
 </resources>

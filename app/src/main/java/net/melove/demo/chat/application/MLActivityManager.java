@@ -2,6 +2,8 @@ package net.melove.demo.chat.application;
 
 import android.app.Activity;
 
+import net.melove.demo.chat.common.base.MLBaseActivity;
+
 import java.lang.ref.WeakReference;
 
 /**
@@ -12,7 +14,7 @@ public class MLActivityManager {
     // 当前类实例
     private static MLActivityManager instance;
 
-    private WeakReference<Activity> currActivity;
+    private WeakReference<MLBaseActivity> currActivity;
 
     /**
      * 私有的构造方法
@@ -36,8 +38,8 @@ public class MLActivityManager {
      *
      * @param activity 当前栈顶的 Activity
      */
-    public void setCurrActivity(Activity activity) {
-        currActivity = new WeakReference<Activity>(activity);
+    public void setCurrActivity(MLBaseActivity activity) {
+        currActivity = new WeakReference<MLBaseActivity>(activity);
     }
 
     /**
@@ -45,8 +47,8 @@ public class MLActivityManager {
      *
      * @return 返回当前栈顶的 Activity
      */
-    public Activity getCurrActivity() {
-        Activity activity = null;
+    public MLBaseActivity getCurrActivity() {
+        MLBaseActivity activity = null;
         // 判断当前 Activity 弱引用指向的 Activity 是否为空
         if (currActivity != null) {
             activity = currActivity.get();

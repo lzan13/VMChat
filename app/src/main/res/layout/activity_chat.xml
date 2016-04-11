@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:melove="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/ml_theme_background"
     android:fitsSystemWindows="true"
-    android:orientation="vertical">
+    tools:context="net.melove.demo.chat.conversation.MLChatActivity">
 
     <include layout="@layout/widget_toolbar_communal"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipChildren="false">
+        android:clipChildren="false"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <ImageView
             android:id="@+id/ml_img_chat_bg"
@@ -178,4 +180,4 @@
 
         </LinearLayout>
     </RelativeLayout>
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

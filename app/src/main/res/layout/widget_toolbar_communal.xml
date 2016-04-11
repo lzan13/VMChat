@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.design.widget.AppBarLayout
+    android:id="@+id/ml_widget_appbar"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:fitsSystemWindows="true">
+    android:layout_height="@dimen/ml_dimen_56"
+    android:theme="@style/MLTheme.AppBarOverlay"
+    app:elevation="@dimen/ml_dimen_0">
 
     <!--公共的 Toolbar 控件-->
     <android.support.v7.widget.Toolbar
@@ -14,7 +16,7 @@
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         android:transitionName="@string/ml_shared_element_toolbar"
-        app:popupTheme="@style/MLTheme.PopupMenu"
+        app:elevation="@dimen/ml_dimen_0"
+        app:popupTheme="@style/MLTheme.PopupOverlay"
         app:theme="@style/MLTheme.ToolbarOverlay"/>
-
-</LinearLayout>
+</android.support.design.widget.AppBarLayout>

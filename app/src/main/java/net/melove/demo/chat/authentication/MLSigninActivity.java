@@ -45,11 +45,6 @@ public class MLSigninActivity extends MLBaseActivity {
     private View mForgetBtn;
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
@@ -112,10 +107,8 @@ public class MLSigninActivity extends MLBaseActivity {
                 attemptLogin();
                 break;
             case R.id.ml_btn_signup:
-                Intent intent = new Intent();
-                intent.setClass(mActivity, MLSignupActivity.class);
-                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, mToolbar, "toolbar");
-                ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
+                Intent intent = new Intent(mActivity, MLSignupActivity.class);
+                superJump(intent);
                 break;
             case R.id.ml_btn_forget_password:
                 forgetPassword();
@@ -192,10 +185,8 @@ public class MLSigninActivity extends MLBaseActivity {
                         // 加载所有群组到内存
                         EMClient.getInstance().groupManager().loadAllGroups();
 
-                        Intent intent = new Intent();
-                        intent.setClass(mActivity, MLMainActivity.class);
-                        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, mToolbar, "toolbar");
-                        ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
+                        Intent intent = new Intent(mActivity, MLMainActivity.class);
+                        superJump(intent);
                         // 根据不同的系统版本选择不同的 finish 方法
                         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
                             mActivity.finish();

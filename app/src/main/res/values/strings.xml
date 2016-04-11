@@ -131,11 +131,10 @@
     <string name="ml_error_invalid_user_name">用户名错误</string>
 
     <!--关于账户的错误 2xx-->
-    <string name="ml_error_user_signin">用户已存在</string>
     <string name="ml_error_user_already_exits">用户已存在</string>
     <string name="ml_error_user_already_login">用户已登录</string>
     <string name="ml_error_user_authentication_failed">用户名或密码错误</string>
-    <string name="ml_error_user_binddevicetoken_failed">绑定设备Token失败</string>
+    <string name="ml_error_user_bind_device_token_failed">绑定设备Token失败</string>
     <string name="ml_error_user_illegal_argument">参数不合法</string>
     <string name="ml_error_user_illegal_password">无效的密码</string>
     <string name="ml_error_user_illegal_username">无效的用户名</string>
@@ -200,5 +199,6 @@
     <string name="ml_input_limit">0123456789abcdefghigklmnopqrstuvwxyz-_.</string>
     <!--Copyright-->
     <string name="ml_copy_right">©2015 melove.net</string>
+    <string name="title_activity_mltest">MLTestActivity</string>
 
 </resources>

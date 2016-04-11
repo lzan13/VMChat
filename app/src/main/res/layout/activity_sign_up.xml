@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:melove="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/ml_white_100"
-    android:orientation="vertical"
-    tools:Content=".activity.MLSignupActivity">
+    android:background="@color/ml_theme_background"
+    android:fitsSystemWindows="true"
+    tools:context="net.melove.demo.chat.authentication.MLSignupActivity">
 
     <!--公共的 Toolbar 控件-->
     <include layout="@layout/widget_toolbar_communal"/>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -34,14 +36,13 @@
                     android:layout_height="@dimen/ml_dimen_72"
                     android:layout_marginBottom="@dimen/ml_dimen_16"
                     android:src="@mipmap/ic_character_blackcat"
-                    melove:ml_border_color="@color/ml_border_white"
+                    melove:ml_border_color="@color/ml_white_54"
                     melove:ml_border_width="@dimen/ml_dimen_2"
                     melove:ml_shape_type="round"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/ml_dimen_16"
                     android:orientation="vertical">
 
                     <android.support.design.widget.TextInputLayout
@@ -126,4 +127,4 @@
             </LinearLayout>
         </RelativeLayout>
     </ScrollView>
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/ml_theme_background"
     android:padding="@dimen/ml_dimen_16"
-    tools:context="net.melove.demo.chat.fragment.MLTestFragment">
+    tools:context="net.melove.demo.chat.test.MLTestFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

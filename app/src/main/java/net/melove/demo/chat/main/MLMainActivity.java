@@ -84,10 +84,8 @@ public class MLMainActivity extends MLBaseActivity implements
             MLLog.d("Load groups and load conversations cost time %d" + costTime);
         } else {
             // 跳转到登录界面
-            Intent intent = new Intent();
-            intent.setClass(this, MLSigninActivity.class);
-            ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this);
-            ActivityCompat.startActivity(this, intent, optionsCompat.toBundle());
+            Intent intent = new Intent(this, MLSigninActivity.class);
+            superJump(intent);
             this.finish();
         }
         // 将主题设置为正常主题
@@ -267,11 +265,8 @@ public class MLMainActivity extends MLBaseActivity implements
                     MLToast.errorToast(R.string.ml_hint_input).show();
                     return;
                 }
-                Intent intent = new Intent();
-                intent.setClass(mActivity, MLChatActivity.class);
-                intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, editText.getText().toString().trim());
-                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, mToolbar, "toolbar");
-                ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
+                Intent intent = new Intent(mActivity, MLChatActivity.class);
+                superJump(intent);
             }
         });
         dialog.setNegativeButton(R.string.ml_btn_cancel, new DialogInterface.OnClickListener() {
@@ -287,10 +282,8 @@ public class MLMainActivity extends MLBaseActivity implements
      * 开始搜索用户或者群组，
      */
     private void startSearch() {
-        Intent intent = new Intent();
-        intent.setClass(mActivity, MLSearchActivity.class);
-        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, mToolbar, "toolbar");
-        ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
+        Intent intent = new Intent(mActivity, MLSearchActivity.class);
+        superJump(intent);
     }
 
     /**
@@ -312,11 +305,9 @@ public class MLMainActivity extends MLBaseActivity implements
             break;
         case 0x01:
             // 退出登录，跳转到登录界面
-            intent = new Intent();
-            intent.setClass(mActivity, MLSigninActivity.class);
-            ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, mToolbar, "toolbar");
-            ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
-            mActivity.finish();
+            intent = new Intent(mActivity, MLSigninActivity.class);
+            superJump(intent);
+            onFinish();
             break;
         // 0x1x 表示其他调用
         case 0x10:
@@ -333,10 +324,7 @@ public class MLMainActivity extends MLBaseActivity implements
             break;
         // 0x2x 暂时表示Test
         case 0x20:
-            //                Intent intent = new Intent();
-            //                intent.setClass(mActivity, MLContactInfoActivity.class);
-            //                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity);
-            //                ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
+
             break;
         default:
             MLToast.makeToast(mActivity.getResources().getString(R.string.ml_test)).show();

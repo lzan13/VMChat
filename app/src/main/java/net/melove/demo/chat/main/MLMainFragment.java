@@ -13,16 +13,13 @@ import android.view.ViewGroup;
 
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
-import com.hyphenate.chat.EMMessage;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.common.base.MLBaseFragment;
 import net.melove.demo.chat.contacts.MLContactsFragment;
 import net.melove.demo.chat.conversation.MLConversationsFragment;
 import net.melove.demo.chat.common.util.MLLog;
-import net.melove.demo.chat.fragment.MLTestFragment;
-
-import java.util.List;
+import net.melove.demo.chat.test.MLTestFragment;
 
 /**
  * 单聊模块儿 Fragment
