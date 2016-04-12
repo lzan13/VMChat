@@ -12,8 +12,8 @@ import com.hyphenate.chat.EMClient;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLConstants;
-import net.melove.demo.chat.common.util.MLLog;
-import net.melove.demo.chat.common.widget.MLImageView;
+import net.melove.demo.chat.communal.util.MLLog;
+import net.melove.demo.chat.communal.widget.MLImageView;
 import net.melove.demo.chat.database.MLInvitedDao;
 
 import java.util.List;

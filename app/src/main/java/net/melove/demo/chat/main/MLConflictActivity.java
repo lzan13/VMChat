@@ -5,10 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 
-import com.hyphenate.chat.EMClient;
-
 import net.melove.demo.chat.R;
-import net.melove.demo.chat.common.base.MLBaseActivity;
+import net.melove.demo.chat.communal.base.MLBaseActivity;
 
 /**
  * Created by lzan13 on 2016/4/5.

@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:melove="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/ml_click_rectangle_white"
-    android:gravity="center_vertical"
-    android:orientation="vertical"
-    android:paddingLeft="@dimen/ml_dimen_16"
-    android:paddingRight="@dimen/ml_dimen_16">
+              xmlns:melove="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@drawable/ml_click_rectangle_white"
+              android:gravity="center_vertical"
+              android:orientation="vertical"
+              android:paddingLeft="@dimen/ml_dimen_16"
+              android:paddingRight="@dimen/ml_dimen_16">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/ml_dimen_48"
+        android:layout_height="@dimen/ml_dimen_56"
         android:layout_marginBottom="@dimen/ml_dimen_4"
         android:layout_marginTop="@dimen/ml_dimen_4">
 
-        <net.melove.demo.chat.common.widget.MLImageView
+        <net.melove.demo.chat.communal.widget.MLImageView
             android:id="@+id/ml_img_contact_avatar"
             android:layout_width="@dimen/ml_dimen_40"
             android:layout_height="@dimen/ml_dimen_40"
@@ -23,7 +23,7 @@
             android:src="@mipmap/ic_character_blackcat"
             melove:ml_border_color="@color/ml_white_87"
             melove:ml_border_width="@dimen/ml_dimen_2"
-            melove:ml_shape_type="round" />
+            melove:ml_shape_type="round"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -35,10 +35,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxWidth="@dimen/ml_dimen_224"
+                android:maxWidth="@dimen/ml_dimen_0"
                 android:text="@string/ml_hint_username"
                 android:textColor="@color/ml_black_87"
-                android:textSize="@dimen/ml_size_14" />
+                android:textSize="@dimen/ml_size_16"/>
         </LinearLayout>
 
     </RelativeLayout>

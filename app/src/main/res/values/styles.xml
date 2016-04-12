@@ -23,6 +23,9 @@
 
         <!--定义 Activity 切换动画-->
         <item name="android:windowAnimationStyle">@style/AnimSlide</item>
+
+        <!--设置 Dialog 样式-->
+        <item name="android:alertDialogTheme">@style/MLTheme.DialogOverlay</item>
     </style>
 
     <!--启动时的主题样式-->
@@ -106,6 +109,12 @@
         <!--弹出菜单的文字颜色和大小-->
         <item name="android:textColor">@color/ml_black_87</item>
         <item name="android:textSize">@dimen/ml_size_16</item>
+    </style>
+
+    <style name="MLTheme.DialogOverlay" parent="@style/Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/ml_theme_accent</item>
+        <item name="android:textColorPrimary">@color/ml_theme_primary_dark</item>
+        <item name="android:colorBackground">@color/ml_white_87</item>
     </style>
 
 </resources>

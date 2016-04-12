@@ -1,4 +1,4 @@
-package net.melove.demo.chat.common.widget;
+package net.melove.demo.chat.communal.widget;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import net.melove.demo.chat.common.util.MLDimen;
+import net.melove.demo.chat.communal.util.MLDimen;
 
 /**
  * Class MLRecordView

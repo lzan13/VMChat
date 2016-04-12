@@ -2,12 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/ml_action_call"
-        android:icon="@mipmap/ic_call_white_24dp"
-        android:orderInCategory="90"
-        android:title="@string/ml_voice_call"
-        app:showAsAction="always" />
-    <item
         android:id="@+id/ml_action_attachment"
         android:icon="@mipmap/ic_attachment_white_24dp"
         android:orderInCategory="100"

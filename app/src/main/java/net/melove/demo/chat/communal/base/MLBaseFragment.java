@@ -1,4 +1,4 @@
-package net.melove.demo.chat.common.base;
+package net.melove.demo.chat.communal.base;
 
 
 import android.support.v4.app.Fragment;
@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentActivity;
 import com.squareup.leakcanary.RefWatcher;
 
 import net.melove.demo.chat.application.MLApplication;
-import net.melove.demo.chat.common.util.MLLog;
+import net.melove.demo.chat.communal.util.MLLog;
 
 /**
  * Created by lzan13 on 2015/7/6.

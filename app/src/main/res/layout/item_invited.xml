@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/ml_dimen_8">
 
-        <net.melove.demo.chat.common.widget.MLImageView
+        <net.melove.demo.chat.communal.widget.MLImageView
             android:id="@+id/ml_img_invited_avatar"
             android:layout_width="@dimen/ml_dimen_40"
             android:layout_height="@dimen/ml_dimen_40"
@@ -30,7 +30,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/ml_dimen_56"
             android:gravity="center_vertical"
-            android:orientation="vertical">
+            android:orientation="vertical">6
 
             <TextView
                 android:id="@+id/ml_text_invited_username"

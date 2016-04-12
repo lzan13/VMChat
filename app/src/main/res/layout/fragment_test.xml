@@ -12,12 +12,12 @@
         android:orientation="vertical">
 
         <!--自定义ViewGroup，可以自动排列放在其中的子View-->
-        <net.melove.demo.chat.common.widget.MLViewGroup
+        <net.melove.demo.chat.communal.widget.MLViewGroup
             android:id="@+id/ml_view_custom_viewgroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        </net.melove.demo.chat.common.widget.MLViewGroup>
+        </net.melove.demo.chat.communal.widget.MLViewGroup>
     </LinearLayout>
 
 </RelativeLayout>

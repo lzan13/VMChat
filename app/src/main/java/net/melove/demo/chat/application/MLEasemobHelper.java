@@ -20,11 +20,11 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMOptions;
 
 import net.melove.demo.chat.R;
-import net.melove.demo.chat.common.util.MLCrypto;
-import net.melove.demo.chat.common.util.MLDate;
-import net.melove.demo.chat.common.util.MLLog;
-import net.melove.demo.chat.common.util.MLMessageUtils;
-import net.melove.demo.chat.common.util.MLSPUtil;
+import net.melove.demo.chat.communal.util.MLCrypto;
+import net.melove.demo.chat.communal.util.MLDate;
+import net.melove.demo.chat.communal.util.MLLog;
+import net.melove.demo.chat.communal.util.MLMessageUtils;
+import net.melove.demo.chat.communal.util.MLSPUtil;
 import net.melove.demo.chat.invited.MLInvitedEntity;
 import net.melove.demo.chat.contacts.MLContactEntity;
 import net.melove.demo.chat.conversation.MLConversationExtUtils;

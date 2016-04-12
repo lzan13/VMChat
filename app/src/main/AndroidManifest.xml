@@ -78,7 +78,7 @@
 
         <!-- Activity的基类 -->
         <activity
-            android:name=".common.base.MLBaseActivity"
+            android:name=".communal.base.MLBaseActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Default"/>
         <!-- 被踢弹出类 -->
@@ -125,6 +125,16 @@
             android:name=".main.MLSearchActivity"
             android:theme="@style/MLTheme.Default"
             android:windowSoftInputMode="adjustResize|stateVisible"/>
+        <!--测试 Activity-->
+        <activity
+            android:name=".test.MLTestActivity"
+            android:label="@string/title_activity_mltest"
+            android:parentActivityName=".communal.base.MLBaseActivity"
+            android:theme="@style/MLTheme.Default">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="net.melove.demo.chat.communal.base.MLBaseActivity"/>
+        </activity>
 
         <!-- 设置环信应用的appkey -->
         <meta-data
@@ -224,15 +234,6 @@
             </intent-filter>
         </receiver>
 
-        <activity
-            android:name=".test.MLTestActivity"
-            android:label="@string/title_activity_mltest"
-            android:parentActivityName=".common.base.MLBaseActivity"
-            android:theme="@style/MLTheme.Default">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="net.melove.demo.chat.common.base.MLBaseActivity"/>
-        </activity>
     </application>
 
 </manifest>

@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import net.melove.demo.chat.R;
-import net.melove.demo.chat.common.base.MLBaseFragment;
+import net.melove.demo.chat.communal.base.MLBaseFragment;
 
 /**
  * A simple {@link Fragment} subclass.

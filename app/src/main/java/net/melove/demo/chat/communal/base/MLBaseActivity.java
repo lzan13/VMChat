@@ -1,11 +1,9 @@
-package net.melove.demo.chat.common.base;
+package net.melove.demo.chat.communal.base;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -15,10 +13,11 @@ import com.squareup.leakcanary.RefWatcher;
 
 import net.melove.demo.chat.application.MLActivityManager;
 import net.melove.demo.chat.application.MLApplication;
-import net.melove.demo.chat.common.util.MLLog;
+import net.melove.demo.chat.communal.util.MLLog;
 
 /**
  * Created by lzan13 on 2015/7/4.
+ * Activity 的基类，定义一些子类公共的方法
  */
 public class MLBaseActivity extends AppCompatActivity {
 
@@ -64,8 +63,7 @@ public class MLBaseActivity extends AppCompatActivity {
      * @param intent 跳转的意图
      */
     public void superJump(Intent intent) {
-        MLBaseActivity fromActivity = MLActivityManager.getInstance().getCurrActivity();
-        fromActivity.startActivity(intent);
+        startActivity(intent);
         /**
          * 5.0以上的跳转方法
          * ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this);

@@ -8,7 +8,7 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 
 import net.melove.demo.chat.R;
-import net.melove.demo.chat.common.util.MLDate;
+import net.melove.demo.chat.communal.util.MLDate;
 import net.melove.demo.chat.conversation.MLMessageAdapter;
 
 /**

@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import net.melove.demo.chat.R;
-import net.melove.demo.chat.common.widget.MLImageView;
+import net.melove.demo.chat.communal.widget.MLImageView;
 
 import java.util.List;
 

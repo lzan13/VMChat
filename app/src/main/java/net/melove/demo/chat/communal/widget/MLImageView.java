@@ -1,4 +1,4 @@
-package net.melove.demo.chat.common.widget;
+package net.melove.demo.chat.communal.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;

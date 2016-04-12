@@ -15,7 +15,7 @@ import android.widget.ListView;
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.database.MLContactDao;
-import net.melove.demo.chat.common.base.MLBaseFragment;
+import net.melove.demo.chat.communal.base.MLBaseFragment;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,8 +1,6 @@
 package net.melove.demo.chat.application;
 
-import android.app.Activity;
-
-import net.melove.demo.chat.common.base.MLBaseActivity;
+import net.melove.demo.chat.communal.base.MLBaseActivity;
 
 import java.lang.ref.WeakReference;
 

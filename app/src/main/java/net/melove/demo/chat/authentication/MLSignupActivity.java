@@ -13,11 +13,11 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.exceptions.HyphenateException;
 
 import net.melove.demo.chat.R;
-import net.melove.demo.chat.common.base.MLBaseActivity;
+import net.melove.demo.chat.communal.base.MLBaseActivity;
 import net.melove.demo.chat.application.MLConstants;
-import net.melove.demo.chat.common.util.MLLog;
-import net.melove.demo.chat.common.util.MLSPUtil;
-import net.melove.demo.chat.common.widget.MLToast;
+import net.melove.demo.chat.communal.util.MLLog;
+import net.melove.demo.chat.communal.util.MLSPUtil;
+import net.melove.demo.chat.communal.widget.MLToast;
 
 /**
  * Created by lzan13 on 2015/7/4.

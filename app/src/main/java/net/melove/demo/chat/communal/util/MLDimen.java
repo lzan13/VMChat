@@ -1,4 +1,4 @@
-package net.melove.demo.chat.common.util;
+package net.melove.demo.chat.communal.util;
 
 import android.content.Context;
 import android.content.res.Resources;

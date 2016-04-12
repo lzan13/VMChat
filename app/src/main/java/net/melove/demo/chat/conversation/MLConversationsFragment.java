@@ -7,8 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,7 +14,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 
 
 import com.hyphenate.chat.EMClient;
@@ -24,8 +21,7 @@ import com.hyphenate.chat.EMConversation;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLConstants;
-import net.melove.demo.chat.common.base.MLBaseFragment;
-import net.melove.demo.chat.main.MLMainActivity;
+import net.melove.demo.chat.communal.base.MLBaseFragment;
 
 import java.util.ArrayList;
 import java.util.Collections;

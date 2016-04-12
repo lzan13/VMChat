@@ -1,4 +1,4 @@
-package net.melove.demo.chat.common.widget;
+package net.melove.demo.chat.communal.widget;
 
 import android.content.Context;
 import android.graphics.PixelFormat;
@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import net.melove.demo.chat.application.MLApplication;
 import net.melove.demo.chat.R;
-import net.melove.demo.chat.common.util.MLBitmapUtil;
+import net.melove.demo.chat.communal.util.MLBitmapUtil;
 
 
 /**

@@ -15,10 +15,10 @@ import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
 
 import net.melove.demo.chat.R;
-import net.melove.demo.chat.common.base.MLBaseFragment;
+import net.melove.demo.chat.communal.base.MLBaseFragment;
 import net.melove.demo.chat.contacts.MLContactsFragment;
 import net.melove.demo.chat.conversation.MLConversationsFragment;
-import net.melove.demo.chat.common.util.MLLog;
+import net.melove.demo.chat.communal.util.MLLog;
 import net.melove.demo.chat.test.MLTestFragment;
 
 /**

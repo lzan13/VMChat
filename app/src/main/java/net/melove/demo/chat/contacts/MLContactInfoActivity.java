@@ -16,15 +16,15 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.exceptions.HyphenateException;
 
 import net.melove.demo.chat.R;
-import net.melove.demo.chat.common.base.MLBaseActivity;
+import net.melove.demo.chat.communal.base.MLBaseActivity;
 import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.conversation.MLChatActivity;
 import net.melove.demo.chat.database.MLInvitedDao;
 import net.melove.demo.chat.database.MLContactDao;
-import net.melove.demo.chat.common.util.MLCrypto;
-import net.melove.demo.chat.common.util.MLDate;
-import net.melove.demo.chat.common.util.MLLog;
-import net.melove.demo.chat.common.widget.MLToast;
+import net.melove.demo.chat.communal.util.MLCrypto;
+import net.melove.demo.chat.communal.util.MLDate;
+import net.melove.demo.chat.communal.util.MLLog;
+import net.melove.demo.chat.communal.widget.MLToast;
 import net.melove.demo.chat.invited.MLInvitedEntity;
 
 
@@ -131,7 +131,7 @@ public class MLContactInfoActivity extends MLBaseActivity {
         textView.setText(R.string.ml_dialog_content_add_contact);
 
         final EditText editText = (EditText) view.findViewById(R.id.ml_dialog_edit_input);
-        editText.setHint(R.string.ml_hint_input);
+        editText.setHint(R.string.ml_hint_input_not_null);
         dialog.setView(view);
         dialog.setPositiveButton(R.string.ml_btn_ok, new DialogInterface.OnClickListener() {
             @Override

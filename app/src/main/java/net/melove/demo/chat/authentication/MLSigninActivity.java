@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
@@ -18,12 +16,12 @@ import com.hyphenate.EMError;
 import com.hyphenate.chat.EMClient;
 
 import net.melove.demo.chat.R;
-import net.melove.demo.chat.common.base.MLBaseActivity;
+import net.melove.demo.chat.communal.base.MLBaseActivity;
 import net.melove.demo.chat.main.MLMainActivity;
 import net.melove.demo.chat.application.MLConstants;
-import net.melove.demo.chat.common.util.MLLog;
-import net.melove.demo.chat.common.util.MLSPUtil;
-import net.melove.demo.chat.common.widget.MLToast;
+import net.melove.demo.chat.communal.util.MLLog;
+import net.melove.demo.chat.communal.util.MLSPUtil;
+import net.melove.demo.chat.communal.widget.MLToast;
 
 /**
  * Created by lzan13 on 2015/7/4.

@@ -6,7 +6,7 @@ android {
     defaultConfig {
         applicationId "net.melove.demo.chat"
         minSdkVersion 15
-        targetSdkVersion 23
+        targetSdkVersion 22
         versionCode 1
         versionName "1.0"
     }
@@ -47,7 +47,7 @@ dependencies {
     // 第三方图片加载库
     compile 'com.github.bumptech.glide:glide:3.7.0'
     // 环信sdk
-
+    compile files('libs/hyphenatechat_3.1.1.jar')
     // 小米推送
     compile files('libs/MiPush_SDK_Client_2_2_21.jar')
 }

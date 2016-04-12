@@ -34,14 +34,14 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 
 import net.melove.demo.chat.R;
-import net.melove.demo.chat.common.base.MLBaseActivity;
+import net.melove.demo.chat.communal.base.MLBaseActivity;
 import net.melove.demo.chat.application.MLConstants;
-import net.melove.demo.chat.common.util.MLDate;
-import net.melove.demo.chat.common.util.MLFile;
-import net.melove.demo.chat.common.util.MLMessageUtils;
+import net.melove.demo.chat.communal.util.MLDate;
+import net.melove.demo.chat.communal.util.MLFile;
+import net.melove.demo.chat.communal.util.MLMessageUtils;
 import net.melove.demo.chat.notification.MLNotifier;
-import net.melove.demo.chat.common.util.MLLog;
-import net.melove.demo.chat.common.widget.MLToast;
+import net.melove.demo.chat.communal.util.MLLog;
+import net.melove.demo.chat.communal.widget.MLToast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -682,9 +682,6 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         int count = mConversation.getAllMessages().size();
 
         switch (item.getItemId()) {
-        case R.id.ml_action_call:
-            MLToast.makeToast("还未实现语音通话功能").show();
-            break;
         case R.id.ml_action_attachment:
             // 打开或关闭附件菜单
             onAttachMenu();
@@ -697,6 +694,9 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             // 清除全部信息，包括数据库中的
             mConversation.clearAllMessages();
             refreshItemRangeRemoved(0, count);
+            break;
+        case R.id.ml_action_settings:
+            
             break;
         }
         return super.onOptionsItemSelected(item);

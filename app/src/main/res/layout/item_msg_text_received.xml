@@ -12,7 +12,7 @@
         android:gravity="left|bottom"
         android:orientation="horizontal">
 
-        <net.melove.demo.chat.common.widget.MLImageView
+        <net.melove.demo.chat.communal.widget.MLImageView
             android:id="@+id/ml_img_msg_avatar"
             android:layout_width="@dimen/ml_dimen_40"
             android:layout_height="@dimen/ml_dimen_40"
@@ -38,7 +38,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bubble_msg_received"
-                    android:maxWidth="@dimen/ml_dimen_264"
+                    android:maxWidth="@dimen/ml_dimen_256"
                     android:paddingBottom="@dimen/ml_dimen_8"
                     android:paddingLeft="@dimen/ml_dimen_12"
                     android:paddingRight="@dimen/ml_dimen_12"

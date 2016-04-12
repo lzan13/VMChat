@@ -4,8 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -27,14 +25,14 @@ import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.application.MLEasemobHelper;
 import net.melove.demo.chat.authentication.MLSigninActivity;
-import net.melove.demo.chat.common.base.MLBaseActivity;
-import net.melove.demo.chat.common.util.MLLog;
+import net.melove.demo.chat.communal.base.MLBaseActivity;
+import net.melove.demo.chat.communal.util.MLLog;
 import net.melove.demo.chat.conversation.MLChatActivity;
 import net.melove.demo.chat.database.MLInvitedDao;
 import net.melove.demo.chat.invited.MLInvitedFragment;
-import net.melove.demo.chat.common.base.MLBaseFragment;
-import net.melove.demo.chat.common.widget.MLImageView;
-import net.melove.demo.chat.common.widget.MLToast;
+import net.melove.demo.chat.communal.base.MLBaseFragment;
+import net.melove.demo.chat.communal.widget.MLImageView;
+import net.melove.demo.chat.communal.widget.MLToast;
 
 /**
  * Created by lzan13 on 2015/7/2.
@@ -256,16 +254,17 @@ public class MLMainActivity extends MLBaseActivity implements
         TextView textView = (TextView) view.findViewById(R.id.ml_dialog_text_message);
         textView.setText(R.string.ml_dialog_content_create_conversation);
         final EditText editText = (EditText) view.findViewById(R.id.ml_dialog_edit_input);
-        editText.setHint(R.string.ml_hint_input);
+        editText.setHint(R.string.ml_hint_input_not_null);
         dialog.setView(view);
         dialog.setPositiveButton(R.string.ml_btn_ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (TextUtils.isEmpty(editText.getText().toString().trim())) {
-                    MLToast.errorToast(R.string.ml_hint_input).show();
+                    MLToast.errorToast(R.string.ml_hint_input_not_null).show();
                     return;
                 }
                 Intent intent = new Intent(mActivity, MLChatActivity.class);
+                intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, editText.getText().toString().trim());
                 superJump(intent);
             }
         });
@@ -289,7 +288,7 @@ public class MLMainActivity extends MLBaseActivity implements
     /**
      * Fragment 的统一回调函数
      *
-     * @param a
+     * @param a action命令
      * @param b
      * @param s
      */

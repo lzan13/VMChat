@@ -6,7 +6,7 @@ import android.text.TextUtils;
 import com.hyphenate.chat.EMConversation;
 
 import net.melove.demo.chat.application.MLConstants;
-import net.melove.demo.chat.common.util.MLDate;
+import net.melove.demo.chat.communal.util.MLDate;
 
 import org.json.JSONException;
 import org.json.JSONObject;

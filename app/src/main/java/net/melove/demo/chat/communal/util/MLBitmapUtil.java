@@ -1,4 +1,4 @@
-package net.melove.demo.chat.common.util;
+package net.melove.demo.chat.communal.util;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

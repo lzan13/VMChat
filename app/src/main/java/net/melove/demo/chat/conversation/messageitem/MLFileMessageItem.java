@@ -11,16 +11,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.hyphenate.EMCallBack;
-import com.hyphenate.chat.EMFileMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMNormalFileMessageBody;
 import com.hyphenate.util.TextFormater;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLConstants;
-import net.melove.demo.chat.common.util.MLDate;
-import net.melove.demo.chat.common.util.MLDimen;
-import net.melove.demo.chat.common.widget.MLImageView;
+import net.melove.demo.chat.communal.util.MLDate;
+import net.melove.demo.chat.communal.util.MLDimen;
+import net.melove.demo.chat.communal.widget.MLImageView;
 import net.melove.demo.chat.conversation.MLChatActivity;
 import net.melove.demo.chat.conversation.MLMessageAdapter;
 

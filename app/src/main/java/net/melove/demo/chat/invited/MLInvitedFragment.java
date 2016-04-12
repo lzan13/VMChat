@@ -24,7 +24,7 @@ import com.hyphenate.exceptions.HyphenateException;
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.database.MLInvitedDao;
-import net.melove.demo.chat.common.base.MLBaseFragment;
+import net.melove.demo.chat.communal.base.MLBaseFragment;
 
 import java.util.ArrayList;
 import java.util.List;

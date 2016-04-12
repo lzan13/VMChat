@@ -11,15 +11,18 @@ import android.widget.Button;
 
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMGroup;
+import com.hyphenate.chat.EMGroupManager;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
+import com.hyphenate.exceptions.HyphenateException;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLEasemobHelper;
-import net.melove.demo.chat.common.base.MLBaseFragment;
-import net.melove.demo.chat.common.util.MLDate;
-import net.melove.demo.chat.common.util.MLLog;
-import net.melove.demo.chat.common.widget.MLViewGroup;
+import net.melove.demo.chat.communal.base.MLBaseFragment;
+import net.melove.demo.chat.communal.util.MLDate;
+import net.melove.demo.chat.communal.util.MLLog;
+import net.melove.demo.chat.communal.widget.MLViewGroup;
 
 /**
  * 测试Fragment，
@@ -67,7 +70,7 @@ public class MLTestFragment extends MLBaseFragment {
     }
 
     private void init() {
-        String[] btns = {"登出", "导入消息", "更新消息", "群消息", "TestActivity"};
+        String[] btns = {"登出", "导入消息", "更新消息", "群消息", "创建群组"};
         viewGroup = (MLViewGroup) getView().findViewById(R.id.ml_view_custom_viewgroup);
         for (int i = 0; i < btns.length; i++) {
             Button btn = new Button(mActivity);
@@ -76,10 +79,33 @@ public class MLTestFragment extends MLBaseFragment {
             btn.setOnClickListener(viewListener);
             viewGroup.addView(btn);
         }
-
-
     }
 
+    /**
+     * 测试按钮的监听事件
+     */
+    private View.OnClickListener viewListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+            case 100:
+                signOut();
+                break;
+            case 101:
+                importMessage();
+                break;
+            case 102:
+                updateMessage();
+                break;
+            case 103:
+                sendGroupMessage();
+                break;
+            case 104:
+                testCreateGroup();
+                break;
+            }
+        }
+    };
 
     /**
      * 退出登录
@@ -115,6 +141,9 @@ public class MLTestFragment extends MLBaseFragment {
 
     }
 
+    /**
+     * 更新消息
+     */
     private void updateMessage() {
         // 更改要撤销的消息的内容，替换为消息已经撤销的提示内容
         //        EMMessage recallMessage = EMMessage.createSendMessage(EMMessage.Type.TXT);
@@ -131,6 +160,9 @@ public class MLTestFragment extends MLBaseFragment {
         //        result = EMClient.getInstance().chatManager().updateMessage(recallMessage);
     }
 
+    /**
+     * 测试给不存在的群发送消息
+     */
     private void sendGroupMessage() {
         //创建一条文本消息,content为消息文字内容，toChatUsername为对方用户或者群聊的id，后文皆是如此
         EMMessage message = EMMessage.createTxtSendMessage("群消息" + MLDate.getCurrentMillisecond(), "1460022071257");
@@ -156,6 +188,42 @@ public class MLTestFragment extends MLBaseFragment {
         });
     }
 
+    private void testCreateGroup() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                /**
+                 * 创建群组
+                 * @param groupName 群组名称
+                 * @param desc 群组简介
+                 * @param allMembers 群组初始成员，如果只有自己传null即可
+                 * @param reason 邀请成员加入的reason
+                 * @param option 群组类型选项，可以设置群组最大用户数(默认200)及群组类型@see {@link EMGroupStyle}
+                 *               option里的GroupStyle分别为：
+                 *               EMGroupStylePrivateOnlyOwnerInvite——私有群，只有群主可以邀请人；
+                 *               EMGroupStylePrivateMemberCanInvite——私有群，群成员也能邀请人进群；
+                 *               EMGroupStylePublicJoinNeedApproval——公开群，加入此群除了群主邀请，只能通过申请加入此群；
+                 *               EMGroupStylePublicOpenJoin ——公开群，任何人都能加入此群
+                 * @return 创建好的group
+                 * @throws HyphenateException
+                 */
+                EMGroupManager.EMGroupOptions option = new EMGroupManager.EMGroupOptions();
+                option.maxUsers = 100;
+                option.style = EMGroupManager.EMGroupStyle.EMGroupStylePublicJoinNeedApproval;
+                String[] members = {"lz1", "lz2"};
+                try {
+                    EMGroup group = EMClient.getInstance().groupManager().createGroup("SDK测试群组2", "SDK端创建群组，测试默认属性", members, "这个群不错", option);
+                    MLLog.i("group is members only - " + group.isMembersOnly());
+                } catch (HyphenateException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    /**
+     * 测试主题
+     */
     private void testActivityTheme() {
         Intent intent = new Intent();
         intent.setClass(mActivity, MLTestActivity.class);
@@ -172,30 +240,4 @@ public class MLTestFragment extends MLBaseFragment {
             e.printStackTrace();
         }
     }
-
-    /**
-     * 测试按钮的监听事件
-     */
-    private View.OnClickListener viewListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-            case 100:
-                signOut();
-                break;
-            case 101:
-                importMessage();
-                break;
-            case 102:
-                updateMessage();
-                break;
-            case 103:
-                sendGroupMessage();
-                break;
-            case 104:
-                testActivityTheme();
-                break;
-            }
-        }
-    };
 }

@@ -12,11 +12,9 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/ml_dimen_48"
-        android:layout_marginBottom="@dimen/ml_dimen_4"
-        android:layout_marginTop="@dimen/ml_dimen_4">
+        android:layout_height="@dimen/ml_dimen_56">
 
-        <net.melove.demo.chat.common.widget.MLImageView
+        <net.melove.demo.chat.communal.widget.MLImageView
             android:id="@+id/ml_img_conversation_avatar"
             android:layout_width="@dimen/ml_dimen_40"
             android:layout_height="@dimen/ml_dimen_40"
@@ -42,7 +40,7 @@
                 android:maxWidth="@dimen/ml_dimen_224"
                 android:text="@string/ml_hint_username"
                 android:textColor="@color/ml_black_87"
-                android:textSize="@dimen/ml_size_14"/>
+                android:textSize="@dimen/ml_size_16"/>
 
             <TextView
                 android:id="@+id/ml_text_conversation_content"

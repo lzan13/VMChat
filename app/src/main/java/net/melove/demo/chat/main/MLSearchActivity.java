@@ -12,7 +12,7 @@ import android.widget.EditText;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLConstants;
-import net.melove.demo.chat.common.base.MLBaseActivity;
+import net.melove.demo.chat.communal.base.MLBaseActivity;
 import net.melove.demo.chat.contacts.MLContactInfoActivity;
 
 /**

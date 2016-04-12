@@ -1,4 +1,4 @@
-package net.melove.demo.chat.common.util;
+package net.melove.demo.chat.communal.util;
 
 /**
  * Created by Administrator on 2015/5/12.

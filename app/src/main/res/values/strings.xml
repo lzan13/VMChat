@@ -100,7 +100,7 @@
 
     <!--Hint 提醒文字-->
     <string name="ml_hint_chat">唠十块钱的(☆_☆)/~~</string>
-    <string name="ml_hint_input">请输入</string>
+    <string name="ml_hint_input_not_null">输入内容不能为空</string>
     <string name="ml_hint_username">账户名</string>
     <string name="ml_hint_password">密码</string>
     <string name="ml_hint_content">内容</string>
