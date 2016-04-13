@@ -22,7 +22,7 @@
         <!--设置状态栏为透明-->
         <item name="android:statusBarColor">@color/ml_transparent</item>
         <!--设置导航栏半透明效果-->
-        <!--<item name="android:windowTranslucentNavigation">true</item>-->
+        <item name="android:windowTranslucentNavigation">true</item>
         <!--设置导航栏背景色-->
         <item name="android:navigationBarColor">@color/ml_theme_primary_dark</item>
 

@@ -2,16 +2,23 @@
 <resources>
     <!--自定义MLImageView的属性-->
     <declare-styleable name="MLImageView">
+        <!--控件边框颜色-->
         <attr name="ml_border_color" format="color"/>
+        <!--控件边框宽度-->
         <attr name="ml_border_width" format="dimension"/>
+        <!--控件按下时颜色的透明度-->
         <attr name="ml_press_alpha" format="integer"/>
+        <!--控件按下的颜色-->
         <attr name="ml_press_color" format="color"/>
+        <!--控件圆角半径-->
         <attr name="ml_radius" format="dimension"/>
+        <!--自定义控件的几种枚举样式 0 正常、1 圆形、2 矩形-->
         <attr name="ml_shape_type" format="enum">
             <enum name="none" value="0"/>
             <enum name="round" value="1"/>
             <enum name="rectangle" value="2"/>
         </attr>
+        <!--是否拦截触摸事件-->
         <attr name="ml_dispatch_touch_event" format="boolean"/>
     </declare-styleable>
 </resources>

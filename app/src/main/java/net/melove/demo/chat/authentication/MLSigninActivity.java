@@ -61,13 +61,13 @@ public class MLSigninActivity extends MLBaseActivity {
 
         mUsername = (String) MLSPUtil.get(mActivity, "username", "");
         mPassword = (String) MLSPUtil.get(mActivity, "password", "");
-        mUsernameView = (EditText) findViewById(R.id.ml_edit_login_username);
-        mPasswordView = (EditText) findViewById(R.id.ml_edit_login_password);
+        mUsernameView = (EditText) findViewById(R.id.ml_edit_sign_in_username);
+        mPasswordView = (EditText) findViewById(R.id.ml_edit_sign_in_password);
         mUsernameView.setText(mUsername);
         mPasswordView.setText(mPassword);
 
-        mSigninBtn = findViewById(R.id.ml_btn_signin);
-        mSignupBtn = findViewById(R.id.ml_btn_signup);
+        mSigninBtn = findViewById(R.id.ml_btn_sign_in);
+        mSignupBtn = findViewById(R.id.ml_btn_sign_up);
         mForgetBtn = findViewById(R.id.ml_btn_forget_password);
 
         mSigninBtn.setOnClickListener(viewListener);
@@ -83,7 +83,7 @@ public class MLSigninActivity extends MLBaseActivity {
     private void initToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
 
-        mToolbar.setTitle(R.string.ml_signin);
+        mToolbar.setTitle(R.string.ml_sign_in);
         // TODO 这里设置Toolbar的图标时如果使用svg图标,在5.x上才能支持，在4.x的设备 svg 图标会显示，但是颜色是黑色不能改变，
         //        mToolbar.setNavigationIcon(R.drawable.ic_menu_close);
         mToolbar.setNavigationIcon(R.mipmap.ic_close_white_24dp);
@@ -101,10 +101,10 @@ public class MLSigninActivity extends MLBaseActivity {
             case -1:
                 onFinish();
                 break;
-            case R.id.ml_btn_signin:
+            case R.id.ml_btn_sign_in:
                 attemptLogin();
                 break;
-            case R.id.ml_btn_signup:
+            case R.id.ml_btn_sign_up:
                 Intent intent = new Intent(mActivity, MLSignupActivity.class);
                 superJump(intent);
                 break;
@@ -159,7 +159,7 @@ public class MLSigninActivity extends MLBaseActivity {
         final Resources res = mActivity.getResources();
 
         mDialog = new ProgressDialog(mActivity);
-        mDialog.setMessage(res.getString(R.string.ml_signin_begin));
+        mDialog.setMessage(res.getString(R.string.ml_sign_in_begin));
         mDialog.show();
 
         EMClient.getInstance().login(mUsername, mPassword, new EMCallBack() {
@@ -206,7 +206,7 @@ public class MLSigninActivity extends MLBaseActivity {
                     @Override
                     public void run() {
                         mDialog.dismiss();
-                        MLLog.d("Error: " + i + " " + res.getString(R.string.ml_signin_failed) + s);
+                        MLLog.d("Error: " + i + " " + res.getString(R.string.ml_sign_in_failed) + s);
                         /**
                          * 关于错误码可以参考官方api详细说明
                          * http://www.easemob.com/apidoc/android/chat3.0/classcom_1_1hyphenate_1_1_e_m_error.html
@@ -249,7 +249,7 @@ public class MLSigninActivity extends MLBaseActivity {
                             MLToast.errorToast(res.getString(R.string.ml_error_server_unknown_error) + "-" + i).show();
                             break;
                         default:
-                            MLToast.errorToast(res.getString(R.string.ml_signin_failed) + "-" + i).show();
+                            MLToast.errorToast(res.getString(R.string.ml_sign_in_failed) + "-" + i).show();
                             break;
                         }
                     }
@@ -258,7 +258,7 @@ public class MLSigninActivity extends MLBaseActivity {
 
             @Override
             public void onProgress(int i, String s) {
-                MLLog.d("progress: " + i + " " + res.getString(R.string.ml_signin_begin) + s);
+                MLLog.d("progress: " + i + " " + res.getString(R.string.ml_sign_in_begin) + s);
 
             }
         });

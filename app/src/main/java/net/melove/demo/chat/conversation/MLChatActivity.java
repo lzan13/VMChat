@@ -154,7 +154,6 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         mToolbar.setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
         // 设置Toolbar图标点击事件，Toolbar上图标的id是 -1
         mToolbar.setNavigationOnClickListener(viewListener);
-
     }
 
     /**

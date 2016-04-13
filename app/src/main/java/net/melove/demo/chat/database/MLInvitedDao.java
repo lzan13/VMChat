@@ -60,7 +60,7 @@ public class MLInvitedDao {
     /**
      * 更新一条申请与通知消息
      *
-     * @param invitedEntity 需要添加的邀请信息对象
+     * @param invitedEntity 需要更新的的邀请信息实体类对象
      */
     public synchronized void updateInvited(MLInvitedEntity invitedEntity) {
         ContentValues values = new ContentValues();

@@ -33,7 +33,7 @@ public class MLConflictActivity extends MLBaseActivity {
         conflictDialog = new AlertDialog.Builder(mActivity);
         conflictDialog.setTitle(R.string.ml_dialog_title_conflict);
         conflictDialog.setMessage(R.string.ml_dialog_message_conflict);
-        conflictDialog.setNeutralButton(R.string.ml_signin_restart, new DialogInterface.OnClickListener() {
+        conflictDialog.setNeutralButton(R.string.ml_sign_in_restart, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // 自定义操作按钮

@@ -4,7 +4,7 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_marginBottom="@dimen/ml_dimen_1"
-              android:background="@drawable/ml_click_rectangle_white"
+              android:background="@drawable/ml_item_click_white"
               android:gravity="center_vertical"
               android:orientation="vertical">
 
@@ -30,7 +30,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/ml_dimen_56"
             android:gravity="center_vertical"
-            android:orientation="vertical">6
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/ml_text_invited_username"
@@ -53,9 +53,25 @@
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:gravity="center_vertical"
+            android:layout_centerVertical="true">
+
+            <TextView
+                android:id="@+id/ml_text_invited_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ml_app_name"
+                android:textColor="@color/ml_black_54"
+                android:textSize="@dimen/ml_size_12"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:gravity="bottom|right"
             android:orientation="horizontal"
             android:visibility="visible">
 
@@ -88,8 +104,8 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true">
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true">
 
             <TextView
                 android:id="@+id/ml_text_invited_status"

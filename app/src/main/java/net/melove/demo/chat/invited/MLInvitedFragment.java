@@ -23,6 +23,7 @@ import com.hyphenate.exceptions.HyphenateException;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLConstants;
+import net.melove.demo.chat.communal.util.MLDate;
 import net.melove.demo.chat.database.MLInvitedDao;
 import net.melove.demo.chat.communal.base.MLBaseFragment;
 
@@ -180,6 +181,7 @@ public class MLInvitedFragment extends MLBaseFragment {
                 try {
                     EMClient.getInstance().contactManager().acceptInvitation(invitedEntity.getUserName());
                     invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.AGREED);
+                    invitedEntity.setUpdateTime(MLDate.getCurrentMillisecond());
                     mInvitedDao.updateInvited(invitedEntity);
                     dialog.dismiss();
                     mHandler.sendMessage(mHandler.obtainMessage(0));
@@ -207,6 +209,7 @@ public class MLInvitedFragment extends MLBaseFragment {
                     EMClient.getInstance().contactManager().declineInvitation(invitedEntity.getUserName());
                     // 修改当前申请消息的状态
                     invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.REFUSED);
+                    invitedEntity.setUpdateTime(MLDate.getCurrentMillisecond());
                     mInvitedDao.updateInvited(invitedEntity);
                     dialog.dismiss();
                     mHandler.sendMessage(mHandler.obtainMessage(0));

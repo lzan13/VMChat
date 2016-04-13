@@ -10,4 +10,7 @@
 
     <integer name="ml_time_toast">360</integer>
     <integer name="ml_time_fab_rotate">300</integer>
+
+
+    <integer name="ml_btn_test">2</integer>
 </resources>

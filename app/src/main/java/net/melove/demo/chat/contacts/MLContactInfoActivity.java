@@ -166,6 +166,7 @@ public class MLContactInfoActivity extends MLBaseActivity {
                             invitedEntity.setType(MLInvitedEntity.InvitedType.CONTACTS);
                             // 设置申请信息的时间
                             invitedEntity.setCreateTime(MLDate.getCurrentMillisecond());
+                            invitedEntity.setUpdateTime(invitedEntity.getCreateTime());
 
                             // 这里进行一下筛选，如果已存在则去更新本地内容
                             MLInvitedEntity temp = mInvitedDao.getInvitedEntiry(objId);

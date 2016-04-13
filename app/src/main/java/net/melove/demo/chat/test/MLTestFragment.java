@@ -1,9 +1,12 @@
 package net.melove.demo.chat.test;
 
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,7 +73,7 @@ public class MLTestFragment extends MLBaseFragment {
     }
 
     private void init() {
-        String[] btns = {"登出", "导入消息", "更新消息", "群消息", "创建群组"};
+        String[] btns = {"登出", "导入消息", "更新消息", "群消息", "创建群组", "AlertDialog", "ProgressDialog"};
         viewGroup = (MLViewGroup) getView().findViewById(R.id.ml_view_custom_viewgroup);
         for (int i = 0; i < btns.length; i++) {
             Button btn = new Button(mActivity);
@@ -102,6 +105,12 @@ public class MLTestFragment extends MLBaseFragment {
                 break;
             case 104:
                 testCreateGroup();
+                break;
+            case 105:
+                testAlertDialog();
+                break;
+            case 106:
+                testProgressDialog();
                 break;
             }
         }
@@ -228,6 +237,30 @@ public class MLTestFragment extends MLBaseFragment {
         Intent intent = new Intent();
         intent.setClass(mActivity, MLTestActivity.class);
         mActivity.startActivity(intent);
+    }
+
+    private void testAlertDialog() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
+        dialog.setTitle("Test");
+        dialog.setMessage("Test Dialog Message!");
+        dialog.setPositiveButton(R.string.ml_btn_ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        dialog.setNegativeButton(R.string.ml_btn_cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        dialog.show();
+    }
+
+    private void testProgressDialog() {
+        ProgressDialog dialog = new ProgressDialog(mActivity);
+        dialog.setMessage("Test progress dialog");
+        dialog.show();
     }
 
     @Override

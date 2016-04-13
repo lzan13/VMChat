@@ -379,6 +379,8 @@ public class MLEasemobHelper {
                         // 这里判断当前保存的信息如果和新的一模一样不进行操作
                         return;
                     }
+                    // 此条信息已经存在，更新修改时间
+                    invitedEntity.setUpdateTime(MLDate.getCurrentMillisecond());
                     mInvitedDao.updateInvited(invitedEntity);
                 } else {
                     mInvitedDao.saveInvited(invitedEntity);
@@ -405,6 +407,8 @@ public class MLEasemobHelper {
                 // 先去数据库查找一下，有没有这一条申请信息，如果有直接修改，没有才新建插入
                 MLInvitedEntity invitedEntity = mInvitedDao.getInvitedEntiry(objId);
                 if (invitedEntity != null) {
+                    // 更新当前消息处理时间
+                    invitedEntity.setUpdateTime(MLDate.getCurrentMillisecond());
                     invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.BEAGREED);
                     mInvitedDao.updateInvited(invitedEntity);
                 } else {
@@ -422,6 +426,7 @@ public class MLEasemobHelper {
                     invitedEntity.setType(MLInvitedEntity.InvitedType.CONTACTS);
                     // 设置申请信息的时间
                     invitedEntity.setCreateTime(MLDate.getCurrentMillisecond());
+                    invitedEntity.setUpdateTime(invitedEntity.getCreateTime());
 
                     mInvitedDao.saveInvited(invitedEntity);
                 }
@@ -445,6 +450,8 @@ public class MLEasemobHelper {
                 // 先去数据库查找一下，有没有这一条申请信息，如果有直接修改，没有才新建插入
                 MLInvitedEntity invitedEntity = mInvitedDao.getInvitedEntiry(objId);
                 if (invitedEntity != null) {
+                    // 更新当前信息的时间
+                    invitedEntity.setUpdateTime(MLDate.getCurrentMillisecond());
                     invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.BEREFUSED);
                     mInvitedDao.updateInvited(invitedEntity);
                 } else {
@@ -462,6 +469,7 @@ public class MLEasemobHelper {
                     invitedEntity.setType(MLInvitedEntity.InvitedType.CONTACTS);
                     // 设置申请信息的时间
                     invitedEntity.setCreateTime(MLDate.getCurrentMillisecond());
+                    invitedEntity.setUpdateTime(invitedEntity.getCreateTime());
 
                     mInvitedDao.saveInvited(invitedEntity);
                 }

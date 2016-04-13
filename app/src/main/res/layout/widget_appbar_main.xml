@@ -11,7 +11,8 @@
         android:id="@+id/ml_widget_appbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/ml_dimen_56"
-        android:theme="@style/MLTheme.AppBarOverlay">
+        android:theme="@style/MLTheme.AppBarOverlay"
+        app:elevation="@dimen/ml_dimen_0">
 
         <!--主界面 Toolbar-->
         <android.support.v7.widget.Toolbar
@@ -21,6 +22,7 @@
             android:background="?attr/colorPrimary"
             android:minHeight="?attr/actionBarSize"
             android:transitionName="@string/ml_shared_element_toolbar"
+            app:elevation="@dimen/ml_dimen_0"
             app:popupTheme="@style/MLTheme.PopupOverlay"
             app:theme="@style/MLTheme.ToolbarOverlay"/>
     </android.support.design.widget.AppBarLayout>

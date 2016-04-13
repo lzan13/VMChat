@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="@color/ml_blue_54">
-    <item>
-        <shape android:shape="rectangle">
-            <corners android:radius="@dimen/ml_dimen_4" />
-            <solid android:color="@color/ml_blue_87" />
-        </shape>
-    </item>
+        android:color="@color/ml_blue_54">
+    <item android:drawable="@color/ml_blue_87"/>
+    <!--添加了id 和没有定义id的区别就是添加了id之后，当前设置的drawable不会显示，只有按下的时候才会显示-->
+    <!--<item-->
+    <!--android:id="@android:id/mask"-->
+    <!--android:drawable="@color/ml_blue_87"/>-->
 </ripple>

@@ -52,10 +52,10 @@ public class MLSignupActivity extends MLBaseActivity {
     private void init() {
         mActivity = this;
         // 实例化控件
-        mUsernameView = (EditText) findViewById(R.id.ml_edit_signup_username);
-        mPasswordView = (EditText) findViewById(R.id.ml_edit_signup_password);
+        mUsernameView = (EditText) findViewById(R.id.ml_edit_sign_up_username);
+        mPasswordView = (EditText) findViewById(R.id.ml_edit_sign_up_password);
 
-        mSignupBtn = findViewById(R.id.ml_btn_signup);
+        mSignupBtn = findViewById(R.id.ml_btn_sign_up);
         mSignupBtn.setOnClickListener(viewListener);
 
     }
@@ -67,7 +67,7 @@ public class MLSignupActivity extends MLBaseActivity {
     private void initToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
 
-        mToolbar.setTitle(R.string.ml_signup);
+        mToolbar.setTitle(R.string.ml_sign_up);
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
         mToolbar.setNavigationOnClickListener(viewListener);
@@ -80,7 +80,7 @@ public class MLSignupActivity extends MLBaseActivity {
             case -1:
                 onFinish();
                 break;
-            case R.id.ml_btn_signup:
+            case R.id.ml_btn_sign_up:
                 attemptSignup();
                 break;
             default:
@@ -132,7 +132,7 @@ public class MLSignupActivity extends MLBaseActivity {
         final Resources res = mActivity.getResources();
         // 注册是耗时过程，所以要显示一个dialog来提示下用户
         mDialog = new ProgressDialog(mActivity);
-        mDialog.setMessage(res.getString(R.string.ml_signup_begin));
+        mDialog.setMessage(res.getString(R.string.ml_sign_up_begin));
         mDialog.show();
         new Thread(new Runnable() {
             @Override
@@ -147,7 +147,7 @@ public class MLSignupActivity extends MLBaseActivity {
                             }
                             // 注册成功保存用户名到本地
                             MLSPUtil.put(mActivity, MLConstants.ML_SHARED_USERNAME, mUsername);
-                            MLToast.rightToast(res.getString(R.string.ml_signup_success)).show();
+                            MLToast.rightToast(res.getString(R.string.ml_sign_up_success)).show();
                             // 注册成功，返回登录界面
                             onFinish();
                         }
@@ -183,7 +183,7 @@ public class MLSignupActivity extends MLBaseActivity {
                                 MLToast.errorToast(res.getString(R.string.ml_error_user_reg_failed) + "-" + errorCode).show();
                                 break;
                             default:
-                                MLToast.errorToast(res.getString(R.string.ml_signup_failed) + "-" + errorCode).show();
+                                MLToast.errorToast(res.getString(R.string.ml_sign_up_failed) + "-" + errorCode).show();
                                 break;
                             }
                         }
