@@ -40,7 +40,7 @@ public class MLInvitedDao {
         values.put(MLDBConstants.COL_REASON, invitedEntity.getReason());
         values.put(MLDBConstants.COL_STATUS, invitedEntity.getStatus().ordinal());
         values.put(MLDBConstants.COL_TYPE, invitedEntity.getType().ordinal());
-        values.put(MLDBConstants.COL_TIME, invitedEntity.getCreateTime());
+        values.put(MLDBConstants.COL_TIME, invitedEntity.getTime());
 
         MLDBManager.getInstance().insterData(MLDBConstants.TB_INVITED, values);
     }
@@ -72,7 +72,7 @@ public class MLInvitedDao {
         values.put(MLDBConstants.COL_REASON, invitedEntity.getReason());
         values.put(MLDBConstants.COL_STATUS, invitedEntity.getStatus().ordinal());
         values.put(MLDBConstants.COL_TYPE, invitedEntity.getType().ordinal());
-        values.put(MLDBConstants.COL_TIME, invitedEntity.getCreateTime());
+        values.put(MLDBConstants.COL_TIME, invitedEntity.getTime());
 
         String whereClause = MLDBConstants.COL_OBJ_ID + "=?";
         MLDBManager.getInstance().updateData(
@@ -162,7 +162,7 @@ public class MLInvitedDao {
         } else if (type == MLInvitedEntity.InvitedType.CONTACTS.ordinal()) {
             invitedEntity.setType(MLInvitedEntity.InvitedType.CONTACTS);
         }
-        invitedEntity.setCreateTime(Long.valueOf(time));
+        invitedEntity.setTime(Long.valueOf(time));
 
         return invitedEntity;
     }

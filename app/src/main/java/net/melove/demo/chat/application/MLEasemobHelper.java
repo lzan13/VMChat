@@ -26,10 +26,10 @@ import net.melove.demo.chat.communal.util.MLLog;
 import net.melove.demo.chat.communal.util.MLMessageUtils;
 import net.melove.demo.chat.communal.util.MLSPUtil;
 import net.melove.demo.chat.invited.MLInvitedEntity;
-import net.melove.demo.chat.contacts.MLContactEntity;
+import net.melove.demo.chat.contacts.MLContactsEntity;
 import net.melove.demo.chat.conversation.MLConversationExtUtils;
 import net.melove.demo.chat.database.MLInvitedDao;
-import net.melove.demo.chat.database.MLContactDao;
+import net.melove.demo.chat.database.MLContactsDao;
 import net.melove.demo.chat.main.MLConflictActivity;
 import net.melove.demo.chat.notification.MLNotifier;
 
@@ -56,7 +56,7 @@ public class MLEasemobHelper {
     // 申请与邀请类消息的数据库操作类
     private MLInvitedDao mInvitedDao;
     // 用户信息数据库操作类
-    private MLContactDao mUserDao;
+    private MLContactsDao mContactsDao;
     // 环信联系人监听
     private EMContactListener mContactListener;
     // 环信连接监听
@@ -97,7 +97,7 @@ public class MLEasemobHelper {
     public synchronized boolean initEasemob(Context context) {
         mContext = context;
 
-        mUserDao = new MLContactDao(mContext);
+        mContactsDao = new MLContactsDao(mContext);
         mInvitedDao = new MLInvitedDao(mContext);
 
         // 获取App内广播接收器实例
@@ -252,9 +252,9 @@ public class MLEasemobHelper {
                     }
                     // 设置会话的最后时间
                     MLConversationExtUtils.setConversationLastTime(conversation);
-                    // 收到新消息，发送一条通知
-                    MLNotifier.getInstance(MLApplication.getContext()).sendMessageNotification(message);
                 }
+                // 收到新消息，发送一条通知
+                MLNotifier.getInstance(MLApplication.getContext()).sendNotificationMessageList(list);
                 // 发送广播，通知需要刷新UI等操作的地方
                 mLocalBroadcastManager.sendBroadcast(new Intent(MLConstants.ML_ACTION_MESSAGE));
             }
@@ -324,9 +324,9 @@ public class MLEasemobHelper {
              */
             @Override
             public void onContactAdded(String username) {
-                MLContactEntity user = new MLContactEntity();
-                user.setUserName(username);
-                mUserDao.saveContacts(user);
+                MLContactsEntity contacts = new MLContactsEntity();
+                contacts.setUserName(username);
+                mContactsDao.saveContacts(contacts);
             }
 
             /**
@@ -335,7 +335,7 @@ public class MLEasemobHelper {
              */
             @Override
             public void onContactDeleted(String username) {
-                mUserDao.deleteContacts(username);
+                mContactsDao.deleteContacts(username);
             }
 
             /**
@@ -365,7 +365,7 @@ public class MLEasemobHelper {
                 // 设置申请信息为联系人申请
                 invitedEntity.setType(MLInvitedEntity.InvitedType.CONTACTS);
                 // 设置申请信息的时间
-                invitedEntity.setCreateTime(MLDate.getCurrentMillisecond());
+                invitedEntity.setTime(MLDate.getCurrentMillisecond());
 
                 /**
                  * 这里先读取本地的申请与通知信息
@@ -380,7 +380,6 @@ public class MLEasemobHelper {
                         return;
                     }
                     // 此条信息已经存在，更新修改时间
-                    invitedEntity.setUpdateTime(MLDate.getCurrentMillisecond());
                     mInvitedDao.updateInvited(invitedEntity);
                 } else {
                     mInvitedDao.saveInvited(invitedEntity);
@@ -408,7 +407,7 @@ public class MLEasemobHelper {
                 MLInvitedEntity invitedEntity = mInvitedDao.getInvitedEntiry(objId);
                 if (invitedEntity != null) {
                     // 更新当前消息处理时间
-                    invitedEntity.setUpdateTime(MLDate.getCurrentMillisecond());
+                    invitedEntity.setTime(MLDate.getCurrentMillisecond());
                     invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.BEAGREED);
                     mInvitedDao.updateInvited(invitedEntity);
                 } else {
@@ -425,9 +424,7 @@ public class MLEasemobHelper {
                     // 设置申请信息为联系人申请
                     invitedEntity.setType(MLInvitedEntity.InvitedType.CONTACTS);
                     // 设置申请信息的时间
-                    invitedEntity.setCreateTime(MLDate.getCurrentMillisecond());
-                    invitedEntity.setUpdateTime(invitedEntity.getCreateTime());
-
+                    invitedEntity.setTime(MLDate.getCurrentMillisecond());
                     mInvitedDao.saveInvited(invitedEntity);
                 }
                 // 调用发送通知栏提醒方法，提醒用户查看申请通知
@@ -451,7 +448,7 @@ public class MLEasemobHelper {
                 MLInvitedEntity invitedEntity = mInvitedDao.getInvitedEntiry(objId);
                 if (invitedEntity != null) {
                     // 更新当前信息的时间
-                    invitedEntity.setUpdateTime(MLDate.getCurrentMillisecond());
+                    invitedEntity.setTime(MLDate.getCurrentMillisecond());
                     invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.BEREFUSED);
                     mInvitedDao.updateInvited(invitedEntity);
                 } else {
@@ -468,8 +465,7 @@ public class MLEasemobHelper {
                     // 设置申请信息为联系人申请
                     invitedEntity.setType(MLInvitedEntity.InvitedType.CONTACTS);
                     // 设置申请信息的时间
-                    invitedEntity.setCreateTime(MLDate.getCurrentMillisecond());
-                    invitedEntity.setUpdateTime(invitedEntity.getCreateTime());
+                    invitedEntity.setTime(MLDate.getCurrentMillisecond());
 
                     mInvitedDao.saveInvited(invitedEntity);
                 }

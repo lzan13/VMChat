@@ -3,35 +3,50 @@
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- 项目权限 -->
+    <!-- 相机 -->
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <!-- 录音 -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <!-- 震动 -->
     <uses-permission android:name="android.permission.VIBRATE"/>
     <!-- 网络 -->
     <uses-permission android:name="android.permission.INTERNET"/>
-    <!-- 录音 -->
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-    <!-- 相机 -->
-    <uses-permission android:name="android.permission.CAMERA"/>
     <!-- 访问网络状态 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <!-- 写入外部存储 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <!-- 安装卸载文件系统 -->
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
-    <!-- 访问精确定位 -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <!-- 访问WIFI状态 -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <!-- 改变WIFI状态 -->
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
-    <!-- 唤醒锁屏 -->
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <!-- 写入外部存储 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <!-- 访问精确定位 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <!-- 修改音频设置 -->
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
     <!-- 读取手机状态 -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <!-- 允许读写系统设置项 使用设置时需要 -->
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <!-- 读取启动设置 -->
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS"/>
+
+
+    <!--音视频通话所需权限-->
+    <!-- 唤醒锁屏 -->
+    <!--<uses-permission android:name="android.permission.WAKE_LOCK"/>-->
+
+    <!--非必需权限-->
     <!-- 开机自启动 -->
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-permission android:name="android.permission.GET_TASKS"/>
+    <!--<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>-->
+    <!--<uses-permission android:name="android.permission.GET_TASKS"/>-->
+    <!-- 安装卸载文件系统 -->
+    <!--<uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>-->
+    <!-- 改变WIFI状态 -->
+    <!--<uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>-->
+    <!-- 读取描述文件 -->
+    <!--<uses-permission android:name="android.permission.READ_PROFILE"/>-->
+    <!-- 读取联系人 -->
+    <!--<uses-permission android:name="android.permission.READ_CONTACTS"/>-->
+    <!-- 弹出系统级 Dialog 权限 -->
+    <!--<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>-->
 
     <!-- Demo新添加的一些属性 -->
     <!-- 访问GMail账户列表 -->
@@ -42,18 +57,8 @@
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
     <!-- 验证账户 -->
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
-    <!-- 读取启动设置 -->
-    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS"/>
     <!-- 连续广播（允许一个程序收到广播后快速收到下一个广播） -->
     <uses-permission android:name="android.permission.BROADCAST_STICKY"/>
-    <!-- 允许读写系统设置项 -->
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
-    <!-- 读取描述文件 -->
-    <uses-permission android:name="android.permission.READ_PROFILE"/>
-    <!-- 读取联系人 -->
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
-    <!-- 弹出系统级 Dialog 权限 -->
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
     <!-- 小米推送的权限 -->
     <permission
@@ -62,12 +67,13 @@
 
     <uses-permission android:name="net.melove.demo.chat.permission.MIPUSH_RECEIVE"/>
 
-    <!-- 配置google推送需要的权限 -->
+    <!-- 配置 Google 推送需要的权限 -->
     <!-- <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/> -->
     <!-- <permission -->
     <!-- android:name="net.melove.demo.chat.permission.C2D_MESSAGE" -->
     <!-- android:protectionLevel="signature"/> -->
     <!-- <uses-permission android:name="net.melove.demo.chat.permission.C2D_MESSAGE"/> -->
+
     <!-- 程序的入口 -->
     <application
         android:name=".application.MLApplication"
@@ -111,7 +117,7 @@
             android:windowSoftInputMode="adjustResize|stateHidden"/>
         <!-- 账户信息界面 -->
         <activity
-            android:name=".contacts.MLContactInfoActivity"
+            android:name=".contacts.MLContactsInfoActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Default"/>
         <!-- 聊天界面 -->
@@ -140,57 +146,24 @@
         <meta-data
             android:name="EASEMOB_APPKEY"
             android:value="lzan13#hxsdkdemo"/>
-        <!-- 声明sdk所需的service SDK核心功能 -->
-        <!-- <service -->
-        <!-- android:name="com.hyphenate.chat.EMChatService" -->
-        <!-- android:exported="true"/> -->
-        <!-- &lt;!&ndash; 声明sdk所需的receiver &ndash;&gt; -->
-        <!-- <receiver android:name="com.hyphenate.chat.EMMonitorReceiver"> -->
-        <!-- <intent-filter> -->
-        <!-- <action android:name="android.intent.action.PACKAGE_REMOVED"/> -->
-        <!-- <data android:scheme="package"/> -->
-        <!-- </intent-filter> -->
-        <!-- &lt;!&ndash; 可选filter &ndash;&gt; -->
-        <!-- <intent-filter> -->
-        <!-- <action android:name="android.intent.action.BOOT_COMPLETED"/> -->
-        <!-- <action android:name="android.intent.action.USER_PRESENT"/> -->
-        <!-- </intent-filter> -->
-        <!-- </receiver> -->
+        <!-- 声明sdk所需的 Service SDK核心功能 -->
+        <!--<service-->
+            <!--android:name="com.hyphenate.chat.EMChatService"-->
+            <!--android:exported="true"/>-->
+        <!--&lt;!&ndash; 声明sdk所需的receiver &ndash;&gt;-->
+        <!--<receiver android:name="com.hyphenate.chat.EMMonitorReceiver">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.PACKAGE_REMOVED"/>-->
+                <!--<data android:scheme="package"/>-->
+            <!--</intent-filter>-->
+            <!--&lt;!&ndash; 可选filter &ndash;&gt;-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.BOOT_COMPLETED"/>-->
+                <!--<action android:name="android.intent.action.USER_PRESENT"/>-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
 
-
-        <!-- 配置谷歌推送需要的服务 -->
-        <!-- <receiver -->
-        <!-- android:name="com.hyphenate.chat.EMGCMBroadcastReceiver" -->
-        <!-- android:exported="true" -->
-        <!-- android:permission="com.google.android.c2dm.permission.SEND"> -->
-        <!-- <intent-filter> -->
-        <!-- <action android:name="com.google.android.c2dm.intent.RECEIVE"/> -->
-        <!-- <category android:name="com.hyphenate.chatuidemo"/> -->
-        <!-- </intent-filter> -->
-        <!-- </receiver> -->
-        <!-- &lt;!&ndash;Easemob SDK 实现的监听GCM推送的Service&ndash;&gt; -->
-        <!-- <service -->
-        <!-- android:name="com.hyphenate.chat.EMGCMListenerService" -->
-        <!-- android:exported="false"> -->
-        <!-- </service> -->
-
-
-        <!-- &lt;!&ndash;接收Google推送的监听&ndash;&gt; -->
-        <!-- <receiver -->
-        <!-- android:name="net.melove.demo.chat.application.MLGCMBroadCast" -->
-        <!-- android:exported="false"> -->
-        <!-- <intent-filter> -->
-        <!-- <action android:name="com.hyphenate.sdk.push"/> -->
-        <!-- <category android:name="net.melove.demo.chat"/> -->
-        <!-- </intent-filter> -->
-        <!-- </receiver> -->
-
-
-        <!-- 配置小米推送服务 -->
-        <service
-            android:name="com.xiaomi.push.service.XMPushService"
-            android:enabled="true"
-            android:process=":pushservice"/>
+        <!-- 配置小米推送服务 这里并没有按照小米官方文档配置全服 Service-->
         <service
             android:name="com.xiaomi.mipush.sdk.PushMessageHandler"
             android:enabled="true"
@@ -199,25 +172,6 @@
         <service
             android:name="com.xiaomi.mipush.sdk.MessageHandleService"
             android:enabled="true"/>
-        <!-- 网络状态广播接收器 -->
-        <receiver
-            android:name="com.xiaomi.push.service.receivers.NetworkStatusReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
-
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </receiver>
-        <!-- Ping 结果广播接收器 -->
-        <receiver
-            android:name="com.xiaomi.push.service.receivers.PingReceiver"
-            android:exported="false"
-            android:process=":pushservice">
-            <intent-filter>
-                <action android:name="com.xiaomi.push.PING_TIMER"/>
-            </intent-filter>
-        </receiver>
 
         <!-- 配置sdk实现的小米推送 广播接收器 -->
         <receiver

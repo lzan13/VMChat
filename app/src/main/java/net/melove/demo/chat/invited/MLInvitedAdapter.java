@@ -1,6 +1,8 @@
 package net.melove.demo.chat.invited;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.content.res.XmlResourceParser;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,14 +14,18 @@ import com.hyphenate.chat.EMClient;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.application.MLConstants;
+import net.melove.demo.chat.communal.util.MLDate;
 import net.melove.demo.chat.communal.util.MLLog;
 import net.melove.demo.chat.communal.widget.MLImageView;
 import net.melove.demo.chat.database.MLInvitedDao;
+
+import org.xmlpull.v1.XmlPullParser;
 
 import java.util.List;
 
 /**
  * Created by lzan13 on 2016/3/17.
+ * 申请信息适配器类
  */
 public class MLInvitedAdapter extends RecyclerView.Adapter<MLInvitedAdapter.InvitedViewHolder> {
 
@@ -99,9 +105,13 @@ public class MLInvitedAdapter extends RecyclerView.Adapter<MLInvitedAdapter.Invi
             holder.btnRefuse.setVisibility(View.VISIBLE);
         } else if (invitedEntity.getStatus() == MLInvitedEntity.InvitedStatus.GROUPAPPLYFOR) {
             holder.textViewStatus.setText(R.string.ml_waiting);
+            holder.textViewStatus.setVisibility(View.GONE);
             holder.btnAgree.setVisibility(View.VISIBLE);
             holder.btnRefuse.setVisibility(View.VISIBLE);
         }
+        // 设置信息时间
+        holder.textViewTime.setText(MLDate.long2Time(invitedEntity.getTime()));
+
         holder.btnAgree.setTag(position);
         holder.btnRefuse.setTag(position);
         holder.btnAgree.setOnClickListener(viewListener);
@@ -179,6 +189,7 @@ public class MLInvitedAdapter extends RecyclerView.Adapter<MLInvitedAdapter.Invi
         MLImageView imageViewAvatar;
         TextView textViewUsername;
         TextView textViewReason;
+        TextView textViewTime;
         TextView textViewStatus;
         Button btnAgree;
         Button btnRefuse;
@@ -193,6 +204,7 @@ public class MLInvitedAdapter extends RecyclerView.Adapter<MLInvitedAdapter.Invi
             imageViewAvatar = (MLImageView) itemView.findViewById(R.id.ml_img_invited_avatar);
             textViewUsername = (TextView) itemView.findViewById(R.id.ml_text_invited_username);
             textViewReason = (TextView) itemView.findViewById(R.id.ml_text_invited_reason);
+            textViewTime = (TextView) itemView.findViewById(R.id.ml_text_invited_time);
             textViewStatus = (TextView) itemView.findViewById(R.id.ml_text_invited_status);
             btnAgree = (Button) itemView.findViewById(R.id.ml_btn_invited_agree);
             btnRefuse = (Button) itemView.findViewById(R.id.ml_btn_invited_refuse);

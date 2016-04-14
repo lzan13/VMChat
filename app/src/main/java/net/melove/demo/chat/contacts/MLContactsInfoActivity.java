@@ -20,7 +20,7 @@ import net.melove.demo.chat.communal.base.MLBaseActivity;
 import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.conversation.MLChatActivity;
 import net.melove.demo.chat.database.MLInvitedDao;
-import net.melove.demo.chat.database.MLContactDao;
+import net.melove.demo.chat.database.MLContactsDao;
 import net.melove.demo.chat.communal.util.MLCrypto;
 import net.melove.demo.chat.communal.util.MLDate;
 import net.melove.demo.chat.communal.util.MLLog;
@@ -32,7 +32,7 @@ import net.melove.demo.chat.invited.MLInvitedEntity;
  * Created by lzan13 on 2015/8/29.
  * 联系人信息展示界面，用于显示联系人的一些详细信息，可以显示好友以及陌生人，如果是陌生人就显示添加好友按钮
  */
-public class MLContactInfoActivity extends MLBaseActivity {
+public class MLContactsInfoActivity extends MLBaseActivity {
 
     private String mChatId;
 
@@ -45,9 +45,9 @@ public class MLContactInfoActivity extends MLBaseActivity {
     // 申请与邀请数据库操作类
     private MLInvitedDao mInvitedDao;
     // 用户信息数据库操作类
-    private MLContactDao mContactDao;
+    private MLContactsDao mContactsDao;
     // 用户信息实体类
-    private MLContactEntity mContactEntity;
+    private MLContactsEntity mContactsEntity;
 
 
     @Override
@@ -67,15 +67,15 @@ public class MLContactInfoActivity extends MLBaseActivity {
         mActivity = this;
         mChatId = getIntent().getStringExtra(MLConstants.ML_EXTRA_CHAT_ID);
         mInvitedDao = new MLInvitedDao(mActivity);
-        mContactDao = new MLContactDao(mActivity);
+        mContactsDao = new MLContactsDao(mActivity);
         // 查询本地User对象
-        mContactEntity = mContactDao.getContact(mChatId);
+        mContactsEntity = mContactsDao.getContact(mChatId);
 
         mFab = (FloatingActionButton) findViewById(R.id.ml_btn_fab_user_info);
         mFab.setOnClickListener(viewListener);
 
         // 根据本地查询到的用户情况来确定是显示 添加好友 还是显示 发送消息
-        if (mContactEntity != null && mContactEntity.getUserName() != null) {
+        if (mContactsEntity != null && mContactsEntity.getUserName() != null) {
             mFab.setImageResource(R.mipmap.ic_chat_white_24dp);
         } else {
             mFab.setImageResource(R.mipmap.ic_add_contacts_white_24dp);
@@ -108,7 +108,7 @@ public class MLContactInfoActivity extends MLBaseActivity {
                 onFinish();
                 break;
             case R.id.ml_btn_fab_user_info:
-                if (mContactEntity != null && mContactEntity.getUserName() != null) {
+                if (mContactsEntity != null && mContactsEntity.getUserName() != null) {
                     startChat();
                 } else {
                     addContact();
@@ -157,7 +157,7 @@ public class MLContactInfoActivity extends MLBaseActivity {
                             invitedEntity.setObjId(objId);
                             // 对方的username
                             invitedEntity.setUserName(mChatId);
-                            // invitedEntity.setNickName(mContactEntity.getNickName());
+                            // invitedEntity.setNickName(mContactsEntity.getNickName());
                             // 设置申请理由
                             invitedEntity.setReason(reason);
                             // 设置申请状态为被申请
@@ -165,8 +165,7 @@ public class MLContactInfoActivity extends MLBaseActivity {
                             // 设置申请信息为联系人申请
                             invitedEntity.setType(MLInvitedEntity.InvitedType.CONTACTS);
                             // 设置申请信息的时间
-                            invitedEntity.setCreateTime(MLDate.getCurrentMillisecond());
-                            invitedEntity.setUpdateTime(invitedEntity.getCreateTime());
+                            invitedEntity.setTime(MLDate.getCurrentMillisecond());
 
                             // 这里进行一下筛选，如果已存在则去更新本地内容
                             MLInvitedEntity temp = mInvitedDao.getInvitedEntiry(objId);

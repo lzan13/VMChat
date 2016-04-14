@@ -4,7 +4,7 @@ package net.melove.demo.chat.contacts;
  * Created by lzan13 on 2015/8/21.
  * 联系人信息实体类
  */
-public class MLContactEntity {
+public class MLContactsEntity {
 
     // 联系人对象的头，用来排序和根据字母查找
     public String header;
@@ -124,10 +124,10 @@ public class MLContactEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || o instanceof MLContactEntity) {
+        if (o == null || o instanceof MLContactsEntity) {
             return false;
         }
-        return userName.equals(((MLContactEntity) o).getUserName());
+        return userName.equals(((MLContactsEntity) o).getUserName());
     }
 
     @Override

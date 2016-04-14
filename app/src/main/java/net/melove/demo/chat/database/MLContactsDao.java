@@ -7,18 +7,19 @@ import android.text.TextUtils;
 
 import com.hyphenate.util.HanziToPinyin;
 
-import net.melove.demo.chat.contacts.MLContactEntity;
+import net.melove.demo.chat.contacts.MLContactsEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by lzan13 on 2015/7/21.
+ * 联系人信息数据库操作类
  */
-public class MLContactDao {
+public class MLContactsDao {
 
 
-    public MLContactDao(Context context) {
+    public MLContactsDao(Context context) {
         MLDBManager.getInstance().init(context);
     }
 
@@ -27,7 +28,7 @@ public class MLContactDao {
      *
      * @param contactEntity 需要保存的联系人
      */
-    public synchronized void saveContacts(MLContactEntity contactEntity) {
+    public synchronized void saveContacts(MLContactsEntity contactEntity) {
         ContentValues values = new ContentValues();
         values.put(MLDBConstants.COL_USERNAME, contactEntity.getUserName());
         values.put(MLDBConstants.COL_NICKNAME, contactEntity.getNickName());
@@ -59,7 +60,7 @@ public class MLContactDao {
      *
      * @param contactEntity 需要修改的联系人信息
      */
-    public synchronized void updateContacts(MLContactEntity contactEntity) {
+    public synchronized void updateContacts(MLContactsEntity contactEntity) {
         ContentValues values = new ContentValues();
         values.put(MLDBConstants.COL_USERNAME, contactEntity.getUserName());
         values.put(MLDBConstants.COL_NICKNAME, contactEntity.getNickName());
@@ -83,8 +84,8 @@ public class MLContactDao {
      *
      * @param contactEntities 需要保存的联系人列表
      */
-    public synchronized void saveContactsList(List<MLContactEntity> contactEntities) {
-        for (MLContactEntity contactEntity : contactEntities) {
+    public synchronized void saveContactsList(List<MLContactsEntity> contactEntities) {
+        for (MLContactsEntity contactEntity : contactEntities) {
             saveContacts(contactEntity);
         }
     }
@@ -96,8 +97,8 @@ public class MLContactDao {
      * @param username 需要获取的联系人的 username，根据此 useranme 确定唯一的联系人
      * @return 返回查询结果，有可能为 @null
      */
-    public synchronized MLContactEntity getContact(String username) {
-        MLContactEntity contactEntity = null;
+    public synchronized MLContactsEntity getContact(String username) {
+        MLContactsEntity contactEntity = null;
         String selection = MLDBConstants.COL_USERNAME + "=?";
         String args[] = new String[]{username};
         Cursor cursor = MLDBManager.getInstance().queryData(MLDBConstants.TB_CONTACTS,
@@ -114,11 +115,11 @@ public class MLContactDao {
      *
      * @return 获取所有联系人
      */
-    public synchronized List<MLContactEntity> getContactList() {
+    public synchronized List<MLContactsEntity> getContactList() {
         Cursor cursor = MLDBManager.getInstance().queryData(MLDBConstants.TB_CONTACTS,
                 null, null, null, null, null, null, null);
 
-        List<MLContactEntity> contactEntities = new ArrayList<MLContactEntity>();
+        List<MLContactsEntity> contactEntities = new ArrayList<MLContactsEntity>();
         while (cursor.moveToNext()) {
             contactEntities.add(cursorToEntity(cursor));
         }
@@ -132,8 +133,8 @@ public class MLContactDao {
      * @param cursor 指针
      * @return 返回得到的实体类
      */
-    private MLContactEntity cursorToEntity(Cursor cursor) {
-        MLContactEntity contactEntity = new MLContactEntity();
+    private MLContactsEntity cursorToEntity(Cursor cursor) {
+        MLContactsEntity contactEntity = new MLContactsEntity();
         String username = cursor.getString(cursor.getColumnIndex(MLDBConstants.COL_USERNAME));
         String nickname = cursor.getString(cursor.getColumnIndex(MLDBConstants.COL_NICKNAME));
         String email = cursor.getString(cursor.getColumnIndex(MLDBConstants.COL_EMAIL));

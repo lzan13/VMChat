@@ -883,7 +883,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 mConversation.markMessageAsRead(message.getMsgId());
             } else {
                 // 如果消息不是当前会话的消息发送通知栏通知
-                MLNotifier.getInstance(mActivity).sendMessageNotification(message);
+                MLNotifier.getInstance(mActivity).sendNotificationMessage(message);
             }
             MLLog.i("message id:%s, from:%s, mseeage:%s", message.getMsgId(), message.getFrom(), message.toString());
         }

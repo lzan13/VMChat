@@ -22,18 +22,8 @@ public class MLInvitedEntity {
     private InvitedStatus status;
     // 消息类型，有群申请和好友申请两种
     private InvitedType type;
-    // 消息创建的时间
-    private long createTime;
-    // 消息更新时间
-    private long updateTime;
-
-    public long getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(long createTime) {
-        this.createTime = createTime;
-    }
+    // 消息时间
+    private long time;
 
     public String getGroupId() {
         return groupId;
@@ -91,12 +81,12 @@ public class MLInvitedEntity {
         this.type = type;
     }
 
-    public long getUpdateTime() {
-        return updateTime;
+    public long getTime() {
+        return time;
     }
 
-    public void setUpdateTime(long updateTime) {
-        this.updateTime = updateTime;
+    public void setTime(long time) {
+        this.time = time;
     }
 
     public String getUserName() {

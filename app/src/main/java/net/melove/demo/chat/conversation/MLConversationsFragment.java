@@ -38,7 +38,7 @@ public class MLConversationsFragment extends MLBaseFragment {
     private List<EMConversation> mConversations = new ArrayList<EMConversation>();
 
     private String[] mMenus = null;
-    // 用来显示会话列表的控件
+    // 代替 ListView 用来显示会话列表的控件
     private RecyclerView mRecyclerView;
     private MLConversationAdapter mConversationAdapter;
 

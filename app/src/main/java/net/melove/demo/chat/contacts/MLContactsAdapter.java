@@ -1,10 +1,10 @@
 package net.melove.demo.chat.contacts;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import net.melove.demo.chat.R;
@@ -14,59 +14,67 @@ import java.util.List;
 
 /**
  * Created by lzan13 on 2015/8/26.
+ * 联系人列表适配器
  */
-public class MLContactsAdapter extends BaseAdapter {
+public class MLContactsAdapter extends RecyclerView.Adapter<MLContactsAdapter.ContactsViewHolder> {
 
     private Context mContext;
     private LayoutInflater mInflater;
-    private List<MLContactEntity> mList;
+    private List<MLContactsEntity> mContactsList;
 
 
-    public MLContactsAdapter(Context context, List<MLContactEntity> list) {
+    public MLContactsAdapter(Context context, List<MLContactsEntity> list) {
         mContext = context;
-        mList = list;
+        mContactsList = list;
+    }
+
+    /**
+     * 获取当前数据源大小
+     *
+     * @return 返回当前适配器数据源 Item 个数
+     */
+    @Override
+    public int getItemCount() {
+        return mContactsList.size();
     }
 
     @Override
-    public int getCount() {
-        return 0;
+    public ContactsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = mInflater.inflate(R.layout.item_contacts, parent, false);
+        return new ContactsViewHolder(itemView);
     }
 
+    /**
+     * @param holder
+     * @param position
+     */
     @Override
-    public Object getItem(int position) {
-        return mList.get(position);
+    public void onBindViewHolder(ContactsViewHolder holder, int position) {
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
-    @Override
-    public long getItemId(int position) {
-        return 0;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHendler viewHendler = null;
-        MLContactEntity info = (MLContactEntity) getItem(position);
-        if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.item_contact, null);
-            viewHendler = new ViewHendler(convertView);
-            convertView.setTag(viewHendler);
-        } else {
-            viewHendler = (ViewHendler) convertView.getTag();
-        }
-        viewHendler.imageViewAvatar.setImageResource(R.mipmap.ic_character_blackcat);
-        viewHendler.textViewUsername.setText(info.getUserName());
-
-        return convertView;
-    }
-
-    private class ViewHendler {
+    /**
+     * 自定义联系人 ViewHolder 用来展示联系人数据
+     */
+    public static class ContactsViewHolder extends RecyclerView.ViewHolder {
         MLImageView imageViewAvatar;
         TextView textViewUsername;
 
-
-        public ViewHendler(View view) {
-            imageViewAvatar = (MLImageView) view.findViewById(R.id.ml_img_invited_avatar);
-            textViewUsername = (TextView) view.findViewById(R.id.ml_text_invited_username);
+        /**
+         * 构造方法
+         *
+         * @param itemView 显示联系人数据的 ItemView
+         */
+        public ContactsViewHolder(View itemView) {
+            super(itemView);
+            imageViewAvatar = (MLImageView) itemView.findViewById(R.id.ml_img_invited_avatar);
+            textViewUsername = (TextView) itemView.findViewById(R.id.ml_text_invited_username);
 
         }
     }

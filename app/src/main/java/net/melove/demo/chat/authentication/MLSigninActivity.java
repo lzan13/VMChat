@@ -59,8 +59,8 @@ public class MLSigninActivity extends MLBaseActivity {
 
     private void init() {
 
-        mUsername = (String) MLSPUtil.get(mActivity, "username", "");
-        mPassword = (String) MLSPUtil.get(mActivity, "password", "");
+        mUsername = (String) MLSPUtil.get(mActivity, MLConstants.ML_SHARED_USERNAME, "");
+        mPassword = (String) MLSPUtil.get(mActivity, MLConstants.ML_SHARED_PASSWORD, "");
         mUsernameView = (EditText) findViewById(R.id.ml_edit_sign_in_username);
         mPasswordView = (EditText) findViewById(R.id.ml_edit_sign_in_password);
         mUsernameView.setText(mUsername);
