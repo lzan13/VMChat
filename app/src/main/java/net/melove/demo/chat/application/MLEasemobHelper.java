@@ -95,6 +95,8 @@ public class MLEasemobHelper {
      * @return 返回初始化状态是否成功
      */
     public synchronized boolean initEasemob(Context context) {
+        MLLog.d("------- init easemob start --------------");
+
         mContext = context;
 
         mContactsDao = new MLContactsDao(mContext);
@@ -145,7 +147,7 @@ public class MLEasemobHelper {
         // 设置是否允许聊天室的Owner 离开并删除聊天室的会话
         options.allowChatroomOwnerLeave(true);
         // 设置google GCM推送id，国内可以不用设置
-        options.setGCMNumber(MLConstants.ML_GCM_NUMBER);
+        //        options.setGCMNumber(MLConstants.ML_GCM_NUMBER);
         // 设置集成小米推送的appid和appkey
         options.setMipushConfig(MLConstants.ML_MI_APP_ID, MLConstants.ML_MI_APP_KEY);
 
@@ -160,6 +162,7 @@ public class MLEasemobHelper {
 
         // 初始化完成
         isInit = true;
+        MLLog.d("------- init easemob end --------------");
         return isInit;
     }
 
@@ -168,6 +171,7 @@ public class MLEasemobHelper {
      * 初始化环信的一些监听
      */
     public void initGlobalListener() {
+        MLLog.d("------- listener start --------------");
         // 设置全局的连接监听
         setConnectionListener();
         // 初始化全局消息监听
@@ -176,6 +180,7 @@ public class MLEasemobHelper {
         setContactListener();
         // 设置全局的群组变化监听
         setGroupChangeListener();
+        MLLog.d("------- listener end ----------------");
     }
 
     /**
@@ -191,6 +196,8 @@ public class MLEasemobHelper {
             @Override
             public void onConnected() {
                 MLLog.d("MLEasemobHelper - onConnected");
+                // 发送app服务器链接变化的广播
+                mLocalBroadcastManager.sendBroadcast(new Intent(MLConstants.ML_ACTION_CONNCETION));
             }
 
             /**
@@ -207,19 +214,23 @@ public class MLEasemobHelper {
                     intent.setClass(activity, MLConflictActivity.class);
                 }
                 if (errorCode == EMError.USER_LOGIN_ANOTHER_DEVICE) {
-                    MLLog.d("被踢，多次初始化也可能出现-" + errorCode);
-                    // 被踢了，已经登录成功的要改为false
+                    MLLog.d("user login another device - " + errorCode);
+                    // 被踢了，已经登录成功的状态要改为 false，这个在使用了推送功能时，调用logout需要传递
                     isLogined = false;
                     signOut(null);
                     intent.putExtra(MLConstants.ML_EXTRA_USER_LOGIN_OTHER_DIVERS, true);
                     activity.startActivity(intent);
                 } else if (errorCode == EMError.USER_REMOVED) {
-                    MLLog.d("账户移除-" + errorCode);
+                    MLLog.d("user be removed - " + errorCode);
+                    // 被踢了，已经登录成功的状态要改为 false，这个在使用了推送功能时，调用logout需要传递
                     isLogined = false;
+                    signOut(null);
                     intent.putExtra(MLConstants.ML_EXTRA_USER_REMOVED, true);
                     mContext.startActivity(intent);
                 } else {
-                    MLLog.d("连接不到服务器-" + errorCode);
+                    MLLog.d("con't servers - " + errorCode);
+                    // 发送app服务器链接变化的广播
+                    mLocalBroadcastManager.sendBroadcast(new Intent(MLConstants.ML_ACTION_CONNCETION));
                 }
             }
         };
@@ -238,7 +249,7 @@ public class MLEasemobHelper {
              * 不用过滤掉空会话，并且能显示会话时间
              * {@link MLConversationExtUtils#setConversationLastTime(EMConversation)}
              *
-             * @param list 收到的新消息集合
+             * @param list 收到的新消息集合 TODO 2016-4-15 19:35 经测试不论是离线还是在线list大小都是 1
              */
             @Override
             public void onMessageReceived(List<EMMessage> list) {
@@ -262,7 +273,7 @@ public class MLEasemobHelper {
             /**
              * 收到新的 CMD 消息
              *
-             * @param list
+             * @param list 收到的透传消息集合
              */
             @Override
             public void onCmdMessageReceived(List<EMMessage> list) {
@@ -636,6 +647,15 @@ public class MLEasemobHelper {
      */
     public boolean isLogined() {
         return EMClient.getInstance().isLoggedInBefore();
+    }
+
+    /**
+     * 判断当前app是否连接聊天服务器
+     *
+     * @return 返回连接服务器状态
+     */
+    public boolean isConnection() {
+        return EMClient.getInstance().isConnected();
     }
 
     /**

@@ -1,11 +1,17 @@
 package net.melove.demo.chat.main;
 
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
@@ -55,6 +61,7 @@ public class MLMainActivity extends MLBaseActivity implements
 
     // 侧滑布局用户头像
     private MLImageView mAvatarView;
+    private FloatingActionButton mConnectionFabBtn;
 
     // Fragment 切换事务处理类
     private FragmentTransaction mFragmentTransaction;
@@ -64,8 +71,10 @@ public class MLMainActivity extends MLBaseActivity implements
     // 菜单操作类型
     private int mMenuType;
 
-    // 申请与通知的 Dao
-    private MLInvitedDao mInvitedDao;
+    // 应用内广播管理器，为了安全这里使用局域广播
+    private LocalBroadcastManager mLocalBroadcastManager;
+    // 会话界面监听会话变化的广播接收器
+    private BroadcastReceiver mBroadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +112,6 @@ public class MLMainActivity extends MLBaseActivity implements
     private void init() {
         mActivity = this;
         mMenuType = 0;
-        mInvitedDao = new MLInvitedDao(mActivity);
     }
 
     /**
@@ -112,7 +120,20 @@ public class MLMainActivity extends MLBaseActivity implements
     private void initView() {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.ml_layout_drawer);
         mNavigationView = (NavigationView) findViewById(R.id.ml_widget_navigation);
+        // 侧滑用户头像
         mAvatarView = (MLImageView) mNavigationView.getHeaderView(0).findViewById(R.id.ml_img_nav_avatar);
+        mAvatarView.setOnClickListener(viewListener);
+
+        // 网络连接提示按钮
+        mConnectionFabBtn = (FloatingActionButton) findViewById(R.id.ml_btn_fab_connection);
+        mConnectionFabBtn.setOnClickListener(viewListener);
+        if (MLEasemobHelper.getInstance().isConnection()) {
+            mConnectionFabBtn.setImageResource(R.mipmap.ic_signal_wifi_on_white_24dp);
+            mConnectionFabBtn.setVisibility(View.GONE);
+        } else {
+            mConnectionFabBtn.setImageResource(R.mipmap.ic_signal_wifi_off_white_24dp);
+            mConnectionFabBtn.setVisibility(View.VISIBLE);
+        }
 
         mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
         mToolbar.setTitle(mActivity.getResources().getString(R.string.ml_dialog_title_chat));
@@ -193,6 +214,24 @@ public class MLMainActivity extends MLBaseActivity implements
             switch (v.getId()) {
             case R.id.ml_img_nav_avatar:
 
+                break;
+            case R.id.ml_btn_fab_connection:
+                Intent intent = null;
+                /**
+                 * 判断手机系统的版本！如果API大于10 就是3.0+
+                 * 因为3.0以上的版本的设置和3.0以下的设置不一样，调用的方法不同
+                 */
+                if (android.os.Build.VERSION.SDK_INT > 10) {
+                    intent = new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS);
+                } else {
+                    intent = new Intent();
+                    ComponentName component = new ComponentName(
+                            "com.android.settings",
+                            "com.android.settings.WirelessSettings");
+                    intent.setComponent(component);
+                    intent.setAction("android.intent.action.VIEW");
+                }
+                startActivity(intent);
                 break;
             }
         }
@@ -336,6 +375,46 @@ public class MLMainActivity extends MLBaseActivity implements
         return mToolbar;
     }
 
+    /**
+     * 注册广播接收器
+     */
+    private void registerBroadcastReceiver() {
+        // 获取局域广播管理器
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(mActivity);
+        // 实例化Intent 过滤器
+        IntentFilter intentFilter = new IntentFilter();
+        // 为过滤器添加一个 Action
+        intentFilter.addAction(MLConstants.ML_ACTION_CONNCETION);
+        // 实例化广播接收器，用来接收自己过滤的广播
+        mBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                // 根据app连接服务器情况设置图标的显示与隐藏
+                if (MLEasemobHelper.getInstance().isConnection()) {
+                    mConnectionFabBtn.setImageResource(R.mipmap.ic_signal_wifi_on_white_24dp);
+                    mConnectionFabBtn.setVisibility(View.GONE);
+                    // MLToast.rightToast(R.string.ml_toast_connected).show();
+                } else {
+                    mConnectionFabBtn.setImageResource(R.mipmap.ic_signal_wifi_off_white_24dp);
+                    mConnectionFabBtn.setVisibility(View.VISIBLE);
+                    /**
+                     * 因为3.x的sdk断开服务器连接后会一直重试并发出回调，所以为了防止一直Toast提示用户，
+                     * 这里取消toast，只是显示图标
+                     */
+                    // MLToast.rightToast(R.string.ml_error_server_not_reachable).show();
+                }
+            }
+        };
+        // 注册广播接收器
+        mLocalBroadcastManager.registerReceiver(mBroadcastReceiver, intentFilter);
+    }
+
+    /**
+     * 取消广播接收器的注册
+     */
+    private void unregisterBroadcastReceiver() {
+        mLocalBroadcastManager.unregisterReceiver(mBroadcastReceiver);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -377,6 +456,7 @@ public class MLMainActivity extends MLBaseActivity implements
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+            // 检测当前是否打开侧滑抽屉菜单，如果打开状态，返回键就关闭，否则结束退出app
             if (mNavigationView.isShown()) {
                 mDrawerLayout.closeDrawer(GravityCompat.START);
             } else {
@@ -401,10 +481,14 @@ public class MLMainActivity extends MLBaseActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+        // 注册广播接收器
+        registerBroadcastReceiver();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        // 取消注册广播接收器
+        unregisterBroadcastReceiver();
     }
 }

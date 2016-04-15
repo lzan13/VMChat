@@ -2,7 +2,7 @@ package net.melove.demo.chat.application;
 
 /**
  * Class ${FILE_NAME}
- * <p>
+ * <p/>
  * Created by lzan13 on 2015/9/10 22:04.
  */
 public class MLConstants {
@@ -42,6 +42,7 @@ public class MLConstants {
     public static final String ML_ACTION_INVITED = "ml_action_invited";
     public static final String ML_ACTION_CONTACT = "ml_action_contact";
     public static final String ML_ACTION_MESSAGE = "ml_action_message";
+    public static final String ML_ACTION_CONNCETION = "ml_action_connection";
 
 
     // SharedPreference 保存内容的 key

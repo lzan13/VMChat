@@ -42,7 +42,7 @@ public class MLConversationsFragment extends MLBaseFragment {
     private RecyclerView mRecyclerView;
     private MLConversationAdapter mConversationAdapter;
 
-    // 应用内广播管理器，为了完全这里使用局域广播
+    // 应用内广播管理器，为了安全这里使用局域广播
     private LocalBroadcastManager mLocalBroadcastManager;
     // 会话界面监听会话变化的广播接收器
     private BroadcastReceiver mBroadcastReceiver;
@@ -240,25 +240,29 @@ public class MLConversationsFragment extends MLBaseFragment {
      * 注册广播接收器，用来监听全局监听监听到新消息之后发送的广播，然后刷新界面
      */
     private void registerBroadcastReceiver() {
+        // 获取局域广播管理器
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(mActivity);
+        // 实例化Intent 过滤器
         IntentFilter intentFilter = new IntentFilter();
+        // 为过滤器添加一个 Action
         intentFilter.addAction(MLConstants.ML_ACTION_MESSAGE);
+        // 实例化广播接收器，用来接收自己过滤的广播
         mBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 refreshConversation();
             }
         };
+        // 注册广播接收器
         mLocalBroadcastManager.registerReceiver(mBroadcastReceiver, intentFilter);
     }
 
     /**
-     * 取消注册消息变化的广播监听
+     * 取消广播接收器的注册
      */
     private void unregisterBroadcastReceiver() {
         mLocalBroadcastManager.unregisterReceiver(mBroadcastReceiver);
     }
-
 
     /**
      * 重写父类的onResume方法， 在这里注册广播

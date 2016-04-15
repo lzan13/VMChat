@@ -365,13 +365,18 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     public void resendMessage(int position, String msgId) {
         // 获取需要重发的消息
         EMMessage message = mConversation.getMessage(msgId, true);
-        // 更新消息时间为当前时间
-        message.setMsgTime(MLDate.getCurrentMillisecond());
-        // 重发消息要先删除老的消息，删除后要刷新下界面，然后再重发消息
+        // 将失败的消息从 conversation对象中删除
         mConversation.removeMessage(message.getMsgId());
-        refreshItemMoved(position, mConversation.getAllMessages().size() - 1);
+        refreshItemRemoved(position);
+
+        // 更新消息时间 TODO 如果修改了消息时间，会导致conversation里有两条同一个id的消息，
+        message.setMsgTime(MLDate.getCurrentMillisecond());
         // 调用发送方法
-        sendMessage(message);
+        EMClient.getInstance().chatManager().sendMessage(message);
+        // 获取消息当前位置
+        int newPosition = mConversation.getMessagePosition(message);
+        // 更新ui
+        refreshItemInserted(newPosition);
     }
 
     /**
@@ -695,7 +700,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             refreshItemRangeRemoved(0, count);
             break;
         case R.id.ml_action_settings:
-            
+
             break;
         }
         return super.onOptionsItemSelected(item);
@@ -950,7 +955,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      */
     @Override
     public void onMessageChanged(EMMessage message, Object object) {
-        MLLog.i("onMessageChaged message:%s, object:%s", message.toString(), object.toString());
+        MLLog.i("onMessageChanged message:%s, object:%s", message.toString(), object.toString());
         refreshItemChanged(mConversation.getMessagePosition(message));
     }
 }

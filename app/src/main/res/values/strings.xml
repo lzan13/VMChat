@@ -188,6 +188,7 @@
     <!--Toast 提示内容-->
     <string name="ml_toast_add_contacts_success">发送好友请求成功，等待对方同意^_^</string>
     <string name="ml_toast_add_contacts_failed">发送好友请求失败-_-||，稍后重试</string>
+    <string name="ml_toast_connected">已经连接到服务器</string>
     <string name="ml_toast_content_copy_success">内容已复制</string>
     <string name="ml_toast_msg_send_faild">消息发送失败，等下再发吧</string>
     <string name="ml_toast_msg_resend_faild">消息重新发送失败，等下再发吧</string>

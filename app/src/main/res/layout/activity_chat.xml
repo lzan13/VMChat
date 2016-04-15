@@ -173,7 +173,7 @@
                 android:id="@+id/ml_gridview_chat_attach_menu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/ml_white_87"
+                android:background="@color/ml_white_100"
                 android:numColumns="4"
                 android:paddingLeft="@dimen/ml_dimen_12"
                 android:paddingRight="@dimen/ml_dimen_12"/>

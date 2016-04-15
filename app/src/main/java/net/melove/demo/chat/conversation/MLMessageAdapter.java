@@ -350,7 +350,7 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
          * @param formPosition Item 开始的位置
          * @param toPosition   Item 改变后的位置
          */
-        private void refreshItemMovedd(int formPosition, int toPosition) {
+        private void refreshItemMoved(int formPosition, int toPosition) {
             resumeLoadMessage();
             notifyItemMoved(formPosition, toPosition);
         }
@@ -359,6 +359,7 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
         public void handleMessage(Message msg) {
             switch (msg.what) {
             case NOTIFY_ALL:
+                // 刷新全部
                 refreshAll();
                 break;
             case NOTIFY_CHANGED:
@@ -368,7 +369,7 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
                 refreshItemInserted(msg.arg1);
                 break;
             case NOTIFY_MOVED:
-                refreshItemMovedd(msg.arg1, msg.arg2);
+                refreshItemMoved(msg.arg1, msg.arg2);
                 break;
             case NOTIFY_RANGE_CHANGED:
                 refreshItemRangeChanged(msg.arg1, msg.arg2);

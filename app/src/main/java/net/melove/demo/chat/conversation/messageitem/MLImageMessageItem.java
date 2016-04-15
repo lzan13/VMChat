@@ -278,6 +278,7 @@ public class MLImageMessageItem extends MLMessageItem {
             mAckStatusView.setVisibility(View.GONE);
             mProgressBar.setVisibility(View.VISIBLE);
             mPercentView.setVisibility(View.VISIBLE);
+            mPercentView.setText("0%");
             mResendView.setVisibility(View.GONE);
             break;
         }
