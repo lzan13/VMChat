@@ -674,10 +674,7 @@ public class MLEasemobHelper {
             ActivityManager.RunningAppProcessInfo info = (ActivityManager.RunningAppProcessInfo) (i.next());
             try {
                 if (info.pid == pid) {
-                    CharSequence c = pm.getApplicationLabel(pm.getApplicationInfo(info.processName, PackageManager.GET_META_DATA));
-                    // Log.d("Process", "Id: "+ info.pid +" ProcessName: "+
-                    // info.processName +"  Label: "+c.toString());
-                    // processName = c.toString();
+                    // 根据进程的信息获取当前进程的名字
                     processName = info.processName;
                     return processName;
                 }
