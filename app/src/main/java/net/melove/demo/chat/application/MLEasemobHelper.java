@@ -38,6 +38,7 @@ import java.util.List;
 
 /**
  * Created by lzan13 on 2015/7/13.
+ * 自定义初始化类做一些环信sdk的初始化操作
  */
 public class MLEasemobHelper {
 
@@ -67,7 +68,7 @@ public class MLEasemobHelper {
     // 表示是否登录成功状态，如果使用了推送，退出时需要要根据这个状态去传递参数
     private boolean isLogined = true;
 
-    // App内广播管理器，为了安全，这里使用本地广播
+    // App内广播管理器，为了安全，这里使用本地局域广播
     private LocalBroadcastManager mLocalBroadcastManager;
 
     /**
@@ -124,6 +125,8 @@ public class MLEasemobHelper {
 
         /**
          * SDK初始化的一些配置
+         * 关于 EMOptions 可以参考官方的 API 文档
+         * http://www.easemob.com/apidoc/android/chat3.0/classcom_1_1hyphenate_1_1chat_1_1_e_m_options.html
          */
         EMOptions options = new EMOptions();
         // 设置Appkey，如果配置文件已经配置，这里可以不用设置
@@ -669,20 +672,21 @@ public class MLEasemobHelper {
         ActivityManager activityManager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
         List list = activityManager.getRunningAppProcesses();
         Iterator i = list.iterator();
-        PackageManager pm = mContext.getPackageManager();
         while (i.hasNext()) {
             ActivityManager.RunningAppProcessInfo info = (ActivityManager.RunningAppProcessInfo) (i.next());
             try {
                 if (info.pid == pid) {
                     // 根据进程的信息获取当前进程的名字
                     processName = info.processName;
+                    // 返回当前进程名
                     return processName;
                 }
             } catch (Exception e) {
-                MLLog.e(e.toString());
+                e.printStackTrace();
             }
         }
-        return processName;
+        // 没有匹配的项，返回为null
+        return null;
     }
 
 }

@@ -171,7 +171,9 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         mConversation.markAllMessagesAsRead();
         int count = mConversation.getAllMessages().size();
         if (count < mConversation.getAllMsgCount() && count < mPageSize) {
+            // 获取已经在列表中的最上边的一条消息id
             String msgId = mConversation.getAllMessages().get(0).getMsgId();
+            // 分页加载更多消息，需要传递已经加载的消息的最上边一条消息的id，以及需要加载的消息的条数
             mConversation.loadMoreMsgFromDB(msgId, mPageSize - count);
         }
         // 初始化ListView控件对象

@@ -338,7 +338,7 @@ public class MLFile {
      * @return Whether the Uri authority is Google Photos.
      */
     public static boolean isGooglePhotosUri(Uri uri) {
-        return "com.google.android.apps.photos.content".equals(uri.getAuthority());
+        return "com.google.android.apps.photos.contentprovider".equals(uri.getAuthority());
     }
 
 }
