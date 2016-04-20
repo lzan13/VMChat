@@ -15,6 +15,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,6 +31,7 @@ import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMConversation;
+import com.hyphenate.chat.EMImageMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 
@@ -43,6 +45,7 @@ import net.melove.demo.chat.notification.MLNotifier;
 import net.melove.demo.chat.communal.util.MLLog;
 import net.melove.demo.chat.communal.widget.MLToast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -576,6 +579,10 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             // 选择图片后返回获取返回的图片路径，然后发送图片
             if (data != null) {
                 String imagePath = MLFile.getPath(mActivity, data.getData());
+                if (TextUtils.isEmpty(imagePath) || new File(imagePath).exists()) {
+                    MLToast.errorToast("image is not exist").show();
+                    return;
+                }
                 sendImageMessage(imagePath);
             }
             break;

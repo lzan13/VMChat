@@ -128,6 +128,12 @@ public class MLFile {
         return null;
     }
 
+    /**
+     * 读取文件到drawable
+     *
+     * @param filepath 文件路径
+     * @return 返回Drawable资源
+     */
     public static Drawable fileToDrawable(String filepath) {
         File file = new File(filepath);
         if (file.exists()) {
@@ -205,7 +211,8 @@ public class MLFile {
     }
 
     /**
-     * 根据 Uri 获取文件的真实路径
+     * 根据 Uri 获取文件的真实路径，这个是网上的方法，用的还是比较多的，可以参考，
+     * 不过在选择google相册的图片的时候，如果本地不存在图片会出现问题
      *
      * @param context 上下文对象
      * @param uri     包含文件信息的 Uri
@@ -214,8 +221,8 @@ public class MLFile {
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public static String getPath(final Context context, final Uri uri) {
 
-        // 判断当前系统 API 4.4（19） 以上
-        final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+        // 判断当前系统 API 4.4（19）及以上
+        boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
 
         // DocumentProvider
         if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
@@ -265,9 +272,11 @@ public class MLFile {
         } else if ("content".equalsIgnoreCase(uri.getScheme())) {
             // MediaStore (and general)
             // Return the remote address
-            if (isGooglePhotosUri(uri))
+            // 这里先判断是否是通过 Google 相册 选择的图片，同时这个图片不存在于本地
+            if (isGooglePhotosUri(uri)) {
+                //                return null;
                 return uri.getLastPathSegment();
-
+            }
             return getDataColumn(context, uri, null, null);
         } else if ("file".equalsIgnoreCase(uri.getScheme())) {
             // File
@@ -334,11 +343,14 @@ public class MLFile {
     }
 
     /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is Google Photos.
+     * 这里我修改了下，我在最新的5.1上选择的一个在 Google相册里的一张图片时，这个 uri.getAuthority() 的值有所改变
+     * com.google.android.apps.photos.contentprovider，之前的结尾是content，我测试的为contentprovider
+     *
+     * @param uri 需要判断的 Uri
+     * @return 判断这个 Uri 是否是通过 Google 相册 选择的
      */
     public static boolean isGooglePhotosUri(Uri uri) {
-        return "com.google.android.apps.photos.contentprovider".equals(uri.getAuthority());
+        return "com.google.android.apps.photos.content".equals(uri.getAuthority());
     }
 
 }
