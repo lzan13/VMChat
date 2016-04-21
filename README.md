@@ -16,16 +16,27 @@ Android SDK minSdkVersion 15
 Gradle 2.8
     
 ### 所使用库的版本
->compile fileTree(include: ['*.jar'], dir: 'libs')  
-// Android V7库，因为已经包含了V4库，所以这里不需要再引入V4库了  
-compile 'com.android.support:appcompat-v7:23.2.1'  
-compile 'com.android.support:design:23.2.1'  
-// Android 官方提供的替代 ListView  
-compile 'com.android.support:recyclerview-v7:23.2.1'  
-// 第三方图片加载库  
-compile 'com.github.bumptech.glide:glide:3.7.0'  
-// 环信sdk  
-compile files('libs/hyphenatechat_3.1.0.jar')  
+>compile fileTree(include: ['*.jar'], dir: 'libs')
+/**
+ * 新的遵循 Android  Material design 设计风格库，此扩展库已经包含了一下三个扩展库，
+ * 如果引入了design，就不需要再单独引入其他库
+ * support-v4
+ * appcomat-v7
+ * recyclerView库
+ */
+compile 'com.android.support:design:23.2.0'
+// Google Play Service 库，使用GCM推送需要
+// compile "com.google.android.gms:play-services-gcm:8.4.0"
+// LeakCanary Debug库，开源捕获内存溢出的库
+compile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
+// LeakCanary 发版的库
+// compile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
+// 第三方图片加载库
+compile 'com.github.bumptech.glide:glide:3.7.0'
+// 环信sdk
+compile files('libs/hyphenatechat_3.1.1.jar')
+// 小米推送
+compile files('libs/MiPush_SDK_Client_2_2_21.jar')  
 
 已实现模块儿
 -----------------
@@ -54,9 +65,5 @@ compile files('libs/hyphenatechat_3.1.0.jar')
 - 群组@功能
 - 阅后即焚
 
-更新记录
--------------------
-更改`ListView`为`RecyclerView` 2016-3-17  
-实现消息重发，修改扩展菜单为`GridView` 2016-3-21 
 
 

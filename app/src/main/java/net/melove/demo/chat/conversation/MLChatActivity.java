@@ -126,6 +126,9 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         mActivity = this;
         mMessageListener = this;
         mHandler = new MLHandler();
+        // 初始化阅后即焚模式为false
+        isBurn = false;
+
         // 获取当前聊天对象的id
         mChatId = getIntent().getStringExtra(MLConstants.ML_EXTRA_CHAT_ID);
 
@@ -365,23 +368,24 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     }
 
     /**
-     * 重发消息方法
+     * 重发消息方法，这里重发什么都没有修改，只是重新发送一遍消息，
+     * TODO 按正常的逻辑来说应该修改消息时间，或者重新创建新消息，把失败的消息删除，但是更新界面会有问题，这里偷懒下
      */
     public void resendMessage(int position, String msgId) {
         // 获取需要重发的消息
         EMMessage message = mConversation.getMessage(msgId, true);
         // 将失败的消息从 conversation对象中删除
-        mConversation.removeMessage(message.getMsgId());
-        refreshItemRemoved(position);
+        //        mConversation.removeMessage(message.getMsgId());
+        //        refreshItemRemoved(position);
 
         // 更新消息时间 TODO 如果修改了消息时间，会导致conversation里有两条同一个id的消息，
-        message.setMsgTime(MLDate.getCurrentMillisecond());
+        //        message.setMsgTime(MLDate.getCurrentMillisecond());
         // 调用发送方法
         EMClient.getInstance().chatManager().sendMessage(message);
         // 获取消息当前位置
-        int newPosition = mConversation.getMessagePosition(message);
+        //        int newPosition = mConversation.getMessagePosition(message);
         // 更新ui
-        refreshItemInserted(newPosition);
+        refreshItemChanged(position);
     }
 
     /**
@@ -835,42 +839,81 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         }
     }
 
+    /**
+     * 改变一条 Item 的刷新
+     *
+     * @param position 改变的位置
+     */
     private void refreshItemChanged(int position) {
         if (mMessageAdapter != null) {
             mMessageAdapter.refresh(position, 1, MLMessageAdapter.NOTIFY_CHANGED);
         }
     }
 
+    /**
+     * 改变多条 Item 的刷新
+     *
+     * @param position 改变的位置
+     * @param count    改变的数量
+     */
     private void refreshItemRangeChanged(int position, int count) {
         if (mMessageAdapter != null) {
             mMessageAdapter.refresh(position, count, MLMessageAdapter.NOTIFY_RANGE_CHANGED);
         }
     }
 
+    /**
+     * 插入一条 Item 的刷新
+     *
+     * @param position 插入 Item 的位置
+     */
     private void refreshItemInserted(int position) {
         if (mMessageAdapter != null) {
             mMessageAdapter.refresh(position, 1, MLMessageAdapter.NOTIFY_INSERTED);
         }
     }
 
+    /**
+     * 插入多条数据的刷新
+     *
+     * @param position 开始插入的位置
+     * @param count    变化的数量
+     */
     private void refreshItemRangeInserted(int position, int count) {
         if (mMessageAdapter != null) {
             mMessageAdapter.refresh(position, count, MLMessageAdapter.NOTIFY_RANGE_INSERTED);
         }
     }
 
+    /**
+     * 删除一条 Item 的刷新
+     *
+     * @param position 删除的位置
+     */
     private void refreshItemRemoved(int position) {
         if (mMessageAdapter != null) {
             mMessageAdapter.refresh(position, 1, MLMessageAdapter.NOTIFY_REMOVED);
         }
     }
 
+    /**
+     * 删除多项 Item 的刷新
+     *
+     * @param position 开始位置
+     * @param count    变化的数量
+     */
     private void refreshItemRangeRemoved(int position, int count) {
         if (mMessageAdapter != null) {
             mMessageAdapter.refresh(position, count, MLMessageAdapter.NOTIFY_RANGE_REMOVED);
         }
     }
 
+    /**
+     * Item 位置移动的刷新
+     *
+     * @param formPosition 原位置
+     * @param toPosition   移动后的位置
+     */
     private void refreshItemMoved(int formPosition, int toPosition) {
         if (mMessageAdapter != null) {
             mMessageAdapter.refresh(formPosition, toPosition, MLMessageAdapter.NOTIFY_MOVED);
