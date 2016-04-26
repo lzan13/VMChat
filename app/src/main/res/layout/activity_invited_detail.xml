@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:melove="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ml_theme_background"
+    android:fitsSystemWindows="true"
+    tools:context="net.melove.demo.chat.conversation.MLChatActivity">
+
+    <include layout="@layout/widget_toolbar_communal"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/ml_dimen_16"
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+            <!--头像-->
+            <net.melove.demo.chat.communal.widget.MLImageView
+                android:id="@+id/ml_img_invited_avatar"
+                android:layout_width="@dimen/ml_dimen_56"
+                android:layout_height="@dimen/ml_dimen_56"
+                android:src="@mipmap/ic_character_blackcat"
+                melove:ml_shape_type="round"/>
+            <!--username-->
+            <TextView
+                android:id="@+id/ml_text_invited_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/ml_dimen_8"
+                android:text="@string/ml_app_name"/>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/ml_dimen_16"
+            android:orientation="horizontal">
+            <!--对方申请的理由-->
+            <TextView
+                android:id="@+id/ml_text_invited_reason"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="@dimen/ml_dimen_224"
+                android:text="@string/ml_test"/>
+            <!--回复对方-->
+            <Button
+                android:id="@+id/ml_btn_invited_reply"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/ml_dimen_36"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/ml_click_rectangle_white"
+                android:text="@string/ml_btn_reply"
+                android:textColor="@color/ml_blue_87"
+                android:textSize="@dimen/ml_size_14"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+            <!--同意-->
+            <Button
+                android:id="@+id/ml_btn_invited_agree"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/ml_dimen_36"
+                android:layout_marginBottom="@dimen/ml_dimen_16"
+                android:layout_marginRight="@dimen/ml_dimen_8"
+                android:layout_marginTop="@dimen/ml_dimen_24"
+                android:background="@drawable/ml_click_rectangle_blue"
+                android:text="@string/ml_btn_agree"
+                android:textColor="@color/ml_white_87"
+                android:textSize="@dimen/ml_size_14"/>
+            <!--拒绝-->
+            <Button
+                android:id="@+id/ml_btn_invited_refuse"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/ml_dimen_36"
+                android:layout_marginBottom="@dimen/ml_dimen_16"
+                android:layout_marginLeft="@dimen/ml_dimen_8"
+                android:layout_marginTop="@dimen/ml_dimen_24"
+                android:background="@drawable/ml_click_rectangle_red"
+                android:text="@string/ml_btn_refuse"
+                android:textColor="@color/ml_white_87"
+                android:textSize="@dimen/ml_size_14"/>
+        </LinearLayout>
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

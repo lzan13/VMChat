@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import net.melove.demo.chat.R;
+import net.melove.demo.chat.application.MLApplication;
 import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.database.MLContactsDao;
 import net.melove.demo.chat.communal.base.MLBaseFragment;
@@ -32,8 +33,6 @@ public class MLContactsFragment extends MLBaseFragment {
     private MLContactsAdapter mContactsAdapter;
     private View mHeadView;
 
-    // 联系人信息数据库操作类
-    private MLContactsDao mContactsDao;
     private List<MLContactsEntity> mContactsList = new ArrayList<MLContactsEntity>();
 
     // 应用内广播管理器，为了完全这里使用局域广播
@@ -112,8 +111,7 @@ public class MLContactsFragment extends MLBaseFragment {
      */
     private void initListView() {
         //        mListView = (ListView) getView().findViewById(R.id.ml_recyclerview_contacts);
-        //        mContactsDao = new MLContactsDao(mActivity);
-        //
+        //MLInvitedDao.getInstance()
         //        // 加载所有联系人
         //        loadUserList();
         //
@@ -141,9 +139,8 @@ public class MLContactsFragment extends MLBaseFragment {
      * @return 返回加载的联系人集合
      */
     private List<MLContactsEntity> loadUserList() {
-        mContactsDao = new MLContactsDao(mActivity);
         // TODO 这里暂时只进行了简单的获取用户列表，后期需要实现排序
-        List<MLContactsEntity> list = mContactsDao.getContactList();
+        List<MLContactsEntity> list = MLContactsDao.getInstance().getContactList();
         return list;
     }
 

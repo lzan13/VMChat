@@ -36,9 +36,6 @@ public class MLInvitedAdapter extends RecyclerView.Adapter<MLInvitedAdapter.Invi
 
     private List<MLInvitedEntity> mInvitedEntities;
 
-    // 邀请与申请信息数据库操作类
-    private MLInvitedDao mInvitedDao;
-
     // 自定义的回调接口
     private MLOnItemClickListener mOnItemClickListener;
 
@@ -46,7 +43,6 @@ public class MLInvitedAdapter extends RecyclerView.Adapter<MLInvitedAdapter.Invi
         mContext = context;
         mInvitedEntities = invitedEntityList;
         mInflater = LayoutInflater.from(mContext);
-        mInvitedDao = new MLInvitedDao(mContext);
     }
 
     @Override
@@ -77,45 +73,34 @@ public class MLInvitedAdapter extends RecyclerView.Adapter<MLInvitedAdapter.Invi
             holder.textViewStatus.setText(R.string.ml_agreed);
             holder.textViewStatus.setVisibility(View.VISIBLE);
             holder.btnAgree.setVisibility(View.GONE);
-            holder.btnRefuse.setVisibility(View.GONE);
         } else if (invitedEntity.getStatus() == MLInvitedEntity.InvitedStatus.REFUSED) {
             holder.textViewStatus.setText(R.string.ml_refused);
             holder.textViewStatus.setVisibility(View.VISIBLE);
             holder.btnAgree.setVisibility(View.GONE);
-            holder.btnRefuse.setVisibility(View.GONE);
         } else if (invitedEntity.getStatus() == MLInvitedEntity.InvitedStatus.BEAGREED) {
             holder.textViewStatus.setText(R.string.ml_be_agreed);
             holder.textViewStatus.setVisibility(View.VISIBLE);
             holder.btnAgree.setVisibility(View.GONE);
-            holder.btnRefuse.setVisibility(View.GONE);
         } else if (invitedEntity.getStatus() == MLInvitedEntity.InvitedStatus.BEREFUSED) {
             holder.textViewStatus.setText(R.string.ml_be_refused);
             holder.textViewStatus.setVisibility(View.VISIBLE);
             holder.btnAgree.setVisibility(View.GONE);
-            holder.btnRefuse.setVisibility(View.GONE);
         } else if (invitedEntity.getStatus() == MLInvitedEntity.InvitedStatus.APPLYFOR) {
             holder.textViewStatus.setText(R.string.ml_waiting);
             holder.textViewStatus.setVisibility(View.VISIBLE);
             holder.btnAgree.setVisibility(View.GONE);
-            holder.btnRefuse.setVisibility(View.GONE);
         } else if (invitedEntity.getStatus() == MLInvitedEntity.InvitedStatus.BEAPPLYFOR) {
             holder.textViewStatus.setText(R.string.ml_waiting);
             holder.textViewStatus.setVisibility(View.GONE);
             holder.btnAgree.setVisibility(View.VISIBLE);
-            holder.btnRefuse.setVisibility(View.VISIBLE);
         } else if (invitedEntity.getStatus() == MLInvitedEntity.InvitedStatus.GROUPAPPLYFOR) {
             holder.textViewStatus.setText(R.string.ml_waiting);
             holder.textViewStatus.setVisibility(View.GONE);
             holder.btnAgree.setVisibility(View.VISIBLE);
-            holder.btnRefuse.setVisibility(View.VISIBLE);
         }
-        // 设置信息时间
-        holder.textViewTime.setText(MLDate.long2Time(invitedEntity.getTime()));
 
         holder.btnAgree.setTag(position);
-        holder.btnRefuse.setTag(position);
         holder.btnAgree.setOnClickListener(viewListener);
-        holder.btnRefuse.setOnClickListener(viewListener);
         /**
          * 给当前 ItemView 设置点击和长按监听
          */
@@ -152,9 +137,6 @@ public class MLInvitedAdapter extends RecyclerView.Adapter<MLInvitedAdapter.Invi
             case R.id.ml_btn_invited_agree:
                 mOnItemClickListener.onItemAction(position, MLConstants.ML_ACTION_INVITED_AGREE);
                 break;
-            case R.id.ml_btn_invited_refuse:
-                mOnItemClickListener.onItemAction(position, MLConstants.ML_ACTION_INVITED_REFUSE);
-                break;
             }
         }
     };
@@ -189,10 +171,8 @@ public class MLInvitedAdapter extends RecyclerView.Adapter<MLInvitedAdapter.Invi
         MLImageView imageViewAvatar;
         TextView textViewUsername;
         TextView textViewReason;
-        TextView textViewTime;
         TextView textViewStatus;
         Button btnAgree;
-        Button btnRefuse;
 
         /**
          * 构造方法，初始化列表项的各个控件
@@ -204,10 +184,8 @@ public class MLInvitedAdapter extends RecyclerView.Adapter<MLInvitedAdapter.Invi
             imageViewAvatar = (MLImageView) itemView.findViewById(R.id.ml_img_invited_avatar);
             textViewUsername = (TextView) itemView.findViewById(R.id.ml_text_invited_username);
             textViewReason = (TextView) itemView.findViewById(R.id.ml_text_invited_reason);
-            textViewTime = (TextView) itemView.findViewById(R.id.ml_text_invited_time);
             textViewStatus = (TextView) itemView.findViewById(R.id.ml_text_invited_status);
             btnAgree = (Button) itemView.findViewById(R.id.ml_btn_invited_agree);
-            btnRefuse = (Button) itemView.findViewById(R.id.ml_btn_invited_refuse);
         }
     }
 }

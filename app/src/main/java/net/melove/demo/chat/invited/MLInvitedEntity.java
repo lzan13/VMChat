@@ -7,7 +7,7 @@ package net.melove.demo.chat.invited;
 public class MLInvitedEntity {
 
     // 保存申请消息时要给这条消息创建一个唯一的id，用来和其他申请消息区分
-    private String objId;
+    private String invitedId;
     // 申请人/被申请人的username
     private String userName;
     // 申请人/被申请人的昵称
@@ -49,12 +49,12 @@ public class MLInvitedEntity {
         this.nickName = nickName;
     }
 
-    public String getObjId() {
-        return objId;
+    public String getInvitedId() {
+        return invitedId;
     }
 
-    public void setObjId(String objId) {
-        this.objId = objId;
+    public void setInvitedId(String invitedId) {
+        this.invitedId = invitedId;
     }
 
     public String getReason() {

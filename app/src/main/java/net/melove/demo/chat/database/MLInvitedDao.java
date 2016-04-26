@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
+import net.melove.demo.chat.application.MLApplication;
 import net.melove.demo.chat.invited.MLInvitedEntity;
 
 import java.util.ArrayList;
@@ -15,13 +16,26 @@ import java.util.List;
  */
 public class MLInvitedDao {
 
+    private static MLInvitedDao instance;
+
     /**
      * 构造方法，初始化数据库操作类
-     *
-     * @param context
      */
-    public MLInvitedDao(Context context) {
+    private MLInvitedDao() {
+        Context context = MLApplication.getContext();
         MLDBManager.getInstance().init(context);
+    }
+
+    /**
+     * 获取单例对象
+     *
+     * @return 返回当前类的实例
+     */
+    public static MLInvitedDao getInstance() {
+        if (instance == null) {
+            instance = new MLInvitedDao();
+        }
+        return instance;
     }
 
 
@@ -32,7 +46,7 @@ public class MLInvitedDao {
      */
     public synchronized void saveInvited(MLInvitedEntity invitedEntity) {
         ContentValues values = new ContentValues();
-        values.put(MLDBConstants.COL_OBJ_ID, invitedEntity.getObjId());
+        values.put(MLDBConstants.COL_ID, invitedEntity.getInvitedId());
         values.put(MLDBConstants.COL_USERNAME, invitedEntity.getUserName());
         values.put(MLDBConstants.COL_NICKNAME, invitedEntity.getNickName());
         values.put(MLDBConstants.COL_GROUP_ID, invitedEntity.getGroupId());
@@ -48,13 +62,13 @@ public class MLInvitedDao {
     /**
      * 删除一条申请与通知
      *
-     * @param objId 需要删除的记录的id
+     * @param invitedId 需要删除的记录的id
      */
-    public synchronized void deleteInvited(String objId) {
+    public synchronized void deleteInvited(String invitedId) {
         MLDBManager.getInstance().delete(
                 MLDBConstants.TB_INVITED,
-                MLDBConstants.COL_OBJ_ID,
-                new String[]{objId});
+                MLDBConstants.COL_ID,
+                new String[]{invitedId});
     }
 
     /**
@@ -64,7 +78,7 @@ public class MLInvitedDao {
      */
     public synchronized void updateInvited(MLInvitedEntity invitedEntity) {
         ContentValues values = new ContentValues();
-        values.put(MLDBConstants.COL_OBJ_ID, invitedEntity.getObjId());
+        values.put(MLDBConstants.COL_ID, invitedEntity.getInvitedId());
         values.put(MLDBConstants.COL_USERNAME, invitedEntity.getUserName());
         values.put(MLDBConstants.COL_NICKNAME, invitedEntity.getNickName());
         values.put(MLDBConstants.COL_GROUP_ID, invitedEntity.getGroupId());
@@ -74,23 +88,24 @@ public class MLInvitedDao {
         values.put(MLDBConstants.COL_TYPE, invitedEntity.getType().ordinal());
         values.put(MLDBConstants.COL_TIME, invitedEntity.getTime());
 
-        String whereClause = MLDBConstants.COL_OBJ_ID + "=?";
+        String whereClause = MLDBConstants.COL_ID + "=?";
+        // 调用DB的更新方法
         MLDBManager.getInstance().updateData(
                 MLDBConstants.TB_INVITED, values,
                 whereClause,
-                new String[]{String.valueOf(invitedEntity.getObjId())});
+                new String[]{String.valueOf(invitedEntity.getInvitedId())});
     }
 
 
     /**
-     * 根据 objId 获取一条申请的详情
+     * 根据 invitedId 获取一条申请的详情
      *
-     * @param objId 查询条件
+     * @param invitedId 查询条件
      * @return 返回一个 MLInvitedEntity 实体类对象
      */
-    public synchronized MLInvitedEntity getInvitedEntiry(String objId) {
-        String selection = MLDBConstants.COL_OBJ_ID + "=?";
-        String args[] = new String[]{objId};
+    public synchronized MLInvitedEntity getInvitedEntiry(String invitedId) {
+        String selection = MLDBConstants.COL_ID + "=?";
+        String args[] = new String[]{invitedId};
         Cursor cursor = MLDBManager.getInstance().queryData(
                 MLDBConstants.TB_INVITED, null,
                 selection, args, null, null, null, null);
@@ -114,6 +129,7 @@ public class MLInvitedDao {
         while (cursor.moveToNext()) {
             invitedEntities.add(cursorToEntity(cursor));
         }
+        // 返回申请消息集合
         return invitedEntities;
     }
 
@@ -125,7 +141,7 @@ public class MLInvitedDao {
      */
     private MLInvitedEntity cursorToEntity(Cursor cursor) {
         MLInvitedEntity invitedEntity = new MLInvitedEntity();
-        String objId = cursor.getString(cursor.getColumnIndex(MLDBConstants.COL_OBJ_ID));
+        String invitedId = cursor.getString(cursor.getColumnIndex(MLDBConstants.COL_ID));
         String username = cursor.getString(cursor.getColumnIndex(MLDBConstants.COL_USERNAME));
         String nickname = cursor.getString(cursor.getColumnIndex(MLDBConstants.COL_NICKNAME));
         String groupId = cursor.getString(cursor.getColumnIndex(MLDBConstants.COL_GROUP_ID));
@@ -135,7 +151,7 @@ public class MLInvitedDao {
         int type = cursor.getInt(cursor.getColumnIndex(MLDBConstants.COL_TYPE));
         String time = cursor.getString(cursor.getColumnIndex(MLDBConstants.COL_TIME));
 
-        invitedEntity.setObjId(objId);
+        invitedEntity.setInvitedId(invitedId);
         invitedEntity.setUserName(username);
         invitedEntity.setNickName(nickname);
         invitedEntity.setGroupId(groupId);
@@ -162,8 +178,9 @@ public class MLInvitedDao {
         } else if (type == MLInvitedEntity.InvitedType.CONTACTS.ordinal()) {
             invitedEntity.setType(MLInvitedEntity.InvitedType.CONTACTS);
         }
+        // 设置当前信息时间，用于排序
         invitedEntity.setTime(Long.valueOf(time));
-
+        // 返回包含数据的实体类对象
         return invitedEntity;
     }
 

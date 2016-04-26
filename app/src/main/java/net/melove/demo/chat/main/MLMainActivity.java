@@ -34,7 +34,6 @@ import net.melove.demo.chat.authentication.MLSigninActivity;
 import net.melove.demo.chat.communal.base.MLBaseActivity;
 import net.melove.demo.chat.communal.util.MLLog;
 import net.melove.demo.chat.conversation.MLChatActivity;
-import net.melove.demo.chat.database.MLInvitedDao;
 import net.melove.demo.chat.invited.MLInvitedFragment;
 import net.melove.demo.chat.communal.base.MLBaseFragment;
 import net.melove.demo.chat.communal.widget.MLImageView;

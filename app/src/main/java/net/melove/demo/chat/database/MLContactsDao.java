@@ -7,6 +7,7 @@ import android.text.TextUtils;
 
 import com.hyphenate.util.HanziToPinyin;
 
+import net.melove.demo.chat.application.MLApplication;
 import net.melove.demo.chat.contacts.MLContactsEntity;
 
 import java.util.ArrayList;
@@ -18,9 +19,23 @@ import java.util.List;
  */
 public class MLContactsDao {
 
+    private static MLContactsDao instance;
 
-    public MLContactsDao(Context context) {
+    private MLContactsDao() {
+        Context context = MLApplication.getContext();
         MLDBManager.getInstance().init(context);
+    }
+
+    /**
+     * 获取当前累的实例
+     *
+     * @return 返回当前类的实例
+     */
+    public static MLContactsDao getInstance() {
+        if (instance == null) {
+            instance = new MLContactsDao();
+        }
+        return instance;
     }
 
     /**

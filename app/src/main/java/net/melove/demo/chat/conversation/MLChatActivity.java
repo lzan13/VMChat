@@ -31,14 +31,12 @@ import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMConversation;
-import com.hyphenate.chat.EMImageMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 
 import net.melove.demo.chat.R;
 import net.melove.demo.chat.communal.base.MLBaseActivity;
 import net.melove.demo.chat.application.MLConstants;
-import net.melove.demo.chat.communal.util.MLDate;
 import net.melove.demo.chat.communal.util.MLFile;
 import net.melove.demo.chat.communal.util.MLMessageUtils;
 import net.melove.demo.chat.notification.MLNotifier;
@@ -91,7 +89,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     private int mPageSize = 15;
 
     // 聊天内容输入框
-    private EditText mEditText;
+    private EditText mInputView;
     // 表情按钮
     private View mEmotionView;
     // 发送按钮
@@ -133,7 +131,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         mChatId = getIntent().getStringExtra(MLConstants.ML_EXTRA_CHAT_ID);
 
         // 初始化输入框控件，并添加输入框监听
-        mEditText = (EditText) findViewById(R.id.ml_edit_chat_input);
+        mInputView = (EditText) findViewById(R.id.ml_edit_chat_input);
         setTextWatcher();
 
         // 获取输入按钮控件对象
@@ -176,7 +174,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         // 设置当前会话未读数为 0
         mConversation.markAllMessagesAsRead();
         int count = mConversation.getAllMessages().size();
-        if (count < mConversation.getAllMsgCount() && count < mPageSize) {
+        if (count < mConversation.getAllMsgCount() && count < mPageSize / 5) {
             // 获取已经在列表中的最上边的一条消息id
             String msgId = mConversation.getAllMessages().get(0).getMsgId();
             // 分页加载更多消息，需要传递已经加载的消息的最上边一条消息的id，以及需要加载的消息的条数
@@ -284,7 +282,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      * 设置输入框监听
      */
     private void setTextWatcher() {
-        mEditText.addTextChangedListener(new TextWatcher() {
+        mInputView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -526,8 +524,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      * 发送文本消息
      */
     private void sendTextMessage() {
-        String content = mEditText.getText().toString();
-        mEditText.setText("");
+        String content = mInputView.getText().toString();
+        mInputView.setText("");
         // 设置界面按钮状态
         mSendView.setVisibility(View.GONE);
         mVoiceView.setVisibility(View.VISIBLE);
@@ -583,7 +581,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             // 选择图片后返回获取返回的图片路径，然后发送图片
             if (data != null) {
                 String imagePath = MLFile.getPath(mActivity, data.getData());
-                if (TextUtils.isEmpty(imagePath) || new File(imagePath).exists()) {
+                if (TextUtils.isEmpty(imagePath) || !new File(imagePath).exists()) {
                     MLToast.errorToast("image is not exist").show();
                     return;
                 }
@@ -754,7 +752,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         /**
          * 防止清空消息后 getLastMessage 空指针异常，这里直接设置为当前会话内存中多于5条时才清除内存中的消息
          */
-        if (mConversation.getAllMessages().size() > 2) {
+        if (mConversation.getAllMessages().size() > 3) {
             // 将会话内的消息从内存中清除，节省内存，但是还要在重新加载一条
             List<String> list = new ArrayList<String>();
             list.add(mConversation.getLastMessage().getMsgId());

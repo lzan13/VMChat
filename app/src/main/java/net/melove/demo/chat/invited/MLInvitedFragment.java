@@ -36,8 +36,6 @@ import java.util.List;
  */
 public class MLInvitedFragment extends MLBaseFragment {
 
-    // 申请信息数据库操作类
-    private MLInvitedDao mInvitedDao;
     // 申请信息集合
     private List<MLInvitedEntity> mInvitedList = new ArrayList<MLInvitedEntity>();
     //    private ListView mListView;
@@ -49,6 +47,7 @@ public class MLInvitedFragment extends MLBaseFragment {
     // 会话界面监听会话变化的广播接收器
     private BroadcastReceiver mBroadcastReceiver;
 
+    // 自定义Handler类，用来处理非UI界面刷新UI的工作
     private MLHandler mHandler;
 
     /**
@@ -87,7 +86,6 @@ public class MLInvitedFragment extends MLBaseFragment {
         mHandler = new MLHandler();
 
         mActivity = getActivity();
-        mInvitedDao = new MLInvitedDao(mActivity);
 
     }
 
@@ -95,8 +93,11 @@ public class MLInvitedFragment extends MLBaseFragment {
      * 初始化邀请信息列表
      */
     private void initListView() {
-        // 获取数据源
-        mInvitedList = mInvitedDao.getInvitedList();
+        /**
+         * 通过调用{@link MLInvitedDao#getInvitedList()} 方法获取申请信息列表数据源
+         * {@link MLInvitedDao} 是一个单例类
+         */
+        mInvitedList = MLInvitedDao.getInstance().getInvitedList();
         // 实例化适配器
         mInvitedAdapter = new MLInvitedAdapter(mActivity, mInvitedList);
         mRecyclerView = (RecyclerView) getView().findViewById(R.id.ml_recyclerview_invited);
@@ -127,8 +128,11 @@ public class MLInvitedFragment extends MLBaseFragment {
      */
     private void refreshInvited() {
         mInvitedList.clear();
-        // 这里清空之后要使用addAll的方式填充数据，不能直接 = ，否则Adapter的数据源将改变
-        mInvitedList.addAll(mInvitedDao.getInvitedList());
+        /**
+         * 更新数据源的数据
+         * 这里清空之后要使用 addAll() 的方式填充数据，不能直接 = ，否则Adapter的数据源将改变
+         */
+        mInvitedList.addAll(MLInvitedDao.getInstance().getInvitedList());
         if (mInvitedAdapter != null) {
             mInvitedAdapter.notifyDataSetChanged();
         }
@@ -151,6 +155,7 @@ public class MLInvitedFragment extends MLBaseFragment {
             public void onItemAction(int position, int action) {
                 switch (action) {
                 case MLConstants.ML_ACTION_INVITED_CLICK:
+                    checkInvitedDetail(position);
                     break;
                 case MLConstants.ML_ACTION_INVITED_AGREE:
                     agreeInvited(position);
@@ -164,6 +169,19 @@ public class MLInvitedFragment extends MLBaseFragment {
                 }
             }
         });
+    }
+
+    /**
+     * 查看当前申请信息的详情，并在详情界面做一些处理
+     *
+     * @param position 当前选中的 Invited 位置
+     */
+    private void checkInvitedDetail(int position) {
+        MLInvitedEntity entity = mInvitedList.get(position);
+        Intent intent = new Intent();
+        intent.setClass(mActivity, MLInvitedDetailActivity.class);
+        intent.putExtra(MLConstants.ML_EXTRA_INVITED_ID, entity.getInvitedId());
+        mActivity.startActivity(intent);
     }
 
     /**
@@ -182,7 +200,8 @@ public class MLInvitedFragment extends MLBaseFragment {
                     EMClient.getInstance().contactManager().acceptInvitation(invitedEntity.getUserName());
                     invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.AGREED);
                     invitedEntity.setTime(MLDate.getCurrentMillisecond());
-                    mInvitedDao.updateInvited(invitedEntity);
+                    // 更新当前的申请信息
+                    MLInvitedDao.getInstance().updateInvited(invitedEntity);
                     dialog.dismiss();
                     mHandler.sendMessage(mHandler.obtainMessage(0));
                 } catch (HyphenateException e) {
@@ -210,7 +229,8 @@ public class MLInvitedFragment extends MLBaseFragment {
                     // 修改当前申请消息的状态
                     invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.REFUSED);
                     invitedEntity.setTime(MLDate.getCurrentMillisecond());
-                    mInvitedDao.updateInvited(invitedEntity);
+                    // 更新当前的申请信息
+                    MLInvitedDao.getInstance().updateInvited(invitedEntity);
                     dialog.dismiss();
                     mHandler.sendMessage(mHandler.obtainMessage(0));
                 } catch (HyphenateException e) {
@@ -228,7 +248,7 @@ public class MLInvitedFragment extends MLBaseFragment {
         dialog.setPositiveButton(R.string.ml_btn_ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mInvitedDao.deleteInvited(mInvitedList.get(index).getObjId());
+                MLInvitedDao.getInstance().deleteInvited(mInvitedList.get(index).getInvitedId());
                 mHandler.sendMessage(mHandler.obtainMessage(0));
             }
         });

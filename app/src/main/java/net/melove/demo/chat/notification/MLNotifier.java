@@ -18,7 +18,8 @@ import net.melove.demo.chat.invited.MLInvitedEntity;
 import java.util.List;
 
 /**
- * Created by lzan13 on 2016/1/13.
+ * Created by lzan13 on 2016/3/13.
+ * 自定义发送通知蓝通知方法
  */
 public class MLNotifier {
     private Context mContext;
@@ -62,10 +63,10 @@ public class MLNotifier {
 
         /**
          * 设置默认提醒，默认的有声音，振动，三色灯提醒
-         * Notification.DEFAULT_VIBRATE    //添加默认震动提醒  需要 VIBRATE permission
-         * Notification.DEFAULT_SOUND    // 添加默认声音提醒
-         * Notification.DEFAULT_LIGHTS// 添加默认三色灯提醒
-         * Notification.DEFAULT_ALL// 添加默认以上3种全部提醒
+         * Notification.DEFAULT_VIBRATE //添加默认震动提醒  需要 VIBRATE permission
+         * Notification.DEFAULT_SOUND   // 添加默认声音提醒
+         * Notification.DEFAULT_LIGHTS  // 添加默认三色灯提醒
+         * Notification.DEFAULT_ALL     // 添加默认以上3种全部提醒
          */
         mBuilder.setDefaults(Notification.DEFAULT_ALL);
         // 设置自定义的振动提醒
@@ -160,7 +161,6 @@ public class MLNotifier {
         mBuilder.setTicker("有一条新消息，别忘记看~");
         // 通知产生的时间，会在通知信息里显示，一般是系统获取到的时间
         mBuilder.setWhen(System.currentTimeMillis());
-
 
 
         // 发送通知栏通知

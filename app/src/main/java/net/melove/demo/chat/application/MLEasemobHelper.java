@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.hyphenate.EMCallBack;
@@ -24,7 +23,6 @@ import net.melove.demo.chat.communal.util.MLCrypto;
 import net.melove.demo.chat.communal.util.MLDate;
 import net.melove.demo.chat.communal.util.MLLog;
 import net.melove.demo.chat.communal.util.MLMessageUtils;
-import net.melove.demo.chat.communal.util.MLSPUtil;
 import net.melove.demo.chat.invited.MLInvitedEntity;
 import net.melove.demo.chat.contacts.MLContactsEntity;
 import net.melove.demo.chat.conversation.MLConversationExtUtils;
@@ -54,10 +52,6 @@ public class MLEasemobHelper {
     // 环信的消息监听器
     private EMMessageListener mMessageListener;
 
-    // 申请与邀请类消息的数据库操作类
-    private MLInvitedDao mInvitedDao;
-    // 用户信息数据库操作类
-    private MLContactsDao mContactsDao;
     // 环信联系人监听
     private EMContactListener mContactListener;
     // 环信连接监听
@@ -99,9 +93,6 @@ public class MLEasemobHelper {
         MLLog.d("------- init easemob start --------------");
 
         mContext = context;
-
-        mContactsDao = new MLContactsDao(mContext);
-        mInvitedDao = new MLInvitedDao(mContext);
 
         // 获取App内广播接收器实例
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(mContext);
@@ -338,18 +329,29 @@ public class MLEasemobHelper {
              */
             @Override
             public void onContactAdded(String username) {
+                // 创建一个新的联系人对象，并保存到本地
                 MLContactsEntity contacts = new MLContactsEntity();
                 contacts.setUserName(username);
-                mContactsDao.saveContacts(contacts);
+                /**
+                 * 调用{@link MLContactsDao#saveContacts(MLContactsEntity)} 去保存联系人，
+                 * 这里将{@link MLContactsDao} 封装成了单例类
+                 */
+                MLContactsDao.getInstance().saveContacts(contacts);
             }
 
             /**
              * 监听删除联系人
+             *
              * @param username 被删除的联系人
              */
             @Override
             public void onContactDeleted(String username) {
-                mContactsDao.deleteContacts(username);
+                /**
+                 * 监听到联系人被删除，删除本地的数据
+                 * 调用{@link MLContactsDao#deleteContacts(String)} 去删除指定的联系人
+                 * 这里将{@link MLContactsDao} 封装成了单例类
+                 */
+                MLContactsDao.getInstance().deleteContacts(username);
             }
 
             /**
@@ -366,9 +368,9 @@ public class MLEasemobHelper {
                 // 当前用户
                 String currUsername = EMClient.getInstance().getCurrentUser();
                 // 根据根据对方的名字，加上当前用户的名字，加申请类型按照一定顺序组合，得到当前申请信息的唯一 ID
-                String objId = MLCrypto.cryptoStr2MD5(username + currUsername + MLInvitedEntity.InvitedType.CONTACTS);
+                String invitedId = MLCrypto.cryptoStr2MD5(username + currUsername + MLInvitedEntity.InvitedType.CONTACTS);
                 // 设置此条信息的唯一ID
-                invitedEntity.setObjId(objId);
+                invitedEntity.setInvitedId(invitedId);
                 // 对方的username
                 invitedEntity.setUserName(username);
                 // invitedEntity.setNickName(mUserEntity.getNickName());
@@ -382,21 +384,21 @@ public class MLEasemobHelper {
                 invitedEntity.setTime(MLDate.getCurrentMillisecond());
 
                 /**
-                 * 这里先读取本地的申请与通知信息
-                 * 如果相同则直接 return，不进行操作
+                 * 这里先读取本地的申请与通知信息，如果相同则直接 return，不进行操作
                  * 只有当新的好友请求发过来时才进行保存，并发送通知
+                 * 这里进行一下筛选，如果已存在则去更新本地内容
+                 * 同样的{@link MLInvitedDao}也是一个单例的操作类，封装了一些对于申请与邀请信息的增删改查的方法
                  */
-                // 这里进行一下筛选，如果已存在则去更新本地内容
-                MLInvitedEntity temp = mInvitedDao.getInvitedEntiry(invitedEntity.getObjId());
+                MLInvitedEntity temp = MLInvitedDao.getInstance().getInvitedEntiry(invitedEntity.getInvitedId());
                 if (temp != null) {
                     if (temp.getReason().equals(invitedEntity.getReason())) {
                         // 这里判断当前保存的信息如果和新的一模一样不进行操作
                         return;
                     }
                     // 此条信息已经存在，更新修改时间
-                    mInvitedDao.updateInvited(invitedEntity);
+                    MLInvitedDao.getInstance().updateInvited(invitedEntity);
                 } else {
-                    mInvitedDao.saveInvited(invitedEntity);
+                    MLInvitedDao.getInstance().saveInvited(invitedEntity);
                 }
                 // 调用发送通知栏提醒方法，提醒用户查看申请通知
                 MLNotifier.getInstance(MLApplication.getContext()).sendInvitedNotification(invitedEntity);
@@ -416,19 +418,19 @@ public class MLEasemobHelper {
                 // 这里进行一下筛选，如果已存在则去更新本地内容
                 String currUsername = EMClient.getInstance().getCurrentUser();
                 // 根据申请者的名字，加上当前用户的名字，加申请类型按照一定顺序组合，得到当前申请信息的唯一 ID
-                String objId = MLCrypto.cryptoStr2MD5(currUsername + username + MLInvitedEntity.InvitedType.CONTACTS);
+                String invitedId = MLCrypto.cryptoStr2MD5(currUsername + username + MLInvitedEntity.InvitedType.CONTACTS);
                 // 先去数据库查找一下，有没有这一条申请信息，如果有直接修改，没有才新建插入
-                MLInvitedEntity invitedEntity = mInvitedDao.getInvitedEntiry(objId);
+                MLInvitedEntity invitedEntity = MLInvitedDao.getInstance().getInvitedEntiry(invitedId);
                 if (invitedEntity != null) {
                     // 更新当前消息处理时间
                     invitedEntity.setTime(MLDate.getCurrentMillisecond());
                     invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.BEAGREED);
-                    mInvitedDao.updateInvited(invitedEntity);
+                    MLInvitedDao.getInstance().updateInvited(invitedEntity);
                 } else {
                     // 创建一条好友申请数据
                     invitedEntity = new MLInvitedEntity();
                     // 设置此条信息的唯一ID
-                    invitedEntity.setObjId(objId);
+                    invitedEntity.setInvitedId(invitedId);
                     // 对方的username
                     invitedEntity.setUserName(username);
                     // invitedEntity.setNickName(mUserEntity.getNickName());
@@ -439,9 +441,12 @@ public class MLEasemobHelper {
                     invitedEntity.setType(MLInvitedEntity.InvitedType.CONTACTS);
                     // 设置申请信息的时间
                     invitedEntity.setTime(MLDate.getCurrentMillisecond());
-                    mInvitedDao.saveInvited(invitedEntity);
+                    MLInvitedDao.getInstance().saveInvited(invitedEntity);
                 }
-                // 调用发送通知栏提醒方法，提醒用户查看申请通知
+                /**
+                 * 调用发送通知栏提醒方法，提醒用户查看申请通知
+                 * 这里是自定义封装号的一个类{@link MLNotifier}
+                 */
                 MLNotifier.getInstance(MLApplication.getContext()).sendInvitedNotification(invitedEntity);
                 mLocalBroadcastManager.sendBroadcast(new Intent(MLConstants.ML_ACTION_INVITED));
             }
@@ -457,19 +462,19 @@ public class MLEasemobHelper {
                 // 这里进行一下筛选，如果已存在则去更新本地内容
                 String currUsername = EMClient.getInstance().getCurrentUser();
                 // 根据申请者的名字，加上当前用户的名字，加申请类型按照一定顺序组合，得到当前申请信息的唯一 ID
-                String objId = MLCrypto.cryptoStr2MD5(currUsername + username + MLInvitedEntity.InvitedType.CONTACTS);
+                String invitedId = MLCrypto.cryptoStr2MD5(currUsername + username + MLInvitedEntity.InvitedType.CONTACTS);
                 // 先去数据库查找一下，有没有这一条申请信息，如果有直接修改，没有才新建插入
-                MLInvitedEntity invitedEntity = mInvitedDao.getInvitedEntiry(objId);
+                MLInvitedEntity invitedEntity = MLInvitedDao.getInstance().getInvitedEntiry(invitedId);
                 if (invitedEntity != null) {
                     // 更新当前信息的时间
                     invitedEntity.setTime(MLDate.getCurrentMillisecond());
                     invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.BEREFUSED);
-                    mInvitedDao.updateInvited(invitedEntity);
+                    MLInvitedDao.getInstance().updateInvited(invitedEntity);
                 } else {
                     // 创建一条好友申请数据
                     invitedEntity = new MLInvitedEntity();
                     // 设置此条信息的唯一ID
-                    invitedEntity.setObjId(objId);
+                    invitedEntity.setInvitedId(invitedId);
                     // 对方的username
                     invitedEntity.setUserName(username);
                     // invitedEntity.setNickName(mUserEntity.getNickName());
@@ -481,9 +486,13 @@ public class MLEasemobHelper {
                     // 设置申请信息的时间
                     invitedEntity.setTime(MLDate.getCurrentMillisecond());
 
-                    mInvitedDao.saveInvited(invitedEntity);
+                    MLInvitedDao.getInstance().saveInvited(invitedEntity);
                 }
-                // 调用发送通知栏提醒方法，提醒用户查看申请通知
+
+                /**
+                 * 调用发送通知栏提醒方法，提醒用户查看申请通知
+                 * 这里是自定义封装号的一个类{@link MLNotifier}
+                 */
                 MLNotifier.getInstance(MLApplication.getContext()).sendInvitedNotification(invitedEntity);
                 mLocalBroadcastManager.sendBroadcast(new Intent(MLConstants.ML_ACTION_INVITED));
             }
@@ -617,8 +626,11 @@ public class MLEasemobHelper {
      * @param callback 退出登录的回调函数，用来给上次回调退出状态
      */
     public void signOut(final EMCallBack callback) {
-        MLSPUtil.remove(mContext, MLConstants.ML_SHARED_USERNAME);
-        MLSPUtil.remove(mContext, MLConstants.ML_SHARED_PASSWORD);
+        /**
+         * 调用sdk的退出登录方法，此方法需要两个参数
+         * boolean 第一个是必须的，表示是否使用了推送，要解绑推送，如果被踢这个参数要设置为false
+         * callback 可选参数，用来接收推出的登录的结果
+         */
         EMClient.getInstance().logout(isLogined, new EMCallBack() {
             @Override
             public void onSuccess() {

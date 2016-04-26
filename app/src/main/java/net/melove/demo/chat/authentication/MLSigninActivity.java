@@ -60,7 +60,6 @@ public class MLSigninActivity extends MLBaseActivity {
     private void init() {
 
         mUsername = (String) MLSPUtil.get(mActivity, MLConstants.ML_SHARED_USERNAME, "");
-        mPassword = (String) MLSPUtil.get(mActivity, MLConstants.ML_SHARED_PASSWORD, "");
         mUsernameView = (EditText) findViewById(R.id.ml_edit_sign_in_username);
         mPasswordView = (EditText) findViewById(R.id.ml_edit_sign_in_password);
         mUsernameView.setText(mUsername);
@@ -174,9 +173,8 @@ public class MLSigninActivity extends MLBaseActivity {
                     public void run() {
                         mDialog.dismiss();
 
-                        // 登录成功，把用户名和密码保存在本地（可以不保存，根据自己的需求）
+                        // 登录成功，把用户名保存在本地（可以不保存，根据自己的需求）
                         MLSPUtil.put(mActivity, MLConstants.ML_SHARED_USERNAME, mUsername);
-                        MLSPUtil.put(mActivity, MLConstants.ML_SHARED_PASSWORD, mPassword);
 
                         // 加载所有会话到内存
                         EMClient.getInstance().chatManager().loadAllConversations();

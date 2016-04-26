@@ -11,7 +11,7 @@ public class MLDBConstants {
     public static final String TB_CONTACTS = "contacts";
 
     // column name
-    public static final String COL_OBJ_ID = "obj_id";
+    public static final String COL_ID = "obj_id";
     public static final String COL_USERNAME = "username";
     public static final String COL_NICKNAME = "nickname";
     public static final String COL_EMAIL = "email";
@@ -57,7 +57,7 @@ public class MLDBConstants {
     /*创建申请与通知信息表*/
     public static final String SQL_INVITED = "create table if not exists '"
             + TB_INVITED + "' ("
-            + COL_OBJ_ID + " varchar(128), "
+            + COL_ID + " varchar(128), "
             + COL_USERNAME + " varchar(128), "
             + COL_NICKNAME + " varchar(128), "
             + COL_GROUP_ID + " varchar(128), "

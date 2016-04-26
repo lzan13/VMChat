@@ -16,6 +16,7 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.exceptions.HyphenateException;
 
 import net.melove.demo.chat.R;
+import net.melove.demo.chat.application.MLApplication;
 import net.melove.demo.chat.communal.base.MLBaseActivity;
 import net.melove.demo.chat.application.MLConstants;
 import net.melove.demo.chat.conversation.MLChatActivity;
@@ -42,10 +43,6 @@ public class MLContactsInfoActivity extends MLBaseActivity {
 
     private FloatingActionButton mFab;
 
-    // 申请与邀请数据库操作类
-    private MLInvitedDao mInvitedDao;
-    // 用户信息数据库操作类
-    private MLContactsDao mContactsDao;
     // 用户信息实体类
     private MLContactsEntity mContactsEntity;
 
@@ -66,10 +63,8 @@ public class MLContactsInfoActivity extends MLBaseActivity {
     private void initView() {
         mActivity = this;
         mChatId = getIntent().getStringExtra(MLConstants.ML_EXTRA_CHAT_ID);
-        mInvitedDao = new MLInvitedDao(mActivity);
-        mContactsDao = new MLContactsDao(mActivity);
         // 查询本地User对象
-        mContactsEntity = mContactsDao.getContact(mChatId);
+        mContactsEntity = MLContactsDao.getInstance().getContact(mChatId);
 
         mFab = (FloatingActionButton) findViewById(R.id.ml_btn_fab_user_info);
         mFab.setOnClickListener(viewListener);
@@ -152,9 +147,9 @@ public class MLContactsInfoActivity extends MLBaseActivity {
                             // 当前用户
                             String currUsername = EMClient.getInstance().getCurrentUser();
                             // 根据根据对方的名字，加上当前用户的名字，加申请类型按照一定顺序组合，得到当前申请信息的唯一 ID
-                            String objId = MLCrypto.cryptoStr2MD5(currUsername + mChatId + MLInvitedEntity.InvitedType.CONTACTS);
+                            String invitedId = MLCrypto.cryptoStr2MD5(currUsername + mChatId + MLInvitedEntity.InvitedType.CONTACTS);
                             // 设置此条信息的唯一ID
-                            invitedEntity.setObjId(objId);
+                            invitedEntity.setInvitedId(invitedId);
                             // 对方的username
                             invitedEntity.setUserName(mChatId);
                             // invitedEntity.setNickName(mContactsEntity.getNickName());
@@ -168,11 +163,11 @@ public class MLContactsInfoActivity extends MLBaseActivity {
                             invitedEntity.setTime(MLDate.getCurrentMillisecond());
 
                             // 这里进行一下筛选，如果已存在则去更新本地内容
-                            MLInvitedEntity temp = mInvitedDao.getInvitedEntiry(objId);
+                            MLInvitedEntity temp = MLInvitedDao.getInstance().getInvitedEntiry(invitedId);
                             if (temp != null) {
-                                mInvitedDao.updateInvited(invitedEntity);
+                                MLInvitedDao.getInstance().updateInvited(invitedEntity);
                             } else {
-                                mInvitedDao.saveInvited(invitedEntity);
+                                MLInvitedDao.getInstance().saveInvited(invitedEntity);
                             }
                             runOnUiThread(new Runnable() {
                                 @Override
