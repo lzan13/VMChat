@@ -2,7 +2,7 @@ package net.melove.demo.chat.application;
 
 /**
  * Class ${FILE_NAME}
- * <p/>
+ * <p>
  * Created by lzan13 on 2015/9/10 22:04.
  */
 public class MLConstants {
@@ -16,13 +16,17 @@ public class MLConstants {
     // 设置消息中 msgId 扩展的 key
     public static final String ML_ATTR_MSG_ID = "ml_msg_id";
 
-    // 设置自己扩展的 key
-    public static final String ML_ATTR_BURN = "ml_burn";
-    public static final String ML_ATTR_RECALL = "ml_recall";
-    public static final String ML_ATTR_TYPE = "ml_type";
-    public static final String ML_ATTR_AT = "ml_at";
-    public static final String ML_ATTR_TOP = "ml_top";
-    public static final String ML_ATTR_LAST_TIME = "ml_list_time";
+    /**
+     * 设置自己扩展的 key，包括会话对象{@link com.hyphenate.chat.EMConversation}扩展，
+     * 以及消息{@link com.hyphenate.chat.EMMessage}扩展
+     */
+    public static final String ML_ATTR_AT = "ml_attr_at";
+    public static final String ML_ATTR_BURN = "ml_attr_burn";
+    public static final String ML_ATTR_LAST_TIME = "ml_attr_list_time";
+    public static final String ML_ATTR_RECALL = "ml_attr_recall";
+    public static final String ML_ATTR_TOP = "ml_attr_top";
+    public static final String ML_ATTR_TYPE = "ml_attr_type";
+    public static final String ML_ATTR_DRAFT = "ml_attr_draft";
 
     /**
      * 自定义一些错误码，表示一些固定的错误
@@ -46,7 +50,9 @@ public class MLConstants {
     public static final String ML_ACTION_CONNCETION = "ml_action_connection";
 
 
-    // SharedPreference 保存内容的 key
+    /**
+     * 保存数据到 {@link android.content.SharedPreferences}的 key
+     */
     public static final String ML_SHARED_USERNAME = "ml_username";
     public static final String ML_SHARED_PASSWORD = "ml_password";
 

@@ -117,7 +117,8 @@
 
 
     <!--消息方面的提示显示信息-->
-    <string name="ml_hint_msg_burn">[阅后即焚]</string>
+    <string name="ml_hint_msg_burn">阅后即焚</string>
+    <string name="ml_hint_msg_draft">草稿</string>
     <string name="ml_hint_msg_recall_by_self">此条消息已撤回</string>
     <string name="ml_hint_msg_recall_by_user">此条消息已被 %1$s 撤回</string>
 
@@ -198,6 +199,7 @@
     <string name="ml_toast_msg_recall_faild_max_time">消息已经超过两分钟，无法撤回</string>
     <string name="ml_toast_msg_recall_faild">撤回失败 失败错误码</string>
     <string name="ml_toast_msg_delete_success">消息删除成功</string>
+    <string name="ml_toast_chat_cant_yourself">不能和自己聊天</string>
 
     <!--界面跳转共享元素名称-->
     <string name="ml_shared_element_toolbar">Toolbar</string>

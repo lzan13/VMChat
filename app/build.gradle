@@ -38,7 +38,7 @@ dependencies {
      *  appcomat-v7
      *  recyclerView库
      */
-    compile 'com.android.support:design:23.2.0'
+    compile 'com.android.support:design:23.3.0'
     // Google Play Service 库，使用GCM推送需要
     //    compile "com.google.android.gms:play-services-gcm:8.4.0"
     // LeakCanary Debug库，开源捕获内存溢出的库

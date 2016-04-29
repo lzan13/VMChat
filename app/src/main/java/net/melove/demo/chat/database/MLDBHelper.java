@@ -59,12 +59,19 @@ public class MLDBHelper extends SQLiteOpenHelper {
     }
 
 
+    /**
+     * 关闭数据库
+     */
     public void closeDB() {
         if (instance != null) {
             SQLiteDatabase db = instance.getWritableDatabase();
             db.close();
             instance = null;
         }
+    }
+
+    public void resetDBHelper() {
+        instance = null;
     }
 
 }

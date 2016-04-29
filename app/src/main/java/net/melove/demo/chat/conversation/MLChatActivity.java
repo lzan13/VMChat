@@ -180,6 +180,12 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             // 分页加载更多消息，需要传递已经加载的消息的最上边一条消息的id，以及需要加载的消息的条数
             mConversation.loadMoreMsgFromDB(msgId, mPageSize - count);
         }
+
+        String draft = MLConversationExtUtils.getConversationDraft(mConversation);
+        if (!TextUtils.isEmpty(draft)) {
+            mInputView.setText(draft);
+        }
+
         // 初始化ListView控件对象
         mRecyclerView = (RecyclerView) findViewById(R.id.ml_recyclerview_message);
         // 实例化消息适配器
@@ -750,14 +756,29 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
          */
         MLConversationExtUtils.setConversationLastTime(mConversation);
         /**
-         * 防止清空消息后 getLastMessage 空指针异常，这里直接设置为当前会话内存中多于5条时才清除内存中的消息
+         * 减少内存用量，这里设置为当前会话内存中多于3条时清除内存中的消息，只保留一条
          */
         if (mConversation.getAllMessages().size() > 3) {
             // 将会话内的消息从内存中清除，节省内存，但是还要在重新加载一条
             List<String> list = new ArrayList<String>();
             list.add(mConversation.getLastMessage().getMsgId());
+            // 清除内存中的消息，此方法不清空DB
             mConversation.clear();
+            // 加载消息到内存
             mConversation.loadMessages(list);
+        }
+
+        /**
+         * 判断聊天输入框内容是否为空，不为空就保存输入框内容到{@link EMConversation}的扩展中
+         * 调用{@link MLConversationExtUtils#setConversationDraft(EMConversation, String)}方法
+         */
+        String draft = mInputView.getText().toString().trim();
+        if (!TextUtils.isEmpty(draft)) {
+            // 将输入框的内容保存为草稿
+            MLConversationExtUtils.setConversationDraft(mConversation, draft);
+        } else {
+            // 清空会话对象扩展中保存的草稿
+            MLConversationExtUtils.setConversationDraft(mConversation, "");
         }
 
         // 这里将父类的方法在后边调用

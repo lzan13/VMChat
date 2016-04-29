@@ -1,9 +1,15 @@
 package net.melove.demo.chat.conversation;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,6 +65,7 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
         return viewHolder;
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     @Override
     public void onBindViewHolder(ConversationViewHolder holder, final int position) {
         MLLog.d("MLConversationAdapter onBindViewHolder - %d", position);
@@ -73,38 +80,57 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
         holder.timeView.setText(time);
 
         String content = "";
-        // 判断当前会话在本地是否有聊天记录，并根据结果获取最后一条消息的内容
-        if (conversation.getAllMessages().size() > 0) {
+        /**
+         * 根据当前 conversation 判断会话列表项要显示的内容
+         * 判断的项目有两项：
+         *  当前会话在本地是否有聊天记录，
+         *  当前会话是否有草稿，
+         */
+        String draft = MLConversationExtUtils.getConversationDraft(conversation);
+        String prefixDraft = "";
+        if (!TextUtils.isEmpty(draft)) {
+            // 表示草稿的前缀
+            prefixDraft = "[" + mContext.getString(R.string.ml_hint_msg_draft) + "]";
+            content = prefixDraft + draft;
+        } else if (conversation.getAllMessages().size() > 0) {
             switch (conversation.getLastMessage().getType()) {
-                case TXT:
-                    content = ((EMTextMessageBody) conversation.getLastMessage().getBody()).getMessage();
-                    break;
-                case FILE:
-                    content = "[" + mContext.getString(R.string.ml_file) + "]";
-                    break;
-                case IMAGE:
-                    content = "[" + mContext.getString(R.string.ml_photo) + "]";
-                    break;
-                case LOCATION:
-                    content = "[" + mContext.getString(R.string.ml_location) + "]";
-                    break;
-                case VIDEO:
-                    content = "[" + mContext.getString(R.string.ml_video) + "]";
-                    break;
-                case VOICE:
-                    content = "[" + mContext.getString(R.string.ml_voice) + "]";
-                    break;
-                default:
-                    break;
+            case TXT:
+                content = ((EMTextMessageBody) conversation.getLastMessage().getBody()).getMessage();
+                break;
+            case FILE:
+                content = "[" + mContext.getString(R.string.ml_file) + "]";
+                break;
+            case IMAGE:
+                content = "[" + mContext.getString(R.string.ml_photo) + "]";
+                break;
+            case LOCATION:
+                content = "[" + mContext.getString(R.string.ml_location) + "]";
+                break;
+            case VIDEO:
+                content = "[" + mContext.getString(R.string.ml_video) + "]";
+                break;
+            case VOICE:
+                content = "[" + mContext.getString(R.string.ml_voice) + "]";
+                break;
+            default:
+                break;
             }
         } else {
             // 当前会话没有聊天信息则设置显示内容为 空
             content = mContext.getString(R.string.ml_hint_empty);
         }
-        holder.contentView.setText(content);
+        // 根据不同的类型展示不同样式的消息
+        if (!TextUtils.isEmpty(draft)) {
+            Spannable spannable = new SpannableString(content);
+            spannable.setSpan(new ForegroundColorSpan(mContext.getColor(R.color.ml_red_87)),
+                    0, prefixDraft.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            holder.contentView.setText(spannable);
+        } else {
+            holder.contentView.setText(content);
+        }
+
         // 设置当前会话联系人名称
         holder.usernameView.setText(conversation.getUserName());
-
 
         // 设置当前会话未读数
         int unreadCount = conversation.getUnreadMsgCount();
@@ -187,9 +213,9 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
         public void handleMessage(Message msg) {
             //            super.handleMessage(msg);
             switch (msg.what) {
-                case HANDLER_CONVERSATION_REFRESH:
-                    refresh();
-                    break;
+            case HANDLER_CONVERSATION_REFRESH:
+                refresh();
+                break;
             }
         }
     }

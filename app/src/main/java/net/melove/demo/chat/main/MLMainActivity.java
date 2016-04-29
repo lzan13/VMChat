@@ -33,6 +33,7 @@ import net.melove.demo.chat.application.MLEasemobHelper;
 import net.melove.demo.chat.authentication.MLSigninActivity;
 import net.melove.demo.chat.communal.base.MLBaseActivity;
 import net.melove.demo.chat.communal.util.MLLog;
+import net.melove.demo.chat.communal.util.MLSPUtil;
 import net.melove.demo.chat.conversation.MLChatActivity;
 import net.melove.demo.chat.invited.MLInvitedFragment;
 import net.melove.demo.chat.communal.base.MLBaseFragment;
@@ -299,6 +300,11 @@ public class MLMainActivity extends MLBaseActivity implements
             public void onClick(DialogInterface dialog, int which) {
                 if (TextUtils.isEmpty(editText.getText().toString().trim())) {
                     MLToast.errorToast(R.string.ml_hint_input_not_null).show();
+                    return;
+                }
+                String currUsername = (String) MLSPUtil.get(mActivity, MLConstants.ML_SHARED_USERNAME, "");
+                if(currUsername.equals(editText.getText().toString().trim())){
+                    MLToast.errorToast(R.string.ml_toast_chat_cant_yourself).show();
                     return;
                 }
                 Intent intent = new Intent(mActivity, MLChatActivity.class);

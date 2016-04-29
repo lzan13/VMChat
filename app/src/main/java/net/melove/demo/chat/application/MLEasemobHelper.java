@@ -23,6 +23,7 @@ import net.melove.demo.chat.communal.util.MLCrypto;
 import net.melove.demo.chat.communal.util.MLDate;
 import net.melove.demo.chat.communal.util.MLLog;
 import net.melove.demo.chat.communal.util.MLMessageUtils;
+import net.melove.demo.chat.database.MLDBHelper;
 import net.melove.demo.chat.invited.MLInvitedEntity;
 import net.melove.demo.chat.contacts.MLContactsEntity;
 import net.melove.demo.chat.conversation.MLConversationExtUtils;
@@ -626,6 +627,7 @@ public class MLEasemobHelper {
      * @param callback 退出登录的回调函数，用来给上次回调退出状态
      */
     public void signOut(final EMCallBack callback) {
+        resetApp();
         /**
          * 调用sdk的退出登录方法，此方法需要两个参数
          * boolean 第一个是必须的，表示是否使用了推送，要解绑推送，如果被踢这个参数要设置为false
@@ -653,6 +655,13 @@ public class MLEasemobHelper {
                 }
             }
         });
+    }
+
+    /**
+     * 重置app操作，主要是在退出登录时清除内存
+     */
+    private void resetApp() {
+        MLDBHelper.getInstance(mContext).resetDBHelper();
     }
 
     /**
