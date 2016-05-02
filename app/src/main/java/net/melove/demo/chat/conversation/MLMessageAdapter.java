@@ -18,6 +18,7 @@ import net.melove.demo.chat.conversation.messageitem.MLMessageItem;
 import net.melove.demo.chat.conversation.messageitem.MLRecallMessageItem;
 import net.melove.demo.chat.conversation.messageitem.MLTextMessageItem;
 
+import java.util.Collections;
 import java.util.List;
 
 
@@ -272,6 +273,8 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
         private void resumeLoadMessage() {
             mMessages.clear();
             mMessages.addAll(mConversation.getAllMessages());
+            // 将list集合倒序排列
+            Collections.reverse(mMessages);
         }
 
         private void refreshAll() {
@@ -287,9 +290,6 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
         private void refreshItemInserted(int position) {
             resumeLoadMessage();
             notifyItemInserted(position);
-//            if (mMessages.size() > 1) {
-//                mRecyclerView.smoothScrollToPosition(mMessages.size() - 1);
-//            }
         }
 
         /**

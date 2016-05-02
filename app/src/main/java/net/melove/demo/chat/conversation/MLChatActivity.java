@@ -174,7 +174,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         // 设置当前会话未读数为 0
         mConversation.markAllMessagesAsRead();
         int count = mConversation.getAllMessages().size();
-        if (count < mConversation.getAllMsgCount() && count < mPageSize / 5) {
+        if (count < mConversation.getAllMsgCount() && count < mPageSize) {
             // 获取已经在列表中的最上边的一条消息id
             String msgId = mConversation.getAllMessages().get(0).getMsgId();
             // 分页加载更多消息，需要传递已经加载的消息的最上边一条消息的id，以及需要加载的消息的条数
@@ -203,6 +203,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
          * 并实现{@link RecyclerView#setItemAnimator(RecyclerView.ItemAnimator)}
          */
         mLayoutManger = new LinearLayoutManager(mActivity);
+        // 设置倒序布局
+        mLayoutManger.setReverseLayout(true);
         mRecyclerView.setLayoutManager(mLayoutManger);
         mRecyclerView.setAdapter(mMessageAdapter);
 
@@ -218,11 +220,15 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        // 加载更多消息到当前会话的内存中
-                        List<EMMessage> messages = mConversation.loadMoreMsgFromDB(mConversation.getAllMessages().get(0).getMsgId(), mPageSize);
-                        if (messages.size() > 0) {
-                            // 调用 Adapter 刷新方法
-                            refreshItemRangeInserted(0, messages.size());
+                        // 只有当前会话不为空时才可以下拉加载更多，否则会出现错误
+                        if (mConversation.getAllMessages().size() > 0) {
+                            // 加载更多消息到当前会话的内存中
+                            List<EMMessage> messages = mConversation.loadMoreMsgFromDB(mConversation.getAllMessages().get(0).getMsgId(), mPageSize);
+                            if (messages.size() > 0) {
+                                // 调用 Adapter 刷新方法
+                                refreshItemRangeInserted(0, messages.size());
+                                // mLayoutManger.scrollToPositionWithOffset(messages.size() - 1, 0);
+                            }
                         }
                         mSwipeRefreshLayout.setRefreshing(false);
                     }

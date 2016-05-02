@@ -7,16 +7,17 @@ MLChatDemo
 ### 首先说下此Demo开发环境
 如果大家的开发环境版本过低建议及时进行更新，因为最新的sdk已经不需要翻墙就可以更新了，开发工具就像我们的武器，
 可以免费更换好武器，你还一直抱着你的老三八大盖不放，这样干不过别人啊
+```gradle
+AndroidStudio 2.1.0
+Android SDK Tools 25.1.3
+Android SDK Build-tools 23.0.2
+Android SDK compileSdkVersion 23
+Android SDK targetSdkVersion 22
+Android SDK minSdkVersion 15
+Gradle 2.10
+Genymotion 2.6
+```
 
-    AndroidStudio 2.0
-    Android SDK Tools 25.1.1
-    Android SDK Build-tools 23.0.2
-    Android SDK compileSdkVersion 23
-    Android SDK targetSdkVersion 22
-    Android SDK minSdkVersion 15
-    Gradle 2.10
-    Genymotion 2.6
-    
 ### 所使用库的版本
 ```gradle
 compile fileTree(include: ['*.jar'], dir: 'libs')
@@ -37,7 +38,7 @@ compile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
 // 第三方图片加载库
 compile 'com.github.bumptech.glide:glide:3.7.0'
 // 环信sdk
-compile files('libs/hyphenatechat_3.1.1.jar')
+compile files('libs/hyphenatechat_3.1.2.jar')
 // 小米推送
 compile files('libs/MiPush_SDK_Client_2_2_21.jar')  
 ```

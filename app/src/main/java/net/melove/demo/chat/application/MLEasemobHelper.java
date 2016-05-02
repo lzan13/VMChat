@@ -87,7 +87,7 @@ public class MLEasemobHelper {
     /**
      * 初始化环信的SDK
      *
-     * @param context
+     * @param context 上下文菜单
      * @return 返回初始化状态是否成功
      */
     public synchronized boolean initEasemob(Context context) {
