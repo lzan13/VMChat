@@ -268,6 +268,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                 case 0:
+
                     // 打开选择图片界面
                     openSelectPhoto();
                     break;
@@ -522,14 +523,14 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         // 调用设置消息扩展方法
         setMessageAttribute(message);
         // 发送一条新消息时插入新消息的位置，这里直接用插入新消息前的消息总数来作为新消息的位置
-        int position = mConversation.getAllMessages().size();
+//        int position = mConversation.getAllMessages().size();
         /**
          *  调用sdk的消息发送方法，发送消息，这里不进行消息的状态监听
          *  都在各自的{@link net.melove.demo.chat.conversation.messageitem.MLMessageItem}实现监听
          */
         EMClient.getInstance().chatManager().sendMessage(message);
         // 点击发送后马上刷新界面，无论消息有没有成功，先刷新显示
-        refreshItemInserted(position);
+        refreshItemInserted(0);
     }
 
     /**

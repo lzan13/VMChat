@@ -77,7 +77,8 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
          */
         mConversation = EMClient.getInstance().chatManager().getConversation(mChatId, null, true);
         mMessages = mConversation.getAllMessages();
-
+        // 将list集合倒序排列
+        Collections.reverse(mMessages);
     }
 
 
