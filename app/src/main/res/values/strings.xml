@@ -41,7 +41,8 @@
     <string name="ml_btn_cancel">取消</string>
     <string name="ml_btn_agree">同意</string>
     <string name="ml_btn_refuse">拒绝</string>
-    <string name="ml_btn_reply">回复</string>
+    <string name="ml_btn_reply">先聊聊</string>
+    <string name="ml_btn_start_chat">开始聊天</string>
 
     <string name="ml_agreed">已同意</string>
     <string name="ml_refused">已拒绝</string>

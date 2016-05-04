@@ -79,7 +79,7 @@
         <item name="android:textSize">@dimen/ml_size_18</item>
         <item name="android:textStyle">normal</item>
         <!--更改菜单按钮样式 此菜单直的是当 action过多显示不全，会有三个小点儿样式-->
-        <item name="android:actionOverflowButtonStyle">@style/MLTheme.ActionBarOverflow</item>
+        <!--<item name="android:actionOverflowButtonStyle">@style/MLTheme.ActionBarOverflow</item>-->
     </style>
 
     <!--自定义 Toolbar 样式，这里为了让文字显示为白色，继承黑色样式的ActionBar-->

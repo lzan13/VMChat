@@ -135,7 +135,7 @@
         <activity
             android:name=".invited.MLInvitedDetailActivity"
             android:theme="@style/MLTheme.Default"
-            android:windowSoftInputMode="adjustResize|stateVisible"/>
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
         <!--测试 Activity-->
         <activity
             android:name=".test.MLTestActivity"

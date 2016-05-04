@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -26,6 +27,9 @@ import net.melove.demo.chat.database.MLInvitedDao;
  */
 public class MLInvitedDetailActivity extends MLBaseActivity {
 
+    // 界面控件
+    private Toolbar mToolbar;
+
     // 申请信息实体类
     private MLInvitedEntity mInvitedEntity;
 
@@ -35,8 +39,12 @@ public class MLInvitedDetailActivity extends MLBaseActivity {
     private TextView mUsernameView;
     // 理由
     private TextView mReasonView;
+    // 状态
+    private TextView mStatusView;
     // 回复按钮
     private Button mReplyBtn;
+    // 开始聊天按钮
+    private Button mStartChatBtn;
     // 同意按钮
     private Button mAgreeBtn;
     // 拒绝按钮
@@ -52,6 +60,7 @@ public class MLInvitedDetailActivity extends MLBaseActivity {
         setContentView(R.layout.activity_invited_detail);
 
         initView();
+        initToolbar();
     }
 
     private void initView() {
@@ -65,15 +74,84 @@ public class MLInvitedDetailActivity extends MLBaseActivity {
         mAvatarView = (MLImageView) findViewById(R.id.ml_img_invited_avatar);
         mUsernameView = (TextView) findViewById(R.id.ml_text_invited_username);
         mReasonView = (TextView) findViewById(R.id.ml_text_invited_reason);
+        mStatusView = (TextView) findViewById(R.id.ml_text_invited_status);
         mReplyBtn = (Button) findViewById(R.id.ml_btn_invited_reply);
+        mStartChatBtn = (Button) findViewById(R.id.ml_btn_invited_start_chat);
         mAgreeBtn = (Button) findViewById(R.id.ml_btn_invited_agree);
         mRefuseBtn = (Button) findViewById(R.id.ml_btn_invited_refuse);
 
 
         mReplyBtn.setOnClickListener(viewListener);
+        mStartChatBtn.setOnClickListener(viewListener);
         mAgreeBtn.setOnClickListener(viewListener);
         mRefuseBtn.setOnClickListener(viewListener);
 
+        refreshView();
+    }
+
+    /**
+     * 初始化Toolbar
+     */
+    private void initToolbar() {
+        mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
+        mToolbar.setTitle(mInvitedEntity.getUserName());
+        setSupportActionBar(mToolbar);
+        // 设置toolbar图标
+        mToolbar.setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
+        // 设置Toolbar图标点击事件，Toolbar上图标的id是 -1
+        mToolbar.setNavigationOnClickListener(viewListener);
+    }
+
+    /**
+     * 刷新界面，
+     */
+    private void refreshView() {
+        mUsernameView.setText(mInvitedEntity.getUserName());
+        mReasonView.setText(mInvitedEntity.getReason());
+        // 判断当前的申请与通知的状态，显示不同的提醒文字
+        if (mInvitedEntity.getStatus() == MLInvitedEntity.InvitedStatus.AGREED) {
+            mAgreeBtn.setVisibility(View.GONE);
+            mRefuseBtn.setVisibility(View.GONE);
+            mStartChatBtn.setVisibility(View.VISIBLE);
+            mStatusView.setText(R.string.ml_agreed);
+            mStatusView.setVisibility(View.GONE);
+        } else if (mInvitedEntity.getStatus() == MLInvitedEntity.InvitedStatus.REFUSED) {
+            mAgreeBtn.setVisibility(View.GONE);
+            mRefuseBtn.setVisibility(View.GONE);
+            mStartChatBtn.setVisibility(View.GONE);
+            mStatusView.setText(R.string.ml_refused);
+            mStatusView.setVisibility(View.GONE);
+        } else if (mInvitedEntity.getStatus() == MLInvitedEntity.InvitedStatus.BEAGREED) {
+            mAgreeBtn.setVisibility(View.GONE);
+            mRefuseBtn.setVisibility(View.GONE);
+            mStartChatBtn.setVisibility(View.VISIBLE);
+            mStatusView.setText(R.string.ml_be_agreed);
+            mStatusView.setVisibility(View.GONE);
+        } else if (mInvitedEntity.getStatus() == MLInvitedEntity.InvitedStatus.BEREFUSED) {
+            mAgreeBtn.setVisibility(View.GONE);
+            mRefuseBtn.setVisibility(View.GONE);
+            mStartChatBtn.setVisibility(View.GONE);
+            mStatusView.setText(R.string.ml_be_refused);
+            mStatusView.setVisibility(View.GONE);
+        } else if (mInvitedEntity.getStatus() == MLInvitedEntity.InvitedStatus.APPLYFOR) {
+            mAgreeBtn.setVisibility(View.GONE);
+            mRefuseBtn.setVisibility(View.GONE);
+            mStartChatBtn.setVisibility(View.GONE);
+            mStatusView.setText(R.string.ml_apply_for);
+            mStatusView.setVisibility(View.GONE);
+        } else if (mInvitedEntity.getStatus() == MLInvitedEntity.InvitedStatus.BEAPPLYFOR) {
+            mAgreeBtn.setVisibility(View.VISIBLE);
+            mRefuseBtn.setVisibility(View.VISIBLE);
+            mStartChatBtn.setVisibility(View.GONE);
+            mStatusView.setText(R.string.ml_waiting);
+            mStatusView.setVisibility(View.GONE);
+        } else if (mInvitedEntity.getStatus() == MLInvitedEntity.InvitedStatus.GROUPAPPLYFOR) {
+            mAgreeBtn.setVisibility(View.VISIBLE);
+            mRefuseBtn.setVisibility(View.VISIBLE);
+            mStartChatBtn.setVisibility(View.GONE);
+            mStatusView.setText(R.string.ml_waiting);
+            mStatusView.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -83,7 +161,12 @@ public class MLInvitedDetailActivity extends MLBaseActivity {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
+            case -1:
+                onFinish();
+                break;
             case R.id.ml_btn_invited_reply:
+            case R.id.ml_btn_invited_start_chat:
+                // 这里回复和开始聊天都调用同一个方法
                 repleyIntiver();
                 break;
             case R.id.ml_btn_invited_agree:
@@ -97,7 +180,7 @@ public class MLInvitedDetailActivity extends MLBaseActivity {
     };
 
     /**
-     * 回复邀请者
+     * 回复邀请者，其实直接发起会话了
      */
     private void repleyIntiver() {
         Intent intent = new Intent(mActivity, MLChatActivity.class);
