@@ -1,10 +1,14 @@
 package net.melove.demo.chat.invited;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
@@ -30,6 +34,11 @@ public class MLInvitedDetailActivity extends MLBaseActivity {
     // 界面控件
     private Toolbar mToolbar;
 
+    // 应用内广播管理器，为了完全这里使用局域广播
+    private LocalBroadcastManager mLocalBroadcastManager;
+    // 会话界面监听会话变化的广播接收器
+    private BroadcastReceiver mBroadcastReceiver;
+
     // 申请信息实体类
     private MLInvitedEntity mInvitedEntity;
 
@@ -43,8 +52,6 @@ public class MLInvitedDetailActivity extends MLBaseActivity {
     private TextView mStatusView;
     // 回复按钮
     private Button mReplyBtn;
-    // 开始聊天按钮
-    private Button mStartChatBtn;
     // 同意按钮
     private Button mAgreeBtn;
     // 拒绝按钮
@@ -65,9 +72,11 @@ public class MLInvitedDetailActivity extends MLBaseActivity {
 
     private void initView() {
         mActivity = this;
+        mHandler = new MLHandler();
+
         Intent intent = getIntent();
         /**
-         * 调用{@link MLInvitedDao#getInvitedEntiry(String)} 获取指定的邀请信息
+         * 调用{@link MLInvitedDao#getInvitedEntiry(String)} 获取指定的申请与邀请信息
          */
         mInvitedEntity = MLInvitedDao.getInstance().getInvitedEntiry(intent.getStringExtra(MLConstants.ML_EXTRA_INVITED_ID));
 
@@ -76,17 +85,15 @@ public class MLInvitedDetailActivity extends MLBaseActivity {
         mReasonView = (TextView) findViewById(R.id.ml_text_invited_reason);
         mStatusView = (TextView) findViewById(R.id.ml_text_invited_status);
         mReplyBtn = (Button) findViewById(R.id.ml_btn_invited_reply);
-        mStartChatBtn = (Button) findViewById(R.id.ml_btn_invited_start_chat);
         mAgreeBtn = (Button) findViewById(R.id.ml_btn_invited_agree);
         mRefuseBtn = (Button) findViewById(R.id.ml_btn_invited_refuse);
 
 
         mReplyBtn.setOnClickListener(viewListener);
-        mStartChatBtn.setOnClickListener(viewListener);
         mAgreeBtn.setOnClickListener(viewListener);
         mRefuseBtn.setOnClickListener(viewListener);
 
-        refreshView();
+        refreshInvited();
     }
 
     /**
@@ -105,52 +112,54 @@ public class MLInvitedDetailActivity extends MLBaseActivity {
     /**
      * 刷新界面，
      */
-    private void refreshView() {
+    private void refreshInvited() {
         mUsernameView.setText(mInvitedEntity.getUserName());
         mReasonView.setText(mInvitedEntity.getReason());
         // 判断当前的申请与通知的状态，显示不同的提醒文字
         if (mInvitedEntity.getStatus() == MLInvitedEntity.InvitedStatus.AGREED) {
             mAgreeBtn.setVisibility(View.GONE);
             mRefuseBtn.setVisibility(View.GONE);
-            mStartChatBtn.setVisibility(View.VISIBLE);
+            mReplyBtn.setText(R.string.ml_btn_start_chat);
             mStatusView.setText(R.string.ml_agreed);
-            mStatusView.setVisibility(View.GONE);
+            mStatusView.setVisibility(View.VISIBLE);
         } else if (mInvitedEntity.getStatus() == MLInvitedEntity.InvitedStatus.REFUSED) {
             mAgreeBtn.setVisibility(View.GONE);
             mRefuseBtn.setVisibility(View.GONE);
-            mStartChatBtn.setVisibility(View.GONE);
+            mReplyBtn.setVisibility(View.VISIBLE);
             mStatusView.setText(R.string.ml_refused);
-            mStatusView.setVisibility(View.GONE);
+            mStatusView.setVisibility(View.VISIBLE);
         } else if (mInvitedEntity.getStatus() == MLInvitedEntity.InvitedStatus.BEAGREED) {
             mAgreeBtn.setVisibility(View.GONE);
             mRefuseBtn.setVisibility(View.GONE);
-            mStartChatBtn.setVisibility(View.VISIBLE);
+            mReplyBtn.setText(R.string.ml_btn_start_chat);
             mStatusView.setText(R.string.ml_be_agreed);
-            mStatusView.setVisibility(View.GONE);
+            mStatusView.setVisibility(View.VISIBLE);
         } else if (mInvitedEntity.getStatus() == MLInvitedEntity.InvitedStatus.BEREFUSED) {
             mAgreeBtn.setVisibility(View.GONE);
             mRefuseBtn.setVisibility(View.GONE);
-            mStartChatBtn.setVisibility(View.GONE);
+            mReplyBtn.setVisibility(View.VISIBLE);
             mStatusView.setText(R.string.ml_be_refused);
-            mStatusView.setVisibility(View.GONE);
+            mStatusView.setVisibility(View.VISIBLE);
         } else if (mInvitedEntity.getStatus() == MLInvitedEntity.InvitedStatus.APPLYFOR) {
             mAgreeBtn.setVisibility(View.GONE);
             mRefuseBtn.setVisibility(View.GONE);
-            mStartChatBtn.setVisibility(View.GONE);
-            mStatusView.setText(R.string.ml_apply_for);
-            mStatusView.setVisibility(View.GONE);
+            mReplyBtn.setVisibility(View.VISIBLE);
+            mStatusView.setText(R.string.ml_waiting_respond);
+            mStatusView.setVisibility(View.VISIBLE);
         } else if (mInvitedEntity.getStatus() == MLInvitedEntity.InvitedStatus.BEAPPLYFOR) {
+            // 被申请
             mAgreeBtn.setVisibility(View.VISIBLE);
             mRefuseBtn.setVisibility(View.VISIBLE);
-            mStartChatBtn.setVisibility(View.GONE);
-            mStatusView.setText(R.string.ml_waiting);
-            mStatusView.setVisibility(View.GONE);
+            mReplyBtn.setVisibility(View.VISIBLE);
+            mStatusView.setText(R.string.ml_waiting_dispose);
+            mStatusView.setVisibility(View.VISIBLE);
         } else if (mInvitedEntity.getStatus() == MLInvitedEntity.InvitedStatus.GROUPAPPLYFOR) {
+            // 群组申请与邀请
             mAgreeBtn.setVisibility(View.VISIBLE);
             mRefuseBtn.setVisibility(View.VISIBLE);
-            mStartChatBtn.setVisibility(View.GONE);
-            mStatusView.setText(R.string.ml_waiting);
-            mStatusView.setVisibility(View.GONE);
+            mReplyBtn.setVisibility(View.VISIBLE);
+            mStatusView.setText(R.string.ml_waiting_dispose);
+            mStatusView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -165,8 +174,6 @@ public class MLInvitedDetailActivity extends MLBaseActivity {
                 onFinish();
                 break;
             case R.id.ml_btn_invited_reply:
-            case R.id.ml_btn_invited_start_chat:
-                // 这里回复和开始聊天都调用同一个方法
                 repleyIntiver();
                 break;
             case R.id.ml_btn_invited_agree:
@@ -204,7 +211,9 @@ public class MLInvitedDetailActivity extends MLBaseActivity {
                     mInvitedEntity.setStatus(MLInvitedEntity.InvitedStatus.AGREED);
                     mInvitedEntity.setTime(MLDate.getCurrentMillisecond());
                     MLInvitedDao.getInstance().updateInvited(mInvitedEntity);
+                    // 关闭对话框
                     dialog.dismiss();
+                    // 发送Handler Manager 通知界面更新
                     mHandler.sendMessage(mHandler.obtainMessage(0));
                 } catch (HyphenateException e) {
                     e.printStackTrace();
@@ -239,7 +248,33 @@ public class MLInvitedDetailActivity extends MLBaseActivity {
             }
         }).start();
     }
+    /**
+     * 注册广播接收器，用来监听全局监听监听到新消息之后发送的广播，然后刷新界面
+     */
+    private void registerBroadcastReceiver() {
+        // 获取局域广播管理器
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(mActivity);
+        // 实例化Intent 过滤器
+        IntentFilter intentFilter = new IntentFilter();
+        // 为过滤器添加一个 Action
+        intentFilter.addAction(MLConstants.ML_ACTION_INVITED);
+        // 实例化广播接收器，用来接收自己过滤的广播
+        mBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                mHandler.sendMessage(mHandler.obtainMessage(0));
+            }
+        };
+        // 注册广播接收器
+        mLocalBroadcastManager.registerReceiver(mBroadcastReceiver, intentFilter);
+    }
 
+    /**
+     * 取消广播接收器的注册
+     */
+    private void unregisterBroadcastReceiver() {
+        mLocalBroadcastManager.unregisterReceiver(mBroadcastReceiver);
+    }
     /**
      * 自定义Handler，用来处理界面的刷新
      */
@@ -250,9 +285,21 @@ public class MLInvitedDetailActivity extends MLBaseActivity {
             switch (what) {
             case 0:
                 // 刷新界面
-
+                refreshInvited();
                 break;
             }
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterBroadcastReceiver();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerBroadcastReceiver();
     }
 }

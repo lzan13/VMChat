@@ -86,15 +86,15 @@ public class MLInvitedAdapter extends RecyclerView.Adapter<MLInvitedAdapter.Invi
             holder.textViewStatus.setVisibility(View.VISIBLE);
             holder.btnAgree.setVisibility(View.GONE);
         } else if (invitedEntity.getStatus() == MLInvitedEntity.InvitedStatus.APPLYFOR) {
-            holder.textViewStatus.setText(R.string.ml_waiting);
+            holder.textViewStatus.setText(R.string.ml_waiting_respond);
             holder.textViewStatus.setVisibility(View.VISIBLE);
             holder.btnAgree.setVisibility(View.GONE);
         } else if (invitedEntity.getStatus() == MLInvitedEntity.InvitedStatus.BEAPPLYFOR) {
-            holder.textViewStatus.setText(R.string.ml_waiting);
+            holder.textViewStatus.setText(R.string.ml_waiting_dispose);
             holder.textViewStatus.setVisibility(View.GONE);
             holder.btnAgree.setVisibility(View.VISIBLE);
         } else if (invitedEntity.getStatus() == MLInvitedEntity.InvitedStatus.GROUPAPPLYFOR) {
-            holder.textViewStatus.setText(R.string.ml_waiting);
+            holder.textViewStatus.setText(R.string.ml_waiting_dispose);
             holder.textViewStatus.setVisibility(View.GONE);
             holder.btnAgree.setVisibility(View.VISIBLE);
         }

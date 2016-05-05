@@ -128,7 +128,6 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
         } else {
             holder.contentView.setText(content);
         }
-
         // 设置当前会话联系人名称
         holder.usernameView.setText(conversation.getUserName());
 

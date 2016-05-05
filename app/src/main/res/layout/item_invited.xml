@@ -25,7 +25,39 @@
             melove:ml_shape_type="round"/>
 
         <LinearLayout
+            android:id="@+id/ml_layout_invited_end"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/ml_btn_invited_agree"
+                android:layout_width="@dimen/ml_dimen_48"
+                android:layout_height="@dimen/ml_dimen_36"
+                android:background="@drawable/ml_click_rectangle_white"
+                android:elevation="@dimen/ml_dimen_0"
+                android:focusable="false"
+                android:gravity="center"
+                android:text="@string/ml_btn_agree"
+                android:textColor="@color/ml_blue_87"
+                android:textSize="@dimen/ml_size_14"/>
+
+            <TextView
+                android:id="@+id/ml_text_invited_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/ml_dimen_8"
+                android:text="@string/ml_app_name"
+                android:textColor="@color/ml_black_54"
+                android:textSize="@dimen/ml_size_12"
+                android:visibility="gone"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_toLeftOf="@id/ml_layout_invited_end"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/ml_dimen_56"
@@ -45,41 +77,9 @@
                 android:id="@+id/ml_text_invited_reason"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxWidth="@dimen/ml_dimen_224"
                 android:text="@string/ml_hint_reason"
                 android:textColor="@color/ml_black_54"
                 android:textSize="@dimen/ml_size_12"/>
-        </LinearLayout>
-
-
-        <Button
-            android:id="@+id/ml_btn_invited_agree"
-            android:layout_width="@dimen/ml_dimen_48"
-            android:layout_height="@dimen/ml_dimen_36"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/ml_click_rectangle_white"
-            android:elevation="@dimen/ml_dimen_0"
-            android:focusable="false"
-            android:gravity="center"
-            android:text="@string/ml_btn_agree"
-            android:textColor="@color/ml_blue_87"
-            android:textSize="@dimen/ml_size_14"/>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true">
-
-            <TextView
-                android:id="@+id/ml_text_invited_status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/ml_app_name"
-                android:textColor="@color/ml_black_54"
-                android:textSize="@dimen/ml_size_12"
-                android:visibility="gone"/>
         </LinearLayout>
 
     </RelativeLayout>

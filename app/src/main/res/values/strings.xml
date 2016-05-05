@@ -34,7 +34,6 @@
     <string name="ml_signature">签名</string>
     <string name="ml_signature_null">无个性不签名</string>
 
-
     <!--Button 按钮相关-->
     <string name="ml_btn_ok">确定</string>
     <string name="ml_btn_i_know">我知道了</string>
@@ -45,10 +44,11 @@
     <string name="ml_btn_start_chat">开始聊天</string>
 
     <string name="ml_agreed">已同意</string>
-    <string name="ml_refused">已拒绝</string>
-    <string name="ml_waiting">等待……</string>
     <string name="ml_be_agreed">对方已同意</string>
+    <string name="ml_refused">已拒绝</string>
     <string name="ml_be_refused">对方已拒绝</string>
+    <string name="ml_waiting_dispose">等待处理</string>
+    <string name="ml_waiting_respond">等待对方回应</string>
     <string name="ml_add_contacts">添加联系人</string>
     <string name="ml_add_group">添加群组</string>
     <string name="ml_create_group">新建群组</string>
