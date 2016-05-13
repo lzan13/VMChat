@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/ml_dimen_16"
-    tools:context="net.melove.demo.chat.test.MLTestFragment">
+    tools:context="net.melove.app.easechat.test.MLTestFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,12 +11,12 @@
         android:orientation="vertical">
 
         <!--自定义ViewGroup，可以自动排列放在其中的子View-->
-        <net.melove.demo.chat.communal.widget.MLViewGroup
+        <net.melove.app.easechat.communal.widget.MLViewGroup
             android:id="@+id/ml_view_custom_viewgroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        </net.melove.demo.chat.communal.widget.MLViewGroup>
+        </net.melove.app.easechat.communal.widget.MLViewGroup>
     </LinearLayout>
 
 </RelativeLayout>

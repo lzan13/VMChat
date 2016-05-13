@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/ml_theme_background"
     android:fitsSystemWindows="true"
-    tools:context="net.melove.demo.chat.conversation.MLChatActivity">
+    tools:context="net.melove.app.easechat.conversation.MLChatActivity">
 
     <include layout="@layout/widget_toolbar_communal"/>
 

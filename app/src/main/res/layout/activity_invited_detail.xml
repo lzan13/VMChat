@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:background="@color/ml_theme_background"
     android:fitsSystemWindows="true"
-    tools:context="net.melove.demo.chat.conversation.MLChatActivity">
+    tools:context="net.melove.app.easechat.conversation.MLChatActivity">
 
     <include layout="@layout/widget_toolbar_communal"/>
 
@@ -30,7 +30,7 @@
             android:paddingRight="@dimen/ml_dimen_16"
             android:paddingTop="@dimen/ml_dimen_8">
             <!--头像-->
-            <net.melove.demo.chat.communal.widget.MLImageView
+            <net.melove.app.easechat.communal.widget.MLImageView
                 android:id="@+id/ml_img_invited_avatar"
                 android:layout_width="@dimen/ml_dimen_56"
                 android:layout_height="@dimen/ml_dimen_56"

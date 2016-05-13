@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="net.melove.demo.chat"
+<manifest package="net.melove.app.easechat"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- 项目权限 -->
@@ -62,7 +62,7 @@
 
     <!-- 小米推送的权限 -->
     <permission
-        android:name="net.melove.demo.chat.permission.MIPUSH_RECEIVE"
+        android:name="net.melove.app.easechat.permission.MIPUSH_RECEIVE"
         android:protectionLevel="signature"/>
 
     <uses-permission android:name="net.melove.demo.chat.permission.MIPUSH_RECEIVE"/>
@@ -76,7 +76,7 @@
 
     <!-- 程序的入口 -->
     <application
-        android:name=".application.MLApplication"
+        android:name="net.melove.app.easechat.application.MLApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/ml_app_name"
@@ -84,17 +84,17 @@
 
         <!-- Activity的基类 -->
         <activity
-            android:name=".communal.base.MLBaseActivity"
+            android:name="net.melove.app.easechat.communal.base.MLBaseActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Default"/>
         <!-- 被踢弹出类 -->
         <activity
-            android:name=".main.MLConflictActivity"
+            android:name="net.melove.app.easechat.main.MLConflictActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Transparent"/>
         <!-- 主界面 -->
         <activity
-            android:name=".main.MLMainActivity"
+            android:name="net.melove.app.easechat.main.MLMainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Launcher">
             <intent-filter>
@@ -105,46 +105,46 @@
         </activity>
         <!-- 登录界面 -->
         <activity
-            android:name=".authentication.MLSigninActivity"
+            android:name="net.melove.app.easechat.authentication.MLSigninActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Default"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
         <!-- 注册界面 -->
         <activity
-            android:name=".authentication.MLSignupActivity"
+            android:name="net.melove.app.easechat.authentication.MLSignupActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Default"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
         <!-- 账户信息界面 -->
         <activity
-            android:name=".contacts.MLContactsInfoActivity"
+            android:name="net.melove.app.easechat.contacts.MLContactsInfoActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Default"/>
         <!-- 聊天界面 -->
         <activity
-            android:name=".conversation.MLChatActivity"
+            android:name="net.melove.app.easechat.conversation.MLChatActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Default"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
         <!-- 搜索界面 -->
         <activity
-            android:name=".main.MLSearchActivity"
+            android:name="net.melove.app.easechat.main.MLSearchActivity"
             android:theme="@style/MLTheme.Default"
             android:windowSoftInputMode="adjustResize|stateVisible"/>
         <!-- Invited消息详情界面 -->
         <activity
-            android:name=".invited.MLInvitedDetailActivity"
+            android:name="net.melove.app.easechat.invited.MLInvitedDetailActivity"
             android:theme="@style/MLTheme.Default"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
         <!--测试 Activity-->
         <activity
-            android:name=".test.MLTestActivity"
+            android:name="net.melove.app.easechat.test.MLTestActivity"
             android:label="@string/title_activity_mltest"
-            android:parentActivityName=".communal.base.MLBaseActivity"
+            android:parentActivityName="net.melove.app.easechat.communal.base.MLBaseActivity"
             android:theme="@style/MLTheme.Default">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="net.melove.demo.chat.communal.base.MLBaseActivity"/>
+                android:value="net.melove.app.easechat.communal.base.MLBaseActivity"/>
         </activity>
 
         <!-- 设置环信应用的appkey -->

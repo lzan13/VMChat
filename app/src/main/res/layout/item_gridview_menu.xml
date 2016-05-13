@@ -9,7 +9,7 @@
               android:paddingBottom="@dimen/ml_dimen_12"
               android:paddingTop="@dimen/ml_dimen_12">
 
-    <net.melove.demo.chat.communal.widget.MLImageView
+    <net.melove.app.easechat.communal.widget.MLImageView
         android:id="@+id/ml_img_menu_photo"
         android:layout_width="@dimen/ml_dimen_52"
         android:layout_height="@dimen/ml_dimen_52"

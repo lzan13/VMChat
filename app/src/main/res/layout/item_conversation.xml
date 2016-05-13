@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/ml_dimen_56">
 
-        <net.melove.demo.chat.communal.widget.MLImageView
+        <net.melove.app.easechat.communal.widget.MLImageView
             android:id="@+id/ml_img_conversation_avatar"
             android:layout_width="@dimen/ml_dimen_40"
             android:layout_height="@dimen/ml_dimen_40"
