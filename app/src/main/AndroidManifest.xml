@@ -151,22 +151,22 @@
         <meta-data
             android:name="EASEMOB_APPKEY"
             android:value="lzan13#hxsdkdemo"/>
-        <!-- 声明sdk所需的 Service SDK核心功能 -->
-        <!--<service-->
-        <!--android:name="com.hyphenate.chat.EMChatService"-->
-        <!--android:exported="true"/>-->
-        <!--&lt;!&ndash; 声明sdk所需的receiver &ndash;&gt;-->
-        <!--<receiver android:name="com.hyphenate.chat.EMMonitorReceiver">-->
-        <!--<intent-filter>-->
-        <!--<action android:name="android.intent.action.PACKAGE_REMOVED"/>-->
-        <!--<data android:scheme="package"/>-->
-        <!--</intent-filter>-->
-        <!--&lt;!&ndash; 可选filter &ndash;&gt;-->
-        <!--<intent-filter>-->
-        <!--<action android:name="android.intent.action.BOOT_COMPLETED"/>-->
-        <!--<action android:name="android.intent.action.USER_PRESENT"/>-->
-        <!--</intent-filter>-->
-        <!--</receiver>-->
+        <!--声明sdk所需的 Service SDK核心功能-->
+        <service
+            android:name="com.hyphenate.chat.EMChatService"
+            android:exported="true"/>
+        <!-- 声明sdk所需的receiver -->
+        <receiver android:name="com.hyphenate.chat.EMMonitorReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
+                <data android:scheme="package"/>
+            </intent-filter>
+            <!-- 可选filter -->
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.USER_PRESENT"/>
+            </intent-filter>
+        </receiver>
 
         <!-- 配置小米推送服务 这里并没有按照小米官方文档配置全服 Service-->
         <service
@@ -174,6 +174,7 @@
             android:enabled="true"
             android:exported="true"/>
         <!-- 小米推送消息处理服务 -->
+
         <service
             android:name="com.xiaomi.mipush.sdk.MessageHandleService"
             android:enabled="true"/>

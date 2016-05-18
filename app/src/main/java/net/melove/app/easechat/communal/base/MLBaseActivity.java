@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.squareup.leakcanary.RefWatcher;
 
@@ -21,13 +22,17 @@ import net.melove.app.easechat.communal.util.MLLog;
  */
 public class MLBaseActivity extends AppCompatActivity {
 
+    // 当前布局RootView
+    protected View mRootView;
+
+    // 当前界面的上下文菜单对象
     protected FragmentActivity mActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MLLog.i("Activity onCreate");
-
+        mActivity = this;
     }
 
     @Override

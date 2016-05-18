@@ -1,100 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
+    android:id="@+id/ml_layout_coordinator"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/ml_theme_background"
+    android:clipToPadding="true"
     android:fitsSystemWindows="true"
     tools:context="net.melove.app.easechat.authentication.MLSignupActivity">
 
     <!--公共的 Toolbar 控件-->
     <include layout="@layout/widget_toolbar_communal"/>
 
-    <ScrollView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/ml_dimen_56"
-            android:layout_marginLeft="@dimen/ml_dimen_16"
-            android:layout_marginRight="@dimen/ml_dimen_16"
-            android:layout_marginTop="@dimen/ml_dimen_56"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_centerVertical="true">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/ml_dimen_16"
-                android:text="@string/ml_hint_sign_up"
-                android:textColor="@color/ml_red_54"
-                android:textSize="@dimen/ml_size_14"/>
+                android:layout_margin="@dimen/ml_dimen_16"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/ml_dimen_16">
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/ml_dimen_36"
-                android:textColor="@color/ml_black_87"
-                android:textColorHint="@color/ml_black_26">
-
-                <EditText
-                    android:id="@+id/ml_edit_sign_up_username"
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:digits="@string/ml_input_limit"
-                    android:hint="@string/ml_hint_username"
-                    android:inputType="textCapCharacters"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:textSize="@dimen/ml_size_16"/>
-            </android.support.design.widget.TextInputLayout>
+                    android:text="@string/ml_hint_sign_up"
+                    android:textColor="@color/ml_red_54"
+                    android:textSize="@dimen/ml_size_14"/>
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/ml_black_87"
-                android:textColorHint="@color/ml_black_26">
-
-                <EditText
-                    android:id="@+id/ml_edit_sign_up_password"
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:digits="@string/ml_input_limit"
-                    android:hint="@string/ml_hint_password"
-                    android:inputType="textCapCharacters"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:textSize="@dimen/ml_size_16"/>
-            </android.support.design.widget.TextInputLayout>
+                    android:layout_marginTop="@dimen/ml_dimen_16"
+                    android:textColor="@color/ml_black_87"
+                    android:textColorHint="@color/ml_black_26">
+
+                    <EditText
+                        android:id="@+id/ml_edit_sign_up_username"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:digits="@string/ml_input_limit"
+                        android:hint="@string/ml_hint_username"
+                        android:inputType="textCapCharacters"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textSize="@dimen/ml_size_16"/>
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/ml_black_87"
+                    android:textColorHint="@color/ml_black_26">
+
+                    <EditText
+                        android:id="@+id/ml_edit_sign_up_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:digits="@string/ml_input_limit"
+                        android:hint="@string/ml_hint_password"
+                        android:inputType="textCapCharacters"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textSize="@dimen/ml_size_16"/>
+                </android.support.design.widget.TextInputLayout>
 
 
-            <Button
-                android:id="@+id/ml_btn_sign_up"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/ml_dimen_36"
-                android:layout_marginBottom="@dimen/ml_dimen_24"
-                android:layout_marginTop="@dimen/ml_dimen_24"
-                android:background="@drawable/ml_click_rectangle_red"
-                android:paddingLeft="@dimen/ml_dimen_16"
-                android:paddingRight="@dimen/ml_dimen_16"
-                android:text="@string/ml_sign_up_now"
-                android:textColor="@color/ml_white_87"
-                android:textSize="@dimen/ml_size_14"/>
+                <Button
+                    android:id="@+id/ml_btn_sign_up"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/ml_dimen_36"
+                    android:layout_marginBottom="@dimen/ml_dimen_24"
+                    android:layout_marginTop="@dimen/ml_dimen_24"
+                    android:background="@drawable/ml_click_rectangle_red"
+                    android:paddingLeft="@dimen/ml_dimen_16"
+                    android:paddingRight="@dimen/ml_dimen_16"
+                    android:text="@string/ml_sign_up_now"
+                    android:textColor="@color/ml_white_87"
+                    android:textSize="@dimen/ml_size_14"/>
 
-            <CheckBox
-                android:id="@+id/ml_checkbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="@dimen/ml_dimen_36"
-                android:text="我同意《集成聊天Demo开源协议》"
-                android:textColor="@color/ml_red_87"/>
+                <CheckBox
+                    android:id="@+id/ml_checkbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="我同意《集成聊天Demo开源协议》"
+                    android:textColor="@color/ml_red_87"
+                    android:textSize="@dimen/ml_size_14"/>
 
-        </LinearLayout>
-    </ScrollView>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/ml_dimen_16"
+                    android:gravity="center"
+                    android:text="@string/ml_copy_right"
+                    android:textColor="@color/ml_red_54"
+                    android:textSize="@dimen/ml_size_12"/>
+            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
+    </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

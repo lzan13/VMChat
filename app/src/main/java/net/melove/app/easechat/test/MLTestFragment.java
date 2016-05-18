@@ -151,6 +151,15 @@ public class MLTestFragment extends MLBaseFragment {
         // 导入一个消息集合到本地，
 //        EMClient.getInstance().chatManager().importMessages(list);
 
+        // 测试插入一条消息
+//        EMMessage textMessage = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
+//        textMessage.setFrom(mChatId);
+//        textMessage.setReceipt(mCurrUsername);
+//        textMessage.setStatus(EMMessage.Status.SUCCESS);
+//        EMTextMessageBody body = new EMTextMessageBody("test insert message");
+//        textMessage.addBody(body);
+//        mConversation.insertMessage(textMessage);
+
     }
 
     /**

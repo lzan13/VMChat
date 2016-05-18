@@ -49,25 +49,19 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
     // 当前会话对象
     private EMConversation mConversation;
     private List<EMMessage> mMessages;
-    private RecyclerView mRecyclerView;
 
     // 自定义的回调接口
     private MLOnItemClickListener mOnItemClickListener;
-    private MLHandler mHandler;
 
     /**
      * 构造方法
      *
      * @param context      上下文对象，在解析布局的时候需要用到
      * @param chatId       当前会话者的id，为username/groupId
-     * @param recyclerView 当前聊天信息展示列表
      */
-    public MLMessageAdapter(Context context, String chatId, RecyclerView recyclerView) {
+    public MLMessageAdapter(Context context, String chatId) {
         mContext = context;
         mChatId = chatId;
-        mRecyclerView = recyclerView;
-
-        mHandler = new MLHandler();
 
         /**
          * 初始化会话对象，这里有三个参数么，
@@ -78,7 +72,7 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
         mConversation = EMClient.getInstance().chatManager().getConversation(mChatId, null, true);
         mMessages = mConversation.getAllMessages();
         // 将list集合倒序排列
-        Collections.reverse(mMessages);
+        // Collections.reverse(mMessages);
     }
 
 
@@ -218,175 +212,13 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
         mOnItemClickListener.onItemAction(message, action);
     }
 
-    /**
-     * ---------------------------------------------------------------------------------
-     * 刷新整个 Adapter 列表方法
-     *
-     * @param notifyType 通知刷新类型
-     */
-    public void refresh(int notifyType) {
-        Message msg = mHandler.obtainMessage();
-        msg.what = notifyType;
-        mHandler.sendMessage(msg);
+    public void refreshMessageData() {
+        mMessages.clear();
+        mMessages.addAll(mConversation.getAllMessages());
+        // 将list集合倒序排列
+        // Collections.reverse(mMessages);
     }
 
-    /**
-     * 自定义 Adapter 局部刷新方法，需要提供位置，数量，类型
-     *
-     * @param arg1       数据改变的位置
-     * @param arg2       数据改变的数量/移动时目标位置
-     * @param notifyType 刷新类型，包含插入新数据，删除数据，等
-     */
-    public void refresh(int arg1, int arg2, int notifyType) {
-        Message msg = mHandler.obtainMessage();
-        msg.what = notifyType;
-        msg.arg1 = arg1;
-        msg.arg2 = arg2;
-        mHandler.sendMessage(msg);
-    }
-
-    /**
-     * 自定义Handler，用来处理消息的刷新等
-     * <p>
-     * 最终还是去调用{@link android.support.v7.widget.RecyclerView.Adapter}已有的 notify 方法
-     * {@link RecyclerView.Adapter#notify()}
-     * {@link RecyclerView.Adapter#notifyAll()}
-     * {@link RecyclerView.Adapter#notifyDataSetChanged()}
-     * 消息的状态改变需要调用 item changed方法
-     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemChanged(int)}
-     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemChanged(int, Object)}
-     * TODO 重发消息的时候需要调用 item move
-     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemMoved(int, int)}
-     * 新插入消息需要调用 item inserted
-     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemInserted(int)}
-     * TODO 改变多条需要 item range changed
-     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRangeChanged(int, int)}
-     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRangeChanged(int, int, Object)}
-     * 插入多条消息需要调用 item range inserted（加载更多消息时需要此刷新）
-     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRangeInserted(int, int)}
-     * 删除多条内容需要 item range removed（TODO 清空或者删除多条消息需要此方法）
-     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRangeRemoved(int, int)}
-     * 删除消息需要 item removed
-     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRemoved(int)}
-     */
-    private class MLHandler extends Handler {
-
-        private void resumeLoadMessage() {
-            mMessages.clear();
-            mMessages.addAll(mConversation.getAllMessages());
-            // 将list集合倒序排列
-            Collections.reverse(mMessages);
-        }
-
-        private void refreshAll() {
-            resumeLoadMessage();
-            notifyDataSetChanged();
-        }
-
-        /**
-         * 插入一条 Item 的刷新
-         *
-         * @param position 插入的位置
-         */
-        private void refreshItemInserted(int position) {
-            resumeLoadMessage();
-            notifyItemInserted(position);
-        }
-
-        /**
-         * 插入多条 Item 的刷新
-         *
-         * @param position 开始插入的位置
-         * @param count    插入的数量
-         */
-        private void refreshItemRangeInserted(int position, int count) {
-            resumeLoadMessage();
-            notifyItemRangeInserted(position, count);
-        }
-
-        /**
-         * 删除一条 Item 的刷新
-         *
-         * @param position 删除 Item 的位置
-         */
-        private void refreshItemRemoved(int position) {
-            resumeLoadMessage();
-            notifyItemRemoved(position);
-        }
-
-        /**
-         * 删除多条 Item 的刷新
-         *
-         * @param position 开始删除的位置
-         * @param count    删除的数量
-         */
-        private void refreshItemRangeRemoved(int position, int count) {
-            resumeLoadMessage();
-            notifyItemRangeRemoved(position, count);
-        }
-
-        /**
-         * Item 改变
-         *
-         * @param position 改变的 Item 的位置
-         */
-        private void refreshItemChanged(int position) {
-            resumeLoadMessage();
-            notifyItemChanged(position);
-        }
-
-        /**
-         * 多条 Item 改变的刷新
-         *
-         * @param position 改变的 Item 的位置
-         */
-        private void refreshItemRangeChanged(int position, int count) {
-            resumeLoadMessage();
-            notifyItemChanged(position, count);
-        }
-
-        /**
-         * Item 的位置改变
-         *
-         * @param formPosition Item 开始的位置
-         * @param toPosition   Item 改变后的位置
-         */
-        private void refreshItemMoved(int formPosition, int toPosition) {
-            resumeLoadMessage();
-            notifyItemMoved(formPosition, toPosition);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-            case NOTIFY_ALL:
-                // 刷新全部
-                refreshAll();
-                break;
-            case NOTIFY_CHANGED:
-                refreshItemChanged(msg.arg1);
-                break;
-            case NOTIFY_INSERTED:
-                refreshItemInserted(msg.arg1);
-                break;
-            case NOTIFY_MOVED:
-                refreshItemMoved(msg.arg1, msg.arg2);
-                break;
-            case NOTIFY_RANGE_CHANGED:
-                refreshItemRangeChanged(msg.arg1, msg.arg2);
-                break;
-            case NOTIFY_RANGE_INSERTED:
-                refreshItemRangeInserted(msg.arg1, msg.arg2);
-                break;
-            case NOTIFY_RANGE_REMOVED:
-                refreshItemRangeRemoved(msg.arg1, msg.arg2);
-                break;
-            case NOTIFY_REMOVED:
-                refreshItemRemoved(msg.arg1);
-                break;
-            }
-        }
-    }
 
     /**
      * 非静态内部类会隐式持有外部类的引用，就像大家经常将自定义的adapter在Activity类里，

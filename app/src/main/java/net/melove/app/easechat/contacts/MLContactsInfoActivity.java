@@ -18,13 +18,13 @@ import com.hyphenate.exceptions.HyphenateException;
 import net.melove.app.easechat.R;
 import net.melove.app.easechat.communal.base.MLBaseActivity;
 import net.melove.app.easechat.application.MLConstants;
+import net.melove.app.easechat.communal.widget.MLToast;
 import net.melove.app.easechat.conversation.MLChatActivity;
 import net.melove.app.easechat.database.MLInvitedDao;
 import net.melove.app.easechat.database.MLContactsDao;
 import net.melove.app.easechat.communal.util.MLCrypto;
 import net.melove.app.easechat.communal.util.MLDate;
 import net.melove.app.easechat.communal.util.MLLog;
-import net.melove.app.easechat.communal.widget.MLToast;
 import net.melove.app.easechat.invited.MLInvitedEntity;
 
 
@@ -180,7 +180,7 @@ public class MLContactsInfoActivity extends MLBaseActivity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    MLToast.makeToast(R.string.ml_toast_add_contacts_success).show();
+                                    MLToast.rightToast(R.string.ml_toast_add_contacts_success).show();
                                 }
                             });
                         } catch (HyphenateException e) {
@@ -191,7 +191,7 @@ public class MLContactsInfoActivity extends MLBaseActivity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    MLToast.makeToast(R.string.ml_toast_add_contacts_failed).show();
+                                    MLToast.errorToast(R.string.ml_toast_add_contacts_failed).show();
                                 }
                             });
                         }

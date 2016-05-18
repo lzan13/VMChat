@@ -44,13 +44,18 @@ public class MLSignupActivity extends MLBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        init();
+        initView();
         initToolbar();
 
     }
 
-    private void init() {
+    /**
+     * 界面ＵＩ初始化方法，一般是为了先通过 findViewById 实例化控件
+     */
+    private void initView() {
         mActivity = this;
+        mRootView = findViewById(R.id.ml_layout_coordinator);
+
         // 实例化控件
         mUsernameView = (EditText) findViewById(R.id.ml_edit_sign_up_username);
         mPasswordView = (EditText) findViewById(R.id.ml_edit_sign_up_password);
@@ -147,7 +152,7 @@ public class MLSignupActivity extends MLBaseActivity {
                             }
                             // 注册成功保存用户名到本地
                             MLSPUtil.put(mActivity, MLConstants.ML_SHARED_USERNAME, mUsername);
-                            MLToast.rightToast(res.getString(R.string.ml_sign_up_success)).show();
+                            MLToast.rightToast(R.string.ml_sign_up_success).show();
                             // 注册成功，返回登录界面
                             onFinish();
                         }
@@ -162,30 +167,32 @@ public class MLSignupActivity extends MLBaseActivity {
                             }
                             int errorCode = e.getErrorCode();
                             MLLog.d("MLSignupActivity - signup - errorCode:%d, errorMsg:%s", errorCode, e.getMessage());
+                            String error = "";
                             switch (errorCode) {
                             // 网络错误
                             case EMError.NETWORK_ERROR:
-                                MLToast.errorToast(res.getString(R.string.ml_error_network_error) + "-" + errorCode).show();
+                                error = res.getString(R.string.ml_error_network_error) + "-" + errorCode;
                                 break;
                             // 用户已存在
                             case EMError.USER_ALREADY_EXIST:
-                                MLToast.errorToast(res.getString(R.string.ml_error_user_already_exits) + "-" + errorCode).show();
+                                error = res.getString(R.string.ml_error_user_already_exits) + "-" + errorCode;
                                 break;
                             // 参数不合法，一般情况是username 使用了uuid导致，不能使用uuid注册
                             case EMError.USER_ILLEGAL_ARGUMENT:
-                                MLToast.errorToast(res.getString(R.string.ml_error_user_illegal_argument) + "-" + errorCode).show();
+                                error = res.getString(R.string.ml_error_user_illegal_argument) + "-" + errorCode;
                                 break;
                             // 服务器未知错误
                             case EMError.SERVER_UNKNOWN_ERROR:
-                                MLToast.errorToast(res.getString(R.string.ml_error_server_unknown_error) + "-" + errorCode).show();
+                                error = res.getString(R.string.ml_error_server_unknown_error) + "-" + errorCode;
                                 break;
                             case EMError.USER_REG_FAILED:
-                                MLToast.errorToast(res.getString(R.string.ml_error_user_reg_failed) + "-" + errorCode).show();
+                                error = res.getString(R.string.ml_error_user_reg_failed) + "-" + errorCode;
                                 break;
                             default:
-                                MLToast.errorToast(res.getString(R.string.ml_sign_up_failed) + "-" + errorCode).show();
+                                error = res.getString(R.string.ml_sign_up_failed) + "-" + errorCode;
                                 break;
                             }
+                            MLToast.errorToast(error).show();
                         }
                     });
                 } catch (Exception e) {

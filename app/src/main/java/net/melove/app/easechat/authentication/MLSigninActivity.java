@@ -17,11 +17,11 @@ import com.hyphenate.chat.EMClient;
 
 import net.melove.app.easechat.R;
 import net.melove.app.easechat.communal.base.MLBaseActivity;
+import net.melove.app.easechat.communal.widget.MLToast;
 import net.melove.app.easechat.main.MLMainActivity;
 import net.melove.app.easechat.application.MLConstants;
 import net.melove.app.easechat.communal.util.MLLog;
 import net.melove.app.easechat.communal.util.MLSPUtil;
-import net.melove.app.easechat.communal.widget.MLToast;
 
 /**
  * Created by lzan13 on 2015/7/4.
@@ -29,15 +29,19 @@ import net.melove.app.easechat.communal.widget.MLToast;
  */
 public class MLSigninActivity extends MLBaseActivity {
 
+    // Toolbar
     private Toolbar mToolbar;
 
+    // loading 等待对话框
     private ProgressDialog mDialog;
 
+    // username和password输入框
     private EditText mUsernameView;
     private EditText mPasswordView;
     private String mUsername;
     private String mPassword;
 
+    // 操作按钮
     private View mSigninBtn;
     private View mSignupBtn;
     private View mForgetBtn;
@@ -53,11 +57,16 @@ public class MLSigninActivity extends MLBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        init();
+        initView();
     }
 
 
-    private void init() {
+    /**
+     * 界面ＵＩ初始化方法，一般是为了先通过 findViewById 实例化控件
+     */
+    private void initView() {
+        mActivity = this;
+        mRootView = findViewById(R.id.ml_layout_coordinator);
 
         mUsername = (String) MLSPUtil.get(mActivity, MLConstants.ML_SHARED_USERNAME, "");
         mUsernameView = (EditText) findViewById(R.id.ml_edit_sign_in_username);
@@ -84,7 +93,7 @@ public class MLSigninActivity extends MLBaseActivity {
 
         mToolbar.setTitle(R.string.ml_sign_in);
         // TODO 这里设置Toolbar的图标时如果使用svg图标,在5.x上才能支持，在4.x的设备 svg 图标会显示，但是颜色是黑色不能改变，
-        //        mToolbar.setNavigationIcon(R.drawable.ic_menu_close);
+        // mToolbar.setNavigationIcon(R.drawable.ic_menu_close);
         mToolbar.setNavigationIcon(R.mipmap.ic_close_white_24dp);
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationOnClickListener(viewListener);
@@ -184,11 +193,7 @@ public class MLSigninActivity extends MLBaseActivity {
                         Intent intent = new Intent(mActivity, MLMainActivity.class);
                         superJump(intent);
                         // 根据不同的系统版本选择不同的 finish 方法
-                        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-                            mActivity.finish();
-                        } else {
-                            mActivity.finishAfterTransition();
-                        }
+                        onFinish();
                     }
                 });
             }
@@ -209,47 +214,49 @@ public class MLSigninActivity extends MLBaseActivity {
                          * 关于错误码可以参考官方api详细说明
                          * http://www.easemob.com/apidoc/android/chat3.0/classcom_1_1hyphenate_1_1_e_m_error.html
                          */
+                        String error = "";
                         switch (i) {
                         // 网络异常 2
                         case EMError.NETWORK_ERROR:
-                            MLToast.errorToast(res.getString(R.string.ml_error_network_error) + "-" + i).show();
+                            error = res.getString(R.string.ml_error_network_error) + "-" + i;
                             break;
                         // 无效的用户名 101
                         case EMError.INVALID_USER_NAME:
-                            MLToast.errorToast(res.getString(R.string.ml_error_invalid_user_name) + "-" + i).show();
+                            error = res.getString(R.string.ml_error_invalid_user_name) + "-" + i;
                             break;
                         // 无效的密码 102
                         case EMError.INVALID_PASSWORD:
-                            MLToast.errorToast(res.getString(R.string.ml_error_invalid_password) + "-" + i).show();
+                            error = res.getString(R.string.ml_error_invalid_password) + "-" + i;
                             break;
                         // 用户认证失败，用户名或密码错误 202
                         case EMError.USER_AUTHENTICATION_FAILED:
-                            MLToast.errorToast(res.getString(R.string.ml_error_user_authentication_failed) + "-" + i).show();
+                            error = res.getString(R.string.ml_error_user_authentication_failed) + "-" + i;
                             break;
                         // 用户不存在 204
                         case EMError.USER_NOT_FOUND:
-                            MLToast.errorToast(res.getString(R.string.ml_error_user_not_found) + "-" + i).show();
+                            error = res.getString(R.string.ml_error_user_not_found) + "-" + i;
                             break;
                         // 无法访问到服务器 300
                         case EMError.SERVER_NOT_REACHABLE:
-                            MLToast.errorToast(res.getString(R.string.ml_error_server_not_reachable) + "-" + i).show();
+                            error = res.getString(R.string.ml_error_server_not_reachable) + "-" + i;
                             break;
                         // 等待服务器响应超时 301
                         case EMError.SERVER_TIMEOUT:
-                            MLToast.errorToast(res.getString(R.string.ml_error_server_timeout) + "-" + i).show();
+                            error = res.getString(R.string.ml_error_server_timeout) + "-" + i;
                             break;
                         // 服务器繁忙 302
                         case EMError.SERVER_BUSY:
-                            MLToast.errorToast(res.getString(R.string.ml_error_server_busy) + "-" + i).show();
+                            error = res.getString(R.string.ml_error_server_busy) + "-" + i;
                             break;
                         // 未知 Server 异常 303
                         case EMError.SERVER_UNKNOWN_ERROR:
-                            MLToast.errorToast(res.getString(R.string.ml_error_server_unknown_error) + "-" + i).show();
+                            error = res.getString(R.string.ml_error_server_unknown_error) + "-" + i;
                             break;
                         default:
-                            MLToast.errorToast(res.getString(R.string.ml_sign_in_failed) + "-" + i).show();
+                            error = res.getString(R.string.ml_sign_in_failed) + "-" + i;
                             break;
                         }
+                        MLToast.errorToast(error).show();
                     }
                 });
             }
@@ -257,14 +264,16 @@ public class MLSigninActivity extends MLBaseActivity {
             @Override
             public void onProgress(int i, String s) {
                 MLLog.d("progress: " + i + " " + res.getString(R.string.ml_sign_in_begin) + s);
-
             }
         });
     }
 
 
+    /**
+     * 找回密码触发方法
+     */
     private void forgetPassword() {
-        MLToast.errorToast("暂不支持找回密码").show();
+        MLToast.makeToast("暂不支持找回密码").show();
     }
 
     @Override

@@ -100,24 +100,21 @@ public class MLMainActivity extends MLBaseActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        init();
         initView();
         initFragment();
     }
 
 
-    /**
-     * 界面属性初始值的初始化
-     */
-    private void init() {
-        mActivity = this;
-        mMenuType = 0;
-    }
 
     /**
-     * 控件初始化
+     * 控件初始化以及界面属性初始值的初始化
      */
     private void initView() {
+        mActivity = this;
+        mMenuType = 0;
+
+        mRootView = findViewById(R.id.ml_layout_coordinator);
+
         mDrawerLayout = (DrawerLayout) findViewById(R.id.ml_layout_drawer);
         mNavigationView = (NavigationView) findViewById(R.id.ml_widget_navigation);
         // 侧滑用户头像
@@ -303,7 +300,7 @@ public class MLMainActivity extends MLBaseActivity implements
                     return;
                 }
                 String currUsername = (String) MLSPUtil.get(mActivity, MLConstants.ML_SHARED_USERNAME, "");
-                if(currUsername.equals(editText.getText().toString().trim())){
+                if (currUsername.equals(editText.getText().toString().trim())) {
                     MLToast.errorToast(R.string.ml_toast_chat_cant_yourself).show();
                     return;
                 }
@@ -398,15 +395,13 @@ public class MLMainActivity extends MLBaseActivity implements
                 if (MLEasemobHelper.getInstance().isConnection()) {
                     mConnectionFabBtn.setImageResource(R.mipmap.ic_signal_wifi_on_white_24dp);
                     mConnectionFabBtn.setVisibility(View.GONE);
-                    // MLToast.rightToast(R.string.ml_toast_connected).show();
                 } else {
-                    mConnectionFabBtn.setImageResource(R.mipmap.ic_signal_wifi_off_white_24dp);
-                    mConnectionFabBtn.setVisibility(View.VISIBLE);
                     /**
                      * 因为3.x的sdk断开服务器连接后会一直重试并发出回调，所以为了防止一直Toast提示用户，
                      * 这里取消toast，只是显示图标
                      */
-                    // MLToast.rightToast(R.string.ml_error_server_not_reachable).show();
+                    mConnectionFabBtn.setImageResource(R.mipmap.ic_signal_wifi_off_white_24dp);
+                    mConnectionFabBtn.setVisibility(View.VISIBLE);
                 }
             }
         };

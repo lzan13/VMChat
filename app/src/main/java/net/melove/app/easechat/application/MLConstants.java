@@ -88,6 +88,15 @@ public class MLConstants {
     public static final int ML_ACTION_INVITED_REFUSE = 0X11;
     public static final int ML_ACTION_INVITED_DELETE = 0X12;
 
+    // 刷新类型
+    public static final int ML_NOTIFY_REFRESH_ALL = 0x00;
+    public static final int ML_NOTIFY_REFRESH_CHANGED = 0x01;
+    public static final int ML_NOTIFY_REFRESH_RANGE_CHANGED = 0x02;
+    public static final int ML_NOTIFY_REFRESH_INSERTED = 0x03;
+    public static final int ML_NOTIFY_REFRESH_RANGE_INSERTED = 0x04;
+    public static final int ML_NOTIFY_REFRESH_MOVED = 0x05;
+    public static final int ML_NOTIFY_REFRESH_REMOVED = 0x06;
+    public static final int ML_NOTIFY_REFRESH_RANGE_REMOVED = 0x07;
 
     /**
      * 聊天消息类型
