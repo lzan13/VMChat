@@ -33,10 +33,10 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     /**
-     *  新的遵循 Android  Material design 设计风格库，此扩展库已经包含了一下三个扩展库，如果引入了design，就不需要再单独引入其他库
-     *  support-v4
-     *  appcomat-v7
-     *  recyclerView库
+     *   新的遵循 Android  Material design 设计风格库，此扩展库已经包含了一下三个扩展库，如果引入了design，就不需要再单独引入其他库
+     *   support-v4
+     *   appcomat-v7
+     *   recyclerView库
      */
     compile 'com.android.support:design:23.3.0'
     // Google Play Service 库，使用GCM推送需要
@@ -47,9 +47,9 @@ dependencies {
     // compile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
     // 第三方图片加载库
     compile 'com.github.bumptech.glide:glide:3.7.0'
-    // 环信sdk
-    compile files('libs/hyphenatechat_3.1.2.jar')
-    // 小米推送
-    compile files('libs/MiPush_SDK_Client_2_2_21.jar')
+    // 环信sdk 在上边fileTree里已经包含了libs，这里可以不用再单独添加
+    // compile files('libs/hyphenatechat_3.1.2.jar')
+    // 小米推送 在上边fileTree里已经包含了libs，这里可以不用再单独添加
+    // compile files('libs/MiPush_SDK_Client_2_2_21.jar')
 }
 

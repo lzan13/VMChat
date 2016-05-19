@@ -144,7 +144,7 @@ public class MLEasemobHelper {
         // 设置google GCM推送id，国内可以不用设置
         //        options.setGCMNumber(MLConstants.ML_GCM_NUMBER);
         // 设置集成小米推送的appid和appkey
-        options.setMipushConfig(MLConstants.ML_MI_APP_ID, MLConstants.ML_MI_APP_KEY);
+        // options.setMipushConfig(MLConstants.ML_MI_APP_ID, MLConstants.ML_MI_APP_KEY);
 
         // 调用初始化方法初始化sdk
         EMClient.getInstance().init(mContext, options);

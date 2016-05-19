@@ -245,7 +245,6 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                             if (messages.size() > 0) {
                                 // 调用 Adapter 刷新方法
                                 refreshItemRangeInserted(0, messages.size());
-                                // mLayoutManger.scrollToPositionWithOffset(messages.size() - 1, 0);
                             }
                         }
                         mSwipeRefreshLayout.setRefreshing(false);
@@ -486,9 +485,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 // 保存新消息
                 EMClient.getInstance().chatManager().saveMessage(recallMessage);
                 // 更新UI
-                Message msg = mHandler.obtainMessage(0);
-                msg.arg1 = mConversation.getMessagePosition(message);
-                mHandler.sendMessage(msg);
+                refreshItemChanged(mConversation.getMessagePosition(message));
             }
 
             /**
@@ -548,8 +545,6 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         EMClient.getInstance().chatManager().sendMessage(message);
         // 点击发送后马上刷新界面，无论消息有没有成功，先刷新显示
         refreshItemInserted(position);
-        // 界面刷新后滚动到刚发送的那一条消息
-        //        scrollToItem(mConversation.getAllMessages().size() - 1, true);
     }
 
     /**
@@ -863,8 +858,13 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      */
     private void refreshAll() {
         if (mMessageAdapter != null) {
+            /**
+             * 发送通知前先调用{@link MLMessageAdapter#refreshMessageData()}更新{@link MLMessageAdapter}的数据源
+             */
             mMessageAdapter.refreshMessageData();
-            sendHandlerMessage(MLConstants.ML_NOTIFY_REFRESH_ALL, 1, 1);
+            // mMessageAdapter.notifyAll();
+            mMessageAdapter.notifyDataSetChanged();
+            notifyHandler(MLConstants.ML_NOTIFY_REFRESH_ALL, 1, 1);
         }
     }
 
@@ -875,8 +875,12 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      */
     private void refreshItemChanged(int position) {
         if (mMessageAdapter != null) {
+            /**
+             * 发送通知前先调用{@link MLMessageAdapter#refreshMessageData()}更新{@link MLMessageAdapter}的数据源
+             */
             mMessageAdapter.refreshMessageData();
-            sendHandlerMessage(MLConstants.ML_NOTIFY_REFRESH_CHANGED, position, 1);
+            mMessageAdapter.notifyItemChanged(position);
+            notifyHandler(MLConstants.ML_NOTIFY_REFRESH_CHANGED, position, 1);
         }
     }
 
@@ -888,8 +892,12 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      */
     private void refreshItemRangeChanged(int position, int count) {
         if (mMessageAdapter != null) {
+            /**
+             * 发送通知前先调用{@link MLMessageAdapter#refreshMessageData()}更新{@link MLMessageAdapter}的数据源
+             */
             mMessageAdapter.refreshMessageData();
-            sendHandlerMessage(MLConstants.ML_NOTIFY_REFRESH_RANGE_CHANGED, position, count);
+            mMessageAdapter.notifyItemRangeChanged(position, count);
+            notifyHandler(MLConstants.ML_NOTIFY_REFRESH_RANGE_CHANGED, position, count);
         }
     }
 
@@ -900,8 +908,12 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      */
     private void refreshItemInserted(int position) {
         if (mMessageAdapter != null) {
+            /**
+             * 发送通知前先调用{@link MLMessageAdapter#refreshMessageData()}更新{@link MLMessageAdapter}的数据源
+             */
             mMessageAdapter.refreshMessageData();
-            sendHandlerMessage(MLConstants.ML_NOTIFY_REFRESH_INSERTED, position, 1);
+            mMessageAdapter.notifyItemInserted(position);
+            notifyHandler(MLConstants.ML_NOTIFY_REFRESH_INSERTED, position, 1);
         }
     }
 
@@ -913,8 +925,12 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      */
     private void refreshItemRangeInserted(int position, int count) {
         if (mMessageAdapter != null) {
+            /**
+             * 发送通知前先调用{@link MLMessageAdapter#refreshMessageData()}更新{@link MLMessageAdapter}的数据源
+             */
             mMessageAdapter.refreshMessageData();
-            sendHandlerMessage(MLConstants.ML_NOTIFY_REFRESH_RANGE_INSERTED, position, count);
+            mMessageAdapter.notifyItemRangeInserted(position, count);
+            notifyHandler(MLConstants.ML_NOTIFY_REFRESH_RANGE_INSERTED, position, count);
         }
     }
 
@@ -926,8 +942,12 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      */
     private void refreshItemMoved(int formPosition, int toPosition) {
         if (mMessageAdapter != null) {
+            /**
+             * 发送通知前先调用{@link MLMessageAdapter#refreshMessageData()}更新{@link MLMessageAdapter}的数据源
+             */
             mMessageAdapter.refreshMessageData();
-            sendHandlerMessage(MLConstants.ML_NOTIFY_REFRESH_MOVED, formPosition, toPosition);
+            mMessageAdapter.notifyItemMoved(formPosition, toPosition);
+            notifyHandler(MLConstants.ML_NOTIFY_REFRESH_MOVED, formPosition, toPosition);
         }
     }
 
@@ -938,8 +958,12 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      */
     private void refreshItemRemoved(int position) {
         if (mMessageAdapter != null) {
+            /**
+             * 发送通知前先调用{@link MLMessageAdapter#refreshMessageData()}更新{@link MLMessageAdapter}的数据源
+             */
             mMessageAdapter.refreshMessageData();
-            sendHandlerMessage(MLConstants.ML_NOTIFY_REFRESH_REMOVED, position, 1);
+            mMessageAdapter.notifyItemRemoved(position);
+            notifyHandler(MLConstants.ML_NOTIFY_REFRESH_REMOVED, position, 1);
         }
     }
 
@@ -951,17 +975,30 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      */
     private void refreshItemRangeRemoved(int position, int count) {
         if (mMessageAdapter != null) {
+            /**
+             * 发送通知前先调用{@link MLMessageAdapter#refreshMessageData()}更新{@link MLMessageAdapter}的数据源
+             */
             mMessageAdapter.refreshMessageData();
-            sendHandlerMessage(MLConstants.ML_NOTIFY_REFRESH_RANGE_REMOVED, position, count);
+            mMessageAdapter.notifyItemRangeRemoved(position, count);
+            notifyHandler(MLConstants.ML_NOTIFY_REFRESH_RANGE_REMOVED, position, count);
         }
     }
 
-
-    private void sendHandlerMessage(int type, int arg1, int arg2) {
+    /**
+     * 发送Handler去刷新界面
+     *
+     * @param type 刷新类型
+     * @param arg1 刷新位置
+     * @param arg2 刷新数量
+     */
+    private void notifyHandler(int type, int arg1, int arg2) {
+        // 得到 Hander 的 Message
         Message msg = mHandler.obtainMessage();
+        // 设置相应的参数
         msg.what = type;
         msg.arg1 = arg1;
         msg.arg2 = arg2;
+        // 发送 Handler 消息
         mHandler.sendMessage(msg);
     }
 
@@ -974,35 +1011,27 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             int what = msg.what;
             switch (what) {
             case MLConstants.ML_NOTIFY_REFRESH_ALL:
-                // mMessageAdapter.notifyAll();
-                mMessageAdapter.notifyDataSetChanged();
                 break;
             // 改变
             case MLConstants.ML_NOTIFY_REFRESH_CHANGED:
-                mMessageAdapter.notifyItemChanged(msg.arg1);
+//                scrollToItem(msg.arg1, false);
                 break;
             case MLConstants.ML_NOTIFY_REFRESH_RANGE_CHANGED:
-                mMessageAdapter.notifyItemRangeChanged(msg.arg1, msg.arg2);
                 break;
             // 插入
             case MLConstants.ML_NOTIFY_REFRESH_INSERTED:
-                mMessageAdapter.notifyItemInserted(msg.arg1);
-                scrollToItem(msg.arg1, true);
+                scrollToItem(msg.arg1, false);
                 break;
             case MLConstants.ML_NOTIFY_REFRESH_RANGE_INSERTED:
-                mMessageAdapter.notifyItemRangeInserted(msg.arg1, msg.arg2);
-                scrollToItem(msg.arg2, true);
+                scrollToItem(msg.arg2 - 1, false);
                 break;
             // 移动
             case MLConstants.ML_NOTIFY_REFRESH_MOVED:
-                mMessageAdapter.notifyItemMoved(msg.arg1, msg.arg2);
                 break;
             // 删除
             case MLConstants.ML_NOTIFY_REFRESH_REMOVED:
-                mMessageAdapter.notifyItemRemoved(msg.arg1);
                 break;
             case MLConstants.ML_NOTIFY_REFRESH_RANGE_REMOVED:
-                mMessageAdapter.notifyItemRangeRemoved(msg.arg1, msg.arg2);
                 break;
             }
         }

@@ -2,7 +2,7 @@
 <manifest package="net.melove.app.easechat"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- 项目权限 -->
+    <!-- 项目权限配置 -->
     <!-- 相机 -->
     <uses-permission android:name="android.permission.CAMERA"/>
     <!-- 录音 -->
@@ -73,6 +73,7 @@
     <!-- android:name="net.melove.demo.chat.permission.C2D_MESSAGE" -->
     <!-- android:protectionLevel="signature"/> -->
     <!-- <uses-permission android:name="net.melove.demo.chat.permission.C2D_MESSAGE"/> -->
+    <!--权限配置 end-->
 
     <!-- 程序的入口 -->
     <application
@@ -146,11 +147,24 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="net.melove.app.easechat.communal.base.MLBaseActivity"/>
         </activity>
+        <!--Activity 注册 end-->
 
         <!-- 设置环信应用的appkey -->
         <meta-data
             android:name="EASEMOB_APPKEY"
             android:value="lzan13#hxsdkdemo"/>
+        <!--配置私有化聊天地址-->
+        <!--<meta-data-->
+            <!--android:name="EASEMOB_CHAT_ADDRESS"-->
+            <!--android:value="101.201.58.11"/>-->
+        <!--&lt;!&ndash;配置私有化聊天端口&ndash;&gt;-->
+        <!--<meta-data-->
+            <!--android:name="EASEMOB_CHAT_PORT"-->
+            <!--android:value="443"/>-->
+        <!--&lt;!&ndash;配置私有化rest接口地址&ndash;&gt;-->
+        <!--<meta-data-->
+            <!--android:name="EASEMOB_API_URL"-->
+            <!--android:value="a1.easemob.com"/>-->
         <!--声明sdk所需的 Service SDK核心功能-->
         <service
             android:name="com.hyphenate.chat.EMChatService"
@@ -167,8 +181,9 @@
                 <action android:name="android.intent.action.USER_PRESENT"/>
             </intent-filter>
         </receiver>
+        <!--环信sdk配置 end-->
 
-        <!-- 配置小米推送服务 这里并没有按照小米官方文档配置全服 Service-->
+        <!-- 配置小米推送服务 这里并没有按照小米官方文档配置全部 Service-->
         <service
             android:name="com.xiaomi.mipush.sdk.PushMessageHandler"
             android:enabled="true"
@@ -180,20 +195,20 @@
             android:enabled="true"/>
 
         <!-- 配置sdk实现的小米推送 广播接收器 -->
-        <receiver
-            android:name="com.hyphenate.chat.EMMipushReceiver"
-            android:enabled="true">
-            <intent-filter>
-                <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="ccom.xiaomi.mipush.MESSAGE_ARRIVED"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="com.xiaomi.mipush.ERROR"/>
-            </intent-filter>
-        </receiver>
+        <!--<receiver-->
+        <!--android:name="com.hyphenate.chat.EMMipushReceiver"-->
+        <!--android:enabled="true">-->
+        <!--<intent-filter>-->
+        <!--<action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE"/>-->
+        <!--</intent-filter>-->
+        <!--<intent-filter>-->
+        <!--<action android:name="ccom.xiaomi.mipush.MESSAGE_ARRIVED"/>-->
+        <!--</intent-filter>-->
+        <!--<intent-filter>-->
+        <!--<action android:name="com.xiaomi.mipush.ERROR"/>-->
+        <!--</intent-filter>-->
+        <!--</receiver>-->
+        <!--小米推送服务配置 end-->
 
     </application>
-
 </manifest>
