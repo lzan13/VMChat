@@ -6,9 +6,14 @@
     <integer name="ml_time_transition">360</integer>
     <integer name="ml_time_share_transition">360</integer>
 
-    <integer name="ml_time_activity">360</integer>
+    <!--自定义 Activity 动画持续时间-->
+    <integer name="ml_time_activity_enter">320</integer>
+    <integer name="ml_time_activity_exit">300</integer>
 
-    <integer name="ml_time_toast">360</integer>
+    <!--自定义的 toast 进入和退出持续时间-->
+    <integer name="ml_time_toast_enter">225</integer>
+    <integer name="ml_time_toast_exit">195</integer>
+
     <integer name="ml_time_fab_rotate">300</integer>
 
 

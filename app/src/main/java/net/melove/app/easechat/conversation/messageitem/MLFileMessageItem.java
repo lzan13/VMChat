@@ -178,7 +178,7 @@ public class MLFileMessageItem extends MLMessageItem {
      * 设置当前消息的callback回调
      */
     protected void setCallback() {
-        setMessageCallback(new EMCallBack() {
+        mMessage.setMessageStatusCallback(new EMCallBack() {
             @Override
             public void onSuccess() {
                 mHandler.sendMessage(mHandler.obtainMessage(CALLBACK_STATUS_SUCCESS));

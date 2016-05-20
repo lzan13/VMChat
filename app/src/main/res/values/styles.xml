@@ -58,23 +58,23 @@
 
     <!--自定义控件MLToast 动画-->
     <style name="ml_toast_anim">
-        <item name="android:windowEnterAnimation">@anim/ml_anim_toast_in</item>
-        <item name="android:windowExitAnimation">@anim/ml_anim_toast_out</item>
+        <item name="android:windowEnterAnimation">@anim/ml_anim_toast_enter</item>
+        <item name="android:windowExitAnimation">@anim/ml_anim_toast_exit</item>
     </style>
 
     <!--Activity切换的 Fade 动画-->
     <style name="AnimFade" parent="@android:style/Animation.Activity">
-        <item name="android:activityOpenEnterAnimation">@anim/ml_anim_fade_in</item>
-        <item name="android:activityOpenExitAnimation">@anim/ml_anim_fade_out</item>
-        <item name="android:activityCloseEnterAnimation">@anim/ml_anim_fade_in</item>
-        <item name="android:activityCloseExitAnimation">@anim/ml_anim_fade_out</item>
+        <item name="android:activityOpenEnterAnimation">@anim/ml_anim_fade_enter</item>
+        <item name="android:activityOpenExitAnimation">@anim/ml_anim_fade_exit</item>
+        <item name="android:activityCloseEnterAnimation">@anim/ml_anim_fade_enter</item>
+        <item name="android:activityCloseExitAnimation">@anim/ml_anim_fade_exit</item>
     </style>
     <!--Activity切换 Slide 动画-->
     <style name="AnimSlide" parent="@android:style/Animation">
-        <item name="android:activityOpenEnterAnimation">@anim/ml_anim_slide_right_in</item>
-        <item name="android:activityOpenExitAnimation">@anim/ml_anim_slide_left_out</item>
-        <item name="android:activityCloseEnterAnimation">@anim/ml_anim_slide_left_in</item>
-        <item name="android:activityCloseExitAnimation">@anim/ml_anim_slide_right_out</item>
+        <item name="android:activityOpenEnterAnimation">@anim/ml_anim_slide_right_enter</item>
+        <item name="android:activityOpenExitAnimation">@anim/ml_anim_slide_left_exit</item>
+        <item name="android:activityCloseEnterAnimation">@anim/ml_anim_slide_left_enter</item>
+        <item name="android:activityCloseExitAnimation">@anim/ml_anim_slide_right_exit</item>
     </style>
 
     <!--自定义 AppBar 样式，这里为了让文字显示为白色，继承黑色样式的ActionBar-->

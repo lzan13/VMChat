@@ -156,41 +156,5 @@ public abstract class MLMessageItem extends LinearLayout {
         }
     }
 
-    /**
-     * 设置消息的callback回调
-     */
-    protected void setMessageCallback(@Nullable final EMCallBack callback) {
-        // 设置消息状态回调
-        mMessage.setMessageStatusCallback(new EMCallBack() {
-            @Override
-            public void onSuccess() {
-                MLLog.i("消息发送成功 %s", mMessage.getMsgId());
-                callback.onSuccess();
-            }
 
-            @Override
-            public void onError(int i, String s) {
-                MLLog.i("消息发送失败 code: %d, error: %s", i, s);
-                mActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (mMessage.getError() == EMError.MESSAGE_INCLUDE_ILLEGAL_CONTENT) {
-                            MLToast.errorToast(R.string.ml_toast_msg_have_illegal).show();
-                        } else if (mMessage.getError() == EMError.GROUP_PERMISSION_DENIED) {
-                            MLToast.errorToast(R.string.ml_toast_msg_not_join_group).show();
-                        } else {
-                            MLToast.errorToast(R.string.ml_toast_msg_send_faild).show();
-                        }
-                    }
-                });
-                callback.onError(i, s);
-            }
-
-            @Override
-            public void onProgress(int i, String s) {
-                MLLog.i("消息发送中 %d - %s", i, s);
-                callback.onProgress(i, s);
-            }
-        });
-    }
 }

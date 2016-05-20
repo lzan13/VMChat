@@ -26,6 +26,7 @@ import net.melove.app.easechat.communal.module.MLBitmapCache;
 import net.melove.app.easechat.communal.util.MLDate;
 import net.melove.app.easechat.communal.util.MLDimen;
 import net.melove.app.easechat.communal.util.MLFile;
+import net.melove.app.easechat.communal.util.MLLog;
 import net.melove.app.easechat.communal.util.MLMessageUtils;
 import net.melove.app.easechat.communal.widget.MLImageView;
 import net.melove.app.easechat.conversation.MLBigImageActivity;
@@ -78,7 +79,6 @@ public class MLImageMessageItem extends MLMessageItem {
 
         /**
          * 获取当前图片的缩略图地址，以及原图地址
-         * TODO 因为SDK在发送图片的时候把 LocalPath设置为了压缩后的临时图片的地址，这里暂时使用缩略图保存的的原始图片地址作为原始图片地址
          */
         String thumbnailsPath = "";
         String fullSizePath = "";
@@ -87,7 +87,7 @@ public class MLImageMessageItem extends MLMessageItem {
             fullSizePath = imgBody.getLocalUrl();
             thumbnailsPath = imgBody.thumbnailLocalPath();
         } else {
-            fullSizePath = imgBody.thumbnailLocalPath();
+            fullSizePath = imgBody.getLocalUrl();
             thumbnailsPath = MLMessageUtils.getThumbImagePath(fullSizePath);
         }
 
@@ -290,7 +290,8 @@ public class MLImageMessageItem extends MLMessageItem {
      * 设置当前消息的callback回调
      */
     protected void setCallback() {
-        setMessageCallback(new EMCallBack() {
+        MLLog.i("MLImageMessageItem setCallback");
+        mMessage.setMessageStatusCallback(new EMCallBack() {
             @Override
             public void onSuccess() {
                 mHandler.sendMessage(mHandler.obtainMessage(CALLBACK_STATUS_SUCCESS));
@@ -306,6 +307,7 @@ public class MLImageMessageItem extends MLMessageItem {
                 Message msg = mHandler.obtainMessage(CALLBACK_STATUS_PROGRESS);
                 msg.arg1 = i;
                 mHandler.sendMessage(msg);
+                MLLog.i("MLImageMessageItem progress:%d, %s", i, s);
             }
         });
     }

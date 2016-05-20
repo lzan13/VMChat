@@ -55,8 +55,6 @@ public class MLTextMessageItem extends MLMessageItem {
         String messageStr = body.getMessage().toString();
         mContentView.setText(messageStr);
 
-        // 设置消息回调
-        setCallback();
         // 刷新界面显示
         refreshView();
     }
@@ -162,30 +160,6 @@ public class MLTextMessageItem extends MLMessageItem {
         }
         // 设置消息ACK 状态
         setAckStatusView();
-    }
-
-    /**
-     * 设置当前消息的callback回调
-     */
-    protected void setCallback() {
-        setMessageCallback(new EMCallBack() {
-            @Override
-            public void onSuccess() {
-                mHandler.sendMessage(mHandler.obtainMessage(CALLBACK_STATUS_SUCCESS));
-            }
-
-            @Override
-            public void onError(int i, String s) {
-                mHandler.sendMessage(mHandler.obtainMessage(CALLBACK_STATUS_ERROR));
-            }
-
-            @Override
-            public void onProgress(int i, String s) {
-                Message msg = mHandler.obtainMessage(CALLBACK_STATUS_PROGRESS);
-                msg.arg1 = i;
-                mHandler.sendMessage(msg);
-            }
-        });
     }
 
     class MLHandler extends Handler {

@@ -27,6 +27,7 @@ import android.widget.LinearLayout;
 import android.widget.SimpleAdapter;
 
 import com.hyphenate.EMCallBack;
+import com.hyphenate.EMError;
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCmdMessageBody;
@@ -79,6 +80,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     // 是否需要继续滚动
     private boolean isNeedScroll = false;
     private boolean isSmoothScroll = false;
+    // 当前是否在最底部
+    private boolean isBottom = true;
 
 
     //自定义 Handler
@@ -214,8 +217,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
          * 并实现{@link RecyclerView#setItemAnimator(RecyclerView.ItemAnimator)}
          */
         mLayoutManger = new LinearLayoutManager(mActivity);
-        // 设置倒序布局
-        // mLayoutManger.setReverseLayout(true);
+        // 设置 RecyclerView 显示状态固定掉底部
+        mLayoutManger.setStackFromEnd(true);
         mRecyclerView.setLayoutManager(mLayoutManger);
         mRecyclerView.setAdapter(mMessageAdapter);
         /**
@@ -223,15 +226,13 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
          *  主要为了监听RecyclerView 当前是否滚动到了指定的位置，然后做一些相应的操作
          */
         mRecyclerView.addOnScrollListener(new MLRecyclerViewListener());
-        // 加载完成后，滚动到底部
-        scrollToItem(mConversation.getAllMessages().size() - 1, false);
-
     }
 
     private void initSwipeRefreshLayout() {
         // 初始化下拉刷新控件对象
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.ml_widget_chat_refreshlayout);
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.ml_red_100, R.color.ml_blue_100);
+        // 设置下拉刷新控件颜色
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.ml_red_100, R.color.ml_blue_100, R.color.ml_orange_100);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -533,7 +534,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      *
      * @param message 需要发送的消息
      */
-    private void sendMessage(EMMessage message) {
+    private void sendMessage(final EMMessage message) {
         // 调用设置消息扩展方法
         setMessageAttribute(message);
         // 发送一条新消息时插入新消息的位置，这里直接用插入新消息前的消息总数来作为新消息的位置
@@ -543,6 +544,42 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
          *  都在各自的{@link net.melove.app.easechat.conversation.messageitem.MLMessageItem}实现监听
          */
         EMClient.getInstance().chatManager().sendMessage(message);
+        // 设置消息状态回调
+        message.setMessageStatusCallback(new EMCallBack() {
+            @Override
+            public void onSuccess() {
+                MLLog.i("消息发送成功 %s", message.getMsgId());
+                // 消息发送成功，刷新当前消息状态
+                refreshItemChanged(mConversation.getMessagePosition(message));
+            }
+
+            @Override
+            public void onError(final int i, final String s) {
+                MLLog.i("消息发送失败 code: %d, error: %s", i, s);
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String error = "";
+                        if (message.getError() == EMError.MESSAGE_INCLUDE_ILLEGAL_CONTENT) {
+                            error = mActivity.getString(R.string.ml_toast_msg_have_illegal) + "-" + i + s;
+                        } else if (message.getError() == EMError.GROUP_PERMISSION_DENIED) {
+                            error = mActivity.getString(R.string.ml_toast_msg_not_join_group) + "-" + i + s;
+                        } else {
+                            error = mActivity.getString(R.string.ml_toast_msg_send_faild) + "-" + i + s;
+                        }
+                        MLToast.errorToast(error).show();
+                    }
+                });
+                // 消息发送失败，刷新当前消息状态
+                refreshItemChanged(mConversation.getMessagePosition(message));
+            }
+
+            @Override
+            public void onProgress(int i, String s) {
+                // TODO 消息发送进度，这里不处理，留给消息Item自己去更新
+                MLLog.i("消息发送中 progress: %d, %s", i, s);
+            }
+        });
         // 点击发送后马上刷新界面，无论消息有没有成功，先刷新显示
         refreshItemInserted(position);
     }
@@ -861,9 +898,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             /**
              * 发送通知前先调用{@link MLMessageAdapter#refreshMessageData()}更新{@link MLMessageAdapter}的数据源
              */
-            mMessageAdapter.refreshMessageData();
-            // mMessageAdapter.notifyAll();
-            mMessageAdapter.notifyDataSetChanged();
+            //            mMessageAdapter.refreshMessageData();
+            //            mMessageAdapter.notifyDataSetChanged();
             notifyHandler(MLConstants.ML_NOTIFY_REFRESH_ALL, 1, 1);
         }
     }
@@ -878,8 +914,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             /**
              * 发送通知前先调用{@link MLMessageAdapter#refreshMessageData()}更新{@link MLMessageAdapter}的数据源
              */
-            mMessageAdapter.refreshMessageData();
-            mMessageAdapter.notifyItemChanged(position);
+            //            mMessageAdapter.refreshMessageData();
+            //            mMessageAdapter.notifyItemChanged(position);
             notifyHandler(MLConstants.ML_NOTIFY_REFRESH_CHANGED, position, 1);
         }
     }
@@ -895,8 +931,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             /**
              * 发送通知前先调用{@link MLMessageAdapter#refreshMessageData()}更新{@link MLMessageAdapter}的数据源
              */
-            mMessageAdapter.refreshMessageData();
-            mMessageAdapter.notifyItemRangeChanged(position, count);
+            //            mMessageAdapter.refreshMessageData();
+            //            mMessageAdapter.notifyItemRangeChanged(position, count);
             notifyHandler(MLConstants.ML_NOTIFY_REFRESH_RANGE_CHANGED, position, count);
         }
     }
@@ -911,8 +947,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             /**
              * 发送通知前先调用{@link MLMessageAdapter#refreshMessageData()}更新{@link MLMessageAdapter}的数据源
              */
-            mMessageAdapter.refreshMessageData();
-            mMessageAdapter.notifyItemInserted(position);
+            //            mMessageAdapter.refreshMessageData();
+            //            mMessageAdapter.notifyItemInserted(position);
             notifyHandler(MLConstants.ML_NOTIFY_REFRESH_INSERTED, position, 1);
         }
     }
@@ -928,8 +964,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             /**
              * 发送通知前先调用{@link MLMessageAdapter#refreshMessageData()}更新{@link MLMessageAdapter}的数据源
              */
-            mMessageAdapter.refreshMessageData();
-            mMessageAdapter.notifyItemRangeInserted(position, count);
+            //            mMessageAdapter.refreshMessageData();
+            //            mMessageAdapter.notifyItemRangeInserted(position, count);
             notifyHandler(MLConstants.ML_NOTIFY_REFRESH_RANGE_INSERTED, position, count);
         }
     }
@@ -945,8 +981,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             /**
              * 发送通知前先调用{@link MLMessageAdapter#refreshMessageData()}更新{@link MLMessageAdapter}的数据源
              */
-            mMessageAdapter.refreshMessageData();
-            mMessageAdapter.notifyItemMoved(formPosition, toPosition);
+            //            mMessageAdapter.refreshMessageData();
+            //            mMessageAdapter.notifyItemMoved(formPosition, toPosition);
             notifyHandler(MLConstants.ML_NOTIFY_REFRESH_MOVED, formPosition, toPosition);
         }
     }
@@ -961,8 +997,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             /**
              * 发送通知前先调用{@link MLMessageAdapter#refreshMessageData()}更新{@link MLMessageAdapter}的数据源
              */
-            mMessageAdapter.refreshMessageData();
-            mMessageAdapter.notifyItemRemoved(position);
+            //            mMessageAdapter.refreshMessageData();
+            //            mMessageAdapter.notifyItemRemoved(position);
             notifyHandler(MLConstants.ML_NOTIFY_REFRESH_REMOVED, position, 1);
         }
     }
@@ -978,8 +1014,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             /**
              * 发送通知前先调用{@link MLMessageAdapter#refreshMessageData()}更新{@link MLMessageAdapter}的数据源
              */
-            mMessageAdapter.refreshMessageData();
-            mMessageAdapter.notifyItemRangeRemoved(position, count);
+            //            mMessageAdapter.refreshMessageData();
+            //            mMessageAdapter.notifyItemRangeRemoved(position, count);
             notifyHandler(MLConstants.ML_NOTIFY_REFRESH_RANGE_REMOVED, position, count);
         }
     }
@@ -992,6 +1028,10 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      * @param arg2 刷新数量
      */
     private void notifyHandler(int type, int arg1, int arg2) {
+        /**
+         * 发送通知前先调用{@link MLMessageAdapter#refreshMessageData()}更新{@link MLMessageAdapter}的数据源
+         */
+        mMessageAdapter.refreshMessageData();
         // 得到 Hander 的 Message
         Message msg = mHandler.obtainMessage();
         // 设置相应的参数
@@ -1009,29 +1049,41 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         @Override
         public void handleMessage(Message msg) {
             int what = msg.what;
+            int arg1 = msg.arg1;
+            int arg2 = msg.arg2;
             switch (what) {
             case MLConstants.ML_NOTIFY_REFRESH_ALL:
+                mMessageAdapter.notifyDataSetChanged();
                 break;
             // 改变
             case MLConstants.ML_NOTIFY_REFRESH_CHANGED:
-//                scrollToItem(msg.arg1, false);
+                mMessageAdapter.notifyItemChanged(arg1);
                 break;
             case MLConstants.ML_NOTIFY_REFRESH_RANGE_CHANGED:
+                mMessageAdapter.notifyItemRangeChanged(arg1, arg2);
                 break;
             // 插入
             case MLConstants.ML_NOTIFY_REFRESH_INSERTED:
-                scrollToItem(msg.arg1, false);
+                mMessageAdapter.notifyItemInserted(arg1);
+                // 只有当前列表在最底部的时候才向下滚动
+                if (isBottom) {
+                    scrollToItem(arg1, false);
+                }
                 break;
             case MLConstants.ML_NOTIFY_REFRESH_RANGE_INSERTED:
-                scrollToItem(msg.arg2 - 1, false);
+                mMessageAdapter.notifyItemRangeInserted(arg1, arg2);
+                scrollToItem(arg2 - 1, false);
                 break;
             // 移动
             case MLConstants.ML_NOTIFY_REFRESH_MOVED:
+                mMessageAdapter.notifyItemMoved(arg1, arg2);
                 break;
             // 删除
             case MLConstants.ML_NOTIFY_REFRESH_REMOVED:
+                mMessageAdapter.notifyItemRemoved(arg1);
                 break;
             case MLConstants.ML_NOTIFY_REFRESH_RANGE_REMOVED:
+                mMessageAdapter.notifyItemRangeRemoved(arg1, arg2);
                 break;
             }
         }
@@ -1119,30 +1171,38 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
             super.onScrollStateChanged(recyclerView, newState);
-            MLLog.i("onScrollStateChanged - isNeedScroll:%b, isSmoothScroll:%b, newState:%d", isNeedScroll, isSmoothScroll, newState);
             if (isNeedScroll && newState == RecyclerView.SCROLL_STATE_IDLE && isSmoothScroll) {
                 isNeedScroll = false;
                 int firstItem = mLayoutManger.findFirstCompletelyVisibleItemPosition();
-                //                int firstItem = mLayoutManger.findFirstVisibleItemPosition()();
+                // int firstItem = mLayoutManger.findFirstVisibleItemPosition()();
                 int n = mRecyclerViewItemIndex - firstItem;
                 if (0 <= n && n < mRecyclerView.getChildCount()) {
                     int top = mRecyclerView.getChildAt(n).getTop();
                     mRecyclerView.smoothScrollBy(0, top);
                 }
             }
+            // 当 RecyclerView 停止滚动后判断当前是否在底部
+            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                int lastItem = mLayoutManger.findLastVisibleItemPosition();
+                if (lastItem == (mMessageAdapter.getItemCount() - 1)) {
+                    isBottom = true;
+                } else {
+                    isBottom = false;
+                }
+            }
+            MLLog.i("onScrollStateChanged - isNeedScroll:%b, isSmoothScroll:%b, newState:%d, isBottom:%b", isNeedScroll, isSmoothScroll, newState, isBottom);
         }
 
         /**
          * RecyclerView 正在滚动中
          *
          * @param recyclerView 当前监听的 RecyclerView 控件
-         * @param dx           水平变化值，表示水平滚动方向
-         * @param dy           垂直变化值，表示上下滚动方向
+         * @param dx           水平变化值，表示水平滚动，正表示向右，负表示向左
+         * @param dy           垂直变化值，表示上下滚动，正表示向下，负表示向上
          */
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
-            MLLog.i("onScrolled - isNeedScroll:%b, isSmoothScroll:%b", isNeedScroll, isSmoothScroll);
             if (isNeedScroll && !isSmoothScroll) {
                 isNeedScroll = false;
                 int firstItem = mLayoutManger.findFirstCompletelyVisibleItemPosition();
@@ -1152,6 +1212,11 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                     mRecyclerView.scrollBy(0, top);
                 }
             }
+            // 如果正在向上滚动，则也设置 isBottom 状态为false
+            if (dy < 0) {
+                isBottom = false;
+            }
+            MLLog.i("onScrolled - isNeedScroll:%b, isSmoothScroll:%b, dy:%d", isNeedScroll, isSmoothScroll, dy);
         }
     }
     /*------------------------------- RecyclerView 滚动监听及处理结束 ------------------------------*/
@@ -1171,19 +1236,20 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         MLLog.i("onMessageReceived list.size:%d", list.size());
         // 循环遍历当前收到的消息
         for (EMMessage message : list) {
+            // 判断消息是否是当前会话的消息
             if (mChatId.equals(message.getFrom())) {
                 // 设置消息为已读
                 mConversation.markMessageAsRead(message.getMsgId());
+                // 调用刷新方法，因为收到的消息是一个list集合，所以我们调用插入多条 Item 的刷新方法
+                int position = mConversation.getAllMessages().size() - list.size();
+                int count = list.size();
+                refreshItemInserted(position);
             } else {
                 // 如果消息不是当前会话的消息发送通知栏通知
                 MLNotifier.getInstance(mActivity).sendNotificationMessage(message);
             }
             MLLog.i("message id:%s, from:%s, mseeage:%s", message.getMsgId(), message.getFrom(), message.toString());
         }
-        // 调用刷新方法，因为收到的消息是一个list集合，所以我们调用插入多条 Item 的刷新方法
-        int position = mConversation.getAllMessages().size() - list.size();
-        int count = list.size();
-        refreshItemRangeInserted(position, count);
 
     }
 

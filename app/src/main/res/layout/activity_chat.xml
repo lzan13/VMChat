@@ -161,6 +161,19 @@
                     android:scrollbars="vertical"/>
             </android.support.v4.widget.SwipeRefreshLayout>
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/ml_layout_chat_input"
+            android:layout_alignParentRight="true">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ml_hint_msg_new"/>
+
+        </LinearLayout>
         <!--扩展菜单布局-->
         <LinearLayout
             android:id="@+id/ml_layout_chat_attach_menu"
