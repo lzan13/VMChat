@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hyphenate.chat.EMConversation;
+import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 
 import net.melove.app.easechat.R;
@@ -87,11 +88,11 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
          *  当前会话是否有草稿，
          */
         String draft = MLConversationExtUtils.getConversationDraft(conversation);
-        String prefixDraft = "";
+        String msgPrefix = "";
         if (!TextUtils.isEmpty(draft)) {
             // 表示草稿的前缀
-            prefixDraft = "[" + mContext.getString(R.string.ml_hint_msg_draft) + "]";
-            content = prefixDraft + draft;
+            msgPrefix = "[" + mContext.getString(R.string.ml_hint_msg_draft) + "]";
+            content = msgPrefix + draft;
         } else if (conversation.getAllMessages().size() > 0) {
             switch (conversation.getLastMessage().getType()) {
             case TXT:
@@ -115,6 +116,11 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
             default:
                 break;
             }
+            // 判断这条消息状态，如果失败加上失败前缀提示
+            if(conversation.getLastMessage().status() == EMMessage.Status.FAIL){
+                msgPrefix = "[" + mContext.getString(R.string.ml_hint_msg_failed) + "]";
+                content = msgPrefix + content;
+            }
         } else {
             // 当前会话没有聊天信息则设置显示内容为 空
             content = mContext.getString(R.string.ml_hint_empty);
@@ -123,7 +129,12 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
         if (!TextUtils.isEmpty(draft)) {
             Spannable spannable = new SpannableString(content);
             spannable.setSpan(new ForegroundColorSpan(mContext.getColor(R.color.ml_red_87)),
-                    0, prefixDraft.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    0, msgPrefix.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            holder.contentView.setText(spannable);
+        }else if(conversation.getLastMessage().status() == EMMessage.Status.FAIL){
+            Spannable spannable = new SpannableString(content);
+            spannable.setSpan(new ForegroundColorSpan(mContext.getColor(R.color.ml_red_87)),
+                    0, msgPrefix.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             holder.contentView.setText(spannable);
         } else {
             holder.contentView.setText(content);

@@ -7,7 +7,7 @@
     <!-- 参考设计指南，导航抽屉宽度应该定义在 240dp-320dp 之间:
          https://developer.android.com/design/patterns/navigation-drawer.html -->
     <dimen name="navigation_drawer_width">320dp</dimen>
-    <dimen name="navigation_header_height">180dp</dimen>
+    <dimen name="navigation_header_height">200dp</dimen>
     <dimen name="navigation_header_vertical_spacing">16dp</dimen>
 
     <!--默认公用的尺寸 自己定义-->

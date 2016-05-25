@@ -38,6 +38,7 @@ import com.hyphenate.chat.EMTextMessageBody;
 import net.melove.app.easechat.R;
 import net.melove.app.easechat.communal.base.MLBaseActivity;
 import net.melove.app.easechat.application.MLConstants;
+import net.melove.app.easechat.communal.util.MLDate;
 import net.melove.app.easechat.communal.util.MLFile;
 import net.melove.app.easechat.communal.util.MLMessageUtils;
 import net.melove.app.easechat.communal.widget.MLToast;
@@ -403,17 +404,17 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         // 获取需要重发的消息
         EMMessage message = mConversation.getMessage(msgId, true);
         // 将失败的消息从 conversation对象中删除
-        //        mConversation.removeMessage(message.getMsgId());
-        //        refreshItemRemoved(position);
-
-        // 更新消息时间 TODO 如果修改了消息时间，会导致conversation里有两条同一个id的消息，
-        //        message.setMsgTime(MLDate.getCurrentMillisecond());
+        mConversation.removeMessage(message.getMsgId());
+        refreshItemRemoved(position);
+        // 更新消息时间 TODO 如果修改了消息时间，会导致conversation里有两条同一个id的消息，所以先删除，后修改时间
+        message.setMsgTime(MLDate.getCurrentMillisecond());
         // 调用发送方法
-        EMClient.getInstance().chatManager().sendMessage(message);
+        // EMClient.getInstance().chatManager().sendMessage(message);
         // 获取消息当前位置
-        //        int newPosition = mConversation.getMessagePosition(message);
+        // int newPosition = mConversation.getMessagePosition(message);
         // 更新ui
-        refreshItemChanged(position);
+        // refreshItemChanged(position);
+        sendMessage(message);
     }
 
     /**
@@ -567,6 +568,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                         } else {
                             error = mActivity.getString(R.string.ml_toast_msg_send_faild) + "-" + i + s;
                         }
+                        MLLog.e(error);
                         MLToast.errorToast(error).show();
                     }
                 });
@@ -582,6 +584,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         });
         // 点击发送后马上刷新界面，无论消息有没有成功，先刷新显示
         refreshItemInserted(position);
+
     }
 
     /**
@@ -828,11 +831,12 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     /**
      * 重写父类的onNewIntent方法，防止打开两个聊天界面
      *
-     * @param intent
+     * @param intent 带有参数的intent
      */
     @Override
     protected void onNewIntent(Intent intent) {
         String chatId = intent.getStringExtra(MLConstants.ML_EXTRA_CHAT_ID);
+        // 判断 intent 携带的数据是否是当前聊天对象
         if (mChatId.equals(chatId)) {
             super.onNewIntent(intent);
         } else {
