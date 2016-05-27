@@ -71,21 +71,19 @@ public class MLMainFragment extends MLBaseFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mActivity = getActivity();
-        init();
+
         initView();
 
     }
 
-    private void init() {
+    private void initView() {
         mCurrentTabIndex = 0;
         mTabTitles = new String[]{
                 mActivity.getResources().getString(R.string.ml_chat),
                 mActivity.getResources().getString(R.string.ml_contacts),
                 mActivity.getResources().getString(R.string.ml_test)
         };
-    }
 
-    private void initView() {
         mTabLayout = (TabLayout) getView().findViewById(R.id.ml_widget_tablayout);
         mViewPager = (ViewPager) getView().findViewById(R.id.ml_view_viewpager);
 
