@@ -36,6 +36,7 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 
 import net.melove.app.easechat.R;
+import net.melove.app.easechat.application.eventbus.MLMessageEvent;
 import net.melove.app.easechat.communal.base.MLBaseActivity;
 import net.melove.app.easechat.application.MLConstants;
 import net.melove.app.easechat.communal.util.MLDate;
@@ -44,6 +45,9 @@ import net.melove.app.easechat.communal.util.MLMessageUtils;
 import net.melove.app.easechat.communal.widget.MLToast;
 import net.melove.app.easechat.notification.MLNotifier;
 import net.melove.app.easechat.communal.util.MLLog;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -159,6 +163,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         mSendView.setOnClickListener(viewListener);
         // 设置扩展菜单点击监听
         mAttachMenuLayout = (LinearLayout) findViewById(R.id.ml_layout_chat_attach_menu);
+        // 菜单布局点击事件，主要是实现点击空白处关闭附件扩展菜单
         mAttachMenuLayout.setOnClickListener(viewListener);
     }
 
@@ -240,6 +245,10 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        // 防止在下拉刷新的时候，当前界面关闭导致错误
+                        if (mActivity.isFinishing()) {
+                            return;
+                        }
                         // 只有当前会话不为空时才可以下拉加载更多，否则会出现错误
                         if (mConversation.getAllMessages().size() > 0) {
                             // 加载更多消息到当前会话的内存中
@@ -540,50 +549,48 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         setMessageAttribute(message);
         // 发送一条新消息时插入新消息的位置，这里直接用插入新消息前的消息总数来作为新消息的位置
         int position = mConversation.getAllMessages().size();
-        /**
-         *  调用sdk的消息发送方法，发送消息，这里不进行消息的状态监听
-         *  都在各自的{@link net.melove.app.easechat.conversation.messageitem.MLMessageItem}实现监听
-         */
-        EMClient.getInstance().chatManager().sendMessage(message);
+
         // 设置消息状态回调
         message.setMessageStatusCallback(new EMCallBack() {
             @Override
             public void onSuccess() {
                 MLLog.i("消息发送成功 %s", message.getMsgId());
-                // 消息发送成功，刷新当前消息状态
-                refreshItemChanged(mConversation.getMessagePosition(message));
+                // 创建并发出一个消息事件
+                MLMessageEvent event = new MLMessageEvent();
+                event.setMessage(message);
+                EventBus.getDefault().post(event);
             }
 
             @Override
             public void onError(final int i, final String s) {
                 MLLog.i("消息发送失败 code: %d, error: %s", i, s);
-                mActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        String error = "";
-                        if (message.getError() == EMError.MESSAGE_INCLUDE_ILLEGAL_CONTENT) {
-                            error = mActivity.getString(R.string.ml_toast_msg_have_illegal) + "-" + i + s;
-                        } else if (message.getError() == EMError.GROUP_PERMISSION_DENIED) {
-                            error = mActivity.getString(R.string.ml_toast_msg_not_join_group) + "-" + i + s;
-                        } else {
-                            error = mActivity.getString(R.string.ml_toast_msg_send_faild) + "-" + i + s;
-                        }
-                        MLLog.e(error);
-                        MLToast.errorToast(error).show();
-                    }
-                });
-                // 消息发送失败，刷新当前消息状态
-                refreshItemChanged(mConversation.getMessagePosition(message));
+                // 创建并发出一个消息事件
+                MLMessageEvent event = new MLMessageEvent();
+                event.setMessage(message);
+                EventBus.getDefault().post(event);
             }
 
             @Override
             public void onProgress(int i, String s) {
                 // TODO 消息发送进度，这里不处理，留给消息Item自己去更新
                 MLLog.i("消息发送中 progress: %d, %s", i, s);
+                // 创建并发出一个消息事件
+                MLMessageEvent event = new MLMessageEvent();
+                event.setMessage(message);
+                event.setProgress(i);
+                EventBus.getDefault().post(event);
             }
         });
+
+        /**
+         *  调用sdk的消息发送方法，发送消息，这里不进行消息的状态监听
+         *  都在各自的{@link net.melove.app.easechat.conversation.messageitem.MLMessageItem}实现监听
+         */
+        EMClient.getInstance().chatManager().sendMessage(message);
+
         // 点击发送后马上刷新界面，无论消息有没有成功，先刷新显示
-        refreshItemInserted(position);
+        //        refreshItemInserted(position);
+        refreshAll();
 
     }
 
@@ -875,6 +882,25 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         EMClient.getInstance().chatManager().removeMessageListener(mMessageListener);
     }
 
+    @Subscribe
+    public void onEventMainThread(MLMessageEvent event) {
+        EMMessage message = event.getMessage();
+        if (message.status() == EMMessage.Status.FAIL) {
+            String error = "";
+            int errorCode = message.getError();
+            if (errorCode == EMError.MESSAGE_INCLUDE_ILLEGAL_CONTENT) {
+                error = mActivity.getString(R.string.ml_toast_msg_have_illegal) + "-" + errorCode;
+            } else if (errorCode == EMError.GROUP_PERMISSION_DENIED) {
+                error = mActivity.getString(R.string.ml_toast_msg_not_join_group) + "-" + errorCode;
+            } else {
+                error = mActivity.getString(R.string.ml_toast_msg_send_faild) + "-" + errorCode;
+            }
+            MLToast.errorToast(error).show();
+        }
+
+        // 消息发送成功，刷新当前消息状态
+        refreshItemChanged(mConversation.getMessagePosition(message));
+    }
 
     /**
      * ---------------------------- RecyclerView 刷新方法 -----------------------------------
@@ -1194,7 +1220,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                     isBottom = false;
                 }
             }
-            MLLog.i("onScrollStateChanged - isNeedScroll:%b, isSmoothScroll:%b, newState:%d, isBottom:%b", isNeedScroll, isSmoothScroll, newState, isBottom);
+            //            MLLog.i("onScrollStateChanged - isNeedScroll:%b, isSmoothScroll:%b, newState:%d, isBottom:%b", isNeedScroll, isSmoothScroll, newState, isBottom);
         }
 
         /**
@@ -1220,7 +1246,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             if (dy < 0) {
                 isBottom = false;
             }
-            MLLog.i("onScrolled - isNeedScroll:%b, isSmoothScroll:%b, dy:%d", isNeedScroll, isSmoothScroll, dy);
+            //            MLLog.i("onScrolled - isNeedScroll:%b, isSmoothScroll:%b, dy:%d", isNeedScroll, isSmoothScroll, dy);
         }
     }
     /*------------------------------- RecyclerView 滚动监听及处理结束 ------------------------------*/

@@ -29,13 +29,10 @@ import net.melove.app.easechat.conversation.MLMessageAdapter;
  */
 public class MLFileMessageItem extends MLMessageItem {
 
-    private int thumbnailsMax = MLDimen.dp2px(R.dimen.ml_dimen_192);
-    private MLHandler mHandler;
 
     public MLFileMessageItem(Context context, MLMessageAdapter adapter, int viewType) {
         super(context, adapter, viewType);
         onInflateView();
-        mHandler = new MLHandler();
     }
 
     /**
@@ -60,8 +57,6 @@ public class MLFileMessageItem extends MLMessageItem {
         String fileExtend = filename.substring(filename.lastIndexOf(".") + 1, filename.length());
         mContentSizeView.setText(TextFormater.getDataSize(fileBody.getFileSize()) + "  " + fileExtend);
 
-        // 设置消息回调
-        setCallback();
         // 刷新界面显示
         refreshView();
     }
@@ -172,53 +167,6 @@ public class MLFileMessageItem extends MLMessageItem {
         }
         // 设置消息ACK 状态
         setAckStatusView();
-    }
-
-    /**
-     * 设置当前消息的callback回调
-     */
-    protected void setCallback() {
-        mMessage.setMessageStatusCallback(new EMCallBack() {
-            @Override
-            public void onSuccess() {
-                mHandler.sendMessage(mHandler.obtainMessage(CALLBACK_STATUS_SUCCESS));
-            }
-
-            @Override
-            public void onError(int i, String s) {
-                mHandler.sendMessage(mHandler.obtainMessage(CALLBACK_STATUS_ERROR));
-            }
-
-            @Override
-            public void onProgress(int i, String s) {
-                Message msg = mHandler.obtainMessage(CALLBACK_STATUS_PROGRESS);
-                msg.arg1 = i;
-                mHandler.sendMessage(msg);
-            }
-        });
-    }
-
-    /**
-     * 自定义 Handler 类，用来刷新当前 ItemView
-     */
-    class MLHandler extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-            case CALLBACK_STATUS_SUCCESS:
-                refreshView();
-                break;
-            case CALLBACK_STATUS_ERROR:
-                refreshView();
-                break;
-            case CALLBACK_STATUS_PROGRESS:
-                // 设置消息进度百分比
-                mPercentView.setText(msg.arg1 + "%");
-                refreshView();
-                break;
-            }
-        }
-
     }
 
 }

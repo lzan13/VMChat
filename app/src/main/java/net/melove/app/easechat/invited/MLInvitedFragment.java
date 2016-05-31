@@ -23,9 +23,13 @@ import com.hyphenate.exceptions.HyphenateException;
 
 import net.melove.app.easechat.R;
 import net.melove.app.easechat.application.MLConstants;
+import net.melove.app.easechat.application.eventbus.MLInvitedEvent;
+import net.melove.app.easechat.application.eventbus.MLMessageEvent;
 import net.melove.app.easechat.communal.util.MLDate;
 import net.melove.app.easechat.database.MLInvitedDao;
 import net.melove.app.easechat.communal.base.MLBaseFragment;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,11 +45,6 @@ public class MLInvitedFragment extends MLBaseFragment {
     //    private ListView mListView;
     private RecyclerView mRecyclerView;
     private MLInvitedAdapter mInvitedAdapter;
-
-    // 应用内广播管理器，为了完全这里使用局域广播
-    private LocalBroadcastManager mLocalBroadcastManager;
-    // 会话界面监听会话变化的广播接收器
-    private BroadcastReceiver mBroadcastReceiver;
 
     // 自定义Handler类，用来处理非UI界面刷新UI的工作
     private MLHandler mHandler;
@@ -261,34 +260,10 @@ public class MLInvitedFragment extends MLBaseFragment {
         dialog.show();
     }
 
-    /**
-     * 注册广播接收器，用来监听全局监听监听到新消息之后发送的广播，然后刷新界面
-     */
-    private void registerBroadcastReceiver() {
-        // 获取局域广播管理器
-        mLocalBroadcastManager = LocalBroadcastManager.getInstance(mActivity);
-        // 实例化Intent 过滤器
-        IntentFilter intentFilter = new IntentFilter();
-        // 为过滤器添加一个 Action
-        intentFilter.addAction(MLConstants.ML_ACTION_INVITED);
-        // 实例化广播接收器，用来接收自己过滤的广播
-        mBroadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                refreshInvited();
-            }
-        };
-        // 注册广播接收器
-        mLocalBroadcastManager.registerReceiver(mBroadcastReceiver, intentFilter);
+    @Subscribe
+    public void onEventMainThread(MLInvitedEvent event) {
+        refreshInvited();
     }
-
-    /**
-     * 取消广播接收器的注册
-     */
-    private void unregisterBroadcastReceiver() {
-        mLocalBroadcastManager.unregisterReceiver(mBroadcastReceiver);
-    }
-
 
     /**
      * 自定义Handler，用来处理界面的刷新
@@ -313,8 +288,6 @@ public class MLInvitedFragment extends MLBaseFragment {
     public void onResume() {
         super.onResume();
         refreshInvited();
-        // 注册广播监听
-        registerBroadcastReceiver();
     }
 
     /**
@@ -323,7 +296,5 @@ public class MLInvitedFragment extends MLBaseFragment {
     @Override
     public void onStop() {
         super.onStop();
-        // 取消广播监听的注册
-        unregisterBroadcastReceiver();
     }
 }

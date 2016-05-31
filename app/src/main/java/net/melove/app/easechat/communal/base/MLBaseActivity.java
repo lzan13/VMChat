@@ -18,7 +18,7 @@ import net.melove.app.easechat.communal.util.MLLog;
 
 /**
  * Created by lzan13 on 2015/7/4.
- * Activity 的基类，定义一些子类公共的方法
+ * Activity 的基类，做一些子类公共的工作
  */
 public class MLBaseActivity extends AppCompatActivity {
 
@@ -31,7 +31,7 @@ public class MLBaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MLLog.i("Activity onCreate");
+        MLLog.i("%s onCreate");
         mActivity = this;
     }
 
@@ -79,19 +79,19 @@ public class MLBaseActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        MLLog.i("Activity onPause");
+        MLLog.i("%s onPause", this.getClass().getSimpleName());
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        MLLog.i("Activity onRestart");
+        MLLog.i("%s onRestart", this.getClass().getSimpleName());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        MLLog.i("Activity onResume");
+        MLLog.i("%s onResume", this.getClass().getSimpleName());
         MLActivityManager.getInstance().setCurrActivity(this);
     }
 
@@ -99,19 +99,19 @@ public class MLBaseActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         mActivity = this;
-        MLLog.i("Activity onStart");
+        MLLog.i("%s onStart", this.getClass().getSimpleName());
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        MLLog.i("Activity onStop");
+        MLLog.i("%s onStop", this.getClass().getSimpleName());
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        MLLog.i("Activity onDestroy");
+        MLLog.i("%s onDestroy", this.getClass().getSimpleName());
         RefWatcher refWatcher = MLApplication.getRefWatcher();
         refWatcher.watch(this);
     }

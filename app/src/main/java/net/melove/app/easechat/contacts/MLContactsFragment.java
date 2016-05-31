@@ -14,8 +14,11 @@ import android.view.ViewGroup;
 
 import net.melove.app.easechat.R;
 import net.melove.app.easechat.application.MLConstants;
+import net.melove.app.easechat.application.eventbus.MLContactEvent;
 import net.melove.app.easechat.database.MLContactsDao;
 import net.melove.app.easechat.communal.base.MLBaseFragment;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -154,32 +157,11 @@ public class MLContactsFragment extends MLBaseFragment {
         }
     };
 
-    /**
-     * 注册广播接收器，用来监听全局监听监听到新消息之后发送的广播，然后刷新界面
-     */
-    private void registerBroadcastReceiver() {
-        // 获取局域广播管理器
-        mLocalBroadcastManager = LocalBroadcastManager.getInstance(mActivity);
-        // 实例化Intent 过滤器
-        IntentFilter intentFilter = new IntentFilter();
-        // 为过滤器添加一个 Action
-        intentFilter.addAction(MLConstants.ML_ACTION_CONTACT);
-        // 实例化广播接收器，用来接收自己过滤的广播
-        mBroadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                refreshContacts();
-            }
-        };
-        // 注册广播接收器
-        mLocalBroadcastManager.registerReceiver(mBroadcastReceiver, intentFilter);
-    }
 
-    /**
-     * 取消广播接收器的注册
-     */
-    private void unregisterBroadcastReceiver() {
-        mLocalBroadcastManager.unregisterReceiver(mBroadcastReceiver);
+    @Subscribe
+    public void onEventMainThread(MLContactEvent event) {
+        refreshContacts();
+
     }
 
     /**
@@ -190,8 +172,6 @@ public class MLContactsFragment extends MLBaseFragment {
         super.onResume();
         // 刷新联系人界面
         refreshContacts();
-        // 注册广播监听
-        registerBroadcastReceiver();
     }
 
     /**
@@ -200,6 +180,5 @@ public class MLContactsFragment extends MLBaseFragment {
     @Override
     public void onStop() {
         super.onStop();
-        unregisterBroadcastReceiver();
     }
 }

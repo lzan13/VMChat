@@ -117,7 +117,7 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
                 break;
             }
             // 判断这条消息状态，如果失败加上失败前缀提示
-            if(conversation.getLastMessage().status() == EMMessage.Status.FAIL){
+            if (conversation.getLastMessage().status() == EMMessage.Status.FAIL) {
                 msgPrefix = "[" + mContext.getString(R.string.ml_hint_msg_failed) + "]";
                 content = msgPrefix + content;
             }
@@ -131,7 +131,7 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
             spannable.setSpan(new ForegroundColorSpan(mContext.getColor(R.color.ml_red_87)),
                     0, msgPrefix.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             holder.contentView.setText(spannable);
-        }else if(conversation.getLastMessage().status() == EMMessage.Status.FAIL){
+        } else if (conversation.getAllMsgCount() > 0 && conversation.getLastMessage().status() == EMMessage.Status.FAIL) {
             Spannable spannable = new SpannableString(content);
             spannable.setSpan(new ForegroundColorSpan(mContext.getColor(R.color.ml_red_87)),
                     0, msgPrefix.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

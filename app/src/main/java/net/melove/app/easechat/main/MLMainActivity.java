@@ -30,6 +30,7 @@ import com.hyphenate.chat.EMClient;
 import net.melove.app.easechat.R;
 import net.melove.app.easechat.application.MLConstants;
 import net.melove.app.easechat.application.MLEasemobHelper;
+import net.melove.app.easechat.application.eventbus.MLConnectionEvent;
 import net.melove.app.easechat.authentication.MLSigninActivity;
 import net.melove.app.easechat.communal.base.MLBaseActivity;
 import net.melove.app.easechat.communal.util.MLLog;
@@ -39,6 +40,8 @@ import net.melove.app.easechat.invited.MLInvitedFragment;
 import net.melove.app.easechat.communal.base.MLBaseFragment;
 import net.melove.app.easechat.communal.widget.MLImageView;
 import net.melove.app.easechat.communal.widget.MLToast;
+
+import org.greenrobot.eventbus.Subscribe;
 
 /**
  * Created by lzan13 on 2015/7/2.
@@ -377,43 +380,21 @@ public class MLMainActivity extends MLBaseActivity implements
         return mToolbar;
     }
 
-    /**
-     * 注册广播接收器
-     */
-    private void registerBroadcastReceiver() {
-        // 获取局域广播管理器
-        mLocalBroadcastManager = LocalBroadcastManager.getInstance(mActivity);
-        // 实例化Intent 过滤器
-        IntentFilter intentFilter = new IntentFilter();
-        // 为过滤器添加一个 Action
-        intentFilter.addAction(MLConstants.ML_ACTION_CONNCETION);
-        // 实例化广播接收器，用来接收自己过滤的广播
-        mBroadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                // 根据app连接服务器情况设置图标的显示与隐藏
-                if (MLEasemobHelper.getInstance().isConnection()) {
-                    mConnectionFabBtn.setImageResource(R.mipmap.ic_signal_wifi_on_white_24dp);
-                    mConnectionFabBtn.setVisibility(View.GONE);
-                } else {
-                    /**
-                     * 因为3.x的sdk断开服务器连接后会一直重试并发出回调，所以为了防止一直Toast提示用户，
-                     * 这里取消toast，只是显示图标
-                     */
-                    mConnectionFabBtn.setImageResource(R.mipmap.ic_signal_wifi_off_white_24dp);
-                    mConnectionFabBtn.setVisibility(View.VISIBLE);
-                }
-            }
-        };
-        // 注册广播接收器
-        mLocalBroadcastManager.registerReceiver(mBroadcastReceiver, intentFilter);
-    }
 
-    /**
-     * 取消广播接收器的注册
-     */
-    private void unregisterBroadcastReceiver() {
-        mLocalBroadcastManager.unregisterReceiver(mBroadcastReceiver);
+    @Subscribe
+    public void onEventMainThread(MLConnectionEvent event) {
+        // 根据app连接服务器情况设置图标的显示与隐藏
+        if (MLEasemobHelper.getInstance().isConnection()) {
+            mConnectionFabBtn.setImageResource(R.mipmap.ic_signal_wifi_on_white_24dp);
+            mConnectionFabBtn.setVisibility(View.GONE);
+        } else {
+            /**
+             * 因为3.x的sdk断开服务器连接后会一直重试并发出回调，所以为了防止一直Toast提示用户，
+             * 这里取消toast，只是显示图标
+             */
+            mConnectionFabBtn.setImageResource(R.mipmap.ic_signal_wifi_off_white_24dp);
+            mConnectionFabBtn.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -481,14 +462,10 @@ public class MLMainActivity extends MLBaseActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        // 注册广播接收器
-        registerBroadcastReceiver();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        // 取消注册广播接收器
-        unregisterBroadcastReceiver();
     }
 }

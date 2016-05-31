@@ -19,11 +19,14 @@ import com.hyphenate.exceptions.HyphenateException;
 
 import net.melove.app.easechat.R;
 import net.melove.app.easechat.application.MLConstants;
+import net.melove.app.easechat.application.eventbus.MLInvitedEvent;
 import net.melove.app.easechat.communal.base.MLBaseActivity;
 import net.melove.app.easechat.communal.util.MLDate;
 import net.melove.app.easechat.communal.widget.MLImageView;
 import net.melove.app.easechat.conversation.MLChatActivity;
 import net.melove.app.easechat.database.MLInvitedDao;
+
+import org.greenrobot.eventbus.Subscribe;
 
 /**
  * Created by lzan13 on 2016/4/26.
@@ -33,11 +36,6 @@ public class MLInvitedDetailActivity extends MLBaseActivity {
 
     // 界面控件
     private Toolbar mToolbar;
-
-    // 应用内广播管理器，为了完全这里使用局域广播
-    private LocalBroadcastManager mLocalBroadcastManager;
-    // 会话界面监听会话变化的广播接收器
-    private BroadcastReceiver mBroadcastReceiver;
 
     // 申请信息实体类
     private MLInvitedEntity mInvitedEntity;
@@ -248,33 +246,12 @@ public class MLInvitedDetailActivity extends MLBaseActivity {
             }
         }).start();
     }
-    /**
-     * 注册广播接收器，用来监听全局监听监听到新消息之后发送的广播，然后刷新界面
-     */
-    private void registerBroadcastReceiver() {
-        // 获取局域广播管理器
-        mLocalBroadcastManager = LocalBroadcastManager.getInstance(mActivity);
-        // 实例化Intent 过滤器
-        IntentFilter intentFilter = new IntentFilter();
-        // 为过滤器添加一个 Action
-        intentFilter.addAction(MLConstants.ML_ACTION_INVITED);
-        // 实例化广播接收器，用来接收自己过滤的广播
-        mBroadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                mHandler.sendMessage(mHandler.obtainMessage(0));
-            }
-        };
-        // 注册广播接收器
-        mLocalBroadcastManager.registerReceiver(mBroadcastReceiver, intentFilter);
+
+    @Subscribe
+    public void onEventMainThread(MLInvitedEvent event) {
+        refreshInvited();
     }
 
-    /**
-     * 取消广播接收器的注册
-     */
-    private void unregisterBroadcastReceiver() {
-        mLocalBroadcastManager.unregisterReceiver(mBroadcastReceiver);
-    }
     /**
      * 自定义Handler，用来处理界面的刷新
      */
@@ -294,12 +271,10 @@ public class MLInvitedDetailActivity extends MLBaseActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        unregisterBroadcastReceiver();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        registerBroadcastReceiver();
     }
 }

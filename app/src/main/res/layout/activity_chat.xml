@@ -171,7 +171,8 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/ml_hint_msg_new"/>
+                android:text="@string/ml_hint_msg_new"
+                android:visibility="gone"/>
 
         </LinearLayout>
         <!--扩展菜单布局-->

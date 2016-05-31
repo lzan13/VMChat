@@ -1,8 +1,13 @@
 package net.melove.app.easechat.communal.base;
 
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.squareup.leakcanary.RefWatcher;
 
@@ -28,33 +33,57 @@ public class MLBaseFragment extends Fragment {
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        MLLog.i("%s onActivityCreated", this.getClass().getSimpleName());
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        MLLog.i("%s onCreate", this.getClass().getSimpleName());
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
-        MLLog.i("Fragment onPause");
+        MLLog.i("%s onPause ", this.getClass().getSimpleName());
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        MLLog.i("Fragment onStart");
+        MLLog.i("%s onStart ", this.getClass().getSimpleName());
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        MLLog.i("Fragment onStop");
+        MLLog.i("%s onStop ", this.getClass().getSimpleName());
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        MLLog.i("Fragment onResume");
+        MLLog.i("%s onResume ", this.getClass().getSimpleName());
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        MLLog.i("%s onDetach ", this.getClass().getSimpleName());
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        MLLog.i("%s onDestroyView ", this.getClass().getSimpleName());
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        MLLog.i("Fragment onDestroy");
+        MLLog.i("%s onDestroy ", this.getClass().getSimpleName());
         RefWatcher refWatcher = MLApplication.getRefWatcher();
         refWatcher.watch(this);
     }

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
 
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMConnectionListener;
@@ -19,6 +18,9 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMOptions;
 
 import net.melove.app.easechat.R;
+import net.melove.app.easechat.application.eventbus.MLConnectionEvent;
+import net.melove.app.easechat.application.eventbus.MLInvitedEvent;
+import net.melove.app.easechat.application.eventbus.MLMessageEvent;
 import net.melove.app.easechat.communal.util.MLCrypto;
 import net.melove.app.easechat.communal.util.MLDate;
 import net.melove.app.easechat.communal.util.MLLog;
@@ -31,6 +33,8 @@ import net.melove.app.easechat.database.MLInvitedDao;
 import net.melove.app.easechat.database.MLContactsDao;
 import net.melove.app.easechat.main.MLConflictActivity;
 import net.melove.app.easechat.notification.MLNotifier;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.Iterator;
 import java.util.List;
@@ -63,9 +67,6 @@ public class MLEasemobHelper {
     // 表示是否登录成功状态，如果使用了推送，退出时需要要根据这个状态去传递参数
     private boolean isLogined = true;
 
-    // App内广播管理器，为了安全，这里使用本地局域广播
-    private LocalBroadcastManager mLocalBroadcastManager;
-
     /**
      * 单例类，用来初始化环信的sdk
      *
@@ -94,9 +95,6 @@ public class MLEasemobHelper {
         MLLog.d("------- init easemob start --------------");
 
         mContext = context;
-
-        // 获取App内广播接收器实例
-        mLocalBroadcastManager = LocalBroadcastManager.getInstance(mContext);
 
         // 获取当前进程 id 并取得进程名
         int pid = android.os.Process.myPid();
@@ -191,8 +189,8 @@ public class MLEasemobHelper {
             @Override
             public void onConnected() {
                 MLLog.d("MLEasemobHelper - onConnected");
-                // 发送app服务器链接变化的广播
-                mLocalBroadcastManager.sendBroadcast(new Intent(MLConstants.ML_ACTION_CONNCETION));
+                // 使用 EventBus 发布消息，可以被订阅此类型消息的订阅者监听到
+                EventBus.getDefault().post(new MLConnectionEvent());
             }
 
             /**
@@ -224,8 +222,8 @@ public class MLEasemobHelper {
                     mContext.startActivity(intent);
                 } else {
                     MLLog.d("con't servers - " + errorCode);
-                    // 发送app服务器链接变化的广播
-                    mLocalBroadcastManager.sendBroadcast(new Intent(MLConstants.ML_ACTION_CONNCETION));
+                    // 使用 EventBus 发布消息，可以被订阅此类型消息的订阅者监听到
+                    EventBus.getDefault().post(new MLConnectionEvent());
                 }
             }
         };
@@ -261,8 +259,8 @@ public class MLEasemobHelper {
                 }
                 // 收到新消息，发送一条通知
                 MLNotifier.getInstance(MLApplication.getContext()).sendNotificationMessageList(list);
-                // 发送广播，通知需要刷新UI等操作的地方
-                mLocalBroadcastManager.sendBroadcast(new Intent(MLConstants.ML_ACTION_MESSAGE));
+                // 使用 EventBus 发布消息，可以被订阅此类型消息的订阅者监听到
+                EventBus.getDefault().post(new MLMessageEvent());
             }
 
             /**
@@ -279,8 +277,8 @@ public class MLEasemobHelper {
                         MLMessageUtils.receiveRecallMessage(mContext, cmdMessage);
                     }
                 }
-                // 发送广播，通知需要刷新UI等操作的地方
-                mLocalBroadcastManager.sendBroadcast(new Intent(MLConstants.ML_ACTION_MESSAGE));
+                // 使用 EventBus 发布消息，可以被订阅此类型消息的订阅者监听到
+                EventBus.getDefault().post(new MLMessageEvent());
             }
 
             /**
@@ -403,9 +401,8 @@ public class MLEasemobHelper {
                 }
                 // 调用发送通知栏提醒方法，提醒用户查看申请通知
                 MLNotifier.getInstance(MLApplication.getContext()).sendInvitedNotification(invitedEntity);
-                mLocalBroadcastManager.sendBroadcast(new Intent(MLConstants.ML_ACTION_INVITED));
-                // 发送广播，通知需要刷新UI等操作的地方
-                mLocalBroadcastManager.sendBroadcast(new Intent(MLConstants.ML_ACTION_CONTACT));
+                // 使用 EventBus 发布消息，可以被订阅此类型消息的订阅者监听到
+                EventBus.getDefault().post(new MLInvitedEvent());
             }
 
             /**
@@ -449,7 +446,8 @@ public class MLEasemobHelper {
                  * 这里是自定义封装号的一个类{@link MLNotifier}
                  */
                 MLNotifier.getInstance(MLApplication.getContext()).sendInvitedNotification(invitedEntity);
-                mLocalBroadcastManager.sendBroadcast(new Intent(MLConstants.ML_ACTION_INVITED));
+                // 使用 EventBus 发布消息，可以被订阅此类型消息的订阅者监听到
+                EventBus.getDefault().post(new MLInvitedEvent());
             }
 
             /**
@@ -495,7 +493,8 @@ public class MLEasemobHelper {
                  * 这里是自定义封装号的一个类{@link MLNotifier}
                  */
                 MLNotifier.getInstance(MLApplication.getContext()).sendInvitedNotification(invitedEntity);
-                mLocalBroadcastManager.sendBroadcast(new Intent(MLConstants.ML_ACTION_INVITED));
+                // 使用 EventBus 发布消息，可以被订阅此类型消息的订阅者监听到
+                EventBus.getDefault().post(new MLInvitedEvent());
             }
         };
         EMClient.getInstance().contactManager().setContactListener(mContactListener);

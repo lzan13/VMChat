@@ -27,14 +27,11 @@ import net.melove.app.easechat.conversation.MLMessageAdapter;
  */
 public class MLTextMessageItem extends MLMessageItem {
 
-    private MLHandler mHandler;
-
     public MLTextMessageItem(Context context, MLMessageAdapter adapter, int viewType) {
         super(context, adapter, viewType);
 
         onInflateView();
 
-        mHandler = new MLHandler();
     }
 
     /**
@@ -161,22 +158,5 @@ public class MLTextMessageItem extends MLMessageItem {
         // 设置消息ACK 状态
         setAckStatusView();
     }
-
-    class MLHandler extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-            case CALLBACK_STATUS_SUCCESS:
-                refreshView();
-                break;
-            case CALLBACK_STATUS_ERROR:
-                refreshView();
-                break;
-            case CALLBACK_STATUS_PROGRESS:
-                break;
-            }
-        }
-    }
-
 
 }

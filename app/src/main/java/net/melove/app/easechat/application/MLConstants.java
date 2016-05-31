@@ -2,7 +2,7 @@ package net.melove.app.easechat.application;
 
 /**
  * Class ${FILE_NAME}
- * <p>
+ * <p/>
  * Created by lzan13 on 2015/9/10 22:04.
  */
 public class MLConstants {
@@ -40,14 +40,15 @@ public class MLConstants {
     // 界面跳转传递 username/groupid 参数的 key
     public static final String ML_EXTRA_CHAT_ID = "ml_chat_id";
     public static final String ML_EXTRA_INVITED_ID = "ml_invited_id";
+
     public static final String ML_EXTRA_USER_LOGIN_OTHER_DIVERS = "ml_user_login_another_devices";
     public static final String ML_EXTRA_USER_REMOVED = "ml_remove";
 
     // 自定义广播的 action
-    public static final String ML_ACTION_INVITED = "ml_action_invited";
-    public static final String ML_ACTION_CONTACT = "ml_action_contact";
-    public static final String ML_ACTION_MESSAGE = "ml_action_message";
-    public static final String ML_ACTION_CONNCETION = "ml_action_connection";
+    public static final String ML_EVENT_ACTION_INVITED = "ml_action_invited";
+    public static final String ML_EVENT_ACTION_CONTACT = "ml_action_contact";
+    public static final String ML_EVENT_ACTION_MESSAGE = "ml_action_message";
+    public static final String ML_EVENT_ACTION_CONNCETION = "ml_action_connection";
 
 
     /**
@@ -88,7 +89,9 @@ public class MLConstants {
     public static final int ML_ACTION_INVITED_REFUSE = 0X11;
     public static final int ML_ACTION_INVITED_DELETE = 0X12;
 
-    // 刷新类型
+    /**
+     * RecyclerView Adapter 列表刷新类型
+     */
     public static final int ML_NOTIFY_REFRESH_ALL = 0x00;
     public static final int ML_NOTIFY_REFRESH_CHANGED = 0x01;
     public static final int ML_NOTIFY_REFRESH_RANGE_CHANGED = 0x02;

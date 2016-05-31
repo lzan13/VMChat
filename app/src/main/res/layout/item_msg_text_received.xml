@@ -12,15 +12,6 @@
         android:gravity="left|bottom"
         android:orientation="horizontal">
 
-        <net.melove.app.easechat.communal.widget.MLImageView
-            android:id="@+id/ml_img_msg_avatar"
-            android:layout_width="@dimen/ml_dimen_40"
-            android:layout_height="@dimen/ml_dimen_40"
-            android:src="@mipmap/ic_character_blackcat"
-            melove:ml_border_color="@color/ml_white_87"
-            melove:ml_border_width="@dimen/ml_dimen_2"
-            melove:ml_shape_type="round"/>
-
         <LinearLayout
             android:id="@+id/ml_layout_bubble"
             android:layout_width="wrap_content"
@@ -33,6 +24,15 @@
                 android:gravity="bottom"
                 android:orientation="horizontal">
 
+                <net.melove.app.easechat.communal.widget.MLImageView
+                    android:id="@+id/ml_img_msg_avatar"
+                    android:layout_width="@dimen/ml_dimen_40"
+                    android:layout_height="@dimen/ml_dimen_40"
+                    android:src="@mipmap/ic_character_blackcat"
+                    melove:ml_border_color="@color/ml_white_87"
+                    melove:ml_border_width="@dimen/ml_dimen_2"
+                    melove:ml_shape_type="round"/>
+
                 <TextView
                     android:id="@+id/ml_text_msg_content"
                     android:layout_width="wrap_content"
@@ -41,7 +41,7 @@
                     android:maxWidth="@dimen/ml_dimen_256"
                     android:paddingBottom="@dimen/ml_dimen_8"
                     android:paddingLeft="@dimen/ml_dimen_12"
-                    android:paddingRight="@dimen/ml_dimen_12"
+                    android:paddingRight="@dimen/ml_dimen_8"
                     android:paddingTop="@dimen/ml_dimen_8"
                     android:text="@string/ml_app_name"
                     android:textColor="@color/ml_black_87"

@@ -21,6 +21,7 @@ import com.hyphenate.chat.EMMessage;
 
 import net.melove.app.easechat.R;
 import net.melove.app.easechat.application.MLConstants;
+import net.melove.app.easechat.application.eventbus.MLMessageEvent;
 import net.melove.app.easechat.communal.util.MLBitmapUtil;
 import net.melove.app.easechat.communal.module.MLBitmapCache;
 import net.melove.app.easechat.communal.util.MLDate;
@@ -33,6 +34,9 @@ import net.melove.app.easechat.conversation.MLBigImageActivity;
 import net.melove.app.easechat.conversation.MLChatActivity;
 import net.melove.app.easechat.conversation.MLMessageAdapter;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.io.File;
 
 /**
@@ -42,18 +46,16 @@ import java.io.File;
 public class MLImageMessageItem extends MLMessageItem {
 
     private int thumbnailsMax = MLDimen.dp2px(R.dimen.ml_dimen_192);
-    private MLHandler mHandler;
 
     public MLImageMessageItem(Context context, MLMessageAdapter adapter, int viewType) {
         super(context, adapter, viewType);
         onInflateView();
-        mHandler = new MLHandler();
     }
 
     /**
      * 实现数据的填充
      *
-     * @param message  需要展示的 EMMessage 对象
+     * @param message 需要展示的 EMMessage 对象
      */
     @Override
     public void onSetupView(EMMessage message) {
@@ -97,17 +99,6 @@ public class MLImageMessageItem extends MLMessageItem {
         // 设置缩略图的显示
         showThumbnailsImage(thumbnailsPath, fullSizePath, imgBody.getWidth(), imgBody.getHeight());
 
-        mImageView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setClass(mActivity, MLBigImageActivity.class);
-
-            }
-        });
-
-        // 设置消息回调
-        setCallback();
         // 刷新界面显示
         refreshView();
     }
@@ -286,52 +277,29 @@ public class MLImageMessageItem extends MLMessageItem {
         setAckStatusView();
     }
 
-    /**
-     * 设置当前消息的callback回调
-     */
-    protected void setCallback() {
-        MLLog.i("MLImageMessageItem setCallback");
-        mMessage.setMessageStatusCallback(new EMCallBack() {
-            @Override
-            public void onSuccess() {
-                mHandler.sendMessage(mHandler.obtainMessage(CALLBACK_STATUS_SUCCESS));
-            }
-
-            @Override
-            public void onError(int i, String s) {
-                mHandler.sendMessage(mHandler.obtainMessage(CALLBACK_STATUS_ERROR));
-            }
-
-            @Override
-            public void onProgress(int i, String s) {
-                Message msg = mHandler.obtainMessage(CALLBACK_STATUS_PROGRESS);
-                msg.arg1 = i;
-                mHandler.sendMessage(msg);
-                MLLog.i("MLImageMessageItem progress:%d, %s", i, s);
-            }
-        });
-    }
-
-    /**
-     * 自定义 Handler 类，用来刷新当前 ItemView
-     */
-    class MLHandler extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-            case CALLBACK_STATUS_SUCCESS:
-                refreshView();
-                break;
-            case CALLBACK_STATUS_ERROR:
-                refreshView();
-                break;
-            case CALLBACK_STATUS_PROGRESS:
-                // 设置消息进度百分比
-                mPercentView.setText(msg.arg1 + "%");
-                refreshView();
-                break;
-            }
+    @Subscribe
+    public void onEventMainThread(MLMessageEvent event) {
+        EMMessage message = event.getMessage();
+        if (!message.getMsgId().equals(mMessage.getMsgId())) {
+            return;
+        }
+        if (message.status() == EMMessage.Status.INPROGRESS) {
+            // 设置消息进度百分比
+            MLLog.i("onEventMainThread MLMessageEvent %d", event.getProgress());
+            mPercentView.setText(event.getProgress() + "%");
+            //        refreshView();
         }
     }
 
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        EventBus.getDefault().unregister(this);
+    }
 }

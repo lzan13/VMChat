@@ -21,7 +21,11 @@ import com.hyphenate.chat.EMConversation;
 
 import net.melove.app.easechat.R;
 import net.melove.app.easechat.application.MLConstants;
+import net.melove.app.easechat.application.eventbus.MLMessageEvent;
 import net.melove.app.easechat.communal.base.MLBaseFragment;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,15 +46,10 @@ public class MLConversationsFragment extends MLBaseFragment {
     private RecyclerView mRecyclerView;
     private MLConversationAdapter mConversationAdapter;
 
-    // 应用内广播管理器，为了安全这里使用局域广播
-    private LocalBroadcastManager mLocalBroadcastManager;
-    // 会话界面监听会话变化的广播接收器
-    private BroadcastReceiver mBroadcastReceiver;
-
     /**
      * 创建实例对象的工厂方法
      *
-     * @return
+     * @return 返回一个新的实例
      */
     public static MLConversationsFragment newInstance() {
         MLConversationsFragment fragment = new MLConversationsFragment();
@@ -64,6 +63,13 @@ public class MLConversationsFragment extends MLBaseFragment {
      */
     public MLConversationsFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // 注册订阅者，监听其它事件发送者发出的事件通知
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -116,9 +122,9 @@ public class MLConversationsFragment extends MLBaseFragment {
      * 刷新会话列表，重新加载会话列表到list集合，然后刷新adapter
      */
     public void refreshConversation() {
-        mConversations.clear();
-        loadConversationList();
         if (mConversationAdapter != null) {
+            mConversations.clear();
+            loadConversationList();
             mConversationAdapter.refreshList();
         }
     }
@@ -190,19 +196,23 @@ public class MLConversationsFragment extends MLBaseFragment {
                 final EMConversation conversation = mConversations.get(position);
                 final boolean isTop = MLConversationExtUtils.getConversationTop(conversation);
                 // 根据当前会话不同的状态来显示不同的长按菜单
+                List<String> menuList = new ArrayList<String>();
                 if (isTop) {
-                    mMenus = new String[]{
-                            mActivity.getResources().getString(R.string.ml_menu_conversation_cancel_top),
-                            mActivity.getResources().getString(R.string.ml_menu_conversation_clear),
-                            mActivity.getResources().getString(R.string.ml_menu_conversation_delete)
-                    };
+                    menuList.add(mActivity.getResources().getString(R.string.ml_menu_conversation_cancel_top));
                 } else {
-                    mMenus = new String[]{
-                            mActivity.getResources().getString(R.string.ml_menu_conversation_top),
-                            mActivity.getResources().getString(R.string.ml_menu_conversation_clear),
-                            mActivity.getResources().getString(R.string.ml_menu_conversation_delete)
-                    };
+                    menuList.add(mActivity.getResources().getString(R.string.ml_menu_conversation_top));
                 }
+                if (conversation.getUnreadMsgCount() > 0) {
+                    menuList.add(mActivity.getResources().getString(R.string.ml_menu_conversation_read));
+                } else {
+                    menuList.add(mActivity.getResources().getString(R.string.ml_menu_conversation_unread));
+                }
+                menuList.add(mActivity.getResources().getString(R.string.ml_menu_conversation_clear));
+                menuList.add(mActivity.getResources().getString(R.string.ml_menu_conversation_delete));
+
+                mMenus = new String[menuList.size()];
+                menuList.toArray(mMenus);
+
                 // 创建并显示 ListView 的长按弹出菜单，并设置弹出菜单 Item的点击监听
                 new AlertDialog.Builder(mActivity)
                         .setTitle(R.string.ml_dialog_title_conversation)
@@ -236,32 +246,16 @@ public class MLConversationsFragment extends MLBaseFragment {
         });
     }
 
-    /**
-     * 注册广播接收器，用来监听全局监听监听到新消息之后发送的广播，然后刷新界面
-     */
-    private void registerBroadcastReceiver() {
-        // 获取局域广播管理器
-        mLocalBroadcastManager = LocalBroadcastManager.getInstance(mActivity);
-        // 实例化Intent 过滤器
-        IntentFilter intentFilter = new IntentFilter();
-        // 为过滤器添加一个 Action
-        intentFilter.addAction(MLConstants.ML_ACTION_MESSAGE);
-        // 实例化广播接收器，用来接收自己过滤的广播
-        mBroadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                refreshConversation();
-            }
-        };
-        // 注册广播接收器
-        mLocalBroadcastManager.registerReceiver(mBroadcastReceiver, intentFilter);
-    }
 
     /**
-     * 取消广播接收器的注册
+     * 作为{@link MLMessageEvent}事件订阅者需要实现的订阅方法，此方法永远运行在主线程
+     *
+     * @param event 订阅的事件类型
      */
-    private void unregisterBroadcastReceiver() {
-        mLocalBroadcastManager.unregisterReceiver(mBroadcastReceiver);
+    @Subscribe
+    public void onEventMainThread(MLMessageEvent event) {
+        // 调用界面刷新方法
+        refreshConversation();
     }
 
     /**
@@ -272,8 +266,6 @@ public class MLConversationsFragment extends MLBaseFragment {
         super.onResume();
         // 刷新会话界面
         refreshConversation();
-        // 注册广播监听
-        registerBroadcastReceiver();
     }
 
     /**
@@ -282,7 +274,7 @@ public class MLConversationsFragment extends MLBaseFragment {
     @Override
     public void onStop() {
         super.onStop();
-        // 注册广播监听
-        unregisterBroadcastReceiver();
+        // 取消观察者的注册
+        EventBus.getDefault().unregister(this);
     }
 }

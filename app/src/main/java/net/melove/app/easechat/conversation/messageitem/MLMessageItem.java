@@ -38,12 +38,6 @@ public abstract class MLMessageItem extends LinearLayout {
     protected LayoutInflater mInflater;
     protected MLMessageAdapter mAdapter;
 
-    // 消息Callback结果
-    protected final int CALLBACK_STATUS_SUCCESS = 0;
-    protected final int CALLBACK_STATUS_ERROR = 1;
-    protected final int CALLBACK_STATUS_PROGRESS = 2;
-
-
     // item 类型
     protected int mViewType;
 
@@ -156,5 +150,15 @@ public abstract class MLMessageItem extends LinearLayout {
         }
     }
 
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        MLLog.i("onAttachedToWindow %s", mMessage.getMsgId());
+    }
 
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        MLLog.i("onDetachedFromWindow %s", mMessage.getMsgId());
+    }
 }
