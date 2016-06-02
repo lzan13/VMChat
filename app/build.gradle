@@ -22,15 +22,30 @@ android {
 //            jniLibs.srcDirs = ['libs']
 //        }
 //    }
+    // 多渠道打包配置
     productFlavors {
+        xiaomi {}
+        qihu360 {}
+        wandoujia {}
+        baidu {}
+        googlePlay {}
     }
+    productFlavors.all {
+        flavor -> flavor.manifestPlaceholders = [ML_CHANNEL_ID: name]
+    }
+
     // 打开增量编译（实验功能）
     dexOptions {
         incremental true
     }
+
+
 }
 
 dependencies {
+    /**
+     * 包含引入的第三方 SDK
+     */
     compile fileTree(include: ['*.jar'], dir: 'libs')
     /**
      * 新的遵循 Android  Material design 设计风格库，此扩展库已经包含了一下三个扩展库，如果引入了design，就不需要再单独引入其他库
@@ -53,9 +68,12 @@ dependencies {
     // 观察者模式解耦库
     compile 'org.greenrobot:eventbus:3.0.0'
 
-    // 环信sdk 在上边fileTree里已经包含了libs，这里可以不用再单独添加
+    /**
+     * 引入各种第三方 SDK jar包，
+     * 环信sdk、小米推送
+     * 因为在上边 fileTree 里已经包含了libs，这里可以不用再单独添加
+     */
     // compile files('libs/hyphenatechat_3.1.2.jar')
-    // 小米推送 在上边fileTree里已经包含了libs，这里可以不用再单独添加
     // compile files('libs/MiPush_SDK_Client_2_2_21.jar')
 }
 

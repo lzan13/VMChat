@@ -285,9 +285,7 @@ public class MLImageMessageItem extends MLMessageItem {
         }
         if (message.status() == EMMessage.Status.INPROGRESS) {
             // 设置消息进度百分比
-            MLLog.i("onEventMainThread MLMessageEvent %d", event.getProgress());
             mPercentView.setText(event.getProgress() + "%");
-            //        refreshView();
         }
     }
 

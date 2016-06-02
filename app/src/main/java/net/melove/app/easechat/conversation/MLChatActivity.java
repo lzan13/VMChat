@@ -589,8 +589,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         EMClient.getInstance().chatManager().sendMessage(message);
 
         // 点击发送后马上刷新界面，无论消息有没有成功，先刷新显示
-        //        refreshItemInserted(position);
-        refreshAll();
+        refreshItemInserted(position);
 
     }
 
@@ -1058,10 +1057,6 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      * @param arg2 刷新数量
      */
     private void notifyHandler(int type, int arg1, int arg2) {
-        /**
-         * 发送通知前先调用{@link MLMessageAdapter#refreshMessageData()}更新{@link MLMessageAdapter}的数据源
-         */
-        mMessageAdapter.refreshMessageData();
         // 得到 Hander 的 Message
         Message msg = mHandler.obtainMessage();
         // 设置相应的参数
@@ -1081,6 +1076,10 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             int what = msg.what;
             int arg1 = msg.arg1;
             int arg2 = msg.arg2;
+            /**
+             * 发送通知前先调用{@link MLMessageAdapter#refreshMessageData()}更新{@link MLMessageAdapter}的数据源
+             */
+            mMessageAdapter.refreshMessageData();
             switch (what) {
             case MLConstants.ML_NOTIFY_REFRESH_ALL:
                 mMessageAdapter.notifyDataSetChanged();
@@ -1318,7 +1317,6 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
 
     /**
      * 收到新的发送回执
-     * TODO 好像无效
      *
      * @param list 收到发送回执的消息集合
      */

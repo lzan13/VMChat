@@ -210,5 +210,9 @@
         <!--</receiver>-->
         <!--小米推送服务配置 end-->
 
+
+        <meta-data
+            android:name="ML_CHANNEL_NAME"
+            android:value="${ML_CHANNEL_ID}"/>
     </application>
 </manifest>
