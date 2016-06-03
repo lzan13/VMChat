@@ -16,9 +16,13 @@ import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMGroupManager;
+import com.hyphenate.chat.EMImageMessageBody;
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.EMMessageBody;
 import com.hyphenate.chat.EMTextMessageBody;
+import com.hyphenate.chat.EMVoiceMessageBody;
 import com.hyphenate.exceptions.HyphenateException;
+import com.hyphenate.util.PathUtil;
 
 import net.melove.app.easechat.R;
 import net.melove.app.easechat.application.MLEasemobHelper;
@@ -26,6 +30,14 @@ import net.melove.app.easechat.communal.base.MLBaseFragment;
 import net.melove.app.easechat.communal.util.MLDate;
 import net.melove.app.easechat.communal.util.MLLog;
 import net.melove.app.easechat.communal.widget.MLViewGroup;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 测试Fragment，
@@ -142,24 +154,145 @@ public class MLTestFragment extends MLBaseFragment {
      * 测试保存一条消息到本地
      */
     private void importMessage() {
-        EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
-        EMTextMessageBody textMessageBody = new EMTextMessageBody("导入消息" + MLDate.getCurrentDate());
-        message.addBody(textMessageBody);
-        message.setFrom("lz8");
-        // 保存一条消息到本地，这个保存会直接加入到内存中
-        EMClient.getInstance().chatManager().saveMessage(message);
+        imoprtMessages();
+        //        EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
+        //        EMTextMessageBody textMessageBody = new EMTextMessageBody("导入消息" + MLDate.getCurrentDate());
+        //        message.addBody(textMessageBody);
+        //        message.setFrom("lz8");
+        //        // 保存一条消息到本地，这个保存会直接加入到内存中
+        //        EMClient.getInstance().chatManager().saveMessage(message);
         // 导入一个消息集合到本地，
-//        EMClient.getInstance().chatManager().importMessages(list);
+        //        EMClient.getInstance().chatManager().importMessages(list);
 
         // 测试插入一条消息
-//        EMMessage textMessage = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
-//        textMessage.setFrom(mChatId);
-//        textMessage.setReceipt(mCurrUsername);
-//        textMessage.setStatus(EMMessage.Status.SUCCESS);
-//        EMTextMessageBody body = new EMTextMessageBody("test insert message");
-//        textMessage.addBody(body);
-//        mConversation.insertMessage(textMessage);
+        //        EMMessage textMessage = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
+        //        textMessage.setFrom(mChatId);
+        //        textMessage.setReceipt(mCurrUsername);
+        //        textMessage.setStatus(EMMessage.Status.SUCCESS);
+        //        EMTextMessageBody body = new EMTextMessageBody("test insert message");
+        //        textMessage.addBody(body);
+        //        mConversation.insertMessage(textMessage);
 
+    }
+
+    private List<EMMessage> imoprtMessages() {
+        String msgJson = "{\n" +
+                "\"uuid\": \"\",\n" +
+                "\"hxType\": \"\",\n" +
+                "\"createTime\": 1461668484000,\n" +
+                "\"updateTime\": 1461668484000,\n" +
+                "\"messageTime\": 1461668539000,\n" +
+                "\"fromId\": \"lz1\",\n" +
+                "\"msgId\": \"198225956681287648\",\n" +
+                "\"toId\": \"lz2\",\n" +
+                "\"chatType\": \"chat\",\n" +
+                "\"msgType\": \"img\",\n" +
+                "\"osskey\": \"\",\n" +
+                "\"callId\": \"iwjw#dev_189424115638077400\",\n" +
+                "\"eventType\": \"chat\",\n" +
+                "\"groupId\": \"\",\n" +
+                "\"securityVersion\": \"\",\n" +
+                "\"security\": \"d2f00fbca7d31aba62f680960af5ffd8\",\n" +
+                "\"bodies\": [{\n" +
+                "                       \"type\":\"img\",\n" +
+                "                       \"file_length\":3269307," +
+                "                       \"size\":{" +
+                "                                   \"height\":1008," +
+                "                                   \"width\":756" +
+                "                                }," +
+                "                       \"filename\":\"image-217703277.jpg\"," +
+                "                       \"secret\":\"1IyXuh5BEeachHOg_fPFZj7mL5wz0WHKKvb_x5TWp9yVVkOI\"," +
+                "                       \"url\":\"https://a1.easemob.com/lzan13/hxsdkdemo/chatfiles/d48c97b0-1e41-11e6-aaf8-e72cf8fe787d\"" +
+                "                  }],\n" +
+                "\"ext\": \"\"\n" +
+                "}\n";
+        List<EMMessage> emMessageList = new ArrayList<EMMessage>();
+        try {
+            JSONObject jsonObject = new JSONObject(msgJson);
+
+            String fromId = jsonObject.optString("fromId");
+            String toId = jsonObject.optString("toId");
+            String msgId = jsonObject.optString("msgId");
+            long messageTime = jsonObject.optLong("messageTime");
+            String chatType = jsonObject.optString("chatType");
+            String msgTypeStr = jsonObject.optString("msgType");
+            String msgBodyStr = jsonObject.optString("bodies");
+            String ext = jsonObject.optString("ext");
+
+            JSONObject bodyObject = new JSONArray(msgBodyStr).getJSONObject(0);
+
+            String url = bodyObject.optString("url");
+            String secret = bodyObject.optString("secret");
+            String filename = bodyObject.optString("filename");
+            int length = bodyObject.optInt("length");
+            int height = bodyObject.optJSONObject("size").optInt("height");
+            int width = bodyObject.optJSONObject("size").optInt("width");
+            String localPath = PathUtil.getInstance().getVoicePath() + "/" + filename;
+
+            EMMessage.Type msgType = null;
+            if (msgTypeStr.equalsIgnoreCase("audio")) {
+                msgType = EMMessage.Type.VOICE;
+            } else if (msgTypeStr.equalsIgnoreCase("img")) {
+                msgType = EMMessage.Type.IMAGE;
+            } else if (msgTypeStr.equalsIgnoreCase("txt") || msgTypeStr.equalsIgnoreCase("house")) {
+                msgType = EMMessage.Type.TXT;
+            } else if (msgTypeStr.equalsIgnoreCase("loc")) {
+                msgType = EMMessage.Type.LOCATION;
+            } else if (msgTypeStr.equalsIgnoreCase("video")) {
+                msgType = EMMessage.Type.VIDEO;
+            }
+            EMMessage message = null;
+            EMMessageBody msgBody = null;
+
+            if (fromId.equalsIgnoreCase("lz1")) {
+                //收到的消息
+                message = EMMessage.createReceiveMessage(msgType);
+                message.setFrom("lz1");
+            } else {
+                //发送的消息
+                message = EMMessage.createSendMessage(msgType);
+                message.setTo("lz1");
+            }
+            message.setMsgTime(messageTime);
+            message.setMsgId(msgId);
+            message.setChatType(EMMessage.ChatType.Chat);
+            //            message.setAcked(true);
+            //            message.setUnread(false);
+            message.setStatus(EMMessage.Status.SUCCESS);
+            switch (msgType) {
+            case LOCATION: // 位置消息
+                //                msgBody = JSON.parseObject(msgBodyStr, CommonLocationMessageBody.class).getHXMsgBody();
+                break;
+            case IMAGE: // 图片消息
+                //                msgBody = JSON.parseObject(msgBodyStr, CommonImageMessageBody.class).getHXMsgBody();
+                EMImageMessageBody imgBody = new EMImageMessageBody(new File(localPath));
+                imgBody.setFileName(filename);
+                imgBody.setRemoteUrl(url);
+                imgBody.setThumbnailUrl(url);
+                imgBody.setSecret(secret);
+                message.addBody(imgBody);
+                break;
+            case VOICE:// 语音消息
+                //                msgBody = JSON.parseObject(msgBodyStr, CommonVoiceMessageBody.class).getHXMsgBody();
+                EMVoiceMessageBody body = new EMVoiceMessageBody(new File(localPath), length);
+                body.setRemoteUrl(url);
+                body.setFileName(filename);
+                body.setSecret(secret);
+                message.addBody(body);
+                break;
+            case TXT: // 文本消息
+                //                msgBody = JSON.parseObject(msgBodyStr, CommonTextMessageBody.class).getHXMsgBody();
+                break;
+            }
+            //            message.addBody(msgBody);
+            emMessageList.add(message);
+            //            EMClient.getInstance().chatManager().saveMessage(message);
+            EMClient.getInstance().chatManager().importMessages(emMessageList);
+            return emMessageList;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**

@@ -2,18 +2,15 @@ package net.melove.app.easechat.conversation.messageitem;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMFileMessageBody;
 import com.hyphenate.chat.EMImageMessageBody;
@@ -27,10 +24,8 @@ import net.melove.app.easechat.communal.module.MLBitmapCache;
 import net.melove.app.easechat.communal.util.MLDate;
 import net.melove.app.easechat.communal.util.MLDimen;
 import net.melove.app.easechat.communal.util.MLFile;
-import net.melove.app.easechat.communal.util.MLLog;
 import net.melove.app.easechat.communal.util.MLMessageUtils;
 import net.melove.app.easechat.communal.widget.MLImageView;
-import net.melove.app.easechat.conversation.MLBigImageActivity;
 import net.melove.app.easechat.conversation.MLChatActivity;
 import net.melove.app.easechat.conversation.MLMessageAdapter;
 
@@ -70,12 +65,20 @@ public class MLImageMessageItem extends MLMessageItem {
         // 设置显示图片控件的默认大小
         //        int[] size = MLBitmapUtil.getImageSize(imgBody.getWidth(), imgBody.getHeight());
         //        mImageView.setLayoutParams(new RelativeLayout.LayoutParams(size[0] + 4, size[1] + 4));
+        int width = imgBody.getWidth();
+        int height = imgBody.getHeight();
+        float scale = MLBitmapUtil.getZoomScale(width, height, thumbnailsMax);
+        ViewGroup.LayoutParams lp = mImageView.getLayoutParams();
+        lp.width = (int) (width / scale);
+        lp.height = (int) (height / scale);
+        mImageView.setLayoutParams(lp);
+
         // 判断下是否是接收方的消息
         if (mViewType == MLConstants.MSG_TYPE_IMAGE_RECEIVED) {
             // 判断消息是否处于下载状态，如果是下载状态设置一个默认的图片
             if (imgBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.DOWNLOADING
                     || imgBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.PENDING) {
-                mImageView.setImageResource(R.mipmap.image_default);
+                mImageView.setBackgroundResource(R.mipmap.image_default);
             }
         }
 
@@ -182,6 +185,8 @@ public class MLImageMessageItem extends MLMessageItem {
                 mImageView.setImageBitmap(bitmap);
             }
         } else {
+            // 暂时没有bitmap就设置一个默认的图片
+            mImageView.setBackgroundResource(R.mipmap.image_default);
             new AsyncTask<Object, Integer, Bitmap>() {
                 @Override
                 protected Bitmap doInBackground(Object... params) {
@@ -195,16 +200,16 @@ public class MLImageMessageItem extends MLMessageItem {
                     } else if ((!fullSizeFile.exists() && (width > thumbnailsMax || height > thumbnailsMax))
                             || thumbnailsFile.exists() && thumbnailsFile.length() > 1024 * 10 * 2) {
                         // 然后判断缩略图是否存在，并且足够清晰，则根据缩略图路径直接获取Bitmap
-                        tempBitmap = MLBitmapUtil.compressBitmap(thumbnailsPath, thumbnailsMax, thumbnailsMax);
+                        tempBitmap = MLBitmapUtil.loadBitmapThumbnail(thumbnailsPath, thumbnailsMax);
                     } else if (fullSizeFile.exists() && fullSizeFile.length() > 1024 * 10 * 5
                             && (width > thumbnailsMax || height > thumbnailsMax)) {
                         // 然后判断原图是否存在，通过原图重新生成缩略图
-                        tempBitmap = MLBitmapUtil.compressBitmap(fullSizePath, thumbnailsMax, thumbnailsMax);
+                        tempBitmap = MLBitmapUtil.loadBitmapThumbnail(fullSizePath, thumbnailsMax);
                         // 文件生成成功之后，把新的Bitmap保存到本地磁盘中
                         MLFile.saveBitmapToSDCard(tempBitmap, thumbnailsPath);
                     } else {
                         // 当图片本身就很小时，直接加在图片
-                        tempBitmap = MLBitmapUtil.compressBitmap(thumbnailsPath, width, height);
+                        tempBitmap = MLBitmapUtil.loadBitmapByFile(thumbnailsPath, width);
                     }
                     return tempBitmap;
                 }

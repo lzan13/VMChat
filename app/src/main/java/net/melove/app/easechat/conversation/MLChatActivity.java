@@ -34,6 +34,7 @@ import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
+import com.hyphenate.exceptions.HyphenateException;
 
 import net.melove.app.easechat.R;
 import net.melove.app.easechat.application.eventbus.MLMessageEvent;
@@ -378,7 +379,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 int position = mConversation.getAllMessages().indexOf(message);
                 switch (action) {
                 case MLConstants.ML_ACTION_MSG_CLICK:
-                    MLLog.i("item position - %d", position);
+
                     break;
                 case MLConstants.ML_ACTION_MSG_RESEND:
                     // 重发消息
@@ -406,8 +407,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     }
 
     /**
-     * 重发消息方法，这里重发什么都没有修改，只是重新发送一遍消息，
-     * TODO 按正常的逻辑来说应该修改消息时间，或者重新创建新消息，把失败的消息删除，但是更新界面会有问题，这里偷懒下
+     * 重发消息方法，这里会先复制一份 EMMessage 对象，先删除失败的消息，然后修改消息时间重新发送
+     * TODO 如果修改了消息时间，会导致conversation里有两条同一个id的消息，所以先删除，后修改时间
      */
     public void resendMessage(int position, String msgId) {
         // 获取需要重发的消息
@@ -415,7 +416,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         // 将失败的消息从 conversation对象中删除
         mConversation.removeMessage(message.getMsgId());
         refreshItemRemoved(position);
-        // 更新消息时间 TODO 如果修改了消息时间，会导致conversation里有两条同一个id的消息，所以先删除，后修改时间
+        // 更新消息时间
         message.setMsgTime(MLDate.getCurrentMillisecond());
         // 调用发送方法
         // EMClient.getInstance().chatManager().sendMessage(message);
@@ -1302,7 +1303,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     }
 
     /**
-     * 收到新的已读回执
+     * 收到消息的已读回执
      *
      * @param list 收到消息已读回执
      */
@@ -1316,7 +1317,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     }
 
     /**
-     * 收到新的发送回执
+     * 收到消息的已送达回执
      *
      * @param list 收到发送回执的消息集合
      */
@@ -1330,7 +1331,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     }
 
     /**
-     * 消息的状态改变
+     * 消息的改变
      *
      * @param message 发生改变的消息
      * @param object  包含改变的消息

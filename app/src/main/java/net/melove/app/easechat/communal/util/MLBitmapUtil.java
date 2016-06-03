@@ -5,8 +5,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.util.Base64;
 
-import net.melove.app.easechat.R;
-
 import java.io.ByteArrayOutputStream;
 
 /**
@@ -14,9 +12,6 @@ import java.io.ByteArrayOutputStream;
  * 图片处理类，压缩，转换
  */
 public class MLBitmapUtil {
-
-    private static int maxWidth = MLDimen.dp2px(R.dimen.ml_dimen_192);
-    private static int maxHeight = MLDimen.dp2px(R.dimen.ml_dimen_192);
 
     /**
      * 将Bitmap 转为 base64 字符串
@@ -48,14 +43,26 @@ public class MLBitmapUtil {
     }
 
     /**
-     * 压缩图片
+     * 获取图片文件的缩略图
      *
-     * @param path        要压缩的图片路径
-     * @param thumbWidth  压缩后的宽
-     * @param thumbHeight 压缩后的高
-     * @return 返回压缩过的图片缩略图
+     * @param path      图片文件路径
+     * @param dimension 设置缩略图最大尺寸
+     * @return 返回压缩后的缩略图
      */
-    public static Bitmap compressBitmap(String path, int thumbWidth, int thumbHeight) {
+    public static Bitmap loadBitmapThumbnail(String path, int dimension) {
+        Bitmap bitmap = loadBitmapByFile(path, dimension);
+        // 调用矩阵方法压缩图片
+        return compressBitmapByMatrix(bitmap, dimension);
+    }
+
+    /**
+     * 通过文件加载图片，这里也可以加载大图，保证不会出现 OOM，
+     *
+     * @param path      要压缩的图片路径
+     * @param dimension 定义压缩后的最大尺寸
+     * @return 返回经过压缩处理的图片
+     */
+    public static Bitmap loadBitmapByFile(String path, int dimension) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         // 开始读入图片，此时把options.inJustDecodeBounds 设为true
         // 这个参数的意义是仅仅解析边缘区域，从而可以得到图片的一些信息，比如大小，而不会整个解析图片，防止OOM
@@ -64,38 +71,40 @@ public class MLBitmapUtil {
         // 此时bitmap还是为空的
         Bitmap bitmap = BitmapFactory.decodeFile(path, options);
 
+        // 得到图片文件的实际宽高
         int actualWidth = options.outWidth;
         int actualHeight = options.outHeight;
 
         // 根据宽高计算缩放比例
-        float scale = getZoomScale(actualWidth, actualHeight);
+        float scale = getZoomScale(actualWidth, actualHeight, dimension);
         if (scale % 2 > 0.4) {
             scale += 1;
         }
+        // 设置压缩比，必须是整形数，这样加载出的bitmap不会占用过大内存，又能显示清晰
         options.inSampleSize = (int) scale;
+        // 设置图片文件仅仅加载边界为false
         options.inJustDecodeBounds = false;
-
-        bitmap = BitmapFactory.decodeFile(path, options);
-        return getThumbImage(bitmap, thumbWidth, thumbHeight);
+        // 加载图片到 Bitmap 对象并返回
+        return BitmapFactory.decodeFile(path, options);
     }
 
     /**
-     * 获取bitmap的缩略图
+     * 获取 bitmap 的缩略图
      *
-     * @param bitmap      需要获取缩略图的Bitmap对象
-     * @param thumbWidth  缩略图的最大宽度
-     * @param thumbHeight 缩略图的最大高度
+     * @param bitmap    需要获取缩略图的Bitmap对象
+     * @param dimension 缩略图的最大尺寸
      * @return 返回缩略图对象
      */
-    private static Bitmap getThumbImage(Bitmap bitmap, int thumbWidth, int thumbHeight) {
+    public static Bitmap compressBitmapByMatrix(Bitmap bitmap, int dimension) {
         int w = bitmap.getWidth();
         int h = bitmap.getHeight();
         float scale = 0.5f;
         if (w > h) {
-            scale = (float) thumbWidth / w;
+            scale = (float) dimension / w;
         } else {
-            scale = (float) thumbHeight / h;
+            scale = (float) dimension / h;
         }
+        // 使用矩阵进行压缩图片
         Matrix matrix = new Matrix();
         matrix.postScale(scale, scale);
         Bitmap result = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
@@ -107,25 +116,17 @@ public class MLBitmapUtil {
      *
      * @param actualWidth  Bitmap的实际宽度
      * @param actualHeight Bitmap的实际高度
+     * @param dimension    定义压缩后最大尺寸
      * @return 返回最佳缩放比例
      */
-    private static float getZoomScale(int actualWidth, int actualHeight) {
+    public static float getZoomScale(int actualWidth, int actualHeight, int dimension) {
         float scale = 1.0f;
         if (actualWidth > actualHeight) {
-            scale = (float) actualWidth / maxHeight;
+            scale = (float) actualWidth / dimension;
         } else {
-            scale = (float) actualHeight / maxHeight;
+            scale = (float) actualHeight / dimension;
         }
         return scale;
     }
-
-    public static int[] getImageSize(int w, int h) {
-        int[] array = {0, 0};
-        float scale = getZoomScale(w, h);
-        array[0] = (int) (w / scale);
-        array[1] = (int) (h / scale);
-        return array;
-    }
-
 
 }

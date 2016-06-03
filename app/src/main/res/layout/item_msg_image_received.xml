@@ -48,7 +48,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
-                            android:src="@mipmap/image_default"
                             melove:ml_border_width="@dimen/ml_dimen_0"
                             melove:ml_radius="@dimen/ml_dimen_4"/>
 

@@ -125,7 +125,7 @@ public class MLEasemobHelper {
         options.setAutoLogin(true);
         // 设置是否需要发送已读回执
         options.setRequireAck(true);
-        // 设置是否需要发送回执，TODO 这个暂时有bug
+        // 设置是否需要发送回执
         options.setRequireDeliveryAck(true);
         // 设置是否需要服务器收到消息确认
         options.setRequireServerAck(true);
