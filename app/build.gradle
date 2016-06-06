@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 
+
 android {
     compileSdkVersion 23
     buildToolsVersion '23.0.2'
@@ -22,16 +23,26 @@ android {
 //            jniLibs.srcDirs = ['libs']
 //        }
 //    }
+
     // 多渠道打包配置
+//    productFlavors {
+//        baidu {}
+//        googlePlay {}
+//        qihu360 {}
+//        wandoujia {}
+//        xiaomi {}
+//    }
+//    productFlavors.all {
+//        flavor -> flavor.manifestPlaceholders = [ML_CHANNEL_ID: name]
+//    }
+
+    // 多appkey 打包
     productFlavors {
-        xiaomi {}
-        qihu360 {}
-        wandoujia {}
-        baidu {}
-        googlePlay {}
+        "lzan13#hxsdkdemo" {}
+        "peekaboomoments#street" {}
     }
     productFlavors.all {
-        flavor -> flavor.manifestPlaceholders = [ML_CHANNEL_ID: name]
+        flavor -> flavor.manifestPlaceholders = [EM_APPKEY: name]
     }
 
     // 打开增量编译（实验功能）

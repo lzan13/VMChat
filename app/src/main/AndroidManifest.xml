@@ -152,19 +152,19 @@
         <!-- 设置环信应用的appkey -->
         <meta-data
             android:name="EASEMOB_APPKEY"
-            android:value="lzan13#hxsdkdemo"/>
+            android:value="${EM_APPKEY}"/>
         <!--配置私有化聊天地址-->
         <!--<meta-data-->
-            <!--android:name="EASEMOB_CHAT_ADDRESS"-->
-            <!--android:value="101.201.58.11"/>-->
+        <!--android:name="EASEMOB_CHAT_ADDRESS"-->
+        <!--android:value="101.201.58.11"/>-->
         <!--&lt;!&ndash;配置私有化聊天端口&ndash;&gt;-->
         <!--<meta-data-->
-            <!--android:name="EASEMOB_CHAT_PORT"-->
-            <!--android:value="443"/>-->
+        <!--android:name="EASEMOB_CHAT_PORT"-->
+        <!--android:value="443"/>-->
         <!--&lt;!&ndash;配置私有化rest接口地址&ndash;&gt;-->
         <!--<meta-data-->
-            <!--android:name="EASEMOB_API_URL"-->
-            <!--android:value="a1.easemob.com"/>-->
+        <!--android:name="EASEMOB_API_URL"-->
+        <!--android:value="a1.easemob.com"/>-->
         <!--声明sdk所需的 Service SDK核心功能-->
         <service
             android:name="com.hyphenate.chat.EMChatService"
@@ -210,9 +210,9 @@
         <!--</receiver>-->
         <!--小米推送服务配置 end-->
 
-
-        <meta-data
-            android:name="ML_CHANNEL_NAME"
-            android:value="${ML_CHANNEL_ID}"/>
+        <!--设置多渠道打包的渠道名，ML_CHANNEL_ID 是渠道名占位符-->
+        <!--<meta-data-->
+            <!--android:name="ML_CHANNEL_NAME"-->
+            <!--android:value="${ML_CHANNEL_ID}"/>-->
     </application>
 </manifest>
