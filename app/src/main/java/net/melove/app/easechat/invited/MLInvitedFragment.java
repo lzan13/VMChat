@@ -30,6 +30,7 @@ import net.melove.app.easechat.database.MLInvitedDao;
 import net.melove.app.easechat.communal.base.MLBaseFragment;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -260,8 +261,8 @@ public class MLInvitedFragment extends MLBaseFragment {
         dialog.show();
     }
 
-    @Subscribe
-    public void onEventMainThread(MLInvitedEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventBus(MLInvitedEvent event) {
         refreshInvited();
     }
 

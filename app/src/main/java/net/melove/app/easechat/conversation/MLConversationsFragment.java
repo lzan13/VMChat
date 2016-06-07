@@ -26,6 +26,7 @@ import net.melove.app.easechat.communal.base.MLBaseFragment;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -252,8 +253,8 @@ public class MLConversationsFragment extends MLBaseFragment {
      *
      * @param event 订阅的事件类型
      */
-    @Subscribe
-    public void onEventMainThread(MLMessageEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventBus(MLMessageEvent event) {
         // 调用界面刷新方法
         refreshConversation();
     }

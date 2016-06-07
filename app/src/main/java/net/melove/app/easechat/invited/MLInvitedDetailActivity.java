@@ -27,6 +27,7 @@ import net.melove.app.easechat.conversation.MLChatActivity;
 import net.melove.app.easechat.database.MLInvitedDao;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * Created by lzan13 on 2016/4/26.
@@ -247,8 +248,8 @@ public class MLInvitedDetailActivity extends MLBaseActivity {
         }).start();
     }
 
-    @Subscribe
-    public void onEventMainThread(MLInvitedEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventBus(MLInvitedEvent event) {
         refreshInvited();
     }
 

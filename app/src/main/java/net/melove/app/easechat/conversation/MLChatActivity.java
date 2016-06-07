@@ -25,6 +25,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMError;
@@ -49,6 +50,7 @@ import net.melove.app.easechat.communal.util.MLLog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -578,6 +580,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 // 创建并发出一个消息事件
                 MLMessageEvent event = new MLMessageEvent();
                 event.setMessage(message);
+                // 带上消息发送进度
                 event.setProgress(i);
                 EventBus.getDefault().post(event);
             }
@@ -663,7 +666,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             }
             break;
         case MLConstants.ML_REQUEST_CODE_VIDEO:
-            // 视频文件 TODO 可以考录自定义实现录制小视频
+            // 视频文件 TODO 可以自定义实现录制小视频
             break;
         case MLConstants.ML_REQUEST_CODE_FILE:
             // 选择文件后返回获取返回的文件路径，然后发送文件
@@ -866,6 +869,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         //        refreshChatUI();
         // 注册环信的消息监听器
         EMClient.getInstance().chatManager().addMessageListener(mMessageListener);
+        // 注册EventBus 消息订阅者
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -880,10 +885,12 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         super.onStop();
         // 再当前界面处于非活动状态时 移除消息监听
         EMClient.getInstance().chatManager().removeMessageListener(mMessageListener);
+        // 取消EventBus 消息订阅者
+        EventBus.getDefault().unregister(this);
     }
 
-    @Subscribe
-    public void onEventMainThread(MLMessageEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventBus(MLMessageEvent event) {
         EMMessage message = event.getMessage();
         if (message.status() == EMMessage.Status.FAIL) {
             String error = "";

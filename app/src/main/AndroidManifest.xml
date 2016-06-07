@@ -152,7 +152,10 @@
         <!-- 设置环信应用的appkey -->
         <meta-data
             android:name="EASEMOB_APPKEY"
-            android:value="${EM_APPKEY}"/>
+            android:value="lzan13#hxsdkdemo"/>
+        <!--<meta-data-->
+        <!--android:name="EASEMOB_APPKEY"-->
+        <!--android:value="${EM_APPKEY}"/>-->
         <!--配置私有化聊天地址-->
         <!--<meta-data-->
         <!--android:name="EASEMOB_CHAT_ADDRESS"-->
@@ -195,24 +198,24 @@
             android:enabled="true"/>
 
         <!-- 配置sdk实现的小米推送 广播接收器 -->
-        <!--<receiver-->
-        <!--android:name="com.hyphenate.chat.EMMipushReceiver"-->
-        <!--android:enabled="true">-->
-        <!--<intent-filter>-->
-        <!--<action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE"/>-->
-        <!--</intent-filter>-->
-        <!--<intent-filter>-->
-        <!--<action android:name="ccom.xiaomi.mipush.MESSAGE_ARRIVED"/>-->
-        <!--</intent-filter>-->
-        <!--<intent-filter>-->
-        <!--<action android:name="com.xiaomi.mipush.ERROR"/>-->
-        <!--</intent-filter>-->
-        <!--</receiver>-->
+        <receiver
+            android:name="com.hyphenate.chat.EMMipushReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="ccom.xiaomi.mipush.MESSAGE_ARRIVED"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.xiaomi.mipush.ERROR"/>
+            </intent-filter>
+        </receiver>
         <!--小米推送服务配置 end-->
 
         <!--设置多渠道打包的渠道名，ML_CHANNEL_ID 是渠道名占位符-->
         <!--<meta-data-->
-            <!--android:name="ML_CHANNEL_NAME"-->
-            <!--android:value="${ML_CHANNEL_ID}"/>-->
+        <!--android:name="ML_CHANNEL_NAME"-->
+        <!--android:value="${ML_CHANNEL_ID}"/>-->
     </application>
 </manifest>

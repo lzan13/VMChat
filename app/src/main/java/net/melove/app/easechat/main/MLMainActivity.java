@@ -31,6 +31,7 @@ import net.melove.app.easechat.R;
 import net.melove.app.easechat.application.MLConstants;
 import net.melove.app.easechat.application.MLEasemobHelper;
 import net.melove.app.easechat.application.eventbus.MLConnectionEvent;
+import net.melove.app.easechat.application.eventbus.MLMessageEvent;
 import net.melove.app.easechat.authentication.MLSigninActivity;
 import net.melove.app.easechat.communal.base.MLBaseActivity;
 import net.melove.app.easechat.communal.util.MLLog;
@@ -42,6 +43,7 @@ import net.melove.app.easechat.communal.widget.MLImageView;
 import net.melove.app.easechat.communal.widget.MLToast;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * Created by lzan13 on 2015/7/2.
@@ -381,8 +383,8 @@ public class MLMainActivity extends MLBaseActivity implements
     }
 
 
-    @Subscribe
-    public void onEventMainThread(MLConnectionEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventBus(MLMessageEvent event) {
         // 根据app连接服务器情况设置图标的显示与隐藏
         if (MLEasemobHelper.getInstance().isConnection()) {
             mConnectionFabBtn.setImageResource(R.mipmap.ic_signal_wifi_on_white_24dp);

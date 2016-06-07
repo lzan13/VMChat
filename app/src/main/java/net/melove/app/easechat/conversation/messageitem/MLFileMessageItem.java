@@ -17,11 +17,16 @@ import com.hyphenate.util.TextFormater;
 
 import net.melove.app.easechat.R;
 import net.melove.app.easechat.application.MLConstants;
+import net.melove.app.easechat.application.eventbus.MLMessageEvent;
 import net.melove.app.easechat.communal.util.MLDate;
 import net.melove.app.easechat.communal.util.MLDimen;
 import net.melove.app.easechat.communal.widget.MLImageView;
 import net.melove.app.easechat.conversation.MLChatActivity;
 import net.melove.app.easechat.conversation.MLMessageAdapter;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * Created by lz on 2016/3/20.
@@ -38,7 +43,7 @@ public class MLFileMessageItem extends MLMessageItem {
     /**
      * 实现数据的填充
      *
-     * @param message  需要展示的 EMMessage 对象
+     * @param message 需要展示的 EMMessage 对象
      */
     @Override
     public void onSetupView(EMMessage message) {
@@ -162,6 +167,7 @@ public class MLFileMessageItem extends MLMessageItem {
             mAckStatusView.setVisibility(View.GONE);
             mProgressBar.setVisibility(View.VISIBLE);
             mPercentView.setVisibility(View.VISIBLE);
+            mPercentView.setText("0%");
             mResendView.setVisibility(View.GONE);
             break;
         }
@@ -169,4 +175,27 @@ public class MLFileMessageItem extends MLMessageItem {
         setAckStatusView();
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventBus(MLMessageEvent event) {
+        EMMessage message = event.getMessage();
+        if (!message.getMsgId().equals(mMessage.getMsgId())) {
+            return;
+        }
+        if (message.status() == EMMessage.Status.INPROGRESS) {
+            // 设置消息进度百分比
+            mPercentView.setText(event.getProgress() + "%");
+        }
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        EventBus.getDefault().unregister(this);
+    }
 }

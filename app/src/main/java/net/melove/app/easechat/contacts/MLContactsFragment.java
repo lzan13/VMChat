@@ -19,6 +19,7 @@ import net.melove.app.easechat.database.MLContactsDao;
 import net.melove.app.easechat.communal.base.MLBaseFragment;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -158,8 +159,8 @@ public class MLContactsFragment extends MLBaseFragment {
     };
 
 
-    @Subscribe
-    public void onEventMainThread(MLContactEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventBus(MLContactEvent event) {
         refreshContacts();
 
     }

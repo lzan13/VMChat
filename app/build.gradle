@@ -37,13 +37,12 @@ android {
 //    }
 
     // 多appkey 打包
-    productFlavors {
-        "lzan13#hxsdkdemo" {}
-        "peekaboomoments#street" {}
-    }
-    productFlavors.all {
-        flavor -> flavor.manifestPlaceholders = [EM_APPKEY: name]
-    }
+//    productFlavors {
+//        "lzan13#hxsdkdemo" {}
+//    }
+//    productFlavors.all {
+//        flavor -> flavor.manifestPlaceholders = [EM_APPKEY: name]
+//    }
 
     // 打开增量编译（实验功能）
     dexOptions {

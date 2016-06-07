@@ -31,6 +31,7 @@ import net.melove.app.easechat.conversation.MLMessageAdapter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 
@@ -282,8 +283,8 @@ public class MLImageMessageItem extends MLMessageItem {
         setAckStatusView();
     }
 
-    @Subscribe
-    public void onEventMainThread(MLMessageEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventBus(MLMessageEvent event) {
         EMMessage message = event.getMessage();
         if (!message.getMsgId().equals(mMessage.getMsgId())) {
             return;
