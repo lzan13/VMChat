@@ -84,7 +84,7 @@ public class MLNotifier {
 
         String message = null;
         // 设置通知栏标题
-        mBuilder.setContentTitle("环聊通知");
+        mBuilder.setContentTitle(mContext.getString(R.string.ml_app_name));
         switch (invitedEntity.getStatus()) {
         case BEAGREED:
             message = invitedEntity.getUserName() + " 同意了你的请求";
@@ -147,7 +147,7 @@ public class MLNotifier {
         }
         mBuilder.setContentText(content);
 
-        mBuilder.setContentTitle("环聊通知");
+        mBuilder.setContentTitle(mContext.getString(R.string.ml_app_name));
         // 设置通知栏点击意图（点击通知栏跳转到相应的页面）
         Intent intent = new Intent(mContext, MLChatActivity.class);
         PendingIntent pIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -175,7 +175,7 @@ public class MLNotifier {
     public void sendNotificationMessageList(List<EMMessage> messages) {
         mBuilder.setContentText(String.format("你有 %d 条新消息", messages.size()));
 
-        mBuilder.setContentTitle("环聊通知");
+        mBuilder.setContentTitle(mContext.getString(R.string.ml_app_name));
         // 设置通知栏点击意图（点击通知栏跳转到相应的页面）
         Intent intent = new Intent(mContext, MLChatActivity.class);
         PendingIntent pIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);

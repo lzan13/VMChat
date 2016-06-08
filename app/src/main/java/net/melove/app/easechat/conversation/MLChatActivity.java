@@ -1277,7 +1277,10 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             if (mChatId.equals(message.getFrom())) {
                 // 设置消息为已读
                 mConversation.markMessageAsRead(message.getMsgId());
-                // 调用刷新方法，因为收到的消息是一个list集合，所以我们调用插入多条 Item 的刷新方法
+                // 调用刷新方法，因为收到的s
+                // df
+                // sd
+                // 消息是一个list集合，所以我们调用插入多条 Item 的刷新方法
                 int position = mConversation.getAllMessages().size() - list.size();
                 int count = list.size();
                 refreshItemInserted(position);
@@ -1291,7 +1294,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     }
 
     /**
-     * 收到新的 CMD 消息
+     * 收到新的 CMD 消息nani
      *
      * @param list
      */
