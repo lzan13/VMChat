@@ -231,11 +231,19 @@ public class MLConversationsFragment extends MLBaseFragment {
                                     refreshConversation();
                                     break;
                                 case 1:
+                                    if (conversation.getUnreadMsgCount() > 0) {
+                                        conversation.markAllMessagesAsRead();
+                                    } else {
+                                        conversation.getLastMessage().setAcked(false);
+                                    }
+                                    refreshConversation();
+                                    break;
+                                case 2:
                                     // 清空当前会话的消息，同时删除了内存中和数据库中的数据
                                     mConversations.get(position).clearAllMessages();
                                     refreshConversation();
                                     break;
-                                case 2:
+                                case 3:
                                     // 删除当前会话，第二个参数表示是否删除此会话的消息
                                     EMClient.getInstance().chatManager().deleteConversation(conversation.getUserName(), false);
                                     refreshConversation();

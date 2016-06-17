@@ -10,6 +10,8 @@ public class MLMessageEvent {
 
     private EMMessage message;
     private int progress;
+    private int errorCode;
+    private String errorMessage;
 
     public MLMessageEvent() {
 

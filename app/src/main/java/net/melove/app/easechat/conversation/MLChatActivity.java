@@ -275,11 +275,11 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         mAttachMenuGridView = (GridView) findViewById(R.id.ml_gridview_chat_attach_menu);
         int[] menuPhotos = {
                 R.mipmap.ic_attach_photo,
-                R.mipmap.ic_attach_location,
                 R.mipmap.ic_attach_video,
                 R.mipmap.ic_attach_file,
-                R.mipmap.ic_attach_gift,
-                R.mipmap.ic_attach_contacts
+                R.mipmap.ic_attach_location,
+                R.mipmap.ic_attach_contacts,
+                R.mipmap.ic_attach_gift
         };
         String[] menuTitles = {mActivity.getString(R.string.ml_photo), mActivity.getString(R.string.ml_location), mActivity.getString(R.string.ml_video), mActivity.getString(R.string.ml_file), mActivity.getString(R.string.ml_gift), mActivity.getString(R.string.ml_contacts)};
         String[] from = {"photo", "title"};
@@ -299,18 +299,17 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                 case 0:
-
                     // 打开选择图片界面
                     openSelectPhoto();
                     break;
                 case 1:
-                    // 发送位置
                     break;
                 case 2:
-                    break;
-                case 3:
                     // 发送文件
                     openSelectFile();
+                    break;
+                case 3:
+                    // 发送位置
                     break;
                 case 4:
                     break;
@@ -1286,7 +1285,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 refreshItemInserted(position);
             } else {
                 // 如果消息不是当前会话的消息发送通知栏通知
-                MLNotifier.getInstance(mActivity).sendNotificationMessage(message);
+                MLNotifier.getInstance().sendNotificationMessage(message);
             }
             MLLog.i("message id:%s, from:%s, mseeage:%s", message.getMsgId(), message.getFrom(), message.toString());
         }

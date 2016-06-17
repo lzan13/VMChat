@@ -14,6 +14,7 @@ import com.squareup.leakcanary.RefWatcher;
 
 import net.melove.app.easechat.application.MLActivityManager;
 import net.melove.app.easechat.application.MLApplication;
+import net.melove.app.easechat.application.MLEasemobHelper;
 import net.melove.app.easechat.communal.util.MLLog;
 
 /**
@@ -26,7 +27,7 @@ public class MLBaseActivity extends AppCompatActivity {
     protected View mRootView;
 
     // 当前界面的上下文菜单对象
-    protected FragmentActivity mActivity;
+    protected MLBaseActivity mActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +94,7 @@ public class MLBaseActivity extends AppCompatActivity {
         super.onResume();
         MLLog.i("%s onResume", this.getClass().getSimpleName());
         MLActivityManager.getInstance().setCurrActivity(this);
+        MLEasemobHelper.getInstance().removeActivity(mActivity);
     }
 
     @Override
@@ -106,6 +108,7 @@ public class MLBaseActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         MLLog.i("%s onStop", this.getClass().getSimpleName());
+        MLEasemobHelper.getInstance().removeActivity(mActivity);
     }
 
     @Override

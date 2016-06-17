@@ -5,14 +5,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/ml_gray_26"
+    android:clipChildren="false"
     android:fitsSystemWindows="true"
     tools:context="net.melove.app.easechat.test.MLTestActivity">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/ml_widget_appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:theme="@style/MLTheme.AppBarOverlay"
-        app:elevation="@dimen/ml_dimen_0">
+        app:elevation="@dimen/ml_dimen_0"
+        app:theme="@style/MLTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -27,16 +30,48 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <RelativeLayout
+            android:id="@+id/ml_layout_top"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/ml_dimen_192"
+            android:background="@color/ml_red_26">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/bg_top"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/ml_layout_top"
+            android:background="@color/ml_red_dark_54"
+            android:orientation="vertical">
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/ml_dimen_16"
+        android:background="@color/ml_white"
+        android:gravity="center_vertical"
+        android:minHeight="@dimen/ml_dimen_48"
+        android:orientation="horizontal"
+        android:padding="@dimen/ml_dimen_8"
+        app:layout_anchor="@id/ml_layout_top"
+        app:layout_anchorGravity="bottom">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/ml_app_name"/>
-    </RelativeLayout>
 
+    </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

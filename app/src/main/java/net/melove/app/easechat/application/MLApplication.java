@@ -1,10 +1,16 @@
 package net.melove.app.easechat.application;
 
+import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
+
+import net.melove.app.easechat.communal.base.MLBaseActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by lzan13 on 2015/8/10
@@ -16,6 +22,7 @@ public class MLApplication extends Application {
     private static Context context;
 
     private static RefWatcher watcher;
+
 
     @Override
     public void onCreate() {
@@ -46,4 +53,6 @@ public class MLApplication extends Application {
     private void initEasemob() {
         MLEasemobHelper.getInstance().initEasemob(context);
     }
+
+
 }

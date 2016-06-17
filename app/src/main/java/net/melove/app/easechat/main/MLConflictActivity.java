@@ -43,12 +43,12 @@ public class MLConflictActivity extends MLBaseActivity {
                 onFinish();
             }
         });
-        conflictDialog.setNegativeButton(R.string.ml_btn_cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // 取消按钮
-            }
-        });
+//        conflictDialog.setNegativeButton(R.string.ml_btn_cancel, new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                // 取消按钮
+//            }
+//        });
         conflictDialog.setPositiveButton(R.string.ml_btn_i_know, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

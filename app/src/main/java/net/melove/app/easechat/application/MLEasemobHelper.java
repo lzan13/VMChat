@@ -21,10 +21,12 @@ import net.melove.app.easechat.R;
 import net.melove.app.easechat.application.eventbus.MLConnectionEvent;
 import net.melove.app.easechat.application.eventbus.MLInvitedEvent;
 import net.melove.app.easechat.application.eventbus.MLMessageEvent;
+import net.melove.app.easechat.communal.base.MLBaseActivity;
 import net.melove.app.easechat.communal.util.MLCrypto;
 import net.melove.app.easechat.communal.util.MLDate;
 import net.melove.app.easechat.communal.util.MLLog;
 import net.melove.app.easechat.communal.util.MLMessageUtils;
+import net.melove.app.easechat.conversation.MLChatActivity;
 import net.melove.app.easechat.database.MLDBHelper;
 import net.melove.app.easechat.invited.MLInvitedEntity;
 import net.melove.app.easechat.contacts.MLContactsEntity;
@@ -36,6 +38,7 @@ import net.melove.app.easechat.notification.MLNotifier;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -50,6 +53,10 @@ public class MLEasemobHelper {
 
     // MLEasemobHelper 单例对象
     private static MLEasemobHelper instance;
+
+    // 保存当前运行的 activity 对象，可用来判断程序是否处于前台，以及完全退出app等操作
+    private List<MLBaseActivity> mActivityList = new ArrayList<MLBaseActivity>();
+
 
     // 记录sdk是否初始化
     private boolean isInit;
@@ -201,7 +208,7 @@ public class MLEasemobHelper {
             @Override
             public void onDisconnected(final int errorCode) {
                 MLLog.d("MLEasemobHelper - onDisconnected - %d", errorCode);
-                Activity activity = MLActivityManager.getInstance().getCurrActivity();
+                MLBaseActivity activity = MLEasemobHelper.getInstance().getTopActivity();
                 Intent intent = new Intent();
                 if (activity != null) {
                     intent.setClass(activity, MLConflictActivity.class);
@@ -219,7 +226,7 @@ public class MLEasemobHelper {
                     isLogined = false;
                     signOut(null);
                     intent.putExtra(MLConstants.ML_EXTRA_USER_REMOVED, true);
-                    mContext.startActivity(intent);
+                    activity.startActivity(intent);
                 } else {
                     MLLog.d("con't servers - " + errorCode);
                     // 使用 EventBus 发布消息，可以被订阅此类型消息的订阅者监听到
@@ -247,6 +254,12 @@ public class MLEasemobHelper {
             @Override
             public void onMessageReceived(List<EMMessage> list) {
                 EMConversation conversation = null;
+                // 判断当前活动界面是不是聊天界面，如果是，全局不处理消息
+                if (MLEasemobHelper.getInstance().getActivityList().size() > 0) {
+                    if (MLEasemobHelper.getInstance().getTopActivity().getClass().getName().equals("MLChatActivity")) {
+                        return;
+                    }
+                }
                 for (EMMessage message : list) {
                     // 根据消息类型来获取回话对象
                     if (message.getChatType() == EMMessage.ChatType.Chat) {
@@ -256,11 +269,19 @@ public class MLEasemobHelper {
                     }
                     // 设置会话的最后时间
                     MLConversationExtUtils.setConversationLastTime(conversation);
+
+                    // 使用 EventBus 发布消息，可以被订阅此类型消息的订阅者监听到
+                    MLMessageEvent event = new MLMessageEvent();
+                    event.setMessage(message);
+                    EventBus.getDefault().post(event);
                 }
-                // 收到新消息，发送一条通知
-                MLNotifier.getInstance(MLApplication.getContext()).sendNotificationMessageList(list);
-                // 使用 EventBus 发布消息，可以被订阅此类型消息的订阅者监听到
-                EventBus.getDefault().post(new MLMessageEvent());
+                if (list.size() > 1) {
+                    // 收到多条新消息，发送一条消息集合的通知
+                    MLNotifier.getInstance().sendNotificationMessageList(list);
+                } else {
+                    // 只有一条消息，发送单条消息的通知
+                    MLNotifier.getInstance().sendNotificationMessage(list.get(0));
+                }
             }
 
             /**
@@ -274,6 +295,13 @@ public class MLEasemobHelper {
                     EMCmdMessageBody body = (EMCmdMessageBody) cmdMessage.getBody();
                     // 判断是不是撤回消息的透传
                     if (body.action().equals(MLConstants.ML_ATTR_RECALL)) {
+                        // 判断当前活动界面是不是聊天界面，如果是，全局不处理消息，聊天界面已经处理了撤回
+                        // 判断当前活动界面是不是聊天界面，如果是，全局不处理消息
+                        if (MLEasemobHelper.getInstance().getActivityList().size() > 0) {
+                            if (MLEasemobHelper.getInstance().getTopActivity().getClass().getName().equals("MLChatActivity")) {
+                                return;
+                            }
+                        }
                         MLMessageUtils.receiveRecallMessage(mContext, cmdMessage);
                     }
                 }
@@ -400,7 +428,7 @@ public class MLEasemobHelper {
                     MLInvitedDao.getInstance().saveInvited(invitedEntity);
                 }
                 // 调用发送通知栏提醒方法，提醒用户查看申请通知
-                MLNotifier.getInstance(MLApplication.getContext()).sendInvitedNotification(invitedEntity);
+                MLNotifier.getInstance().sendInvitedNotification(invitedEntity);
                 // 使用 EventBus 发布消息，可以被订阅此类型消息的订阅者监听到
                 EventBus.getDefault().post(new MLInvitedEvent());
             }
@@ -445,7 +473,7 @@ public class MLEasemobHelper {
                  * 调用发送通知栏提醒方法，提醒用户查看申请通知
                  * 这里是自定义封装号的一个类{@link MLNotifier}
                  */
-                MLNotifier.getInstance(MLApplication.getContext()).sendInvitedNotification(invitedEntity);
+                MLNotifier.getInstance().sendInvitedNotification(invitedEntity);
                 // 使用 EventBus 发布消息，可以被订阅此类型消息的订阅者监听到
                 EventBus.getDefault().post(new MLInvitedEvent());
             }
@@ -492,7 +520,7 @@ public class MLEasemobHelper {
                  * 调用发送通知栏提醒方法，提醒用户查看申请通知
                  * 这里是自定义封装号的一个类{@link MLNotifier}
                  */
-                MLNotifier.getInstance(MLApplication.getContext()).sendInvitedNotification(invitedEntity);
+                MLNotifier.getInstance().sendInvitedNotification(invitedEntity);
                 // 使用 EventBus 发布消息，可以被订阅此类型消息的订阅者监听到
                 EventBus.getDefault().post(new MLInvitedEvent());
             }
@@ -709,4 +737,47 @@ public class MLEasemobHelper {
         return null;
     }
 
+    /**
+     * 获取当前运行启动的 activity 的列表
+     *
+     * @return 返回保存列表
+     */
+    public List<MLBaseActivity> getActivityList() {
+        return mActivityList;
+    }
+
+
+    /**
+     * 获取当前运行的 activity
+     *
+     * @return 返回当前活动的activity
+     */
+    public MLBaseActivity getTopActivity() {
+        if (mActivityList.size() > 0) {
+            return mActivityList.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 添加当前activity到集合
+     *
+     * @param activity 需要添加的 activity
+     */
+    public void addActivity(MLBaseActivity activity) {
+        if (!mActivityList.contains(activity)) {
+            mActivityList.add(0, activity);
+        }
+    }
+
+    /**
+     * 从 Activity 运行列表移除当前要退出的 activity
+     *
+     * @param activity 要移除的 activity
+     */
+    public void removeActivity(MLBaseActivity activity) {
+        if (mActivityList.contains(activity)) {
+            mActivityList.remove(activity);
+        }
+    }
 }

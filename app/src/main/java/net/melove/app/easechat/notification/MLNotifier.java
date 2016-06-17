@@ -11,6 +11,8 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 
 import net.melove.app.easechat.R;
+import net.melove.app.easechat.application.MLApplication;
+import net.melove.app.easechat.application.MLConstants;
 import net.melove.app.easechat.conversation.MLChatActivity;
 import net.melove.app.easechat.main.MLMainActivity;
 import net.melove.app.easechat.invited.MLInvitedEntity;
@@ -24,6 +26,7 @@ import java.util.List;
 public class MLNotifier {
     private Context mContext;
 
+    // 通知栏提醒ID
     private int mInvitedNotifyId = 5120;
     private int mMsgNotifyId = 5121;
 
@@ -31,16 +34,19 @@ public class MLNotifier {
     private NotificationManager mNotificationManager = null;
     private NotificationCompat.Builder mBuilder = null;
 
-    private MLNotifier(Context context) {
-        mContext = context;
-        mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        mBuilder = new NotificationCompat.Builder(context);
+    /**
+     * 私有的构造方法
+     */
+    private MLNotifier() {
+        mContext = MLApplication.getContext();
+        mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        mBuilder = new NotificationCompat.Builder(mContext);
         init();
     }
 
-    public static MLNotifier getInstance(Context context) {
+    public static MLNotifier getInstance() {
         if (instance == null) {
-            instance = new MLNotifier(context);
+            instance = new MLNotifier();
         }
         return instance;
     }
@@ -150,6 +156,7 @@ public class MLNotifier {
         mBuilder.setContentTitle(mContext.getString(R.string.ml_app_name));
         // 设置通知栏点击意图（点击通知栏跳转到相应的页面）
         Intent intent = new Intent(mContext, MLChatActivity.class);
+        intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, message.getFrom());
         PendingIntent pIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         mBuilder.setContentIntent(pIntent);
         // 紧急事件，比如通话，跳过发送通知栏提醒，直接响应对应的事件
@@ -177,7 +184,7 @@ public class MLNotifier {
 
         mBuilder.setContentTitle(mContext.getString(R.string.ml_app_name));
         // 设置通知栏点击意图（点击通知栏跳转到相应的页面）
-        Intent intent = new Intent(mContext, MLChatActivity.class);
+        Intent intent = new Intent(mContext, MLMainActivity.class);
         PendingIntent pIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         mBuilder.setContentIntent(pIntent);
         // 紧急事件，比如通话，跳过发送通知栏提醒，直接响应对应的事件
