@@ -52,7 +52,6 @@ android {
 
 }
 
-
 /**
  * 项目依赖，包含引入的第三方 SDK以及Android官方 Support 库
  */
@@ -66,7 +65,7 @@ dependencies {
      */
     compile 'com.android.support:design:23.3.0'
     // Google Play Service 库，使用GCM推送需要
-    // compile "com.google.android.gms:play-services-gcm:8.4.0"
+    compile "com.google.android.gms:play-services-gcm:9.0.0"
     // LeakCanary Debug库，开源捕获内存溢出的库
     compile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
     // LeakCanary 发版的库

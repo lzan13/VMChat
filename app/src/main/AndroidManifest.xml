@@ -45,8 +45,6 @@
     <!--<uses-permission android:name="android.permission.READ_PROFILE"/>-->
     <!-- 读取联系人 -->
     <!--<uses-permission android:name="android.permission.READ_CONTACTS"/>-->
-    <!-- 弹出系统级 Dialog 权限 -->
-    <!--<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>-->
 
     <!-- Demo新添加的一些属性 -->
     <!-- 访问GMail账户列表 -->
@@ -60,20 +58,10 @@
     <!-- 连续广播（允许一个程序收到广播后快速收到下一个广播） -->
     <uses-permission android:name="android.permission.BROADCAST_STICKY"/>
 
-    <!-- 小米推送的权限 -->
-    <permission
-        android:name="net.melove.app.easechat.permission.MIPUSH_RECEIVE"
-        android:protectionLevel="signature"/>
-
-    <uses-permission android:name="net.melove.demo.chat.permission.MIPUSH_RECEIVE"/>
-
     <!-- 配置 Google 推送需要的权限 -->
-    <!-- <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/> -->
-    <!-- <permission -->
-    <!-- android:name="net.melove.demo.chat.permission.C2D_MESSAGE" -->
-    <!-- android:protectionLevel="signature"/> -->
-    <!-- <uses-permission android:name="net.melove.demo.chat.permission.C2D_MESSAGE"/> -->
-    <!--权限配置 end-->
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <!-- GCM permission end -->
 
     <!-- 程序的入口 -->
     <application
@@ -185,33 +173,6 @@
             </intent-filter>
         </receiver>
         <!--环信sdk配置 end-->
-
-        <!-- 配置小米推送服务 这里并没有按照小米官方文档配置全部 Service-->
-        <service
-            android:name="com.xiaomi.mipush.sdk.PushMessageHandler"
-            android:enabled="true"
-            android:exported="true"/>
-        <!-- 小米推送消息处理服务 -->
-
-        <service
-            android:name="com.xiaomi.mipush.sdk.MessageHandleService"
-            android:enabled="true"/>
-
-        <!-- 配置sdk实现的小米推送 广播接收器 -->
-        <receiver
-            android:name="com.hyphenate.chat.EMMipushReceiver"
-            android:enabled="true">
-            <intent-filter>
-                <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="ccom.xiaomi.mipush.MESSAGE_ARRIVED"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="com.xiaomi.mipush.ERROR"/>
-            </intent-filter>
-        </receiver>
-        <!--小米推送服务配置 end-->
 
         <!--设置多渠道打包的渠道名，ML_CHANNEL_ID 是渠道名占位符-->
         <!--<meta-data-->
