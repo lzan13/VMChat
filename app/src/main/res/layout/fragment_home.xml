@@ -14,13 +14,13 @@
             android:id="@+id/ml_widget_tablayout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/ml_dimen_36"
-            app:tabBackground="@drawable/ml_click_rectangle_white"
-            app:tabIndicatorColor="@color/ml_tab_indicator"
+            app:tabBackground="@color/ml_theme_primary"
+            app:tabIndicatorColor="@color/ml_white_87"
             app:tabIndicatorHeight="@dimen/ml_dimen_2"
             app:tabMode="fixed"
-            app:tabSelectedTextColor="@color/ml_tab_selected"
-            app:tabTextColor="@color/ml_tab_normal"/>
-        
+            app:tabSelectedTextColor="@color/ml_white_87"
+            app:tabTextColor="@color/ml_white_54"/>
+
         <!--盛放 Fragment 的容器-->
         <android.support.v4.view.ViewPager
             android:id="@+id/ml_view_viewpager"

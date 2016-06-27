@@ -63,7 +63,7 @@ public class MLConstants {
     /**
      * 当界面跳转需要返回结果时，定义跳转请求码
      */
-    public static final int ML_REQUEST_CODE_PHOTO = 0x01;
+    public static final int ML_REQUEST_CODE_CAMERA = 0x01;
     public static final int ML_REQUEST_CODE_GALLERY = 0x02;
     public static final int ML_REQUEST_CODE_VIDEO = 0x03;
     public static final int ML_REQUEST_CODE_FILE = 0x04;

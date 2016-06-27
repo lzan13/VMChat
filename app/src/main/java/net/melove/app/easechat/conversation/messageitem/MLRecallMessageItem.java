@@ -38,6 +38,11 @@ public class MLRecallMessageItem extends MLMessageItem {
         mContentView.setText(messageStr);
     }
 
+    @Override
+    protected void onItemLongClick() {
+
+    }
+
     /**
      * 解析对应的xml 布局，填充当前 ItemView，并初始化控件
      */
@@ -46,10 +51,5 @@ public class MLRecallMessageItem extends MLMessageItem {
         mInflater.inflate(R.layout.item_msg_sys_recall, this);
         mTimeView = (TextView) findViewById(R.id.ml_text_msg_time);
         mContentView = (TextView) findViewById(R.id.ml_text_msg_content);
-    }
-
-    @Override
-    protected void onItemLongClick() {
-
     }
 }

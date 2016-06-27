@@ -43,8 +43,15 @@ public class MLTextMessageItem extends MLMessageItem {
     public void onSetupView(EMMessage message) {
         mMessage = message;
 
-        // 设置消息消息发送者的名称
-        mUsernameView.setText(message.getFrom());
+        // 判断如果是单聊或者消息是发送方，不显示username
+        if (mMessage.getChatType() == EMMessage.ChatType.Chat || mMessage.direct() == EMMessage.Direct.SEND) {
+            mUsernameView.setVisibility(View.GONE);
+        } else {
+            // 设置消息消息发送者的名称
+            mUsernameView.setText(message.getFrom());
+            mUsernameView.setVisibility(View.VISIBLE);
+        }
+
         // 设置消息时间
         mTimeView.setText(MLDate.long2Time(message.getMsgTime()));
 
@@ -54,26 +61,6 @@ public class MLTextMessageItem extends MLMessageItem {
 
         // 刷新界面显示
         refreshView();
-    }
-
-    /**
-     * 解析对应的xml 布局，填充当前 ItemView，并初始化控件
-     */
-    @Override
-    protected void onInflateView() {
-        if (mViewType == MLConstants.MSG_TYPE_TEXT_SEND) {
-            mInflater.inflate(R.layout.item_msg_text_send, this);
-        } else {
-            mInflater.inflate(R.layout.item_msg_text_received, this);
-        }
-
-        mAvatarView = (MLImageView) findViewById(R.id.ml_img_msg_avatar);
-        mContentView = (TextView) findViewById(R.id.ml_text_msg_content);
-        mUsernameView = (TextView) findViewById(R.id.ml_text_msg_username);
-        mTimeView = (TextView) findViewById(R.id.ml_text_msg_time);
-        mResendView = (ImageView) findViewById(R.id.ml_img_msg_resend);
-        mProgressBar = (ProgressBar) findViewById(R.id.ml_progressbar_msg);
-        mAckStatusView = (ImageView) findViewById(R.id.ml_img_msg_ack);
     }
 
     /**
@@ -157,6 +144,26 @@ public class MLTextMessageItem extends MLMessageItem {
         }
         // 设置消息ACK 状态
         setAckStatusView();
+    }
+
+    /**
+     * 解析对应的xml 布局，填充当前 ItemView，并初始化控件
+     */
+    @Override
+    protected void onInflateView() {
+        if (mViewType == MLConstants.MSG_TYPE_TEXT_SEND) {
+            mInflater.inflate(R.layout.item_msg_text_send, this);
+        } else {
+            mInflater.inflate(R.layout.item_msg_text_received, this);
+        }
+
+        mAvatarView = (MLImageView) findViewById(R.id.ml_img_msg_avatar);
+        mContentView = (TextView) findViewById(R.id.ml_text_msg_content);
+        mUsernameView = (TextView) findViewById(R.id.ml_text_msg_username);
+        mTimeView = (TextView) findViewById(R.id.ml_text_msg_time);
+        mResendView = (ImageView) findViewById(R.id.ml_img_msg_resend);
+        mProgressBar = (ProgressBar) findViewById(R.id.ml_progressbar_msg);
+        mAckStatusView = (ImageView) findViewById(R.id.ml_img_msg_ack);
     }
 
 }

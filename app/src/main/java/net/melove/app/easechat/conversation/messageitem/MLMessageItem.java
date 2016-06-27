@@ -63,6 +63,7 @@ public abstract class MLMessageItem extends LinearLayout {
     // 重发按钮
     protected ImageView mResendView;
     // 消息进度
+    protected View mProgressLayout;
     protected ProgressBar mProgressBar;
     protected TextView mPercentView;
     // Ack状态显示
@@ -93,17 +94,17 @@ public abstract class MLMessageItem extends LinearLayout {
     }
 
     /**
+     * 抽象方法，填充当前 Item，子类必须实现
+     * 解析对应的xml 布局，填充当前 ItemView，并初始化控件
+     */
+    protected abstract void onInflateView();
+
+    /**
      * 处理数据显示
      *
      * @param message 需要展示的 EMMessage 对象
      */
     public abstract void onSetupView(EMMessage message);
-
-    /**
-     * 抽象方法，填充当前 Item，子类必须实现
-     * 解析对应的xml 布局，填充当前 ItemView，并初始化控件
-     */
-    protected abstract void onInflateView();
 
     /**
      * 当前Item 长按监听

@@ -14,6 +14,8 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 
+import net.melove.app.easechat.application.MLApplication;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -79,7 +81,7 @@ public class MLFile {
     /**
      * 复制文件
      *
-     * @param srcPath 源文件地址
+     * @param srcPath   源文件地址
      * @param filepath2 目标文件地址
      * @return 返回复制结果
      */
@@ -165,8 +167,8 @@ public class MLFile {
     /**
      * 根据传入的路径，获取图片的宽高
      *
-     * @param filepath
-     * @return
+     * @param filepath 图片文件的路径
+     * @return 返回图片的宽高是拼接的字符串
      */
     public static String getImageSize(String filepath) {
         BitmapFactory.Options options = new BitmapFactory.Options();
@@ -211,6 +213,178 @@ public class MLFile {
     }
 
     /**
+     * 获取Android系统的一些默认路径
+     * 不常用：
+     * Environment.getDataDirectory().getPath()             : /data
+     * Environment.getDownloadCacheDirectory().getPath()    : /cache
+     * Environment.getRootDirectory().getPath()             : /system
+     *
+     * 常用：
+     * Environment.getExternalStorageDirectory().getPath()  : /mnt/sdcard (storage/emulated/0)
+     * Context.getCacheDir().getPath()                      : /data/data/packagename/cache
+     * Context.getExternalCacheDir().getPath()              : /mnt/sdcard/Android/data/packagename/cache
+     * Context.getFilesDir().getPath()                      : /data/data/packagename/files
+     * Context.getObbDir().getPath()                        : /mnt/sdcard/Android/obb/packagename
+     * Context.getPackageName()                             : packagename
+     * Context.getPackageCodePath()                         : /data/app/packagename-1.apk
+     * Context.getPackageResourcePath()                     : /data/app/packagename-1.apk
+     */
+    /**
+     * 获取 root 下的目录，一般不常用
+     *
+     * @return 返回得到的目录
+     */
+    /**
+     *
+     public static String getDataPath() {
+     String rootCache = Environment.getDownloadCacheDirectory().getPath();
+     String rootData = Environment.getDataDirectory().getPath();
+     String rootSystem = Environment.getRootDirectory().getPath();
+
+     // SDCard 目录
+     Environment.getExternalStorageDirectory().getPath();
+     // 当前 app 在 root 下的缓存目录
+     MLApplication.getContext().getCacheDir().getPath();
+     // 当前 app 在 SDCard 下的缓存目录
+     MLApplication.getContext().getExternalCacheDir().getPath();
+     // 当前 app 在 root 下的 files 目录
+     MLApplication.getContext().getFilesDir().getPath();
+     MLApplication.getContext().getFilesDir().getPath();
+     // 当前 app 在 SDCard 下的 obb 目录，一般是apk包过大要分出资源包，游戏用的比较多
+     MLApplication.getContext().getObbDir().getPath();
+     // 获取当前 app 包名
+     MLApplication.getContext().getPackageName();
+     // 获取当前 app 代码路径
+     MLApplication.getContext().getPackageCodePath();
+     // 获取当前 app 资源路径
+     MLApplication.getContext().getPackageResourcePath();
+
+     // 获取常用目录的方法，参数是需要获取的目录类型，可以是download，camera
+     Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+     return null;
+     }
+     */
+
+
+    /**
+     * 获取 /mnt/sdcard (/storage/emulated/0) 目录
+     *
+     * @return 返回得到的路径
+     */
+    public static String getSDCard() {
+        return Environment.getExternalStorageDirectory().getPath() + "/";
+    }
+
+    /**
+     * 获取 /data/data/packagename/cache 目录
+     *
+     * @return 返回得到的路径
+     */
+    public static String getCacheFromData() {
+        return MLApplication.getContext().getCacheDir().getPath() + "/";
+    }
+
+    /**
+     * 获取 /mnt/sdcard/Android/data/packagename/cache 目录
+     *
+     * @return 返回得到的路径
+     */
+    public static String getCacheFromSDCard() {
+        return MLApplication.getContext().getExternalCacheDir().getPath() + "/";
+    }
+
+    /**
+     * 获取/data/data/packagename/files 目录
+     *
+     * @return 返回得到的路径
+     */
+    public static String getFilesFromData() {
+        return MLApplication.getContext().getFilesDir().getPath() + "/";
+    }
+
+    /**
+     * 获取 /mnt/sdcard/Android/data/packagename/files 目录
+     *
+     * @return 返回得到的路径
+     */
+    public static String getFilesFromSDCard() {
+        return MLApplication.getContext().getExternalFilesDir("").getAbsolutePath() + "/";
+    }
+
+    /**
+     * 获取 /mnt/sdcard/Android/obb/packagename 目录
+     *
+     * @return 返回得到的路径
+     */
+    public static String getOBB() {
+        return MLApplication.getContext().getObbDir().getAbsolutePath() + "/";
+    }
+
+    /**
+     * 获取设备默认的相册目录
+     *
+     * @return 返回得到的路径
+     */
+    public static String getDCIM() {
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/";
+    }
+
+    /**
+     * 获取设备默认的下载目录
+     *
+     * @return 返回得到的路径
+     */
+    public static String getDownload() {
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + "/";
+    }
+
+    /**
+     * 获取设备默认的音乐目录
+     *
+     * @return 返回得到的路径
+     */
+    public static String getMusic() {
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath() + "/";
+    }
+
+    /**
+     * 获取设备默认的电影目录
+     *
+     * @return 返回得到的路径
+     */
+    public static String getMovies() {
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getAbsolutePath() + "/";
+    }
+
+    /**
+     * 获取 packagename 目录
+     *
+     * @return 返回得到的路径
+     */
+    public static String getPackageName() {
+        return MLApplication.getContext().getPackageName();
+    }
+
+    /**
+     * 获取 /data/app/packagename-1.apk 目录
+     *
+     * @return 返回得到的路径
+     */
+    public static String getPackageCode() {
+        return MLApplication.getContext().getPackageCodePath();
+    }
+
+    /**
+     * 获取 /data/app/packagename-1.apk 目录
+     *
+     * @return 返回得到的路径
+     */
+    public static String getPackageResource() {
+        return MLApplication.getContext().getPackageResourcePath();
+    }
+
+
+    /**
      * 根据 Uri 获取文件的真实路径，这个是网上的方法，用的还是比较多的，可以参考，
      * 不过在选择google相册的图片的时候，如果本地不存在图片会出现问题
      *
@@ -237,18 +411,15 @@ public class MLFile {
                 }
 
                 // TODO handle non-primary volumes
-            }
-            // DownloadsProvider
-            else if (isDownloadsDocument(uri)) {
-
+            } else if (isDownloadsDocument(uri)) {
+                // DownloadsProvider
                 final String id = DocumentsContract.getDocumentId(uri);
                 final Uri contentUri = ContentUris.withAppendedId(
                         Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
 
                 return getDataColumn(context, contentUri, null, null);
-            }
-            // MediaProvider
-            else if (isMediaDocument(uri)) {
+            } else if (isMediaDocument(uri)) {
+                // MediaProvider
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
                 final String type = split[0];

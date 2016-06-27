@@ -4,13 +4,16 @@ import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -38,6 +41,7 @@ import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.exceptions.HyphenateException;
 
 import net.melove.app.easechat.R;
+import net.melove.app.easechat.application.MLApplication;
 import net.melove.app.easechat.application.eventbus.MLMessageEvent;
 import net.melove.app.easechat.communal.base.MLBaseActivity;
 import net.melove.app.easechat.application.MLConstants;
@@ -98,6 +102,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     // 聊天扩展菜单
     private LinearLayout mAttachMenuLayout;
     private GridView mAttachMenuGridView;
+    private Uri mCameraImageUri = null;
+
     // 是否发送原图
     private boolean isOrigin = true;
 
@@ -278,10 +284,17 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 R.mipmap.ic_attach_video,
                 R.mipmap.ic_attach_file,
                 R.mipmap.ic_attach_location,
-                R.mipmap.ic_attach_contacts,
-                R.mipmap.ic_attach_gift
+                R.mipmap.ic_attach_gift,
+                R.mipmap.ic_attach_contacts
         };
-        String[] menuTitles = {mActivity.getString(R.string.ml_photo), mActivity.getString(R.string.ml_location), mActivity.getString(R.string.ml_video), mActivity.getString(R.string.ml_file), mActivity.getString(R.string.ml_gift), mActivity.getString(R.string.ml_contacts)};
+        String[] menuTitles = {
+                mActivity.getString(R.string.ml_photo),
+                mActivity.getString(R.string.ml_video),
+                mActivity.getString(R.string.ml_file),
+                mActivity.getString(R.string.ml_location),
+                mActivity.getString(R.string.ml_gift),
+                mActivity.getString(R.string.ml_contacts)
+        };
         String[] from = {"photo", "title"};
         int[] to = {R.id.ml_img_menu_photo, R.id.ml_text_menu_title};
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
@@ -299,21 +312,27 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                 case 0:
-                    // 打开选择图片界面
-                    openSelectPhoto();
+                    // 弹出选择图片方式对话框
+                    selectPhotoMode();
                     break;
                 case 1:
+                    // 视频
                     break;
                 case 2:
-                    // 发送文件
-                    openSelectFile();
+                    // 选择文件
+                    openFileManager();
                     break;
                 case 3:
                     // 发送位置
                     break;
                 case 4:
+                    // 礼物
                     break;
                 case 5:
+                    // 联系人 名片
+                    break;
+                default:
+                    MLToast.makeToast(R.string.ml_hint_chat).show();
                     break;
                 }
                 onAttachMenu();
@@ -652,9 +671,16 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         MLLog.d("onActivityResult requestCode %d, resultCode %d", requestCode, resultCode);
+        if (resultCode != RESULT_OK) {
+            return;
+        }
         switch (requestCode) {
-        case MLConstants.ML_REQUEST_CODE_PHOTO:
-            // 选择图片后返回获取返回的图片路径，然后发送图片
+        case MLConstants.ML_REQUEST_CODE_CAMERA:
+            // 相机拍摄的图片
+            sendImageMessage(mCameraImageUri.getPath());
+            break;
+        case MLConstants.ML_REQUEST_CODE_GALLERY:
+            // 图库选择的图片，选择图片后返回获取返回的图片路径，然后发送图片
             if (data != null) {
                 String imagePath = MLFile.getPath(mActivity, data.getData());
                 if (TextUtils.isEmpty(imagePath) || !new File(imagePath).exists()) {
@@ -700,30 +726,75 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 // 结束当前Activity
                 onFinish();
                 break;
-            // 表情按钮
             case R.id.ml_img_chat_emotion:
+                // 表情按钮
 
                 break;
-            // 发送按钮
             case R.id.ml_img_chat_send:
+                // 发送按钮
                 sendTextMessage();
                 break;
-            // 语音按钮
             case R.id.ml_img_chat_voice:
+                // 语音按钮
 
                 break;
-            // 附件菜单背景，用来关闭菜单
             case R.id.ml_layout_chat_attach_menu:
+                // 附件菜单背景，点击空白处用来关闭菜单
                 onAttachMenu();
                 break;
             }
         }
     };
 
+    private void selectPhotoMode() {
+        String[] menus = {
+                mActivity.getString(R.string.ml_menu_chat_camera),
+                mActivity.getString(R.string.ml_menu_chat_gallery)
+        };
+        AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
+        dialog.setTitle(mActivity.getString(R.string.ml_dialog_title_select_photo_mode));
+
+        dialog.setItems(menus, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                case 0:
+                    // 打开相机直接拍照
+                    openCamera();
+                    break;
+                case 1:
+                    // 打开图库选择图片
+                    openGallery();
+                    break;
+                default:
+                    openGallery();
+                    break;
+                }
+            }
+        });
+        dialog.show();
+    }
+
+    private void openCamera() {
+        // 定义拍照后图片保存的路径以及文件名
+        String imagePath = MLFile.getDCIM() + "IMG" + MLDate.getCurrentDate4() + ".jpg";
+        // 激活相机
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // 判断存储卡是否可以用，可用进行存储
+        if (MLFile.hasSdcard()) {
+            // 根据文件路径解析成Uri
+            mCameraImageUri = Uri.fromFile(new File(imagePath));
+            // 将Uri设置为媒体输出的目标，目的就是为了等下拍照保存在自己设定的路径
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, mCameraImageUri);
+        }
+        // 根据 Intent 启动一个带有返回值的 Activity，这里启动的就是相机，返回选择图片的地址
+        mActivity.startActivityForResult(intent, MLConstants.ML_REQUEST_CODE_CAMERA);
+    }
+
     /**
-     * 打开系统图片选择器，去进行选择图片
+     * 打开系统图库，去进行选择图片
      */
-    private void openSelectPhoto() {
+    private void openGallery() {
         Intent intent = null;
         if (Build.VERSION.SDK_INT < 19) {
             intent = new Intent();
@@ -734,13 +805,13 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             // 在Android 系统版本大于19 上，调用系统选择图片方法稍有不同
             intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         }
-        mActivity.startActivityForResult(intent, MLConstants.ML_REQUEST_CODE_PHOTO);
+        mActivity.startActivityForResult(intent, MLConstants.ML_REQUEST_CODE_GALLERY);
     }
 
     /**
-     * 打开系统文件选择器，去选择文件
+     * 打开系统文件管理器，去选择文件
      */
-    private void openSelectFile() {
+    private void openFileManager() {
         // 设置intent属性，跳转到系统文件选择界面
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_GET_CONTENT);

@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion '23.0.2'
+    buildToolsVersion '24.0.0'
     defaultConfig {
         applicationId "net.melove.app.easechat"
         minSdkVersion 15
@@ -44,12 +44,10 @@ android {
 //        flavor -> flavor.manifestPlaceholders = [EM_APPKEY: name]
 //    }
 
-    // 打开增量编译（实验功能）
+    // 增量编译
     dexOptions {
         incremental true
     }
-
-
 }
 
 /**
@@ -64,8 +62,10 @@ dependencies {
      *  recyclerView库
      */
     compile 'com.android.support:design:23.3.0'
+    // 解决方法数超过65536问题扩展库
+    compile 'com.android.support:multidex:1.0.0'
     // Google Play Service 库，使用GCM推送需要
-    compile "com.google.android.gms:play-services-gcm:9.0.0"
+    compile 'com.google.android.gms:play-services-gcm:9.0.0'
     // LeakCanary Debug库，开源捕获内存溢出的库
     compile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
     // LeakCanary 发版的库

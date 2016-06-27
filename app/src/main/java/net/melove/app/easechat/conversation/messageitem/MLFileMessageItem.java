@@ -49,8 +49,14 @@ public class MLFileMessageItem extends MLMessageItem {
     public void onSetupView(EMMessage message) {
         mMessage = message;
 
-        // 设置消息消息发送者的名称
-        mUsernameView.setText(message.getFrom());
+        // 判断如果是单聊或者消息是发送方，不显示username
+        if (mMessage.getChatType() == EMMessage.ChatType.Chat || mMessage.direct() == EMMessage.Direct.SEND) {
+            mUsernameView.setVisibility(View.GONE);
+        } else {
+            // 设置消息消息发送者的名称
+            mUsernameView.setText(message.getFrom());
+            mUsernameView.setVisibility(View.VISIBLE);
+        }
         // 设置消息时间
         mTimeView.setText(MLDate.long2Time(mMessage.getMsgTime()));
 
@@ -64,29 +70,6 @@ public class MLFileMessageItem extends MLMessageItem {
 
         // 刷新界面显示
         refreshView();
-    }
-
-    /**
-     * 解析对应的xml 布局，填充当前 ItemView，并初始化控件
-     */
-    @Override
-    protected void onInflateView() {
-        if (mViewType == MLConstants.MSG_TYPE_FILE_SEND) {
-            mInflater.inflate(R.layout.item_msg_file_send, this);
-        } else {
-            mInflater.inflate(R.layout.item_msg_file_received, this);
-        }
-
-        mAvatarView = (MLImageView) findViewById(R.id.ml_img_msg_avatar);
-        mImageView = (MLImageView) findViewById(R.id.ml_img_msg_image);
-        mUsernameView = (TextView) findViewById(R.id.ml_text_msg_username);
-        mTimeView = (TextView) findViewById(R.id.ml_text_msg_time);
-        mContentView = (TextView) findViewById(R.id.ml_text_msg_content);
-        mContentSizeView = (TextView) findViewById(R.id.ml_text_msg_size);
-        mResendView = (ImageView) findViewById(R.id.ml_img_msg_resend);
-        mProgressBar = (ProgressBar) findViewById(R.id.ml_progressbar_msg);
-        mPercentView = (TextView) findViewById(R.id.ml_text_msg_progress_percent);
-        mAckStatusView = (ImageView) findViewById(R.id.ml_img_msg_ack);
     }
 
     /**
@@ -145,16 +128,14 @@ public class MLFileMessageItem extends MLMessageItem {
         switch (mMessage.status()) {
         case SUCCESS:
             mAckStatusView.setVisibility(View.VISIBLE);
-            mProgressBar.setVisibility(View.GONE);
-            mPercentView.setVisibility(View.GONE);
+            mProgressLayout.setVisibility(View.GONE);
             mResendView.setVisibility(View.GONE);
             break;
         case FAIL:
         case CREATE:
             // 当消息在发送过程中被Kill，消息的状态会变成Create，而且永远不会发送成功，所以这里把CREATE状态莪要设置为失败
             mAckStatusView.setVisibility(View.GONE);
-            mProgressBar.setVisibility(View.GONE);
-            mPercentView.setVisibility(View.GONE);
+            mProgressLayout.setVisibility(View.GONE);
             mResendView.setVisibility(View.VISIBLE);
             mResendView.setOnClickListener(new OnClickListener() {
                 @Override
@@ -165,9 +146,7 @@ public class MLFileMessageItem extends MLMessageItem {
             break;
         case INPROGRESS:
             mAckStatusView.setVisibility(View.GONE);
-            mProgressBar.setVisibility(View.VISIBLE);
-            mPercentView.setVisibility(View.VISIBLE);
-            mPercentView.setText("0%");
+            mProgressLayout.setVisibility(View.VISIBLE);
             mResendView.setVisibility(View.GONE);
             break;
         }
@@ -175,6 +154,11 @@ public class MLFileMessageItem extends MLMessageItem {
         setAckStatusView();
     }
 
+    /**
+     * 使用注解的方式实现EventBus的观察者方法，用来监听特定事件
+     *
+     * @param event 要监听的事件类型
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventBus(MLMessageEvent event) {
         EMMessage message = event.getMessage();
@@ -183,8 +167,32 @@ public class MLFileMessageItem extends MLMessageItem {
         }
         if (message.status() == EMMessage.Status.INPROGRESS) {
             // 设置消息进度百分比
-            mPercentView.setText(event.getProgress() + "%");
+            mPercentView.setText(String.valueOf(event.getProgress()));
         }
+    }
+
+    /**
+     * 解析对应的xml 布局，填充当前 ItemView，并初始化控件
+     */
+    @Override
+    protected void onInflateView() {
+        if (mViewType == MLConstants.MSG_TYPE_FILE_SEND) {
+            mInflater.inflate(R.layout.item_msg_file_send, this);
+        } else {
+            mInflater.inflate(R.layout.item_msg_file_received, this);
+        }
+
+        mAvatarView = (MLImageView) findViewById(R.id.ml_img_msg_avatar);
+        mImageView = (MLImageView) findViewById(R.id.ml_img_msg_image);
+        mUsernameView = (TextView) findViewById(R.id.ml_text_msg_username);
+        mTimeView = (TextView) findViewById(R.id.ml_text_msg_time);
+        mContentView = (TextView) findViewById(R.id.ml_text_msg_content);
+        mContentSizeView = (TextView) findViewById(R.id.ml_text_msg_size);
+        mResendView = (ImageView) findViewById(R.id.ml_img_msg_resend);
+        mProgressLayout = findViewById(R.id.ml_layout_progress);
+        mProgressBar = (ProgressBar) findViewById(R.id.ml_progressbar_msg);
+        mPercentView = (TextView) findViewById(R.id.ml_text_msg_progress_percent);
+        mAckStatusView = (ImageView) findViewById(R.id.ml_img_msg_ack);
     }
 
     @Override

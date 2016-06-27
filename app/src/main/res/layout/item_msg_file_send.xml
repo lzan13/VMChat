@@ -51,68 +51,101 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/bubble_msg_send"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/ml_dimen_8">
-
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <net.melove.app.easechat.communal.widget.MLImageView
-                            android:id="@+id/ml_img_msg_image"
-                            android:layout_width="@dimen/ml_dimen_56"
-                            android:layout_height="@dimen/ml_dimen_56"
-                            android:src="@mipmap/ic_attach_file"/>
-
-                        <LinearLayout
-                            android:layout_width="@dimen/ml_dimen_40"
-                            android:layout_height="@dimen/ml_dimen_40"
-                            android:layout_centerInParent="true"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:padding="@dimen/ml_dimen_2">
-
-                            <ProgressBar
-                                android:id="@+id/ml_progressbar_msg"
-                                android:layout_width="@dimen/ml_dimen_20"
-                                android:layout_height="@dimen/ml_dimen_20"
-                                android:visibility="visible"/>
-
-                            <TextView
-                                android:id="@+id/ml_text_msg_progress_percent"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/ml_shape_text_background_black"
-                                android:paddingLeft="@dimen/ml_dimen_4"
-                                android:paddingRight="@dimen/ml_dimen_4"
-                                android:text="@string/ml_test"
-                                android:textColor="@color/ml_white_87"
-                                android:textSize="@dimen/ml_size_10"/>
-                        </LinearLayout>
-                    </RelativeLayout>
+                    android:orientation="vertical"
+                    android:paddingLeft="@dimen/ml_dimen_8"
+                    android:paddingRight="@dimen/ml_dimen_12"
+                    android:paddingTop="@dimen/ml_dimen_8">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/ml_dimen_4"
-                        android:orientation="vertical">
+                        android:orientation="horizontal">
 
-                        <TextView
-                            android:id="@+id/ml_text_msg_content"
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <net.melove.app.easechat.communal.widget.MLImageView
+                                android:id="@+id/ml_img_msg_image"
+                                android:layout_width="@dimen/ml_dimen_56"
+                                android:layout_height="@dimen/ml_dimen_56"
+                                android:src="@mipmap/ic_attach_file"/>
+
+                            <RelativeLayout
+                                android:id="@+id/ml_layout_progress"
+                                android:layout_width="@dimen/ml_dimen_40"
+                                android:layout_height="@dimen/ml_dimen_40"
+                                android:layout_centerInParent="true"
+                                android:background="@drawable/ml_shape_text_background_black"
+                                android:padding="@dimen/ml_dimen_2">
+
+                                <ProgressBar
+                                    android:id="@+id/ml_progressbar_msg"
+                                    android:layout_width="@dimen/ml_dimen_32"
+                                    android:layout_height="@dimen/ml_dimen_32"
+                                    android:layout_centerInParent="true"
+                                    android:visibility="visible"/>
+
+                                <TextView
+                                    android:id="@+id/ml_text_msg_progress_percent"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerInParent="true"
+                                    android:text="@string/ml_test"
+                                    android:textColor="@color/ml_white_87"
+                                    android:textSize="@dimen/ml_size_10"/>
+                            </RelativeLayout>
+                        </RelativeLayout>
+
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:maxWidth="@dimen/ml_dimen_192"
-                            android:text="@string/ml_app_name"
-                            android:textColor="@color/ml_white_87"
-                            android:textSize="@dimen/ml_size_14"/>
+                            android:layout_marginLeft="@dimen/ml_dimen_8"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/ml_text_msg_content"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:maxWidth="@dimen/ml_dimen_192"
+                                android:text="@string/ml_app_name"
+                                android:textColor="@color/ml_white_87"
+                                android:textSize="@dimen/ml_size_14"/>
+
+                            <TextView
+                                android:id="@+id/ml_text_msg_size"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/ml_file"
+                                android:textColor="@color/ml_white_54"
+                                android:textSize="@dimen/ml_size_12"/>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|bottom"
+                        android:layout_marginBottom="@dimen/ml_dimen_2"
+                        android:layout_marginTop="@dimen/ml_dimen_2"
+                        android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/ml_text_msg_size"
+                            android:id="@+id/ml_text_msg_username"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/ml_file"
+                            android:layout_marginRight="@dimen/ml_dimen_8"
+                            android:text="@string/ml_hint_username"
                             android:textColor="@color/ml_white_54"
-                            android:textSize="@dimen/ml_size_12"/>
+                            android:textSize="@dimen/ml_size_8"/>
+
+                        <TextView
+                            android:id="@+id/ml_text_msg_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/ml_hint_time"
+                            android:textColor="@color/ml_white_54"
+                            android:textSize="@dimen/ml_size_8"/>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -124,35 +157,6 @@
                     melove:ml_border_color="@color/ml_white_87"
                     melove:ml_border_width="@dimen/ml_dimen_2"
                     melove:ml_shape_type="round"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/ml_dimen_1"
-                android:background="@drawable/ml_shape_text_background_black"
-                android:gravity="right"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/ml_dimen_2"
-                android:paddingRight="@dimen/ml_dimen_2">
-
-                <TextView
-                    android:id="@+id/ml_text_msg_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/ml_hint_time"
-                    android:textColor="@color/ml_white_54"
-                    android:textSize="@dimen/ml_size_8"/>
-
-                <TextView
-                    android:id="@+id/ml_text_msg_username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/ml_dimen_8"
-                    android:text="@string/ml_hint_username"
-                    android:textColor="@color/ml_white_54"
-                    android:textSize="@dimen/ml_size_8"/>
-
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
