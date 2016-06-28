@@ -176,26 +176,20 @@ public class MLSigninActivity extends MLBaseActivity {
              */
             @Override
             public void onSuccess() {
-                runOnUiThread(new Runnable() {
-                    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-                    @Override
-                    public void run() {
-                        mDialog.dismiss();
+                mDialog.dismiss();
 
-                        // 登录成功，把用户名保存在本地（可以不保存，根据自己的需求）
-                        MLSPUtil.put(mActivity, MLConstants.ML_SHARED_USERNAME, mUsername);
+                // 登录成功，把用户名保存在本地（可以不保存，根据自己的需求）
+                MLSPUtil.put(mActivity, MLConstants.ML_SHARED_USERNAME, mUsername);
 
-                        // 加载所有会话到内存
-                        EMClient.getInstance().chatManager().loadAllConversations();
-                        // 加载所有群组到内存
-                        EMClient.getInstance().groupManager().loadAllGroups();
+                // 加载所有会话到内存
+                EMClient.getInstance().chatManager().loadAllConversations();
+                // 加载所有群组到内存
+                EMClient.getInstance().groupManager().loadAllGroups();
 
-                        Intent intent = new Intent(mActivity, MLMainActivity.class);
-                        superJump(intent);
-                        // 根据不同的系统版本选择不同的 finish 方法
-                        onFinish();
-                    }
-                });
+                Intent intent = new Intent(mActivity, MLMainActivity.class);
+                superJump(intent);
+                // 根据不同的系统版本选择不同的 finish 方法
+                onFinish();
             }
 
             /**

@@ -56,8 +56,8 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
     /**
      * 构造方法
      *
-     * @param context      上下文对象，在解析布局的时候需要用到
-     * @param chatId       当前会话者的id，为username/groupId
+     * @param context 上下文对象，在解析布局的时候需要用到
+     * @param chatId  当前会话者的id，为username/groupId
      */
     public MLMessageAdapter(Context context, String chatId) {
         mContext = context;
@@ -96,25 +96,25 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
     public int getItemViewType(int position) {
         EMMessage message = mMessages.get(position);
         int itemType = -1;
-        switch (message.getType()) {
-        case TXT:
-            // 判断是否为撤回类型的消息
-            if (message.getBooleanAttribute(MLConstants.ML_ATTR_RECALL, false)) {
-                itemType = MLConstants.MSG_TYPE_SYS_RECALL;
-            } else {
+        // 判断是否为撤回类型的消息
+        if (message.getBooleanAttribute(MLConstants.ML_ATTR_RECALL, false)) {
+            itemType = MLConstants.MSG_TYPE_SYS_RECALL;
+        } else {
+            switch (message.getType()) {
+            case TXT:
                 itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_TEXT_SEND : MLConstants.MSG_TYPE_TEXT_RECEIVED;
+                break;
+            case IMAGE:
+                itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_IMAGE_SEND : MLConstants.MSG_TYPE_IMAGE_RECEIVED;
+                break;
+            case FILE:
+                itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_FILE_SEND : MLConstants.MSG_TYPE_FILE_RECEIVED;
+                break;
+            default:
+                // 默认返回txt类型
+                itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_TEXT_SEND : MLConstants.MSG_TYPE_TEXT_RECEIVED;
+                break;
             }
-            break;
-        case IMAGE:
-            itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_IMAGE_SEND : MLConstants.MSG_TYPE_IMAGE_RECEIVED;
-            break;
-        case FILE:
-            itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_FILE_SEND : MLConstants.MSG_TYPE_FILE_RECEIVED;
-            break;
-        default:
-            // 默认返回txt类型
-            itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_TEXT_SEND : MLConstants.MSG_TYPE_TEXT_RECEIVED;
-            break;
         }
         return itemType;
     }

@@ -126,9 +126,9 @@
 
             <!--聊天表情框-->
             <RelativeLayout
-                android:id="@+id/ml_layout_chat_input_smilies"
+                android:id="@+id/ml_layout_chat_input_emotion"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/ml_dimen_192"
+                android:layout_height="@dimen/ml_dimen_224"
                 android:visibility="gone">
 
                 <GridView

@@ -32,7 +32,7 @@
     <!--启动时的主题样式-->
     <style name="MLTheme.Launcher" parent="MLTheme.Base">
         <!--防止启动瞬间黑屏或白屏，程序启动时的背景图，可以设置为一张代表性的logo，或者设置app框架类图-->
-        <item name="android:windowBackground">@mipmap/bg_launcher_statusbar_toolbar</item>
+        <item name="android:windowBackground">@mipmap/bg_launcher_statusbar_toolbar_tab</item>
     </style>
 
     <!--设置 Activity 透明主题-->

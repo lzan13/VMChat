@@ -32,9 +32,13 @@ public class MLRecallMessageItem extends MLMessageItem {
         mMessage = message;
         // 设置消息时间
         mTimeView.setText(MLDate.long2Time(message.getMsgTime()));
-
-        EMTextMessageBody body = (EMTextMessageBody) message.getBody();
-        String messageStr = body.getMessage();
+        // 设置显示内容
+        String messageStr = null;
+        if (mMessage.direct() == EMMessage.Direct.SEND) {
+            messageStr = String.format(mContext.getString(R.string.ml_hint_msg_recall_by_self));
+        }else{
+            messageStr = String.format(mContext.getString(R.string.ml_hint_msg_recall_by_user), message.getUserName());
+        }
         mContentView.setText(messageStr);
     }
 

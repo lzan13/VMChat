@@ -130,6 +130,8 @@ public class MLEasemobHelper {
         // options.setAppKey("lzan13#hxsdkdemo");
         // 设置自动登录
         options.setAutoLogin(true);
+        // 设置是否按照服务器时间排序，false按照本地时间排序
+//        options.setSortMessageByServerTime(false);
         // 设置是否需要发送已读回执
         options.setRequireAck(true);
         // 设置是否需要发送回执
@@ -296,7 +298,6 @@ public class MLEasemobHelper {
                     // 判断是不是撤回消息的透传
                     if (body.action().equals(MLConstants.ML_ATTR_RECALL)) {
                         // 判断当前活动界面是不是聊天界面，如果是，全局不处理消息，聊天界面已经处理了撤回
-                        // 判断当前活动界面是不是聊天界面，如果是，全局不处理消息
                         if (MLEasemobHelper.getInstance().getActivityList().size() > 0) {
                             if (MLEasemobHelper.getInstance().getTopActivity().getClass().getName().equals("MLChatActivity")) {
                                 return;

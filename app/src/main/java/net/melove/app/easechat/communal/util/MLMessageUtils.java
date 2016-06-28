@@ -87,41 +87,16 @@ public class MLMessageUtils {
             return result;
         }
         // 根据得到的msgId 去本地查找这条消息，如果本地已经没有这条消息了，就不用撤回
-        EMMessage oldMessage = EMClient.getInstance().chatManager().getMessage(msgId);
-        if (oldMessage == null) {
+        EMMessage message = EMClient.getInstance().chatManager().getMessage(msgId);
+        if (message == null) {
             MLLog.d("recall - 3 message is null %s", msgId);
             return result;
         }
 
-        // 这里根据是否是群组聊天来判断会话的chatId
-        String chatId = oldMessage.getChatType() == EMMessage.ChatType.Chat ? oldMessage.getFrom() : oldMessage.getTo();
-        /**
-         * 创建一条接收方的消息，因为最新版SDK不支持setType，所以其他类型消息无法更新为TXT类型，
-         * 这里只能新建消息，并且设置消息类型为TXT，
-         */
-        // 更改要撤销的消息的内容，替换为消息已经撤销的提示内容，因为自己是接收方，所以创建一条接收的消息
-        EMMessage recallMessage = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
-        EMTextMessageBody body = new EMTextMessageBody(String.format(context.getString(R.string.ml_hint_msg_recall_by_user), oldMessage.getUserName()));
-        recallMessage.addBody(body);
-        // 设置发送方和接收方
-        recallMessage.setFrom(oldMessage.getFrom());
-        if (oldMessage.getChatType() == EMMessage.ChatType.Chat) {
-            recallMessage.setReceipt(EMClient.getInstance().getCurrentUser());
-        } else {
-            recallMessage.setReceipt(chatId);
-        }
-        // 设置新消息的 msgId为撤销消息的 msgId
-        recallMessage.setMsgId(msgId);
-        // 设置新消息的 msgTime 为撤销消息的 mstTime
-        recallMessage.setMsgTime(oldMessage.getMsgTime());
         // 设置扩展为撤回消息类型，是为了区分消息的显示
-        recallMessage.setAttribute(MLConstants.ML_ATTR_RECALL, true);
-        // 删除旧消息
-        EMClient.getInstance().chatManager().getConversation(chatId).removeMessage(msgId);
-        // 保存消息到本地
-        EMClient.getInstance().chatManager().saveMessage(recallMessage);
-        // 设置此条消息为已读
-        EMClient.getInstance().chatManager().getConversation(chatId).markMessageAsRead(recallMessage.getMsgId());
+        message.setAttribute(MLConstants.ML_ATTR_RECALL, true);
+        // 更新消息
+        result = EMClient.getInstance().chatManager().updateMessage(message);
         return result;
     }
 

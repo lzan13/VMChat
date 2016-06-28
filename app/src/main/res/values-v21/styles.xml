@@ -4,7 +4,7 @@
     <!--启动时的主题样式-->
     <style name="MLTheme.Launcher" parent="MLTheme.Base">
         <!--防止启动瞬间黑屏或白屏，程序启动时的背景图，可以设置为一张代表性的logo，或者设置app框架类图-->
-        <item name="android:windowBackground">@mipmap/bg_launcher_statusbar_toolbar</item>
+        <item name="android:windowBackground">@mipmap/bg_launcher_statusbar_toolbar_tab</item>
         <!--5.0以上的系统可以设置状态栏是否透明-->
         <item name="android:statusBarColor">@color/ml_theme_primary_dark</item>
     </style>

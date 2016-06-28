@@ -27,8 +27,8 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
 
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMError;
@@ -38,10 +38,8 @@ import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
-import com.hyphenate.exceptions.HyphenateException;
 
 import net.melove.app.easechat.R;
-import net.melove.app.easechat.application.MLApplication;
 import net.melove.app.easechat.application.eventbus.MLMessageEvent;
 import net.melove.app.easechat.communal.base.MLBaseActivity;
 import net.melove.app.easechat.application.MLConstants;
@@ -99,7 +97,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     //自定义 Handler
     private MLHandler mHandler;
 
-    // 聊天扩展菜单
+    // 聊天扩展菜单主要打开图片、视频、文件、位置等
     private LinearLayout mAttachMenuLayout;
     private GridView mAttachMenuGridView;
     private Uri mCameraImageUri = null;
@@ -117,6 +115,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     private EditText mInputView;
     // 表情按钮
     private View mEmotionView;
+    private View mKeyboardView;
+    private RelativeLayout mEmotionLayout;
     // 发送按钮
     private View mSendView;
     // 语音按钮
@@ -164,12 +164,17 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
 
         // 获取输入按钮控件对象
         mEmotionView = findViewById(R.id.ml_img_chat_emotion);
+        mKeyboardView = findViewById(R.id.ml_img_chat_keyboard);
+        mEmotionLayout = (RelativeLayout) findViewById(R.id.ml_layout_chat_input_emotion);
         mSendView = findViewById(R.id.ml_img_chat_send);
         mVoiceView = findViewById(R.id.ml_img_chat_voice);
+
         // 设置输入按钮控件的点击监听
         mEmotionView.setOnClickListener(viewListener);
+        mKeyboardView.setOnClickListener(viewListener);
         mVoiceView.setOnClickListener(viewListener);
         mSendView.setOnClickListener(viewListener);
+
         // 设置扩展菜单点击监听
         mAttachMenuLayout = (LinearLayout) findViewById(R.id.ml_layout_chat_attach_menu);
         // 菜单布局点击事件，主要是实现点击空白处关闭附件扩展菜单
@@ -501,22 +506,10 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             public void onSuccess() {
                 // 关闭进度对话框
                 pd.dismiss();
-                // 更改要撤销的消息的内容，替换为消息已经撤销的提示内容
-                EMMessage recallMessage = EMMessage.createSendMessage(EMMessage.Type.TXT);
-                EMTextMessageBody body = new EMTextMessageBody(mActivity.getString(R.string.ml_hint_msg_recall_by_self));
-                recallMessage.addBody(body);
-                recallMessage.setReceipt(message.getTo());
-                // 设置新消息的 msgId为撤销消息的 msgId
-                recallMessage.setMsgId(message.getMsgId());
-                // 设置新消息的 msgTime 为撤销消息的 mstTime
-                recallMessage.setMsgTime(message.getMsgTime());
                 // 设置扩展为撤回消息类型，是为了区分消息的显示
-                recallMessage.setAttribute(MLConstants.ML_ATTR_RECALL, true);
-                // 删除旧消息
-                mConversation.removeMessage(message.getMsgId());
-                // 保存新消息
-                EMClient.getInstance().chatManager().saveMessage(recallMessage);
-                // 更新UI
+                message.setAttribute(MLConstants.ML_ATTR_RECALL, true);
+                // 更新消息
+                EMClient.getInstance().chatManager().updateMessage(message);
                 refreshItemChanged(mConversation.getMessagePosition(message));
             }
 
@@ -727,8 +720,9 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 onFinish();
                 break;
             case R.id.ml_img_chat_emotion:
+            case R.id.ml_img_chat_keyboard:
                 // 表情按钮
-
+                onEmotion();
                 break;
             case R.id.ml_img_chat_send:
                 // 发送按钮
@@ -746,6 +740,9 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         }
     };
 
+    /**
+     * 弹出选择图片发方式，是使用相机还是图库
+     */
     private void selectPhotoMode() {
         String[] menus = {
                 mActivity.getString(R.string.ml_menu_chat_camera),
@@ -775,6 +772,9 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         dialog.show();
     }
 
+    /**
+     * 打开相机去拍摄图片发送
+     */
     private void openCamera() {
         // 定义拍照后图片保存的路径以及文件名
         String imagePath = MLFile.getDCIM() + "IMG" + MLDate.getCurrentDate4() + ".jpg";
@@ -821,7 +821,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     }
 
     /**
-     * 打开和关闭附件菜单
+     * 附件菜单
      */
     private void onAttachMenu() {
         // 判断当前附件菜单显示状态，显示就关闭，不显示就打开
@@ -829,6 +829,22 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             mAttachMenuLayout.setVisibility(View.GONE);
         } else {
             mAttachMenuLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
+     * 表情菜单
+     */
+    private void onEmotion() {
+        // 判断表情界面是否显示状态，显示则关闭，隐藏则显示
+        if (mEmotionLayout.isShown()) {
+            mEmotionView.setVisibility(View.VISIBLE);
+            mKeyboardView.setVisibility(View.GONE);
+            mEmotionLayout.setVisibility(View.GONE);
+        } else {
+            mEmotionView.setVisibility(View.GONE);
+            mKeyboardView.setVisibility(View.VISIBLE);
+            mEmotionLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -1005,8 +1021,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             /**
              * 发送通知前先调用{@link MLMessageAdapter#refreshMessageData()}更新{@link MLMessageAdapter}的数据源
              */
-            //            mMessageAdapter.refreshMessageData();
-            //            mMessageAdapter.notifyDataSetChanged();
+            // mMessageAdapter.refreshMessageData();
+            // mMessageAdapter.notifyDataSetChanged();
             notifyHandler(MLConstants.ML_NOTIFY_REFRESH_ALL, 1, 1);
         }
     }
