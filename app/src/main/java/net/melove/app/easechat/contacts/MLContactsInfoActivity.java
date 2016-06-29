@@ -18,12 +18,12 @@ import com.hyphenate.exceptions.HyphenateException;
 import net.melove.app.easechat.R;
 import net.melove.app.easechat.communal.base.MLBaseActivity;
 import net.melove.app.easechat.application.MLConstants;
+import net.melove.app.easechat.communal.util.MLDateUtil;
 import net.melove.app.easechat.communal.widget.MLToast;
 import net.melove.app.easechat.conversation.MLChatActivity;
 import net.melove.app.easechat.database.MLInvitedDao;
 import net.melove.app.easechat.database.MLContactsDao;
 import net.melove.app.easechat.communal.util.MLCrypto;
-import net.melove.app.easechat.communal.util.MLDate;
 import net.melove.app.easechat.communal.util.MLLog;
 import net.melove.app.easechat.invited.MLInvitedEntity;
 
@@ -168,7 +168,7 @@ public class MLContactsInfoActivity extends MLBaseActivity {
                             // 设置申请信息为联系人申请
                             invitedEntity.setType(MLInvitedEntity.InvitedType.CONTACTS);
                             // 设置申请信息的时间
-                            invitedEntity.setTime(MLDate.getCurrentMillisecond());
+                            invitedEntity.setTime(MLDateUtil.getCurrentMillisecond());
 
                             // 这里进行一下筛选，如果已存在则去更新本地内容
                             MLInvitedEntity temp = MLInvitedDao.getInstance().getInvitedEntiry(invitedId);

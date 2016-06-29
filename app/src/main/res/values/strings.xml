@@ -220,4 +220,7 @@
     <string name="ml_copy_right">©2015 melove.net</string>
     <string name="title_activity_mltest">MLTestActivity</string>
 
+
+    <string name="test_unicode_smiling">\uD83D\uDE01</string>
+    <string name="test_unicode_smiling_tears">\uD83D\uDE02</string>
 </resources>

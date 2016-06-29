@@ -21,7 +21,7 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 
 import net.melove.app.easechat.R;
-import net.melove.app.easechat.communal.util.MLDate;
+import net.melove.app.easechat.communal.util.MLDateUtil;
 import net.melove.app.easechat.communal.util.MLLog;
 import net.melove.app.easechat.communal.widget.MLImageView;
 
@@ -77,7 +77,7 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
          * 这里改为通过给 EMConversation 对象添加了一个时间扩展，这样可以避免在会话没有消息时，无法显示时间的问题
          * 调用{@link MLConversationExtUtils#getConversationLastTime(EMConversation)}获取扩展里的时间
          */
-        String time = MLDate.long2Time(MLConversationExtUtils.getConversationLastTime(conversation));
+        String time = MLDateUtil.getRelativeTime(MLConversationExtUtils.getConversationLastTime(conversation));
         holder.timeView.setText(time);
 
         String content = "";
@@ -145,7 +145,12 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
         // 设置当前会话未读数
         int unreadCount = conversation.getUnreadMsgCount();
         if (unreadCount == 0) {
-            holder.countView.setVisibility(View.GONE);
+            if (MLConversationExtUtils.getConversationUnread(conversation)) {
+                holder.countView.setVisibility(View.VISIBLE);
+                holder.countView.setText("1");
+            } else {
+                holder.countView.setVisibility(View.GONE);
+            }
         } else if (unreadCount >= 100) {
             holder.countView.setVisibility(View.VISIBLE);
             holder.countView.setText("99+");
@@ -155,9 +160,9 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
         }
         /**
          * 判断当前会话是否置顶
-         * 调用工具类{@link MLConversationExtUtils#setConversationTop(EMConversation, boolean)}进行设置
+         * 调用工具类{@link MLConversationExtUtils#setConversationPushpin(EMConversation, boolean)}进行设置
          */
-        if (MLConversationExtUtils.getConversationTop(conversation)) {
+        if (MLConversationExtUtils.getConversationPUSHPIN(conversation)) {
             holder.pushpinView.setVisibility(View.VISIBLE);
         } else {
             holder.pushpinView.setVisibility(View.GONE);

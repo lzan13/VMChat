@@ -43,7 +43,7 @@ import net.melove.app.easechat.R;
 import net.melove.app.easechat.application.eventbus.MLMessageEvent;
 import net.melove.app.easechat.communal.base.MLBaseActivity;
 import net.melove.app.easechat.application.MLConstants;
-import net.melove.app.easechat.communal.util.MLDate;
+import net.melove.app.easechat.communal.util.MLDateUtil;
 import net.melove.app.easechat.communal.util.MLFile;
 import net.melove.app.easechat.communal.util.MLMessageUtils;
 import net.melove.app.easechat.communal.widget.MLToast;
@@ -207,6 +207,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         mConversation = EMClient.getInstance().chatManager().getConversation(mChatId, null, true);
         // 设置当前会话未读数为 0
         mConversation.markAllMessagesAsRead();
+        MLConversationExtUtils.setConversationUnread(mConversation, false);
         int count = mConversation.getAllMessages().size();
         if (count < mConversation.getAllMsgCount() && count < mPageSize) {
             // 获取已经在列表中的最上边的一条消息id
@@ -442,7 +443,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         mConversation.removeMessage(message.getMsgId());
         refreshItemRemoved(position);
         // 更新消息时间
-        message.setMsgTime(MLDate.getCurrentMillisecond());
+        message.setMsgTime(MLDateUtil.getCurrentMillisecond());
         // 调用发送方法
         // EMClient.getInstance().chatManager().sendMessage(message);
         // 获取消息当前位置
@@ -777,7 +778,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      */
     private void openCamera() {
         // 定义拍照后图片保存的路径以及文件名
-        String imagePath = MLFile.getDCIM() + "IMG" + MLDate.getCurrentDate4() + ".jpg";
+        String imagePath = MLFile.getDCIM() + "IMG" + MLDateUtil.getDateTimeNoSpacing() + ".jpg";
         // 激活相机
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // 判断存储卡是否可以用，可用进行存储

@@ -2,15 +2,12 @@ package net.melove.app.easechat.conversation.messageitem;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMNormalFileMessageBody;
 import com.hyphenate.util.TextFormater;
@@ -18,8 +15,7 @@ import com.hyphenate.util.TextFormater;
 import net.melove.app.easechat.R;
 import net.melove.app.easechat.application.MLConstants;
 import net.melove.app.easechat.application.eventbus.MLMessageEvent;
-import net.melove.app.easechat.communal.util.MLDate;
-import net.melove.app.easechat.communal.util.MLDimen;
+import net.melove.app.easechat.communal.util.MLDateUtil;
 import net.melove.app.easechat.communal.widget.MLImageView;
 import net.melove.app.easechat.conversation.MLChatActivity;
 import net.melove.app.easechat.conversation.MLMessageAdapter;
@@ -58,7 +54,7 @@ public class MLFileMessageItem extends MLMessageItem {
             mUsernameView.setVisibility(View.VISIBLE);
         }
         // 设置消息时间
-        mTimeView.setText(MLDate.long2Time(mMessage.getMsgTime()));
+        mTimeView.setText(MLDateUtil.getRelativeTime(mMessage.getMsgTime()));
 
         EMNormalFileMessageBody fileBody = (EMNormalFileMessageBody) mMessage.getBody();
         String filename = fileBody.getFileName();

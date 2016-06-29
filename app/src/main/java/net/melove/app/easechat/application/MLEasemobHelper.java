@@ -1,6 +1,5 @@
 package net.melove.app.easechat.application;
 
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
@@ -23,10 +22,9 @@ import net.melove.app.easechat.application.eventbus.MLInvitedEvent;
 import net.melove.app.easechat.application.eventbus.MLMessageEvent;
 import net.melove.app.easechat.communal.base.MLBaseActivity;
 import net.melove.app.easechat.communal.util.MLCrypto;
-import net.melove.app.easechat.communal.util.MLDate;
+import net.melove.app.easechat.communal.util.MLDateUtil;
 import net.melove.app.easechat.communal.util.MLLog;
 import net.melove.app.easechat.communal.util.MLMessageUtils;
-import net.melove.app.easechat.conversation.MLChatActivity;
 import net.melove.app.easechat.database.MLDBHelper;
 import net.melove.app.easechat.invited.MLInvitedEntity;
 import net.melove.app.easechat.contacts.MLContactsEntity;
@@ -409,7 +407,7 @@ public class MLEasemobHelper {
                 // 设置申请信息为联系人申请
                 invitedEntity.setType(MLInvitedEntity.InvitedType.CONTACTS);
                 // 设置申请信息的时间
-                invitedEntity.setTime(MLDate.getCurrentMillisecond());
+                invitedEntity.setTime(MLDateUtil.getCurrentMillisecond());
 
                 /**
                  * 这里先读取本地的申请与通知信息，如果相同则直接 return，不进行操作
@@ -450,7 +448,7 @@ public class MLEasemobHelper {
                 MLInvitedEntity invitedEntity = MLInvitedDao.getInstance().getInvitedEntiry(invitedId);
                 if (invitedEntity != null) {
                     // 更新当前消息处理时间
-                    invitedEntity.setTime(MLDate.getCurrentMillisecond());
+                    invitedEntity.setTime(MLDateUtil.getCurrentMillisecond());
                     invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.BEAGREED);
                     MLInvitedDao.getInstance().updateInvited(invitedEntity);
                 } else {
@@ -467,7 +465,7 @@ public class MLEasemobHelper {
                     // 设置申请信息为联系人申请
                     invitedEntity.setType(MLInvitedEntity.InvitedType.CONTACTS);
                     // 设置申请信息的时间
-                    invitedEntity.setTime(MLDate.getCurrentMillisecond());
+                    invitedEntity.setTime(MLDateUtil.getCurrentMillisecond());
                     MLInvitedDao.getInstance().saveInvited(invitedEntity);
                 }
                 /**
@@ -495,7 +493,7 @@ public class MLEasemobHelper {
                 MLInvitedEntity invitedEntity = MLInvitedDao.getInstance().getInvitedEntiry(invitedId);
                 if (invitedEntity != null) {
                     // 更新当前信息的时间
-                    invitedEntity.setTime(MLDate.getCurrentMillisecond());
+                    invitedEntity.setTime(MLDateUtil.getCurrentMillisecond());
                     invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.BEREFUSED);
                     MLInvitedDao.getInstance().updateInvited(invitedEntity);
                 } else {
@@ -512,7 +510,7 @@ public class MLEasemobHelper {
                     // 设置申请信息为联系人申请
                     invitedEntity.setType(MLInvitedEntity.InvitedType.CONTACTS);
                     // 设置申请信息的时间
-                    invitedEntity.setTime(MLDate.getCurrentMillisecond());
+                    invitedEntity.setTime(MLDateUtil.getCurrentMillisecond());
 
                     MLInvitedDao.getInstance().saveInvited(invitedEntity);
                 }

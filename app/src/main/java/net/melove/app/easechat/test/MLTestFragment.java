@@ -1,12 +1,8 @@
 package net.melove.app.easechat.test;
 
 
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +24,7 @@ import net.melove.app.easechat.R;
 import net.melove.app.easechat.application.MLConstants;
 import net.melove.app.easechat.application.MLEasemobHelper;
 import net.melove.app.easechat.communal.base.MLBaseFragment;
-import net.melove.app.easechat.communal.util.MLDate;
+import net.melove.app.easechat.communal.util.MLDateUtil;
 import net.melove.app.easechat.communal.util.MLLog;
 import net.melove.app.easechat.communal.widget.MLViewGroup;
 
@@ -37,7 +33,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -168,7 +163,7 @@ public class MLTestFragment extends MLBaseFragment {
      */
     private void sendGroupMessage() {
         //创建一条文本消息,content为消息文字内容，toChatUsername为对方用户或者群聊的id，后文皆是如此
-        EMMessage message = EMMessage.createTxtSendMessage("群消息" + MLDate.getCurrentMillisecond(), "1460022071257");
+        EMMessage message = EMMessage.createTxtSendMessage("群消息" + MLDateUtil.getCurrentMillisecond(), "1460022071257");
         //如果是群聊，设置chattype,默认是单聊
         message.setChatType(EMMessage.ChatType.GroupChat);
         //发送消息
@@ -217,7 +212,7 @@ public class MLTestFragment extends MLBaseFragment {
     private void importMessage() {
         imoprtMessages();
         //        EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
-        //        EMTextMessageBody textMessageBody = new EMTextMessageBody("导入消息" + MLDate.getCurrentDate());
+        //        EMTextMessageBody textMessageBody = new EMTextMessageBody("导入消息" + MLDateUtil.getCurrentDate());
         //        message.addBody(textMessageBody);
         //        message.setFrom("lz8");
         //        // 保存一条消息到本地，这个保存会直接加入到内存中

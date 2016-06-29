@@ -5,10 +5,9 @@ import android.widget.TextView;
 
 
 import com.hyphenate.chat.EMMessage;
-import com.hyphenate.chat.EMTextMessageBody;
 
 import net.melove.app.easechat.R;
-import net.melove.app.easechat.communal.util.MLDate;
+import net.melove.app.easechat.communal.util.MLDateUtil;
 import net.melove.app.easechat.conversation.MLMessageAdapter;
 
 /**
@@ -31,7 +30,7 @@ public class MLRecallMessageItem extends MLMessageItem {
     public void onSetupView(EMMessage message) {
         mMessage = message;
         // 设置消息时间
-        mTimeView.setText(MLDate.long2Time(message.getMsgTime()));
+        mTimeView.setText(MLDateUtil.getRelativeTime(message.getMsgTime()));
         // 设置显示内容
         String messageStr = null;
         if (mMessage.direct() == EMMessage.Direct.SEND) {

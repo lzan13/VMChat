@@ -6,7 +6,7 @@ import android.text.TextUtils;
 import com.hyphenate.chat.EMConversation;
 
 import net.melove.app.easechat.application.MLConstants;
-import net.melove.app.easechat.communal.util.MLDate;
+import net.melove.app.easechat.communal.util.MLDateUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,9 +35,9 @@ public class MLConversationExtUtils {
      * 设置会话置顶状态
      *
      * @param conversation 要置顶的会话对象
-     * @param top          设置会话是否置顶
+     * @param pushpin      设置会话是否置顶
      */
-    public static void setConversationTop(EMConversation conversation, boolean top) {
+    public static void setConversationPushpin(EMConversation conversation, boolean pushpin) {
         // 获取当前会话对象的扩展
         String ext = conversation.getExtField();
         JSONObject jsonObject = null;
@@ -49,7 +49,7 @@ public class MLConversationExtUtils {
                 jsonObject = new JSONObject(ext);
             }
             // 将扩展信息设置给外层的 JSONObject 对象
-            jsonObject.put(MLConstants.ML_ATTR_TOP, top);
+            jsonObject.put(MLConstants.ML_ATTR_PUSHPIN, pushpin);
             // 将扩展信息保存到 Conversation 对象的扩展中去
             conversation.setExtField(jsonObject.toString());
         } catch (JSONException e) {
@@ -63,7 +63,7 @@ public class MLConversationExtUtils {
      * @param conversation 需要操作的会话对象
      * @return 返回当前会话是否置顶
      */
-    public static boolean getConversationTop(EMConversation conversation) {
+    public static boolean getConversationPUSHPIN(EMConversation conversation) {
         // 获取当前会话对象的扩展
         String ext = conversation.getExtField();
         // 判断扩展内容是否为空
@@ -73,7 +73,7 @@ public class MLConversationExtUtils {
         try {
             // 根据扩展获取Json对象，然后获取置顶的属性，
             JSONObject jsonObject = new JSONObject(ext);
-            return jsonObject.optBoolean(MLConstants.ML_ATTR_TOP);
+            return jsonObject.optBoolean(MLConstants.ML_ATTR_PUSHPIN);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -98,7 +98,7 @@ public class MLConversationExtUtils {
             }
             // 根据当前会话消息数是否为零来设置会话的最后时间
             if (conversation.getAllMessages().size() == 0) {
-                jsonObject.put(MLConstants.ML_ATTR_LAST_TIME, MLDate.getCurrentMillisecond());
+                jsonObject.put(MLConstants.ML_ATTR_LAST_TIME, MLDateUtil.getCurrentMillisecond());
             } else {
                 jsonObject.put(MLConstants.ML_ATTR_LAST_TIME, conversation.getLastMessage().getMsgTime());
             }
@@ -131,7 +131,7 @@ public class MLConversationExtUtils {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return MLDate.getCurrentMillisecond();
+        return MLDateUtil.getCurrentMillisecond();
     }
 
     /**
@@ -183,5 +183,56 @@ public class MLConversationExtUtils {
             e.printStackTrace();
         }
         return "";
+    }
+
+    /**
+     * 标记会话为未读状态
+     *
+     * @param conversation 需要标记的会话
+     * @param unread       设置未读状态
+     */
+    public static void setConversationUnread(EMConversation conversation, boolean unread) {
+        // 获取当前会话对象的扩展
+        String ext = conversation.getExtField();
+        JSONObject jsonObject = null;
+        try {
+            // 判断扩展内容是否为空
+            if (TextUtils.isEmpty(ext)) {
+                jsonObject = new JSONObject();
+            } else {
+                jsonObject = new JSONObject(ext);
+            }
+            // 将扩展信息设置给 JSONObject 对象
+            jsonObject.put(MLConstants.ML_ATTR_UNREAD, unread);
+            // 将扩展信息保存到 EMConversation 对象扩展中去
+            conversation.setExtField(jsonObject.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 获取 conversation 对象扩展中的未读状态
+     *
+     * @param conversation 当前会话
+     * @return 返回未读状态
+     */
+    public static boolean getConversationUnread(EMConversation conversation) {
+        // 获取当前会话对象的扩展
+        String ext = conversation.getExtField();
+        JSONObject jsonObject = null;
+        try {
+            // 判断扩展内容是否为空
+            if (TextUtils.isEmpty(ext)) {
+                jsonObject = new JSONObject();
+            } else {
+                jsonObject = new JSONObject(ext);
+            }
+            // 根据扩展的key获取扩展的值
+            return jsonObject.optBoolean(MLConstants.ML_ATTR_UNREAD);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

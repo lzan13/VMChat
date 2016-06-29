@@ -1,13 +1,9 @@
 package net.melove.app.easechat.conversation;
 
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -161,7 +157,7 @@ public class MLConversationsFragment extends MLBaseFragment {
         // 将列表排序之后，要重新将置顶的item设置到顶部
         int count = 0;
         for (int i = 0; i < list.size(); i++) {
-            if (MLConversationExtUtils.getConversationTop(list.get(i))) {
+            if (MLConversationExtUtils.getConversationPUSHPIN(list.get(i))) {
                 mConversations.add(count, list.get(i));
                 count++;
             } else {
@@ -195,7 +191,7 @@ public class MLConversationsFragment extends MLBaseFragment {
             @Override
             public void onItemLongClick(final int position) {
                 final EMConversation conversation = mConversations.get(position);
-                final boolean isTop = MLConversationExtUtils.getConversationTop(conversation);
+                final boolean isTop = MLConversationExtUtils.getConversationPUSHPIN(conversation);
                 // 根据当前会话不同的状态来显示不同的长按菜单
                 List<String> menuList = new ArrayList<String>();
                 if (isTop) {
@@ -203,7 +199,7 @@ public class MLConversationsFragment extends MLBaseFragment {
                 } else {
                     menuList.add(mActivity.getResources().getString(R.string.ml_menu_conversation_top));
                 }
-                if (conversation.getUnreadMsgCount() > 0) {
+                if (conversation.getUnreadMsgCount() > 0 || MLConversationExtUtils.getConversationUnread(conversation)) {
                     menuList.add(mActivity.getResources().getString(R.string.ml_menu_conversation_read));
                 } else {
                     menuList.add(mActivity.getResources().getString(R.string.ml_menu_conversation_unread));
@@ -224,17 +220,18 @@ public class MLConversationsFragment extends MLBaseFragment {
                                 case 0:
                                     // 根据当前状态设置会话是否置顶
                                     if (isTop) {
-                                        MLConversationExtUtils.setConversationTop(conversation, false);
+                                        MLConversationExtUtils.setConversationPushpin(conversation, false);
                                     } else {
-                                        MLConversationExtUtils.setConversationTop(conversation, true);
+                                        MLConversationExtUtils.setConversationPushpin(conversation, true);
                                     }
                                     refreshConversation();
                                     break;
                                 case 1:
-                                    if (conversation.getUnreadMsgCount() > 0) {
+                                    if (conversation.getUnreadMsgCount() > 0 || MLConversationExtUtils.getConversationUnread(conversation)) {
                                         conversation.markAllMessagesAsRead();
+                                        MLConversationExtUtils.setConversationUnread(conversation, false);
                                     } else {
-                                        conversation.getLastMessage().setAcked(false);
+                                        MLConversationExtUtils.setConversationUnread(conversation, true);
                                     }
                                     refreshConversation();
                                     break;

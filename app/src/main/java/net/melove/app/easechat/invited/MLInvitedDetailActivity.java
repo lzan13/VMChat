@@ -1,14 +1,10 @@
 package net.melove.app.easechat.invited;
 
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
@@ -21,7 +17,7 @@ import net.melove.app.easechat.R;
 import net.melove.app.easechat.application.MLConstants;
 import net.melove.app.easechat.application.eventbus.MLInvitedEvent;
 import net.melove.app.easechat.communal.base.MLBaseActivity;
-import net.melove.app.easechat.communal.util.MLDate;
+import net.melove.app.easechat.communal.util.MLDateUtil;
 import net.melove.app.easechat.communal.widget.MLImageView;
 import net.melove.app.easechat.conversation.MLChatActivity;
 import net.melove.app.easechat.database.MLInvitedDao;
@@ -208,7 +204,7 @@ public class MLInvitedDetailActivity extends MLBaseActivity {
                 try {
                     EMClient.getInstance().contactManager().acceptInvitation(mInvitedEntity.getUserName());
                     mInvitedEntity.setStatus(MLInvitedEntity.InvitedStatus.AGREED);
-                    mInvitedEntity.setTime(MLDate.getCurrentMillisecond());
+                    mInvitedEntity.setTime(MLDateUtil.getCurrentMillisecond());
                     MLInvitedDao.getInstance().updateInvited(mInvitedEntity);
                     // 关闭对话框
                     dialog.dismiss();
@@ -237,7 +233,7 @@ public class MLInvitedDetailActivity extends MLBaseActivity {
                     EMClient.getInstance().contactManager().declineInvitation(mInvitedEntity.getUserName());
                     // 修改当前申请消息的状态
                     mInvitedEntity.setStatus(MLInvitedEntity.InvitedStatus.REFUSED);
-                    mInvitedEntity.setTime(MLDate.getCurrentMillisecond());
+                    mInvitedEntity.setTime(MLDateUtil.getCurrentMillisecond());
                     MLInvitedDao.getInstance().updateInvited(mInvitedEntity);
                     dialog.dismiss();
                     mHandler.sendMessage(mHandler.obtainMessage(0));

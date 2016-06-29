@@ -6,10 +6,8 @@ import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMMessage;
-import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.util.PathUtil;
 
-import net.melove.app.easechat.R;
 import net.melove.app.easechat.application.MLConstants;
 
 /**
@@ -28,7 +26,7 @@ public class MLMessageUtils {
         boolean result = false;
         // 获取当前时间，用来判断后边撤回消息的时间点是否合法，这个判断不需要在接收方做，
         // 因为如果接收方之前不在线，很久之后才收到消息，将导致撤回失败
-        long currTime = MLDate.getCurrentMillisecond();
+        long currTime = MLDateUtil.getCurrentMillisecond();
         long msgTime = message.getMsgTime();
         // 判断当前消息的时间是否已经超过了限制时间，如果超过，则不可撤回消息
         if (currTime < msgTime || (currTime - msgTime > MLConstants.ML_TIME_RECALL)) {

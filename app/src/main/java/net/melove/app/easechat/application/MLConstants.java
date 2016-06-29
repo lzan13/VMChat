@@ -20,13 +20,22 @@ public class MLConstants {
      * 设置自己扩展的 key，包括会话对象{@link com.hyphenate.chat.EMConversation}扩展，
      * 以及消息{@link com.hyphenate.chat.EMMessage}扩展
      */
+    // at(@)
     public static final String ML_ATTR_AT = "ml_attr_at";
+    // 阅后即焚
     public static final String ML_ATTR_BURN = "ml_attr_burn";
+    // 最后时间
     public static final String ML_ATTR_LAST_TIME = "ml_attr_list_time";
+    // 撤回
     public static final String ML_ATTR_RECALL = "ml_attr_recall";
-    public static final String ML_ATTR_TOP = "ml_attr_top";
+    // 置顶
+    public static final String ML_ATTR_PUSHPIN = "ml_attr_pushpin";
+    // 类型
     public static final String ML_ATTR_TYPE = "ml_attr_type";
+    // 草稿
     public static final String ML_ATTR_DRAFT = "ml_attr_draft";
+    // 会话未读
+    public static final String ML_ATTR_UNREAD = "ml_attr_unread";
 
     /**
      * 自定义一些错误码，表示一些固定的错误

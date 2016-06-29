@@ -2,21 +2,18 @@ package net.melove.app.easechat.conversation.messageitem;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 
 import net.melove.app.easechat.R;
 import net.melove.app.easechat.application.MLConstants;
-import net.melove.app.easechat.communal.util.MLDate;
+import net.melove.app.easechat.communal.util.MLDateUtil;
 import net.melove.app.easechat.communal.widget.MLImageView;
 import net.melove.app.easechat.conversation.MLChatActivity;
 import net.melove.app.easechat.conversation.MLMessageAdapter;
@@ -53,7 +50,7 @@ public class MLTextMessageItem extends MLMessageItem {
         }
 
         // 设置消息时间
-        mTimeView.setText(MLDate.long2Time(message.getMsgTime()));
+        mTimeView.setText(MLDateUtil.getRelativeTime(message.getMsgTime()));
 
         EMTextMessageBody body = (EMTextMessageBody) mMessage.getBody();
         String messageStr = body.getMessage().toString();

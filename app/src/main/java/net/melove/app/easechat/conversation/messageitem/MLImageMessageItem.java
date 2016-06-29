@@ -21,7 +21,7 @@ import net.melove.app.easechat.application.MLConstants;
 import net.melove.app.easechat.application.eventbus.MLMessageEvent;
 import net.melove.app.easechat.communal.util.MLBitmapUtil;
 import net.melove.app.easechat.communal.module.MLBitmapCache;
-import net.melove.app.easechat.communal.util.MLDate;
+import net.melove.app.easechat.communal.util.MLDateUtil;
 import net.melove.app.easechat.communal.util.MLDimen;
 import net.melove.app.easechat.communal.util.MLFile;
 import net.melove.app.easechat.communal.util.MLMessageUtils;
@@ -67,7 +67,7 @@ public class MLImageMessageItem extends MLMessageItem {
         }
 
         // 设置消息时间
-        mTimeView.setText(MLDate.long2Time(mMessage.getMsgTime()));
+        mTimeView.setText(MLDateUtil.getRelativeTime(mMessage.getMsgTime()));
 
         EMImageMessageBody imgBody = (EMImageMessageBody) mMessage.getBody();
         // 设置显示图片控件的默认大小
