@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -41,6 +40,7 @@ import com.hyphenate.chat.EMTextMessageBody;
 
 import net.melove.app.easechat.R;
 import net.melove.app.easechat.application.eventbus.MLMessageEvent;
+import net.melove.app.easechat.application.eventbus.MLRefreshEvent;
 import net.melove.app.easechat.communal.base.MLBaseActivity;
 import net.melove.app.easechat.application.MLConstants;
 import net.melove.app.easechat.communal.util.MLDateUtil;
@@ -93,10 +93,6 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     // 当前是否在最底部
     private boolean isBottom = true;
 
-
-    //自定义 Handler
-    private MLHandler mHandler;
-
     // 聊天扩展菜单主要打开图片、视频、文件、位置等
     private LinearLayout mAttachMenuLayout;
     private GridView mAttachMenuGridView;
@@ -148,7 +144,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     private void initView() {
         mActivity = this;
         mMessageListener = this;
-        mHandler = new MLHandler();
+
         // 初始化阅后即焚模式为false
         isBurn = false;
 
@@ -230,7 +226,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
          * RececlerView 默认的布局管理器：
          * LinearLayoutManager          显示垂直滚动列表或水平的项目
          * GridLayoutManager            显示在一个网格项目
-         * StaggeredGridLayoutManager   显示在交错网格项目
+         * StaggeredGridLayoutManager   显示在交错网格项目()
          * 自定义的布局管理器，需要继承 {@link android.support.v7.widget.RecyclerView.LayoutManager}
          *
          * add/remove items时的动画是默认启用的。
@@ -270,7 +266,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                             List<EMMessage> messages = mConversation.loadMoreMsgFromDB(mConversation.getAllMessages().get(0).getMsgId(), mPageSize);
                             if (messages.size() > 0) {
                                 // 调用 Adapter 刷新方法
-                                refreshItemRangeInserted(0, messages.size());
+                                postRefreshEvent(0, messages.size(), MLConstants.ML_NOTIFY_REFRESH_RANGE_INSERTED);
                             }
                         }
                         mSwipeRefreshLayout.setRefreshing(false);
@@ -441,15 +437,10 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         EMMessage message = mConversation.getMessage(msgId, true);
         // 将失败的消息从 conversation对象中删除
         mConversation.removeMessage(message.getMsgId());
-        refreshItemRemoved(position);
+        postRefreshEvent(position, 1, MLConstants.ML_NOTIFY_REFRESH_REMOVED);
         // 更新消息时间
         message.setMsgTime(MLDateUtil.getCurrentMillisecond());
-        // 调用发送方法
-        // EMClient.getInstance().chatManager().sendMessage(message);
-        // 获取消息当前位置
-        // int newPosition = mConversation.getMessagePosition(message);
-        // 更新ui
-        // refreshItemChanged(position);
+        // 重新调用发送消息方法
         sendMessage(message);
     }
 
@@ -487,7 +478,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         // 删除消息，此方法会同时删除内存和数据库中的数据
         mConversation.removeMessage(message.getMsgId());
         // 刷新界面
-        refreshItemRemoved(position);
+        postRefreshEvent(position, 1, MLConstants.ML_NOTIFY_REFRESH_REMOVED);
         // 弹出操作提示
         MLToast.rightToast(R.string.ml_toast_msg_delete_success).show();
     }
@@ -511,7 +502,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 message.setAttribute(MLConstants.ML_ATTR_RECALL, true);
                 // 更新消息
                 EMClient.getInstance().chatManager().updateMessage(message);
-                refreshItemChanged(mConversation.getMessagePosition(message));
+                postRefreshEvent(mConversation.getMessagePosition(message), 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);
             }
 
             /**
@@ -603,9 +594,10 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
          *  都在各自的{@link net.melove.app.easechat.conversation.messageitem.MLMessageItem}实现监听
          */
         EMClient.getInstance().chatManager().sendMessage(message);
+        MLLog.i("onMessageReceived - view count %d; conversation size %d", mRecyclerView.getChildCount(), mConversation.getAllMessages().size());
 
         // 点击发送后马上刷新界面，无论消息有没有成功，先刷新显示
-        refreshItemInserted(position);
+        postRefreshEvent(position, 1, MLConstants.ML_NOTIFY_REFRESH_INSERTED);
 
     }
 
@@ -849,6 +841,352 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         }
     }
 
+
+    /**
+     * 使用注解的方式订阅消息改变事件，主要监听发送消息的回调状态改变：
+     * 成功
+     * 失败
+     * 进度
+     *
+     * @param event 包含消息的事件
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventBus(MLMessageEvent event) {
+        EMMessage message = event.getMessage();
+        if (message.status() == EMMessage.Status.FAIL) {
+            String error = "";
+            int errorCode = message.getError();
+            if (errorCode == EMError.MESSAGE_INCLUDE_ILLEGAL_CONTENT) {
+                error = mActivity.getString(R.string.ml_toast_msg_have_illegal) + "-" + errorCode;
+            } else if (errorCode == EMError.GROUP_PERMISSION_DENIED) {
+                error = mActivity.getString(R.string.ml_toast_msg_not_join_group) + "-" + errorCode;
+            } else {
+                error = mActivity.getString(R.string.ml_toast_msg_send_faild) + "-" + errorCode;
+            }
+            MLToast.errorToast(error).show();
+        }
+
+        // 消息发送成功，刷新当前消息状态
+        postRefreshEvent(mConversation.getMessagePosition(message), 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);
+    }
+
+    /**
+     * 发送可订阅的刷新事件
+     *
+     * @param position 刷新事件记录的位置
+     * @param count    刷新事件记录打的数量
+     * @param type     刷新事件的类型方式
+     */
+    private void postRefreshEvent(int position, int count, int type) {
+        MLRefreshEvent event = new MLRefreshEvent();
+        event.setPosition(position);
+        event.setCount(count);
+        event.setType(type);
+        EventBus.getDefault().post(event);
+    }
+
+
+    /**
+     * ---------------------------- RecyclerView 刷新方法 -----------------------------------
+     * 这里调用下 {@link MLMessageAdapter}里封装的方法
+     * 最终还是去调用{@link android.support.v7.widget.RecyclerView.Adapter}已有的 notify 方法
+     * 消息的状态改变需要调用 item changed方法
+     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemChanged(int)}
+     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemChanged(int, Object)}
+     * TODO 重发消息的时候需要调用 item move
+     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemMoved(int, int)}
+     * 新插入消息需要调用 item inserted
+     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemInserted(int)}
+     * TODO 改变多条需要 item range changed
+     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRangeChanged(int, int)}
+     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRangeChanged(int, int, Object)}
+     * 插入多条消息需要调用 item range inserted（加载更多消息时需要此刷新）
+     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRangeInserted(int, int)}
+     * 删除多条内容需要 item range removed（TODO 清空或者删除多条消息需要此方法）
+     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRangeRemoved(int, int)}
+     * 删除消息需要 item removed
+     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRemoved(int)}
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventBus(MLRefreshEvent event) {
+        /**
+         * 发送通知前先调用{@link MLMessageAdapter#refreshMessageData()}更新{@link MLMessageAdapter}的数据源
+         */
+        mMessageAdapter.refreshMessageData();
+        int position = event.getPosition();
+        int count = event.getCount();
+        int type = event.getType();
+
+        switch (type) {
+        case MLConstants.ML_NOTIFY_REFRESH_ALL:
+            mMessageAdapter.notifyDataSetChanged();
+            break;
+        case MLConstants.ML_NOTIFY_REFRESH_CHANGED:
+            // 改变一条消息
+            mMessageAdapter.notifyItemChanged(position);
+            break;
+        case MLConstants.ML_NOTIFY_REFRESH_RANGE_CHANGED:
+            // 改变多条消息
+            mMessageAdapter.notifyItemRangeChanged(position, count);
+            break;
+        case MLConstants.ML_NOTIFY_REFRESH_INSERTED:
+            // 插入一条消息
+            mMessageAdapter.notifyItemInserted(position);
+            // 只有当前列表在最底部的时候才向下滚动
+            if (isBottom) {
+                scrollToItem(position, false);
+            }
+            break;
+        case MLConstants.ML_NOTIFY_REFRESH_RANGE_INSERTED:
+            // 插入多条消息，一般是下拉加载更多时
+            mMessageAdapter.notifyItemRangeInserted(position, count);
+            scrollToItem(position + count - 1, false);
+            break;
+        case MLConstants.ML_NOTIFY_REFRESH_MOVED:
+            // 移动消息
+            mMessageAdapter.notifyItemMoved(position, count);
+            break;
+        case MLConstants.ML_NOTIFY_REFRESH_REMOVED:
+            // 删除一条消息
+            mMessageAdapter.notifyItemRemoved(position);
+            break;
+        case MLConstants.ML_NOTIFY_REFRESH_RANGE_REMOVED:
+            // 删除多条消息
+            mMessageAdapter.notifyItemRangeRemoved(position, count);
+            break;
+        }
+    }
+    /*--------------------------------- 刷新代码结束 -----------------------------------------*/
+
+
+    /**
+     * ----------------------------- RecyclerView 滚动监听 -----------------------------------
+     * 监听RecyclerView 的滚动，实现滚动到指定位置
+     *
+     * @param position 需要滚动到的位置
+     * @param isScroll 是否需要滚动效果
+     */
+    private void scrollToItem(int position, boolean isScroll) {
+        if (position < 0 || position >= mMessageAdapter.getItemCount()) {
+            return;
+        }
+        mRecyclerViewItemIndex = position;
+        isSmoothScroll = isScroll;
+        // 不管当前 RecyclerView 是否在滚动，都调用一下停止，进行下一次的位置滚动
+        mRecyclerView.stopScroll();
+
+        if (isScroll) {
+            // 调用带有动画的滚动方法滚动 RecyclerView
+            smoothScrollToItem(position);
+        } else {
+            scrollToItem(position);
+        }
+    }
+
+    /**
+     * 带有滚动效果的 Scroll 方法，将 RecyclerView 滚动到指定位置
+     *
+     * @param position 需要滚动到的位置
+     */
+    private void smoothScrollToItem(int position) {
+        // RecyclerView 当前在屏幕上显示的第一个item的位置
+        int firstItem = mLayoutManger.findFirstVisibleItemPosition();
+        // RecyclerView 当前在屏幕上显示的最后一个item的位置
+        int lastItem = mLayoutManger.findLastVisibleItemPosition();
+
+        MLLog.i("smoothScrollToItem - view count %d; conversation size %d", mRecyclerView.getChildCount(), mConversation.getAllMessages().size());
+
+        // 判断需要滚动到的 position 和当前显示的区别，做一些相应的操作
+        if (position <= firstItem) {
+            mRecyclerView.smoothScrollToPosition(position);
+        } else if (position <= lastItem) {
+            int top = mRecyclerView.getChildAt(position - firstItem).getTop();
+            mRecyclerView.smoothScrollBy(0, top);
+        } else {
+            mRecyclerView.smoothScrollToPosition(position);
+            isNeedScroll = true;
+        }
+    }
+
+    /**
+     * 将RecyclerView 滚动到指定位置，这个没有滚动的动画效果，直接跳转到相应位置
+     *
+     * @param position 需要滚动到的位置
+     */
+    private void scrollToItem(int position) {
+        // RecyclerView 当前在屏幕上显示的第一个item的索引位置
+        int firstItem = mLayoutManger.findFirstVisibleItemPosition();
+        // RecyclerView 当前在屏幕上显示的最后一个item的索引位置
+        int lastItem = mLayoutManger.findLastVisibleItemPosition();
+
+        MLLog.i("scrollToItem - view count %d; conversation size %d", mRecyclerView.getChildCount(), mConversation.getAllMessages().size());
+
+        // 判断需要滚动到的 position 和当前显示的区别，做一些相应的操作
+        if (position <= firstItem) {
+            mRecyclerView.scrollToPosition(position);
+        } else if (position <= lastItem) {
+            if (lastItem - firstItem == mLayoutManger.getItemCount()) {
+                return;
+            }
+            int top = mRecyclerView.getChildAt(position - firstItem).getTop();
+            mRecyclerView.scrollBy(0, top);
+        } else {
+            mRecyclerView.scrollToPosition(position);
+            isNeedScroll = true;
+        }
+    }
+
+    /**
+     * 自定义实现RecyclerView的滚动监听，监听
+     */
+    class MLRecyclerViewListener extends RecyclerView.OnScrollListener {
+        /**
+         * 监听 RecyclerView 滚动状态的变化
+         *
+         * @param recyclerView 当前监听的 RecyclerView 控件
+         * @param newState     RecyclerView 变化的状态
+         */
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            super.onScrollStateChanged(recyclerView, newState);
+            if (isNeedScroll && newState == RecyclerView.SCROLL_STATE_IDLE && isSmoothScroll) {
+                isNeedScroll = false;
+                int firstItem = mLayoutManger.findFirstCompletelyVisibleItemPosition();
+                // int firstItem = mLayoutManger.findFirstVisibleItemPosition()();
+                int n = mRecyclerViewItemIndex - firstItem;
+                if (0 <= n && n < mRecyclerView.getChildCount()) {
+                    int top = mRecyclerView.getChildAt(n).getTop();
+                    mRecyclerView.smoothScrollBy(0, top);
+                }
+            }
+            // 当 RecyclerView 停止滚动后判断当前是否在底部
+            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                int lastItem = mLayoutManger.findLastVisibleItemPosition();
+                if (lastItem == (mMessageAdapter.getItemCount() - 1)) {
+                    isBottom = true;
+                } else {
+                    isBottom = false;
+                }
+            }
+            //            MLLog.i("onScrollStateChanged - isNeedScroll:%b, isSmoothScroll:%b, newState:%d, isBottom:%b", isNeedScroll, isSmoothScroll, newState, isBottom);
+        }
+
+        /**
+         * RecyclerView 正在滚动中
+         *
+         * @param recyclerView 当前监听的 RecyclerView 控件
+         * @param dx           水平变化值，表示水平滚动，正表示向右，负表示向左
+         * @param dy           垂直变化值，表示上下滚动，正表示向下，负表示向上
+         */
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            if (isNeedScroll && !isSmoothScroll) {
+                isNeedScroll = false;
+                int firstItem = mLayoutManger.findFirstCompletelyVisibleItemPosition();
+                int n = mRecyclerViewItemIndex - firstItem;
+                if (0 <= n && n < mRecyclerView.getChildCount()) {
+                    int top = mRecyclerView.getChildAt(n).getTop();
+                    mRecyclerView.scrollBy(0, top);
+                }
+            }
+            // 如果正在向上滚动，则也设置 isBottom 状态为false
+            if (dy < 0) {
+                isBottom = false;
+            }
+            //            MLLog.i("onScrolled - isNeedScroll:%b, isSmoothScroll:%b, dy:%d", isNeedScroll, isSmoothScroll, dy);
+        }
+    }
+    /*------------------------------- RecyclerView 滚动监听及处理结束 ------------------------------*/
+
+
+    /**
+     * --------------------------------- Message Listener -------------------------------------
+     * 环信消息监听主要方法
+     * <p>
+     * 收到新消息
+     *
+     * @param list 收到的新消息集合
+     */
+    @Override
+    public void onMessageReceived(List<EMMessage> list) {
+        MLLog.i("onMessageReceived list.size:%d", list.size());
+        // 循环遍历当前收到的消息
+        for (EMMessage message : list) {
+            // 判断消息是否是当前会话的消息
+            if (mChatId.equals(message.getFrom())) {
+                // 设置消息为已读
+                mConversation.markMessageAsRead(message.getMsgId());
+                // 调用刷新方法，因为到来的消息可能不是当前会话的，所以要循环判断
+                int position = mConversation.getMessagePosition(message);
+                postRefreshEvent(position, 1, MLConstants.ML_NOTIFY_REFRESH_INSERTED);
+            } else {
+                // 如果消息不是当前会话的消息发送通知栏通知
+                MLNotifier.getInstance().sendNotificationMessage(message);
+            }
+        }
+    }
+
+    /**
+     * 收到新的 CMD 消息nani
+     *
+     * @param list
+     */
+    @Override
+    public void onCmdMessageReceived(List<EMMessage> list) {
+        for (int i = 0; i < list.size(); i++) {
+            // 透传消息
+            EMMessage cmdMessage = list.get(i);
+            EMCmdMessageBody body = (EMCmdMessageBody) cmdMessage.getBody();
+            // 判断是不是撤回消息的透传
+            if (body.action().equals(MLConstants.ML_ATTR_RECALL)) {
+                MLMessageUtils.receiveRecallMessage(mActivity, cmdMessage);
+                postRefreshEvent(0, 1, MLConstants.ML_NOTIFY_REFRESH_ALL);
+            }
+        }
+    }
+
+    /**
+     * 收到消息的已读回执
+     *
+     * @param list 收到消息已读回执
+     */
+    @Override
+    public void onMessageReadAckReceived(List<EMMessage> list) {
+        MLLog.i("onMessageReadAckReceived list.size:%d", list.size());
+        // 调用刷新方法，因为收到的消息是一个list集合，所以我们调用多条 Item 改变的刷新方法
+        int position = mConversation.getAllMessages().size() - list.size();
+        int count = list.size();
+//        postRefreshEvent(position, count, MLConstants.ML_NOTIFY_REFRESH_RANGE_CHANGED);
+    }
+
+    /**
+     * 收到消息的已送达回执
+     *
+     * @param list 收到发送回执的消息集合
+     */
+    @Override
+    public void onMessageDeliveryAckReceived(List<EMMessage> list) {
+        MLLog.i("onMessageDeliveryAckReceived list.size:%d", list.size());
+        // 调用刷新方法，因为收到的消息是一个list集合，所以我们调用多条 Item 改变的刷新方法
+        int position = mConversation.getAllMessages().size() - list.size();
+        int count = list.size();
+//        postRefreshEvent(position, count, MLConstants.ML_NOTIFY_REFRESH_RANGE_CHANGED);
+    }
+
+    /**
+     * 消息的改变
+     *
+     * @param message 发生改变的消息
+     * @param object  包含改变的消息
+     */
+    @Override
+    public void onMessageChanged(EMMessage message, Object object) {
+        MLLog.i("onMessageChanged message:%s, object:%s", message.toString(), object.toString());
+//        postRefreshEvent(mConversation.getMessagePosition(message), 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);
+    }
+    /*-------------------------------------- 消息监听 end ---------------------------------------*/
+
     /**
      * 重写菜单项的选择事件
      *
@@ -870,7 +1208,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             // mConversation.clear();
             // 清除全部信息，包括数据库中的
             mConversation.clearAllMessages();
-            refreshItemRangeRemoved(0, count);
+            postRefreshEvent(0, count, MLConstants.ML_NOTIFY_REFRESH_RANGE_REMOVED);
             break;
         case R.id.ml_action_settings:
 
@@ -974,468 +1312,5 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         EMClient.getInstance().chatManager().removeMessageListener(mMessageListener);
         // 取消EventBus 消息订阅者
         EventBus.getDefault().unregister(this);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventBus(MLMessageEvent event) {
-        EMMessage message = event.getMessage();
-        if (message.status() == EMMessage.Status.FAIL) {
-            String error = "";
-            int errorCode = message.getError();
-            if (errorCode == EMError.MESSAGE_INCLUDE_ILLEGAL_CONTENT) {
-                error = mActivity.getString(R.string.ml_toast_msg_have_illegal) + "-" + errorCode;
-            } else if (errorCode == EMError.GROUP_PERMISSION_DENIED) {
-                error = mActivity.getString(R.string.ml_toast_msg_not_join_group) + "-" + errorCode;
-            } else {
-                error = mActivity.getString(R.string.ml_toast_msg_send_faild) + "-" + errorCode;
-            }
-            MLToast.errorToast(error).show();
-        }
-
-        // 消息发送成功，刷新当前消息状态
-        refreshItemChanged(mConversation.getMessagePosition(message));
-    }
-
-    /**
-     * ---------------------------- RecyclerView 刷新方法 -----------------------------------
-     * 这里调用下 {@link MLMessageAdapter}里封装的方法
-     * 最终还是去调用{@link android.support.v7.widget.RecyclerView.Adapter}已有的 notify 方法
-     * 消息的状态改变需要调用 item changed方法
-     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemChanged(int)}
-     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemChanged(int, Object)}
-     * TODO 重发消息的时候需要调用 item move
-     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemMoved(int, int)}
-     * 新插入消息需要调用 item inserted
-     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemInserted(int)}
-     * TODO 改变多条需要 item range changed
-     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRangeChanged(int, int)}
-     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRangeChanged(int, int, Object)}
-     * 插入多条消息需要调用 item range inserted（加载更多消息时需要此刷新）
-     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRangeInserted(int, int)}
-     * 删除多条内容需要 item range removed（TODO 清空或者删除多条消息需要此方法）
-     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRangeRemoved(int, int)}
-     * 删除消息需要 item removed
-     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRemoved(int)}
-     */
-    private void refreshAll() {
-        if (mMessageAdapter != null) {
-            /**
-             * 发送通知前先调用{@link MLMessageAdapter#refreshMessageData()}更新{@link MLMessageAdapter}的数据源
-             */
-            // mMessageAdapter.refreshMessageData();
-            // mMessageAdapter.notifyDataSetChanged();
-            notifyHandler(MLConstants.ML_NOTIFY_REFRESH_ALL, 1, 1);
-        }
-    }
-
-    /**
-     * 改变一条 Item 的刷新
-     *
-     * @param position 改变的位置
-     */
-    private void refreshItemChanged(int position) {
-        if (mMessageAdapter != null) {
-            /**
-             * 发送通知前先调用{@link MLMessageAdapter#refreshMessageData()}更新{@link MLMessageAdapter}的数据源
-             */
-            //            mMessageAdapter.refreshMessageData();
-            //            mMessageAdapter.notifyItemChanged(position);
-            notifyHandler(MLConstants.ML_NOTIFY_REFRESH_CHANGED, position, 1);
-        }
-    }
-
-    /**
-     * 改变多条 Item 的刷新
-     *
-     * @param position 改变的位置
-     * @param count    改变的数量
-     */
-    private void refreshItemRangeChanged(int position, int count) {
-        if (mMessageAdapter != null) {
-            /**
-             * 发送通知前先调用{@link MLMessageAdapter#refreshMessageData()}更新{@link MLMessageAdapter}的数据源
-             */
-            //            mMessageAdapter.refreshMessageData();
-            //            mMessageAdapter.notifyItemRangeChanged(position, count);
-            notifyHandler(MLConstants.ML_NOTIFY_REFRESH_RANGE_CHANGED, position, count);
-        }
-    }
-
-    /**
-     * 插入一条 Item 的刷新
-     *
-     * @param position 插入 Item 的位置
-     */
-    private void refreshItemInserted(int position) {
-        if (mMessageAdapter != null) {
-            /**
-             * 发送通知前先调用{@link MLMessageAdapter#refreshMessageData()}更新{@link MLMessageAdapter}的数据源
-             */
-            //            mMessageAdapter.refreshMessageData();
-            //            mMessageAdapter.notifyItemInserted(position);
-            notifyHandler(MLConstants.ML_NOTIFY_REFRESH_INSERTED, position, 1);
-        }
-    }
-
-    /**
-     * 插入多条数据的刷新
-     *
-     * @param position 开始插入的位置
-     * @param count    变化的数量
-     */
-    private void refreshItemRangeInserted(int position, int count) {
-        if (mMessageAdapter != null) {
-            /**
-             * 发送通知前先调用{@link MLMessageAdapter#refreshMessageData()}更新{@link MLMessageAdapter}的数据源
-             */
-            //            mMessageAdapter.refreshMessageData();
-            //            mMessageAdapter.notifyItemRangeInserted(position, count);
-            notifyHandler(MLConstants.ML_NOTIFY_REFRESH_RANGE_INSERTED, position, count);
-        }
-    }
-
-    /**
-     * Item 位置移动的刷新
-     *
-     * @param formPosition 原位置
-     * @param toPosition   移动后的位置
-     */
-    private void refreshItemMoved(int formPosition, int toPosition) {
-        if (mMessageAdapter != null) {
-            /**
-             * 发送通知前先调用{@link MLMessageAdapter#refreshMessageData()}更新{@link MLMessageAdapter}的数据源
-             */
-            //            mMessageAdapter.refreshMessageData();
-            //            mMessageAdapter.notifyItemMoved(formPosition, toPosition);
-            notifyHandler(MLConstants.ML_NOTIFY_REFRESH_MOVED, formPosition, toPosition);
-        }
-    }
-
-    /**
-     * 删除一条 Item 的刷新
-     *
-     * @param position 删除的位置
-     */
-    private void refreshItemRemoved(int position) {
-        if (mMessageAdapter != null) {
-            /**
-             * 发送通知前先调用{@link MLMessageAdapter#refreshMessageData()}更新{@link MLMessageAdapter}的数据源
-             */
-            //            mMessageAdapter.refreshMessageData();
-            //            mMessageAdapter.notifyItemRemoved(position);
-            notifyHandler(MLConstants.ML_NOTIFY_REFRESH_REMOVED, position, 1);
-        }
-    }
-
-    /**
-     * 删除多项 Item 的刷新
-     *
-     * @param position 开始位置
-     * @param count    变化的数量
-     */
-    private void refreshItemRangeRemoved(int position, int count) {
-        if (mMessageAdapter != null) {
-            /**
-             * 发送通知前先调用{@link MLMessageAdapter#refreshMessageData()}更新{@link MLMessageAdapter}的数据源
-             */
-            //            mMessageAdapter.refreshMessageData();
-            //            mMessageAdapter.notifyItemRangeRemoved(position, count);
-            notifyHandler(MLConstants.ML_NOTIFY_REFRESH_RANGE_REMOVED, position, count);
-        }
-    }
-
-    /**
-     * 发送Handler去刷新界面
-     *
-     * @param type 刷新类型
-     * @param arg1 刷新位置
-     * @param arg2 刷新数量
-     */
-    private void notifyHandler(int type, int arg1, int arg2) {
-        // 得到 Hander 的 Message
-        Message msg = mHandler.obtainMessage();
-        // 设置相应的参数
-        msg.what = type;
-        msg.arg1 = arg1;
-        msg.arg2 = arg2;
-        // 发送 Handler 消息
-        mHandler.sendMessage(msg);
-    }
-
-    /**
-     * 自定义 Handler 类，主要用于界面的刷新操作
-     */
-    class MLHandler extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            int what = msg.what;
-            int arg1 = msg.arg1;
-            int arg2 = msg.arg2;
-            /**
-             * 发送通知前先调用{@link MLMessageAdapter#refreshMessageData()}更新{@link MLMessageAdapter}的数据源
-             */
-            mMessageAdapter.refreshMessageData();
-            switch (what) {
-            case MLConstants.ML_NOTIFY_REFRESH_ALL:
-                mMessageAdapter.notifyDataSetChanged();
-                break;
-            // 改变
-            case MLConstants.ML_NOTIFY_REFRESH_CHANGED:
-                mMessageAdapter.notifyItemChanged(arg1);
-                break;
-            case MLConstants.ML_NOTIFY_REFRESH_RANGE_CHANGED:
-                mMessageAdapter.notifyItemRangeChanged(arg1, arg2);
-                break;
-            // 插入
-            case MLConstants.ML_NOTIFY_REFRESH_INSERTED:
-                mMessageAdapter.notifyItemInserted(arg1);
-                // 只有当前列表在最底部的时候才向下滚动
-                if (isBottom) {
-                    scrollToItem(arg1, false);
-                }
-                break;
-            case MLConstants.ML_NOTIFY_REFRESH_RANGE_INSERTED:
-                mMessageAdapter.notifyItemRangeInserted(arg1, arg2);
-                scrollToItem(arg2 - 1, false);
-                break;
-            // 移动
-            case MLConstants.ML_NOTIFY_REFRESH_MOVED:
-                mMessageAdapter.notifyItemMoved(arg1, arg2);
-                break;
-            // 删除
-            case MLConstants.ML_NOTIFY_REFRESH_REMOVED:
-                mMessageAdapter.notifyItemRemoved(arg1);
-                break;
-            case MLConstants.ML_NOTIFY_REFRESH_RANGE_REMOVED:
-                mMessageAdapter.notifyItemRangeRemoved(arg1, arg2);
-                break;
-            }
-        }
-    }
-    /*--------------------------------- 刷新代码结束 -----------------------------------------*/
-
-
-    /**
-     * ----------------------------- RecyclerView 滚动监听 -----------------------------------
-     * 监听RecyclerView 的滚动，实现平滑滚动到指定位置
-     *
-     * @param position 需要滚动到的位置
-     * @param isScroll 是否需要滚动效果
-     */
-    private void scrollToItem(int position, boolean isScroll) {
-        if (position < 0 || position >= mMessageAdapter.getItemCount()) {
-            return;
-        }
-        mRecyclerViewItemIndex = position;
-        isSmoothScroll = isScroll;
-        // 不管当前 RecyclerView 是否在滚动，都调用一下停止，进行下一次的位置滚动
-        mRecyclerView.stopScroll();
-        if (isScroll) {
-            // 调用带有动画的滚动方法滚动 RecyclerView
-            smoothScrollToItem(position);
-        } else {
-            scrollToItem(position);
-        }
-    }
-
-    /**
-     * 带有滚动效果的 Scroll 方法，将 RecyclerView 滚动到指定位置
-     *
-     * @param position 需要滚动到的位置
-     */
-    private void smoothScrollToItem(int position) {
-        // RecyclerView 当前在屏幕上显示的第一个item的位置
-        int firstItem = mLayoutManger.findFirstVisibleItemPosition();
-        // RecyclerView 当前在屏幕上显示的最后一个item的位置
-        int lastItem = mLayoutManger.findLastVisibleItemPosition();
-        // 判断需要滚动到的 position 和当前显示的区别，做一些相应的操作
-        if (position <= firstItem) {
-            mRecyclerView.smoothScrollToPosition(position);
-        } else if (position <= lastItem) {
-            int top = mRecyclerView.getChildAt(position - firstItem).getTop();
-            mRecyclerView.smoothScrollBy(0, top);
-        } else {
-            mRecyclerView.smoothScrollToPosition(position);
-            isNeedScroll = true;
-        }
-    }
-
-    /**
-     * 将RecyclerView 滚动到指定位置，这个没有滚动的动画效果，直接跳转到相应位置
-     *
-     * @param position 需要滚动到的位置
-     */
-    private void scrollToItem(int position) {
-        // RecyclerView 当前在屏幕上显示的第一个item的索引位置
-        int firstItem = mLayoutManger.findFirstVisibleItemPosition();
-        // RecyclerView 当前在屏幕上显示的最后一个item的索引位置
-        int lastItem = mLayoutManger.findLastVisibleItemPosition();
-        // 判断需要滚动到的 position 和当前显示的区别，做一些相应的操作
-        if (position <= firstItem) {
-            mRecyclerView.scrollToPosition(position);
-        } else if (position <= lastItem) {
-            int top = mRecyclerView.getChildAt(position - firstItem).getTop();
-            mRecyclerView.scrollBy(0, top);
-        } else {
-            mRecyclerView.scrollToPosition(position);
-            isNeedScroll = true;
-        }
-    }
-
-    /**
-     * 自定义实现RecyclerView的滚动监听，监听
-     */
-    class MLRecyclerViewListener extends RecyclerView.OnScrollListener {
-        /**
-         * 监听 RecyclerView 滚动状态的变化
-         *
-         * @param recyclerView 当前监听的 RecyclerView 控件
-         * @param newState     RecyclerView 变化的状态
-         */
-        @Override
-        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-            super.onScrollStateChanged(recyclerView, newState);
-            if (isNeedScroll && newState == RecyclerView.SCROLL_STATE_IDLE && isSmoothScroll) {
-                isNeedScroll = false;
-                int firstItem = mLayoutManger.findFirstCompletelyVisibleItemPosition();
-                // int firstItem = mLayoutManger.findFirstVisibleItemPosition()();
-                int n = mRecyclerViewItemIndex - firstItem;
-                if (0 <= n && n < mRecyclerView.getChildCount()) {
-                    int top = mRecyclerView.getChildAt(n).getTop();
-                    mRecyclerView.smoothScrollBy(0, top);
-                }
-            }
-            // 当 RecyclerView 停止滚动后判断当前是否在底部
-            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                int lastItem = mLayoutManger.findLastVisibleItemPosition();
-                if (lastItem == (mMessageAdapter.getItemCount() - 1)) {
-                    isBottom = true;
-                } else {
-                    isBottom = false;
-                }
-            }
-            //            MLLog.i("onScrollStateChanged - isNeedScroll:%b, isSmoothScroll:%b, newState:%d, isBottom:%b", isNeedScroll, isSmoothScroll, newState, isBottom);
-        }
-
-        /**
-         * RecyclerView 正在滚动中
-         *
-         * @param recyclerView 当前监听的 RecyclerView 控件
-         * @param dx           水平变化值，表示水平滚动，正表示向右，负表示向左
-         * @param dy           垂直变化值，表示上下滚动，正表示向下，负表示向上
-         */
-        @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-            super.onScrolled(recyclerView, dx, dy);
-            if (isNeedScroll && !isSmoothScroll) {
-                isNeedScroll = false;
-                int firstItem = mLayoutManger.findFirstCompletelyVisibleItemPosition();
-                int n = mRecyclerViewItemIndex - firstItem;
-                if (0 <= n && n < mRecyclerView.getChildCount()) {
-                    int top = mRecyclerView.getChildAt(n).getTop();
-                    mRecyclerView.scrollBy(0, top);
-                }
-            }
-            // 如果正在向上滚动，则也设置 isBottom 状态为false
-            if (dy < 0) {
-                isBottom = false;
-            }
-            //            MLLog.i("onScrolled - isNeedScroll:%b, isSmoothScroll:%b, dy:%d", isNeedScroll, isSmoothScroll, dy);
-        }
-    }
-    /*------------------------------- RecyclerView 滚动监听及处理结束 ------------------------------*/
-
-
-    /**
-     * --------------------------------- Message Listener -------------------------------------
-     * 环信消息监听主要方法
-     */
-    /**
-     * 收到新消息
-     *
-     * @param list 收到的新消息集合
-     */
-    @Override
-    public void onMessageReceived(List<EMMessage> list) {
-        MLLog.i("onMessageReceived list.size:%d", list.size());
-        // 循环遍历当前收到的消息
-        for (EMMessage message : list) {
-            // 判断消息是否是当前会话的消息
-            if (mChatId.equals(message.getFrom())) {
-                // 设置消息为已读
-                mConversation.markMessageAsRead(message.getMsgId());
-                // 调用刷新方法，因为收到的s
-                // df
-                // sd
-                // 消息是一个list集合，所以我们调用插入多条 Item 的刷新方法
-                int position = mConversation.getAllMessages().size() - list.size();
-                int count = list.size();
-                refreshItemInserted(position);
-            } else {
-                // 如果消息不是当前会话的消息发送通知栏通知
-                MLNotifier.getInstance().sendNotificationMessage(message);
-            }
-            MLLog.i("message id:%s, from:%s, mseeage:%s", message.getMsgId(), message.getFrom(), message.toString());
-        }
-
-    }
-
-    /**
-     * 收到新的 CMD 消息nani
-     *
-     * @param list
-     */
-    @Override
-    public void onCmdMessageReceived(List<EMMessage> list) {
-        for (int i = 0; i < list.size(); i++) {
-            // 透传消息
-            EMMessage cmdMessage = list.get(i);
-            EMCmdMessageBody body = (EMCmdMessageBody) cmdMessage.getBody();
-            // 判断是不是撤回消息的透传
-            if (body.action().equals(MLConstants.ML_ATTR_RECALL)) {
-                MLMessageUtils.receiveRecallMessage(mActivity, cmdMessage);
-                refreshAll();
-            }
-        }
-    }
-
-    /**
-     * 收到消息的已读回执
-     *
-     * @param list 收到消息已读回执
-     */
-    @Override
-    public void onMessageReadAckReceived(List<EMMessage> list) {
-        MLLog.i("onMessageReadAckReceived list.size:%d", list.size());
-        // 调用刷新方法，因为收到的消息是一个list集合，所以我们调用多条 Item 改变的刷新方法
-        int position = mConversation.getAllMessages().size() - list.size();
-        int count = list.size();
-        refreshItemRangeChanged(position, count);
-    }
-
-    /**
-     * 收到消息的已送达回执
-     *
-     * @param list 收到发送回执的消息集合
-     */
-    @Override
-    public void onMessageDeliveryAckReceived(List<EMMessage> list) {
-        MLLog.i("onMessageDeliveryAckReceived list.size:%d", list.size());
-        // 调用刷新方法，因为收到的消息是一个list集合，所以我们调用多条 Item 改变的刷新方法
-        int position = mConversation.getAllMessages().size() - list.size();
-        int count = list.size();
-        refreshItemRangeChanged(position, count);
-    }
-
-    /**
-     * 消息的改变
-     *
-     * @param message 发生改变的消息
-     * @param object  包含改变的消息
-     */
-    @Override
-    public void onMessageChanged(EMMessage message, Object object) {
-        MLLog.i("onMessageChanged message:%s, object:%s", message.toString(), object.toString());
-        refreshItemChanged(mConversation.getMessagePosition(message));
     }
 }

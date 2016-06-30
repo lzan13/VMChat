@@ -12,11 +12,15 @@ import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 
 import net.melove.app.easechat.application.MLConstants;
+import net.melove.app.easechat.application.eventbus.MLRefreshEvent;
 import net.melove.app.easechat.conversation.messageitem.MLFileMessageItem;
 import net.melove.app.easechat.conversation.messageitem.MLImageMessageItem;
 import net.melove.app.easechat.conversation.messageitem.MLMessageItem;
 import net.melove.app.easechat.conversation.messageitem.MLRecallMessageItem;
 import net.melove.app.easechat.conversation.messageitem.MLTextMessageItem;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Collections;
 import java.util.List;
@@ -212,13 +216,13 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
         mOnItemClickListener.onItemAction(message, action);
     }
 
+    /**
+     * 更新数据源
+     */
     public void refreshMessageData() {
         mMessages.clear();
         mMessages.addAll(mConversation.getAllMessages());
-        // 将list集合倒序排列
-        // Collections.reverse(mMessages);
     }
-
 
     /**
      * 非静态内部类会隐式持有外部类的引用，就像大家经常将自定义的adapter在Activity类里，
