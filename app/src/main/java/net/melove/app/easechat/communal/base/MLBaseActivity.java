@@ -94,7 +94,7 @@ public class MLBaseActivity extends AppCompatActivity {
         super.onResume();
         MLLog.i("%s onResume", this.getClass().getSimpleName());
         MLActivityManager.getInstance().setCurrActivity(this);
-        MLEasemobHelper.getInstance().removeActivity(mActivity);
+        MLEasemobHelper.getInstance().addActivity(mActivity);
     }
 
     @Override

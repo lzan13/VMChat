@@ -551,11 +551,6 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      * @param message 需要发送的消息
      */
     private void sendMessage(final EMMessage message) {
-        // 调用设置消息扩展方法
-        setMessageAttribute(message);
-        // 发送一条新消息时插入新消息的位置，这里直接用插入新消息前的消息总数来作为新消息的位置
-        int position = mConversation.getAllMessages().size();
-
         // 设置消息状态回调
         message.setMessageStatusCallback(new EMCallBack() {
             @Override
@@ -588,13 +583,15 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 EventBus.getDefault().post(event);
             }
         });
-
+        // 调用设置消息扩展方法
+        setMessageAttribute(message);
+        // 发送一条新消息时插入新消息的位置，这里直接用插入新消息前的消息总数来作为新消息的位置
+        int position = mConversation.getAllMessages().size();
         /**
          *  调用sdk的消息发送方法，发送消息，这里不进行消息的状态监听
          *  都在各自的{@link net.melove.app.easechat.conversation.messageitem.MLMessageItem}实现监听
          */
         EMClient.getInstance().chatManager().sendMessage(message);
-        MLLog.i("onMessageReceived - view count %d; conversation size %d", mRecyclerView.getChildCount(), mConversation.getAllMessages().size());
 
         // 点击发送后马上刷新界面，无论消息有没有成功，先刷新显示
         postRefreshEvent(position, 1, MLConstants.ML_NOTIFY_REFRESH_INSERTED);
@@ -878,6 +875,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      * @param type     刷新事件的类型方式
      */
     private void postRefreshEvent(int position, int count, int type) {
+        // 实例刷新事件MLRefreshEvent，并填充数据
         MLRefreshEvent event = new MLRefreshEvent();
         event.setPosition(position);
         event.setCount(count);
@@ -909,10 +907,13 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventBus(MLRefreshEvent event) {
+        MLLog.i("onEventBus -0- adapter item count %d, conversation %d", mLayoutManger.getItemCount(), mConversation.getAllMessages().size());
         /**
-         * 发送通知前先调用{@link MLMessageAdapter#refreshMessageData()}更新{@link MLMessageAdapter}的数据源
+         * 先调用{@link MLMessageAdapter#refreshMessageData()}更新{@link MLMessageAdapter}的数据源，
+         * 这个方法不能调用过早，因为有时conversation内存中的消息还没有加载进来
          */
         mMessageAdapter.refreshMessageData();
+
         int position = event.getPosition();
         int count = event.getCount();
         int type = event.getType();
@@ -930,6 +931,9 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             mMessageAdapter.notifyItemRangeChanged(position, count);
             break;
         case MLConstants.ML_NOTIFY_REFRESH_INSERTED:
+            MLLog.i("onEventBus -2- adapter item count %d, conversation %d", mLayoutManger.getItemCount(), mConversation.getAllMessages().size());
+            // 这里在调用一次刷新数据源是为了防止conversation没有及时的添加发送的消息
+            mMessageAdapter.refreshMessageData();
             // 插入一条消息
             mMessageAdapter.notifyItemInserted(position);
             // 只有当前列表在最底部的时候才向下滚动
@@ -938,6 +942,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             }
             break;
         case MLConstants.ML_NOTIFY_REFRESH_RANGE_INSERTED:
+            // 这里在调用一次刷新数据源是为了防止conversation没有及时的添加发送的消息
+            mMessageAdapter.refreshMessageData();
             // 插入多条消息，一般是下拉加载更多时
             mMessageAdapter.notifyItemRangeInserted(position, count);
             scrollToItem(position + count - 1, false);
@@ -967,6 +973,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      * @param isScroll 是否需要滚动效果
      */
     private void scrollToItem(int position, boolean isScroll) {
+        MLLog.i("scrollToItem adapter item count %d, position %d", mLayoutManger.getItemCount(), position);
         if (position < 0 || position >= mMessageAdapter.getItemCount()) {
             return;
         }
@@ -974,7 +981,6 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         isSmoothScroll = isScroll;
         // 不管当前 RecyclerView 是否在滚动，都调用一下停止，进行下一次的位置滚动
         mRecyclerView.stopScroll();
-
         if (isScroll) {
             // 调用带有动画的滚动方法滚动 RecyclerView
             smoothScrollToItem(position);
@@ -989,13 +995,11 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      * @param position 需要滚动到的位置
      */
     private void smoothScrollToItem(int position) {
+        MLLog.i("smoothScrollToItem - item count %d; conversation size %d", mLayoutManger.getChildCount(), mConversation.getAllMessages().size());
         // RecyclerView 当前在屏幕上显示的第一个item的位置
         int firstItem = mLayoutManger.findFirstVisibleItemPosition();
         // RecyclerView 当前在屏幕上显示的最后一个item的位置
         int lastItem = mLayoutManger.findLastVisibleItemPosition();
-
-        MLLog.i("smoothScrollToItem - view count %d; conversation size %d", mRecyclerView.getChildCount(), mConversation.getAllMessages().size());
-
         // 判断需要滚动到的 position 和当前显示的区别，做一些相应的操作
         if (position <= firstItem) {
             mRecyclerView.smoothScrollToPosition(position);
@@ -1014,13 +1018,11 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      * @param position 需要滚动到的位置
      */
     private void scrollToItem(int position) {
+        MLLog.i("scrollToItem - item count %d; conversation size %d", mLayoutManger.getChildCount(), mConversation.getAllMessages().size());
         // RecyclerView 当前在屏幕上显示的第一个item的索引位置
         int firstItem = mLayoutManger.findFirstVisibleItemPosition();
         // RecyclerView 当前在屏幕上显示的最后一个item的索引位置
         int lastItem = mLayoutManger.findLastVisibleItemPosition();
-
-        MLLog.i("scrollToItem - view count %d; conversation size %d", mRecyclerView.getChildCount(), mConversation.getAllMessages().size());
-
         // 判断需要滚动到的 position 和当前显示的区别，做一些相应的操作
         if (position <= firstItem) {
             mRecyclerView.scrollToPosition(position);
@@ -1140,8 +1142,12 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             EMCmdMessageBody body = (EMCmdMessageBody) cmdMessage.getBody();
             // 判断是不是撤回消息的透传
             if (body.action().equals(MLConstants.ML_ATTR_RECALL)) {
-                MLMessageUtils.receiveRecallMessage(mActivity, cmdMessage);
-                postRefreshEvent(0, 1, MLConstants.ML_NOTIFY_REFRESH_ALL);
+                boolean result = MLMessageUtils.receiveRecallMessage(mActivity, cmdMessage);
+                if (result) {
+                    String msgId = cmdMessage.getStringAttribute(MLConstants.ML_ATTR_MSG_ID, null);
+                    int position = mConversation.getMessagePosition(mConversation.getMessage(msgId, true));
+                    postRefreshEvent(position, 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);
+                }
             }
         }
     }
@@ -1156,10 +1162,10 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         MLLog.i("onMessageReadAckReceived list.size:%d", list.size());
         for (EMMessage message : list) {
             // 判断消息是否是当前会话的消息
-            if (mChatId.equals(message.getFrom())) {
+            if (mChatId.equals(message.getTo())) {
                 // 调用刷新方法，因为到来的消息可能不是当前会话的，所以要循环判断
                 int position = mConversation.getMessagePosition(message);
-//                postRefreshEvent(position, 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);
+                postRefreshEvent(position, 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);
             }
         }
     }
@@ -1174,10 +1180,10 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         MLLog.i("onMessageDeliveryAckReceived list.size:%d", list.size());
         for (EMMessage message : list) {
             // 判断消息是否是当前会话的消息
-            if (mChatId.equals(message.getFrom())) {
+            if (mChatId.equals(message.getTo())) {
                 // 调用刷新方法，因为到来的消息可能不是当前会话的，所以要循环判断
                 int position = mConversation.getMessagePosition(message);
-//                postRefreshEvent(position, 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);
+                postRefreshEvent(position, 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);
             }
         }
     }
@@ -1191,7 +1197,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     @Override
     public void onMessageChanged(EMMessage message, Object object) {
         MLLog.i("onMessageChanged message:%s, object:%s", message.toString(), object.toString());
-//        postRefreshEvent(mConversation.getMessagePosition(message), 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);
+        int position = mConversation.getMessagePosition(message);
+        postRefreshEvent(position, 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);
     }
     /*-------------------------------------- 消息监听 end ---------------------------------------*/
 

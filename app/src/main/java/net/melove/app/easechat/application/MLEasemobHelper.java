@@ -256,7 +256,7 @@ public class MLEasemobHelper {
                 EMConversation conversation = null;
                 // 判断当前活动界面是不是聊天界面，如果是，全局不处理消息
                 if (MLEasemobHelper.getInstance().getActivityList().size() > 0) {
-                    if (MLEasemobHelper.getInstance().getTopActivity().getClass().getName().equals("MLChatActivity")) {
+                    if (MLEasemobHelper.getInstance().getTopActivity().getClass().getSimpleName().equals("MLChatActivity")) {
                         return;
                     }
                 }
