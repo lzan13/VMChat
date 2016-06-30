@@ -1154,10 +1154,14 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     @Override
     public void onMessageReadAckReceived(List<EMMessage> list) {
         MLLog.i("onMessageReadAckReceived list.size:%d", list.size());
-        // 调用刷新方法，因为收到的消息是一个list集合，所以我们调用多条 Item 改变的刷新方法
-        int position = mConversation.getAllMessages().size() - list.size();
-        int count = list.size();
-//        postRefreshEvent(position, count, MLConstants.ML_NOTIFY_REFRESH_RANGE_CHANGED);
+        for (EMMessage message : list) {
+            // 判断消息是否是当前会话的消息
+            if (mChatId.equals(message.getFrom())) {
+                // 调用刷新方法，因为到来的消息可能不是当前会话的，所以要循环判断
+                int position = mConversation.getMessagePosition(message);
+//                postRefreshEvent(position, 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);
+            }
+        }
     }
 
     /**
@@ -1168,10 +1172,14 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     @Override
     public void onMessageDeliveryAckReceived(List<EMMessage> list) {
         MLLog.i("onMessageDeliveryAckReceived list.size:%d", list.size());
-        // 调用刷新方法，因为收到的消息是一个list集合，所以我们调用多条 Item 改变的刷新方法
-        int position = mConversation.getAllMessages().size() - list.size();
-        int count = list.size();
-//        postRefreshEvent(position, count, MLConstants.ML_NOTIFY_REFRESH_RANGE_CHANGED);
+        for (EMMessage message : list) {
+            // 判断消息是否是当前会话的消息
+            if (mChatId.equals(message.getFrom())) {
+                // 调用刷新方法，因为到来的消息可能不是当前会话的，所以要循环判断
+                int position = mConversation.getMessagePosition(message);
+//                postRefreshEvent(position, 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);
+            }
+        }
     }
 
     /**
