@@ -32,7 +32,7 @@ public class MLBaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MLLog.i("%s onCreate");
+        MLLog.i("%s onCreate", this.getClass().getSimpleName());
         mActivity = this;
     }
 

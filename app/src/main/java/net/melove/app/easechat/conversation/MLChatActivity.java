@@ -720,7 +720,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 break;
             case R.id.ml_img_chat_voice:
                 // 语音按钮
-
+                mInputView.setText(mActivity.getString(R.string.test_unicode_smiling_u));
                 break;
             case R.id.ml_layout_chat_attach_menu:
                 // 附件菜单背景，点击空白处用来关闭菜单

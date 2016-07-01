@@ -222,5 +222,6 @@
 
 
     <string name="test_unicode_smiling">\uD83D\uDE01</string>
+    <string name="test_unicode_smiling_u">1F601</string>
     <string name="test_unicode_smiling_tears">\uD83D\uDE02</string>
 </resources>
