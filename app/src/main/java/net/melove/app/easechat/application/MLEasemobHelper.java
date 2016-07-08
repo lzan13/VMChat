@@ -24,7 +24,7 @@ import net.melove.app.easechat.communal.base.MLBaseActivity;
 import net.melove.app.easechat.communal.util.MLCrypto;
 import net.melove.app.easechat.communal.util.MLDateUtil;
 import net.melove.app.easechat.communal.util.MLLog;
-import net.melove.app.easechat.communal.util.MLMessageUtils;
+import net.melove.app.easechat.conversation.MLMessageUtils;
 import net.melove.app.easechat.database.MLDBHelper;
 import net.melove.app.easechat.invited.MLInvitedEntity;
 import net.melove.app.easechat.contacts.MLContactsEntity;

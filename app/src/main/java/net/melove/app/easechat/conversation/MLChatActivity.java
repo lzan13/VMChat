@@ -45,7 +45,6 @@ import net.melove.app.easechat.communal.base.MLBaseActivity;
 import net.melove.app.easechat.application.MLConstants;
 import net.melove.app.easechat.communal.util.MLDateUtil;
 import net.melove.app.easechat.communal.util.MLFile;
-import net.melove.app.easechat.communal.util.MLMessageUtils;
 import net.melove.app.easechat.communal.widget.MLToast;
 import net.melove.app.easechat.notification.MLNotifier;
 import net.melove.app.easechat.communal.util.MLLog;
@@ -720,7 +719,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 break;
             case R.id.ml_img_chat_voice:
                 // 语音按钮
-                mInputView.setText(mActivity.getString(R.string.test_unicode_smiling_u));
+                mInputView.setText(mActivity.getString(R.string.test_unicode_smiling));
                 break;
             case R.id.ml_layout_chat_attach_menu:
                 // 附件菜单背景，点击空白处用来关闭菜单

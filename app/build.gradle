@@ -78,6 +78,6 @@ dependencies {
      *  引入各种第三方 SDK jar包，在上边 fileTree 里已经包含了libs，这里可以不用再单独添加
      */
     compile files('libs/MiPush_SDK_Client_2_2_21.jar')
-    compile files('libs/hyphenatechat_3.1.3.jar')
+    compile files('libs/hyphenatechat_3.1.4.jar')
 }
 

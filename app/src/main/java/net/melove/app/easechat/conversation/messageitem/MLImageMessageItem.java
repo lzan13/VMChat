@@ -24,7 +24,7 @@ import net.melove.app.easechat.communal.module.MLBitmapCache;
 import net.melove.app.easechat.communal.util.MLDateUtil;
 import net.melove.app.easechat.communal.util.MLDimen;
 import net.melove.app.easechat.communal.util.MLFile;
-import net.melove.app.easechat.communal.util.MLMessageUtils;
+import net.melove.app.easechat.conversation.MLMessageUtils;
 import net.melove.app.easechat.communal.widget.MLImageView;
 import net.melove.app.easechat.conversation.MLChatActivity;
 import net.melove.app.easechat.conversation.MLMessageAdapter;
