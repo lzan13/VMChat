@@ -9,7 +9,7 @@
     android:background="@color/ml_theme_background"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
-    tools:context="net.melove.app.easechat.authentication.MLSignupActivity">
+    tools:context="net.melove.app.chat.authentication.MLSignupActivity">
 
     <!--公共的 Toolbar 控件-->
     <include layout="@layout/widget_toolbar_communal"/>

@@ -8,7 +8,7 @@
     android:background="@color/ml_gray_26"
     android:clipChildren="false"
     android:fitsSystemWindows="true"
-    tools:context="net.melove.app.easechat.test.MLTestActivity">
+    tools:context="net.melove.app.chat.test.MLTestActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/ml_widget_appbar"
