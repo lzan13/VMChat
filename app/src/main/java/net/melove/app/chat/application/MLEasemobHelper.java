@@ -18,6 +18,7 @@ import com.hyphenate.chat.EMOptions;
 
 import net.melove.app.chat.R;
 import net.melove.app.chat.application.eventbus.MLConnectionEvent;
+import net.melove.app.chat.application.eventbus.MLContactsEvent;
 import net.melove.app.chat.application.eventbus.MLInvitedEvent;
 import net.melove.app.chat.application.eventbus.MLMessageEvent;
 import net.melove.app.chat.communal.base.MLBaseActivity;
@@ -129,7 +130,7 @@ public class MLEasemobHelper {
         // 设置自动登录
         options.setAutoLogin(true);
         // 设置是否按照服务器时间排序，false按照本地时间排序
-//        options.setSortMessageByServerTime(false);
+        //        options.setSortMessageByServerTime(false);
         // 设置是否需要发送已读回执
         options.setRequireAck(true);
         // 设置是否需要发送回执
@@ -363,6 +364,8 @@ public class MLEasemobHelper {
                  * 这里将{@link MLContactsDao} 封装成了单例类
                  */
                 MLContactsDao.getInstance().saveContacts(contacts);
+                // 发送可被订阅的消息，通知订阅者联系人有变化
+                EventBus.getDefault().post(new MLContactsEvent());
             }
 
             /**
@@ -378,6 +381,8 @@ public class MLEasemobHelper {
                  * 这里将{@link MLContactsDao} 封装成了单例类
                  */
                 MLContactsDao.getInstance().deleteContacts(username);
+                // 发送可被订阅的消息，通知订阅者联系人有变化
+                EventBus.getDefault().post(new MLContactsEvent());
             }
 
             /**
@@ -428,7 +433,7 @@ public class MLEasemobHelper {
                 }
                 // 调用发送通知栏提醒方法，提醒用户查看申请通知
                 MLNotifier.getInstance().sendInvitedNotification(invitedEntity);
-                // 使用 EventBus 发布消息，可以被订阅此类型消息的订阅者监听到
+                // 使用 EventBus 发布消息，通知订阅者申请与通知信息有变化
                 EventBus.getDefault().post(new MLInvitedEvent());
             }
 
@@ -473,7 +478,7 @@ public class MLEasemobHelper {
                  * 这里是自定义封装号的一个类{@link MLNotifier}
                  */
                 MLNotifier.getInstance().sendInvitedNotification(invitedEntity);
-                // 使用 EventBus 发布消息，可以被订阅此类型消息的订阅者监听到
+                // 使用 EventBus 发布消息，通知订阅者申请与通知信息有变化
                 EventBus.getDefault().post(new MLInvitedEvent());
             }
 
@@ -520,7 +525,7 @@ public class MLEasemobHelper {
                  * 这里是自定义封装号的一个类{@link MLNotifier}
                  */
                 MLNotifier.getInstance().sendInvitedNotification(invitedEntity);
-                // 使用 EventBus 发布消息，可以被订阅此类型消息的订阅者监听到
+                // 使用 EventBus 发布消息，通知订阅者申请与通知信息有变化
                 EventBus.getDefault().post(new MLInvitedEvent());
             }
         };

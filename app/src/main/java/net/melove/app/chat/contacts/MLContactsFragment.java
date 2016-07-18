@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import net.melove.app.chat.R;
-import net.melove.app.chat.application.eventbus.MLContactEvent;
+import net.melove.app.chat.application.eventbus.MLContactsEvent;
 import net.melove.app.chat.database.MLContactsDao;
 import net.melove.app.chat.communal.base.MLBaseFragment;
 
@@ -156,7 +156,7 @@ public class MLContactsFragment extends MLBaseFragment {
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventBus(MLContactEvent event) {
+    public void onEventBus(MLContactsEvent event) {
         refreshContacts();
 
     }

@@ -42,9 +42,6 @@ public class MLInvitedFragment extends MLBaseFragment {
     private RecyclerView mRecyclerView;
     private MLInvitedAdapter mInvitedAdapter;
 
-    // 自定义Handler类，用来处理非UI界面刷新UI的工作
-    private MLHandler mHandler;
-
     /**
      * 工厂方法，用来创建一个Fragment的实例
      *
@@ -78,7 +75,6 @@ public class MLInvitedFragment extends MLBaseFragment {
      * 初始化界面控件等
      */
     private void initView() {
-        mHandler = new MLHandler();
 
         mActivity = getActivity();
 
@@ -198,7 +194,6 @@ public class MLInvitedFragment extends MLBaseFragment {
                     // 更新当前的申请信息
                     MLInvitedDao.getInstance().updateInvited(invitedEntity);
                     dialog.dismiss();
-                    mHandler.sendMessage(mHandler.obtainMessage(0));
                 } catch (HyphenateException e) {
                     e.printStackTrace();
                 }
@@ -227,7 +222,6 @@ public class MLInvitedFragment extends MLBaseFragment {
                     // 更新当前的申请信息
                     MLInvitedDao.getInstance().updateInvited(invitedEntity);
                     dialog.dismiss();
-                    mHandler.sendMessage(mHandler.obtainMessage(0));
                 } catch (HyphenateException e) {
                     e.printStackTrace();
                 }
@@ -244,7 +238,6 @@ public class MLInvitedFragment extends MLBaseFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 MLInvitedDao.getInstance().deleteInvited(mInvitedList.get(index).getInvitedId());
-                mHandler.sendMessage(mHandler.obtainMessage(0));
             }
         });
         dialog.setNegativeButton(R.string.ml_btn_cancel, new DialogInterface.OnClickListener() {
@@ -256,25 +249,14 @@ public class MLInvitedFragment extends MLBaseFragment {
         dialog.show();
     }
 
+    /**
+     * 使用 EventBus 的订阅方式监听事件的变化，这里 EventBus 3.x 使用注解的方式确定方法调用的线程
+     *
+     * @param event
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventBus(MLInvitedEvent event) {
         refreshInvited();
-    }
-
-    /**
-     * 自定义Handler，用来处理界面的刷新
-     */
-    class MLHandler extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            int what = msg.what;
-            switch (what) {
-            case 0:
-                // 刷新界面
-                refreshInvited();
-                break;
-            }
-        }
     }
 
     /**

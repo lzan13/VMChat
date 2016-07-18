@@ -925,6 +925,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
 
     /**
      * ---------------------------- RecyclerView 刷新方法 -----------------------------------
+     * 使用 EventBus 的订阅模式实现消息变化的刷新，这里 EventBus 3.x 使用注解的方式确定方法调用的线程
+     * <p>
      * 这里调用下 {@link MLMessageAdapter}里封装的方法
      * 最终还是去调用{@link android.support.v7.widget.RecyclerView.Adapter}已有的 notify 方法
      * 消息的状态改变需要调用 item changed方法

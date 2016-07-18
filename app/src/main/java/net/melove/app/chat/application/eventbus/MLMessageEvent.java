@@ -4,13 +4,17 @@ import com.hyphenate.chat.EMMessage;
 
 /**
  * Created by lzan13 on 2016/5/30.
- * 自定义EventBus post 的事件
+ * 自定义EventBus post 的事件，传递消息变化信息
  */
 public class MLMessageEvent {
 
+    // 变化的消息对象
     private EMMessage message;
+    // 消息进度
     private int progress;
+    // 消息出现错误时的错误码
     private int errorCode;
+    // 消息出现错误是的错误信息
     private String errorMessage;
 
     public MLMessageEvent() {
