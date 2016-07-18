@@ -49,7 +49,7 @@ public class MLConstants {
     // 界面跳转传递 username/groupid 参数的 key
     public static final String ML_EXTRA_CHAT_ID = "ml_chat_id";
     public static final String ML_EXTRA_INVITED_ID = "ml_invited_id";
-    public static final String ML_EXTRA_IS_COMING = "ml_is_coming";
+    public static final String ML_EXTRA_IS_COMING_CALL = "ml_is_coming_call";
 
     public static final String ML_EXTRA_USER_LOGIN_OTHER_DIVERS = "ml_user_login_another_devices";
     public static final String ML_EXTRA_USER_REMOVED = "ml_remove";

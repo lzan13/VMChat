@@ -28,7 +28,7 @@ import java.io.OutputStream;
  * Created by lzan13 on 2014/12/16.
  * this is my file utils
  */
-public class MLFile {
+public class MLFileUtil {
 
     /**
      * 判断目录是否存在

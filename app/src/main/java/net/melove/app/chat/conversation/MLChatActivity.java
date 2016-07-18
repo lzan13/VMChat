@@ -44,8 +44,10 @@ import net.melove.app.chat.application.eventbus.MLRefreshEvent;
 import net.melove.app.chat.communal.base.MLBaseActivity;
 import net.melove.app.chat.application.MLConstants;
 import net.melove.app.chat.communal.util.MLDateUtil;
-import net.melove.app.chat.communal.util.MLFile;
+import net.melove.app.chat.communal.util.MLFileUtil;
 import net.melove.app.chat.communal.widget.MLToast;
+import net.melove.app.chat.conversation.call.MLVideoCallActivity;
+import net.melove.app.chat.conversation.call.MLVoiceCallActivity;
 import net.melove.app.chat.notification.MLNotifier;
 import net.melove.app.chat.communal.util.MLLog;
 
@@ -550,7 +552,15 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      * @param message 需要发送的消息
      */
     private void sendMessage(final EMMessage message) {
-        // 设置消息状态回调
+        // 调用设置消息扩展方法
+        setMessageAttribute(message);
+        // 发送一条新消息时插入新消息的位置，这里直接用插入新消息前的消息总数来作为新消息的位置
+        int position = mConversation.getAllMessages().size();
+        /**
+         *  调用sdk的消息发送方法发送消息，发送消息时要尽早的设置消息监听，防止消息状态已经回调，
+         *  但是自己没有注册监听，导致检测不到消息状态的变化
+         *  所以这里在发送之前先设置消息的状态回调
+         */
         message.setMessageStatusCallback(new EMCallBack() {
             @Override
             public void onSuccess() {
@@ -582,14 +592,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 EventBus.getDefault().post(event);
             }
         });
-        // 调用设置消息扩展方法
-        setMessageAttribute(message);
-        // 发送一条新消息时插入新消息的位置，这里直接用插入新消息前的消息总数来作为新消息的位置
-        int position = mConversation.getAllMessages().size();
-        /**
-         *  调用sdk的消息发送方法，发送消息，这里不进行消息的状态监听
-         *  都在各自的{@link net.melove.app.chat.conversation.messageitem.MLMessageItem}实现监听
-         */
+        // 发送消息
         EMClient.getInstance().chatManager().sendMessage(message);
 
         // 点击发送后马上刷新界面，无论消息有没有成功，先刷新显示
@@ -664,7 +667,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         case MLConstants.ML_REQUEST_CODE_GALLERY:
             // 图库选择的图片，选择图片后返回获取返回的图片路径，然后发送图片
             if (data != null) {
-                String imagePath = MLFile.getPath(mActivity, data.getData());
+                String imagePath = MLFileUtil.getPath(mActivity, data.getData());
                 if (TextUtils.isEmpty(imagePath) || !new File(imagePath).exists()) {
                     MLToast.errorToast("image is not exist").show();
                     return;
@@ -678,7 +681,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         case MLConstants.ML_REQUEST_CODE_FILE:
             // 选择文件后返回获取返回的文件路径，然后发送文件
             if (data != null) {
-                String filePath = MLFile.getPath(mActivity, data.getData());
+                String filePath = MLFileUtil.getPath(mActivity, data.getData());
                 sendFileMessage(filePath);
             }
             break;
@@ -766,11 +769,11 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      */
     private void openCamera() {
         // 定义拍照后图片保存的路径以及文件名
-        String imagePath = MLFile.getDCIM() + "IMG" + MLDateUtil.getDateTimeNoSpacing() + ".jpg";
+        String imagePath = MLFileUtil.getDCIM() + "IMG" + MLDateUtil.getDateTimeNoSpacing() + ".jpg";
         // 激活相机
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // 判断存储卡是否可以用，可用进行存储
-        if (MLFile.hasSdcard()) {
+        if (MLFileUtil.hasSdcard()) {
             // 根据文件路径解析成Uri
             mCameraImageUri = Uri.fromFile(new File(imagePath));
             // 将Uri设置为媒体输出的目标，目的就是为了等下拍照保存在自己设定的路径
@@ -819,6 +822,43 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         } else {
             mAttachMenuLayout.setVisibility(View.VISIBLE);
         }
+    }
+
+    /**
+     * 选择通话模式
+     */
+    private void selectCallMode() {
+        String[] menus = {
+                mActivity.getString(R.string.ml_video_call),
+                mActivity.getString(R.string.ml_voice_call)
+        };
+        AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
+//        dialog.setTitle(mActivity.getString(R.string.ml_dialog_title_select_photo_mode));
+
+        dialog.setItems(menus, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent();
+                switch (which) {
+                case 0:
+                    // 视频通话
+                    intent.setClass(mActivity, MLVideoCallActivity.class);
+                    break;
+                case 1:
+                    // 语音通话
+                    intent.setClass(mActivity, MLVoiceCallActivity.class);
+                    break;
+                default:
+                    break;
+                }
+                // 设置被呼叫放的username
+                intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mChatId);
+                // 设置通话为自己呼叫出的
+                intent.putExtra(MLConstants.ML_EXTRA_IS_COMING_CALL, false);
+                mActivity.startActivity(intent);
+            }
+        });
+        dialog.show();
     }
 
     /**
@@ -1213,6 +1253,9 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         int count = mConversation.getAllMessages().size();
 
         switch (item.getItemId()) {
+        case R.id.ml_action_call:
+            selectCallMode();
+            break;
         case R.id.ml_action_attachment:
             // 打开或关闭附件菜单
             onAttachMenu();

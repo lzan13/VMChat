@@ -23,7 +23,7 @@ import net.melove.app.chat.communal.util.MLBitmapUtil;
 import net.melove.app.chat.communal.module.MLBitmapCache;
 import net.melove.app.chat.communal.util.MLDateUtil;
 import net.melove.app.chat.communal.util.MLDimen;
-import net.melove.app.chat.communal.util.MLFile;
+import net.melove.app.chat.communal.util.MLFileUtil;
 import net.melove.app.chat.conversation.MLMessageUtils;
 import net.melove.app.chat.communal.widget.MLImageView;
 import net.melove.app.chat.conversation.MLChatActivity;
@@ -192,7 +192,7 @@ public class MLImageMessageItem extends MLMessageItem {
                         // 然后判断原图是否存在，通过原图重新生成缩略图
                         tempBitmap = MLBitmapUtil.loadBitmapThumbnail(fullSizePath, thumbnailsMax);
                         // 文件生成成功之后，把新的Bitmap保存到本地磁盘中
-                        MLFile.saveBitmapToSDCard(tempBitmap, thumbnailsPath);
+                        MLFileUtil.saveBitmapToSDCard(tempBitmap, thumbnailsPath);
                     } else {
                         // 当图片本身就很小时，直接加在图片
                         tempBitmap = MLBitmapUtil.loadBitmapByFile(thumbnailsPath, width);

@@ -1,4 +1,4 @@
-package net.melove.app.chat.call;
+package net.melove.app.chat.conversation.call;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -44,6 +44,8 @@ public class MLCallReceiver extends BroadcastReceiver {
         callIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         // 设置呼叫方 username 参数
         callIntent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, callFrom);
+        // 设置通话为对方打来
+        callIntent.putExtra(MLConstants.ML_EXTRA_IS_COMING_CALL, true);
         // 根据 intent 跳转到相应的界面
         context.startActivity(callIntent);
     }

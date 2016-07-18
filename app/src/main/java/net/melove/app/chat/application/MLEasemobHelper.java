@@ -21,7 +21,7 @@ import net.melove.app.chat.application.eventbus.MLConnectionEvent;
 import net.melove.app.chat.application.eventbus.MLInvitedEvent;
 import net.melove.app.chat.application.eventbus.MLMessageEvent;
 import net.melove.app.chat.communal.base.MLBaseActivity;
-import net.melove.app.chat.communal.util.MLCrypto;
+import net.melove.app.chat.communal.util.MLCryptoUtil;
 import net.melove.app.chat.communal.util.MLDateUtil;
 import net.melove.app.chat.communal.util.MLLog;
 import net.melove.app.chat.conversation.MLMessageUtils;
@@ -394,7 +394,7 @@ public class MLEasemobHelper {
                 // 当前用户
                 String currUsername = EMClient.getInstance().getCurrentUser();
                 // 根据根据对方的名字，加上当前用户的名字，加申请类型按照一定顺序组合，得到当前申请信息的唯一 ID
-                String invitedId = MLCrypto.cryptoStr2MD5(username + currUsername + MLInvitedEntity.InvitedType.CONTACTS);
+                String invitedId = MLCryptoUtil.cryptoStr2MD5(username + currUsername + MLInvitedEntity.InvitedType.CONTACTS);
                 // 设置此条信息的唯一ID
                 invitedEntity.setInvitedId(invitedId);
                 // 对方的username
@@ -443,7 +443,7 @@ public class MLEasemobHelper {
                 // 这里进行一下筛选，如果已存在则去更新本地内容
                 String currUsername = EMClient.getInstance().getCurrentUser();
                 // 根据申请者的名字，加上当前用户的名字，加申请类型按照一定顺序组合，得到当前申请信息的唯一 ID
-                String invitedId = MLCrypto.cryptoStr2MD5(currUsername + username + MLInvitedEntity.InvitedType.CONTACTS);
+                String invitedId = MLCryptoUtil.cryptoStr2MD5(currUsername + username + MLInvitedEntity.InvitedType.CONTACTS);
                 // 先去数据库查找一下，有没有这一条申请信息，如果有直接修改，没有才新建插入
                 MLInvitedEntity invitedEntity = MLInvitedDao.getInstance().getInvitedEntiry(invitedId);
                 if (invitedEntity != null) {
@@ -488,7 +488,7 @@ public class MLEasemobHelper {
                 // 这里进行一下筛选，如果已存在则去更新本地内容
                 String currUsername = EMClient.getInstance().getCurrentUser();
                 // 根据申请者的名字，加上当前用户的名字，加申请类型按照一定顺序组合，得到当前申请信息的唯一 ID
-                String invitedId = MLCrypto.cryptoStr2MD5(currUsername + username + MLInvitedEntity.InvitedType.CONTACTS);
+                String invitedId = MLCryptoUtil.cryptoStr2MD5(currUsername + username + MLInvitedEntity.InvitedType.CONTACTS);
                 // 先去数据库查找一下，有没有这一条申请信息，如果有直接修改，没有才新建插入
                 MLInvitedEntity invitedEntity = MLInvitedDao.getInstance().getInvitedEntiry(invitedId);
                 if (invitedEntity != null) {

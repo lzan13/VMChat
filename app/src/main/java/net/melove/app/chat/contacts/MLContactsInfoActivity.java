@@ -23,7 +23,7 @@ import net.melove.app.chat.communal.widget.MLToast;
 import net.melove.app.chat.conversation.MLChatActivity;
 import net.melove.app.chat.database.MLInvitedDao;
 import net.melove.app.chat.database.MLContactsDao;
-import net.melove.app.chat.communal.util.MLCrypto;
+import net.melove.app.chat.communal.util.MLCryptoUtil;
 import net.melove.app.chat.communal.util.MLLog;
 import net.melove.app.chat.invited.MLInvitedEntity;
 
@@ -155,7 +155,7 @@ public class MLContactsInfoActivity extends MLBaseActivity {
                             // 创建一条好友申请数据，自己发送好友请求也保存
                             MLInvitedEntity invitedEntity = new MLInvitedEntity();
                             // 根据根据对方的名字，加上当前用户的名字，加申请类型按照一定顺序组合，得到当前申请信息的唯一 ID
-                            String invitedId = MLCrypto.cryptoStr2MD5(mCurrUsername + mChatId + MLInvitedEntity.InvitedType.CONTACTS);
+                            String invitedId = MLCryptoUtil.cryptoStr2MD5(mCurrUsername + mChatId + MLInvitedEntity.InvitedType.CONTACTS);
                             // 设置此条信息的唯一ID
                             invitedEntity.setInvitedId(invitedId);
                             // 对方的username

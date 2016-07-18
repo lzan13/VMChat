@@ -5,7 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="net.melove.app.chat.call.MLVoiceCallActivity">
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    tools:context=".conversation.call.MLVoiceCallActivity">
 
     <!--<ImageView-->
     <!--android:id="@+id/ml_img_call_bg"-->
@@ -96,7 +98,6 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_margin="@dimen/ml_dimen_24"
-                android:backgroundTint="@color/ml_blue_100"
                 android:src="@mipmap/ic_call_white_24dp"
                 app:fabSize="normal"/>
 

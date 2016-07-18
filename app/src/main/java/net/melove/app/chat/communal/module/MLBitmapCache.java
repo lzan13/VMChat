@@ -13,6 +13,9 @@ public class MLBitmapCache {
     private LruCache<String, Bitmap> cache = null;
 
 
+    /**
+     * 构造函数，初始化缓存
+     */
     private MLBitmapCache() {
         cache = new LruCache<String, Bitmap>((int) (Runtime.getRuntime().maxMemory() / 8)) {
             @Override

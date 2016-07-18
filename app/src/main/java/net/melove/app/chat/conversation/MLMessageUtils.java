@@ -9,7 +9,7 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.util.PathUtil;
 
 import net.melove.app.chat.application.MLConstants;
-import net.melove.app.chat.communal.util.MLCrypto;
+import net.melove.app.chat.communal.util.MLCryptoUtil;
 import net.melove.app.chat.communal.util.MLDateUtil;
 import net.melove.app.chat.communal.util.MLLog;
 
@@ -107,7 +107,7 @@ public class MLMessageUtils {
      * @return 返回本地路径
      */
     public static String getThumbImagePath(String fullSizePath) {
-        String thumbImageName = MLCrypto.cryptoStr2SHA1(fullSizePath);
+        String thumbImageName = MLCryptoUtil.cryptoStr2SHA1(fullSizePath);
         String path = PathUtil.getInstance().getHistoryPath() + "/" + "thumb_" + thumbImageName;
         return path;
     }

@@ -115,6 +115,18 @@
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Default"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
+        <!--视频通话界面-->
+        <activity
+            android:name=".conversation.call.MLVideoCallActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MLTheme.Transparent"
+            android:windowSoftInputMode="adjustNothing|stateAlwaysHidden"/>
+        <!--语音通话界面-->
+        <activity
+            android:name=".conversation.call.MLVoiceCallActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MLTheme.Transparent"
+            android:windowSoftInputMode="adjustNothing|stateAlwaysHidden"/>
         <!-- 搜索界面 -->
         <activity
             android:name=".main.MLSearchActivity"
@@ -182,15 +194,11 @@
         <!-- android:name="ML_CHANNEL_NAME" -->
         <!-- android:value="${ML_CHANNEL_ID}"/> -->
         <receiver
-            android:name=".call.MLCallReceiver"
+            android:name=".conversation.call.MLCallReceiver"
             android:enabled="true"
             android:exported="true">
         </receiver>
 
-        <activity android:name=".call.MLVideoCallActivity">
-        </activity>
-        <activity android:name=".call.MLVoiceCallActivity">
-        </activity>
     </application>
 
 </manifest>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="ml_app_name">MLEaseChat</string>
+    <string name="ml_app_name">MLChat</string>
     <string name="ml_test">Test</string>
     <string name="ml_test_text">公司介绍\n\n
         环信成立于2013年4月，是一家全通讯能力云服务提供商。产品包括全球最大的即时通讯云PaaS平台——环信即时通讯云，以及全球首创的全媒体智能云客服平台—环信移动客服。\n\n\n
@@ -73,6 +73,7 @@
     <string name="ml_home">主页</string>
     <string name="ml_group">群组</string>
     <string name="ml_room">聊天室</string>
+    <string name="ml_call">通话</string>
     <string name="ml_voice_call">语音电话</string>
     <string name="ml_video_call">视频通话</string>
     <string name="ml_apply_for">申请与通知</string>
