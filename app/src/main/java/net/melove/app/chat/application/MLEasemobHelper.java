@@ -2,7 +2,6 @@ package net.melove.app.chat.application;
 
 import android.app.ActivityManager;
 import android.content.Context;
-import android.content.Intent;
 
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMConnectionListener;
@@ -13,6 +12,7 @@ import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMConversation;
+import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMOptions;
 
@@ -32,7 +32,6 @@ import net.melove.app.chat.contacts.MLContactsEntity;
 import net.melove.app.chat.conversation.MLConversationExtUtils;
 import net.melove.app.chat.database.MLInvitedDao;
 import net.melove.app.chat.database.MLContactsDao;
-import net.melove.app.chat.main.MLConflictActivity;
 import net.melove.app.chat.notification.MLNotifier;
 
 import org.greenrobot.eventbus.EventBus;
@@ -130,7 +129,7 @@ public class MLEasemobHelper {
         // 设置自动登录
         options.setAutoLogin(true);
         // 设置是否按照服务器时间排序，false按照本地时间排序
-        //        options.setSortMessageByServerTime(false);
+        options.setSortMessageByServerTime(false);
         // 设置是否需要发送已读回执
         options.setRequireAck(true);
         // 设置是否需要发送回执
@@ -197,8 +196,12 @@ public class MLEasemobHelper {
             @Override
             public void onConnected() {
                 MLLog.d("MLEasemobHelper - onConnected");
+
+                // 设置链接监听变化状态
+                MLConnectionEvent event = new MLConnectionEvent();
+                event.setType(MLConstants.ML_CONNECTION_CONNECTED);
                 // 使用 EventBus 发布消息，可以被订阅此类型消息的订阅者监听到
-                EventBus.getDefault().post(new MLConnectionEvent());
+                EventBus.getDefault().post(event);
             }
 
             /**
@@ -209,30 +212,28 @@ public class MLEasemobHelper {
             @Override
             public void onDisconnected(final int errorCode) {
                 MLLog.d("MLEasemobHelper - onDisconnected - %d", errorCode);
-                MLBaseActivity activity = MLEasemobHelper.getInstance().getTopActivity();
-                Intent intent = new Intent();
-                if (activity != null) {
-                    intent.setClass(activity, MLConflictActivity.class);
-                }
+                MLConnectionEvent event = new MLConnectionEvent();
                 if (errorCode == EMError.USER_LOGIN_ANOTHER_DEVICE) {
                     MLLog.d("user login another device - " + errorCode);
                     // 被踢了，已经登录成功的状态要改为 false，这个在使用了推送功能时，调用logout需要传递
                     isLogined = false;
                     signOut(null);
-                    intent.putExtra(MLConstants.ML_EXTRA_USER_LOGIN_OTHER_DIVERS, true);
-                    activity.startActivity(intent);
+                    // 设置链接监听变化状态
+                    event.setType(MLConstants.ML_CONNECTION_USER_LOGIN_OTHER_DIVERS);
                 } else if (errorCode == EMError.USER_REMOVED) {
                     MLLog.d("user be removed - " + errorCode);
                     // 被踢了，已经登录成功的状态要改为 false，这个在使用了推送功能时，调用logout需要传递
                     isLogined = false;
                     signOut(null);
-                    intent.putExtra(MLConstants.ML_EXTRA_USER_REMOVED, true);
-                    activity.startActivity(intent);
+                    // 设置链接监听变化状态
+                    event.setType(MLConstants.ML_CONNECTION_USER_REMOVED);
                 } else {
                     MLLog.d("con't servers - " + errorCode);
-                    // 使用 EventBus 发布消息，可以被订阅此类型消息的订阅者监听到
-                    EventBus.getDefault().post(new MLConnectionEvent());
+                    // 设置链接监听变化状态
+                    event.setType(MLConstants.ML_CONNECTION_DISCONNECTED);
                 }
+                // 发送订阅消息，通知网络监听有变化
+                EventBus.getDefault().post(event);
             }
         };
         EMClient.getInstance().addConnectionListener(mConnectionListener);
@@ -549,7 +550,7 @@ public class MLEasemobHelper {
              */
             @Override
             public void onInvitationReceived(String groupId, String groupName, String inviter, String reason) {
-
+                EMGroup group = EMClient.getInstance().groupManager().getGroup(groupId);
             }
 
             /**

@@ -77,13 +77,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Default"/>
         <!-- 被踢弹出类 -->
-        <activity
-            android:name=".main.MLConflictActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/MLTheme.Transparent"/>
         <!-- 主界面 -->
         <activity
             android:name=".main.MLMainActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Launcher">
             <intent-filter>

@@ -16,6 +16,7 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.exceptions.HyphenateException;
 
 import net.melove.app.chat.R;
+import net.melove.app.chat.application.eventbus.MLConnectionEvent;
 import net.melove.app.chat.communal.base.MLBaseActivity;
 import net.melove.app.chat.application.MLConstants;
 import net.melove.app.chat.communal.util.MLDateUtil;
@@ -47,6 +48,8 @@ public class MLContactsInfoActivity extends MLBaseActivity {
 
     // 用户信息实体类
     private MLContactsEntity mContactsEntity;
+
+    private AlertDialog.Builder dialog;
 
 
     @Override
@@ -126,7 +129,7 @@ public class MLContactsInfoActivity extends MLBaseActivity {
      * 添加好友
      */
     private void addContact() {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
+        dialog = new AlertDialog.Builder(mActivity);
         dialog.setTitle(R.string.ml_add_contacts);
         View view = mActivity.getLayoutInflater().inflate(R.layout.dialog_communal, null);
         TextView textView = (TextView) view.findViewById(R.id.ml_dialog_text_message);
@@ -218,6 +221,16 @@ public class MLContactsInfoActivity extends MLBaseActivity {
         intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mChatId);
         mActivity.startActivity(intent);
         mActivity.finish();
+    }
+
+    /**
+     * 重载父类实现的 EventBus 订阅方法，实现更具体的逻辑处理
+     *
+     * @param event 订阅的消息类型
+     */
+    @Override
+    public void onEventBus(MLConnectionEvent event) {
+        super.onEventBus(event);
     }
 
     @Override

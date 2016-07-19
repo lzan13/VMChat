@@ -26,8 +26,6 @@ import net.melove.app.chat.test.MLTestFragment;
  */
 public class MLMainFragment extends MLBaseFragment {
 
-    private EMMessageListener mMessageListener;
-
     // 和ViewPager配合使用
     private TabLayout mTabLayout;
     // TabLayout 装填的内容
@@ -123,8 +121,6 @@ public class MLMainFragment extends MLBaseFragment {
     @Override
     public void onStop() {
         super.onStop();
-        // 取消消息的监听事件，为了防止多个界面同时监听
-        EMClient.getInstance().chatManager().removeMessageListener(mMessageListener);
     }
 
     @Override

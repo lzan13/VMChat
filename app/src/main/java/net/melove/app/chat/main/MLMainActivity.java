@@ -1,6 +1,5 @@
 package net.melove.app.chat.main;
 
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,7 +8,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
@@ -28,7 +26,7 @@ import com.hyphenate.chat.EMClient;
 import net.melove.app.chat.R;
 import net.melove.app.chat.application.MLConstants;
 import net.melove.app.chat.application.MLEasemobHelper;
-import net.melove.app.chat.application.eventbus.MLMessageEvent;
+import net.melove.app.chat.application.eventbus.MLConnectionEvent;
 import net.melove.app.chat.authentication.MLSigninActivity;
 import net.melove.app.chat.communal.base.MLBaseActivity;
 import net.melove.app.chat.communal.util.MLLog;
@@ -38,9 +36,6 @@ import net.melove.app.chat.invited.MLInvitedFragment;
 import net.melove.app.chat.communal.base.MLBaseFragment;
 import net.melove.app.chat.communal.widget.MLImageView;
 import net.melove.app.chat.communal.widget.MLToast;
-
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * Created by lzan13 on 2015/7/2.
@@ -73,10 +68,10 @@ public class MLMainActivity extends MLBaseActivity implements
     // 菜单操作类型
     private int mMenuType;
 
-    // 应用内广播管理器，为了安全这里使用局域广播
-    private LocalBroadcastManager mLocalBroadcastManager;
-    // 会话界面监听会话变化的广播接收器
-    private BroadcastReceiver mBroadcastReceiver;
+    // 创建新会话对话框
+    private AlertDialog createConversationDialog;
+    private AlertDialog.Builder alertDialogBuilder;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +102,6 @@ public class MLMainActivity extends MLBaseActivity implements
     }
 
 
-
     /**
      * 控件初始化以及界面属性初始值的初始化
      */
@@ -135,7 +129,7 @@ public class MLMainActivity extends MLBaseActivity implements
         }
 
         mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
-        mToolbar.setTitle(mActivity.getResources().getString(R.string.ml_dialog_title_chat));
+        mToolbar.setTitle(mActivity.getResources().getString(R.string.ml_chat));
         setSupportActionBar(mToolbar);
 
         initDrawer();
@@ -286,15 +280,15 @@ public class MLMainActivity extends MLBaseActivity implements
      * 根据输入的 chatId 创建一个新的会话
      */
     private void createNewConversation() {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
-        dialog.setTitle(mActivity.getResources().getString(R.string.ml_dialog_title_conversation));
+        alertDialogBuilder = new AlertDialog.Builder(mActivity);
+        alertDialogBuilder.setTitle(mActivity.getResources().getString(R.string.ml_dialog_title_conversation));
         View view = mActivity.getLayoutInflater().inflate(R.layout.dialog_communal, null);
         TextView textView = (TextView) view.findViewById(R.id.ml_dialog_text_message);
         textView.setText(R.string.ml_dialog_content_create_conversation);
         final EditText editText = (EditText) view.findViewById(R.id.ml_dialog_edit_input);
         editText.setHint(R.string.ml_hint_input_not_null);
-        dialog.setView(view);
-        dialog.setPositiveButton(R.string.ml_btn_ok, new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setView(view);
+        alertDialogBuilder.setPositiveButton(R.string.ml_btn_ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (TextUtils.isEmpty(editText.getText().toString().trim())) {
@@ -311,13 +305,14 @@ public class MLMainActivity extends MLBaseActivity implements
                 superJump(intent);
             }
         });
-        dialog.setNegativeButton(R.string.ml_btn_cancel, new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setNegativeButton(R.string.ml_btn_cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
             }
         });
-        dialog.show();
+        createConversationDialog = alertDialogBuilder.create();
+        createConversationDialog.show();
     }
 
     /**
@@ -380,28 +375,46 @@ public class MLMainActivity extends MLBaseActivity implements
     }
 
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventBus(MLMessageEvent event) {
-        // 根据app连接服务器情况设置图标的显示与隐藏
-        if (MLEasemobHelper.getInstance().isConnection()) {
+    /**
+     * 重载父类实现的 EventBus 订阅方法，实现更具体的逻辑处理
+     *
+     * @param event 订阅的消息类型
+     */
+    @Override
+    public void onEventBus(MLConnectionEvent event) {
+        /**
+         * 因为3.x的sdk断开服务器连接后会一直重试并发出回调，所以为了防止一直Toast提示用户，
+         * 这里取消弹出 Toast 方式，只是显示图标
+         */
+        if (event.getType() == MLConstants.ML_CONNECTION_CONNECTED) {
             mConnectionFabBtn.setImageResource(R.mipmap.ic_signal_wifi_on_white_24dp);
             mConnectionFabBtn.setVisibility(View.GONE);
         } else {
-            /**
-             * 因为3.x的sdk断开服务器连接后会一直重试并发出回调，所以为了防止一直Toast提示用户，
-             * 这里取消toast，只是显示图标
-             */
             mConnectionFabBtn.setImageResource(R.mipmap.ic_signal_wifi_off_white_24dp);
             mConnectionFabBtn.setVisibility(View.VISIBLE);
         }
+        super.onEventBus(event);
     }
 
+
+    /**
+     * 重载加载菜单布局方法
+     *
+     * @param menu 菜单对象
+     * @return 返回加载结果
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * 重载菜单项选择方法
+     *
+     * @param item 被选择的菜单项
+     * @return 返回处理结果，是否向下传递
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -449,8 +462,14 @@ public class MLMainActivity extends MLBaseActivity implements
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onResume() {
+        super.onResume();
+        if (!MLEasemobHelper.getInstance().isLogined()) {
+            // 跳转到登录界面
+            Intent intent = new Intent(this, MLSigninActivity.class);
+            superJump(intent);
+            this.finish();
+        }
     }
 
     @Override
@@ -459,12 +478,16 @@ public class MLMainActivity extends MLBaseActivity implements
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStop() {
+        super.onStop();
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onDestroy() {
+        // 判断对话框是否显示状态，显示中则销毁
+        if (createConversationDialog != null && createConversationDialog.isShowing()) {
+            createConversationDialog.dismiss();
+        }
+        super.onDestroy();
     }
 }

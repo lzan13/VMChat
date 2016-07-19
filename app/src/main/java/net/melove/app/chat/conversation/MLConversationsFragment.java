@@ -63,13 +63,6 @@ public class MLConversationsFragment extends MLBaseFragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        // 注册订阅者，监听其它事件发送者发出的事件通知
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -264,6 +257,12 @@ public class MLConversationsFragment extends MLBaseFragment {
         refreshConversation();
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        // 注册订阅者，监听其它事件发送者发出的事件通知
+        EventBus.getDefault().register(this);
+    }
     /**
      * 重写父类的onResume方法， 在这里注册广播
      */

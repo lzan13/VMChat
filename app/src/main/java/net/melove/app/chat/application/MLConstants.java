@@ -51,23 +51,26 @@ public class MLConstants {
     public static final String ML_EXTRA_INVITED_ID = "ml_invited_id";
     public static final String ML_EXTRA_IS_COMING_CALL = "ml_is_coming_call";
 
-    public static final String ML_EXTRA_USER_LOGIN_OTHER_DIVERS = "ml_user_login_another_devices";
-    public static final String ML_EXTRA_USER_REMOVED = "ml_remove";
-
     // 自定义广播的 action
     public static final String ML_EVENT_ACTION_INVITED = "ml_action_invited";
+
     public static final String ML_EVENT_ACTION_CONTACT = "ml_action_contact";
     public static final String ML_EVENT_ACTION_MESSAGE = "ml_action_message";
     public static final String ML_EVENT_ACTION_CONNCETION = "ml_action_connection";
-
-
     /**
      * 保存数据到 {@link android.content.SharedPreferences}的 key
      */
     public static final String ML_SHARED_USERNAME = "ml_username";
     public static final String ML_SHARED_PASSWORD = "ml_password";
-
     public static final int ML_TIME_RECALL = 300000;
+
+    /**
+     * 链接状态码
+     */
+    public static final int ML_CONNECTION_USER_LOGIN_OTHER_DIVERS = 0x00;
+    public static final int ML_CONNECTION_USER_REMOVED = 0x01;
+    public static final int ML_CONNECTION_CONNECTED = 0x02;
+    public static final int ML_CONNECTION_DISCONNECTED = 0x03;
 
 
     /**

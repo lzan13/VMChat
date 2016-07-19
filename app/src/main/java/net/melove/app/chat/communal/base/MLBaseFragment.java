@@ -17,6 +17,8 @@ import net.melove.app.chat.communal.util.MLLog;
  */
 public class MLBaseFragment extends Fragment {
 
+    private String className = this.getClass().getSimpleName();
+
     protected FragmentActivity mActivity;
 
     /**
@@ -32,55 +34,55 @@ public class MLBaseFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        MLLog.i("%s onActivityCreated", this.getClass().getSimpleName());
+        MLLog.i("%s onActivityCreated", className);
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MLLog.i("%s onCreate", this.getClass().getSimpleName());
+        MLLog.i("%s onCreate", className);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        MLLog.i("%s onPause ", this.getClass().getSimpleName());
+        MLLog.i("%s onPause ", className);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        MLLog.i("%s onStart ", this.getClass().getSimpleName());
+        MLLog.i("%s onStart ", className);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        MLLog.i("%s onStop ", this.getClass().getSimpleName());
+        MLLog.i("%s onStop ", className);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        MLLog.i("%s onResume ", this.getClass().getSimpleName());
+        MLLog.i("%s onResume ", className);
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        MLLog.i("%s onDetach ", this.getClass().getSimpleName());
+        MLLog.i("%s onDetach ", className);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        MLLog.i("%s onDestroyView ", this.getClass().getSimpleName());
+        MLLog.i("%s onDestroyView ", className);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        MLLog.i("%s onDestroy ", this.getClass().getSimpleName());
+        MLLog.i("%s onDestroy ", className);
         RefWatcher refWatcher = MLApplication.getRefWatcher();
         refWatcher.watch(this);
     }

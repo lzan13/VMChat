@@ -833,7 +833,6 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 mActivity.getString(R.string.ml_voice_call)
         };
         AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
-//        dialog.setTitle(mActivity.getString(R.string.ml_dialog_title_select_photo_mode));
 
         dialog.setItems(menus, new DialogInterface.OnClickListener() {
             @Override
@@ -925,7 +924,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
 
     /**
      * ---------------------------- RecyclerView 刷新方法 -----------------------------------
-     * 使用 EventBus 的订阅模式实现消息变化的刷新，这里 EventBus 3.x 使用注解的方式确定方法调用的线程
+     * 使用 EventBus 的订阅模式实现消息变化的监听，这里 EventBus 3.x 使用注解的方式确定方法调用的线程
      * <p>
      * 这里调用下 {@link MLMessageAdapter}里封装的方法
      * 最终还是去调用{@link android.support.v7.widget.RecyclerView.Adapter}已有的 notify 方法
@@ -945,6 +944,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRangeRemoved(int, int)}
      * 删除消息需要 item removed
      * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRemoved(int)}
+     *
+     * @param event 订阅的消息类型
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventBus(MLRefreshEvent event) {
@@ -1353,8 +1354,6 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         //        refreshChatUI();
         // 注册环信的消息监听器
         EMClient.getInstance().chatManager().addMessageListener(mMessageListener);
-        // 注册EventBus 消息订阅者
-        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -1369,7 +1368,5 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         super.onStop();
         // 再当前界面处于非活动状态时 移除消息监听
         EMClient.getInstance().chatManager().removeMessageListener(mMessageListener);
-        // 取消EventBus 消息订阅者
-        EventBus.getDefault().unregister(this);
     }
 }

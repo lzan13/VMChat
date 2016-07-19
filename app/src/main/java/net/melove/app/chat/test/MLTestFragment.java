@@ -217,11 +217,11 @@ public class MLTestFragment extends MLBaseFragment {
         //        message.setFrom("lz8");
         //        // 保存一条消息到本地，这个保存会直接加入到内存中
         //        EMClient.getInstance().chatManager().saveMessage(message);
-        // 导入一个消息集合到本地，
+        //        // 导入一个消息集合到本地，
         //        EMClient.getInstance().chatManager().importMessages(list);
 
         // 测试插入一条消息
-        //        EMMessage textMessage = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
+        //                EMMessage textMessage = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
         //        textMessage.setFrom(mChatId);
         //        textMessage.setReceipt(mCurrUsername);
         //        textMessage.setStatus(EMMessage.Status.SUCCESS);
