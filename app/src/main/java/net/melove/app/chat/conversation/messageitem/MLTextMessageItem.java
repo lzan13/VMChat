@@ -24,6 +24,14 @@ import net.melove.app.chat.conversation.MLMessageAdapter;
  */
 public class MLTextMessageItem extends MLMessageItem {
 
+
+    /**
+     * 构造方法，创建item的view，需要传递对应的参数
+     *
+     * @param context  上下文对象
+     * @param adapter  适配器
+     * @param viewType item类型
+     */
     public MLTextMessageItem(Context context, MLMessageAdapter adapter, int viewType) {
         super(context, adapter, viewType);
 

@@ -31,6 +31,13 @@ import org.greenrobot.eventbus.ThreadMode;
 public class MLFileMessageItem extends MLMessageItem {
 
 
+    /**
+     * 构造方法，创建item的view，需要传递对应的参数
+     *
+     * @param context  上下文对象
+     * @param adapter  适配器
+     * @param viewType item类型
+     */
     public MLFileMessageItem(Context context, MLMessageAdapter adapter, int viewType) {
         super(context, adapter, viewType);
         onInflateView();
@@ -91,9 +98,9 @@ public class MLFileMessageItem extends MLMessageItem {
         }
 
         // 创建并显示 ListView 的长按弹出菜单，并设置弹出菜单 Item的点击监听
-        AlertDialog.Builder menuDialog = new AlertDialog.Builder(mActivity);
-        menuDialog.setTitle(R.string.ml_dialog_title_conversation);
-        menuDialog.setItems(menus, new DialogInterface.OnClickListener() {
+        alertDialogBuilder = new AlertDialog.Builder(mActivity);
+        alertDialogBuilder.setTitle(R.string.ml_dialog_title_conversation);
+        alertDialogBuilder.setItems(menus, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
@@ -109,6 +116,7 @@ public class MLFileMessageItem extends MLMessageItem {
                 }
             }
         });
+        menuDialog = alertDialogBuilder.create();
         menuDialog.show();
     }
 

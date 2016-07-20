@@ -484,7 +484,7 @@ public class MLMainActivity extends MLBaseActivity implements
 
     @Override
     protected void onDestroy() {
-        // 判断对话框是否显示状态，显示中则销毁
+        // 判断对话框是否显示状态，显示中则销毁，避免 activity 的销毁导致错误
         if (createConversationDialog != null && createConversationDialog.isShowing()) {
             createConversationDialog.dismiss();
         }

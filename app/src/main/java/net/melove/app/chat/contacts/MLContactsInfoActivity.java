@@ -49,7 +49,9 @@ public class MLContactsInfoActivity extends MLBaseActivity {
     // 用户信息实体类
     private MLContactsEntity mContactsEntity;
 
-    private AlertDialog.Builder dialog;
+    // 弹出对话框
+    private AlertDialog.Builder alertDialogBuilder;
+    private AlertDialog addContactsDialog;
 
 
     @Override
@@ -129,16 +131,16 @@ public class MLContactsInfoActivity extends MLBaseActivity {
      * 添加好友
      */
     private void addContact() {
-        dialog = new AlertDialog.Builder(mActivity);
-        dialog.setTitle(R.string.ml_add_contacts);
+        alertDialogBuilder = new AlertDialog.Builder(mActivity);
+        alertDialogBuilder.setTitle(R.string.ml_add_contacts);
         View view = mActivity.getLayoutInflater().inflate(R.layout.dialog_communal, null);
         TextView textView = (TextView) view.findViewById(R.id.ml_dialog_text_message);
         textView.setText(R.string.ml_dialog_content_add_contact);
 
         final EditText editText = (EditText) view.findViewById(R.id.ml_dialog_edit_input);
         editText.setHint(R.string.ml_hint_input_not_null);
-        dialog.setView(view);
-        dialog.setPositiveButton(R.string.ml_btn_ok, new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setView(view);
+        alertDialogBuilder.setPositiveButton(R.string.ml_btn_ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 new Thread(new Runnable() {
@@ -202,14 +204,14 @@ public class MLContactsInfoActivity extends MLBaseActivity {
                 }).start();
             }
         });
-        dialog.setNegativeButton(R.string.ml_btn_cancel, new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setNegativeButton(R.string.ml_btn_cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
             }
         });
-
-        dialog.show();
+        addContactsDialog = alertDialogBuilder.create();
+        addContactsDialog.show();
     }
 
     /**
@@ -234,13 +236,9 @@ public class MLContactsInfoActivity extends MLBaseActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
+    protected void onResume() {
+        super.onResume();
+        initView();
     }
 
     @Override
@@ -249,8 +247,11 @@ public class MLContactsInfoActivity extends MLBaseActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        initView();
+    protected void onDestroy() {
+        // 检测是否有弹出框显示，如果有显示则销毁，避免 activity 的销毁导致错误
+        if (addContactsDialog != null && addContactsDialog.isShowing()) {
+            addContactsDialog.dismiss();
+        }
+        super.onDestroy();
     }
 }

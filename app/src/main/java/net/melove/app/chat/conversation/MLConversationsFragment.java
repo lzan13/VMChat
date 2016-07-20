@@ -43,6 +43,10 @@ public class MLConversationsFragment extends MLBaseFragment {
     private RecyclerView mRecyclerView;
     private MLConversationAdapter mConversationAdapter;
 
+    private AlertDialog.Builder alertDialogBuilder;
+    private AlertDialog conversationMenuDialog;
+
+
     /**
      * 创建实例对象的工厂方法
      *
@@ -204,43 +208,46 @@ public class MLConversationsFragment extends MLBaseFragment {
                 menuList.toArray(mMenus);
 
                 // 创建并显示 ListView 的长按弹出菜单，并设置弹出菜单 Item的点击监听
-                new AlertDialog.Builder(mActivity)
-                        .setTitle(R.string.ml_dialog_title_conversation)
-                        .setItems(mMenus, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                switch (which) {
-                                case 0:
-                                    // 根据当前状态设置会话是否置顶
-                                    if (isTop) {
-                                        MLConversationExtUtils.setConversationPushpin(conversation, false);
-                                    } else {
-                                        MLConversationExtUtils.setConversationPushpin(conversation, true);
-                                    }
-                                    refreshConversation();
-                                    break;
-                                case 1:
-                                    if (conversation.getUnreadMsgCount() > 0 || MLConversationExtUtils.getConversationUnread(conversation)) {
-                                        conversation.markAllMessagesAsRead();
-                                        MLConversationExtUtils.setConversationUnread(conversation, false);
-                                    } else {
-                                        MLConversationExtUtils.setConversationUnread(conversation, true);
-                                    }
-                                    refreshConversation();
-                                    break;
-                                case 2:
-                                    // 清空当前会话的消息，同时删除了内存中和数据库中的数据
-                                    mConversations.get(position).clearAllMessages();
-                                    refreshConversation();
-                                    break;
-                                case 3:
-                                    // 删除当前会话，第二个参数表示是否删除此会话的消息
-                                    EMClient.getInstance().chatManager().deleteConversation(conversation.getUserName(), false);
-                                    refreshConversation();
-                                    break;
-                                }
+                alertDialogBuilder = new AlertDialog.Builder(mActivity);
+
+                alertDialogBuilder.setTitle(R.string.ml_dialog_title_conversation);
+                alertDialogBuilder.setItems(mMenus, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                        case 0:
+                            // 根据当前状态设置会话是否置顶
+                            if (isTop) {
+                                MLConversationExtUtils.setConversationPushpin(conversation, false);
+                            } else {
+                                MLConversationExtUtils.setConversationPushpin(conversation, true);
                             }
-                        }).show();
+                            refreshConversation();
+                            break;
+                        case 1:
+                            if (conversation.getUnreadMsgCount() > 0 || MLConversationExtUtils.getConversationUnread(conversation)) {
+                                conversation.markAllMessagesAsRead();
+                                MLConversationExtUtils.setConversationUnread(conversation, false);
+                            } else {
+                                MLConversationExtUtils.setConversationUnread(conversation, true);
+                            }
+                            refreshConversation();
+                            break;
+                        case 2:
+                            // 清空当前会话的消息，同时删除了内存中和数据库中的数据
+                            mConversations.get(position).clearAllMessages();
+                            refreshConversation();
+                            break;
+                        case 3:
+                            // 删除当前会话，第二个参数表示是否删除此会话的消息
+                            EMClient.getInstance().chatManager().deleteConversation(conversation.getUserName(), false);
+                            refreshConversation();
+                            break;
+                        }
+                    }
+                });
+                conversationMenuDialog = alertDialogBuilder.create();
+                conversationMenuDialog.show();
             }
         });
     }
@@ -263,6 +270,7 @@ public class MLConversationsFragment extends MLBaseFragment {
         // 注册订阅者，监听其它事件发送者发出的事件通知
         EventBus.getDefault().register(this);
     }
+
     /**
      * 重写父类的onResume方法， 在这里注册广播
      */
@@ -281,5 +289,14 @@ public class MLConversationsFragment extends MLBaseFragment {
         super.onStop();
         // 取消观察者的注册
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        // 检测弹出框是否显示，显示中则销毁，防止因activity的销毁导致错误
+        if (conversationMenuDialog != null && conversationMenuDialog.isShowing()) {
+            conversationMenuDialog.dismiss();
+        }
+        super.onDestroy();
     }
 }

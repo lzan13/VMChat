@@ -2,6 +2,7 @@ package net.melove.app.chat.conversation.messageitem;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -30,6 +31,7 @@ public abstract class MLMessageItem extends LinearLayout {
     // 上下文对象
     protected Context mContext;
     protected Activity mActivity;
+
     // 布局内容填充者，将xml布局文件解析为view
     protected LayoutInflater mInflater;
     protected MLMessageAdapter mAdapter;
@@ -39,6 +41,10 @@ public abstract class MLMessageItem extends LinearLayout {
 
     // 当前 Item 需要处理的 EMMessage 对象
     protected EMMessage mMessage;
+
+    // 弹出框
+    protected AlertDialog.Builder alertDialogBuilder;
+    protected AlertDialog menuDialog;
 
     /**
      * 聊天界面不同的item 所有要显示的控件，每个item可能显示的个数不同，
@@ -65,6 +71,14 @@ public abstract class MLMessageItem extends LinearLayout {
     // Ack状态显示
     protected ImageView mAckStatusView;
 
+
+    /**
+     * 构造方法，创建item的view，需要传递对应的参数
+     *
+     * @param context  上下文对象
+     * @param adapter  适配器
+     * @param viewType item类型
+     */
     public MLMessageItem(Context context, MLMessageAdapter adapter, int viewType) {
         super(context);
         mContext = context;
@@ -149,13 +163,17 @@ public abstract class MLMessageItem extends LinearLayout {
 
     @Override
     protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
         MLLog.i("onAttachedToWindow %s", mMessage.getMsgId());
+        super.onAttachedToWindow();
     }
 
     @Override
     protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
         MLLog.i("onDetachedFromWindow %s", mMessage.getMsgId());
+        // 检查是否有弹出框，如果有则销毁，防止界面销毁时出现异常
+        if (menuDialog != null && menuDialog.isShowing()) {
+            menuDialog.dismiss();
+        }
+        super.onDetachedFromWindow();
     }
 }

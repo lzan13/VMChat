@@ -99,6 +99,15 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     private GridView mAttachMenuGridView;
     private Uri mCameraImageUri = null;
 
+
+    // 对话框
+    private AlertDialog.Builder alertDialogBuilder;
+    private AlertDialog photoModeDialog;
+    private AlertDialog callModeDialog;
+
+    private ProgressDialog progressDialog;
+
+
     // 是否发送原图
     private boolean isOrigin = true;
 
@@ -491,14 +500,14 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      */
     private void recallMessage(final EMMessage message) {
         // 显示撤回消息操作的 dialog
-        final ProgressDialog pd = new ProgressDialog(mActivity);
-        pd.setMessage("正在撤回 请稍候……");
-        pd.show();
+        progressDialog = new ProgressDialog(mActivity);
+        progressDialog.setMessage("正在撤回 请稍候……");
+        progressDialog.show();
         MLMessageUtils.sendRecallMessage(message, new EMCallBack() {
             @Override
             public void onSuccess() {
                 // 关闭进度对话框
-                pd.dismiss();
+                progressDialog.dismiss();
                 // 设置扩展为撤回消息类型，是为了区分消息的显示
                 message.setAttribute(MLConstants.ML_ATTR_RECALL, true);
                 // 更新消息
@@ -513,7 +522,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
              */
             @Override
             public void onError(final int i, final String s) {
-                pd.dismiss();
+                progressDialog.dismiss();
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -740,10 +749,13 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 mActivity.getString(R.string.ml_menu_chat_camera),
                 mActivity.getString(R.string.ml_menu_chat_gallery)
         };
-        AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
-        dialog.setTitle(mActivity.getString(R.string.ml_dialog_title_select_photo_mode));
-
-        dialog.setItems(menus, new DialogInterface.OnClickListener() {
+        if (alertDialogBuilder == null) {
+            alertDialogBuilder = new AlertDialog.Builder(mActivity);
+        }
+        // 设置弹出框 title
+        //        alertDialogBuilder.setTitle(mActivity.getString(R.string.ml_dialog_title_select_photo_mode));
+        // 设置弹出框的菜单项及点击事件
+        alertDialogBuilder.setItems(menus, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
@@ -761,7 +773,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 }
             }
         });
-        dialog.show();
+        photoModeDialog = alertDialogBuilder.create();
+        photoModeDialog.show();
     }
 
     /**
@@ -832,9 +845,11 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 mActivity.getString(R.string.ml_video_call),
                 mActivity.getString(R.string.ml_voice_call)
         };
-        AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
-
-        dialog.setItems(menus, new DialogInterface.OnClickListener() {
+        if (alertDialogBuilder == null) {
+            alertDialogBuilder = new AlertDialog.Builder(mActivity);
+        }
+        // 设置菜单项及点击监听
+        alertDialogBuilder.setItems(menus, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent();
@@ -857,7 +872,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 mActivity.startActivity(intent);
             }
         });
-        dialog.show();
+        callModeDialog = alertDialogBuilder.create();
+        callModeDialog.show();
     }
 
     /**
@@ -1357,16 +1373,26 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mActivity = null;
-        mToolbar = null;
-    }
-
-    @Override
     protected void onStop() {
         super.onStop();
         // 再当前界面处于非活动状态时 移除消息监听
         EMClient.getInstance().chatManager().removeMessageListener(mMessageListener);
+    }
+
+    @Override
+    protected void onDestroy() {
+        mActivity = null;
+        mToolbar = null;
+        // 检测弹出框是否显示状态，如果是显示中则销毁，避免 activity 的销毁导致错误
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+        if (photoModeDialog != null && photoModeDialog.isShowing()) {
+            photoModeDialog.dismiss();
+        }
+        if (callModeDialog != null && callModeDialog.isShowing()) {
+            callModeDialog.dismiss();
+        }
+        super.onDestroy();
     }
 }
