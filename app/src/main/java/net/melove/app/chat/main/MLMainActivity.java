@@ -32,7 +32,7 @@ import net.melove.app.chat.communal.base.MLBaseActivity;
 import net.melove.app.chat.communal.util.MLLog;
 import net.melove.app.chat.communal.util.MLSPUtil;
 import net.melove.app.chat.conversation.MLChatActivity;
-import net.melove.app.chat.invited.MLInvitedFragment;
+import net.melove.app.chat.invited.MLApplyForActivity;
 import net.melove.app.chat.communal.base.MLBaseFragment;
 import net.melove.app.chat.communal.widget.MLImageView;
 import net.melove.app.chat.communal.widget.MLToast;
@@ -257,7 +257,7 @@ public class MLMainActivity extends MLBaseActivity implements
             break;
         case R.id.ml_nav_notification:
             mMenuType = 0;
-            mCurrentFragment = MLInvitedFragment.newInstance();
+            mCurrentFragment = MLApplyForActivity.newInstance();
             mToolbar.setTitle(R.string.ml_apply_for);
             break;
         case R.id.ml_nav_help:

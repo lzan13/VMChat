@@ -15,12 +15,11 @@ import com.hyphenate.exceptions.HyphenateException;
 
 import net.melove.app.chat.R;
 import net.melove.app.chat.application.MLConstants;
-import net.melove.app.chat.application.eventbus.MLInvitedEvent;
+import net.melove.app.chat.application.eventbus.MLApplyForEvent;
 import net.melove.app.chat.communal.base.MLBaseActivity;
 import net.melove.app.chat.communal.util.MLDateUtil;
 import net.melove.app.chat.communal.widget.MLImageView;
 import net.melove.app.chat.conversation.MLChatActivity;
-import net.melove.app.chat.database.MLInvitedDao;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -73,20 +72,20 @@ public class MLInvitedDetailActivity extends MLBaseActivity {
         /**
          * 调用{@link MLInvitedDao#getInvitedEntiry(String)} 获取指定的申请与邀请信息
          */
-        mInvitedEntity = MLInvitedDao.getInstance().getInvitedEntiry(intent.getStringExtra(MLConstants.ML_EXTRA_INVITED_ID));
-
-        mAvatarView = (MLImageView) findViewById(R.id.ml_img_invited_avatar);
-        mUsernameView = (TextView) findViewById(R.id.ml_text_invited_username);
-        mReasonView = (TextView) findViewById(R.id.ml_text_invited_reason);
-        mStatusView = (TextView) findViewById(R.id.ml_text_invited_status);
-        mReplyBtn = (Button) findViewById(R.id.ml_btn_invited_reply);
-        mAgreeBtn = (Button) findViewById(R.id.ml_btn_invited_agree);
-        mRefuseBtn = (Button) findViewById(R.id.ml_btn_invited_refuse);
-
-
-        mReplyBtn.setOnClickListener(viewListener);
-        mAgreeBtn.setOnClickListener(viewListener);
-        mRefuseBtn.setOnClickListener(viewListener);
+//        mInvitedEntity = MLInvitedDao.getInstance().getInvitedEntiry(intent.getStringExtra(MLConstants.ML_EXTRA_INVITED_ID));
+//
+//        mAvatarView = (MLImageView) findViewById(R.id.ml_img_invited_avatar);
+//        mUsernameView = (TextView) findViewById(R.id.ml_text_invited_username);
+//        mReasonView = (TextView) findViewById(R.id.ml_text_invited_reason);
+//        mStatusView = (TextView) findViewById(R.id.ml_text_invited_status);
+//        mReplyBtn = (Button) findViewById(R.id.ml_btn_invited_reply);
+//        mAgreeBtn = (Button) findViewById(R.id.ml_btn_invited_agree);
+//        mRefuseBtn = (Button) findViewById(R.id.ml_btn_invited_refuse);
+//
+//
+//        mReplyBtn.setOnClickListener(viewListener);
+//        mAgreeBtn.setOnClickListener(viewListener);
+//        mRefuseBtn.setOnClickListener(viewListener);
 
         refreshInvited();
     }
@@ -198,23 +197,23 @@ public class MLInvitedDetailActivity extends MLBaseActivity {
         dialog.setMessage(mActivity.getResources().getString(R.string.ml_dialog_message_waiting));
         dialog.show();
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    EMClient.getInstance().contactManager().acceptInvitation(mInvitedEntity.getUserName());
-                    mInvitedEntity.setStatus(MLInvitedEntity.InvitedStatus.AGREED);
-                    mInvitedEntity.setTime(MLDateUtil.getCurrentMillisecond());
-                    MLInvitedDao.getInstance().updateInvited(mInvitedEntity);
-                    // 关闭对话框
-                    dialog.dismiss();
-                    // 发送Handler Manager 通知界面更新
-                    mHandler.sendMessage(mHandler.obtainMessage(0));
-                } catch (HyphenateException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    EMClient.getInstance().contactManager().acceptInvitation(mInvitedEntity.getUserName());
+//                    mInvitedEntity.setStatus(MLInvitedEntity.InvitedStatus.AGREED);
+//                    mInvitedEntity.setTime(MLDateUtil.getCurrentMillisecond());
+//                    MLInvitedDao.getInstance().updateInvited(mInvitedEntity);
+//                    // 关闭对话框
+//                    dialog.dismiss();
+//                    // 发送Handler Manager 通知界面更新
+//                    mHandler.sendMessage(mHandler.obtainMessage(0));
+//                } catch (HyphenateException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }).start();
 
 
     }
@@ -226,26 +225,26 @@ public class MLInvitedDetailActivity extends MLBaseActivity {
         final ProgressDialog dialog = new ProgressDialog(mActivity);
         dialog.setMessage(mActivity.getResources().getString(R.string.ml_dialog_message_waiting));
         dialog.show();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    EMClient.getInstance().contactManager().declineInvitation(mInvitedEntity.getUserName());
-                    // 修改当前申请消息的状态
-                    mInvitedEntity.setStatus(MLInvitedEntity.InvitedStatus.REFUSED);
-                    mInvitedEntity.setTime(MLDateUtil.getCurrentMillisecond());
-                    MLInvitedDao.getInstance().updateInvited(mInvitedEntity);
-                    dialog.dismiss();
-                    mHandler.sendMessage(mHandler.obtainMessage(0));
-                } catch (HyphenateException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    EMClient.getInstance().contactManager().declineInvitation(mInvitedEntity.getUserName());
+//                    // 修改当前申请消息的状态
+//                    mInvitedEntity.setStatus(MLInvitedEntity.InvitedStatus.REFUSED);
+//                    mInvitedEntity.setTime(MLDateUtil.getCurrentMillisecond());
+//                    MLInvitedDao.getInstance().updateInvited(mInvitedEntity);
+//                    dialog.dismiss();
+//                    mHandler.sendMessage(mHandler.obtainMessage(0));
+//                } catch (HyphenateException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }).start();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventBus(MLInvitedEvent event) {
+    public void onEventBus(MLApplyForEvent event) {
         refreshInvited();
     }
 

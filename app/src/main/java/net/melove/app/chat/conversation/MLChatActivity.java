@@ -205,7 +205,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      */
     private void initConversation() {
         /**
-         * 初始化会话对象，这里有三个参数么，
+         * 初始化会话对象，这里有三个参数，
          * 第一个表示会话的当前聊天的 useranme 或者 groupid
          * 第二个是绘画类型可以为空
          * 第三个表示如果会话不存在是否创建
@@ -1312,12 +1312,13 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         /**
          * 减少内存用量，这里设置为当前会话内存中多于3条时清除内存中的消息，只保留一条
          */
-        if (mConversation.getAllMessages().size() > 3) {
+        if (mConversation.getAllMessages().size() > 1) {
             // 将会话内的消息从内存中清除，节省内存，但是还要在重新加载一条
             List<String> list = new ArrayList<String>();
             list.add(mConversation.getLastMessage().getMsgId());
             // 清除内存中的消息，此方法不清空DB
             mConversation.clear();
+            mConversation.clearAllMessages();
             // 加载消息到内存
             mConversation.loadMessages(list);
         }

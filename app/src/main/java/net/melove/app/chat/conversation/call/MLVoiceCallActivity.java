@@ -4,6 +4,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import com.hyphenate.chat.EMClient;
+
 import net.melove.app.chat.R;
 
 public class MLVoiceCallActivity extends AppCompatActivity {

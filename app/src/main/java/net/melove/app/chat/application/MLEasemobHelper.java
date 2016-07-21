@@ -15,11 +15,12 @@ import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMOptions;
+import com.hyphenate.chat.EMTextMessageBody;
 
 import net.melove.app.chat.R;
 import net.melove.app.chat.application.eventbus.MLConnectionEvent;
 import net.melove.app.chat.application.eventbus.MLContactsEvent;
-import net.melove.app.chat.application.eventbus.MLInvitedEvent;
+import net.melove.app.chat.application.eventbus.MLApplyForEvent;
 import net.melove.app.chat.application.eventbus.MLMessageEvent;
 import net.melove.app.chat.communal.base.MLBaseActivity;
 import net.melove.app.chat.communal.util.MLCryptoUtil;
@@ -30,7 +31,6 @@ import net.melove.app.chat.database.MLDBHelper;
 import net.melove.app.chat.invited.MLInvitedEntity;
 import net.melove.app.chat.contacts.MLContactsEntity;
 import net.melove.app.chat.conversation.MLConversationExtUtils;
-import net.melove.app.chat.database.MLInvitedDao;
 import net.melove.app.chat.database.MLContactsDao;
 import net.melove.app.chat.notification.MLNotifier;
 
@@ -395,47 +395,50 @@ public class MLEasemobHelper {
             @Override
             public void onContactInvited(String username, String reason) {
                 MLLog.d("onContactInvited - username:%s, reaseon:%s", username, reason);
-                // 创建一条好友申请数据
-                MLInvitedEntity invitedEntity = new MLInvitedEntity();
-                // 当前用户
-                String currUsername = EMClient.getInstance().getCurrentUser();
-                // 根据根据对方的名字，加上当前用户的名字，加申请类型按照一定顺序组合，得到当前申请信息的唯一 ID
-                String invitedId = MLCryptoUtil.cryptoStr2MD5(username + currUsername + MLInvitedEntity.InvitedType.CONTACTS);
-                // 设置此条信息的唯一ID
-                invitedEntity.setInvitedId(invitedId);
-                // 对方的username
-                invitedEntity.setUserName(username);
-                // invitedEntity.setNickName(mUserEntity.getNickName());
-                // 设置申请理由
-                invitedEntity.setReason(reason);
-                // 设置申请状态为被申请
-                invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.BEAPPLYFOR);
-                // 设置申请信息为联系人申请
-                invitedEntity.setType(MLInvitedEntity.InvitedType.CONTACTS);
-                // 设置申请信息的时间
-                invitedEntity.setTime(MLDateUtil.getCurrentMillisecond());
 
-                /**
-                 * 这里先读取本地的申请与通知信息，如果相同则直接 return，不进行操作
-                 * 只有当新的好友请求发过来时才进行保存，并发送通知
-                 * 这里进行一下筛选，如果已存在则去更新本地内容
-                 * 同样的{@link MLInvitedDao}也是一个单例的操作类，封装了一些对于申请与邀请信息的增删改查的方法
-                 */
-                MLInvitedEntity temp = MLInvitedDao.getInstance().getInvitedEntiry(invitedEntity.getInvitedId());
-                if (temp != null) {
-                    if (temp.getReason().equals(invitedEntity.getReason())) {
-                        // 这里判断当前保存的信息如果和新的一模一样不进行操作
-                        return;
-                    }
-                    // 此条信息已经存在，更新修改时间
-                    MLInvitedDao.getInstance().updateInvited(invitedEntity);
+                // 根据申请者的 username 和当前登录账户 username 拼接出msgId方便后边更新申请信息
+                String msgId = username + EMClient.getInstance().getCurrentUser();
+
+                // 首先查找这条申请消息是否为空
+                EMMessage message = EMClient.getInstance().chatManager().getMessage(msgId);
+                if (message != null) {
+                    // 申请理由
+                    message.setAttribute(MLConstants.ML_ATTR_REASON, reason);
+                    // 当前申请的消息状态
+                    message.setAttribute(MLConstants.ML_ATTR_STATUS, MLConstants.ML_STATUS_BE_APPLY_FOR);
+                    // 更新消息时间
+                    message.setMsgTime(MLDateUtil.getCurrentMillisecond());
+                    message.setLocalTime(message.getMsgTime());
+                    // 更新消息到本地
+                    EMClient.getInstance().chatManager().updateMessage(message);
                 } else {
-                    MLInvitedDao.getInstance().saveInvited(invitedEntity);
+                    // 创建一条接收的消息，用来保存申请信息
+                    message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
+                    EMTextMessageBody body = new EMTextMessageBody(username + " 申请加你好友");
+                    message.addBody(body);
+                    // 设置消息扩展，主要是申请信息
+                    message.setAttribute(MLConstants.ML_ATTR_APPLY_FOR, true);
+                    // 申请者username
+                    message.setAttribute(MLConstants.ML_ATTR_USERNAME, username);
+                    // 申请理由
+                    message.setAttribute(MLConstants.ML_ATTR_REASON, reason);
+                    // 当前申请的消息状态
+                    message.setAttribute(MLConstants.ML_ATTR_STATUS, MLConstants.ML_STATUS_BE_APPLY_FOR);
+                    // 申请与通知类型
+                    message.setAttribute(MLConstants.ML_ATTR_TYPE, MLConstants.ML_APPLY_FOR_CONTACTS);
+                    // 设置消息发送方
+                    message.setFrom(MLConstants.ML_CONVERSATION_ID_APPLY_FOR);
+                    // 设置
+                    message.setMsgId(msgId);
+                    // 将消息保存到本地和内存
+                    EMClient.getInstance().chatManager().saveMessage(message);
                 }
                 // 调用发送通知栏提醒方法，提醒用户查看申请通知
-                MLNotifier.getInstance().sendInvitedNotification(invitedEntity);
+                MLNotifier.getInstance().sendNotificationMessage(message);
                 // 使用 EventBus 发布消息，通知订阅者申请与通知信息有变化
-                EventBus.getDefault().post(new MLInvitedEvent());
+                MLApplyForEvent event = new MLApplyForEvent();
+                event.setMessage(message);
+                EventBus.getDefault().post(event);
             }
 
             /**
@@ -446,41 +449,44 @@ public class MLEasemobHelper {
             @Override
             public void onContactAgreed(String username) {
                 MLLog.d("onContactAgreed - username:%s", username);
-                // 这里进行一下筛选，如果已存在则去更新本地内容
-                String currUsername = EMClient.getInstance().getCurrentUser();
-                // 根据申请者的名字，加上当前用户的名字，加申请类型按照一定顺序组合，得到当前申请信息的唯一 ID
-                String invitedId = MLCryptoUtil.cryptoStr2MD5(currUsername + username + MLInvitedEntity.InvitedType.CONTACTS);
-                // 先去数据库查找一下，有没有这一条申请信息，如果有直接修改，没有才新建插入
-                MLInvitedEntity invitedEntity = MLInvitedDao.getInstance().getInvitedEntiry(invitedId);
-                if (invitedEntity != null) {
-                    // 更新当前消息处理时间
-                    invitedEntity.setTime(MLDateUtil.getCurrentMillisecond());
-                    invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.BEAGREED);
-                    MLInvitedDao.getInstance().updateInvited(invitedEntity);
+                // 根据申请者的 username 和当前登录账户 username 拼接出msgId方便后边更新申请信息（申请者在前）
+                String msgId = EMClient.getInstance().getCurrentUser() + username;
+
+                // 首先查找这条申请消息是否为空
+                EMMessage message = EMClient.getInstance().chatManager().getMessage(msgId);
+                if (message != null) {
+                    // 当前申请的消息状态
+                    message.setAttribute(MLConstants.ML_ATTR_STATUS, MLConstants.ML_STATUS_BE_AGREED);
+                    // 更新消息到本地
+                    EMClient.getInstance().chatManager().updateMessage(message);
                 } else {
-                    // 创建一条好友申请数据
-                    invitedEntity = new MLInvitedEntity();
-                    // 设置此条信息的唯一ID
-                    invitedEntity.setInvitedId(invitedId);
-                    // 对方的username
-                    invitedEntity.setUserName(username);
-                    // invitedEntity.setNickName(mUserEntity.getNickName());
-                    invitedEntity.setReason(MLApplication.getContext().getString(R.string.ml_add_contact_reason));
-                    // 设置申请状态为被同意
-                    invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.BEAGREED);
-                    // 设置申请信息为联系人申请
-                    invitedEntity.setType(MLInvitedEntity.InvitedType.CONTACTS);
-                    // 设置申请信息的时间
-                    invitedEntity.setTime(MLDateUtil.getCurrentMillisecond());
-                    MLInvitedDao.getInstance().saveInvited(invitedEntity);
+                    // 创建一条接收的消息，用来保存申请信息
+                    message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
+                    EMTextMessageBody body = new EMTextMessageBody(username + " 同意了你的好友申请");
+                    message.addBody(body);
+                    // 设置消息扩展，主要是申请信息
+                    message.setAttribute(MLConstants.ML_ATTR_APPLY_FOR, true);
+                    // 申请者username
+                    message.setAttribute(MLConstants.ML_ATTR_USERNAME, username);
+                    // 申请理由
+                    message.setAttribute(MLConstants.ML_ATTR_REASON, "我同意你的好友申请");
+                    // 当前申请的消息状态
+                    message.setAttribute(MLConstants.ML_ATTR_STATUS, MLConstants.ML_STATUS_BE_AGREED);
+                    // 申请与通知类型
+                    message.setAttribute(MLConstants.ML_ATTR_TYPE, MLConstants.ML_APPLY_FOR_CONTACTS);
+                    // 设置消息发送方
+                    message.setFrom(MLConstants.ML_CONVERSATION_ID_APPLY_FOR);
+                    // 设置
+                    message.setMsgId(msgId);
+                    // 将消息保存到本地和内存
+                    EMClient.getInstance().chatManager().saveMessage(message);
                 }
-                /**
-                 * 调用发送通知栏提醒方法，提醒用户查看申请通知
-                 * 这里是自定义封装号的一个类{@link MLNotifier}
-                 */
-                MLNotifier.getInstance().sendInvitedNotification(invitedEntity);
+                // 调用发送通知栏提醒方法，提醒用户查看申请通知
+                MLNotifier.getInstance().sendNotificationMessage(message);
                 // 使用 EventBus 发布消息，通知订阅者申请与通知信息有变化
-                EventBus.getDefault().post(new MLInvitedEvent());
+                MLApplyForEvent event = new MLApplyForEvent();
+                event.setMessage(message);
+                EventBus.getDefault().post(event);
             }
 
             /**
@@ -491,43 +497,44 @@ public class MLEasemobHelper {
             @Override
             public void onContactRefused(String username) {
                 MLLog.d("onContactRefused - username:%s", username);
-                // 这里进行一下筛选，如果已存在则去更新本地内容
-                String currUsername = EMClient.getInstance().getCurrentUser();
-                // 根据申请者的名字，加上当前用户的名字，加申请类型按照一定顺序组合，得到当前申请信息的唯一 ID
-                String invitedId = MLCryptoUtil.cryptoStr2MD5(currUsername + username + MLInvitedEntity.InvitedType.CONTACTS);
-                // 先去数据库查找一下，有没有这一条申请信息，如果有直接修改，没有才新建插入
-                MLInvitedEntity invitedEntity = MLInvitedDao.getInstance().getInvitedEntiry(invitedId);
-                if (invitedEntity != null) {
-                    // 更新当前信息的时间
-                    invitedEntity.setTime(MLDateUtil.getCurrentMillisecond());
-                    invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.BEREFUSED);
-                    MLInvitedDao.getInstance().updateInvited(invitedEntity);
+                // 根据申请者的 username 和当前登录账户 username 拼接出msgId方便后边更新申请信息（申请者在前）
+                String msgId = EMClient.getInstance().getCurrentUser() + username;
+
+                // 首先查找这条申请消息是否为空
+                EMMessage message = EMClient.getInstance().chatManager().getMessage(msgId);
+                if (message != null) {
+                    // 当前申请的消息状态
+                    message.setAttribute(MLConstants.ML_ATTR_STATUS, MLConstants.ML_STATUS_BE_AGREED);
+                    // 更新消息到本地
+                    EMClient.getInstance().chatManager().updateMessage(message);
                 } else {
-                    // 创建一条好友申请数据
-                    invitedEntity = new MLInvitedEntity();
-                    // 设置此条信息的唯一ID
-                    invitedEntity.setInvitedId(invitedId);
-                    // 对方的username
-                    invitedEntity.setUserName(username);
-                    // invitedEntity.setNickName(mUserEntity.getNickName());
-                    invitedEntity.setReason(MLApplication.getContext().getString(R.string.ml_add_contact_reason));
-                    // 设置申请状态为被同意
-                    invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.BEREFUSED);
-                    // 设置申请信息为联系人申请
-                    invitedEntity.setType(MLInvitedEntity.InvitedType.CONTACTS);
-                    // 设置申请信息的时间
-                    invitedEntity.setTime(MLDateUtil.getCurrentMillisecond());
-
-                    MLInvitedDao.getInstance().saveInvited(invitedEntity);
+                    // 创建一条接收的消息，用来保存申请信息
+                    message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
+                    EMTextMessageBody body = new EMTextMessageBody(username + " 同意了你的好友申请");
+                    message.addBody(body);
+                    // 设置消息扩展，主要是申请信息
+                    message.setAttribute(MLConstants.ML_ATTR_APPLY_FOR, true);
+                    // 申请者username
+                    message.setAttribute(MLConstants.ML_ATTR_USERNAME, username);
+                    // 申请理由
+                    message.setAttribute(MLConstants.ML_ATTR_REASON, "我同意你的好友申请");
+                    // 当前申请的消息状态
+                    message.setAttribute(MLConstants.ML_ATTR_STATUS, MLConstants.ML_STATUS_BE_AGREED);
+                    // 申请与通知类型
+                    message.setAttribute(MLConstants.ML_ATTR_TYPE, MLConstants.ML_APPLY_FOR_CONTACTS);
+                    // 设置消息发送方
+                    message.setFrom(MLConstants.ML_CONVERSATION_ID_APPLY_FOR);
+                    // 设置
+                    message.setMsgId(msgId);
+                    // 将消息保存到本地和内存
+                    EMClient.getInstance().chatManager().saveMessage(message);
                 }
-
-                /**
-                 * 调用发送通知栏提醒方法，提醒用户查看申请通知
-                 * 这里是自定义封装号的一个类{@link MLNotifier}
-                 */
-                MLNotifier.getInstance().sendInvitedNotification(invitedEntity);
+                // 调用发送通知栏提醒方法，提醒用户查看申请通知
+                MLNotifier.getInstance().sendNotificationMessage(message);
                 // 使用 EventBus 发布消息，通知订阅者申请与通知信息有变化
-                EventBus.getDefault().post(new MLInvitedEvent());
+                MLApplyForEvent event = new MLApplyForEvent();
+                event.setMessage(message);
+                EventBus.getDefault().post(event);
             }
         };
         EMClient.getInstance().contactManager().setContactListener(mContactListener);

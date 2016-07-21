@@ -9,39 +9,53 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMConversation;
+import com.hyphenate.chat.EMMessage;
 
 import net.melove.app.chat.R;
 import net.melove.app.chat.application.MLConstants;
 import net.melove.app.chat.communal.util.MLLog;
 import net.melove.app.chat.communal.widget.MLImageView;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
  * Created by lzan13 on 2016/3/17.
  * 申请信息适配器类
  */
-public class MLInvitedAdapter extends RecyclerView.Adapter<MLInvitedAdapter.InvitedViewHolder> {
+public class MLApplyForAdapter extends RecyclerView.Adapter<MLApplyForAdapter.InvitedViewHolder> {
 
     // 上下文对象
     private Context mContext;
 
     private LayoutInflater mInflater;
 
-    private List<MLInvitedEntity> mInvitedEntities;
+    // 当前会话对象
+    private EMConversation mConversation;
+    private List<EMMessage> mMessages;
 
     // 自定义的回调接口
     private MLOnItemClickListener mOnItemClickListener;
 
-    public MLInvitedAdapter(Context context, List<MLInvitedEntity> invitedEntityList) {
+    public MLApplyForAdapter(Context context) {
         mContext = context;
-        mInvitedEntities = invitedEntityList;
         mInflater = LayoutInflater.from(mContext);
+        /**
+         * 初始化会话对象，这里有三个参数么，
+         * mChatid 第一个表示会话的当前聊天的 useranme 或者 groupid
+         * null 第二个是会话类型可以为空
+         * true 第三个表示如果会话不存在是否创建
+         */
+        mConversation = EMClient.getInstance().chatManager().getConversation(MLConstants.ML_CONVERSATION_ID_APPLY_FOR, null, true);
+        mMessages = mConversation.getAllMessages();
+        // 将list集合倒序排列
+        Collections.reverse(mMessages);
     }
 
     @Override
     public InvitedViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.item_invited, parent, false);
+        View view = mInflater.inflate(R.layout.item_apply_for, parent, false);
         InvitedViewHolder holder = new InvitedViewHolder(view);
         return holder;
     }
@@ -49,7 +63,7 @@ public class MLInvitedAdapter extends RecyclerView.Adapter<MLInvitedAdapter.Invi
 
     @Override
     public void onBindViewHolder(InvitedViewHolder holder, final int position) {
-        MLLog.i("MLInvitedAdapter - onBindViewHolder - %d", position);
+        MLLog.i("MLApplyForAdapter - onBindViewHolder - %d", position);
         MLInvitedEntity invitedEntity = mInvitedEntities.get(position);
         holder.imageViewAvatar.setImageResource(R.mipmap.ic_character_blackcat);
 
@@ -102,14 +116,14 @@ public class MLInvitedAdapter extends RecyclerView.Adapter<MLInvitedAdapter.Invi
             @Override
             public void onClick(View v) {
                 // 设置点击动作
-                mOnItemClickListener.onItemAction(position, MLConstants.ML_ACTION_INVITED_CLICK);
+                mOnItemClickListener.onItemAction(position, MLConstants.ML_ACTION_APPLY_FOR_CLICK);
             }
         });
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 // 这里直接给长按设置删除操作
-                mOnItemClickListener.onItemAction(position, MLConstants.ML_ACTION_INVITED_DELETE);
+                mOnItemClickListener.onItemAction(position, MLConstants.ML_ACTION_APPLY_FOR_DELETE);
                 return true;
             }
         });
@@ -129,7 +143,7 @@ public class MLInvitedAdapter extends RecyclerView.Adapter<MLInvitedAdapter.Invi
             int position = (int) v.getTag();
             switch (v.getId()) {
             case R.id.ml_btn_invited_agree:
-                mOnItemClickListener.onItemAction(position, MLConstants.ML_ACTION_INVITED_AGREE);
+                mOnItemClickListener.onItemAction(position, MLConstants.ML_ACTION_APPLY_FOR_AGREE);
                 break;
             }
         }
@@ -141,7 +155,7 @@ public class MLInvitedAdapter extends RecyclerView.Adapter<MLInvitedAdapter.Invi
     protected interface MLOnItemClickListener {
         /**
          * Item 点击及长按事件的处理
-         * 这里Item的点击及长按监听都在当前的 MLInvitedAdapter 实现
+         * 这里Item的点击及长按监听都在当前的 MLApplyForAdapter 实现
          *
          * @param position 需要操作的Item的位置
          * @param action   长按菜单需要处理的动作，

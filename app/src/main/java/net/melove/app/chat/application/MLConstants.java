@@ -2,19 +2,17 @@ package net.melove.app.chat.application;
 
 /**
  * Class ${FILE_NAME}
- * <p/>
+ * <p>
  * Created by lzan13 on 2015/9/10 22:04.
  */
 public class MLConstants {
 
+    // GCM number
     public static final String ML_GCM_NUMBER = "163141467698";
 
     // 集成小米推送需要的 appid 和 appkey
     public static final String ML_MI_APP_ID = "2882303761517430984";
     public static final String ML_MI_APP_KEY = "5191743065984";
-
-    // 设置消息中 msgId 扩展的 key
-    public static final String ML_ATTR_MSG_ID = "ml_msg_id";
 
     /**
      * 设置自己扩展的 key，包括会话对象{@link com.hyphenate.chat.EMConversation}扩展，
@@ -26,6 +24,8 @@ public class MLConstants {
     public static final String ML_ATTR_BURN = "ml_attr_burn";
     // 最后时间
     public static final String ML_ATTR_LAST_TIME = "ml_attr_list_time";
+    // 消息id
+    public static final String ML_ATTR_MSG_ID = "ml_attr_msg_id";
     // 撤回
     public static final String ML_ATTR_RECALL = "ml_attr_recall";
     // 置顶
@@ -36,6 +36,16 @@ public class MLConstants {
     public static final String ML_ATTR_DRAFT = "ml_attr_draft";
     // 会话未读
     public static final String ML_ATTR_UNREAD = "ml_attr_unread";
+    // 是不是申请与通知类型
+    public static final String ML_ATTR_APPLY_FOR = "ml_attr_apply_for";
+    // 用户名
+    public static final String ML_ATTR_USERNAME = "ml_attr_username";
+    // 群组id
+    public static final String ML_ATTR_GROUP_ID = "ml_attr_group_id";
+    // 理由
+    public static final String ML_ATTR_REASON = "ml_attr_reason";
+    // 状态
+    public static final String ML_ATTR_STATUS = "ml_attr_status";
 
     /**
      * 自定义一些错误码，表示一些固定的错误
@@ -44,25 +54,22 @@ public class MLConstants {
     public static final int ML_ERROR_I_RECALL_TIME = 5001;
     // 撤回消息错误文字描述
     public static final String ML_ERROR_S_RECALL_TIME = "ml_max_time";
-
+    public static final int ML_TIME_RECALL = 300000;
 
     // 界面跳转传递 username/groupid 参数的 key
     public static final String ML_EXTRA_CHAT_ID = "ml_chat_id";
-    public static final String ML_EXTRA_INVITED_ID = "ml_invited_id";
     public static final String ML_EXTRA_IS_COMING_CALL = "ml_is_coming_call";
 
-    // 自定义广播的 action
-    public static final String ML_EVENT_ACTION_INVITED = "ml_action_invited";
 
-    public static final String ML_EVENT_ACTION_CONTACT = "ml_action_contact";
-    public static final String ML_EVENT_ACTION_MESSAGE = "ml_action_message";
-    public static final String ML_EVENT_ACTION_CONNCETION = "ml_action_connection";
+    // 定义好友申请与通知的 Conversation Id
+    public static final String ML_CONVERSATION_ID_APPLY_FOR = "ml_conversation_id_apply_for";
+
     /**
      * 保存数据到 {@link android.content.SharedPreferences}的 key
      */
     public static final String ML_SHARED_USERNAME = "ml_username";
     public static final String ML_SHARED_PASSWORD = "ml_password";
-    public static final int ML_TIME_RECALL = 300000;
+
 
     /**
      * 链接状态码
@@ -97,10 +104,20 @@ public class MLConstants {
     /**
      * 自定义申请与请求列表项点击与长按的 Action
      */
-    public static final int ML_ACTION_INVITED_CLICK = 0X00;
-    public static final int ML_ACTION_INVITED_AGREE = 0X10;
-    public static final int ML_ACTION_INVITED_REFUSE = 0X11;
-    public static final int ML_ACTION_INVITED_DELETE = 0X12;
+    public static final int ML_ACTION_APPLY_FOR_CLICK = 0X00;
+    public static final int ML_ACTION_APPLY_FOR_AGREE = 0X10;
+    public static final int ML_ACTION_APPLY_FOR_REFUSE = 0X11;
+    public static final int ML_ACTION_APPLY_FOR_DELETE = 0X12;
+    // 申请与请求的状态
+    public static final int ML_STATUS_AGREED = 0x00;         // 同意
+    public static final int ML_STATUS_REFUSED = 0x01;        // 拒绝
+    public static final int ML_STATUS_BE_AGREED = 0x02;      // 对方同意
+    public static final int ML_STATUS_BE_REFUSED = 0x03;     // 对方拒绝
+    public static final int ML_STATUS_APPLY_FOR = 0x04;      // 自己申请
+    public static final int ML_STATUS_BE_APPLY_FOR = 0x05;   // 对方申请
+    // 申请与通知类型
+    public static final int ML_APPLY_FOR_CONTACTS = 0x00;   // 联系人申请
+    public static final int ML_APPLY_FOR_GROUP = 0x01;      // 群组申请
 
     /**
      * RecyclerView Adapter 列表刷新类型
@@ -118,17 +135,13 @@ public class MLConstants {
      * 聊天消息类型
      * 首先是SDK支持的正常的消息类型
      */
-    public static final int MSG_TYPE_TEXT_SEND = 0;
-    public static final int MSG_TYPE_TEXT_RECEIVED = 1;
-    public static final int MSG_TYPE_IMAGE_SEND = 2;
-    public static final int MSG_TYPE_IMAGE_RECEIVED = 3;
-    public static final int MSG_TYPE_FILE_SEND = 4;
-    public static final int MSG_TYPE_FILE_RECEIVED = 5;
-
-    /**
-     * 系统级消息类型
-     */
+    public static final int MSG_TYPE_TEXT_SEND = 0x00;
+    public static final int MSG_TYPE_TEXT_RECEIVED = 0x01;
+    public static final int MSG_TYPE_IMAGE_SEND = 0x02;
+    public static final int MSG_TYPE_IMAGE_RECEIVED = 0x03;
+    public static final int MSG_TYPE_FILE_SEND = 0x04;
+    public static final int MSG_TYPE_FILE_RECEIVED = 0x05;
     // 撤回类型消息
-    public static final int MSG_TYPE_SYS_RECALL = 10;
+    public static final int MSG_TYPE_SYS_RECALL = 0x10;
 
 }
