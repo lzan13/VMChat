@@ -44,7 +44,6 @@ public class MLDBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(MLDBConstants.SQL_CONTACTS);
-        db.execSQL(MLDBConstants.SQL_INVITED);
         db.execSQL(MLDBConstants.SQL_GROUP);
     }
 

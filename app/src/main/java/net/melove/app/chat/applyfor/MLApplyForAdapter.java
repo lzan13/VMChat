@@ -1,4 +1,4 @@
-package net.melove.app.chat.invited;
+package net.melove.app.chat.applyfor;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -64,47 +64,55 @@ public class MLApplyForAdapter extends RecyclerView.Adapter<MLApplyForAdapter.In
     @Override
     public void onBindViewHolder(InvitedViewHolder holder, final int position) {
         MLLog.i("MLApplyForAdapter - onBindViewHolder - %d", position);
-        MLInvitedEntity invitedEntity = mInvitedEntities.get(position);
+        EMMessage message = mMessages.get(position);
         holder.imageViewAvatar.setImageResource(R.mipmap.ic_character_blackcat);
 
         String currUsername = EMClient.getInstance().getCurrentUser();
+        String username = message.getStringAttribute(MLConstants.ML_ATTR_USERNAME, "");
         // 设置申请的人
-        if (currUsername.equals(invitedEntity.getUserName())) {
-            holder.textViewUsername.setText(invitedEntity.getUserName());
+        if (currUsername.equals(username)) {
+            holder.textViewUsername.setText(username);
+        } else {
+            holder.textViewUsername.setText(username);
         }
-        holder.textViewUsername.setText(invitedEntity.getUserName());
         // 设置申请理由
-        holder.textViewReason.setText(invitedEntity.getReason());
+        holder.textViewReason.setText(message.getStringAttribute(MLConstants.ML_ATTR_REASON, "reason"));
+        int status = message.getIntAttribute(MLConstants.ML_ATTR_STATUS, 0);
+        int type = message.getIntAttribute(MLConstants.ML_ATTR_TYPE, 0);
 
-        // 判断当前的申请与通知的状态，显示不同的提醒文字
-        if (invitedEntity.getStatus() == MLInvitedEntity.InvitedStatus.AGREED) {
+        switch (status) {
+        case MLConstants.ML_STATUS_AGREED:
             holder.textViewStatus.setText(R.string.ml_agreed);
             holder.textViewStatus.setVisibility(View.VISIBLE);
             holder.btnAgree.setVisibility(View.GONE);
-        } else if (invitedEntity.getStatus() == MLInvitedEntity.InvitedStatus.REFUSED) {
+            break;
+        case MLConstants.ML_STATUS_REFUSED:
             holder.textViewStatus.setText(R.string.ml_refused);
             holder.textViewStatus.setVisibility(View.VISIBLE);
             holder.btnAgree.setVisibility(View.GONE);
-        } else if (invitedEntity.getStatus() == MLInvitedEntity.InvitedStatus.BEAGREED) {
+            break;
+        case MLConstants.ML_STATUS_BE_AGREED:
             holder.textViewStatus.setText(R.string.ml_be_agreed);
             holder.textViewStatus.setVisibility(View.VISIBLE);
             holder.btnAgree.setVisibility(View.GONE);
-        } else if (invitedEntity.getStatus() == MLInvitedEntity.InvitedStatus.BEREFUSED) {
+            break;
+        case MLConstants.ML_STATUS_BE_REFUSED:
             holder.textViewStatus.setText(R.string.ml_be_refused);
             holder.textViewStatus.setVisibility(View.VISIBLE);
             holder.btnAgree.setVisibility(View.GONE);
-        } else if (invitedEntity.getStatus() == MLInvitedEntity.InvitedStatus.APPLYFOR) {
+            break;
+        case MLConstants.ML_STATUS_APPLY_FOR:
             holder.textViewStatus.setText(R.string.ml_waiting_respond);
             holder.textViewStatus.setVisibility(View.VISIBLE);
             holder.btnAgree.setVisibility(View.GONE);
-        } else if (invitedEntity.getStatus() == MLInvitedEntity.InvitedStatus.BEAPPLYFOR) {
+            break;
+        case MLConstants.ML_STATUS_BE_APPLY_FOR:
             holder.textViewStatus.setText(R.string.ml_waiting_dispose);
             holder.textViewStatus.setVisibility(View.GONE);
             holder.btnAgree.setVisibility(View.VISIBLE);
-        } else if (invitedEntity.getStatus() == MLInvitedEntity.InvitedStatus.GROUPAPPLYFOR) {
-            holder.textViewStatus.setText(R.string.ml_waiting_dispose);
-            holder.textViewStatus.setVisibility(View.GONE);
-            holder.btnAgree.setVisibility(View.VISIBLE);
+            break;
+        default:
+            break;
         }
 
         holder.btnAgree.setTag(position);
@@ -131,7 +139,7 @@ public class MLApplyForAdapter extends RecyclerView.Adapter<MLApplyForAdapter.In
 
     @Override
     public int getItemCount() {
-        return mInvitedEntities.size();
+        return mMessages.size();
     }
 
     /**
@@ -142,7 +150,7 @@ public class MLApplyForAdapter extends RecyclerView.Adapter<MLApplyForAdapter.In
         public void onClick(View v) {
             int position = (int) v.getTag();
             switch (v.getId()) {
-            case R.id.ml_btn_invited_agree:
+            case R.id.ml_btn_apply_for_agree:
                 mOnItemClickListener.onItemAction(position, MLConstants.ML_ACTION_APPLY_FOR_AGREE);
                 break;
             }
@@ -189,11 +197,11 @@ public class MLApplyForAdapter extends RecyclerView.Adapter<MLApplyForAdapter.In
          */
         public InvitedViewHolder(View itemView) {
             super(itemView);
-            imageViewAvatar = (MLImageView) itemView.findViewById(R.id.ml_img_invited_avatar);
-            textViewUsername = (TextView) itemView.findViewById(R.id.ml_text_invited_username);
-            textViewReason = (TextView) itemView.findViewById(R.id.ml_text_invited_reason);
-            textViewStatus = (TextView) itemView.findViewById(R.id.ml_text_invited_status);
-            btnAgree = (Button) itemView.findViewById(R.id.ml_btn_invited_agree);
+            imageViewAvatar = (MLImageView) itemView.findViewById(R.id.ml_img_user_avatar);
+            textViewUsername = (TextView) itemView.findViewById(R.id.ml_text_user_signature);
+            textViewReason = (TextView) itemView.findViewById(R.id.ml_text_apply_for_reason);
+            textViewStatus = (TextView) itemView.findViewById(R.id.ml_text_apply_for_status);
+            btnAgree = (Button) itemView.findViewById(R.id.ml_btn_apply_for_agree);
         }
     }
 }

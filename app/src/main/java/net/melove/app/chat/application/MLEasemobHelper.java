@@ -17,18 +17,15 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMOptions;
 import com.hyphenate.chat.EMTextMessageBody;
 
-import net.melove.app.chat.R;
 import net.melove.app.chat.application.eventbus.MLConnectionEvent;
 import net.melove.app.chat.application.eventbus.MLContactsEvent;
 import net.melove.app.chat.application.eventbus.MLApplyForEvent;
 import net.melove.app.chat.application.eventbus.MLMessageEvent;
 import net.melove.app.chat.communal.base.MLBaseActivity;
-import net.melove.app.chat.communal.util.MLCryptoUtil;
 import net.melove.app.chat.communal.util.MLDateUtil;
 import net.melove.app.chat.communal.util.MLLog;
 import net.melove.app.chat.conversation.MLMessageUtils;
 import net.melove.app.chat.database.MLDBHelper;
-import net.melove.app.chat.invited.MLInvitedEntity;
 import net.melove.app.chat.contacts.MLContactsEntity;
 import net.melove.app.chat.conversation.MLConversationExtUtils;
 import net.melove.app.chat.database.MLContactsDao;

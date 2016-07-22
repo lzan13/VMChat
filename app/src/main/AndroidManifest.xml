@@ -101,6 +101,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Default"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
+        <!--申请与通知界面-->
+        <activity
+            android:name=".applyfor.MLApplyForActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MLTheme.Default"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
         <!-- 账户信息界面 -->
         <activity
             android:name=".contacts.MLContactsInfoActivity"
@@ -129,11 +135,6 @@
             android:name=".main.MLSearchActivity"
             android:theme="@style/MLTheme.Default"
             android:windowSoftInputMode="adjustResize|stateVisible"/>
-        <!-- Invited消息详情界面 -->
-        <activity
-            android:name=".invited.MLInvitedDetailActivity"
-            android:theme="@style/MLTheme.Default"
-            android:windowSoftInputMode="adjustResize|stateHidden"/>
         <!-- 测试 Activity -->
         <activity
             android:name=".test.MLTestActivity"

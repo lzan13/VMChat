@@ -11,8 +11,8 @@ public class MLConstants {
     public static final String ML_GCM_NUMBER = "163141467698";
 
     // 集成小米推送需要的 appid 和 appkey
-    public static final String ML_MI_APP_ID = "2882303761517430984";
-    public static final String ML_MI_APP_KEY = "5191743065984";
+    public static final String ML_MI_APP_ID = "2882303761517493144";
+    public static final String ML_MI_APP_KEY = "5601749395144";
 
     /**
      * 设置自己扩展的 key，包括会话对象{@link com.hyphenate.chat.EMConversation}扩展，

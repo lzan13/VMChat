@@ -31,7 +31,7 @@
             android:layout_marginRight="@dimen/ml_dimen_24"
             android:layout_marginTop="@dimen/ml_dimen_16"
             android:layout_toLeftOf="@id/ml_text_dialog_title_time"
-            android:text="@string/ml_dialog_title_chat"
+            android:text="@string/ml_dialog_title_message"
             android:textColor="@color/ml_black_87"
             android:textSize="@dimen/ml_size_20" />
     </RelativeLayout>

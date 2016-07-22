@@ -15,7 +15,6 @@ import net.melove.app.chat.application.MLApplication;
 import net.melove.app.chat.application.MLConstants;
 import net.melove.app.chat.conversation.MLChatActivity;
 import net.melove.app.chat.main.MLMainActivity;
-import net.melove.app.chat.invited.MLInvitedEntity;
 
 import java.util.List;
 
@@ -86,39 +85,39 @@ public class MLNotifier {
      *
      * @param invitedEntity 申请与通知的实体类，用来确定发送通知的内容
      */
-    public void sendInvitedNotification(MLInvitedEntity invitedEntity) {
-
-        String message = null;
-        // 设置通知栏标题
-        mBuilder.setContentTitle(mContext.getString(R.string.ml_app_name));
-        switch (invitedEntity.getStatus()) {
-        case BEAGREED:
-            message = invitedEntity.getUserName() + " 同意了你的请求";
-            break;
-        case BEREFUSED:
-            message = invitedEntity.getUserName() + " 拒绝了你的请求";
-            break;
-        case BEAPPLYFOR:
-            message = invitedEntity.getUserName() + " 申请添加你为好友";
-            break;
-        case GROUPAPPLYFOR:
-
-            break;
-        }
-
-        mBuilder.setContentText(message);
-
-        // 设置状态栏显示内容（这里是一闪而过的，带有上升动画）
-        mBuilder.setTicker("有条新的请求等你处理");
-
-        // 设置通知栏点击意图（点击通知栏跳转到相应的页面）
-        Intent intent = new Intent(mContext, MLMainActivity.class);
-        PendingIntent pIntent = PendingIntent.getActivity(mContext, 0, intent, 0);
-        mBuilder.setContentIntent(pIntent);
-
-        // 发送通知
-        mNotificationManager.notify(mInvitedNotifyId, mBuilder.build());
-    }
+//    public void sendInvitedNotification(MLInvitedEntity invitedEntity) {
+//
+//        String message = null;
+//        // 设置通知栏标题
+//        mBuilder.setContentTitle(mContext.getString(R.string.ml_app_name));
+//        switch (invitedEntity.getStatus()) {
+//        case BEAGREED:
+//            message = invitedEntity.getUserName() + " 同意了你的请求";
+//            break;
+//        case BEREFUSED:
+//            message = invitedEntity.getUserName() + " 拒绝了你的请求";
+//            break;
+//        case BEAPPLYFOR:
+//            message = invitedEntity.getUserName() + " 申请添加你为好友";
+//            break;
+//        case GROUPAPPLYFOR:
+//
+//            break;
+//        }
+//
+//        mBuilder.setContentText(message);
+//
+//        // 设置状态栏显示内容（这里是一闪而过的，带有上升动画）
+//        mBuilder.setTicker("有条新的请求等你处理");
+//
+//        // 设置通知栏点击意图（点击通知栏跳转到相应的页面）
+//        Intent intent = new Intent(mContext, MLMainActivity.class);
+//        PendingIntent pIntent = PendingIntent.getActivity(mContext, 0, intent, 0);
+//        mBuilder.setContentIntent(pIntent);
+//
+//        // 发送通知
+//        mNotificationManager.notify(mInvitedNotifyId, mBuilder.build());
+//    }
 
     /**
      * 发送消息通知

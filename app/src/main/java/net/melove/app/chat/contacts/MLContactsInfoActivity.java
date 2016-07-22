@@ -1,5 +1,6 @@
 package net.melove.app.chat.contacts;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -23,6 +25,7 @@ import net.melove.app.chat.application.eventbus.MLConnectionEvent;
 import net.melove.app.chat.communal.base.MLBaseActivity;
 import net.melove.app.chat.application.MLConstants;
 import net.melove.app.chat.communal.util.MLDateUtil;
+import net.melove.app.chat.communal.widget.MLImageView;
 import net.melove.app.chat.communal.widget.MLToast;
 import net.melove.app.chat.conversation.MLChatActivity;
 import net.melove.app.chat.database.MLContactsDao;
@@ -38,16 +41,33 @@ import org.greenrobot.eventbus.EventBus;
  */
 public class MLContactsInfoActivity extends MLBaseActivity {
 
+    //
+    private CollapsingToolbarLayout mCollapsingToolbarLayout;
+
+    // 界面控件
+    private Toolbar mToolbar;
+
+    private FloatingActionButton mFab;
+
     // 当前联系人的username
     private String mChatId;
     // 当前登录用户username
     private String mCurrUsername;
+    // 头像
+    private MLImageView mAvatarView;
+    // 名字
+    private TextView mUsernameView;
+    // 理由
+    private TextView mReasonView;
+    // 状态
+    private TextView mStatusView;
+    // 回复按钮
+    private Button mReplyBtn;
+    // 同意按钮
+    private Button mAgreeBtn;
+    // 拒绝按钮
+    private Button mRefuseBtn;
 
-    //
-    private CollapsingToolbarLayout mCollapsingToolbarLayout;
-    private Toolbar mToolbar;
-
-    private FloatingActionButton mFab;
 
     // 用户信息实体类
     private MLContactsEntity mContactsEntity;
@@ -124,6 +144,14 @@ public class MLContactsInfoActivity extends MLBaseActivity {
                     addContact();
                 }
                 break;
+            case R.id.ml_btn_apply_for_reply:
+                break;
+            case R.id.ml_btn_apply_for_agree:
+                agreeInvited();
+                break;
+            case R.id.ml_btn_apply_for_refuse:
+                refuseInvited();
+                break;
             default:
                 break;
             }
@@ -138,7 +166,7 @@ public class MLContactsInfoActivity extends MLBaseActivity {
         alertDialogBuilder.setTitle(R.string.ml_add_contacts);
         View view = mActivity.getLayoutInflater().inflate(R.layout.dialog_communal, null);
         TextView textView = (TextView) view.findViewById(R.id.ml_dialog_text_message);
-        textView.setText(R.string.ml_dialog_content_add_contact);
+        textView.setText(R.string.ml_dialog_content_add_contact_reason);
 
         final EditText editText = (EditText) view.findViewById(R.id.ml_dialog_edit_input);
         editText.setHint(R.string.ml_hint_input_not_null);
@@ -244,6 +272,59 @@ public class MLContactsInfoActivity extends MLBaseActivity {
         intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mChatId);
         mActivity.startActivity(intent);
         mActivity.finish();
+    }
+    /**
+     * 同意好友请求，环信的同意和拒绝好友请求 都需要异步处理，这里新建线程去调用
+     */
+    private void agreeInvited() {
+        final ProgressDialog dialog = new ProgressDialog(mActivity);
+        dialog.setMessage(mActivity.getResources().getString(R.string.ml_dialog_message_waiting));
+        dialog.show();
+
+        //        new Thread(new Runnable() {
+        //            @Override
+        //            public void run() {
+        //                try {
+        //                    EMClient.getInstance().contactManager().acceptInvitation(mInvitedEntity.getUserName());
+        //                    mInvitedEntity.setStatus(MLInvitedEntity.InvitedStatus.AGREED);
+        //                    mInvitedEntity.setTime(MLDateUtil.getCurrentMillisecond());
+        //                    MLInvitedDao.getInstance().updateInvited(mInvitedEntity);
+        //                    // 关闭对话框
+        //                    dialog.dismiss();
+        //                    // 发送Handler Manager 通知界面更新
+        //                    mHandler.sendMessage(mHandler.obtainMessage(0));
+        //                } catch (HyphenateException e) {
+        //                    e.printStackTrace();
+        //                }
+        //            }
+        //        }).start();
+
+
+    }
+
+    /**
+     * 拒绝好友请求，环信的同意和拒绝好友请求 都需要异步处理，这里新建线程去调用
+     */
+    private void refuseInvited() {
+        final ProgressDialog dialog = new ProgressDialog(mActivity);
+        dialog.setMessage(mActivity.getResources().getString(R.string.ml_dialog_message_waiting));
+        dialog.show();
+        //        new Thread(new Runnable() {
+        //            @Override
+        //            public void run() {
+        //                try {
+        //                    EMClient.getInstance().contactManager().declineInvitation(mInvitedEntity.getUserName());
+        //                    // 修改当前申请消息的状态
+        //                    mInvitedEntity.setStatus(MLInvitedEntity.InvitedStatus.REFUSED);
+        //                    mInvitedEntity.setTime(MLDateUtil.getCurrentMillisecond());
+        //                    MLInvitedDao.getInstance().updateInvited(mInvitedEntity);
+        //                    dialog.dismiss();
+        //                    mHandler.sendMessage(mHandler.obtainMessage(0));
+        //                } catch (HyphenateException e) {
+        //                    e.printStackTrace();
+        //                }
+        //            }
+        //        }).start();
     }
 
     /**

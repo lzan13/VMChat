@@ -14,7 +14,7 @@
         android:layout_margin="@dimen/ml_dimen_8">
 
         <net.melove.app.chat.communal.widget.MLImageView
-            android:id="@+id/ml_img_invited_avatar"
+            android:id="@+id/ml_img_user_avatar"
             android:layout_width="@dimen/ml_dimen_40"
             android:layout_height="@dimen/ml_dimen_40"
             android:layout_alignParentLeft="true"
@@ -33,7 +33,7 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/ml_btn_invited_agree"
+                android:id="@+id/ml_btn_apply_for_agree"
                 android:layout_width="@dimen/ml_dimen_48"
                 android:layout_height="@dimen/ml_dimen_36"
                 android:background="@drawable/ml_click_rectangle_white"
@@ -45,7 +45,7 @@
                 android:textSize="@dimen/ml_size_14"/>
 
             <TextView
-                android:id="@+id/ml_text_invited_status"
+                android:id="@+id/ml_text_apply_for_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/ml_dimen_8"
@@ -65,7 +65,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/ml_text_invited_username"
+                android:id="@+id/ml_text_user_signature"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxWidth="@dimen/ml_dimen_224"
@@ -74,7 +74,7 @@
                 android:textSize="@dimen/ml_size_14"/>
 
             <TextView
-                android:id="@+id/ml_text_invited_reason"
+                android:id="@+id/ml_text_apply_for_reason"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/ml_hint_reason"

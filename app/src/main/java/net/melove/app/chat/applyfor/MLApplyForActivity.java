@@ -1,22 +1,25 @@
-package net.melove.app.chat.invited;
+package net.melove.app.chat.applyfor;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
-import com.hyphenate.exceptions.HyphenateException;
+import com.hyphenate.chat.EMMessage;
 
 import net.melove.app.chat.R;
 import net.melove.app.chat.application.MLConstants;
 import net.melove.app.chat.application.eventbus.MLApplyForEvent;
 import net.melove.app.chat.communal.base.MLBaseActivity;
-import net.melove.app.chat.communal.util.MLDateUtil;
+import net.melove.app.chat.contacts.MLContactsInfoActivity;
 import net.melove.app.chat.conversation.MLConversationExtUtils;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -27,6 +30,9 @@ import org.greenrobot.eventbus.ThreadMode;
  * 好友申请通知界面
  */
 public class MLApplyForActivity extends MLBaseActivity {
+
+
+    private Toolbar mToolbar;
 
     // 当前会话对象，这里主要是记录申请与记录信息
     private EMConversation mConversation;
@@ -44,20 +50,30 @@ public class MLApplyForActivity extends MLBaseActivity {
 
 
         initView();
+        initToolbar();
         initListView();
 
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    /**
+     * 初始化Toolbar组件
+     */
+    private void initToolbar() {
+        mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
+        setSupportActionBar(mToolbar);
+        mToolbar.setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onFinish();
+            }
+        });
     }
 
     /**
      * 初始化界面控件等
      */
     private void initView() {
-
         mActivity = this;
 
     }
@@ -140,7 +156,7 @@ public class MLApplyForActivity extends MLBaseActivity {
             public void onItemAction(int position, int action) {
                 switch (action) {
                 case MLConstants.ML_ACTION_APPLY_FOR_CLICK:
-                    checkInvitedDetail(position);
+                    jumpUserInfo(position);
                     break;
                 case MLConstants.ML_ACTION_APPLY_FOR_AGREE:
                     agreeInvited(position);
@@ -161,12 +177,12 @@ public class MLApplyForActivity extends MLBaseActivity {
      *
      * @param position 当前选中的 Invited 位置
      */
-    private void checkInvitedDetail(int position) {
-        //        MLInvitedEntity entity = mInvitedList.get(position);
-        //        Intent intent = new Intent();
-        //        intent.setClass(mActivity, MLInvitedDetailActivity.class);
-        //        intent.putExtra(MLConstants.ML_EXTRA_INVITED_ID, entity.getInvitedId());
-        //        mActivity.startActivity(intent);
+    private void jumpUserInfo(int position) {
+        EMMessage message = mConversation.getAllMessages().get(position);
+        Intent intent = new Intent();
+        intent.setClass(mActivity, MLContactsInfoActivity.class);
+        intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, message.getStringAttribute(MLConstants.ML_ATTR_USERNAME, "null"));
+        mActivity.startActivity(intent);
     }
 
     /**
@@ -226,7 +242,7 @@ public class MLApplyForActivity extends MLBaseActivity {
     private void deleteInvited(final int position) {
         final int index = position;
         AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
-        dialog.setTitle(mActivity.getResources().getString(R.string.ml_dialog_title_invited));
+        dialog.setTitle(mActivity.getResources().getString(R.string.ml_dialog_title_apply_for));
         dialog.setMessage(mActivity.getResources().getString(R.string.ml_dialog_content_delete_invited));
         dialog.setPositiveButton(R.string.ml_btn_ok, new DialogInterface.OnClickListener() {
             @Override
@@ -268,5 +284,10 @@ public class MLApplyForActivity extends MLBaseActivity {
     @Override
     public void onStop() {
         super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

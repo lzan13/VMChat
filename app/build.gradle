@@ -13,7 +13,11 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            // 是否开启混淆
+            minifyEnabled true
+            // 打包时删除无用资源 依赖于混淆，必须和 minifyEnabled 一起使用
+            shrinkResources true
+            // 混淆文件
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -78,7 +82,7 @@ dependencies {
     /**
      *  引入各种第三方 SDK jar包，在上边 fileTree 里已经包含了libs，这里可以不用再单独添加
      */
-    compile files('libs/MiPush_SDK_Client_2_2_21.jar')
+    compile files('libs/MiPush_SDK_Client_3_0_3.jar')
     compile files('libs/hyphenatechat_3.1.4.jar')
 }
 

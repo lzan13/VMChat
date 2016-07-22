@@ -73,8 +73,8 @@ public class MLContactsAdapter extends RecyclerView.Adapter<MLContactsAdapter.Co
          */
         public ContactsViewHolder(View itemView) {
             super(itemView);
-            imageViewAvatar = (MLImageView) itemView.findViewById(R.id.ml_img_invited_avatar);
-            textViewUsername = (TextView) itemView.findViewById(R.id.ml_text_invited_username);
+            imageViewAvatar = (MLImageView) itemView.findViewById(R.id.ml_img_user_avatar);
+            textViewUsername = (TextView) itemView.findViewById(R.id.ml_text_user_signature);
 
         }
     }

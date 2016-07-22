@@ -56,13 +56,13 @@
     <string name="ml_add_contact_reason">嗨！加个好友吧 ^_^~</string>
 
     <!--Dialog-->
-    <string name="ml_dialog_title_conversation">会话操作</string>
-    <string name="ml_dialog_title_apply_for">申请操作</string>
-    <string name="ml_dialog_title_chat">Message 操作</string>
-    <string name="ml_dialog_title_invited">Invited 操作</string>
-    <string name="ml_dialog_title_conflict">其他设备登录</string>
+    <string name="ml_dialog_title_conversation">操作会话</string>
+    <string name="ml_dialog_title_apply_for">操作申请与通知</string>
+    <string name="ml_dialog_title_message">操作消息</string>
+    <string name="ml_dialog_title_conflict">账户登录冲突</string>
     <string name="ml_dialog_title_select_photo_mode">选择图片方式</string>
-    <string name="ml_dialog_content_add_contact">输入你的申请理由，让对方容易通过你的请求，也可以输入你的姓名，让对方知道你是谁，更容易通过请求</string>
+    <string name="ml_dialog_title_select_call_mode">选择通话方式</string>
+    <string name="ml_dialog_content_add_contact_reason">输入你的申请理由，让对方容易通过你的请求，也可以输入你的姓名，让对方知道你是谁，更容易通过请求</string>
     <string name="ml_dialog_content_create_conversation">演示环信不需要互为好友就能发起会话，只需要知道对方环信账户，即可跳转到聊天界面进行聊天，请输入对方的username</string>
     <string name="ml_dialog_content_delete_invited">确定要删除用户申请么</string>
     <string name="ml_dialog_message_waiting">正在处理，请稍候……</string>
