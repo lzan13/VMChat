@@ -147,6 +147,13 @@
         </activity>
         <!-- Activity 注册 end -->
 
+        <!--通话广播监听-->
+        <receiver
+            android:name=".conversation.call.MLCallReceiver"
+            android:enabled="true"
+            android:exported="true">
+        </receiver>
+
 
         <!-- 设置环信应用的appkey -->
         <meta-data
@@ -186,16 +193,44 @@
         </receiver>
         <!-- 环信sdk配置 end -->
 
+        <!--监听华为推送广播-->
+        <receiver android:name="net.melove.app.chat.conversation.MLHWPushReceiver">
+            <intent-filter>
+                <!--必须,用于接收token-->
+                <action android:name="com.huawei.android.push.intent.REGISTRATION"/>
+                <!--必须，用于接收消息-->
+                <action android:name="com.huawei.android.push.intent.RECEIVE"/>
+            </intent-filter>
+            <meta-data
+                android:name="CS_cloud_ablitity"
+                android:value="successRateAnalytics"/>
+        </receiver>
+        <!--PushSDK:PushSDK接收外部请求事件入口-->
+        <receiver
+            android:name="com.huawei.android.pushagent.PushEventReceiver"
+            android:process=":pushservice">
+            <intent-filter>
+                <action android:name="com.huawei.android.push.intent.REFRESH_PUSH_CHANNEL"/>
+                <action android:name="com.huawei.intent.action.PUSH"/>
+                <action android:name="com.huawei.intent.action.PUSH_ON"/>
+                <action android:name="com.huawei.android.push.PLUGIN"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+        <!-- PushSDK:Push服务 -->
+        <service
+            android:name="com.huawei.android.pushagent.PushService"
+            android:process=":pushservice">
+        </service>
 
         <!-- 设置多渠道打包的渠道名，ML_CHANNEL_ID 是渠道名占位符 -->
         <!-- <meta-data -->
         <!-- android:name="ML_CHANNEL_NAME" -->
         <!-- android:value="${ML_CHANNEL_ID}"/> -->
-        <receiver
-            android:name=".conversation.call.MLCallReceiver"
-            android:enabled="true"
-            android:exported="true">
-        </receiver>
 
     </application>
 

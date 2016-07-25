@@ -2,7 +2,7 @@ package net.melove.app.chat.application;
 
 /**
  * Class ${FILE_NAME}
- * <p>
+ * <p/>
  * Created by lzan13 on 2015/9/10 22:04.
  */
 public class MLConstants {
@@ -13,6 +13,9 @@ public class MLConstants {
     // 集成小米推送需要的 appid 和 appkey
     public static final String ML_MI_APP_ID = "2882303761517493144";
     public static final String ML_MI_APP_KEY = "5601749395144";
+
+    // 华为推送 APPID
+    public static final String ML_HUAWEI_APP_ID = "10598250";
 
     /**
      * 设置自己扩展的 key，包括会话对象{@link com.hyphenate.chat.EMConversation}扩展，
