@@ -7,7 +7,7 @@
     <ImageView
         android:id="@+id/ml_img_nav_top"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:src="@mipmap/bg_top"
         android:tint="@color/ml_black_26"/>

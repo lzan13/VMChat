@@ -13,7 +13,7 @@ import android.widget.EditText;
 import net.melove.app.chat.R;
 import net.melove.app.chat.application.MLConstants;
 import net.melove.app.chat.communal.base.MLBaseActivity;
-import net.melove.app.chat.contacts.MLContactsInfoActivity;
+import net.melove.app.chat.contacts.MLContacterInfoActivity;
 
 /**
  * Created by lzan13 on 2016/1/12.
@@ -86,7 +86,7 @@ public class MLSearchActivity extends MLBaseActivity {
         //                // 模拟搜索完成，跳转到用户信息页
         //                String str = mSearchView.getText().toString();
         //                Intent intent = new Intent();
-        //                intent.setClass(mActivity, MLContactsInfoActivity.class);
+        //                intent.setClass(mActivity, MLContacterInfoActivity.class);
         //                intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, str);
         //                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity);
         //                ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
@@ -104,7 +104,7 @@ public class MLSearchActivity extends MLBaseActivity {
         // 模拟搜索完成，跳转到用户信息页
         String str = mSearchView.getText().toString();
         Intent intent = new Intent();
-        intent.setClass(mActivity, MLContactsInfoActivity.class);
+        intent.setClass(mActivity, MLContacterInfoActivity.class);
         intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, str);
         ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
                 mActivity, mToolbar, getResources().getString(R.string.ml_shared_element_toolbar));

@@ -20,10 +20,10 @@ public class MLContactsAdapter extends RecyclerView.Adapter<MLContactsAdapter.Co
 
     private Context mContext;
     private LayoutInflater mInflater;
-    private List<MLContactsEntity> mContactsList;
+    private List<MLContacterEntity> mContactsList;
 
 
-    public MLContactsAdapter(Context context, List<MLContactsEntity> list) {
+    public MLContactsAdapter(Context context, List<MLContacterEntity> list) {
         mContext = context;
         mContactsList = list;
     }

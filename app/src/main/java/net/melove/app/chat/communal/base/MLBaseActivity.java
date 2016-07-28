@@ -186,11 +186,11 @@ public class MLBaseActivity extends AppCompatActivity {
         mActivity.finish();
 
         // 根据不同的系统版本选择不同的 finish 方法
-                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-                    mActivity.finish();
-                } else {
-                    mActivity.finishAfterTransition();
-                }
+        //        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+        //            mActivity.finish();
+        //        } else {
+        //            mActivity.finishAfterTransition();
+        //        }
     }
 
 

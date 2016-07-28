@@ -563,6 +563,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     private void sendMessage(final EMMessage message) {
         // 调用设置消息扩展方法
         setMessageAttribute(message);
+
         // 发送一条新消息时插入新消息的位置，这里直接用插入新消息前的消息总数来作为新消息的位置
         int position = mConversation.getAllMessages().size();
         /**
@@ -573,7 +574,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         message.setMessageStatusCallback(new EMCallBack() {
             @Override
             public void onSuccess() {
-                MLLog.i("消息发送成功 %s", message.getMsgId());
+                MLLog.i("消息发送成功 msgId %s, content %s", message.getMsgId(), message.getBody());
                 // 创建并发出一个消息事件
                 MLMessageEvent event = new MLMessageEvent();
                 event.setMessage(message);
@@ -586,6 +587,10 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 // 创建并发出一个消息事件
                 MLMessageEvent event = new MLMessageEvent();
                 event.setMessage(message);
+                // 设置消息 erorCode
+                event.setErrorCode(i);
+                // 设置消息 errorMessage
+                event.setErrorMessage(s);
                 EventBus.getDefault().post(event);
             }
 
@@ -905,16 +910,16 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     public void onEventBus(MLMessageEvent event) {
         EMMessage message = event.getMessage();
         if (message.status() == EMMessage.Status.FAIL) {
-            String error = "";
-            int errorCode = message.getError();
+            String errorMessage = event.getErrorMessage();
+            int errorCode = event.getErrorCode();
             if (errorCode == EMError.MESSAGE_INCLUDE_ILLEGAL_CONTENT) {
-                error = mActivity.getString(R.string.ml_toast_msg_have_illegal) + "-" + errorCode;
+                errorMessage = mActivity.getString(R.string.ml_toast_msg_have_illegal) + errorMessage + "-" + errorCode;
             } else if (errorCode == EMError.GROUP_PERMISSION_DENIED) {
-                error = mActivity.getString(R.string.ml_toast_msg_not_join_group) + "-" + errorCode;
+                errorMessage = mActivity.getString(R.string.ml_toast_msg_not_join_group) + errorMessage + "-" + errorCode;
             } else {
-                error = mActivity.getString(R.string.ml_toast_msg_send_faild) + "-" + errorCode;
+                errorMessage = mActivity.getString(R.string.ml_toast_msg_send_faild) + errorMessage + "-" + errorCode;
             }
-            MLToast.errorToast(error).show();
+            MLToast.errorToast(errorMessage).show();
         }
 
         // 消息发送成功，刷新当前消息状态
@@ -1318,7 +1323,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             list.add(mConversation.getLastMessage().getMsgId());
             // 清除内存中的消息，此方法不清空DB
             mConversation.clear();
-            mConversation.clearAllMessages();
+            // mConversation.clearAllMessages();
             // 加载消息到内存
             mConversation.loadMessages(list);
         }

@@ -79,9 +79,13 @@
 
     <!--自定义 AppBar 样式，这里为了让文字显示为白色，继承黑色样式的ActionBar-->
     <style name="MLTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <!--<item name="colorControlNormal">@color/ml_white_100</item>-->
-        <!--<item name="android:textColor">@color/ml_white_100</item>-->
-        <item name="android:textSize">@dimen/ml_size_18</item>
+        <!--Appbar 控制器颜色-->
+        <item name="colorControlNormal">@color/ml_white_100</item>
+        <!--Appbar 标题颜色-->
+        <item name="android:textColor">@color/ml_white_100</item>
+        <!--Appbar 标题大小-->
+        <item name="android:textSize">@dimen/ml_size_16</item>
+        <!--Appbar 标题样式-->
         <item name="android:textStyle">normal</item>
         <!--更改菜单按钮样式 此菜单直的是当 action过多显示不全，会有三个小点儿样式-->
         <!--<item name="android:actionOverflowButtonStyle">@style/MLTheme.ActionBarOverflow</item>-->
@@ -89,10 +93,13 @@
 
     <!--自定义 Toolbar 样式，这里为了让文字显示为白色，继承黑色样式的ActionBar-->
     <style name="MLTheme.ToolbarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <!--Toolbar字体颜色-->
+        <!--Toolbar 控制器颜色-->
         <item name="colorControlNormal">@color/ml_white_100</item>
-        <item name="android:textColor">@color/ml_white_87</item>
-        <item name="android:textSize">@dimen/ml_size_18</item>
+        <!--Toolbar 上文字颜色-->
+        <item name="android:textColor">@color/ml_white_100</item>
+        <!--Toolbar 文字大小-->
+        <item name="android:textSize">@dimen/ml_size_16</item>
+        <!--Toolbar 文字样式-->
         <item name="android:textStyle">normal</item>
     </style>
 

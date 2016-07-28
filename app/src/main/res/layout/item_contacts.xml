@@ -16,7 +16,7 @@
         android:layout_marginTop="@dimen/ml_dimen_4">
 
         <net.melove.app.chat.communal.widget.MLImageView
-            android:id="@+id/ml_img_contact_avatar"
+            android:id="@+id/ml_img_contacter_avatar"
             android:layout_width="@dimen/ml_dimen_40"
             android:layout_height="@dimen/ml_dimen_40"
             android:layout_centerVertical="true"

@@ -3,7 +3,6 @@ package net.melove.app.chat.application;
 import android.app.ActivityManager;
 import android.content.Context;
 
-import com.huawei.android.pushagent.PushManager;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMConnectionListener;
 import com.hyphenate.EMContactListener;
@@ -27,7 +26,7 @@ import net.melove.app.chat.communal.util.MLDateUtil;
 import net.melove.app.chat.communal.util.MLLog;
 import net.melove.app.chat.conversation.MLMessageUtils;
 import net.melove.app.chat.database.MLDBHelper;
-import net.melove.app.chat.contacts.MLContactsEntity;
+import net.melove.app.chat.contacts.MLContacterEntity;
 import net.melove.app.chat.conversation.MLConversationExtUtils;
 import net.melove.app.chat.database.MLContactsDao;
 import net.melove.app.chat.notification.MLNotifier;
@@ -67,8 +66,8 @@ public class MLEasemobHelper {
     // 环信群组变化监听
     private EMGroupChangeListener mGroupChangeListener;
 
-    // 表示是否登录成功状态，如果使用了推送，退出时需要要根据这个状态去传递参数
-    private boolean isLogined = true;
+    // 表示是是否解绑Token，一般离线状态都要设置为false
+    private boolean isUnbuildToken = true;
 
     /**
      * 单例类，用来初始化环信的sdk
@@ -123,7 +122,7 @@ public class MLEasemobHelper {
          */
         EMOptions options = new EMOptions();
         // 设置Appkey，如果配置文件已经配置，这里可以不用设置
-        // options.setAppKey("lzan13#hxsdkdemo");
+        options.setAppKey("lzan13#hxsdkdemo");
         // 设置自动登录
         options.setAutoLogin(true);
         // 设置是否按照服务器时间排序，false按照本地时间排序
@@ -218,18 +217,16 @@ public class MLEasemobHelper {
             @Override
             public void onDisconnected(final int errorCode) {
                 MLLog.d("MLEasemobHelper - onDisconnected - %d", errorCode);
+                // 在离线状态下，退出登录的时候需要设置为false，已经登录成功的状态要改为 false，这个在使用了推送功能时，调用logout需要传递
+                isUnbuildToken = false;
                 MLConnectionEvent event = new MLConnectionEvent();
                 if (errorCode == EMError.USER_LOGIN_ANOTHER_DEVICE) {
                     MLLog.d("user login another device - " + errorCode);
-                    // 被踢了，已经登录成功的状态要改为 false，这个在使用了推送功能时，调用logout需要传递
-                    isLogined = false;
                     signOut(null);
                     // 设置链接监听变化状态
                     event.setType(MLConstants.ML_CONNECTION_USER_LOGIN_OTHER_DIVERS);
                 } else if (errorCode == EMError.USER_REMOVED) {
                     MLLog.d("user be removed - " + errorCode);
-                    // 被踢了，已经登录成功的状态要改为 false，这个在使用了推送功能时，调用logout需要传递
-                    isLogined = false;
                     signOut(null);
                     // 设置链接监听变化状态
                     event.setType(MLConstants.ML_CONNECTION_USER_REMOVED);
@@ -364,10 +361,10 @@ public class MLEasemobHelper {
             @Override
             public void onContactAdded(String username) {
                 // 创建一个新的联系人对象，并保存到本地
-                MLContactsEntity contacts = new MLContactsEntity();
+                MLContacterEntity contacts = new MLContacterEntity();
                 contacts.setUserName(username);
                 /**
-                 * 调用{@link MLContactsDao#saveContacts(MLContactsEntity)} 去保存联系人，
+                 * 调用{@link MLContactsDao#saveContacts(MLContacterEntity)} 去保存联系人，
                  * 这里将{@link MLContactsDao} 封装成了单例类
                  */
                 MLContactsDao.getInstance().saveContacts(contacts);
@@ -675,12 +672,13 @@ public class MLEasemobHelper {
         resetApp();
         /**
          * 调用sdk的退出登录方法，此方法需要两个参数
-         * boolean 第一个是必须的，表示是否使用了推送，要解绑推送，如果被踢这个参数要设置为false
+         * boolean 第一个是必须的，表示要解绑Token，如果离线状态这个参数要设置为false
          * callback 可选参数，用来接收推出的登录的结果
          */
-        EMClient.getInstance().logout(isLogined, new EMCallBack() {
+        EMClient.getInstance().logout(isUnbuildToken, new EMCallBack() {
             @Override
             public void onSuccess() {
+                isUnbuildToken = true;
                 if (callback != null) {
                     callback.onSuccess();
                 }
@@ -688,6 +686,7 @@ public class MLEasemobHelper {
 
             @Override
             public void onError(int i, String s) {
+                isUnbuildToken = true;
                 if (callback != null) {
                     callback.onError(i, s);
                 }
@@ -714,7 +713,7 @@ public class MLEasemobHelper {
      *
      * @return 返回一个boolean值 表示是否登录成功过
      */
-    public boolean isLogined() {
+    public boolean isUnbuildToken() {
         return EMClient.getInstance().isLoggedInBefore();
     }
 

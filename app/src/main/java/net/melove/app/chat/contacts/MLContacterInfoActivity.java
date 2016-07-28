@@ -39,7 +39,7 @@ import org.greenrobot.eventbus.EventBus;
  * Created by lzan13 on 2015/8/29.
  * 联系人信息展示界面，用于显示联系人的一些详细信息，可以显示好友以及陌生人，如果是陌生人就显示添加好友按钮
  */
-public class MLContactsInfoActivity extends MLBaseActivity {
+public class MLContacterInfoActivity extends MLBaseActivity {
 
     //
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
@@ -70,7 +70,7 @@ public class MLContactsInfoActivity extends MLBaseActivity {
 
 
     // 用户信息实体类
-    private MLContactsEntity mContactsEntity;
+    private MLContacterEntity mContactsEntity;
 
     // 弹出对话框
     private AlertDialog.Builder alertDialogBuilder;
@@ -81,7 +81,7 @@ public class MLContactsInfoActivity extends MLBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_user_info);
+        setContentView(R.layout.activity_contacter_info);
 
         initView();
         initToolbar();
@@ -97,7 +97,7 @@ public class MLContactsInfoActivity extends MLBaseActivity {
         // 查询本地User对象
         mContactsEntity = MLContactsDao.getInstance().getContact(mChatId);
 
-        mFab = (FloatingActionButton) findViewById(R.id.ml_btn_fab_user_info);
+        mFab = (FloatingActionButton) findViewById(R.id.ml_btn_fab_contacter_info);
         mFab.setOnClickListener(viewListener);
 
         if (mChatId.equals(mCurrUsername)) {
@@ -137,19 +137,19 @@ public class MLContactsInfoActivity extends MLBaseActivity {
             case -1:
                 onFinish();
                 break;
-            case R.id.ml_btn_fab_user_info:
+            case R.id.ml_btn_fab_contacter_info:
                 if (mContactsEntity != null && mContactsEntity.getUserName() != null) {
                     startChat();
                 } else {
                     addContact();
                 }
                 break;
-            case R.id.ml_btn_apply_for_reply:
+            case R.id.ml_btn_reply_apply_for:
                 break;
-            case R.id.ml_btn_apply_for_agree:
+            case R.id.ml_btn_agree_apply_for:
                 agreeInvited();
                 break;
-            case R.id.ml_btn_apply_for_refuse:
+            case R.id.ml_btn_refuse_apply_for:
                 refuseInvited();
                 break;
             default:

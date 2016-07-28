@@ -23,7 +23,7 @@ public class MLCallReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         // 判断环信是否登录成功
-        if (!MLEasemobHelper.getInstance().isLogined()) {
+        if (!MLEasemobHelper.getInstance().isUnbuildToken()) {
             return;
         }
 

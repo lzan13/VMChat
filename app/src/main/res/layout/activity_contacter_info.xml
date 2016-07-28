@@ -12,7 +12,7 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/ml_widget_appbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/ml_dimen_192"
+        android:layout_height="@dimen/ml_dimen_224"
         android:fitsSystemWindows="true"
         android:theme="@style/MLTheme.AppBarOverlay"
         app:elevation="@dimen/ml_dimen_0">
@@ -48,12 +48,12 @@
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/MLTheme.PopupOverlay">
                 <!--头像-->
-                <net.melove.app.chat.communal.widget.MLImageView
-                    android:id="@+id/ml_img_user_avatar"
-                    android:layout_width="@dimen/ml_dimen_36"
-                    android:layout_height="@dimen/ml_dimen_36"
-                    android:src="@mipmap/ic_character_blackcat"
-                    melove:ml_shape_type="round"/>
+                <!--<net.melove.app.chat.communal.widget.MLImageView-->
+                <!--android:id="@+id/ml_img_contacter_avatar"-->
+                <!--android:layout_width="@dimen/ml_dimen_36"-->
+                <!--android:layout_height="@dimen/ml_dimen_36"-->
+                <!--android:src="@mipmap/ic_character_blackcat"-->
+                <!--melove:ml_shape_type="round"/>-->
             </android.support.v7.widget.Toolbar>
 
         </android.support.design.widget.CollapsingToolbarLayout>
@@ -85,7 +85,7 @@
 
                 <!-- 用户签名 -->
                 <TextView
-                    android:id="@+id/ml_text_user_signature"
+                    android:id="@+id/ml_text_contacter_signature"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/ml_dimen_8"
@@ -104,7 +104,7 @@
 
                 <!--回复对方-->
                 <Button
-                    android:id="@+id/ml_btn_apply_for_reply"
+                    android:id="@+id/ml_btn_reply_apply_for"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/ml_dimen_36"
                     android:layout_alignParentRight="true"
@@ -118,18 +118,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:layout_toLeftOf="@id/ml_btn_apply_for_reply"
+                    android:layout_toLeftOf="@id/ml_btn_reply_apply_for"
                     android:orientation="vertical">
                     <!--对方申请的理由-->
                     <TextView
-                        android:id="@+id/ml_text_apply_for_reason"
+                        android:id="@+id/ml_text_reason_apply_for"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/ml_test"/>
 
                     <!--当前请求的状态-->
                     <TextView
-                        android:id="@+id/ml_text_apply_for_status"
+                        android:id="@+id/ml_text_status_apply_for"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/ml_dimen_8"
@@ -145,7 +145,7 @@
                 android:orientation="horizontal">
                 <!--同意-->
                 <Button
-                    android:id="@+id/ml_btn_apply_for_agree"
+                    android:id="@+id/ml_btn_agree_apply_for"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/ml_dimen_36"
                     android:layout_marginRight="@dimen/ml_dimen_8"
@@ -155,7 +155,7 @@
                     android:textSize="@dimen/ml_size_14"/>
                 <!--拒绝-->
                 <Button
-                    android:id="@+id/ml_btn_apply_for_refuse"
+                    android:id="@+id/ml_btn_refuse_apply_for"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/ml_dimen_36"
                     android:layout_marginLeft="@dimen/ml_dimen_8"
@@ -169,7 +169,7 @@
 
     <!--悬浮按钮 设置在锚点在appbar上，可以滚动隐藏-->
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/ml_btn_fab_user_info"
+        android:id="@+id/ml_btn_fab_contacter_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/ml_dimen_16"
@@ -178,5 +178,20 @@
         app:fabSize="normal"
         app:layout_anchor="@id/ml_widget_appbar"
         app:layout_anchorGravity="bottom|end"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_anchor="@id/ml_widget_appbar"
+        app:layout_anchorGravity="bottom|center">
+
+        <net.melove.app.chat.communal.widget.MLImageView
+            android:id="@+id/ml_img_contacter_avatar"
+            android:layout_width="@dimen/ml_dimen_72"
+            android:layout_height="@dimen/ml_dimen_72"
+            android:layout_marginBottom="@dimen/ml_dimen_16"
+            android:src="@mipmap/ic_character_blackcat"
+            melove:ml_shape_type="round"/>
+    </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

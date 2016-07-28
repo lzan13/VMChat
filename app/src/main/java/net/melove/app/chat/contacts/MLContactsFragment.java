@@ -32,7 +32,7 @@ public class MLContactsFragment extends MLBaseFragment {
     private MLContactsAdapter mContactsAdapter;
     private View mHeadView;
 
-    private List<MLContactsEntity> mContactsList = new ArrayList<MLContactsEntity>();
+    private List<MLContacterEntity> mContactsList = new ArrayList<MLContacterEntity>();
 
     // 应用内广播管理器，为了完全这里使用局域广播
     private LocalBroadcastManager mLocalBroadcastManager;
@@ -137,9 +137,9 @@ public class MLContactsFragment extends MLBaseFragment {
      *
      * @return 返回加载的联系人集合
      */
-    private List<MLContactsEntity> loadUserList() {
+    private List<MLContacterEntity> loadUserList() {
         // TODO 这里暂时只进行了简单的获取用户列表，后期需要实现排序
-        List<MLContactsEntity> list = MLContactsDao.getInstance().getContactList();
+        List<MLContacterEntity> list = MLContactsDao.getInstance().getContactList();
         return list;
     }
 

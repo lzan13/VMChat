@@ -41,7 +41,7 @@
                     android:text="@string/ml_app_name"/>
 
                 <ImageButton
-                    android:id="@+id/ml_img_"
+                    android:id="@+id/ml_img_exit_full_screen"
                     android:layout_width="@dimen/ml_dimen_48"
                     android:layout_height="@dimen/ml_dimen_48"
                     android:layout_alignParentRight="true"

@@ -10,6 +10,7 @@ import android.widget.Button;
 
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMGroupManager;
 import com.hyphenate.chat.EMImageMessageBody;
@@ -82,7 +83,7 @@ public class MLTestFragment extends MLBaseFragment {
     }
 
     private void init() {
-        String[] btns = {"登出", "导入消息", "更新消息", "群消息", "创建群组"};
+        String[] btns = {"登出", "Insert Message", "更新消息", "群消息", "创建群组"};
         viewGroup = (MLViewGroup) getView().findViewById(R.id.ml_view_custom_viewgroup);
         for (int i = 0; i < btns.length; i++) {
             Button btn = new Button(mActivity);
@@ -104,7 +105,7 @@ public class MLTestFragment extends MLBaseFragment {
                 signOut();
                 break;
             case 101:
-                importMessage();
+                insertMessage();
                 break;
             case 102:
                 updateMessage();
@@ -209,8 +210,7 @@ public class MLTestFragment extends MLBaseFragment {
     /**
      * 测试保存一条消息到本地
      */
-    private void importMessage() {
-        imoprtMessages();
+    private void insertMessage() {
         //        EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
         //        EMTextMessageBody textMessageBody = new EMTextMessageBody("导入消息" + MLDateUtil.getCurrentDate());
         //        message.addBody(textMessageBody);
@@ -221,13 +221,14 @@ public class MLTestFragment extends MLBaseFragment {
         //        EMClient.getInstance().chatManager().importMessages(list);
 
         // 测试插入一条消息
-        //                EMMessage textMessage = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
-        //        textMessage.setFrom(mChatId);
-        //        textMessage.setReceipt(mCurrUsername);
-        //        textMessage.setStatus(EMMessage.Status.SUCCESS);
-        //        EMTextMessageBody body = new EMTextMessageBody("test insert message");
-        //        textMessage.addBody(body);
-        //        mConversation.insertMessage(textMessage);
+        EMConversation conversation = EMClient.getInstance().chatManager().getConversation("lz1", EMConversation.EMConversationType.Chat, true);
+        EMMessage textMessage = EMMessage.createSendMessage(EMMessage.Type.TXT);
+        textMessage.setFrom("lz0");
+        textMessage.setReceipt("lz1");
+        textMessage.setStatus(EMMessage.Status.SUCCESS);
+        EMTextMessageBody body = new EMTextMessageBody("test insert message");
+        textMessage.addBody(body);
+        conversation.insertMessage(textMessage);
 
     }
 

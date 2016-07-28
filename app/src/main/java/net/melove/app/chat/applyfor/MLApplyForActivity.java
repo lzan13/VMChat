@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,7 +18,7 @@ import net.melove.app.chat.R;
 import net.melove.app.chat.application.MLConstants;
 import net.melove.app.chat.application.eventbus.MLApplyForEvent;
 import net.melove.app.chat.communal.base.MLBaseActivity;
-import net.melove.app.chat.contacts.MLContactsInfoActivity;
+import net.melove.app.chat.contacts.MLContacterInfoActivity;
 import net.melove.app.chat.conversation.MLConversationExtUtils;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -180,7 +179,7 @@ public class MLApplyForActivity extends MLBaseActivity {
     private void jumpUserInfo(int position) {
         EMMessage message = mConversation.getAllMessages().get(position);
         Intent intent = new Intent();
-        intent.setClass(mActivity, MLContactsInfoActivity.class);
+        intent.setClass(mActivity, MLContacterInfoActivity.class);
         intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, message.getStringAttribute(MLConstants.ML_ATTR_USERNAME, "null"));
         mActivity.startActivity(intent);
     }
