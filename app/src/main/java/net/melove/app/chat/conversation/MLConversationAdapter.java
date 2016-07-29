@@ -16,11 +16,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
+import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 
 import net.melove.app.chat.R;
+import net.melove.app.chat.application.MLConstants;
 import net.melove.app.chat.communal.util.MLDateUtil;
 import net.melove.app.chat.communal.util.MLLog;
 import net.melove.app.chat.communal.widget.MLImageView;
@@ -140,7 +143,18 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
             holder.contentView.setText(content);
         }
         // 设置当前会话联系人名称
-        holder.usernameView.setText(conversation.getUserName());
+        if (conversation.getType() == EMConversation.EMConversationType.Chat) {
+            // 这里有一些特殊的会话，因为是使用会话保存的申请与通知，处理下会话的标题
+            if (conversation.getUserName().equals(MLConstants.ML_CONVERSATION_ID_APPLY_FOR)) {
+                holder.titleView.setText("申请与通知");
+            } else {
+                holder.titleView.setText(conversation.getUserName());
+            }
+        } else if (conversation.getType() == EMConversation.EMConversationType.GroupChat) {
+            // 如果是群聊设置群组名称
+            EMGroup group = EMClient.getInstance().groupManager().getGroup(conversation.getUserName());
+            holder.titleView.setText(group.getGroupName());
+        }
 
         // 设置当前会话未读数
         int unreadCount = conversation.getUnreadMsgCount();
@@ -240,7 +254,7 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
      */
     protected static class ConversationViewHolder extends RecyclerView.ViewHolder {
         public MLImageView avatarView;
-        public TextView usernameView;
+        public TextView titleView;
         public TextView contentView;
         public TextView timeView;
         public ImageView pushpinView;
@@ -254,7 +268,7 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
         public ConversationViewHolder(View itemView) {
             super(itemView);
             avatarView = (MLImageView) itemView.findViewById(R.id.ml_img_conversation_avatar);
-            usernameView = (TextView) itemView.findViewById(R.id.ml_text_conversation_username);
+            titleView = (TextView) itemView.findViewById(R.id.ml_text_conversation_title);
             contentView = (TextView) itemView.findViewById(R.id.ml_text_conversation_content);
             timeView = (TextView) itemView.findViewById(R.id.ml_text_conversation_time);
             pushpinView = (ImageView) itemView.findViewById(R.id.ml_img_conversation_pushpin);

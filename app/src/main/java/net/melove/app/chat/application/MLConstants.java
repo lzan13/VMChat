@@ -95,7 +95,7 @@ public class MLConstants {
     public static final int ML_REQUEST_CODE_CONTACTS = 0x07;
 
     /**
-     * 自定义会话界面消息列表项的点击与长按 Action
+     * 自定义聊天界面消息列表项的点击与长按 Action
      */
     public static final int ML_ACTION_MSG_CLICK = 0X00;
     public static final int ML_ACTION_MSG_RESEND = 0X01;
@@ -105,7 +105,7 @@ public class MLConstants {
     public static final int ML_ACTION_MSG_RECALL = 0X13;
 
     /**
-     * 自定义申请与请求列表项点击与长按的 Action
+     * 自定义申请与通知列表项点击与长按的 Action
      */
     public static final int ML_ACTION_APPLY_FOR_CLICK = 0X00;
     public static final int ML_ACTION_APPLY_FOR_AGREE = 0X10;

@@ -34,7 +34,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/ml_text_conversation_username"
+                android:id="@+id/ml_text_conversation_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxWidth="@dimen/ml_dimen_224"

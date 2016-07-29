@@ -18,6 +18,7 @@ import com.hyphenate.chat.EMConversation;
 import net.melove.app.chat.R;
 import net.melove.app.chat.application.MLConstants;
 import net.melove.app.chat.application.eventbus.MLMessageEvent;
+import net.melove.app.chat.applyfor.MLApplyForActivity;
 import net.melove.app.chat.communal.base.MLBaseFragment;
 
 import org.greenrobot.eventbus.EventBus;
@@ -175,9 +176,14 @@ public class MLConversationsFragment extends MLBaseFragment {
              */
             @Override
             public void onItemClick(int position) {
+                EMConversation conversation = mConversations.get(position);
                 Intent intent = new Intent();
-                intent.setClass(mActivity, MLChatActivity.class);
-                intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mConversations.get(position).getUserName());
+                if (conversation.getUserName().equals(MLConstants.ML_CONVERSATION_ID_APPLY_FOR)) {
+                    intent.setClass(mActivity, MLApplyForActivity.class);
+                } else {
+                    intent.setClass(mActivity, MLChatActivity.class);
+                    intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mConversations.get(position).getUserName());
+                }
                 mActivity.startActivity(intent);
             }
 

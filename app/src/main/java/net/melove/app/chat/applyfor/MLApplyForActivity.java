@@ -59,6 +59,7 @@ public class MLApplyForActivity extends MLBaseActivity {
      */
     private void initToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
+        mToolbar.setTitle(R.string.ml_apply_for);
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
