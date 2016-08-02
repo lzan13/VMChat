@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -24,6 +25,7 @@ import com.hyphenate.chat.EMTextMessageBody;
 
 import net.melove.app.chat.R;
 import net.melove.app.chat.application.MLConstants;
+import net.melove.app.chat.communal.base.MLBaseActivity;
 import net.melove.app.chat.communal.util.MLDateUtil;
 import net.melove.app.chat.communal.util.MLLog;
 import net.melove.app.chat.communal.widget.MLImageView;
@@ -69,7 +71,6 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
         return viewHolder;
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
     @Override
     public void onBindViewHolder(ConversationViewHolder holder, final int position) {
         MLLog.d("MLConversationAdapter onBindViewHolder - %d", position);
@@ -80,18 +81,24 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
          * 这里改为通过给 EMConversation 对象添加了一个时间扩展，这样可以避免在会话没有消息时，无法显示时间的问题
          * 调用{@link MLConversationExtUtils#getConversationLastTime(EMConversation)}获取扩展里的时间
          */
-        String time = MLDateUtil.getRelativeTime(MLConversationExtUtils.getConversationLastTime(conversation));
-        holder.timeView.setText(time);
+        long timestamp = 0L;
+        if (conversation.getAllMessages().size() == 0) {
+            timestamp = MLConversationExtUtils.getConversationLastTime(conversation);
+        } else {
+            timestamp = conversation.getLastMessage().getMsgTime();
+        }
+        // 设置时间
+        holder.timeView.setText(MLDateUtil.getRelativeTime(timestamp));
 
-        String content = "";
         /**
          * 根据当前 conversation 判断会话列表项要显示的内容
          * 判断的项目有两项：
          *  当前会话在本地是否有聊天记录，
          *  当前会话是否有草稿，
          */
-        String draft = MLConversationExtUtils.getConversationDraft(conversation);
+        String content = "";
         String msgPrefix = "";
+        String draft = MLConversationExtUtils.getConversationDraft(conversation);
         if (!TextUtils.isEmpty(draft)) {
             // 表示草稿的前缀
             msgPrefix = "[" + mContext.getString(R.string.ml_hint_msg_draft) + "]";
@@ -131,12 +138,12 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
         // 根据不同的类型展示不同样式的消息
         if (!TextUtils.isEmpty(draft)) {
             Spannable spannable = new SpannableString(content);
-            spannable.setSpan(new ForegroundColorSpan(mContext.getColor(R.color.ml_red_87)),
+            spannable.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.ml_red_87)),
                     0, msgPrefix.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             holder.contentView.setText(spannable);
         } else if (conversation.getAllMsgCount() > 0 && conversation.getLastMessage().status() == EMMessage.Status.FAIL) {
             Spannable spannable = new SpannableString(content);
-            spannable.setSpan(new ForegroundColorSpan(mContext.getColor(R.color.ml_red_87)),
+            spannable.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.ml_red_87)),
                     0, msgPrefix.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             holder.contentView.setText(spannable);
         } else {
@@ -146,7 +153,7 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
         if (conversation.getType() == EMConversation.EMConversationType.Chat) {
             // 这里有一些特殊的会话，因为是使用会话保存的申请与通知，处理下会话的标题
             if (conversation.getUserName().equals(MLConstants.ML_CONVERSATION_ID_APPLY_FOR)) {
-                holder.titleView.setText("申请与通知");
+                holder.titleView.setText(R.string.ml_apply_for);
             } else {
                 holder.titleView.setText(conversation.getUserName());
             }

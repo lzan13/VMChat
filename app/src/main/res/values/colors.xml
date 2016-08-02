@@ -58,6 +58,11 @@
     <color name="ml_blue_54">#892384fe</color>
     <color name="ml_blue_26">#422384fe</color>
 
+    <!--蓝色-->
+    <color name="ml_green_100">#ff039e00</color>
+    <color name="ml_green_87">#dd039e00</color>
+    <color name="ml_green_54">#89039e00</color>
+    <color name="ml_green_26">#42039e00</color>
 
     <!--TabLayout 颜色-->
     <color name="ml_tab_indicator">#dde62f17</color>

@@ -25,7 +25,7 @@
         <item name="android:windowAnimationStyle">@style/AnimSlide</item>
 
         <!--设置 Dialog 样式 在4.x上会导致ProgressDialog有双重背景，暂时取消设置-->
-        <item name="android:dialogTheme">@style/MLTheme.DialogOverlay</item>
+        <!--<item name="android:dialogTheme">@style/MLTheme.DialogOverlay</item>-->
 
     </style>
 
@@ -36,7 +36,7 @@
     </style>
 
     <!--设置 Activity 透明主题-->
-    <style name="MLTheme.Transparent" parent="MLTheme.Base">
+    <style name="MLTheme.Call" parent="MLTheme.Base">
         <item name="android:windowAnimationStyle">@style/AnimFade</item>
         <item name="android:windowBackground">@color/ml_black_26</item>
         <item name="android:windowIsTranslucent">true</item>

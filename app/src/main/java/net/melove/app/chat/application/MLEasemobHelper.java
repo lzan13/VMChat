@@ -9,6 +9,7 @@ import com.hyphenate.EMContactListener;
 import com.hyphenate.EMError;
 import com.hyphenate.EMGroupChangeListener;
 import com.hyphenate.EMMessageListener;
+import com.hyphenate.chat.EMCallStateChangeListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMConversation;
@@ -65,6 +66,8 @@ public class MLEasemobHelper {
     private EMConnectionListener mConnectionListener;
     // 环信群组变化监听
     private EMGroupChangeListener mGroupChangeListener;
+    // 通话状态监听
+    private EMCallStateChangeListener callStateListener;
 
     // 表示是是否解绑Token，一般离线状态都要设置为false
     private boolean isUnbuildToken = true;
@@ -115,6 +118,22 @@ public class MLEasemobHelper {
         }
         mContext = context;
 
+        // 调用初始化方法初始化sdk
+        EMClient.getInstance().init(mContext, initOptions());
+
+        // 设置开启debug模式
+        EMClient.getInstance().setDebugMode(true);
+
+        // 初始化全局监听
+        initGlobalListener();
+
+        // 初始化完成
+        isInit = true;
+        MLLog.d("------- init easemob end --------------");
+        return isInit;
+    }
+
+    private EMOptions initOptions() {
         /**
          * SDK初始化的一些配置
          * 关于 EMOptions 可以参考官方的 API 文档
@@ -155,22 +174,8 @@ public class MLEasemobHelper {
 
         // 注册华为推送
         // PushManager.requestToken(mContext);
-
-        // 调用初始化方法初始化sdk
-        EMClient.getInstance().init(mContext, options);
-
-        // 设置开启debug模式
-        EMClient.getInstance().setDebugMode(true);
-
-        // 初始化全局监听
-        initGlobalListener();
-
-        // 初始化完成
-        isInit = true;
-        MLLog.d("------- init easemob end --------------");
-        return isInit;
+        return options;
     }
-
 
     /**
      * 初始化环信的一些监听
@@ -186,6 +191,56 @@ public class MLEasemobHelper {
         // 设置全局的群组变化监听
         setGroupChangeListener();
         MLLog.d("------- listener end ----------------");
+    }
+
+    /**
+     * 设置通话状态监听，监听通话状态，处理界面显示
+     */
+    public void initCallStateChangeListener() {
+        if (callStateListener == null) {
+            callStateListener = new EMCallStateChangeListener() {
+                @Override
+                public void onCallStateChanged(CallState callState, final CallError callError) {
+                    switch (callState) {
+                    case CONNECTING: // 正在连接对方
+                        MLLog.i("正在连接对方");
+                        break;
+                    case CONNECTED: // 双方已经建立连接
+                        MLLog.i("双方已经建立连接");
+                        break;
+                    case ACCEPTED: // 电话接通成功
+                        MLLog.i("电话接通成功");
+                        break;
+                    case DISCONNNECTED: // 电话断了
+                        MLLog.i("电话断了" + callError);
+                        break;
+                    case NETWORK_UNSTABLE:
+                        if (callError == EMCallStateChangeListener.CallError.ERROR_NO_DATA) {
+                            MLLog.i("没有通话数据" + callError);
+                        } else {
+                            MLLog.i("网络不稳定" + callError);
+                        }
+                        break;
+                    case NETWORK_NORMAL:
+                        MLLog.i("网络正常");
+                        break;
+                    default:
+                        break;
+                    }
+                }
+            };
+            EMClient.getInstance().callManager().addCallStateChangeListener(callStateListener);
+        }
+    }
+
+    /**
+     * 删除通话状态监听
+     */
+    public void removeCallStateChangeListener() {
+        if (callStateListener != null) {
+            EMClient.getInstance().callManager().removeCallStateChangeListener(callStateListener);
+            callStateListener = null;
+        }
     }
 
     /**
@@ -254,27 +309,18 @@ public class MLEasemobHelper {
              * 不用过滤掉空会话，并且能显示会话时间
              * {@link MLConversationExtUtils#setConversationLastTime(EMConversation)}
              *
-             * @param list 收到的新消息集合 TODO 2016-4-15 19:35 经测试不论是离线还是在线list大小都是 1
+             * @param list 收到的新消息集合，离线和在线都是走这个监听
              */
             @Override
             public void onMessageReceived(List<EMMessage> list) {
-                EMConversation conversation = null;
                 // 判断当前活动界面是不是聊天界面，如果是，全局不处理消息
                 if (MLEasemobHelper.getInstance().getActivityList().size() > 0) {
                     if (MLEasemobHelper.getInstance().getTopActivity().getClass().getSimpleName().equals("MLChatActivity")) {
                         return;
                     }
                 }
+                // 遍历消息集合
                 for (EMMessage message : list) {
-                    // 根据消息类型来获取回话对象
-                    if (message.getChatType() == EMMessage.ChatType.Chat) {
-                        conversation = EMClient.getInstance().chatManager().getConversation(message.getFrom());
-                    } else {
-                        conversation = EMClient.getInstance().chatManager().getConversation(message.getTo());
-                    }
-                    // 设置会话的最后时间
-                    MLConversationExtUtils.setConversationLastTime(conversation);
-
                     // 使用 EventBus 发布消息，可以被订阅此类型消息的订阅者监听到
                     MLMessageEvent event = new MLMessageEvent();
                     event.setMessage(message);
@@ -713,7 +759,7 @@ public class MLEasemobHelper {
      *
      * @return 返回一个boolean值 表示是否登录成功过
      */
-    public boolean isUnbuildToken() {
+    public boolean isLoginedInBefore() {
         return EMClient.getInstance().isLoggedInBefore();
     }
 

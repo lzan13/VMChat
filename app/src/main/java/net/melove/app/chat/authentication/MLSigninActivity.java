@@ -60,13 +60,15 @@ public class MLSigninActivity extends MLBaseActivity {
 
 
     /**
-     * 界面ＵＩ初始化方法，一般是为了先通过 findViewById 实例化控件
+     * 界面UI初始化方法，一般是为了先通过 findViewById 实例化控件
      */
     private void initView() {
         mActivity = this;
         mRootView = findViewById(R.id.ml_layout_coordinator);
 
         mUsername = (String) MLSPUtil.get(mActivity, MLConstants.ML_SHARED_USERNAME, "");
+
+        // 初始化界面控件
         mUsernameView = (EditText) findViewById(R.id.ml_edit_sign_in_username);
         mPasswordView = (EditText) findViewById(R.id.ml_edit_sign_in_password);
         mUsernameView.setText(mUsername);
@@ -75,7 +77,7 @@ public class MLSigninActivity extends MLBaseActivity {
         mSigninBtn = findViewById(R.id.ml_btn_sign_in);
         mSignupBtn = findViewById(R.id.ml_btn_sign_up);
         mForgetBtn = findViewById(R.id.ml_btn_forget_password);
-
+        // 设置空间点击监听
         mSigninBtn.setOnClickListener(viewListener);
         mSignupBtn.setOnClickListener(viewListener);
         mForgetBtn.setOnClickListener(viewListener);
@@ -151,6 +153,7 @@ public class MLSigninActivity extends MLBaseActivity {
         }
 
         if (cancel) {
+            // 输入框获取焦点
             focusView.requestFocus();
         } else {
             signin();

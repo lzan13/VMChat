@@ -12,8 +12,6 @@ import net.melove.app.chat.application.MLEasemobHelper;
  * 通话呼叫监听广播实现，用来监听其他账户对自己的呼叫
  */
 public class MLCallReceiver extends BroadcastReceiver {
-    private String EXTRA_FROM = "from";
-    private String EXTRA_TYPE = "type";
     private String TYPE_VIDEO = "video";
     private String TYPE_VOICE = "voice";
 
@@ -23,14 +21,14 @@ public class MLCallReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         // 判断环信是否登录成功
-        if (!MLEasemobHelper.getInstance().isUnbuildToken()) {
+        if (!MLEasemobHelper.getInstance().isLoginedInBefore()) {
             return;
         }
 
         // 呼叫方的usernmae
-        String callFrom = intent.getStringExtra(EXTRA_FROM);
+        String callFrom = intent.getStringExtra(MLConstants.ML_EXTRA_FROM);
         // 呼叫类型，有语音和视频两种
-        String callType = intent.getStringExtra(EXTRA_TYPE);
+        String callType = intent.getStringExtra(MLConstants.ML_EXTRA_TYPE);
 
         // 创建界面跳转 intent
         Intent callIntent = new Intent();

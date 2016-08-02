@@ -122,13 +122,13 @@
         <activity
             android:name=".conversation.call.MLVideoCallActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/MLTheme.Transparent"
+            android:theme="@style/MLTheme.Call"
             android:windowSoftInputMode="adjustNothing|stateAlwaysHidden"/>
         <!--语音通话界面-->
         <activity
             android:name=".conversation.call.MLVoiceCallActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/MLTheme.Transparent"
+            android:theme="@style/MLTheme.Call"
             android:windowSoftInputMode="adjustNothing|stateAlwaysHidden"/>
         <!-- 搜索界面 -->
         <activity

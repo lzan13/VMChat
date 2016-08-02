@@ -2,7 +2,7 @@ package net.melove.app.chat.application;
 
 /**
  * Class ${FILE_NAME}
- * <p/>
+ * <p>
  * Created by lzan13 on 2015/9/10 22:04.
  */
 public class MLConstants {
@@ -62,6 +62,10 @@ public class MLConstants {
     // 界面跳转传递 username/groupid 参数的 key
     public static final String ML_EXTRA_CHAT_ID = "ml_chat_id";
     public static final String ML_EXTRA_IS_COMING_CALL = "ml_is_coming_call";
+
+    // 通话监听的key
+    public static final String ML_EXTRA_FROM = "from";
+    public static final String ML_EXTRA_TYPE = "type";
 
 
     // 定义好友申请与通知的 Conversation Id

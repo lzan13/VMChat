@@ -76,7 +76,7 @@ public class MLMainActivity extends MLBaseActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // 判断当前是否已经登录
-        if (MLEasemobHelper.getInstance().isUnbuildToken()) {
+        if (MLEasemobHelper.getInstance().isLoginedInBefore()) {
             // 获取当前系统时间毫秒数
             long start = System.currentTimeMillis();
             // 加载群组到内存
@@ -465,7 +465,7 @@ public class MLMainActivity extends MLBaseActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        if (!MLEasemobHelper.getInstance().isUnbuildToken()) {
+        if (!MLEasemobHelper.getInstance().isLoginedInBefore()) {
             // 跳转到登录界面
             Intent intent = new Intent(this, MLSigninActivity.class);
             superJump(intent);

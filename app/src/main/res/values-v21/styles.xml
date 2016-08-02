@@ -45,8 +45,11 @@
         <!--<item name="android:colorButtonNormal">@color/ml_red_54</item>-->
     </style>
 
-    <style name="MLTheme.Transparent" parent="MLTheme.Base">
-
+    <style name="MLTheme.Call" parent="MLTheme.Base">
+        <!-- 默认主要颜色，一般是 Toolbar 等颜色 -->
+        <item name="android:colorPrimary">@color/ml_transparent</item>
+        <!-- 深一些的主要色，一般是状态栏等颜色 -->
+        <item name="android:colorPrimaryDark">@color/ml_transparent</item>
         <!--设置状态栏为透明-->
         <item name="android:statusBarColor">@color/ml_transparent</item>
         <!--设置导航栏半透明效果-->
