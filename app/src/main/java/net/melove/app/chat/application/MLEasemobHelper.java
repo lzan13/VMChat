@@ -18,6 +18,7 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMOptions;
 import com.hyphenate.chat.EMTextMessageBody;
 
+import net.melove.app.chat.application.eventbus.MLCallEvent;
 import net.melove.app.chat.application.eventbus.MLConnectionEvent;
 import net.melove.app.chat.application.eventbus.MLContactsEvent;
 import net.melove.app.chat.application.eventbus.MLApplyForEvent;
@@ -170,15 +171,19 @@ public class MLEasemobHelper {
         // options.setMipushConfig(MLConstants.ML_MI_APP_ID, MLConstants.ML_MI_APP_KEY);
 
         // 设置华为推送appid
-        options.setHuaweiPushAppId(MLConstants.ML_HUAWEI_APP_ID);
+        // options.setHuaweiPushAppId(MLConstants.ML_HUAWEI_APP_ID);
 
-        // 注册华为推送
+        // 调用华为官方的注册华为推送 TODO 测试用
         // PushManager.requestToken(mContext);
         return options;
     }
 
     /**
-     * 初始化环信的一些监听
+     * 初始化全局监听，其中包括：
+     * 连接监听 {@link #setConnectionListener()}
+     * 消息监听 {@link #setMessageListener()}
+     * 联系人监听 {@link #setContactListener()}
+     * 群组监听 {@link #setGroupChangeListener()}
      */
     public void initGlobalListener() {
         MLLog.d("------- listener start --------------");
@@ -200,19 +205,39 @@ public class MLEasemobHelper {
         if (callStateListener == null) {
             callStateListener = new EMCallStateChangeListener() {
                 @Override
-                public void onCallStateChanged(CallState callState, final CallError callError) {
+                public void onCallStateChanged(CallState callState, CallError callError) {
+
+                    MLCallEvent event = new MLCallEvent();
+                    event.setCallState(callState);
+                    event.setCallError(callError);
+
                     switch (callState) {
-                    case CONNECTING: // 正在连接对方
-                        MLLog.i("正在连接对方");
+                    case CONNECTING: // 正在呼叫对方
+                        MLLog.i("正在呼叫对方" + callError);
                         break;
-                    case CONNECTED: // 双方已经建立连接
-                        MLLog.i("双方已经建立连接");
+                    case CONNECTED: // 正在等待对方接受呼叫申请（对方申请与你进行通话）
+                        MLLog.i("正在等待对方接受呼叫申请" + callError);
                         break;
-                    case ACCEPTED: // 电话接通成功
-                        MLLog.i("电话接通成功");
+                    case ACCEPTED: // 通话已接通
+                        MLLog.i("通话已接通");
                         break;
-                    case DISCONNNECTED: // 电话断了
-                        MLLog.i("电话断了" + callError);
+                    case DISCONNNECTED: // 通话已中断
+                        MLLog.i("通话已中断" + callError);
+                        if (callError == CallError.ERROR_INAVAILABLE) {
+                            MLLog.i("对方不在线" + callError);
+                        } else if (callError == CallError.ERROR_BUSY) {
+                            MLLog.i("对方正在通话中" + callError);
+                        } else if (callError == CallError.REJECTED) {
+                            MLLog.i("对方已拒绝" + callError);
+                        } else if (callError == CallError.ERROR_NORESPONSE) {
+                            MLLog.i("对方未接听" + callError);
+                        } else if (callError == CallError.ERROR_TRANSPORT) {
+                            MLLog.i("连接建立失败，等下再呼叫吧" + callError);
+                        } else if (callError == CallError.ERROR_LOCAL_VERSION_SMALLER || callError == CallError.ERROR_PEER_VERSION_SMALLER) {
+                            MLLog.i("双方通讯协议不同" + callError);
+                        } else {
+                            MLLog.i("通话已结束，时长：%s，error %s", "10:35", callError);
+                        }
                         break;
                     case NETWORK_UNSTABLE:
                         if (callError == EMCallStateChangeListener.CallError.ERROR_NO_DATA) {
@@ -223,6 +248,18 @@ public class MLEasemobHelper {
                         break;
                     case NETWORK_NORMAL:
                         MLLog.i("网络正常");
+                        break;
+                    case VIDEO_PAUSE:
+                        MLLog.i("视频传输已暂停");
+                        break;
+                    case VIDEO_RESUME:
+                        MLLog.i("视频传输已恢复");
+                        break;
+                    case VOICE_PAUSE:
+                        MLLog.i("语音传输已暂停");
+                        break;
+                    case VOICE_RESUME:
+                        MLLog.i("语音传输已恢复");
                         break;
                     default:
                         break;

@@ -177,7 +177,6 @@ public class MLSigninActivity extends MLBaseActivity {
              */
             @Override
             public void onSuccess() {
-                mDialog.dismiss();
 
                 // 登录成功，把用户名保存在本地（可以不保存，根据自己的需求）
                 MLSPUtil.put(mActivity, MLConstants.ML_SHARED_USERNAME, mUsername);
@@ -187,8 +186,13 @@ public class MLSigninActivity extends MLBaseActivity {
                 // 加载所有群组到内存
                 EMClient.getInstance().groupManager().loadAllGroups();
 
+                // 关闭登录进度弹出框
+                mDialog.dismiss();
+
+                // 登录成功跳转到主界面
                 Intent intent = new Intent(mActivity, MLMainActivity.class);
                 superJump(intent);
+
                 // 根据不同的系统版本选择不同的 finish 方法
                 onFinish();
             }
@@ -213,45 +217,45 @@ public class MLSigninActivity extends MLBaseActivity {
                         switch (i) {
                         // 网络异常 2
                         case EMError.NETWORK_ERROR:
-                            error = res.getString(R.string.ml_error_network_error) + "-" + i;
+                            error = res.getString(R.string.ml_error_network_error);
                             break;
                         // 无效的用户名 101
                         case EMError.INVALID_USER_NAME:
-                            error = res.getString(R.string.ml_error_invalid_user_name) + "-" + i;
+                            error = res.getString(R.string.ml_error_invalid_user_name);
                             break;
                         // 无效的密码 102
                         case EMError.INVALID_PASSWORD:
-                            error = res.getString(R.string.ml_error_invalid_password) + "-" + i;
+                            error = res.getString(R.string.ml_error_invalid_password);
                             break;
                         // 用户认证失败，用户名或密码错误 202
                         case EMError.USER_AUTHENTICATION_FAILED:
-                            error = res.getString(R.string.ml_error_user_authentication_failed) + "-" + i;
+                            error = res.getString(R.string.ml_error_user_authentication_failed);
                             break;
                         // 用户不存在 204
                         case EMError.USER_NOT_FOUND:
-                            error = res.getString(R.string.ml_error_user_not_found) + "-" + i;
+                            error = res.getString(R.string.ml_error_user_not_found);
                             break;
                         // 无法访问到服务器 300
                         case EMError.SERVER_NOT_REACHABLE:
-                            error = res.getString(R.string.ml_error_server_not_reachable) + "-" + i;
+                            error = res.getString(R.string.ml_error_server_not_reachable);
                             break;
                         // 等待服务器响应超时 301
                         case EMError.SERVER_TIMEOUT:
-                            error = res.getString(R.string.ml_error_server_timeout) + "-" + i;
+                            error = res.getString(R.string.ml_error_server_timeout);
                             break;
                         // 服务器繁忙 302
                         case EMError.SERVER_BUSY:
-                            error = res.getString(R.string.ml_error_server_busy) + "-" + i;
+                            error = res.getString(R.string.ml_error_server_busy);
                             break;
                         // 未知 Server 异常 303
                         case EMError.SERVER_UNKNOWN_ERROR:
-                            error = res.getString(R.string.ml_error_server_unknown_error) + "-" + i;
+                            error = res.getString(R.string.ml_error_server_unknown_error);
                             break;
                         default:
-                            error = res.getString(R.string.ml_sign_in_failed) + "-" + i;
+                            error = res.getString(R.string.ml_sign_in_failed);
                             break;
                         }
-                        MLToast.errorToast(error).show();
+                        MLToast.errorToast(error + "-" + i + "-" + s).show();
                     }
                 });
             }
@@ -262,7 +266,6 @@ public class MLSigninActivity extends MLBaseActivity {
             }
         });
     }
-
 
     /**
      * 找回密码触发方法
@@ -276,5 +279,4 @@ public class MLSigninActivity extends MLBaseActivity {
         super.onDestroy();
     }
 }
-
-
+ 

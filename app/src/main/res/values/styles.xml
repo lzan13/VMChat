@@ -124,6 +124,7 @@
     </style>
 
 
+    <!--自定义弹出框样式-->
     <style name="MLTheme.Light.Dialog" parent="Theme.AppCompat.Dialog">
         <item name="colorAccent">@color/ml_orange_87</item>
         <item name="android:textColorPrimary">@color/ml_blue_87</item>

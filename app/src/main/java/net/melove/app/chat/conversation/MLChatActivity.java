@@ -873,7 +873,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 // 设置被呼叫放的username
                 intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mChatId);
                 // 设置通话为自己呼叫出的
-                intent.putExtra(MLConstants.ML_EXTRA_IS_COMING_CALL, false);
+                intent.putExtra(MLConstants.ML_EXTRA_IS_INCOMING_CALL, false);
                 mActivity.startActivity(intent);
             }
         });

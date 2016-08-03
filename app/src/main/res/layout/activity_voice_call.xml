@@ -15,7 +15,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
+        <!--通话界面背景-->
         <ImageView
             android:id="@+id/ml_img_call_bg"
             android:layout_width="match_parent"
@@ -30,12 +30,11 @@
             android:clipToPadding="true"
             android:fitsSystemWindows="true">
 
-            <!--头部状态以及最小化操作-->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/ml_dimen_24">
-
+                <!--通话状态-->
                 <TextView
                     android:id="@+id/ml_text_call_status"
                     android:layout_width="wrap_content"
@@ -43,7 +42,7 @@
                     android:layout_centerInParent="true"
                     android:text="@string/ml_app_name"
                     android:textColor="@color/ml_white_87"/>
-
+                <!--通话界面最小化-->
                 <ImageButton
                     android:id="@+id/ml_btn_exit_full_screen"
                     android:layout_width="@dimen/ml_dimen_48"
@@ -61,7 +60,7 @@
                 android:layout_marginTop="@dimen/ml_dimen_96"
                 android:gravity="center"
                 android:orientation="vertical">
-
+                <!--当前通话的头像-->
                 <net.melove.app.chat.communal.widget.MLImageView
                     android:id="@+id/ml_img_call_avatar"
                     android:layout_width="@dimen/ml_dimen_96"
@@ -69,7 +68,7 @@
                     android:src="@mipmap/ic_character_blackcat"
                     app:ml_border_width="@dimen/ml_dimen_1"
                     app:ml_shape_type="round"/>
-
+                <!--当前通话的账户名-->
                 <TextView
                     android:id="@+id/ml_text_call_username"
                     android:layout_width="wrap_content"
@@ -96,31 +95,32 @@
                     android:orientation="horizontal">
 
                     <!--麦克风开关-->
-                    <ImageButton
-                        android:id="@+id/ml_btn_on_off_mic"
-                        android:layout_width="@dimen/ml_dimen_48"
-                        android:layout_height="@dimen/ml_dimen_48"
-                        android:layout_margin="@dimen/ml_dimen_8"
-                        android:background="@drawable/ml_click_rectangle_white"
-                        android:src="@mipmap/ic_mic_white_24dp"/>
+                    <CheckBox
+                        android:id="@+id/ml_checkbox_mic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/ml_dimen_16"
+                        android:button="@drawable/ml_checkbox_mic"
+                        android:checked="true"/>
 
                     <!--扬声器开关-->
-                    <ImageButton
-                        android:id="@+id/ml_btn_on_off_speaker"
-                        android:layout_width="@dimen/ml_dimen_48"
-                        android:layout_height="@dimen/ml_dimen_48"
-                        android:layout_margin="@dimen/ml_dimen_8"
-                        android:background="@drawable/ml_click_rectangle_white"
-                        android:src="@mipmap/ic_volume_up_white_24dp"/>
+                    <CheckBox
+                        android:id="@+id/ml_checkbox_speaker"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/ml_dimen_16"
+                        android:button="@drawable/ml_checkbox_speaker"
+                        android:checked="true"/>
 
                     <!--录制开关-->
-                    <ImageButton
-                        android:id="@+id/ml_btn_on_off_record"
-                        android:layout_width="@dimen/ml_dimen_48"
-                        android:layout_height="@dimen/ml_dimen_48"
-                        android:layout_margin="@dimen/ml_dimen_8"
-                        android:background="@drawable/ml_click_rectangle_white"
-                        android:src="@mipmap/ic_videocam_off_white_24dp"/>
+                    <CheckBox
+                        android:id="@+id/ml_checkbox_record"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/ml_dimen_16"
+                        android:button="@drawable/ml_checkbox_record"
+                        android:checked="false"/>
+
                 </LinearLayout>
 
                 <LinearLayout

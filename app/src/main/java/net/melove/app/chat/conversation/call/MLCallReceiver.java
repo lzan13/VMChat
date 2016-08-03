@@ -43,7 +43,7 @@ public class MLCallReceiver extends BroadcastReceiver {
         // 设置呼叫方 username 参数
         callIntent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, callFrom);
         // 设置通话为对方打来
-        callIntent.putExtra(MLConstants.ML_EXTRA_IS_COMING_CALL, true);
+        callIntent.putExtra(MLConstants.ML_EXTRA_IS_INCOMING_CALL, true);
         // 根据 intent 跳转到相应的界面
         context.startActivity(callIntent);
     }

@@ -171,28 +171,28 @@ public class MLSignupActivity extends MLBaseActivity {
                             switch (errorCode) {
                             // 网络错误
                             case EMError.NETWORK_ERROR:
-                                error = res.getString(R.string.ml_error_network_error) + "-" + errorCode;
+                                error = res.getString(R.string.ml_error_network_error);
                                 break;
                             // 用户已存在
                             case EMError.USER_ALREADY_EXIST:
-                                error = res.getString(R.string.ml_error_user_already_exits) + "-" + errorCode;
+                                error = res.getString(R.string.ml_error_user_already_exits);
                                 break;
                             // 参数不合法，一般情况是username 使用了uuid导致，不能使用uuid注册
                             case EMError.USER_ILLEGAL_ARGUMENT:
-                                error = res.getString(R.string.ml_error_user_illegal_argument) + "-" + errorCode;
+                                error = res.getString(R.string.ml_error_user_illegal_argument);
                                 break;
                             // 服务器未知错误
                             case EMError.SERVER_UNKNOWN_ERROR:
-                                error = res.getString(R.string.ml_error_server_unknown_error) + "-" + errorCode;
+                                error = res.getString(R.string.ml_error_server_unknown_error);
                                 break;
                             case EMError.USER_REG_FAILED:
-                                error = res.getString(R.string.ml_error_user_reg_failed) + "-" + errorCode;
+                                error = res.getString(R.string.ml_error_user_reg_failed);
                                 break;
                             default:
-                                error = res.getString(R.string.ml_sign_up_failed) + "-" + errorCode;
+                                error = res.getString(R.string.ml_sign_up_failed);
                                 break;
                             }
-                            MLToast.errorToast(error).show();
+                            MLToast.errorToast(error + "-" + errorCode + "-" + e.getMessage()).show();
                         }
                     });
                 } catch (Exception e) {
