@@ -2,6 +2,7 @@ package net.melove.app.chat.application;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.IntentFilter;
 
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMConnectionListener;
@@ -27,6 +28,7 @@ import net.melove.app.chat.communal.base.MLBaseActivity;
 import net.melove.app.chat.communal.util.MLDateUtil;
 import net.melove.app.chat.communal.util.MLLog;
 import net.melove.app.chat.conversation.MLMessageUtils;
+import net.melove.app.chat.conversation.call.MLCallReceiver;
 import net.melove.app.chat.database.MLDBHelper;
 import net.melove.app.chat.contacts.MLContacterEntity;
 import net.melove.app.chat.conversation.MLConversationExtUtils;
@@ -60,6 +62,9 @@ public class MLEasemobHelper {
 
     // 环信的消息监听器
     private EMMessageListener mMessageListener;
+    // 通话广播监听器
+    private MLCallReceiver mCallReceiver = null;
+
 
     // 环信联系人监听
     private EMContactListener mContactListener;
@@ -187,6 +192,10 @@ public class MLEasemobHelper {
      */
     public void initGlobalListener() {
         MLLog.d("------- listener start --------------");
+        // 设置通话广播监听
+        setCallReceiverListener();
+        // 通话状态监听，TODO 这里不直接调用，只需要在有通话时调用
+        // setCallStateChangeListener();
         // 设置全局的连接监听
         setConnectionListener();
         // 初始化全局消息监听
@@ -199,9 +208,22 @@ public class MLEasemobHelper {
     }
 
     /**
+     * 设置通话广播监听
+     */
+    private void setCallReceiverListener() {
+        // 设置通话广播监听器过滤内容
+        IntentFilter callFilter = new IntentFilter(EMClient.getInstance().callManager().getIncomingCallBroadcastAction());
+        if (mCallReceiver == null) {
+            mCallReceiver = new MLCallReceiver();
+        }
+        //注册通话广播接收者
+        mContext.registerReceiver(mCallReceiver, callFilter);
+    }
+
+    /**
      * 设置通话状态监听，监听通话状态，处理界面显示
      */
-    public void initCallStateChangeListener() {
+    public void setCallStateChangeListener() {
         if (callStateListener == null) {
             callStateListener = new EMCallStateChangeListener() {
                 @Override
@@ -210,6 +232,7 @@ public class MLEasemobHelper {
                     MLCallEvent event = new MLCallEvent();
                     event.setCallState(callState);
                     event.setCallError(callError);
+                    EventBus.getDefault().post(event);
 
                     switch (callState) {
                     case CONNECTING: // 正在呼叫对方

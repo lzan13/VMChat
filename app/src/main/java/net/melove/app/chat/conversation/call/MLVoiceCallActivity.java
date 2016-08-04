@@ -7,6 +7,7 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.widget.CheckBox;
@@ -83,6 +84,24 @@ public class MLVoiceCallActivity extends MLBaseActivity {
     private void initView() {
         mActivity = this;
 
+        // 收到呼叫或者呼叫对方时初始化通话状态监听
+        MLEasemobHelper.getInstance().setCallStateChangeListener();
+
+        // 初始化音频管理器
+        mAudioManager = (AudioManager) mActivity.getSystemService(Context.AUDIO_SERVICE);
+        // 根据系统版本不同选择不同的方式初始化音频播放工具
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            createSoundPoolWithBuilder();
+        } else {
+            createSoundPoolWithConstructor();
+        }
+        // 根据通话呼叫与被呼叫加载不同的提示音效
+        if (isInComingCall) {
+            loadId = mSoundPool.load(mActivity, R.raw.sound_call_incoming, 1);
+        } else {
+            loadId = mSoundPool.load(mActivity, R.raw.sound_calling, 1);
+        }
+        // 获取通话对方的username
         username = getIntent().getStringExtra(MLConstants.ML_EXTRA_CHAT_ID);
         isInComingCall = getIntent().getBooleanExtra(MLConstants.ML_EXTRA_IS_INCOMING_CALL, false);
 
@@ -123,26 +142,6 @@ public class MLVoiceCallActivity extends MLBaseActivity {
             mAnswerCallFab.setVisibility(View.GONE);
             makeCall();
         }
-
-
-        // 收到呼叫或者呼叫对方时初始化通话状态监听
-        MLEasemobHelper.getInstance().initCallStateChangeListener();
-
-        // 初始化音频管理器
-        mAudioManager = (AudioManager) mActivity.getSystemService(Context.AUDIO_SERVICE);
-        // 根据系统版本不同选择不同的方式初始化音频播放工具
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            createSoundPoolWithBuilder();
-        } else {
-            createSoundPoolWithConstructor();
-        }
-        // 根据通话呼叫与被呼叫加载不同的提示音效
-        if (isInComingCall) {
-            loadId = mSoundPool.load(mActivity, R.raw.ml_call_incoming, 1);
-        } else {
-            loadId = mSoundPool.load(mActivity, R.raw.ml_calling, 1);
-        }
-        playCallSound();
     }
 
     /**
@@ -227,6 +226,10 @@ public class MLVoiceCallActivity extends MLBaseActivity {
      * 拒绝通话
      */
     private void rejectCall() {
+        // 结束通话时取消通话状态监听
+        MLEasemobHelper.getInstance().removeCallStateChangeListener();
+        // 拒绝通话后关闭通知铃音
+        stopCallSound();
         try {
             // 调用 SDK 的拒绝通话方法
             EMClient.getInstance().callManager().rejectCall();
@@ -234,8 +237,6 @@ public class MLVoiceCallActivity extends MLBaseActivity {
             e.printStackTrace();
             MLToast.errorToast("拒绝通话失败：error-" + e.getErrorCode() + "-" + e.getMessage()).show();
         }
-        // 结束通话时取消通话状态监听
-        MLEasemobHelper.getInstance().removeCallStateChangeListener();
         onFinish();
     }
 
@@ -243,6 +244,10 @@ public class MLVoiceCallActivity extends MLBaseActivity {
      * 结束通话
      */
     private void endCall() {
+        // 结束通话时取消通话状态监听
+        MLEasemobHelper.getInstance().removeCallStateChangeListener();
+        // 结束通话后关闭通知铃音
+        stopCallSound();
         try {
             // 调用 SDK 的结束通话方法
             EMClient.getInstance().callManager().endCall();
@@ -250,8 +255,6 @@ public class MLVoiceCallActivity extends MLBaseActivity {
             e.printStackTrace();
             MLToast.errorToast("结束通话失败：error-" + e.getErrorCode() + "-" + e.getMessage()).show();
         }
-        // 结束通话时取消通话状态监听
-        MLEasemobHelper.getInstance().removeCallStateChangeListener();
         onFinish();
     }
 
@@ -263,6 +266,8 @@ public class MLVoiceCallActivity extends MLBaseActivity {
         mRejectCallFab.setVisibility(View.GONE);
         mAnswerCallFab.setVisibility(View.GONE);
         mEndCallFab.setVisibility(View.VISIBLE);
+        // 接听通话后关闭通知铃音
+        stopCallSound();
         // 默认接通时打开免提
         openSpeaker();
         // 调用接通通话方法
@@ -310,17 +315,33 @@ public class MLVoiceCallActivity extends MLBaseActivity {
      * 播放呼叫通话提示音
      */
     private void playCallSound() {
-        mAudioManager.setSpeakerphoneOn(true);
+        if (!mAudioManager.isSpeakerphoneOn()) {
+            mAudioManager.setSpeakerphoneOn(true);
+        }
         // 设置音频管理器音频模式为铃音模式
-        mAudioManager.setMode(AudioManager.MODE_NORMAL);
+        mAudioManager.setMode(AudioManager.MODE_RINGTONE);
         // 播放提示音，返回一个播放的音频id，等下停止播放需要用到
-        soundId = mSoundPool.play(
-                loadId, // 播放资源id；就是加载到SoundPool里的音频资源顺序，这里就是第一个，也是唯一的一个
-                0.5f,   // 左声道音量
-                0.5f,   // 右声道音量
-                1,      // 优先级，这里至于一个提示音，不需要关注
-                -1,     // 是否循环；0 不循环，-1 循环
-                1);     // 播放比率；从0.5-2，一般设置为1，表示正常播放
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                soundId = mSoundPool.play(
+                        loadId, // 播放资源id；就是加载到SoundPool里的音频资源顺序，这里就是第一个，也是唯一的一个
+                        0.5f,   // 左声道音量
+                        0.5f,   // 右声道音量
+                        1,      // 优先级，这里至于一个提示音，不需要关注
+                        -1,     // 是否循环；0 不循环，-1 循环
+                        1);     // 播放比率；从0.5-2，一般设置为1，表示正常播放
+            }
+        }, 5000);
+    }
+
+    /**
+     * 停止播放呼叫音效
+     */
+    private void stopCallSound() {
+        if (mSoundPool != null) {
+            mSoundPool.stop(soundId);
+        }
     }
 
     /**
@@ -334,53 +355,74 @@ public class MLVoiceCallActivity extends MLBaseActivity {
         switch (callState) {
         case CONNECTING: // 正在呼叫对方
             MLLog.i("正在呼叫对方" + callError);
+            mCallStatusView.setText(R.string.ml_call_connecting);
+            // 开始播放音效
+            playCallSound();
             break;
         case CONNECTED: // 正在等待对方接受呼叫申请（对方申请与你进行通话）
             MLLog.i("正在等待对方接受呼叫申请" + callError);
+            mCallStatusView.setText(R.string.ml_call_connected);
             break;
         case ACCEPTED: // 通话已接通
             MLLog.i("通话已接通");
             // 电话接通，停止播放提示音
-            mSoundPool.stop(soundId);
+            mCallStatusView.setText(R.string.ml_call_accepted);
+            stopCallSound();
             break;
         case DISCONNNECTED: // 通话已中断
             MLLog.i("通话已中断" + callError);
+            mCallStatusView.setText(R.string.ml_call_disconnected);
 
             // 结束通话时取消通话状态监听
             MLEasemobHelper.getInstance().removeCallStateChangeListener();
 
             if (callError == EMCallStateChangeListener.CallError.ERROR_INAVAILABLE) {
                 MLLog.i("对方不在线" + callError);
+                mCallStatusView.setText(R.string.ml_call_not_online);
             } else if (callError == EMCallStateChangeListener.CallError.ERROR_BUSY) {
                 MLLog.i("对方正在通话中" + callError);
+                mCallStatusView.setText(R.string.ml_call_busy);
             } else if (callError == EMCallStateChangeListener.CallError.REJECTED) {
                 MLLog.i("对方已拒绝" + callError);
+                mCallStatusView.setText(R.string.ml_call_reject);
             } else if (callError == EMCallStateChangeListener.CallError.ERROR_NORESPONSE) {
                 MLLog.i("对方未接听" + callError);
+                mCallStatusView.setText(R.string.ml_call_not_answer);
             } else if (callError == EMCallStateChangeListener.CallError.ERROR_TRANSPORT) {
-                MLLog.i("连接建立失败，等下再呼叫吧" + callError);
-            } else if (callError == EMCallStateChangeListener.CallError.ERROR_LOCAL_VERSION_SMALLER
-                    || callError == EMCallStateChangeListener.CallError.ERROR_PEER_VERSION_SMALLER) {
+                MLLog.i("连接建立失败" + callError);
+                mCallStatusView.setText(R.string.ml_call_connection_fail);
+            } else if (callError == EMCallStateChangeListener.CallError.ERROR_LOCAL_VERSION_SMALLER) {
                 MLLog.i("双方通讯协议不同" + callError);
+                mCallStatusView.setText(R.string.ml_call_local_version_smaller);
+            } else if (callError == EMCallStateChangeListener.CallError.ERROR_PEER_VERSION_SMALLER) {
+                MLLog.i("双方通讯协议不同" + callError);
+                mCallStatusView.setText(R.string.ml_call_opposite_version_smaller);
             } else {
                 MLLog.i("通话已结束，时长：%s，error %s", "10:35", callError);
+                mCallStatusView.setText(R.string.ml_call_not_online);
             }
+            onFinish();
             break;
         case NETWORK_UNSTABLE:
             if (callError == EMCallStateChangeListener.CallError.ERROR_NO_DATA) {
                 MLLog.i("没有通话数据" + callError);
+                mCallStatusView.setText(R.string.ml_call_no_data);
             } else {
                 MLLog.i("网络不稳定" + callError);
+                mCallStatusView.setText(R.string.ml_call_network_unsatble);
             }
             break;
         case NETWORK_NORMAL:
             MLLog.i("网络正常");
+            mCallStatusView.setText(R.string.ml_call_network_normal);
             break;
         case VOICE_PAUSE:
             MLLog.i("语音传输已暂停");
+            mCallStatusView.setText(R.string.ml_call_voice_pause);
             break;
         case VOICE_RESUME:
             MLLog.i("语音传输已恢复");
+            mCallStatusView.setText(R.string.ml_call_voice_resume);
             break;
         default:
             break;
@@ -394,7 +436,7 @@ public class MLVoiceCallActivity extends MLBaseActivity {
     protected void createSoundPoolWithBuilder() {
         AudioAttributes attributes = new AudioAttributes.Builder()
                 // 设置音频要用在什么地方，这里选择电话通知铃音
-                .setUsage(AudioAttributes.USAGE_UNKNOWN)
+                .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
                 .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                 .build();
         // 使用 build 的方式实例化 SoundPool

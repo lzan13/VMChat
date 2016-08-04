@@ -64,7 +64,7 @@ public class MLVideoCallActivity extends MLBaseActivity {
 
 
         // 收到呼叫或者呼叫对方时初始化通话状态监听
-        MLEasemobHelper.getInstance().initCallStateChangeListener();
+        MLEasemobHelper.getInstance().setCallStateChangeListener();
 
         mVideoCallHelper = EMClient.getInstance().callManager().getVideoCallHelper();
         // 设置自动码率  TODO 新的针对音视频优化的 SDK 不需要调用，默认直接开启

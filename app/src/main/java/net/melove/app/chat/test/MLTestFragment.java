@@ -13,13 +13,10 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMGroupManager;
-import com.hyphenate.chat.EMImageMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMMessageBody;
 import com.hyphenate.chat.EMTextMessageBody;
-import com.hyphenate.chat.EMVoiceMessageBody;
 import com.hyphenate.exceptions.HyphenateException;
-import com.hyphenate.util.PathUtil;
 
 import net.melove.app.chat.R;
 import net.melove.app.chat.application.MLConstants;
@@ -33,7 +30,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -105,7 +101,7 @@ public class MLTestFragment extends MLBaseFragment {
                 signOut();
                 break;
             case 101:
-                insertMessage();
+                importMessages();
                 break;
             case 102:
                 updateMessage();
@@ -208,18 +204,22 @@ public class MLTestFragment extends MLBaseFragment {
     }
 
     /**
-     * 测试保存一条消息到本地
+     * 保存一条消息到本地
+     */
+    private void saveMessage() {
+        EMMessage textMessage = EMMessage.createSendMessage(EMMessage.Type.TXT);
+        textMessage.setFrom("lz0");
+        textMessage.setReceipt("lz1");
+        textMessage.setStatus(EMMessage.Status.SUCCESS);
+        EMTextMessageBody body = new EMTextMessageBody("test save message");
+        textMessage.addBody(body);
+        EMClient.getInstance().chatManager().saveMessage(textMessage);
+    }
+
+    /**
+     * 测试插入一条消息到当前会话
      */
     private void insertMessage() {
-        //        EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
-        //        EMTextMessageBody textMessageBody = new EMTextMessageBody("导入消息" + MLDateUtil.getCurrentDate());
-        //        message.addBody(textMessageBody);
-        //        message.setFrom("lz8");
-        //        // 保存一条消息到本地，这个保存会直接加入到内存中
-        //        EMClient.getInstance().chatManager().saveMessage(message);
-        //        // 导入一个消息集合到本地，
-        //        EMClient.getInstance().chatManager().importMessages(list);
-
         // 测试插入一条消息
         EMConversation conversation = EMClient.getInstance().chatManager().getConversation("lz1", EMConversation.EMConversationType.Chat, true);
         EMMessage textMessage = EMMessage.createSendMessage(EMMessage.Type.TXT);
@@ -232,124 +232,85 @@ public class MLTestFragment extends MLBaseFragment {
 
     }
 
-    private List<EMMessage> imoprtMessages() {
-        String msgJson = "{\n" +
-                "\"uuid\": \"\",\n" +
-                "\"hxType\": \"\",\n" +
-                "\"createTime\": 1461668484000,\n" +
-                "\"updateTime\": 1461668484000,\n" +
-                "\"messageTime\": 1461668539000,\n" +
-                "\"fromId\": \"lz1\",\n" +
-                "\"msgId\": \"198225956681287648\",\n" +
-                "\"toId\": \"lz2\",\n" +
-                "\"chatType\": \"chat\",\n" +
-                "\"msgType\": \"img\",\n" +
-                "\"osskey\": \"\",\n" +
-                "\"callId\": \"iwjw#dev_189424115638077400\",\n" +
-                "\"eventType\": \"chat\",\n" +
-                "\"groupId\": \"\",\n" +
-                "\"securityVersion\": \"\",\n" +
-                "\"security\": \"d2f00fbca7d31aba62f680960af5ffd8\",\n" +
-                "\"bodies\": [{\n" +
-                "                       \"type\":\"img\",\n" +
-                "                       \"file_length\":3269307," +
-                "                       \"size\":{" +
-                "                                   \"height\":1008," +
-                "                                   \"width\":756" +
-                "                                }," +
-                "                       \"filename\":\"image-217703277.jpg\"," +
-                "                       \"secret\":\"1IyXuh5BEeachHOg_fPFZj7mL5wz0WHKKvb_x5TWp9yVVkOI\"," +
-                "                       \"url\":\"https://a1.easemob.com/lzan13/hxsdkdemo/chatfiles/d48c97b0-1e41-11e6-aaf8-e72cf8fe787d\"" +
-                "                  }],\n" +
-                "\"ext\": \"\"\n" +
-                "}\n";
-        List<EMMessage> emMessageList = new ArrayList<EMMessage>();
+    /**
+     * 导入多条消息
+     */
+    private void importMessages() {
+        String msgJson = "[{\n" +
+                "\"uuid\": \"5dd2241a-4ffa-11e6-9396-31c48b60c199\",\n" +
+                "\"type\": \"chatmessage\",\n" +
+                "\"created\": 1469184741585,\n" +
+                "\"modified\": 1469184741585,\n" +
+                "\"timestamp\": 1469184741193,\n" +
+                "\"from\": \"lz0\",\n" +
+                "\"msg_id\": \"221705959213369320\",\n" +
+                "\"to\": \"lz1\",\n" +
+                "\"chat_type\": \"chat\",\n" +
+                "\"payload\": {\n" +
+                "    \"bodies\": [\n" +
+                "      {\n" +
+                "        \"msg\": \"特殊\",\n" +
+                "        \"type\": \"txt\"\n" +
+                "      }\n" +
+                "    ],\n" +
+                "    \"ext\": {}\n" +
+                "  }\n" +
+                "},\n" +
+                "{\n" +
+                "\"uuid\": \"f8235b18-5240-11e6-9c2c-096df3a4c703\",\n" +
+                "\"type\": \"chatmessage\",\n" +
+                "\"created\": 1469434967583,\n" +
+                "\"modified\": 1469434967583,\n" +
+                "\"timestamp\": 1469434967362,\n" +
+                "\"from\": \"lz0\",\n" +
+                "\"msg_id\": \"222780672404621268\",\n" +
+                "\"to\": \"lz1\",\n" +
+                "\"chat_type\": \"chat\",\n" +
+                "\"payload\": {\n" +
+                "    \"bodies\": [\n" +
+                "      {\n" +
+                "        \"msg\": \"到三点\",\n" +
+                "        \"type\": \"txt\"\n" +
+                "      }\n" +
+                "    ],\n" +
+                "    \"ext\": {}\n" +
+                "  }\n" +
+                "}]";
+        List<EMMessage> messageList = new ArrayList<EMMessage>();
         try {
-            JSONObject jsonObject = new JSONObject(msgJson);
+            JSONArray jsonArray = new JSONArray(msgJson);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String uuid = jsonObject.optString("uuid");
+                String type = jsonObject.optString("type");
+                long created = jsonObject.optLong("created");
+                long modified = jsonObject.optLong("modified");
+                long timestamp = jsonObject.optLong("timestamp");
+                String from = jsonObject.optString("from");
+                String to = jsonObject.optString("to");
+                String msgId = jsonObject.optString("msg_id");
+                String chatType = jsonObject.optString("chat_type");
 
-            String fromId = jsonObject.optString("fromId");
-            String toId = jsonObject.optString("toId");
-            String msgId = jsonObject.optString("msgId");
-            long messageTime = jsonObject.optLong("messageTime");
-            String chatType = jsonObject.optString("chatType");
-            String msgTypeStr = jsonObject.optString("msgType");
-            String msgBodyStr = jsonObject.optString("bodies");
-            String ext = jsonObject.optString("ext");
+                JSONObject payload = jsonObject.optJSONObject("payload");
+                JSONObject body = payload.optJSONArray("bodies").getJSONObject(0);
 
-            JSONObject bodyObject = new JSONArray(msgBodyStr).getJSONObject(0);
+                String msgStr = body.optString("msg");
+                String msgTypeStr = body.optString("type");
+                String ext = jsonObject.optString("ext");
 
-            String url = bodyObject.optString("url");
-            String secret = bodyObject.optString("secret");
-            String filename = bodyObject.optString("filename");
-            int length = bodyObject.optInt("length");
-            int height = bodyObject.optJSONObject("size").optInt("height");
-            int width = bodyObject.optJSONObject("size").optInt("width");
-            String localPath = PathUtil.getInstance().getVoicePath() + "/" + filename;
+                EMMessage message = EMMessage.createTxtSendMessage(msgStr, to);
+                message.setFrom(from);
+                message.setMsgTime(timestamp);
+                message.setMsgId(msgId);
+                message.setChatType(EMMessage.ChatType.Chat);
+                message.setStatus(EMMessage.Status.SUCCESS);
 
-            EMMessage.Type msgType = null;
-            if (msgTypeStr.equalsIgnoreCase("audio")) {
-                msgType = EMMessage.Type.VOICE;
-            } else if (msgTypeStr.equalsIgnoreCase("img")) {
-                msgType = EMMessage.Type.IMAGE;
-            } else if (msgTypeStr.equalsIgnoreCase("txt") || msgTypeStr.equalsIgnoreCase("house")) {
-                msgType = EMMessage.Type.TXT;
-            } else if (msgTypeStr.equalsIgnoreCase("loc")) {
-                msgType = EMMessage.Type.LOCATION;
-            } else if (msgTypeStr.equalsIgnoreCase("video")) {
-                msgType = EMMessage.Type.VIDEO;
+                messageList.add(message);
             }
-            EMMessage message = null;
-            EMMessageBody msgBody = null;
-
-            if (fromId.equalsIgnoreCase("lz1")) {
-                //收到的消息
-                message = EMMessage.createReceiveMessage(msgType);
-                message.setFrom("lz1");
-            } else {
-                //发送的消息
-                message = EMMessage.createSendMessage(msgType);
-                message.setTo("lz1");
-            }
-            message.setMsgTime(messageTime);
-            message.setMsgId(msgId);
-            message.setChatType(EMMessage.ChatType.Chat);
-            //            message.setAcked(true);
-            //            message.setUnread(false);
-            message.setStatus(EMMessage.Status.SUCCESS);
-            switch (msgType) {
-            case LOCATION: // 位置消息
-                //                msgBody = JSON.parseObject(msgBodyStr, CommonLocationMessageBody.class).getHXMsgBody();
-                break;
-            case IMAGE: // 图片消息
-                //                msgBody = JSON.parseObject(msgBodyStr, CommonImageMessageBody.class).getHXMsgBody();
-                EMImageMessageBody imgBody = new EMImageMessageBody(new File(localPath));
-                imgBody.setFileName(filename);
-                imgBody.setRemoteUrl(url);
-                imgBody.setThumbnailUrl(url);
-                imgBody.setSecret(secret);
-                message.addBody(imgBody);
-                break;
-            case VOICE:// 语音消息
-                //                msgBody = JSON.parseObject(msgBodyStr, CommonVoiceMessageBody.class).getHXMsgBody();
-                EMVoiceMessageBody body = new EMVoiceMessageBody(new File(localPath), length);
-                body.setRemoteUrl(url);
-                body.setFileName(filename);
-                body.setSecret(secret);
-                message.addBody(body);
-                break;
-            case TXT: // 文本消息
-                //                msgBody = JSON.parseObject(msgBodyStr, CommonTextMessageBody.class).getHXMsgBody();
-                break;
-            }
-            //            message.addBody(msgBody);
-            emMessageList.add(message);
-            //            EMClient.getInstance().chatManager().saveMessage(message);
-            EMClient.getInstance().chatManager().importMessages(emMessageList);
-            return emMessageList;
+            EMClient.getInstance().chatManager().importMessages(messageList);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return null;
     }
 
 

@@ -154,13 +154,17 @@
     <string name="ml_call_video_resume">视频传输已恢复</string>
     <string name="ml_call_voice_pause">语音传输已暂停</string>
     <string name="ml_call_voice_resume">语音传输已恢复</string>
-    <string name="ml_call_voice_reject">对方拒绝了你的通话申请</string>
+    <string name="ml_call_reject">对方拒绝了你的通话申请</string>
     <string name="ml_call_not_online">对方不在线，稍后再呼叫吧</string>
     <string name="ml_call_busy">对方正在通话中，先发个消息联系下吧</string>
     <string name="ml_call_not_answer">对方已拒绝</string>
     <string name="ml_call_not_answer_is_incoming">已拒绝</string>
     <string name="ml_call_cancel">已取消</string>
     <string name="ml_call_cancel_is_incoming">对方已取消</string>
+    <string name="ml_call_connection_fail">建立连接失败</string>
+    <string name="ml_call_version_different">双方通讯协议不同</string>
+    <string name="ml_call_local_version_smaller">本地版本过低，无法通讯</string>
+    <string name="ml_call_opposite_version_smaller">对方版本过低，无法通讯</string>
     <string name="ml_call_duration_time">通话时长</string>
 
     <!--Error 文字内容-->
