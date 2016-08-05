@@ -74,10 +74,10 @@ public class MLVideoCallActivity extends MLBaseActivity {
         // 初始化界面控件
         mCallStatusView = (TextView) findViewById(R.id.ml_text_call_status);
         mExitFullScreenBtn = (ImageButton) findViewById(R.id.ml_btn_exit_full_screen);
-        mOnOffMicBtn = (CheckBox) findViewById(R.id.ml_checkbox_mic);
+        mOnOffMicBtn = (CheckBox) findViewById(R.id.ml_btn_mic_switch);
         mOnOffCamera = (CheckBox) findViewById(R.id.ml_checkbox_camera);
-        mOnOffSpeakerBtn = (CheckBox) findViewById(R.id.ml_checkbox_speaker);
-        mOnOffRecordBtn = (CheckBox) findViewById(R.id.ml_checkbox_record);
+        mOnOffSpeakerBtn = (CheckBox) findViewById(R.id.ml_speaker_switch);
+        mOnOffRecordBtn = (CheckBox) findViewById(R.id.ml_record_switch);
         mRejectCallFab = (FloatingActionButton) findViewById(R.id.ml_btn_fab_reject_call);
         mEndCallFab = (FloatingActionButton) findViewById(R.id.ml_btn_fab_end_call);
         mAnswerCallFab = (FloatingActionButton) findViewById(R.id.ml_btn_fab_answer_call);
@@ -98,16 +98,16 @@ public class MLVideoCallActivity extends MLBaseActivity {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-            case R.id.ml_checkbox_mic:
+            case R.id.ml_btn_mic_switch:
                 // 麦克风开关
                 break;
             case R.id.ml_checkbox_camera:
                 // 摄像头开关
                 break;
-            case R.id.ml_checkbox_speaker:
+            case R.id.ml_speaker_switch:
                 // 扬声器开关
                 break;
-            case R.id.ml_checkbox_record:
+            case R.id.ml_record_switch:
                 // 录制开关
                 break;
             case R.id.ml_btn_fab_reject_call:

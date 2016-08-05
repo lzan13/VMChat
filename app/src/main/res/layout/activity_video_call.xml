@@ -93,7 +93,7 @@
 
                 <!--麦克风开关-->
                 <CheckBox
-                    android:id="@+id/ml_checkbox_mic"
+                    android:id="@+id/ml_btn_mic_switch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/ml_dimen_16"
@@ -111,7 +111,7 @@
 
                 <!--扬声器开关-->
                 <CheckBox
-                    android:id="@+id/ml_checkbox_speaker"
+                    android:id="@+id/ml_speaker_switch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/ml_dimen_16"
@@ -120,7 +120,7 @@
 
                 <!--录制开关-->
                 <CheckBox
-                    android:id="@+id/ml_checkbox_record"
+                    android:id="@+id/ml_record_switch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/ml_dimen_16"

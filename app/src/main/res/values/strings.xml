@@ -146,7 +146,7 @@
     <string name="ml_call_connected">正在等待对方接受呼叫申请...</string>
     <string name="ml_call_connected_is_incoming">对方申请与你进行通话</string>
     <string name="ml_call_accepted">通话已接通</string>
-    <string name="ml_call_disconnected">通话已中断</string>
+    <string name="ml_call_disconnected">通话已结束</string>
     <string name="ml_call_no_data">没有通话数据</string>
     <string name="ml_call_network_unsatble">网络状态不佳</string>
     <string name="ml_call_network_normal">网络状态良好</string>
@@ -245,6 +245,8 @@
     <string name="ml_toast_msg_recall_faild">撤回失败 失败错误码</string>
     <string name="ml_toast_msg_delete_success">消息删除成功</string>
     <string name="ml_toast_chat_cant_yourself">不能和自己聊天</string>
+
+    <string name="ml_toast_unrealized">功能暂未实现，尽请期待(๑^ں^๑)</string>
 
     <!--界面跳转共享元素名称-->
     <string name="ml_shared_element_toolbar">Toolbar</string>

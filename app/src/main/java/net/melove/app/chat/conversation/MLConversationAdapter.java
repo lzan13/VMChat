@@ -104,32 +104,38 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
             msgPrefix = "[" + mContext.getString(R.string.ml_hint_msg_draft) + "]";
             content = msgPrefix + draft;
         } else if (conversation.getAllMessages().size() > 0) {
-            switch (conversation.getLastMessage().getType()) {
-            case TXT:
-                content = ((EMTextMessageBody) conversation.getLastMessage().getBody()).getMessage();
-                break;
-            case FILE:
-                content = "[" + mContext.getString(R.string.ml_file) + "]";
-                break;
-            case IMAGE:
-                content = "[" + mContext.getString(R.string.ml_photo) + "]";
-                break;
-            case LOCATION:
-                content = "[" + mContext.getString(R.string.ml_location) + "]";
-                break;
-            case VIDEO:
-                content = "[" + mContext.getString(R.string.ml_video) + "]";
-                break;
-            case VOICE:
-                content = "[" + mContext.getString(R.string.ml_voice) + "]";
-                break;
-            default:
-                break;
-            }
-            // 判断这条消息状态，如果失败加上失败前缀提示
-            if (conversation.getLastMessage().status() == EMMessage.Status.FAIL) {
-                msgPrefix = "[" + mContext.getString(R.string.ml_hint_msg_failed) + "]";
-                content = msgPrefix + content;
+            EMMessage lastMessage = conversation.getLastMessage();
+            // 首先判断消息是否已经撤回，撤回就不能显示消息内容
+            if (lastMessage.getBooleanAttribute(MLConstants.ML_ATTR_RECALL, false)) {
+                content = mContext.getString(R.string.ml_hint_msg_recall_by_self);
+            } else {
+                switch (lastMessage.getType()) {
+                case TXT:
+                    content = ((EMTextMessageBody) conversation.getLastMessage().getBody()).getMessage();
+                    break;
+                case FILE:
+                    content = "[" + mContext.getString(R.string.ml_file) + "]";
+                    break;
+                case IMAGE:
+                    content = "[" + mContext.getString(R.string.ml_photo) + "]";
+                    break;
+                case LOCATION:
+                    content = "[" + mContext.getString(R.string.ml_location) + "]";
+                    break;
+                case VIDEO:
+                    content = "[" + mContext.getString(R.string.ml_video) + "]";
+                    break;
+                case VOICE:
+                    content = "[" + mContext.getString(R.string.ml_voice) + "]";
+                    break;
+                default:
+                    break;
+                }
+                // 判断这条消息状态，如果失败加上失败前缀提示
+                if (conversation.getLastMessage().status() == EMMessage.Status.FAIL) {
+                    msgPrefix = "[" + mContext.getString(R.string.ml_hint_msg_failed) + "]";
+                    content = msgPrefix + content;
+                }
             }
         } else {
             // 当前会话没有聊天信息则设置显示内容为 空
@@ -160,7 +166,11 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
         } else if (conversation.getType() == EMConversation.EMConversationType.GroupChat) {
             // 如果是群聊设置群组名称
             EMGroup group = EMClient.getInstance().groupManager().getGroup(conversation.getUserName());
-            holder.titleView.setText(group.getGroupName());
+            if (group != null) {
+                holder.titleView.setText(group.getGroupName());
+            } else {
+                holder.titleView.setText(conversation.getUserName());
+            }
         }
 
         // 设置当前会话未读数

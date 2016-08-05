@@ -8,7 +8,10 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/ml_dimen_16"
+        android:layout_marginBottom="@dimen/ml_dimen_16"
+        android:layout_marginLeft="@dimen/ml_dimen_8"
+        android:layout_marginRight="@dimen/ml_dimen_8"
+        android:layout_marginTop="@dimen/ml_dimen_8"
         android:background="@drawable/ml_shape_toast"
         android:clipChildren="false"
         android:elevation="@dimen/ml_dimen_8"
