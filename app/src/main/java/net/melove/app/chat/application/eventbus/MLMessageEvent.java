@@ -10,11 +10,13 @@ public class MLMessageEvent {
 
     // 变化的消息对象
     private EMMessage message;
+    // 消息状态
+    private EMMessage.Status status;
     // 消息进度
     private int progress;
     // 消息出现错误时的错误码
     private int errorCode;
-    // 消息出现错误是的错误信息
+    // 消息出现错误时的错误信息
     private String errorMessage;
 
     public MLMessageEvent() {
@@ -51,5 +53,13 @@ public class MLMessageEvent {
 
     public void setProgress(int progress) {
         this.progress = progress;
+    }
+
+    public EMMessage.Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(EMMessage.Status status) {
+        this.status = status;
     }
 }

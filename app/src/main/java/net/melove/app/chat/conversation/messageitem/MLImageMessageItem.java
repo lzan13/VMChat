@@ -284,7 +284,7 @@ public class MLImageMessageItem extends MLMessageItem {
         if (!message.getMsgId().equals(mMessage.getMsgId())) {
             return;
         }
-        if (message.status() == EMMessage.Status.INPROGRESS) {
+        if (message.getType() == EMMessage.Type.IMAGE && event.getStatus() == EMMessage.Status.INPROGRESS) {
             // 设置消息进度百分比
             mPercentView.setText(String.valueOf(event.getProgress()));
         }

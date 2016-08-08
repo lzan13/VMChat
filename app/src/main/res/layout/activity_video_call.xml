@@ -49,13 +49,13 @@
             android:layout_marginTop="@dimen/ml_dimen_24">
             <!--切换摄像头-->
             <ImageButton
-                android:id="@+id/ml_btn_change_camera"
+                android:id="@+id/ml_btn_change_camera_switch"
                 android:layout_width="@dimen/ml_dimen_48"
                 android:layout_height="@dimen/ml_dimen_48"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="@dimen/ml_dimen_16"
                 android:background="@drawable/ml_click_rectangle_white"
-                android:src="@mipmap/ic_camera_rear_white_24dp"/>
+                android:src="@drawable/ml_checkbox_change_camera"/>
             <!--通话状态-->
             <TextView
                 android:id="@+id/ml_text_call_status"
@@ -92,40 +92,41 @@
                 android:orientation="horizontal">
 
                 <!--麦克风开关-->
-                <CheckBox
+                <ImageButton
                     android:id="@+id/ml_btn_mic_switch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/ml_dimen_16"
-                    android:button="@drawable/ml_checkbox_mic"
-                    android:checked="true"/>
+                    android:layout_width="@dimen/ml_dimen_48"
+                    android:layout_height="@dimen/ml_dimen_48"
+                    android:layout_margin="@dimen/ml_dimen_8"
+                    android:background="@drawable/ml_click_rectangle_white"
+                    android:src="@drawable/ml_checkbox_mic"/>
 
                 <!--摄像头开关-->
-                <CheckBox
-                    android:id="@+id/ml_checkbox_camera"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/ml_dimen_16"
-                    android:button="@drawable/ml_checkbox_camera"
-                    android:checked="true"/>
+                <ImageButton
+                    android:id="@+id/ml_btn_camera_switch"
+                    android:layout_width="@dimen/ml_dimen_48"
+                    android:layout_height="@dimen/ml_dimen_48"
+                    android:layout_margin="@dimen/ml_dimen_8"
+                    android:background="@drawable/ml_click_rectangle_white"
+                    android:src="@drawable/ml_checkbox_camera"/>
 
                 <!--扬声器开关-->
-                <CheckBox
-                    android:id="@+id/ml_speaker_switch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/ml_dimen_16"
-                    android:button="@drawable/ml_checkbox_speaker"
-                    android:checked="true"/>
+                <ImageButton
+                    android:id="@+id/ml_btn_speaker_switch"
+                    android:layout_width="@dimen/ml_dimen_48"
+                    android:layout_height="@dimen/ml_dimen_48"
+                    android:layout_margin="@dimen/ml_dimen_8"
+                    android:background="@drawable/ml_click_rectangle_white"
+                    android:src="@drawable/ml_checkbox_speaker"/>
 
                 <!--录制开关-->
-                <CheckBox
-                    android:id="@+id/ml_record_switch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/ml_dimen_16"
-                    android:button="@drawable/ml_checkbox_record"
-                    android:checked="false"/>
+                <ImageButton
+                    android:id="@+id/ml_btn_record_switch"
+                    android:layout_width="@dimen/ml_dimen_48"
+                    android:layout_height="@dimen/ml_dimen_48"
+                    android:layout_margin="@dimen/ml_dimen_8"
+                    android:background="@drawable/ml_click_rectangle_white"
+                    android:src="@drawable/ml_checkbox_record"/>
+
             </LinearLayout>
 
             <LinearLayout

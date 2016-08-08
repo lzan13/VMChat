@@ -384,6 +384,7 @@ public class MLEasemobHelper {
                     // 使用 EventBus 发布消息，可以被订阅此类型消息的订阅者监听到
                     MLMessageEvent event = new MLMessageEvent();
                     event.setMessage(message);
+                    event.setStatus(message.status());
                     EventBus.getDefault().post(event);
                 }
                 if (list.size() > 1) {
@@ -404,6 +405,13 @@ public class MLEasemobHelper {
             public void onCmdMessageReceived(List<EMMessage> list) {
                 for (EMMessage cmdMessage : list) {
                     EMCmdMessageBody body = (EMCmdMessageBody) cmdMessage.getBody();
+
+                    // 使用 EventBus 发布消息，可以被订阅此类型消息的订阅者监听到
+                    MLMessageEvent event = new MLMessageEvent();
+                    event.setMessage(cmdMessage);
+                    event.setStatus(cmdMessage.status());
+                    EventBus.getDefault().post(event);
+
                     // 判断是不是撤回消息的透传
                     if (body.action().equals(MLConstants.ML_ATTR_RECALL)) {
                         // 判断当前活动界面是不是聊天界面，如果是，全局不处理消息，聊天界面已经处理了撤回
@@ -415,8 +423,6 @@ public class MLEasemobHelper {
                         MLMessageUtils.receiveRecallMessage(mContext, cmdMessage);
                     }
                 }
-                // 使用 EventBus 发布消息，可以被订阅此类型消息的订阅者监听到
-                EventBus.getDefault().post(new MLMessageEvent());
             }
 
             /**

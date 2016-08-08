@@ -66,6 +66,7 @@ public class MLConstants {
     // 通话监听的key
     public static final String ML_EXTRA_FROM = "from";
     public static final String ML_EXTRA_TYPE = "type";
+    public static final String ML_EXTRA_TO = "to";
 
 
     // 定义好友申请与通知的 Conversation Id

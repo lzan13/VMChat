@@ -1,11 +1,6 @@
 package net.melove.app.chat.conversation.call;
 
-import android.annotation.TargetApi;
-import android.content.Context;
-import android.media.AudioAttributes;
 import android.media.AudioManager;
-import android.media.SoundPool;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
@@ -21,10 +16,8 @@ import com.hyphenate.exceptions.EMNoActiveCallException;
 import com.hyphenate.exceptions.EMServiceNotReadyException;
 
 import net.melove.app.chat.R;
-import net.melove.app.chat.application.MLConstants;
 import net.melove.app.chat.application.MLEasemobHelper;
 import net.melove.app.chat.application.eventbus.MLCallEvent;
-import net.melove.app.chat.communal.base.MLBaseActivity;
 import net.melove.app.chat.communal.util.MLLog;
 import net.melove.app.chat.communal.widget.MLImageView;
 import net.melove.app.chat.communal.widget.MLToast;
@@ -32,20 +25,10 @@ import net.melove.app.chat.communal.widget.MLToast;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-public class MLVoiceCallActivity extends MLBaseActivity {
-
-    // 呼叫方名字
-    private String username;
-    // 是否是拨打进来的电话
-    private boolean isInComingCall;
-
-    // 音频管理器
-    private AudioManager mAudioManager;
-    private SoundPool mSoundPool;
-    private int streamID;
-    private int loadId;
+public class MLVoiceCallActivity extends MLCallActivity {
 
     // 界面控件
+    // 通话状态控件
     private TextView mCallStatusView;
     // 显示对方头像的控件
     private MLImageView mAvatarView;
@@ -73,43 +56,14 @@ public class MLVoiceCallActivity extends MLBaseActivity {
         setContentView(R.layout.activity_voice_call);
 
         initView();
-
     }
 
     /**
-     * 初始化界面方法，做一些界面的初始化操作
+     * 重载父类方法,实现一些当前通话的操作，
      */
-    private void initView() {
-        mActivity = this;
-
-        // 收到呼叫或者呼叫对方时初始化通话状态监听
-        MLEasemobHelper.getInstance().setCallStateChangeListener();
-
-        // 初始化音频管理器
-        mAudioManager = (AudioManager) mActivity.getSystemService(Context.AUDIO_SERVICE);
-        // 根据系统版本不同选择不同的方式初始化音频播放工具
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            createSoundPoolWithBuilder();
-        } else {
-            createSoundPoolWithConstructor();
-        }
-        // 根据通话呼叫与被呼叫加载不同的提示音效
-        if (isInComingCall) {
-            loadId = mSoundPool.load(mActivity, R.raw.sound_call_incoming, 1);
-        } else {
-            loadId = mSoundPool.load(mActivity, R.raw.sound_calling, 1);
-        }
-        //  设置资源加载监听
-        mSoundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
-            @Override
-            public void onLoadComplete(SoundPool soundPool, int i, int i1) {
-                playCallSound();
-            }
-        });
-
-        // 获取通话对方的username
-        username = getIntent().getStringExtra(MLConstants.ML_EXTRA_CHAT_ID);
-        isInComingCall = getIntent().getBooleanExtra(MLConstants.ML_EXTRA_IS_INCOMING_CALL, false);
+    @Override
+    protected void initView() {
+        super.initView();
 
         // 初始化界面控件
         mCallStatusView = (TextView) findViewById(R.id.ml_text_call_status);
@@ -119,8 +73,8 @@ public class MLVoiceCallActivity extends MLBaseActivity {
         // 最小化按钮
         mExitFullScreenBtn = (ImageButton) findViewById(R.id.ml_btn_exit_full_screen);
         mMicSwitch = (ImageButton) findViewById(R.id.ml_btn_mic_switch);
-        mSpeakerSwitch = (ImageButton) findViewById(R.id.ml_speaker_switch);
-        mRecordSwitch = (ImageButton) findViewById(R.id.ml_record_switch);
+        mSpeakerSwitch = (ImageButton) findViewById(R.id.ml_btn_speaker_switch);
+        mRecordSwitch = (ImageButton) findViewById(R.id.ml_btn_record_switch);
         mRejectCallFab = (FloatingActionButton) findViewById(R.id.ml_btn_fab_reject_call);
         mEndCallFab = (FloatingActionButton) findViewById(R.id.ml_btn_fab_end_call);
         mAnswerCallFab = (FloatingActionButton) findViewById(R.id.ml_btn_fab_answer_call);
@@ -150,6 +104,7 @@ public class MLVoiceCallActivity extends MLBaseActivity {
             mRejectCallFab.setVisibility(View.GONE);
             mEndCallFab.setVisibility(View.VISIBLE);
             mAnswerCallFab.setVisibility(View.GONE);
+            // 自己是主叫方，调用呼叫方法
             makeCall();
         }
     }
@@ -165,6 +120,9 @@ public class MLVoiceCallActivity extends MLBaseActivity {
         }
     }
 
+    /**
+     * 界面控件点击监听器
+     */
     private View.OnClickListener viewListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -176,11 +134,11 @@ public class MLVoiceCallActivity extends MLBaseActivity {
                 // 麦克风开关
                 onMicrophone();
                 break;
-            case R.id.ml_speaker_switch:
+            case R.id.ml_btn_speaker_switch:
                 // 扬声器开关
                 onSpeaker();
                 break;
-            case R.id.ml_record_switch:
+            case R.id.ml_btn_record_switch:
                 // 录制开关
                 recordCall();
                 break;
@@ -200,11 +158,13 @@ public class MLVoiceCallActivity extends MLBaseActivity {
         }
     };
 
+
     /**
      * 麦克风开关，主要调用环信语音数据传输方法
      * TODO 3.1.4 SDK 暂时无效
      */
     private void onMicrophone() {
+        vibrate();
         if (mMicSwitch.isActivated()) {
             // 暂停语音数据的传输
             EMClient.getInstance().callManager().pauseVoiceTransfer();
@@ -220,6 +180,7 @@ public class MLVoiceCallActivity extends MLBaseActivity {
      * 扬声器开关
      */
     private void onSpeaker() {
+        vibrate();
         // 根据按钮状态决定打开还是关闭扬声器
         if (mSpeakerSwitch.isActivated()) {
             closeSpeaker();
@@ -232,6 +193,7 @@ public class MLVoiceCallActivity extends MLBaseActivity {
      * 录制通话内容 TODO 后期实现
      */
     private void recordCall() {
+        vibrate();
         MLToast.makeToast(R.string.ml_toast_unrealized).show();
         // 根据开关状态决定是否开启录制
         if (mRecordSwitch.isActivated()) {
@@ -333,40 +295,6 @@ public class MLVoiceCallActivity extends MLBaseActivity {
     }
 
     /**
-     * 播放呼叫通话提示音
-     */
-    private void playCallSound() {
-        if (!mAudioManager.isSpeakerphoneOn()) {
-            mAudioManager.setSpeakerphoneOn(true);
-        }
-        // 设置音频管理器音频模式为铃音模式
-        mAudioManager.setMode(AudioManager.MODE_RINGTONE);
-        // 播放提示音，返回一个播放的音频id，等下停止播放需要用到
-        if (mSoundPool != null) {
-            streamID = mSoundPool.play(
-                    loadId, // 播放资源id；就是加载到SoundPool里的音频资源顺序，这里就是第一个，也是唯一的一个
-                    0.5f,   // 左声道音量
-                    0.5f,   // 右声道音量
-                    1,      // 优先级，这里至于一个提示音，不需要关注
-                    -1,     // 是否循环；0 不循环，-1 循环
-                    1);     // 播放比率；从0.5-2，一般设置为1，表示正常播放
-        }
-    }
-
-    /**
-     * 关闭音效的播放，并释放资源
-     */
-    private void stopCallSound() {
-        if (mSoundPool != null) {
-            // 停止播放音效
-            mSoundPool.stop(streamID);
-            // 释放资源
-            mSoundPool.release();
-            mSoundPool = null;
-        }
-    }
-
-    /**
      * 实现订阅方法，订阅全局监听发来的通话状态事件
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -448,39 +376,6 @@ public class MLVoiceCallActivity extends MLBaseActivity {
         default:
             break;
         }
-    }
-
-    /**
-     * 当系统的 SDK 版本高于21时，使用另一种方式创建 SoundPool
-     */
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    protected void createSoundPoolWithBuilder() {
-        AudioAttributes attributes = new AudioAttributes.Builder()
-                // 设置音频要用在什么地方，这里选择电话通知铃音
-                .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
-                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                .build();
-        // 使用 build 的方式实例化 SoundPool
-        mSoundPool = new SoundPool.Builder().setAudioAttributes(attributes).setMaxStreams(1).build();
-    }
-
-    /**
-     * 使用构造函数实例化 SoundPool
-     */
-    @SuppressWarnings("deprecation")
-    protected void createSoundPoolWithConstructor() {
-        // 老版本使用构造函数方式实例化 SoundPool，MODE 设置为铃音 MODE_RINGTONE
-        mSoundPool = new SoundPool(1, AudioManager.MODE_RINGTONE, 0);
-    }
-
-    /**
-     * 销毁界面时做一些自己的操作
-     */
-    @Override
-    protected void onFinish() {
-        // 关闭音效并释放资源
-        stopCallSound();
-        super.onFinish();
     }
 
     @Override

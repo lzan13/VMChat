@@ -578,6 +578,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 // 创建并发出一个消息事件
                 MLMessageEvent event = new MLMessageEvent();
                 event.setMessage(message);
+                event.setStatus(message.status());
                 EventBus.getDefault().post(event);
             }
 
@@ -587,6 +588,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 // 创建并发出一个消息事件
                 MLMessageEvent event = new MLMessageEvent();
                 event.setMessage(message);
+                event.setStatus(message.status());
                 // 设置消息 erorCode
                 event.setErrorCode(i);
                 // 设置消息 errorMessage
@@ -601,6 +603,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 // 创建并发出一个消息事件
                 MLMessageEvent event = new MLMessageEvent();
                 event.setMessage(message);
+                event.setStatus(message.status());
                 // 带上消息发送进度
                 event.setProgress(i);
                 EventBus.getDefault().post(event);
@@ -900,16 +903,23 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
 
     /**
      * 使用注解的方式订阅消息改变事件，主要监听发送消息的回调状态改变：
-     * 成功
-     * 失败
-     * 进度
+     * SUCCESS      成功
+     * FAIL         失败
+     * INPROGRESS   进度
+     * CREATE       创建
      *
      * @param event 包含消息的事件
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventBus(MLMessageEvent event) {
+        // 获取订阅事件包含的消息对象
         EMMessage message = event.getMessage();
-        if (message.status() == EMMessage.Status.FAIL) {
+        // 获取消息状态
+        EMMessage.Status status = event.getStatus();
+        if (status == EMMessage.Status.SUCCESS) {
+            // 消息状态回调完毕，刷新当前消息显示，这里不论成功失败都要刷新，TODO 进度的改变交由个字的Item自己去实现
+            postRefreshEvent(mConversation.getMessagePosition(message), 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);
+        } else if (status == EMMessage.Status.FAIL) {
             String errorMessage = event.getErrorMessage();
             int errorCode = event.getErrorCode();
             if (errorCode == EMError.MESSAGE_INCLUDE_ILLEGAL_CONTENT) {
@@ -920,10 +930,9 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 errorMessage = mActivity.getString(R.string.ml_toast_msg_send_faild) + errorMessage + "-" + errorCode;
             }
             MLToast.errorToast(errorMessage).show();
+            // 消息状态回调完毕，刷新当前消息显示，这里不论成功失败都要刷新，TODO 进度的改变交由个字的Item自己去实现
+            postRefreshEvent(mConversation.getMessagePosition(message), 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);
         }
-
-        // 消息发送成功，刷新当前消息状态
-        postRefreshEvent(mConversation.getMessagePosition(message), 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);
     }
 
     /**
