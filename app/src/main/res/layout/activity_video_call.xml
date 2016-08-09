@@ -29,7 +29,9 @@
             android:background="@color/ml_white_26"/>
     </RelativeLayout>
 
+    <!--控制按钮层布局-->
     <RelativeLayout
+        android:id="@+id/ml_layout_call_control"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">

@@ -17,6 +17,7 @@ import android.view.MotionEvent;
 import android.widget.ImageView;
 
 import net.melove.app.chat.R;
+import net.melove.app.chat.communal.util.MLBitmapUtil;
 
 /**
  * Created by lzan13 on 2015/4/30.
@@ -33,6 +34,10 @@ public class MLImageView extends ImageView {
     private static final Bitmap.Config BITMAP_CONFIG = Bitmap.Config.ARGB_8888;
     private static final int COLORDRAWABLE_DIMENSION = 1;
 
+    // 模糊半径，为 0 即不进行模糊
+    protected int blurRadius;
+    // 模糊前的缩放比例，原图缩放的越小，模糊耗费资源越少
+    protected float blurScale;
     // 边框颜色
     private int borderColor;
     // 边框宽度
@@ -65,6 +70,8 @@ public class MLImageView extends ImageView {
 
     private void init(Context context, AttributeSet attrs) {
         //初始化默认值
+        blurRadius = 0;
+        blurScale = 0.2f;
         borderWidth = 6;
         borderColor = 0xddffffff;
         pressAlpha = 0x42;
@@ -75,6 +82,7 @@ public class MLImageView extends ImageView {
         // 获取控件的属性值
         if (attrs != null) {
             TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.MLImageView);
+            blurRadius = array.getInteger(R.styleable.MLImageView_ml_blur_radius, blurRadius);
             borderColor = array.getColor(R.styleable.MLImageView_ml_border_color, borderColor);
             borderWidth = array.getDimensionPixelOffset(R.styleable.MLImageView_ml_border_width, borderWidth);
             pressAlpha = array.getInteger(R.styleable.MLImageView_ml_press_alpha, pressAlpha);
@@ -122,6 +130,11 @@ public class MLImageView extends ImageView {
         if (bitmap == null) {
             return;
         }
+        // 根据模糊半径是否为 0 来判断是否模糊图片
+        if (blurRadius > 0) {
+            MLBitmapUtil.stackBlurBitmap(bitmap, blurScale, blurRadius, false);
+        }
+        // 绘制图片到画板
         drawDrawable(canvas, bitmap);
 
         drawPress(canvas);
@@ -256,21 +269,21 @@ public class MLImageView extends ImageView {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                pressPaint.setAlpha(pressAlpha);
-                invalidate();
-                break;
-            case MotionEvent.ACTION_UP:
-                pressPaint.setAlpha(0);
-                invalidate();
-                break;
-            case MotionEvent.ACTION_MOVE:
+        case MotionEvent.ACTION_DOWN:
+            pressPaint.setAlpha(pressAlpha);
+            invalidate();
+            break;
+        case MotionEvent.ACTION_UP:
+            pressPaint.setAlpha(0);
+            invalidate();
+            break;
+        case MotionEvent.ACTION_MOVE:
 
-                break;
-            default:
-                pressPaint.setAlpha(0);
-                invalidate();
-                break;
+            break;
+        default:
+            pressPaint.setAlpha(0);
+            invalidate();
+            break;
         }
         return super.onTouchEvent(event);
     }

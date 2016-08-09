@@ -1,10 +1,14 @@
 package net.melove.app.chat.conversation.call;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -18,6 +22,8 @@ import com.hyphenate.exceptions.EMServiceNotReadyException;
 import net.melove.app.chat.R;
 import net.melove.app.chat.application.MLEasemobHelper;
 import net.melove.app.chat.application.eventbus.MLCallEvent;
+import net.melove.app.chat.communal.util.MLBitmapUtil;
+import net.melove.app.chat.communal.util.MLDateUtil;
 import net.melove.app.chat.communal.util.MLLog;
 import net.melove.app.chat.communal.widget.MLImageView;
 import net.melove.app.chat.communal.widget.MLToast;
@@ -27,7 +33,9 @@ import org.greenrobot.eventbus.ThreadMode;
 
 public class MLVoiceCallActivity extends MLCallActivity {
 
-    // 界面控件
+
+    // 通话背景图
+    private ImageView mCallBackgroundView;
     // 通话状态控件
     private TextView mCallStatusView;
     // 显示对方头像的控件
@@ -66,8 +74,14 @@ public class MLVoiceCallActivity extends MLCallActivity {
         super.initView();
 
         // 初始化界面控件
+        // 通话背景图
+        mCallBackgroundView = (ImageView) findViewById(R.id.ml_img_call_bg);
+        mCallBackgroundView.setImageResource(R.mipmap.ic_character_blackcat);
+        // 显示通话状态控件
         mCallStatusView = (TextView) findViewById(R.id.ml_text_call_status);
+        // 显示对方头像控件
         mAvatarView = (MLImageView) findViewById(R.id.ml_img_call_avatar);
+        // 显示对方用户名控件
         mUsernameView = (TextView) findViewById(R.id.ml_text_call_username);
 
         // 最小化按钮
@@ -164,43 +178,46 @@ public class MLVoiceCallActivity extends MLCallActivity {
      * TODO 3.1.4 SDK 暂时无效
      */
     private void onMicrophone() {
-        vibrate();
         if (mMicSwitch.isActivated()) {
+            mMicSwitch.setActivated(false);
             // 暂停语音数据的传输
             EMClient.getInstance().callManager().pauseVoiceTransfer();
-            mMicSwitch.setActivated(false);
         } else {
-            // 回复语音数据的传输
-            EMClient.getInstance().callManager().resumeVoiceTransfer();
             mMicSwitch.setActivated(true);
+            // 恢复语音数据的传输
+            EMClient.getInstance().callManager().resumeVoiceTransfer();
         }
+        // 方法调用成功加个振动反馈
+        vibrate();
     }
 
     /**
      * 扬声器开关
      */
     private void onSpeaker() {
-        vibrate();
         // 根据按钮状态决定打开还是关闭扬声器
         if (mSpeakerSwitch.isActivated()) {
             closeSpeaker();
         } else {
             openSpeaker();
         }
+        // 方法调用成功加个振动反馈
+        vibrate();
     }
 
     /**
      * 录制通话内容 TODO 后期实现
      */
     private void recordCall() {
-        vibrate();
         MLToast.makeToast(R.string.ml_toast_unrealized).show();
         // 根据开关状态决定是否开启录制
         if (mRecordSwitch.isActivated()) {
             mRecordSwitch.setActivated(false);
         } else {
-            mRecordSwitch.setActivated(false);
+            mRecordSwitch.setActivated(true);
         }
+        // 方法调用成功加个振动反馈
+        vibrate();
     }
 
     /**
@@ -381,6 +398,23 @@ public class MLVoiceCallActivity extends MLCallActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        // 添加控件监听，监听背景图加载是否完成
+        mCallBackgroundView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                // 移除控件加载图片监听
+                mCallBackgroundView.getViewTreeObserver().removeOnPreDrawListener(this);
+                MLLog.i("start blur  -- %d", MLDateUtil.getCurrentMillisecond());
+                mCallBackgroundView.setDrawingCacheEnabled(true);
+                Bitmap bitmap = mCallBackgroundView.getDrawingCache();
+                mCallBackgroundView.setImageBitmap(MLBitmapUtil.stackBlurBitmap(bitmap, 0.1f, 8, false));
+                // mCallBackgroundView.setImageBitmap(MLBitmapUtil.rsBlurBitmp(mActivity, bitmap, 2, 10));
+                mCallBackgroundView.setDrawingCacheEnabled(false);
+                MLLog.i("end blur  -- %d", MLDateUtil.getCurrentMillisecond());
+                return false;
+            }
+        });
     }
 
     @Override

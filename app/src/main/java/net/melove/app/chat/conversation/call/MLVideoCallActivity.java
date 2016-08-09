@@ -3,7 +3,6 @@ package net.melove.app.chat.conversation.call;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.view.SurfaceView;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -31,7 +30,11 @@ public class MLVideoCallActivity extends MLCallActivity {
 
     // 视频通话帮助类
     private EMCallManager.EMVideoCallHelper mVideoCallHelper;
+    // 摄像头数据处理器
+    private MLCameraDataProcessor mCameraDataProcessor;
 
+    // 控制按钮层布局
+    private View mControlLayout;
     // 显示视频通话画面的控件
     private EMLocalSurfaceView mLocalSurfaceView;
     private EMOppositeSurfaceView mOppositeSurfaceView;
@@ -75,6 +78,8 @@ public class MLVideoCallActivity extends MLCallActivity {
     protected void initView() {
         super.initView();
 
+        // 初始化控制层
+        mControlLayout = findViewById(R.id.ml_layout_call_control);
         // 初始化界面控件
         mLocalSurfaceView = (EMLocalSurfaceView) findViewById(R.id.ml_surface_view_local);
         mOppositeSurfaceView = (EMOppositeSurfaceView) findViewById(R.id.ml_surface_view_opposite);
@@ -99,7 +104,9 @@ public class MLVideoCallActivity extends MLCallActivity {
         mSpeakerSwitch.setActivated(true);
         mRecordSwitch.setActivated(false);
 
-        // 设置按钮的点击监听
+        // 设置控件的点击监听
+        mControlLayout.setOnClickListener(viewListener);
+        mLocalSurfaceView.setOnClickListener(viewListener);
         mExitFullScreenBtn.setOnClickListener(viewListener);
         mChangeCameraSwitch.setOnClickListener(viewListener);
         mMicSwitch.setOnClickListener(viewListener);
@@ -113,13 +120,18 @@ public class MLVideoCallActivity extends MLCallActivity {
 
         // 初始化视频通话帮助类
         mVideoCallHelper = EMClient.getInstance().callManager().getVideoCallHelper();
+        // 初始化视频数据处理器
+        mCameraDataProcessor = new MLCameraDataProcessor();
+
         // 设置自动码率  TODO 新的针对音视频优化的 SDK 不需要调用，默认直接开启
         mVideoCallHelper.setAdaptiveVideoFlag(true);
         // 设置视频通话分辨率 默认是(320, 240)
         mVideoCallHelper.setResolution(640, 480);
         // 设置视频通话比特率 默认是(150)
         mVideoCallHelper.setVideoBitrate(300);
+        // 设置本地以及对方显示画面控件
         EMClient.getInstance().callManager().setSurfaceView(mLocalSurfaceView, mOppositeSurfaceView);
+        EMClient.getInstance().callManager().setCameraDataProcessor(mCameraDataProcessor);
 
         // 设置界面控件的显示
         if (isInComingCall) {
@@ -155,6 +167,12 @@ public class MLVideoCallActivity extends MLCallActivity {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
+            case R.id.ml_layout_call_control:
+                MLToast.makeToast("this call control layout").show();
+                break;
+            case R.id.ml_surface_view_local:
+                MLToast.makeToast("this local surface view").show();
+                break;
             case R.id.ml_btn_exit_full_screen:
                 // 最小化通话界面
                 break;
@@ -205,7 +223,7 @@ public class MLVideoCallActivity extends MLCallActivity {
             mChangeCameraSwitch.setActivated(false);
         } else {
             EMClient.getInstance().callManager().switchCamera();
-            mChangeCameraSwitch.setActivated(false);
+            mChangeCameraSwitch.setActivated(true);
         }
     }
 
@@ -217,13 +235,13 @@ public class MLVideoCallActivity extends MLCallActivity {
         vibrate();
         // 根据麦克风开关是否被激活来进行判断麦克风状态，然后进行下一步操作
         if (mMicSwitch.isActivated()) {
+            mMicSwitch.setActivated(false);
             // 暂停语音数据的传输
             EMClient.getInstance().callManager().pauseVoiceTransfer();
-            mMicSwitch.setActivated(false);
         } else {
-            // 回复语音数据的传输
-            EMClient.getInstance().callManager().resumeVoiceTransfer();
             mMicSwitch.setActivated(true);
+            // 恢复语音数据的传输
+            EMClient.getInstance().callManager().resumeVoiceTransfer();
         }
     }
 
@@ -231,42 +249,47 @@ public class MLVideoCallActivity extends MLCallActivity {
      * 摄像头开关
      */
     private void onCamera() {
-        vibrate();
         // 根据摄像头开关按钮状态判断摄像头状态，然后进行下一步操作
         if (mCameraSwitch.isActivated()) {
-            EMClient.getInstance().callManager().pauseVideoTransfer();
             mCameraSwitch.setActivated(false);
+            // 暂停视频数据的传输
+            EMClient.getInstance().callManager().pauseVideoTransfer();
         } else {
-            EMClient.getInstance().callManager().resumeVideoTransfer();
             mCameraSwitch.setActivated(true);
+            // 恢复视频数据的传输
+            EMClient.getInstance().callManager().resumeVideoTransfer();
         }
+        // 方法调用成功加个振动反馈
+        vibrate();
     }
 
     /**
      * 扬声器开关
      */
     private void onSpeaker() {
-        vibrate();
         // 根据按钮状态决定打开还是关闭扬声器
         if (mSpeakerSwitch.isActivated()) {
             closeSpeaker();
         } else {
             openSpeaker();
         }
+        // 方法调用成功加个振动反馈
+        vibrate();
     }
 
     /**
      * 录制通话内容 TODO 后期实现
      */
     private void recordCall() {
-        vibrate();
         MLToast.makeToast(R.string.ml_toast_unrealized).show();
         // 根据开关状态决定是否开启录制
         if (mRecordSwitch.isActivated()) {
             mRecordSwitch.setActivated(false);
         } else {
-            mRecordSwitch.setActivated(false);
+            mRecordSwitch.setActivated(true);
         }
+        // 方法调用成功加个振动反馈
+        vibrate();
     }
 
     /**

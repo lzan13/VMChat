@@ -230,6 +230,7 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
      */
     static class MessageViewHolder extends RecyclerView.ViewHolder {
 
+
         public MessageViewHolder(View itemView) {
             super(itemView);
         }
