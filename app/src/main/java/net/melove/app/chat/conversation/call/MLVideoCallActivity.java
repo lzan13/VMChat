@@ -120,8 +120,6 @@ public class MLVideoCallActivity extends MLCallActivity {
 
         // 初始化视频通话帮助类
         mVideoCallHelper = EMClient.getInstance().callManager().getVideoCallHelper();
-        // 初始化视频数据处理器
-        mCameraDataProcessor = new MLCameraDataProcessor();
 
         // 设置自动码率  TODO 新的针对音视频优化的 SDK 不需要调用，默认直接开启
         mVideoCallHelper.setAdaptiveVideoFlag(true);
@@ -129,8 +127,12 @@ public class MLVideoCallActivity extends MLCallActivity {
         mVideoCallHelper.setResolution(640, 480);
         // 设置视频通话比特率 默认是(150)
         mVideoCallHelper.setVideoBitrate(300);
-        // 设置本地以及对方显示画面控件
+
+        // 设置本地以及对方显示画面控件 TODO 这个要设置在上边几个方法之后，不然会概率出现接收方无画面
         EMClient.getInstance().callManager().setSurfaceView(mLocalSurfaceView, mOppositeSurfaceView);
+        // 初始化视频数据处理器
+        mCameraDataProcessor = new MLCameraDataProcessor();
+        // 设置视频通话数据处理类
         EMClient.getInstance().callManager().setCameraDataProcessor(mCameraDataProcessor);
 
         // 设置界面控件的显示
@@ -169,6 +171,12 @@ public class MLVideoCallActivity extends MLCallActivity {
             switch (v.getId()) {
             case R.id.ml_layout_call_control:
                 MLToast.makeToast("this call control layout").show();
+                if (mControlLayout.isShown()) {
+                    mControlLayout.setVisibility(View.INVISIBLE);
+                } else {
+                    mControlLayout.setVisibility(View.VISIBLE);
+                }
+
                 break;
             case R.id.ml_surface_view_local:
                 MLToast.makeToast("this local surface view").show();

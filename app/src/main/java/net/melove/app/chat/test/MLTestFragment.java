@@ -9,7 +9,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.hyphenate.EMCallBack;
+import com.hyphenate.chat.EMChatRoom;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMGroupManager;
@@ -79,7 +81,7 @@ public class MLTestFragment extends MLBaseFragment {
     }
 
     private void init() {
-        String[] btns = {"登出", "Insert Message", "更新消息", "群消息", "创建群组"};
+        String[] btns = {"登出", "Insert Message", "更新消息", "群消息", "创建群组", "Send CMD", "ChatRoom"};
         viewGroup = (MLViewGroup) getView().findViewById(R.id.ml_view_custom_viewgroup);
         for (int i = 0; i < btns.length; i++) {
             Button btn = new Button(mActivity);
@@ -113,11 +115,35 @@ public class MLTestFragment extends MLBaseFragment {
                 testCreateGroup();
                 break;
             case 105:
+                sendCMDMessage();
+                break;
+            case 106:
                 break;
             }
         }
     };
 
+    private void getChatRoom() {
+        try {
+            EMChatRoom chatRoom = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer("", true);
+            chatRoom.getMemberList();
+        } catch (HyphenateException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 发送透传消息
+     */
+    private void sendCMDMessage() {
+        EMMessage cmdMessage = EMMessage.createSendMessage(EMMessage.Type.CMD);
+        String action = "online";
+        EMCmdMessageBody cmdBody = new EMCmdMessageBody(action);
+        cmdMessage.setReceipt("lz0");
+        cmdMessage.addBody(cmdBody);
+        cmdMessage.setAttribute("ml_online_client", "app");
+        EMClient.getInstance().chatManager().sendMessage(cmdMessage);
+    }
 
     /**
      * 测试创建群组

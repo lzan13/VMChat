@@ -76,7 +76,6 @@ public class MLVoiceCallActivity extends MLCallActivity {
         // 初始化界面控件
         // 通话背景图
         mCallBackgroundView = (ImageView) findViewById(R.id.ml_img_call_bg);
-        mCallBackgroundView.setImageResource(R.mipmap.ic_character_blackcat);
         // 显示通话状态控件
         mCallStatusView = (TextView) findViewById(R.id.ml_text_call_status);
         // 显示对方头像控件
@@ -408,7 +407,7 @@ public class MLVoiceCallActivity extends MLCallActivity {
                 MLLog.i("start blur  -- %d", MLDateUtil.getCurrentMillisecond());
                 mCallBackgroundView.setDrawingCacheEnabled(true);
                 Bitmap bitmap = mCallBackgroundView.getDrawingCache();
-                mCallBackgroundView.setImageBitmap(MLBitmapUtil.stackBlurBitmap(bitmap, 0.1f, 8, false));
+                mCallBackgroundView.setImageBitmap(MLBitmapUtil.stackBlurBitmap(bitmap, 5, 10, false));
                 // mCallBackgroundView.setImageBitmap(MLBitmapUtil.rsBlurBitmp(mActivity, bitmap, 2, 10));
                 mCallBackgroundView.setDrawingCacheEnabled(false);
                 MLLog.i("end blur  -- %d", MLDateUtil.getCurrentMillisecond());

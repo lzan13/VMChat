@@ -65,7 +65,7 @@
                     android:id="@+id/ml_img_call_avatar"
                     android:layout_width="@dimen/ml_dimen_96"
                     android:layout_height="@dimen/ml_dimen_96"
-                    android:src="@mipmap/ic_character_blackcat"
+                    android:src="@mipmap/ic_character_spider"
                     app:ml_border_width="@dimen/ml_dimen_1"
                     app:ml_shape_type="round"/>
                 <!--当前通话的账户名-->

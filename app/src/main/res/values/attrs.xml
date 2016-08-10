@@ -4,6 +4,8 @@
     <declare-styleable name="MLImageView">
         <!--模糊半径-->
         <attr name="ml_blur_radius" format="integer"/>
+        <!--模糊图片是缩放比例-->
+        <attr name="ml_blur_scale" format="integer"/>
         <!--控件边框颜色-->
         <attr name="ml_border_color" format="color"/>
         <!--控件边框宽度-->

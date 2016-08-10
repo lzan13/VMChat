@@ -37,21 +37,21 @@ public class MLImageView extends ImageView {
     // 模糊半径，为 0 即不进行模糊
     protected int blurRadius;
     // 模糊前的缩放比例，原图缩放的越小，模糊耗费资源越少
-    protected float blurScale;
+    protected int blurScale;
     // 边框颜色
-    private int borderColor;
+    protected int borderColor;
     // 边框宽度
-    private int borderWidth;
+    protected int borderWidth;
     // 按下的透明度
-    private int pressAlpha;
+    protected int pressAlpha;
     // 按下的颜色
-    private int pressColor;
+    protected int pressColor;
     // 圆角半径
-    private int radius;
+    protected int radius;
     // 图片类型（矩形，圆形）
-    private int shapeType;
+    protected int shapeType;
     // 当前控件是否继续分发触摸事件，默认继续分发，即不拦截触摸事件
-    private boolean isDispatchTouchEvent = true;
+    protected boolean isDispatchTouchEvent = true;
 
     public MLImageView(Context context) {
         super(context);
@@ -71,8 +71,8 @@ public class MLImageView extends ImageView {
     private void init(Context context, AttributeSet attrs) {
         //初始化默认值
         blurRadius = 0;
-        blurScale = 0.2f;
-        borderWidth = 6;
+        blurScale = 2;
+        borderWidth = 8;
         borderColor = 0xddffffff;
         pressAlpha = 0x42;
         pressColor = 0x42000000;
@@ -83,6 +83,7 @@ public class MLImageView extends ImageView {
         if (attrs != null) {
             TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.MLImageView);
             blurRadius = array.getInteger(R.styleable.MLImageView_ml_blur_radius, blurRadius);
+            blurScale = array.getInteger(R.styleable.MLImageView_ml_blur_scale, blurScale);
             borderColor = array.getColor(R.styleable.MLImageView_ml_border_color, borderColor);
             borderWidth = array.getDimensionPixelOffset(R.styleable.MLImageView_ml_border_width, borderWidth);
             pressAlpha = array.getInteger(R.styleable.MLImageView_ml_press_alpha, pressAlpha);
@@ -132,7 +133,7 @@ public class MLImageView extends ImageView {
         }
         // 根据模糊半径是否为 0 来判断是否模糊图片
         if (blurRadius > 0) {
-            MLBitmapUtil.stackBlurBitmap(bitmap, blurScale, blurRadius, false);
+            bitmap = MLBitmapUtil.stackBlurBitmap(bitmap, blurScale, blurRadius, false);
         }
         // 绘制图片到画板
         drawDrawable(canvas, bitmap);

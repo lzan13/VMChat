@@ -62,7 +62,7 @@ public class MLBitmapUtil {
     public static Bitmap loadBitmapThumbnail(String path, int dimension) {
         Bitmap bitmap = loadBitmapByFile(path, dimension);
         // 调用矩阵方法压缩图片
-        return compressBitmapByMatrix(bitmap, dimension);
+        return compressBitmapByMatrixToDimension(bitmap, dimension);
     }
 
     /**
@@ -105,7 +105,7 @@ public class MLBitmapUtil {
      * @param dimension 图片压缩后最大宽高
      * @return 返回压缩后的 Bitmap
      */
-    public static Bitmap compressBitmapByMatrix(Bitmap bitmap, int dimension) {
+    public static Bitmap compressBitmapByMatrixToDimension(Bitmap bitmap, int dimension) {
         int w = bitmap.getWidth();
         int h = bitmap.getHeight();
         float scale = 0.5f;
@@ -128,10 +128,11 @@ public class MLBitmapUtil {
      * @param scale  图片压缩比率(0-1)
      * @return 返回压缩后的 Bitmap
      */
-    public static Bitmap compressBitmapByMatrix(Bitmap bitmap, float scale) {
+    public static Bitmap compressBitmapByMatrixToScale(Bitmap bitmap, int scale) {
         // 使用矩阵进行压缩图片
         Matrix matrix = new Matrix();
-        matrix.postScale(scale, scale);
+        float s = (float) 1 / scale;
+        matrix.postScale(s, s);
         Bitmap result = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
         return result;
     }
@@ -166,7 +167,7 @@ public class MLBitmapUtil {
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     public static Bitmap rsBlurBitmp(Context context, Bitmap bitmap, int scale, float radius) {
         // 创建一个新的压缩过的 Bitmap
-        Bitmap overlay = compressBitmapByMatrix(bitmap, scale);
+        Bitmap overlay = compressBitmapByMatrixToScale(bitmap, scale);
 
         RenderScript rs = null;
         try {
@@ -228,10 +229,10 @@ public class MLBitmapUtil {
      * @param reuse      是否重用 Bitmap
      * @return
      */
-    public static Bitmap stackBlurBitmap(Bitmap sentBitmap, float scale, int radius, boolean reuse) {
+    public static Bitmap stackBlurBitmap(Bitmap sentBitmap, int scale, int radius, boolean reuse) {
 
         // 创建一个新的压缩过的 Bitmap
-        Bitmap overlay = compressBitmapByMatrix(sentBitmap, scale);
+        Bitmap overlay = compressBitmapByMatrixToScale(sentBitmap, scale);
 
         Bitmap bitmap;
         if (reuse) {
