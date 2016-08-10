@@ -11,8 +11,31 @@ android {
         versionCode 1
         versionName "1.0"
     }
-    buildTypes {
+
+    // 配置签名信息
+    signingConfigs {
+        // Debug 使用默认签名
+        debug {
+            storeFile file("debug.keystore")
+        }
+        // 发布时用自己的签名
         release {
+            storeFile file("lzan13.keystore")
+            storePassword "lzan13"
+            keyAlias "lzan13"
+            keyPassword "lzan13"
+        }
+    }
+
+    buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+            signingConfig signingConfigs.debug
+        }
+        release {
+            signingConfig signingConfigs.release
+            // 是否开启压缩
+            zipAlignEnabled true
             // 是否开启混淆
             minifyEnabled true
             // 打包时删除无用资源 依赖于混淆，必须和 minifyEnabled 一起使用
@@ -21,10 +44,19 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    // 文件路径映射配置
 //    sourceSets {
 //        main {
 //            // 设置Jni so文件路径 如果有jniLibs目录就不需要设置
 //            jniLibs.srcDirs = ['libs']
+//        }
+//    }
+//    productFlavors {
+//        dev {
+//            minSdkVersion 21
+//        }
+//        release {
+//            minSdkVersion 15
 //        }
 //    }
 
@@ -72,9 +104,9 @@ dependencies {
     // Google Play Service 库，使用GCM推送需要
     compile 'com.google.android.gms:play-services-gcm:9.0.0'
     // LeakCanary Debug库，开源捕获内存溢出的库
-    compile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
     // LeakCanary 发版的库
-    // compile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
     // 第三方图片加载库
     compile 'com.github.bumptech.glide:glide:3.7.0'
     // 观察者模式解耦库

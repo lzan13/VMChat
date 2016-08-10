@@ -25,7 +25,8 @@
         <com.hyphenate.media.EMOppositeSurfaceView
             android:id="@+id/ml_surface_view_opposite"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:backgroundTint="@color/ml_black_26"/>
     </RelativeLayout>
 
     <!--控制按钮层布局-->
@@ -40,7 +41,8 @@
             android:id="@+id/ml_surface_view_local"
             android:layout_width="@dimen/ml_dimen_144"
             android:layout_height="@dimen/ml_dimen_192"
-            android:layout_alignParentRight="true"/>
+            android:layout_alignParentRight="true"
+            android:backgroundTint="@color/ml_black_26"/>
 
         <!--头部状态以及最小化操作-->
         <RelativeLayout

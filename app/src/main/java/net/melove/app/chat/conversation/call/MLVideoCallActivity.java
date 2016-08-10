@@ -107,6 +107,7 @@ public class MLVideoCallActivity extends MLCallActivity {
         // 设置控件的点击监听
         mControlLayout.setOnClickListener(viewListener);
         mLocalSurfaceView.setOnClickListener(viewListener);
+        mOppositeSurfaceView.setOnClickListener(viewListener);
         mExitFullScreenBtn.setOnClickListener(viewListener);
         mChangeCameraSwitch.setOnClickListener(viewListener);
         mMicSwitch.setOnClickListener(viewListener);
@@ -127,6 +128,9 @@ public class MLVideoCallActivity extends MLCallActivity {
         mVideoCallHelper.setResolution(640, 480);
         // 设置视频通话比特率 默认是(150)
         mVideoCallHelper.setVideoBitrate(300);
+        // 设置本地预览图像显示在最上层
+        mLocalSurfaceView.setZOrderMediaOverlay(true);
+        mLocalSurfaceView.setZOrderOnTop(true);
 
         // 设置本地以及对方显示画面控件 TODO 这个要设置在上边几个方法之后，不然会概率出现接收方无画面
         EMClient.getInstance().callManager().setSurfaceView(mLocalSurfaceView, mOppositeSurfaceView);
@@ -170,16 +174,13 @@ public class MLVideoCallActivity extends MLCallActivity {
         public void onClick(View v) {
             switch (v.getId()) {
             case R.id.ml_layout_call_control:
-                MLToast.makeToast("this call control layout").show();
-                if (mControlLayout.isShown()) {
-                    mControlLayout.setVisibility(View.INVISIBLE);
-                } else {
-                    mControlLayout.setVisibility(View.VISIBLE);
-                }
-
+                onControlLayout();
                 break;
             case R.id.ml_surface_view_local:
-                MLToast.makeToast("this local surface view").show();
+                onControlLayout();
+                break;
+            case R.id.ml_surface_view_opposite:
+                onControlLayout();
                 break;
             case R.id.ml_btn_exit_full_screen:
                 // 最小化通话界面
@@ -219,6 +220,17 @@ public class MLVideoCallActivity extends MLCallActivity {
             }
         }
     };
+
+    /**
+     * 控制界面的显示与隐藏
+     */
+    private void onControlLayout() {
+        if (mControlLayout.isShown()) {
+            mControlLayout.setVisibility(View.INVISIBLE);
+        } else {
+            mControlLayout.setVisibility(View.VISIBLE);
+        }
+    }
 
     /**
      * 切换摄像头
