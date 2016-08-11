@@ -29,8 +29,8 @@ android {
 
     buildTypes {
         debug {
-            applicationIdSuffix ".debug"
-            signingConfig signingConfigs.debug
+//            applicationIdSuffix ".debug"
+//            signingConfig signingConfigs.debug
         }
         release {
             signingConfig signingConfigs.release
@@ -49,14 +49,6 @@ android {
 //        main {
 //            // 设置Jni so文件路径 如果有jniLibs目录就不需要设置
 //            jniLibs.srcDirs = ['libs']
-//        }
-//    }
-//    productFlavors {
-//        dev {
-//            minSdkVersion 21
-//        }
-//        release {
-//            minSdkVersion 15
 //        }
 //    }
 

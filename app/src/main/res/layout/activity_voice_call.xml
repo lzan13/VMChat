@@ -5,162 +5,156 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     android:background="@color/ml_theme_background"
     android:clipToPadding="false"
     android:fitsSystemWindows="false"
     tools:context=".conversation.call.MLVoiceCallActivity">
 
-    <!--<include layout="@layout/widget_toolbar_communal"/>-->
+    <!--通话界面背景-->
+    <ImageView
+        android:id="@+id/ml_img_call_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/bg_chat"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <!--通话界面背景-->
-        <ImageView
-            android:id="@+id/ml_img_call_bg"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/bg_chat"
-            android:tint="@color/ml_black_26"/>
+        android:layout_height="match_parent"
+        android:clipToPadding="true"
+        android:fitsSystemWindows="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="true"
-            android:fitsSystemWindows="true">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/ml_dimen_24">
+            <!--通话状态-->
+            <TextView
+                android:id="@+id/ml_text_call_status"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/ml_dimen_24">
-                <!--通话状态-->
-                <TextView
-                    android:id="@+id/ml_text_call_status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="@string/ml_app_name"
-                    android:textColor="@color/ml_white_87"/>
-                <!--通话界面最小化-->
+                android:layout_centerInParent="true"
+                android:text="@string/ml_app_name"
+                android:textColor="@color/ml_white_87"/>
+            <!--通话界面最小化-->
+            <ImageButton
+                android:id="@+id/ml_btn_exit_full_screen"
+                android:layout_width="@dimen/ml_dimen_48"
+                android:layout_height="@dimen/ml_dimen_48"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/ml_dimen_16"
+                android:background="@drawable/ml_click_rectangle_white"
+                android:src="@mipmap/ic_fullscreen_exit_white_24dp"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/ml_dimen_96"
+            android:gravity="center"
+            android:orientation="vertical">
+            <!--当前通话的头像-->
+            <net.melove.app.chat.communal.widget.MLImageView
+                android:id="@+id/ml_img_call_avatar"
+                android:layout_width="@dimen/ml_dimen_96"
+                android:layout_height="@dimen/ml_dimen_96"
+                android:src="@mipmap/ic_character_spider"
+                app:ml_border_width="@dimen/ml_dimen_1"
+                app:ml_shape_type="round"/>
+            <!--当前通话的账户名-->
+            <TextView
+                android:id="@+id/ml_text_call_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/ml_dimen_8"
+                android:text="@string/ml_app_name"
+                android:textColor="@color/ml_white_87"
+                android:textSize="@dimen/ml_size_18"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ml_layout_calling"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/ml_black_26"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <!--麦克风开关-->
                 <ImageButton
-                    android:id="@+id/ml_btn_exit_full_screen"
+                    android:id="@+id/ml_btn_mic_switch"
                     android:layout_width="@dimen/ml_dimen_48"
                     android:layout_height="@dimen/ml_dimen_48"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="@dimen/ml_dimen_16"
-                    android:background="@drawable/ml_click_rectangle_white"
-                    android:src="@mipmap/ic_fullscreen_exit_white_24dp"/>
-            </RelativeLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/ml_dimen_96"
-                android:gravity="center"
-                android:orientation="vertical">
-                <!--当前通话的头像-->
-                <net.melove.app.chat.communal.widget.MLImageView
-                    android:id="@+id/ml_img_call_avatar"
-                    android:layout_width="@dimen/ml_dimen_96"
-                    android:layout_height="@dimen/ml_dimen_96"
-                    android:src="@mipmap/ic_character_spider"
-                    app:ml_border_width="@dimen/ml_dimen_1"
-                    app:ml_shape_type="round"/>
-                <!--当前通话的账户名-->
-                <TextView
-                    android:id="@+id/ml_text_call_username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:layout_margin="@dimen/ml_dimen_8"
-                    android:text="@string/ml_app_name"
-                    android:textColor="@color/ml_white_87"
-                    android:textSize="@dimen/ml_size_18"
-                    android:textStyle="bold"/>
+                    android:background="@drawable/ml_click_rectangle_white"
+                    android:src="@drawable/ml_checkbox_mic"/>
+
+                <!--扬声器开关-->
+                <ImageButton
+                    android:id="@+id/ml_btn_speaker_switch"
+                    android:layout_width="@dimen/ml_dimen_48"
+                    android:layout_height="@dimen/ml_dimen_48"
+                    android:layout_margin="@dimen/ml_dimen_8"
+                    android:background="@drawable/ml_click_rectangle_white"
+                    android:src="@drawable/ml_checkbox_speaker"/>
+
+                <!--录制开关-->
+                <ImageButton
+                    android:id="@+id/ml_btn_record_switch"
+                    android:layout_width="@dimen/ml_dimen_48"
+                    android:layout_height="@dimen/ml_dimen_48"
+                    android:layout_margin="@dimen/ml_dimen_8"
+                    android:background="@drawable/ml_click_rectangle_white"
+                    android:src="@drawable/ml_checkbox_record"/>
+
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/ml_layout_calling"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:background="@color/ml_black_26"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <LinearLayout
+                android:orientation="horizontal">
+                <!--拒绝接听-->
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/ml_btn_fab_reject_call"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="@dimen/ml_dimen_24"
+                    android:src="@mipmap/ic_call_end_white_24dp"
+                    app:fabSize="normal"/>
 
-                    <!--麦克风开关-->
-                    <ImageButton
-                        android:id="@+id/ml_btn_mic_switch"
-                        android:layout_width="@dimen/ml_dimen_48"
-                        android:layout_height="@dimen/ml_dimen_48"
-                        android:layout_margin="@dimen/ml_dimen_8"
-                        android:background="@drawable/ml_click_rectangle_white"
-                        android:src="@drawable/ml_checkbox_mic"/>
-
-                    <!--扬声器开关-->
-                    <ImageButton
-                        android:id="@+id/ml_btn_speaker_switch"
-                        android:layout_width="@dimen/ml_dimen_48"
-                        android:layout_height="@dimen/ml_dimen_48"
-                        android:layout_margin="@dimen/ml_dimen_8"
-                        android:background="@drawable/ml_click_rectangle_white"
-                        android:src="@drawable/ml_checkbox_speaker"/>
-
-                    <!--录制开关-->
-                    <ImageButton
-                        android:id="@+id/ml_btn_record_switch"
-                        android:layout_width="@dimen/ml_dimen_48"
-                        android:layout_height="@dimen/ml_dimen_48"
-                        android:layout_margin="@dimen/ml_dimen_8"
-                        android:background="@drawable/ml_click_rectangle_white"
-                        android:src="@drawable/ml_checkbox_record"/>
-
-                </LinearLayout>
-
-                <LinearLayout
+                <!--结束通话-->
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/ml_btn_fab_end_call"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <!--拒绝接听-->
-                    <android.support.design.widget.FloatingActionButton
-                        android:id="@+id/ml_btn_fab_reject_call"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_margin="@dimen/ml_dimen_16"
-                        android:src="@mipmap/ic_call_end_white_24dp"
-                        app:fabSize="normal"/>
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="@dimen/ml_dimen_24"
+                    android:src="@mipmap/ic_call_end_white_24dp"
+                    android:visibility="gone"
+                    app:fabSize="normal"/>
 
-                    <!--结束通话-->
-                    <android.support.design.widget.FloatingActionButton
-                        android:id="@+id/ml_btn_fab_end_call"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_margin="@dimen/ml_dimen_16"
-                        android:src="@mipmap/ic_call_end_white_24dp"
-                        android:visibility="gone"
-                        app:fabSize="normal"/>
+                <!--接听通话-->
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/ml_btn_fab_answer_call"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="@dimen/ml_dimen_24"
+                    android:src="@mipmap/ic_call_white_24dp"
+                    app:backgroundTint="@color/ml_green_87"
+                    app:fabSize="normal"/>
 
-                    <!--接听通话-->
-                    <android.support.design.widget.FloatingActionButton
-                        android:id="@+id/ml_btn_fab_answer_call"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_margin="@dimen/ml_dimen_16"
-                        android:src="@mipmap/ic_call_white_24dp"
-                        app:backgroundTint="@color/ml_green_87"
-                        app:fabSize="normal"/>
-
-                </LinearLayout>
             </LinearLayout>
-        </RelativeLayout>
+        </LinearLayout>
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

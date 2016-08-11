@@ -21,11 +21,12 @@
     <integer name="ml_btn_test">2</integer>
 
     <!--模糊时的模糊半径-->
-    <integer name="ml_img_blur_radius_2">2</integer>
-    <integer name="ml_img_blur_radius_4">4</integer>
-    <integer name="ml_img_blur_radius_6">6</integer>
-    <integer name="ml_img_blur_radius_8">8</integer>
-    <integer name="ml_img_blur_radius_10">10</integer>
-    <integer name="ml_img_blur_radius_15">15</integer>
-    <integer name="ml_img_blur_radius_20">20</integer>
+    <integer name="ml_img_blur_2">2</integer>
+    <integer name="ml_img_blur_4">4</integer>
+    <integer name="ml_img_blur_8">8</integer>
+    <integer name="ml_img_blur_12">12</integer>
+    <integer name="ml_img_blur_16">16</integer>
+    <integer name="ml_img_blur_20">20</integer>
+    <integer name="ml_img_blur_24">24</integer>
+    <integer name="ml_img_blur_32">32</integer>
 </resources>

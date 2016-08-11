@@ -37,7 +37,10 @@
     <!-- 非必需权限 -->
     <!-- 开机自启动 -->
     <!-- <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/> -->
-    <!-- <uses-permission android:name="android.permission.GET_TASKS"/> -->
+    <!--获取当前和最近执行的任务
+    TODO 已被弃用后期可能会添加另一个权限 REAL_GET_TASKS
+    TODO https://android.googlesource.com/platform/frameworks/base/+/2d7576b%5E!/-->
+    <uses-permission android:name="android.permission.GET_TASKS"/>
     <!-- 安装卸载文件系统 -->
     <!-- <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/> -->
     <!-- 改变WIFI状态 -->
@@ -62,7 +65,11 @@
 
     <!-- 配置 Google 推送需要的权限 -->
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
-
+    <!--小米推送自定义权限-->
+    <permission
+        android:name="net.melove.app.chat.permission.MIPUSH_RECEIVE"
+        android:protectionLevel="signature"/>
+    <uses-permission android:name="net.melove.app.chat.permission.MIPUSH_RECEIVE"/>
     <!-- GCM permission end -->
     <!-- 程序的入口 -->
     <application
@@ -161,8 +168,8 @@
             android:name="EASEMOB_APPKEY"
             android:value="lzan13#hxsdkdemo"/>
         <!--<meta-data-->
-            <!--android:name="EASEMOB_APPKEY"-->
-            <!--android:value="${EM_APPKEY}"/>-->
+        <!--android:name="EASEMOB_APPKEY"-->
+        <!--android:value="${EM_APPKEY}"/>-->
         <!--配置私有化聊天地址-->
         <meta-data
             android:name="EASEMOB_CHAT_ADDRESS"
@@ -194,6 +201,7 @@
         </receiver>
         <!-- 环信sdk配置 end -->
 
+        <!--华为推送 start-->
         <!--监听华为推送广播-->
         <receiver android:name="net.melove.app.chat.conversation.MLHWPushReceiver">
             <intent-filter>
@@ -228,6 +236,31 @@
             android:name="com.huawei.android.pushagent.PushService"
             android:process=":pushservice">
         </service>
+        <!--华为推送 end-->
+
+        <!-- 小米推送 start -->
+        <service
+            android:name="com.xiaomi.mipush.sdk.PushMessageHandler"
+            android:enabled="true"
+            android:exported="true"/>
+        <service
+            android:name="com.xiaomi.mipush.sdk.MessageHandleService"
+            android:enabled="true"/>
+
+        <receiver
+            android:name="com.hyphenate.chat.EMMipushReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.xiaomi.mipush.MESSAGE_ARRIVED"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.xiaomi.mipush.ERROR"/>
+            </intent-filter>
+        </receiver>
+        <!-- 小米推送 end -->
 
         <!-- 设置多渠道打包的渠道名，ML_CHANNEL_ID 是渠道名占位符 -->
         <!-- <meta-data -->

@@ -1,10 +1,17 @@
 package net.melove.app.chat.conversation.call;
 
+import android.graphics.Bitmap;
+import android.graphics.PixelFormat;
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hyphenate.chat.EMCallManager;
@@ -20,6 +27,8 @@ import com.hyphenate.media.EMOppositeSurfaceView;
 import net.melove.app.chat.R;
 import net.melove.app.chat.application.MLEasemobHelper;
 import net.melove.app.chat.application.eventbus.MLCallEvent;
+import net.melove.app.chat.communal.util.MLBitmapUtil;
+import net.melove.app.chat.communal.util.MLDateUtil;
 import net.melove.app.chat.communal.util.MLLog;
 import net.melove.app.chat.communal.widget.MLToast;
 
@@ -39,7 +48,8 @@ public class MLVideoCallActivity extends MLCallActivity {
     private EMLocalSurfaceView mLocalSurfaceView;
     private EMOppositeSurfaceView mOppositeSurfaceView;
 
-    // 界面控件
+    // 通话背景图
+    private ImageView mCallBackgroundView;
     // 通话状态控件
     private TextView mCallStatusView;
     // 切换摄像头按钮
@@ -78,12 +88,14 @@ public class MLVideoCallActivity extends MLCallActivity {
     protected void initView() {
         super.initView();
 
+        // 通话背景图
+        mCallBackgroundView = (ImageView) findViewById(R.id.ml_img_call_bg);
+        mCallBackgroundView.setImageResource(R.mipmap.ic_character_spider);
         // 初始化控制层
         mControlLayout = findViewById(R.id.ml_layout_call_control);
         // 初始化界面控件
         mLocalSurfaceView = (EMLocalSurfaceView) findViewById(R.id.ml_surface_view_local);
         mOppositeSurfaceView = (EMOppositeSurfaceView) findViewById(R.id.ml_surface_view_opposite);
-
         // 通话状态控件
         mCallStatusView = (TextView) findViewById(R.id.ml_text_call_status);
         // 界面操作按钮
@@ -128,7 +140,7 @@ public class MLVideoCallActivity extends MLCallActivity {
         mVideoCallHelper.setResolution(640, 480);
         // 设置视频通话比特率 默认是(150)
         mVideoCallHelper.setVideoBitrate(300);
-        // 设置本地预览图像显示在最上层
+        // 设置本地预览图像显示在最上层，一定要提前设置，否则无效
         mLocalSurfaceView.setZOrderMediaOverlay(true);
         mLocalSurfaceView.setZOrderOnTop(true);
 
@@ -160,7 +172,7 @@ public class MLVideoCallActivity extends MLCallActivity {
      */
     private void makeCall() {
         try {
-            EMClient.getInstance().callManager().makeVideoCall(username);
+            EMClient.getInstance().callManager().makeVideoCall(mChatId);
         } catch (EMServiceNotReadyException e) {
             e.printStackTrace();
         }
@@ -370,6 +382,14 @@ public class MLVideoCallActivity extends MLCallActivity {
     }
 
     /**
+     * 处理界面大小
+     */
+    private void surfaceViewProcessor() {
+        // 设置显示对方图像控件显示
+        mOppositeSurfaceView.setVisibility(View.VISIBLE);
+    }
+
+    /**
      * 打开扬声器
      * 主要是通过扬声器的开关以及设置音频播放模式来实现
      * 1、MODE_NORMAL：是正常模式，一般用于外放音频
@@ -423,8 +443,10 @@ public class MLVideoCallActivity extends MLCallActivity {
         case ACCEPTED: // 通话已接通
             MLLog.i("通话已接通");
             // 电话接通，停止播放提示音
-            mCallStatusView.setText(R.string.ml_call_accepted);
             stopCallSound();
+            mCallStatusView.setText(R.string.ml_call_accepted);
+            // 通话接通，处理下SurfaceView的显示
+            surfaceViewProcessor();
             break;
         case DISCONNNECTED: // 通话已中断
             MLLog.i("通话已结束" + callError);
@@ -434,7 +456,7 @@ public class MLVideoCallActivity extends MLCallActivity {
                 MLLog.i("对方不在线" + callError);
                 mCallStatusView.setText(R.string.ml_call_not_online);
             } else if (callError == EMCallStateChangeListener.CallError.ERROR_BUSY) {
-                MLLog.i("对方正在通话中" + callError);
+                MLLog.i("对方正忙" + callError);
                 mCallStatusView.setText(R.string.ml_call_busy);
             } else if (callError == EMCallStateChangeListener.CallError.REJECTED) {
                 MLLog.i("对方已拒绝" + callError);
@@ -499,6 +521,30 @@ public class MLVideoCallActivity extends MLCallActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        // 添加控件监听，监听背景图加载是否完成
+        mCallBackgroundView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                // 移除控件加载图片监听
+                mCallBackgroundView.getViewTreeObserver().removeOnPreDrawListener(this);
+                MLLog.i("blur bitmap - 0 - %d", MLDateUtil.getCurrentMillisecond());
+                mCallBackgroundView.setDrawingCacheEnabled(true);
+                Bitmap bitmap = mCallBackgroundView.getDrawingCache();
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                    mCallBackgroundView.setImageBitmap(MLBitmapUtil.stackBlurBitmap(bitmap,
+                            mActivity.getResources().getInteger(R.integer.ml_img_blur_16),
+                            mActivity.getResources().getInteger(R.integer.ml_img_blur_8), false));
+                } else {
+                    mCallBackgroundView.setImageBitmap(MLBitmapUtil.rsBlurBitmp(mActivity, bitmap,
+                            mActivity.getResources().getInteger(R.integer.ml_img_blur_16),
+                            mActivity.getResources().getInteger(R.integer.ml_img_blur_8)));
+                }
+                mCallBackgroundView.setDrawingCacheEnabled(false);
+                MLLog.i("blur bitmap - 1 - %d", MLDateUtil.getCurrentMillisecond());
+                return false;
+            }
+        });
     }
 
     @Override
