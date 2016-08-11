@@ -129,11 +129,13 @@ public class MLBitmapUtil {
      * @return 返回压缩后的 Bitmap
      */
     public static Bitmap compressBitmapByMatrixToScale(Bitmap bitmap, int scale) {
+        MLLog.i("compress bitmap - 0 - %d", MLDateUtil.getCurrentMillisecond());
         // 使用矩阵进行压缩图片
         Matrix matrix = new Matrix();
         float s = (float) 1 / scale;
         matrix.postScale(s, s);
         Bitmap result = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        MLLog.i("compress bitmap - 1 - %d", MLDateUtil.getCurrentMillisecond());
         return result;
     }
 
@@ -189,7 +191,7 @@ public class MLBitmapUtil {
                 rs.destroy();
             }
         }
-        return bitmap;
+        return overlay;
     }
 
     /**

@@ -79,6 +79,17 @@ public class MLConstants {
     public static final String ML_SHARED_PASSWORD = "ml_password";
 
 
+    // 通话结束状态码
+    public static final int ML_CALL_NORMAL = 0x00;
+    public static final int ML_CALL_CANCEL = 0x01;
+    public static final int ML_CALL_BUSY = 0x02;
+    public static final int ML_CALL_OFFLINE = 0x03;
+    public static final int ML_CALL_REFUESD = 0x04;
+    public static final int ML_CALL_BEREFUESD = 0x05;
+    public static final int ML_CALL_UNANSWERED = 0x06;
+    public static final int ML_CALL_NORESPONSE = 0x07;
+    public static final int ML_CALL_VERSION_DIFFERENT = 0x08;
+
     /**
      * 链接状态码
      */

@@ -3,6 +3,7 @@ package net.melove.app.chat.conversation.call;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.hyphenate.exceptions.EMNoActiveCallException;
 import com.hyphenate.exceptions.EMServiceNotReadyException;
 
 import net.melove.app.chat.R;
+import net.melove.app.chat.application.MLConstants;
 import net.melove.app.chat.application.MLEasemobHelper;
 import net.melove.app.chat.application.eventbus.MLCallEvent;
 import net.melove.app.chat.communal.util.MLBitmapUtil;
@@ -76,6 +78,7 @@ public class MLVoiceCallActivity extends MLCallActivity {
         // 初始化界面控件
         // 通话背景图
         mCallBackgroundView = (ImageView) findViewById(R.id.ml_img_call_bg);
+        mCallBackgroundView.setImageResource(R.mipmap.ic_character_spider);
         // 显示通话状态控件
         mCallStatusView = (TextView) findViewById(R.id.ml_text_call_status);
         // 显示对方头像控件
@@ -106,7 +109,7 @@ public class MLVoiceCallActivity extends MLCallActivity {
         mAnswerCallFab.setOnClickListener(viewListener);
 
         // 设置对方的名字以及界面其他控件的显示
-        mUsernameView.setText(username);
+        mUsernameView.setText(mChatId);
         if (isInComingCall) {
             mCallStatusView.setText(R.string.ml_call_connected_is_incoming);
             mRejectCallFab.setVisibility(View.VISIBLE);
@@ -127,7 +130,7 @@ public class MLVoiceCallActivity extends MLCallActivity {
      */
     private void makeCall() {
         try {
-            EMClient.getInstance().callManager().makeVoiceCall(username);
+            EMClient.getInstance().callManager().makeVoiceCall(mChatId);
         } catch (EMServiceNotReadyException e) {
             e.printStackTrace();
         }
@@ -227,6 +230,9 @@ public class MLVoiceCallActivity extends MLCallActivity {
         MLEasemobHelper.getInstance().removeCallStateChangeListener();
         // 拒绝通话后关闭通知铃音
         stopCallSound();
+        // 挂断电话调用保存消息方法
+        mCallStatus = MLConstants.ML_CALL_REFUESD;
+        saveCallMessage();
         try {
             // 调用 SDK 的拒绝通话方法
             EMClient.getInstance().callManager().rejectCall();
@@ -245,6 +251,8 @@ public class MLVoiceCallActivity extends MLCallActivity {
         MLEasemobHelper.getInstance().removeCallStateChangeListener();
         // 结束通话后关闭通知铃音
         stopCallSound();
+        // 挂断电话调用保存消息方法
+        saveCallMessage();
         try {
             // 调用 SDK 的结束通话方法
             EMClient.getInstance().callManager().endCall();
@@ -270,6 +278,8 @@ public class MLVoiceCallActivity extends MLCallActivity {
         // 调用接通通话方法
         try {
             EMClient.getInstance().callManager().answerCall();
+            // 设置通话状态为正常
+            mCallStatus = MLConstants.ML_CALL_NORMAL;
         } catch (EMNoActiveCallException e) {
             e.printStackTrace();
             MLToast.errorToast("接听通话失败：error-" + e.getErrorCode() + "-" + e.getMessage()).show();
@@ -339,30 +349,47 @@ public class MLVoiceCallActivity extends MLCallActivity {
 
             if (callError == EMCallStateChangeListener.CallError.ERROR_INAVAILABLE) {
                 MLLog.i("对方不在线" + callError);
+                // 设置通话状态
+                mCallStatus = MLConstants.ML_CALL_OFFLINE;
                 mCallStatusView.setText(R.string.ml_call_not_online);
             } else if (callError == EMCallStateChangeListener.CallError.ERROR_BUSY) {
-                MLLog.i("对方正在通话中" + callError);
+                MLLog.i("对方正忙" + callError);
+                // 设置通话状态
+                mCallStatus = MLConstants.ML_CALL_BUSY;
                 mCallStatusView.setText(R.string.ml_call_busy);
             } else if (callError == EMCallStateChangeListener.CallError.REJECTED) {
                 MLLog.i("对方已拒绝" + callError);
+                // 设置通话状态
+                mCallStatus = MLConstants.ML_CALL_BEREFUESD;
                 mCallStatusView.setText(R.string.ml_call_reject);
             } else if (callError == EMCallStateChangeListener.CallError.ERROR_NORESPONSE) {
                 MLLog.i("对方未接听" + callError);
+                // 设置通话状态
+                mCallStatus = MLConstants.ML_CALL_NORESPONSE;
                 mCallStatusView.setText(R.string.ml_call_not_answer);
             } else if (callError == EMCallStateChangeListener.CallError.ERROR_TRANSPORT) {
                 MLLog.i("连接建立失败" + callError);
+                // 设置通话状态
+                mCallStatus = MLConstants.ML_CALL_CANCEL;
                 mCallStatusView.setText(R.string.ml_call_connection_fail);
             } else if (callError == EMCallStateChangeListener.CallError.ERROR_LOCAL_VERSION_SMALLER) {
                 MLLog.i("双方通讯协议不同" + callError);
+                // 设置通话状态
+                mCallStatus = MLConstants.ML_CALL_VERSION_DIFFERENT;
                 mCallStatusView.setText(R.string.ml_call_local_version_smaller);
             } else if (callError == EMCallStateChangeListener.CallError.ERROR_PEER_VERSION_SMALLER) {
                 MLLog.i("双方通讯协议不同" + callError);
+                // 设置通话状态
+                mCallStatus = MLConstants.ML_CALL_VERSION_DIFFERENT;
                 mCallStatusView.setText(R.string.ml_call_opposite_version_smaller);
             } else {
                 MLLog.i("通话已结束，时长：%s，error %s", "10:35", callError);
+                // 设置通话状态
+                mCallStatus = MLConstants.ML_CALL_NORMAL;
                 mCallStatusView.setText(R.string.ml_call_disconnected);
             }
-
+            // 通话结束保存消息
+            saveCallMessage();
             // 结束通话时取消通话状态监听
             MLEasemobHelper.getInstance().removeCallStateChangeListener();
             // 结束通话关闭界面
@@ -404,13 +431,20 @@ public class MLVoiceCallActivity extends MLCallActivity {
             public boolean onPreDraw() {
                 // 移除控件加载图片监听
                 mCallBackgroundView.getViewTreeObserver().removeOnPreDrawListener(this);
-                MLLog.i("start blur  -- %d", MLDateUtil.getCurrentMillisecond());
+                MLLog.i("blur bitmap - 0 - %d", MLDateUtil.getCurrentMillisecond());
                 mCallBackgroundView.setDrawingCacheEnabled(true);
                 Bitmap bitmap = mCallBackgroundView.getDrawingCache();
-                mCallBackgroundView.setImageBitmap(MLBitmapUtil.stackBlurBitmap(bitmap, 5, 10, false));
-                // mCallBackgroundView.setImageBitmap(MLBitmapUtil.rsBlurBitmp(mActivity, bitmap, 2, 10));
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                    mCallBackgroundView.setImageBitmap(MLBitmapUtil.stackBlurBitmap(bitmap,
+                            mActivity.getResources().getInteger(R.integer.ml_img_blur_16),
+                            mActivity.getResources().getInteger(R.integer.ml_img_blur_8), false));
+                } else {
+                    mCallBackgroundView.setImageBitmap(MLBitmapUtil.rsBlurBitmp(mActivity, bitmap,
+                            mActivity.getResources().getInteger(R.integer.ml_img_blur_16),
+                            mActivity.getResources().getInteger(R.integer.ml_img_blur_8)));
+                }
                 mCallBackgroundView.setDrawingCacheEnabled(false);
-                MLLog.i("end blur  -- %d", MLDateUtil.getCurrentMillisecond());
+                MLLog.i("blur bitmap - 1 - %d", MLDateUtil.getCurrentMillisecond());
                 return false;
             }
         });

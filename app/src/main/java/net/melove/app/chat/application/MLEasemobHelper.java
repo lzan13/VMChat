@@ -173,12 +173,11 @@ public class MLEasemobHelper {
         // options.setGCMNumber(MLConstants.ML_GCM_NUMBER);
 
         // 设置集成小米推送的appid和appkey
-        // options.setMipushConfig(MLConstants.ML_MI_APP_ID, MLConstants.ML_MI_APP_KEY);
+        options.setMipushConfig(MLConstants.ML_MI_APP_ID, MLConstants.ML_MI_APP_KEY);
 
         // 设置华为推送appid
-        // options.setHuaweiPushAppId(MLConstants.ML_HUAWEI_APP_ID);
-
-        // 调用华为官方的注册华为推送 TODO 测试用
+        options.setHuaweiPushAppId(MLConstants.ML_HUAWEI_APP_ID);
+        // TODO 主动调用华为官方的注册华为推送 测试用，SDK内部已经调用
         // PushManager.requestToken(mContext);
         return options;
     }
@@ -316,7 +315,7 @@ public class MLEasemobHelper {
             @Override
             public void onConnected() {
                 MLLog.d("MLEasemobHelper - onConnected");
-
+                isUnbuildToken = true;
                 // 设置链接监听变化状态
                 MLConnectionEvent event = new MLConnectionEvent();
                 event.setType(MLConstants.ML_CONNECTION_CONNECTED);

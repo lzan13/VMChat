@@ -5,10 +5,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     android:background="@color/ml_theme_background"
     android:clipToPadding="false"
     android:fitsSystemWindows="false"
     tools:context=".conversation.call.MLVideoCallActivity">
+
     <!--界面背景-->
     <ImageView
         android:id="@+id/ml_img_call_bg"
@@ -17,17 +19,12 @@
         android:scaleType="centerCrop"
         android:src="@mipmap/bg_chat"/>
 
-    <RelativeLayout
+    <!--显示对方画面控件-->
+    <com.hyphenate.media.EMOppositeSurfaceView
+        android:id="@+id/ml_surface_view_opposite"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <!--显示对方画面控件-->
-        <com.hyphenate.media.EMOppositeSurfaceView
-            android:id="@+id/ml_surface_view_opposite"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:backgroundTint="@color/ml_black_26"/>
-    </RelativeLayout>
+        android:layout_height="match_parent"
+        android:visibility="invisible"/>
 
     <!--控制按钮层布局-->
     <RelativeLayout
@@ -39,10 +36,10 @@
         <!--显示本地画面控件-->
         <com.hyphenate.media.EMLocalSurfaceView
             android:id="@+id/ml_surface_view_local"
-            android:layout_width="@dimen/ml_dimen_144"
-            android:layout_height="@dimen/ml_dimen_192"
+            android:layout_width="120dp"
+            android:layout_height="160dp"
             android:layout_alignParentRight="true"
-            android:backgroundTint="@color/ml_black_26"/>
+            android:layout_marginTop="@dimen/ml_dimen_96"/>
 
         <!--头部状态以及最小化操作-->
         <RelativeLayout
