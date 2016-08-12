@@ -31,7 +31,10 @@ public class MLCallActivity extends MLBaseActivity {
     // 是否是拨打进来的电话
     protected boolean isInComingCall;
 
+    // 通话结束状态，用来保存通话结束后的消息提示
     protected int mCallStatus;
+    // 通话类型，用于区分语音和视频通话 0 代表视频，1 代表语音
+    protected int mCallType;
 
     // 音频管理器
     protected AudioManager mAudioManager;
@@ -61,7 +64,8 @@ public class MLCallActivity extends MLBaseActivity {
 
         // 获取通话对方的username
         mChatId = getIntent().getStringExtra(MLConstants.ML_EXTRA_CHAT_ID);
-        isInComingCall = getIntent().getBooleanExtra(MLConstants.ML_EXTRA_IS_INCOMING_CALL, false);
+        isInComingCall = getIntent().getBooleanExtra(MLConstants.ML_EXTRA_CALL_IS_INCOMING, false);
+        // 默认通话状态为自己取消
         mCallStatus = MLConstants.ML_CALL_CANCEL;
 
         // 收到呼叫或者呼叫对方时初始化通话状态监听
@@ -98,6 +102,7 @@ public class MLCallActivity extends MLBaseActivity {
     protected void saveCallMessage() {
         EMMessage message = null;
         EMTextMessageBody body = null;
+        String content = null;
         if (isInComingCall) {
             message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
             message.setFrom(mChatId);
@@ -109,48 +114,59 @@ public class MLCallActivity extends MLBaseActivity {
         switch (mCallStatus) {
         case MLConstants.ML_CALL_NORMAL:
             // 通话正常结束，要加上通话时间
-            body = new EMTextMessageBody(mActivity.getString(R.string.ml_call_duration_time));
+            content = mActivity.getString(R.string.ml_call_duration_time);
             break;
         case MLConstants.ML_CALL_CANCEL:
-            // 已取消（自己取消）
-            body = new EMTextMessageBody(mActivity.getString(R.string.ml_call_cancel));
+            // 自己取消
+            content = mActivity.getString(R.string.ml_call_cancel);
+            break;
+        case MLConstants.ML_CALL_CANCEL_IS_INCOMING:
+            // 对方取消
+            content = mActivity.getString(R.string.ml_call_cancel_is_incoming);
             break;
         case MLConstants.ML_CALL_BUSY:
             // 对方正忙
-            body = new EMTextMessageBody(mActivity.getString(R.string.ml_call_busy));
+            content = mActivity.getString(R.string.ml_call_busy);
             break;
         case MLConstants.ML_CALL_OFFLINE:
             // 对方不在线
-            body = new EMTextMessageBody(mActivity.getString(R.string.ml_call_not_online));
+            content = mActivity.getString(R.string.ml_call_not_online);
+            break;
+        case MLConstants.ML_CALL_REFUESD_IS_INCOMING:
+            // 自己已拒绝
+            content = mActivity.getString(R.string.ml_call_reject_is_incoming);
             break;
         case MLConstants.ML_CALL_REFUESD:
-            // 已拒绝
-            body = new EMTextMessageBody(mActivity.getString(R.string.ml_call_not_answer_is_incoming));
-            break;
-        case MLConstants.ML_CALL_BEREFUESD:
             // 对方拒绝
-            body = new EMTextMessageBody(mActivity.getString(R.string.ml_call_not_answer));
-            break;
-        case MLConstants.ML_CALL_UNANSWERED:
-            // 未接听（对方取消）
-            body = new EMTextMessageBody(mActivity.getString(R.string.ml_call_cancel));
+            content = mActivity.getString(R.string.ml_call_reject);
             break;
         case MLConstants.ML_CALL_NORESPONSE:
-            // 对方未接听
-            body = new EMTextMessageBody(mActivity.getString(R.string.ml_call_not_answer));
+            // 对方无响应
+            content = mActivity.getString(R.string.ml_call_noresponse);
+            break;
+        case MLConstants.ML_CALL_TRANSPORT:
+            // 建立连接失败
+            content = mActivity.getString(R.string.ml_call_connection_fail);
             break;
         case MLConstants.ML_CALL_VERSION_DIFFERENT:
             // 双方通话协议版本不同
-            body = new EMTextMessageBody(mActivity.getString(R.string.ml_call_not_online));
+            content = mActivity.getString(R.string.ml_call_not_online);
             break;
         default:
             // 默认为取消
-            body = new EMTextMessageBody(mActivity.getString(R.string.ml_call_cancel));
+            content = mActivity.getString(R.string.ml_call_cancel);
             break;
         }
+        body = new EMTextMessageBody(content);
         message.addBody(body);
         message.setStatus(EMMessage.Status.SUCCESS);
         message.setMsgId(MLDateUtil.getCurrentMillisecond() + "");
+        if (mCallType == 0) {
+            message.setAttribute(MLConstants.ML_ATTR_CALL_VIDEO, true);
+        } else {
+            message.setAttribute(MLConstants.ML_ATTR_CALL_VOICE, true);
+        }
+        // 调用sdk的保存消息方法
         EMClient.getInstance().chatManager().saveMessage(message);
     }
 

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:melove="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/ml_dimen_8"
+                android:gravity="center_vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left|bottom"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="bottom"
+            android:orientation="horizontal">
+
+            <net.melove.app.chat.communal.widget.MLImageView
+                android:id="@+id/ml_img_msg_avatar"
+                android:layout_width="@dimen/ml_dimen_40"
+                android:layout_height="@dimen/ml_dimen_40"
+                android:src="@mipmap/ic_character_blackcat"
+                melove:ml_border_color="@color/ml_white_87"
+                melove:ml_border_width="@dimen/ml_dimen_2"
+                melove:ml_shape_type="round"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bubble_msg_received"
+                android:gravity="left"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/ml_dimen_12"
+                android:paddingRight="@dimen/ml_dimen_8"
+                android:paddingTop="@dimen/ml_dimen_8">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/ml_img_msg_call"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/ml_dimen_8"
+                        android:src="@mipmap/ic_call_white_24dp"
+                        android:tint="@color/ml_gray_54"/>
+
+                    <TextView
+                        android:id="@+id/ml_text_msg_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:maxWidth="@dimen/ml_dimen_256"
+                        android:text="@string/ml_app_name"
+                        android:textColor="@color/ml_black_87"
+                        android:textSize="@dimen/ml_size_14"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginBottom="@dimen/ml_dimen_2"
+                    android:layout_marginTop="@dimen/ml_dimen_4"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/ml_text_msg_username"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/ml_dimen_8"
+                        android:text="@string/ml_hint_username"
+                        android:textColor="@color/ml_black_54"
+                        android:textSize="@dimen/ml_size_8"/>
+
+                    <TextView
+                        android:id="@+id/ml_text_msg_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ml_hint_time"
+                        android:textColor="@color/ml_black_54"
+                        android:textSize="@dimen/ml_size_8"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

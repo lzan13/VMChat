@@ -411,7 +411,25 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 int position = mConversation.getAllMessages().indexOf(message);
                 switch (action) {
                 case MLConstants.ML_ACTION_MSG_CLICK:
-
+                    if (message.getBooleanAttribute(MLConstants.ML_ATTR_CALL_VIDEO, false)) {
+                        // 视频通话
+                        Intent intent = new Intent();
+                        intent.setClass(mActivity, MLVideoCallActivity.class);
+                        // 设置被呼叫放的username
+                        intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mChatId);
+                        // 设置通话为自己呼叫出的
+                        intent.putExtra(MLConstants.ML_EXTRA_CALL_IS_INCOMING, false);
+                        mActivity.startActivity(intent);
+                    } else if (message.getBooleanAttribute(MLConstants.ML_ATTR_CALL_VOICE, false)) {
+                        // 语音通话
+                        Intent intent = new Intent();
+                        intent.setClass(mActivity, MLVoiceCallActivity.class);
+                        // 设置被呼叫放的username
+                        intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mChatId);
+                        // 设置通话为自己呼叫出的
+                        intent.putExtra(MLConstants.ML_EXTRA_CALL_IS_INCOMING, false);
+                        mActivity.startActivity(intent);
+                    }
                     break;
                 case MLConstants.ML_ACTION_MSG_RESEND:
                     // 重发消息
@@ -876,7 +894,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 // 设置被呼叫放的username
                 intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mChatId);
                 // 设置通话为自己呼叫出的
-                intent.putExtra(MLConstants.ML_EXTRA_IS_INCOMING_CALL, false);
+                intent.putExtra(MLConstants.ML_EXTRA_CALL_IS_INCOMING, false);
                 mActivity.startActivity(intent);
             }
         });
@@ -1382,7 +1400,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     protected void onResume() {
         super.onResume();
         // 刷新界面
-        //        refreshChatUI();
+        postRefreshEvent(mConversation.getAllMessages().size() - 1, 1, MLConstants.ML_NOTIFY_REFRESH_INSERTED);
         // 注册环信的消息监听器
         EMClient.getInstance().chatManager().addMessageListener(mMessageListener);
     }

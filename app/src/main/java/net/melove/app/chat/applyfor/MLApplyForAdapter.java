@@ -78,7 +78,7 @@ public class MLApplyForAdapter extends RecyclerView.Adapter<MLApplyForAdapter.In
         // 设置申请理由
         holder.textViewReason.setText(message.getStringAttribute(MLConstants.ML_ATTR_REASON, "reason"));
         int status = message.getIntAttribute(MLConstants.ML_ATTR_STATUS, 0);
-        int type = message.getIntAttribute(MLConstants.ML_ATTR_TYPE, 0);
+        int type = message.getIntAttribute(MLConstants.ML_ATTR_TYPE, MLConstants.ML_APPLY_FOR_CONTACTS);
 
         switch (status) {
         case MLConstants.ML_STATUS_AGREED:
