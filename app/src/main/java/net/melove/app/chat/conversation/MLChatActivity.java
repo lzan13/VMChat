@@ -227,10 +227,6 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             mInputView.setText(draft);
         }
 
-        // 初始化ListView控件对象
-        mRecyclerView = (RecyclerView) findViewById(R.id.ml_recyclerview_message);
-        // 实例化消息适配器
-        mMessageAdapter = new MLMessageAdapter(mActivity, mChatId);
         /**
          * 为RecyclerView 设置布局管理器，这里使用线性布局
          * RececlerView 默认的布局管理器：
@@ -246,6 +242,10 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         mLayoutManger = new LinearLayoutManager(mActivity);
         // 设置 RecyclerView 显示状态固定掉底部
         mLayoutManger.setStackFromEnd(true);
+        // 初始化ListView控件对象
+        mRecyclerView = (RecyclerView) findViewById(R.id.ml_recyclerview_message);
+        // 实例化消息适配器
+        mMessageAdapter = new MLMessageAdapter(mActivity, mChatId);
         mRecyclerView.setLayoutManager(mLayoutManger);
         mRecyclerView.setAdapter(mMessageAdapter);
         /**
@@ -938,16 +938,22 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             // 消息状态回调完毕，刷新当前消息显示，这里不论成功失败都要刷新，TODO 进度的改变交由个字的Item自己去实现
             postRefreshEvent(mConversation.getMessagePosition(message), 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);
         } else if (status == EMMessage.Status.FAIL) {
-            String errorMessage = event.getErrorMessage();
+            String errorMessage = null;
             int errorCode = event.getErrorCode();
             if (errorCode == EMError.MESSAGE_INCLUDE_ILLEGAL_CONTENT) {
-                errorMessage = mActivity.getString(R.string.ml_toast_msg_have_illegal) + errorMessage + "-" + errorCode;
+                // 消息包含敏感词
+                errorMessage = mActivity.getString(R.string.ml_toast_msg_have_illegal);
             } else if (errorCode == EMError.GROUP_PERMISSION_DENIED) {
-                errorMessage = mActivity.getString(R.string.ml_toast_msg_not_join_group) + errorMessage + "-" + errorCode;
+                // 不在群里内
+                errorMessage = mActivity.getString(R.string.ml_toast_msg_not_join_group);
+            } else if (errorCode == EMError.FILE_INVALID) {
+                // 文件过大
+                errorMessage = mActivity.getString(R.string.ml_toast_msg_file_too_big);
             } else {
-                errorMessage = mActivity.getString(R.string.ml_toast_msg_send_faild) + errorMessage + "-" + errorCode;
+                // 发送失败
+                errorMessage = mActivity.getString(R.string.ml_toast_msg_send_faild);
             }
-            MLToast.errorToast(errorMessage).show();
+            MLToast.errorToast(errorMessage + event.getErrorMessage() + "-" + errorCode).show();
             // 消息状态回调完毕，刷新当前消息显示，这里不论成功失败都要刷新，TODO 进度的改变交由个字的Item自己去实现
             postRefreshEvent(mConversation.getMessagePosition(message), 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);
         }

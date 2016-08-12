@@ -122,6 +122,7 @@ public class MLVideoCallActivity extends MLCallActivity {
 
         // 设置控件的点击监听
         mControlLayout.setOnClickListener(viewListener);
+        mCallBackgroundView.setOnClickListener(viewListener);
         mLocalSurfaceView.setOnClickListener(viewListener);
         mOppositeSurfaceView.setOnClickListener(viewListener);
         mExitFullScreenBtn.setOnClickListener(viewListener);
@@ -190,6 +191,7 @@ public class MLVideoCallActivity extends MLCallActivity {
         public void onClick(View v) {
             switch (v.getId()) {
             case R.id.ml_layout_call_control:
+            case R.id.ml_img_call_bg:
                 onControlLayout();
                 break;
             case R.id.ml_surface_view_local:
@@ -242,7 +244,7 @@ public class MLVideoCallActivity extends MLCallActivity {
      */
     private void onControlLayout() {
         if (mControlLayout.isShown()) {
-            mControlLayout.setVisibility(View.INVISIBLE);
+            mControlLayout.setVisibility(View.GONE);
         } else {
             mControlLayout.setVisibility(View.VISIBLE);
         }

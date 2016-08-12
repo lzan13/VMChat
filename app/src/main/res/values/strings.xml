@@ -82,7 +82,7 @@
     <string name="ml_group">群组</string>
     <string name="ml_room">聊天室</string>
     <string name="ml_call">通话</string>
-    <string name="ml_voice_call">语音电话</string>
+    <string name="ml_voice_call">语音通话</string>
     <string name="ml_video_call">视频通话</string>
     <string name="ml_apply_for">申请与通知</string>
     <string name="ml_help">帮助</string>
@@ -238,11 +238,12 @@
     <string name="ml_toast_add_contacts_failed">发送好友请求失败-_-||，稍后重试</string>
     <string name="ml_toast_connected">已经连接到服务器</string>h
     <string name="ml_toast_content_copy_success">内容已复制</string>
-    <string name="ml_toast_msg_send_faild">消息发送失败，等下再发吧</string>
-    <string name="ml_toast_msg_resend_faild">消息重新发送失败，等下再发吧</string>
+    <string name="ml_toast_msg_send_faild">消息发送失败</string>
+    <string name="ml_toast_msg_file_too_big">文件过大</string>
+    <string name="ml_toast_msg_resend_faild">消息重新发送失败</string>
     <string name="ml_toast_msg_not_join_group">未加入当前群组，不能发送消息</string>
     <string name="ml_toast_msg_have_illegal">信息包含非法字符</string>
-    <string name="ml_toast_msg_recall_faild_max_time">消息已经超过两分钟，无法撤回</string>
+    <string name="ml_toast_msg_recall_faild_max_time">消息已经超过五分钟，无法撤回</string>
     <string name="ml_toast_msg_recall_faild">撤回失败 失败错误码</string>
     <string name="ml_toast_msg_delete_success">消息删除成功</string>
     <string name="ml_toast_chat_cant_yourself">不能和自己聊天</string>

@@ -108,6 +108,12 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
             // 首先判断消息是否已经撤回，撤回就不能显示消息内容
             if (lastMessage.getBooleanAttribute(MLConstants.ML_ATTR_RECALL, false)) {
                 content = mContext.getString(R.string.ml_hint_msg_recall_by_self);
+            } else if (lastMessage.getBooleanAttribute(MLConstants.ML_ATTR_CALL_VIDEO, false)) {
+                content = "[" + mContext.getString(R.string.ml_video_call) + "]";
+                ;
+            } else if (lastMessage.getBooleanAttribute(MLConstants.ML_ATTR_CALL_VOICE, false)) {
+                content = "[" + mContext.getString(R.string.ml_voice_call) + "]";
+                ;
             } else {
                 switch (lastMessage.getType()) {
                 case TXT:
