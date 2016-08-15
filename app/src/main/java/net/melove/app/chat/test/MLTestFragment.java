@@ -81,7 +81,7 @@ public class MLTestFragment extends MLBaseFragment {
     }
 
     private void init() {
-        String[] btns = {"登出", "Insert Message", "更新消息", "群消息", "创建群组", "Send CMD", "ChatRoom"};
+        String[] btns = {"登出", "Insert Message", "更新消息", "群消息", "创建群组", "Send CMD", "ChatRoom", "Test MLLog"};
         viewGroup = (MLViewGroup) getView().findViewById(R.id.ml_view_custom_viewgroup);
         for (int i = 0; i < btns.length; i++) {
             Button btn = new Button(mActivity);
@@ -119,10 +119,34 @@ public class MLTestFragment extends MLBaseFragment {
                 break;
             case 106:
                 break;
+            case 107:
+                testMLLog();
+                break;
             }
         }
     };
 
+    /**
+     * 测试 MLLog 类
+     */
+    private void testMLLog() {
+        MLLog.i("testMLLog main thread");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(3000);
+                    MLLog.i("testMLLog sub thread");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    /**
+     * 获取聊天室
+     */
     private void getChatRoom() {
         try {
             EMChatRoom chatRoom = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer("", true);

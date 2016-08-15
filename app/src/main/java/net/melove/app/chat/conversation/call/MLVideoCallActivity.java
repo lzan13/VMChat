@@ -493,7 +493,7 @@ public class MLVideoCallActivity extends MLCallActivity {
             } else if (callError == EMCallStateChangeListener.CallError.ERROR_TRANSPORT) {
                 MLLog.i("连接建立失败" + callError);
                 // 设置通话状态为建立连接失败
-                mCallStatus = MLConstants.ML_CALL_CANCEL;
+                mCallStatus = MLConstants.ML_CALL_TRANSPORT;
                 mCallStatusView.setText(R.string.ml_call_connection_fail);
             } else if (callError == EMCallStateChangeListener.CallError.ERROR_LOCAL_VERSION_SMALLER) {
                 MLLog.i("双方通讯协议不同" + callError);

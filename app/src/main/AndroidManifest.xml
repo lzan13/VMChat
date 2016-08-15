@@ -138,6 +138,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Call"
             android:windowSoftInputMode="adjustNothing|stateAlwaysHidden"/>
+        <activity
+            android:name=".conversation.MLBigImageActivity"
+            android:theme="@style/MLTheme.Default"
+            android:windowSoftInputMode="adjustNothing|stateAlwaysHidden"/>
         <!-- 搜索界面 -->
         <activity
             android:name=".main.MLSearchActivity"

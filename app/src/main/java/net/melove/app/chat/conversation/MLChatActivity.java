@@ -411,25 +411,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 int position = mConversation.getAllMessages().indexOf(message);
                 switch (action) {
                 case MLConstants.ML_ACTION_MSG_CLICK:
-                    if (message.getBooleanAttribute(MLConstants.ML_ATTR_CALL_VIDEO, false)) {
-                        // 视频通话
-                        Intent intent = new Intent();
-                        intent.setClass(mActivity, MLVideoCallActivity.class);
-                        // 设置被呼叫放的username
-                        intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mChatId);
-                        // 设置通话为自己呼叫出的
-                        intent.putExtra(MLConstants.ML_EXTRA_CALL_IS_INCOMING, false);
-                        mActivity.startActivity(intent);
-                    } else if (message.getBooleanAttribute(MLConstants.ML_ATTR_CALL_VOICE, false)) {
-                        // 语音通话
-                        Intent intent = new Intent();
-                        intent.setClass(mActivity, MLVoiceCallActivity.class);
-                        // 设置被呼叫放的username
-                        intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mChatId);
-                        // 设置通话为自己呼叫出的
-                        intent.putExtra(MLConstants.ML_EXTRA_CALL_IS_INCOMING, false);
-                        mActivity.startActivity(intent);
-                    }
+                    // 消息点击事件，不同的消息有不同的触发
+                    itemClick(message);
                     break;
                 case MLConstants.ML_ACTION_MSG_RESEND:
                     // 重发消息
@@ -454,6 +437,40 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 }
             }
         });
+    }
+
+    /**
+     * 消息点击事件，不同的消息有不同的触发
+     *
+     * @param message 点击的消息
+     */
+    private void itemClick(EMMessage message) {
+        if (message.getType() == EMMessage.Type.IMAGE) {
+            // 图片
+            Intent intent = new Intent();
+            intent.setClass(mActivity, MLBigImageActivity.class);
+            // 将被点击的消息ID传递过去
+            intent.putExtra(MLConstants.ML_EXTRA_CHAT_MSG_ID, message.getMsgId());
+            mActivity.startActivity(intent);
+        } else if (message.getBooleanAttribute(MLConstants.ML_ATTR_CALL_VIDEO, false)) {
+            // 视频通话
+            Intent intent = new Intent();
+            intent.setClass(mActivity, MLVideoCallActivity.class);
+            // 设置被呼叫放的username
+            intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mChatId);
+            // 设置通话为自己呼叫出的
+            intent.putExtra(MLConstants.ML_EXTRA_CALL_IS_INCOMING, false);
+            mActivity.startActivity(intent);
+        } else if (message.getBooleanAttribute(MLConstants.ML_ATTR_CALL_VOICE, false)) {
+            // 语音通话
+            Intent intent = new Intent();
+            intent.setClass(mActivity, MLVoiceCallActivity.class);
+            // 设置被呼叫放的username
+            intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mChatId);
+            // 设置通话为自己呼叫出的
+            intent.putExtra(MLConstants.ML_EXTRA_CALL_IS_INCOMING, false);
+            mActivity.startActivity(intent);
+        }
     }
 
     /**
@@ -979,7 +996,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     /**
      * ---------------------------- RecyclerView 刷新方法 -----------------------------------
      * 使用 EventBus 的订阅模式实现消息变化的监听，这里 EventBus 3.x 使用注解的方式确定方法调用的线程
-     * <p>
+     * <p/>
      * 这里调用下 {@link MLMessageAdapter}里封装的方法
      * 最终还是去调用{@link android.support.v7.widget.RecyclerView.Adapter}已有的 notify 方法
      * 消息的状态改变需要调用 item changed方法
@@ -1201,7 +1218,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     /**
      * --------------------------------- Message Listener -------------------------------------
      * 环信消息监听主要方法
-     * <p>
+     * <p/>
      * 收到新消息
      *
      * @param list 收到的新消息集合

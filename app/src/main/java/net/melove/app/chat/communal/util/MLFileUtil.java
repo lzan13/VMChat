@@ -33,12 +33,23 @@ public class MLFileUtil {
     /**
      * 判断目录是否存在
      *
-     * @param path
+     * @param path 目录路径
      * @return
      */
     public static boolean isDirExists(String path) {
         File dir = new File(path);
         return dir.exists();
+    }
+
+    /**
+     * 判断文件是否存在
+     *
+     * @param path 文件路径
+     * @return
+     */
+    public static boolean isFileExists(String path) {
+        File file = new File(path);
+        return file.exists();
     }
 
     /**

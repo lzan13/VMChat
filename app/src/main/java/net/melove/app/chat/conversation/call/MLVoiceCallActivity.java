@@ -147,6 +147,7 @@ public class MLVoiceCallActivity extends MLCallActivity {
             switch (v.getId()) {
             case R.id.ml_btn_exit_full_screen:
                 // 最小化通话界面
+                exitFullScreen();
                 break;
             case R.id.ml_btn_mic_switch:
                 // 麦克风开关
@@ -176,6 +177,12 @@ public class MLVoiceCallActivity extends MLCallActivity {
         }
     };
 
+    /**
+     * 退出全屏通话界面
+     */
+    private void exitFullScreen() {
+        mActivity.moveTaskToBack(true);
+    }
 
     /**
      * 麦克风开关，主要调用环信语音数据传输方法
@@ -377,7 +384,7 @@ public class MLVoiceCallActivity extends MLCallActivity {
             } else if (callError == EMCallStateChangeListener.CallError.ERROR_TRANSPORT) {
                 MLLog.i("连接建立失败" + callError);
                 // 设置通话状态为建立连接失败
-                mCallStatus = MLConstants.ML_CALL_CANCEL;
+                mCallStatus = MLConstants.ML_CALL_TRANSPORT;
                 mCallStatusView.setText(R.string.ml_call_connection_fail);
             } else if (callError == EMCallStateChangeListener.CallError.ERROR_LOCAL_VERSION_SMALLER) {
                 MLLog.i("双方通讯协议不同" + callError);
