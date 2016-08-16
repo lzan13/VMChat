@@ -129,12 +129,14 @@
         <!--视频通话界面-->
         <activity
             android:name=".conversation.call.MLVideoCallActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Call"
             android:windowSoftInputMode="adjustNothing|stateAlwaysHidden"/>
         <!--语音通话界面-->
         <activity
             android:name=".conversation.call.MLVoiceCallActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Call"
             android:windowSoftInputMode="adjustNothing|stateAlwaysHidden"/>

@@ -2,7 +2,7 @@ package net.melove.app.chat.application;
 
 /**
  * Class ${FILE_NAME}
- * <p/>
+ * <p>
  * Created by lzan13 on 2015/9/10 22:04.
  */
 public class MLConstants {
@@ -87,7 +87,7 @@ public class MLConstants {
      * 通话结束状态码
      */
     // 正常结束通话
-    public static final int ML_CALL_NORMAL = 0x00;
+    public static final int ML_CALL_ACCEPTED = 0x00;
     // 自己取消通话
     public static final int ML_CALL_CANCEL = 0x01;
     // 对方取消通话

@@ -165,8 +165,10 @@
     <string name="ml_call_version_different">双方通讯协议不同，无法通讯</string>
     <string name="ml_call_video_pause">视频传输已暂停</string>
     <string name="ml_call_video_resume">视频传输已恢复</string>
+    <string name="ml_call_video_calling">视频通话进行中</string>
     <string name="ml_call_voice_pause">语音传输已暂停</string>
     <string name="ml_call_voice_resume">语音传输已恢复</string>
+    <string name="ml_call_voice_calling">语音通话进行中</string>
 
     <!--Error 文字内容-->
     <string name="ml_error_field_required">此项是必须的</string>
