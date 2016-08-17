@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    android:id="@+id/ml_layout_coordinator"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:melove="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ml_theme_background"
+    android:fitsSystemWindows="true">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/ml_widget_appbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/ml_dimen_224"
+        android:fitsSystemWindows="true"
+        android:theme="@style/MLTheme.AppBarOverlay"
+        app:elevation="@dimen/ml_dimen_0">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/ml_widget_collapsing"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
+            app:elevation="@dimen/ml_dimen_0"
+            app:expandedTitleMarginStart="@dimen/ml_dimen_72"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/bg_top"
+                app:layout_collapseMode="parallax"
+                app:layout_collapseParallaxMultiplier="0.7"/>
+            <!--主界面 Toolbar-->
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/ml_widget_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:fitsSystemWindows="false"
+                android:minHeight="?attr/actionBarSize"
+                android:theme="@style/MLTheme.ToolbarOverlay"
+                android:transitionName="@string/ml_shared_element_toolbar"
+                app:elevation="@dimen/ml_dimen_0"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/MLTheme.PopupOverlay">
+                <!--头像-->
+                <!--<net.melove.app.chat.communal.widget.MLImageView-->
+                <!--android:id="@+id/ml_img_contacter_avatar"-->
+                <!--android:layout_width="@dimen/ml_dimen_36"-->
+                <!--android:layout_height="@dimen/ml_dimen_36"-->
+                <!--android:src="@mipmap/ic_character_blackcat"-->
+                <!--melove:ml_shape_type="round"/>-->
+            </android.support.v7.widget.Toolbar>
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <!--中间内容布局-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/ml_dimen_16"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/ml_dimen_16">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/ml_white_87"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/ml_dimen_8"
+                android:paddingLeft="@dimen/ml_dimen_16"
+                android:paddingRight="@dimen/ml_dimen_16"
+                android:paddingTop="@dimen/ml_dimen_8">
+
+                <!-- 用户签名 -->
+                <TextView
+                    android:id="@+id/ml_text_contacter_signature"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/ml_dimen_8"
+                    android:text="@string/ml_app_name"/>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/ml_dimen_16"
+                android:background="@color/ml_white_87"
+                android:paddingBottom="@dimen/ml_dimen_8"
+                android:paddingLeft="@dimen/ml_dimen_16"
+                android:paddingRight="@dimen/ml_dimen_16"
+                android:paddingTop="@dimen/ml_dimen_8">
+
+                <!--回复对方-->
+                <Button
+                    android:id="@+id/ml_btn_reply_apply_for"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/ml_dimen_36"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/ml_click_rectangle_white"
+                    android:text="@string/ml_btn_reply"
+                    android:textColor="@color/ml_blue_87"
+                    android:textSize="@dimen/ml_size_14"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@id/ml_btn_reply_apply_for"
+                    android:orientation="vertical">
+                    <!--对方申请的理由-->
+                    <TextView
+                        android:id="@+id/ml_text_reason_apply_for"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ml_test"/>
+
+                    <!--当前请求的状态-->
+                    <TextView
+                        android:id="@+id/ml_text_status_apply_for"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/ml_dimen_8"
+                        android:text="@string/ml_agreed"/>
+                </LinearLayout>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/ml_dimen_24"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+                <!--同意-->
+                <Button
+                    android:id="@+id/ml_btn_agree_apply_for"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/ml_dimen_36"
+                    android:layout_marginRight="@dimen/ml_dimen_8"
+                    android:background="@drawable/ml_click_rectangle_blue"
+                    android:text="@string/ml_btn_agree"
+                    android:textColor="@color/ml_white_87"
+                    android:textSize="@dimen/ml_size_14"/>
+                <!--拒绝-->
+                <Button
+                    android:id="@+id/ml_btn_refuse_apply_for"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/ml_dimen_36"
+                    android:layout_marginLeft="@dimen/ml_dimen_8"
+                    android:background="@drawable/ml_click_rectangle_red"
+                    android:text="@string/ml_btn_refuse"
+                    android:textColor="@color/ml_white_87"
+                    android:textSize="@dimen/ml_size_14"/>
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+    <!--悬浮按钮 设置在锚点在appbar上，可以滚动隐藏-->
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/ml_btn_fab_contacter_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/ml_dimen_16"
+        android:src="@mipmap/ic_chat_white_24dp"
+        android:visibility="visible"
+        app:fabSize="normal"
+        app:layout_anchor="@id/ml_widget_appbar"
+        app:layout_anchorGravity="bottom|end"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_anchor="@id/ml_widget_appbar"
+        app:layout_anchorGravity="bottom|center">
+
+        <net.melove.app.chat.communal.widget.MLImageView
+            android:id="@+id/ml_img_contacter_avatar"
+            android:layout_width="@dimen/ml_dimen_72"
+            android:layout_height="@dimen/ml_dimen_72"
+            android:layout_marginBottom="@dimen/ml_dimen_16"
+            android:src="@mipmap/ic_character_blackcat"
+            melove:ml_shape_type="round"/>
+    </LinearLayout>
+
+</android.support.design.widget.CoordinatorLayout>

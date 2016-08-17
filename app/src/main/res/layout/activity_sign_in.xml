@@ -9,7 +9,7 @@
     android:background="@color/ml_theme_background"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
-    tools:context="net.melove.app.easechat.authentication.MLSigninActivity">
+    tools:context="net.melove.app.chat.authentication.MLSigninActivity">
 
     <!--公共的 Toolbar 控件-->
     <include layout="@layout/widget_toolbar_communal"/>
@@ -45,7 +45,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/ml_dimen_16"
                     android:textColor="@color/ml_black_87"
-                    android:textColorHint="@color/ml_black_26">
+                    android:textColorHint="@color/ml_black_38">
 
                     <EditText
                         android:id="@+id/ml_edit_sign_in_username"
@@ -57,7 +57,7 @@
                         android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="@color/ml_black_87"
-                        android:textColorHint="@color/ml_black_26"
+                        android:textColorHint="@color/ml_black_38"
                         android:textSize="@dimen/ml_size_16"/>
                 </android.support.design.widget.TextInputLayout>
 
@@ -65,7 +65,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/ml_black_87"
-                    android:textColorHint="@color/ml_black_26">
+                    android:textColorHint="@color/ml_black_38">
 
                     <EditText
                         android:id="@+id/ml_edit_sign_in_password"
@@ -75,6 +75,8 @@
                         android:inputType="textPassword"
                         android:maxLines="1"
                         android:singleLine="true"
+                        android:textColor="@color/ml_black_87"
+                        android:textColorHint="@color/ml_black_38"
                         android:textSize="@dimen/ml_size_16"/>
                 </android.support.design.widget.TextInputLayout>
 

@@ -25,26 +25,31 @@
         <item name="android:windowAnimationStyle">@style/AnimSlide</item>
 
         <!--设置 Dialog 样式 在4.x上会导致ProgressDialog有双重背景，暂时取消设置-->
-        <item name="android:dialogTheme">@style/MLTheme.DialogOverlay</item>
+        <!--<item name="android:dialogTheme">@style/MLTheme.DialogOverlay</item>-->
 
     </style>
 
     <!--启动时的主题样式-->
     <style name="MLTheme.Launcher" parent="MLTheme.Base">
         <!--防止启动瞬间黑屏或白屏，程序启动时的背景图，可以设置为一张代表性的logo，或者设置app框架类图-->
-        <item name="android:windowBackground">@mipmap/bg_launcher_statusbar_toolbar</item>
+        <item name="android:windowBackground">@mipmap/bg_launcher_statusbar_toolbar_tab</item>
     </style>
 
     <!--设置 Activity 透明主题-->
     <style name="MLTheme.Transparent" parent="MLTheme.Base">
         <item name="android:windowAnimationStyle">@style/AnimFade</item>
-        <item name="android:windowBackground">@color/ml_black_26</item>
+        <item name="android:windowBackground">@color/ml_theme_background</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+    <!--设置 Activity 半透明主题-->
+    <style name="MLTheme.Translucent" parent="MLTheme.Base">
+        <item name="android:windowAnimationStyle">@style/AnimFade</item>
+        <item name="android:windowBackground">@color/ml_theme_background</item>
         <item name="android:windowIsTranslucent">true</item>
     </style>
 
     <!--默认主题-->
     <style name="MLTheme.Default" parent="MLTheme.Base">
-
         <!--按钮颜色-->
         <!--<item name="colorButtonNormal">@color/ml_orange_54</item>-->
         <!--<item name="android:colorButtonNormal">@color/ml_gray_87</item>-->
@@ -77,22 +82,29 @@
         <item name="android:activityCloseExitAnimation">@anim/ml_anim_slide_right_exit</item>
     </style>
 
-    <!--自定义 AppBar 样式，这里为了让文字显示为白色，继承黑色样式的ActionBar-->
+    <!--自定义默认 AppBar 样式，这里为了让文字显示为白色，继承黑色样式的ActionBar-->
     <style name="MLTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <!--<item name="colorControlNormal">@color/ml_white_100</item>-->
-        <!--<item name="android:textColor">@color/ml_white_100</item>-->
-        <item name="android:textSize">@dimen/ml_size_18</item>
+        <!--Appbar 控制器颜色-->
+        <item name="colorControlNormal">@color/ml_white_100</item>
+        <!--Appbar 标题颜色-->
+        <item name="android:textColor">@color/ml_white_100</item>
+        <!--Appbar 标题大小-->
+        <item name="android:textSize">@dimen/ml_size_16</item>
+        <!--Appbar 标题样式-->
         <item name="android:textStyle">normal</item>
         <!--更改菜单按钮样式 此菜单直的是当 action过多显示不全，会有三个小点儿样式-->
         <!--<item name="android:actionOverflowButtonStyle">@style/MLTheme.ActionBarOverflow</item>-->
     </style>
 
-    <!--自定义 Toolbar 样式，这里为了让文字显示为白色，继承黑色样式的ActionBar-->
+    <!--自定义透明 Toolbar 样式，这里为了让文字显示为白色，继承黑色样式的ActionBar-->
     <style name="MLTheme.ToolbarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <!--Toolbar字体颜色-->
+        <!--Toolbar 控制器颜色-->
         <item name="colorControlNormal">@color/ml_white_100</item>
-        <item name="android:textColor">@color/ml_white_87</item>
-        <item name="android:textSize">@dimen/ml_size_18</item>
+        <!--Toolbar 上文字颜色-->
+        <item name="android:textColor">@color/ml_white_100</item>
+        <!--Toolbar 文字大小-->
+        <item name="android:textSize">@dimen/ml_size_16</item>
+        <!--Toolbar 文字样式-->
         <item name="android:textStyle">normal</item>
     </style>
 
@@ -117,6 +129,7 @@
     </style>
 
 
+    <!--自定义弹出框样式-->
     <style name="MLTheme.Light.Dialog" parent="Theme.AppCompat.Dialog">
         <item name="colorAccent">@color/ml_orange_87</item>
         <item name="android:textColorPrimary">@color/ml_blue_87</item>

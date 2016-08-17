@@ -1,17 +1,25 @@
 <resources>
-    <string name="ml_app_name">MLEaseChat</string>
+    <string name="ml_app_name">MLChat</string>
     <string name="ml_test">Test</string>
     <string name="ml_test_text">公司介绍\n\n
-        环信成立于2013年4月，是一家全通讯能力云服务提供商。产品包括全球最大的即时通讯云PaaS平台——环信即时通讯云，以及全球首创的全媒体智能云客服平台—环信移动客服。\n\n\n
+        环信成立于2013年4月，是一家全通讯能力云服务提供商。产品包括全球最大的即时通讯云PaaS平台——环信即时通讯云，
+        以及全球首创的全媒体智能云客服平台—环信移动客服。\n\n\n
         提供服务：\n
         环信移动客服 — 全媒体智能云客服倡领者\n\n
-        环信移动客服是全球首创的全媒体智能云客服平台。支持全媒体接入，包括网页在线客服、社交媒体客服（微博、微信）和移动端客服等多种渠道。基于环信业界领先的IM长连接技术保证消息必达，并通过独创的智能机器人技术极大降低人工客服工作量。\n\n
+        环信移动客服是全球首创的全媒体智能云客服平台。支持全媒体接入，包括网页在线客服、社交媒体客服（微博、微信）
+        和移动端客服等多种渠道。基于环信业界领先的IM长连接技术保证消息必达，并通过独创的智能机器人技术极大降低人工客服工作量。\n\n
         环信即时通讯云 — 全球最大的即时通讯云PaaS平台\n\n
-        环信即时通讯云是全球最大的即时通讯云PaaS平台。为开发者提供基于移动互联网的即时通讯能力，如单聊、群聊、发语音、发图片、发位置、实时音频、实时视频等，让开发者摆脱繁重的移动IM通讯底层开发，24小时即可让App拥有内置IM能力。\n\n\n
+        环信即时通讯云是全球最大的即时通讯云PaaS平台。为开发者提供基于移动互联网的即时通讯能力，如单聊、群聊、
+        发语音、发图片、发位置、实时音频、实时视频等，让开发者摆脱繁重的移动IM通讯底层开发，24小时即可让App拥有内置IM能力。\n\n\n
         融资情况：\n\n
-        环信目前一年时间已经完成了4轮融资。天使轮为经纬中国500万人民币、A轮为SIG 500万美元、A+轮为红杉资本300万美元，B轮融资1250万美金，由红杉资本领投，经纬中国和SIG跟投。是即时通讯云领域上线早、融资快、资金最充裕的平台。\n\n\n
+        环信目前一年时间已经完成了4轮融资。天使轮为经纬中国500万人民币、A轮为SIG 500万美元、A+轮为红杉资本300万美元，
+        B轮融资1250万美金，由红杉资本领投，经纬中国和SIG跟投。是即时通讯云领域上线早、融资快、资金最充裕的平台。\n\n\n
         业绩规模：\n\n
-        环信即时通讯云于2014年6月上线，上线后快速发展，截至2015年上半年，环信的App注册用户23062万家，环信SDK覆盖C端用户数2.51亿，环信平台日发送消息过亿条。作为国内起步最早、规模最大的即时通讯云平台，在一年时间里环信即时通讯云在市场占有率、月活用户数、品牌认知度、用户满意度以及融资总额五个方面排名即时通讯云行业第一。同时，环信的移动客服产品已经签约了4万家付费客服席位，典型用户包括国美在线、58到家、楚楚街9块9等上百家互联网巨头企业客户。\n\n\n</string>
+        环信即时通讯云于2014年6月上线，上线后快速发展，截至2015年上半年，环信的App注册用户23062万家，
+        环信SDK覆盖C端用户数2.51亿，环信平台日发送消息过亿条。作为国内起步最早、规模最大的即时通讯云平台，
+        在一年时间里环信即时通讯云在市场占有率、月活用户数、品牌认知度、用户满意度以及融资总额五个方面排名即时
+        通讯云行业第一。同时，环信的移动客服产品已经签约了4万家付费客服席位，典型用户包括国美在线、58到家、
+        楚楚街9块9等上百家互联网巨头企业客户。\n\n\n</string>
 
 
     <!--登录与注册-->
@@ -56,12 +64,13 @@
     <string name="ml_add_contact_reason">嗨！加个好友吧 ^_^~</string>
 
     <!--Dialog-->
-    <string name="ml_dialog_title_conversation">会话操作</string>
-    <string name="ml_dialog_title_apply_for">申请操作</string>
-    <string name="ml_dialog_title_chat">Message 操作</string>
-    <string name="ml_dialog_title_invited">Invited 操作</string>
-    <string name="ml_dialog_title_conflict">其他设备登录</string>
-    <string name="ml_dialog_content_add_contact">输入你的申请理由，让对方容易通过你的请求，也可以输入你的姓名，让对方知道你是谁，更容易通过请求</string>
+    <string name="ml_dialog_title_conversation">操作会话</string>
+    <string name="ml_dialog_title_apply_for">操作申请与通知</string>
+    <string name="ml_dialog_title_message">操作消息</string>
+    <string name="ml_dialog_title_conflict">账户登录冲突</string>
+    <string name="ml_dialog_title_select_photo_mode">选择图片方式</string>
+    <string name="ml_dialog_title_select_call_mode">选择通话方式</string>
+    <string name="ml_dialog_content_add_contact_reason">输入你的申请理由，让对方容易通过你的请求，也可以输入你的姓名，让对方知道你是谁，更容易通过请求</string>
     <string name="ml_dialog_content_create_conversation">演示环信不需要互为好友就能发起会话，只需要知道对方环信账户，即可跳转到聊天界面进行聊天，请输入对方的username</string>
     <string name="ml_dialog_content_delete_invited">确定要删除用户申请么</string>
     <string name="ml_dialog_message_waiting">正在处理，请稍候……</string>
@@ -72,7 +81,8 @@
     <string name="ml_home">主页</string>
     <string name="ml_group">群组</string>
     <string name="ml_room">聊天室</string>
-    <string name="ml_voice_call">语音电话</string>
+    <string name="ml_call">通话</string>
+    <string name="ml_voice_call">语音通话</string>
     <string name="ml_video_call">视频通话</string>
     <string name="ml_apply_for">申请与通知</string>
     <string name="ml_help">帮助</string>
@@ -97,6 +107,8 @@
     <string name="ml_menu_chat_delete">删除消息</string>
     <string name="ml_menu_chat_forward">转发消息</string>
     <string name="ml_menu_chat_recall">撤回</string>
+    <string name="ml_menu_chat_gallery">图库</string>
+    <string name="ml_menu_chat_camera">相机</string>
     <string name="ml_menu_conversation_cancel_top">取消置顶</string>
     <string name="ml_menu_conversation_clear">清空会话内容</string>
     <string name="ml_menu_conversation_delete">删除会话</string>
@@ -115,11 +127,11 @@
     <string name="ml_hint_time">时间</string>
     <string name="ml_hint_reason">申请理由</string>
     <string name="ml_hint_sign_in">输入你的环信账户进行登录，环信账号不能是邮箱账户</string>
-    <string name="ml_hint_sign_up">输入你想要注册的环信账号，环信账户可以使手机号，或者任意长度的字符串，应全部为消息字母或数字，除了(.)(_)(-)外不能包含其他特殊字符，不能是邮箱账户</string>
+    <string name="ml_hint_sign_up">输入你想要注册的环信账号，环信账户可以使手机号，或者任意长度的字符串，
+        应全部为消息字母或数字，除了(.)(_)(-)外不能包含其他特殊字符，不能是邮箱账户</string>
     <string name="ml_hint_username">账户名</string>
 
-
-    <!--消息方面的提示显示信息-->
+    <!--消息方面的提示信息-->
     <string name="ml_hint_msg_at">\@我消息</string>
     <string name="ml_hint_msg_burn">阅后即焚</string>
     <string name="ml_hint_msg_draft">草稿</string>
@@ -128,6 +140,35 @@
     <string name="ml_hint_msg_new">{$1}条新消息</string>
     <string name="ml_hint_msg_recall_by_self">此条消息已撤回</string>
     <string name="ml_hint_msg_recall_by_user">此条消息已被 %1$s 撤回</string>
+
+    <!--通话方面的提示信息-->
+    <string name="ml_call_accepted">通话已接通</string>
+    <string name="ml_call_busy">对方正忙，先发个给他吧</string>
+    <string name="ml_call_cancel">已取消</string>
+    <string name="ml_call_cancel_is_incoming">对方已取消</string>
+    <string name="ml_call_connecting">正在呼叫对方...</string>
+    <string name="ml_call_connected">正在等待对方接受呼叫申请...</string>
+    <string name="ml_call_connected_is_incoming">对方申请与你进行通话</string>
+    <string name="ml_call_connection_fail">建立连接失败</string>
+    <string name="ml_call_disconnected">通话已结束</string>
+    <string name="ml_call_duration_time">通话时长</string>
+    <string name="ml_call_no_data">没有通话数据</string>
+    <string name="ml_call_not_answer">对方未接听</string>
+    <string name="ml_call_noresponse">对方手机不在身边，稍后再试</string>
+    <string name="ml_call_not_online">对方不在线，发个留言给他吧</string>
+    <string name="ml_call_network_unsatble">网络状态不佳</string>
+    <string name="ml_call_network_normal">网络状态良好</string>
+    <string name="ml_call_reject">对方已拒绝</string>
+    <string name="ml_call_reject_is_incoming">已拒绝</string>
+    <string name="ml_call_local_version_smaller">本地版本过低，无法通讯</string>
+    <string name="ml_call_opposite_version_smaller">对方版本过低，无法通讯</string>
+    <string name="ml_call_version_different">双方通讯协议不同，无法通讯</string>
+    <string name="ml_call_video_pause">视频传输已暂停</string>
+    <string name="ml_call_video_resume">视频传输已恢复</string>
+    <string name="ml_call_video_calling">视频通话进行中</string>
+    <string name="ml_call_voice_pause">语音传输已暂停</string>
+    <string name="ml_call_voice_resume">语音传输已恢复</string>
+    <string name="ml_call_voice_calling">语音通话进行中</string>
 
     <!--Error 文字内容-->
     <string name="ml_error_field_required">此项是必须的</string>
@@ -197,24 +238,32 @@
     <!--Toast 提示内容-->
     <string name="ml_toast_add_contacts_success">发送好友请求成功，等待对方同意^_^</string>
     <string name="ml_toast_add_contacts_failed">发送好友请求失败-_-||，稍后重试</string>
-    <string name="ml_toast_connected">已经连接到服务器</string>
+    <string name="ml_toast_connected">已经连接到服务器</string>h
     <string name="ml_toast_content_copy_success">内容已复制</string>
-    <string name="ml_toast_msg_send_faild">消息发送失败，等下再发吧</string>
-    <string name="ml_toast_msg_resend_faild">消息重新发送失败，等下再发吧</string>
+    <string name="ml_toast_msg_send_faild">消息发送失败</string>
+    <string name="ml_toast_msg_file_too_big">文件过大</string>
+    <string name="ml_toast_msg_resend_faild">消息重新发送失败</string>
     <string name="ml_toast_msg_not_join_group">未加入当前群组，不能发送消息</string>
     <string name="ml_toast_msg_have_illegal">信息包含非法字符</string>
-    <string name="ml_toast_msg_recall_faild_max_time">消息已经超过两分钟，无法撤回</string>
+    <string name="ml_toast_msg_recall_faild_max_time">消息已经超过五分钟，无法撤回</string>
     <string name="ml_toast_msg_recall_faild">撤回失败 失败错误码</string>
     <string name="ml_toast_msg_delete_success">消息删除成功</string>
     <string name="ml_toast_chat_cant_yourself">不能和自己聊天</string>
+
+    <string name="ml_toast_unrealized">功能暂未实现，尽请期待(๑^ں^๑)</string>
 
     <!--界面跳转共享元素名称-->
     <string name="ml_shared_element_toolbar">Toolbar</string>
 
     <!--输入框限制输入内容-->
     <string name="ml_input_limit">0123456789abcdefghigklmnopqrstuvwxyz-_.</string>
+    <string name="ml_input_limit_full">0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIGKLMNOPQRSTUVWXYZ-_.</string>
     <!--Copyright-->
     <string name="ml_copy_right">©2015 melove.net</string>
     <string name="title_activity_mltest">MLTestActivity</string>
 
+
+    <string name="test_unicode_smiling">\uD83D\uDE01</string>
+    <string name="test_unicode_smiling_u">1F601</string>
+    <string name="test_unicode_smiling_tears">\uD83D\uDE02</string>
 </resources>

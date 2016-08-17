@@ -3,6 +3,7 @@
     android:id="@+id/ml_widget_appbar"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:melove="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="@dimen/ml_dimen_56"
     android:theme="@style/MLTheme.AppBarOverlay"
@@ -18,5 +19,14 @@
         android:transitionName="@string/ml_shared_element_toolbar"
         app:elevation="@dimen/ml_dimen_0"
         app:popupTheme="@style/MLTheme.PopupOverlay"
-        app:theme="@style/MLTheme.ToolbarOverlay"/>
+        app:theme="@style/MLTheme.ToolbarOverlay">
+
+        <!--头像-->
+        <!--<net.melove.app.chat.communal.widget.MLImageView-->
+            <!--android:id="@+id/ml_img_avatar"-->
+            <!--android:layout_width="@dimen/ml_dimen_36"-->
+            <!--android:layout_height="@dimen/ml_dimen_36"-->
+            <!--android:src="@mipmap/ic_character_blackcat"-->
+            <!--melove:ml_shape_type="round"/>-->
+    </android.support.v7.widget.Toolbar>
 </android.support.design.widget.AppBarLayout>

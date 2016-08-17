@@ -15,6 +15,10 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+#这里是 keep 小米监听的广播，其实在环信sdk中就已经包含了，这里不用单独写
+#-keep class com.hyphenate.EMMipushReceiver {*;}
+
 # 环信3.0 Lite SDK 最新混淆代码
 -keep class com.hyphenate.** {*;}
 -dontwarn  com.hyphenate.**

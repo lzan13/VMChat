@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/ml_action_call"
+        android:icon="@mipmap/ic_call_white_24dp"
+        android:orderInCategory="50"
+        android:title="@string/ml_call"
+        app:showAsAction="always"/>
     <item
         android:id="@+id/ml_action_attachment"
         android:icon="@mipmap/ic_attachment_white_24dp"
         android:orderInCategory="100"
         android:title="@string/ml_attachment"
-        app:showAsAction="always" />
+        app:showAsAction="always"/>
     <item
         android:id="@+id/ml_action_settings"
         android:icon="@mipmap/ic_settings_white_24dp"
         android:orderInCategory="150"
         android:title="@string/ml_settings"
-        app:showAsAction="never" />
+        app:showAsAction="never"/>
     <item
         android:id="@+id/ml_action_delete"
         android:icon="@mipmap/ic_delete_white_24dp"
         android:orderInCategory="150"
         android:title="@string/ml_clear_message"
-        app:showAsAction="never" />
+        app:showAsAction="never"/>
 
 </menu>

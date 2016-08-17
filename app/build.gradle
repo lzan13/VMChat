@@ -2,21 +2,49 @@ apply plugin: 'com.android.application'
 
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion '23.0.2'
+    compileSdkVersion 24
+    buildToolsVersion '24.0.1'
     defaultConfig {
-        applicationId "net.melove.app.easechat"
+        applicationId "net.melove.app.chat"
         minSdkVersion 15
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
     }
-    buildTypes {
+
+    // 配置签名信息
+    signingConfigs {
+        // Debug 使用默认签名
+        debug {
+            storeFile file("debug.keystore")
+        }
+        // 发布时用自己的签名
         release {
-            minifyEnabled false
+            storeFile file("lzan13.keystore")
+            storePassword "lzan13"
+            keyAlias "lzan13"
+            keyPassword "lzan13"
+        }
+    }
+
+    buildTypes {
+        debug {
+//            applicationIdSuffix ".debug"
+//            signingConfig signingConfigs.debug
+        }
+        release {
+            signingConfig signingConfigs.release
+            // 是否开启压缩
+            zipAlignEnabled true
+            // 是否开启混淆
+            minifyEnabled true
+            // 打包时删除无用资源 依赖于混淆，必须和 minifyEnabled 一起使用
+            shrinkResources true
+            // 混淆文件
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    // 文件路径映射配置
 //    sourceSets {
 //        main {
 //            // 设置Jni so文件路径 如果有jniLibs目录就不需要设置
@@ -44,46 +72,44 @@ android {
 //        flavor -> flavor.manifestPlaceholders = [EM_APPKEY: name]
 //    }
 
-    // 打开增量编译（实验功能）
+    // 增量编译
     dexOptions {
         incremental true
     }
-
-
 }
 
+/**
+ * 项目依赖，包含引入的第三方 SDK以及Android官方 Support 库
+ */
 dependencies {
-    /**
-     * 包含引入的第三方 SDK
-     */
     compile fileTree(include: ['*.jar'], dir: 'libs')
     /**
-     * 新的遵循 Android  Material design 设计风格库，此扩展库已经包含了一下三个扩展库，如果引入了design，就不需要再单独引入其他库
-     * support-v4
-     * appcomat-v7
-     * recyclerView库
+     *   新的遵循 Android  Material design 设计风格库，此扩展库已经包含了一下三个扩展库，如果引入了design，
+     *   就不需要再单独引入其他库
+     *   support-v4
+     *   appcomat-v7
+     *   recyclerView库
      */
-    compile 'com.android.support:design:23.3.0'
+    compile 'com.android.support:design:24.1.1'
+    // 解决方法数超过65536问题扩展库
+    compile 'com.android.support:multidex:1.0.0'
     // Google Play Service 库，使用GCM推送需要
-    // compile "com.google.android.gms:play-services-gcm:8.4.0"
-
+    compile 'com.google.android.gms:play-services-gcm:9.0.0'
     // LeakCanary Debug库，开源捕获内存溢出的库
-    compile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
     // LeakCanary 发版的库
-    // compile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
-
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
     // 第三方图片加载库
     compile 'com.github.bumptech.glide:glide:3.7.0'
-
     // 观察者模式解耦库
     compile 'org.greenrobot:eventbus:3.0.0'
-
+    // 支持手势缩放的ImageView
+    compile 'com.bm.photoview:library:1.4.1'
     /**
-     * 引入各种第三方 SDK jar包，
-     * 环信sdk、小米推送
-     * 因为在上边 fileTree 里已经包含了libs，这里可以不用再单独添加
+     *   引入各种第三方 SDK jar包，在上边 fileTree 里已经包含了libs，这里可以不用再单独添加
      */
-    // compile files('libs/hyphenatechat_3.1.2.jar')
-    // compile files('libs/MiPush_SDK_Client_2_2_21.jar')
+    compile files('libs/MiPush_SDK_Client_3_0_3.jar')
+    compile files('libs/hyphenatechat_3.1.4.jar')
+    compile files('libs/HwPush_SDK_V2705.jar')
 }
 

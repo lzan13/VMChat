@@ -7,10 +7,10 @@
     <ImageView
         android:id="@+id/ml_img_nav_top"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:src="@mipmap/bg_top"
-        android:tint="@color/ml_black_26"/>
+        android:tint="@color/ml_black_38"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,7 +18,7 @@
         android:gravity="bottom"
         android:orientation="vertical">
 
-        <net.melove.app.easechat.communal.widget.MLImageView
+        <net.melove.app.chat.communal.widget.MLImageView
             android:id="@+id/ml_img_nav_avatar"
             android:layout_width="@dimen/ml_dimen_56"
             android:layout_height="@dimen/ml_dimen_56"

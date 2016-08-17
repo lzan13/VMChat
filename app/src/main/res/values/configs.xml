@@ -16,6 +16,17 @@
 
     <integer name="ml_time_fab_rotate">300</integer>
 
+    <integer name="ml_time_vibrate">60</integer>
 
     <integer name="ml_btn_test">2</integer>
+
+    <!--模糊时的模糊半径-->
+    <integer name="ml_img_blur_2">2</integer>
+    <integer name="ml_img_blur_4">4</integer>
+    <integer name="ml_img_blur_8">8</integer>
+    <integer name="ml_img_blur_12">12</integer>
+    <integer name="ml_img_blur_16">16</integer>
+    <integer name="ml_img_blur_20">20</integer>
+    <integer name="ml_img_blur_24">24</integer>
+    <integer name="ml_img_blur_32">32</integer>
 </resources>

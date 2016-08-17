@@ -1,52 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="net.melove.app.easechat"
+<manifest package="net.melove.app.chat"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- 项目权限配置 -->
     <!-- 相机 -->
     <uses-permission android:name="android.permission.CAMERA"/>
+    <!-- 网络 -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <!-- 录音 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <!-- 震动 -->
     <uses-permission android:name="android.permission.VIBRATE"/>
-    <!-- 网络 -->
-    <uses-permission android:name="android.permission.INTERNET"/>
     <!-- 访问网络状态 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <!-- 访问WIFI状态 -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <!-- 读取手机状态 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <!--唤醒锁屏-->
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <!-- 写入外部存储 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <!-- 访问精确定位 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <!-- 修改音频设置 -->
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
-    <!-- 读取手机状态 -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <!-- 允许读写系统设置项 使用设置时需要 -->
     <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
     <!-- 读取启动设置 -->
     <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS"/>
 
-
-    <!--音视频通话所需权限-->
+    <!-- 音视频通话所需权限 -->
     <!-- 唤醒锁屏 -->
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
-    <!--非必需权限-->
+    <!-- 非必需权限 -->
     <!-- 开机自启动 -->
-    <!--<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>-->
-    <!--<uses-permission android:name="android.permission.GET_TASKS"/>-->
+    <!-- <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/> -->
+    <!--获取当前和最近执行的任务
+    TODO 已被弃用后期可能会添加另一个权限 REAL_GET_TASKS
+    TODO https://android.googlesource.com/platform/frameworks/base/+/2d7576b%5E!/-->
+    <uses-permission android:name="android.permission.GET_TASKS"/>
     <!-- 安装卸载文件系统 -->
-    <!--<uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>-->
+    <!-- <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/> -->
     <!-- 改变WIFI状态 -->
-    <!--<uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>-->
+    <!-- <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/> -->
     <!-- 读取描述文件 -->
-    <!--<uses-permission android:name="android.permission.READ_PROFILE"/>-->
+    <!-- <uses-permission android:name="android.permission.READ_PROFILE"/> -->
     <!-- 读取联系人 -->
-    <!--<uses-permission android:name="android.permission.READ_CONTACTS"/>-->
-    <!-- 弹出系统级 Dialog 权限 -->
-    <!--<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>-->
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+
 
     <!-- Demo新添加的一些属性 -->
     <!-- 访问GMail账户列表 -->
@@ -60,24 +63,17 @@
     <!-- 连续广播（允许一个程序收到广播后快速收到下一个广播） -->
     <uses-permission android:name="android.permission.BROADCAST_STICKY"/>
 
-    <!-- 小米推送的权限 -->
-    <permission
-        android:name="net.melove.app.easechat.permission.MIPUSH_RECEIVE"
-        android:protectionLevel="signature"/>
-
-    <uses-permission android:name="net.melove.demo.chat.permission.MIPUSH_RECEIVE"/>
-
     <!-- 配置 Google 推送需要的权限 -->
-    <!-- <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/> -->
-    <!-- <permission -->
-    <!-- android:name="net.melove.demo.chat.permission.C2D_MESSAGE" -->
-    <!-- android:protectionLevel="signature"/> -->
-    <!-- <uses-permission android:name="net.melove.demo.chat.permission.C2D_MESSAGE"/> -->
-    <!--权限配置 end-->
-
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+    <!--小米推送自定义权限-->
+    <permission
+        android:name="net.melove.app.chat.permission.MIPUSH_RECEIVE"
+        android:protectionLevel="signature"/>
+    <uses-permission android:name="net.melove.app.chat.permission.MIPUSH_RECEIVE"/>
+    <!-- GCM permission end -->
     <!-- 程序的入口 -->
     <application
-        android:name="net.melove.app.easechat.application.MLApplication"
+        android:name=".application.MLApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/ml_app_name"
@@ -85,17 +81,14 @@
 
         <!-- Activity的基类 -->
         <activity
-            android:name="net.melove.app.easechat.communal.base.MLBaseActivity"
+            android:name=".communal.base.MLBaseActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Default"/>
         <!-- 被踢弹出类 -->
-        <activity
-            android:name="net.melove.app.easechat.main.MLConflictActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/MLTheme.Transparent"/>
         <!-- 主界面 -->
         <activity
-            android:name="net.melove.app.easechat.main.MLMainActivity"
+            android:name=".main.MLMainActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Launcher">
             <intent-filter>
@@ -106,48 +99,76 @@
         </activity>
         <!-- 登录界面 -->
         <activity
-            android:name="net.melove.app.easechat.authentication.MLSigninActivity"
+            android:name=".authentication.MLSigninActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Default"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
         <!-- 注册界面 -->
         <activity
-            android:name="net.melove.app.easechat.authentication.MLSignupActivity"
+            android:name=".authentication.MLSignupActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MLTheme.Default"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
+        <!--申请与通知界面-->
+        <activity
+            android:name=".applyfor.MLApplyForActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Default"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
         <!-- 账户信息界面 -->
         <activity
-            android:name="net.melove.app.easechat.contacts.MLContactsInfoActivity"
+            android:name=".contacts.MLContacterInfoActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Default"/>
         <!-- 聊天界面 -->
         <activity
-            android:name="net.melove.app.easechat.conversation.MLChatActivity"
+            android:name=".conversation.MLChatActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Default"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
+        <!--视频通话界面-->
+        <activity
+            android:name=".conversation.call.MLVideoCallActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/MLTheme.Transparent"
+            android:windowSoftInputMode="adjustNothing|stateAlwaysHidden"/>
+        <!--语音通话界面-->
+        <activity
+            android:name=".conversation.call.MLVoiceCallActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/MLTheme.Transparent"
+            android:windowSoftInputMode="adjustNothing|stateAlwaysHidden"/>
+        <!--显示大图界面 使用半透明主题-->
+        <activity
+            android:name=".conversation.MLBigImageActivity"
+            android:theme="@style/MLTheme.Translucent"
+            android:windowSoftInputMode="adjustNothing|stateAlwaysHidden"/>
         <!-- 搜索界面 -->
         <activity
-            android:name="net.melove.app.easechat.main.MLSearchActivity"
+            android:name=".main.MLSearchActivity"
             android:theme="@style/MLTheme.Default"
             android:windowSoftInputMode="adjustResize|stateVisible"/>
-        <!-- Invited消息详情界面 -->
+        <!-- 测试 Activity -->
         <activity
-            android:name="net.melove.app.easechat.invited.MLInvitedDetailActivity"
-            android:theme="@style/MLTheme.Default"
-            android:windowSoftInputMode="adjustResize|stateHidden"/>
-        <!--测试 Activity-->
-        <activity
-            android:name="net.melove.app.easechat.test.MLTestActivity"
+            android:name=".test.MLTestActivity"
             android:label="@string/title_activity_mltest"
-            android:parentActivityName="net.melove.app.easechat.communal.base.MLBaseActivity"
+            android:parentActivityName=".communal.base.MLBaseActivity"
             android:theme="@style/MLTheme.Default">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="net.melove.app.easechat.communal.base.MLBaseActivity"/>
+                android:value="net.melove.app.chat.communal.base.MLBaseActivity"/>
         </activity>
-        <!--Activity 注册 end-->
+        <!-- Activity 注册 end -->
+
+        <!--通话广播监听-->
+        <receiver
+            android:name=".conversation.call.MLCallReceiver"
+            android:enabled="true"
+            android:exported="true">
+        </receiver>
+
 
         <!-- 设置环信应用的appkey -->
         <meta-data
@@ -157,18 +178,18 @@
         <!--android:name="EASEMOB_APPKEY"-->
         <!--android:value="${EM_APPKEY}"/>-->
         <!--配置私有化聊天地址-->
-        <!--<meta-data-->
-        <!--android:name="EASEMOB_CHAT_ADDRESS"-->
-        <!--android:value="101.201.58.11"/>-->
-        <!--&lt;!&ndash;配置私有化聊天端口&ndash;&gt;-->
-        <!--<meta-data-->
-        <!--android:name="EASEMOB_CHAT_PORT"-->
-        <!--android:value="443"/>-->
-        <!--&lt;!&ndash;配置私有化rest接口地址&ndash;&gt;-->
-        <!--<meta-data-->
-        <!--android:name="EASEMOB_API_URL"-->
-        <!--android:value="a1.easemob.com"/>-->
-        <!--声明sdk所需的 Service SDK核心功能-->
+        <meta-data
+            android:name="EASEMOB_CHAT_ADDRESS"
+            android:value="101.201.58.11"/>
+        <!--配置私有化聊天端口-->
+        <meta-data
+            android:name="EASEMOB_CHAT_PORT"
+            android:value="443"/>
+        <!--配置私有化rest接口地址-->
+        <meta-data
+            android:name="EASEMOB_API_URL"
+            android:value="a1.easemob.com"/>
+        <!-- 声明sdk所需的 Service SDK核心功能 -->
         <service
             android:name="com.hyphenate.chat.EMChatService"
             android:exported="true"/>
@@ -176,6 +197,7 @@
         <receiver android:name="com.hyphenate.chat.EMMonitorReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_REMOVED"/>
+
                 <data android:scheme="package"/>
             </intent-filter>
             <!-- 可选filter -->
@@ -184,38 +206,74 @@
                 <action android:name="android.intent.action.USER_PRESENT"/>
             </intent-filter>
         </receiver>
-        <!--环信sdk配置 end-->
+        <!-- 环信sdk配置 end -->
 
-        <!-- 配置小米推送服务 这里并没有按照小米官方文档配置全部 Service-->
+        <!--华为推送 start-->
+        <!--监听华为推送广播-->
+        <receiver android:name="net.melove.app.chat.conversation.MLHWPushReceiver">
+            <intent-filter>
+                <!--必须,用于接收token-->
+                <action android:name="com.huawei.android.push.intent.REGISTRATION"/>
+                <!--必须，用于接收消息-->
+                <action android:name="com.huawei.android.push.intent.RECEIVE"/>
+            </intent-filter>
+            <meta-data
+                android:name="CS_cloud_ablitity"
+                android:value="successRateAnalytics"/>
+        </receiver>
+        <!--PushSDK:PushSDK接收外部请求事件入口-->
+        <receiver
+            android:name="com.huawei.android.pushagent.PushEventReceiver"
+            android:process=":pushservice">
+            <intent-filter>
+                <action android:name="com.huawei.android.push.intent.REFRESH_PUSH_CHANNEL"/>
+                <action android:name="com.huawei.intent.action.PUSH"/>
+                <action android:name="com.huawei.intent.action.PUSH_ON"/>
+                <action android:name="com.huawei.android.push.PLUGIN"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED"/>
+                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
+
+                <data android:scheme="package"/>
+            </intent-filter>
+        </receiver>
+        <!-- PushSDK:Push服务 -->
+        <service
+            android:name="com.huawei.android.pushagent.PushService"
+            android:process=":pushservice">
+        </service>
+        <!--华为推送 end-->
+
+        <!-- 小米推送 start -->
         <service
             android:name="com.xiaomi.mipush.sdk.PushMessageHandler"
             android:enabled="true"
             android:exported="true"/>
-        <!-- 小米推送消息处理服务 -->
-
         <service
             android:name="com.xiaomi.mipush.sdk.MessageHandleService"
             android:enabled="true"/>
 
-        <!-- 配置sdk实现的小米推送 广播接收器 -->
         <receiver
             android:name="com.hyphenate.chat.EMMipushReceiver"
-            android:enabled="true">
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="ccom.xiaomi.mipush.MESSAGE_ARRIVED"/>
+                <action android:name="com.xiaomi.mipush.MESSAGE_ARRIVED"/>
             </intent-filter>
             <intent-filter>
                 <action android:name="com.xiaomi.mipush.ERROR"/>
             </intent-filter>
         </receiver>
-        <!--小米推送服务配置 end-->
+        <!-- 小米推送 end -->
 
-        <!--设置多渠道打包的渠道名，ML_CHANNEL_ID 是渠道名占位符-->
-        <!--<meta-data-->
-        <!--android:name="ML_CHANNEL_NAME"-->
-        <!--android:value="${ML_CHANNEL_ID}"/>-->
+        <!-- 设置多渠道打包的渠道名，ML_CHANNEL_ID 是渠道名占位符 -->
+        <!-- <meta-data -->
+        <!-- android:name="ML_CHANNEL_NAME" -->
+        <!-- android:value="${ML_CHANNEL_ID}"/> -->
+
     </application>
+
 </manifest>

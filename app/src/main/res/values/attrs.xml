@@ -2,6 +2,10 @@
 <resources>
     <!--自定义MLImageView的属性-->
     <declare-styleable name="MLImageView">
+        <!--模糊半径-->
+        <attr name="ml_blur_radius" format="integer"/>
+        <!--模糊图片是缩放比例-->
+        <attr name="ml_blur_scale" format="integer"/>
         <!--控件边框颜色-->
         <attr name="ml_border_color" format="color"/>
         <!--控件边框宽度-->
@@ -14,7 +18,7 @@
         <attr name="ml_radius" format="dimension"/>
         <!--自定义控件的几种枚举样式 0 正常、1 圆形、2 矩形-->
         <attr name="ml_shape_type" format="enum">
-            <enum name="none" value="0"/>
+            <enum name="normal" value="0"/>
             <enum name="round" value="1"/>
             <enum name="rectangle" value="2"/>
         </attr>

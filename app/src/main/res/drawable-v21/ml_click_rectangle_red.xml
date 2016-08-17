@@ -3,7 +3,7 @@
         android:color="@color/ml_red_dark_100"
         android:radius="@dimen/ml_dimen_4">
     <!--没有添加id-->
-    <item android:drawable="@color/ml_red_87"/>
+    <item android:drawable="@color/ml_red_100"/>
     <!--添加了id 和没有定义id的区别就是添加了id之后，当前设置的drawable不会显示，只有按下的时候才会显示-->
     <!--<item-->
     <!--android:id="@android:id/mask"-->
