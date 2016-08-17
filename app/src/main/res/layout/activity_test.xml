@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/ml_gray_26"
+    android:background="@color/ml_gray_38"
     android:clipChildren="false"
     android:fitsSystemWindows="true"
     tools:context="net.melove.app.chat.test.MLTestActivity">
@@ -36,7 +36,7 @@
             android:id="@+id/ml_layout_top"
             android:layout_width="match_parent"
             android:layout_height="@dimen/ml_dimen_192"
-            android:background="@color/ml_red_26">
+            android:background="@color/ml_red_38">
 
             <ImageView
                 android:layout_width="match_parent"

@@ -5,8 +5,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 
+import com.bm.library.PhotoView;
 import com.bumptech.glide.Glide;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMImageMessageBody;
@@ -31,7 +31,7 @@ public class MLBigImageActivity extends MLBaseActivity {
     private Toolbar mToolbar;
 
     // 显示原图控件
-    private ImageView mImageView;
+    private PhotoView mPhotoView;
 
     private EMMessage mMessage;
 
@@ -46,6 +46,18 @@ public class MLBigImageActivity extends MLBaseActivity {
 
     }
 
+    /**
+     * 初始化 Toolbar 控件
+     */
+    private void initToolbar() {
+        mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
+        mToolbar.setTitle(((EMImageMessageBody) mMessage.getBody()).getFileName());
+        setSupportActionBar(mToolbar);
+        // 设置toolbar图标
+        mToolbar.setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
+        // 设置Toolbar图标点击事件，Toolbar上图标的id是 -1
+        mToolbar.setNavigationOnClickListener(viewListener);
+    }
 
     /**
      * 初始化界面
@@ -53,7 +65,10 @@ public class MLBigImageActivity extends MLBaseActivity {
     private void initView() {
         mActivity = this;
 
-        mImageView = (ImageView) findViewById(R.id.ml_img_big_image);
+        mPhotoView = (PhotoView) findViewById(R.id.ml_img_big_image);
+        // 启动图片缩放功能
+        mPhotoView.enable();
+
 
         String msgId = getIntent().getStringExtra(MLConstants.ML_EXTRA_CHAT_MSG_ID);
         mMessage = EMClient.getInstance().chatManager().getMessage(msgId);
@@ -69,28 +84,17 @@ public class MLBigImageActivity extends MLBaseActivity {
                     .load(localPath)
                     .crossFade()
                     .dontAnimate()
-                    .into(mImageView);
+                    .placeholder(R.mipmap.image_default)
+                    .into(mPhotoView);
         } else {
             // 原图不存在
             Glide.with(mActivity)
                     .load(remotePath)
                     .crossFade()
                     .dontAnimate()
-                    .into(mImageView);
+                    .placeholder(R.mipmap.image_default)
+                    .into(mPhotoView);
         }
-    }
-
-    /**
-     * 初始化 Toolbar 控件
-     */
-    private void initToolbar() {
-        mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
-        mToolbar.setTitle("图片详情");
-        setSupportActionBar(mToolbar);
-        // 设置toolbar图标
-        mToolbar.setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
-        // 设置Toolbar图标点击事件，Toolbar上图标的id是 -1
-        mToolbar.setNavigationOnClickListener(viewListener);
     }
 
     private View.OnClickListener viewListener = new View.OnClickListener() {

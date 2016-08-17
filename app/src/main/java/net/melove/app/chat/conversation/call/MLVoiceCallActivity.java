@@ -225,7 +225,11 @@ public class MLVoiceCallActivity extends MLCallActivity {
      * 退出全屏通话界面
      */
     private void exitFullScreen() {
-        mActivity.moveTaskToBack(true);
+        // 振动反馈
+        vibrate();
+        // 让应用回到桌面
+        //        mActivity.moveTaskToBack(true);
+        mActivity.finish();
     }
 
     /**
@@ -233,6 +237,8 @@ public class MLVoiceCallActivity extends MLCallActivity {
      * TODO 3.1.4 SDK 语音通话暂时无效
      */
     private void onMicrophone() {
+        // 振动反馈
+        vibrate();
         // 根据麦克风开关是否被激活来进行判断麦克风状态，然后进行下一步操作
         if (mMicSwitch.isActivated()) {
             // 暂停语音数据的传输
@@ -247,28 +253,28 @@ public class MLVoiceCallActivity extends MLCallActivity {
             mMicSwitch.setActivated(true);
             MLCallStatus.getInstance().setMic(true);
         }
-        // 方法调用成功加个振动反馈
-        vibrate();
     }
 
     /**
      * 扬声器开关
      */
     private void onSpeaker() {
+        // 振动反馈
+        vibrate();
         // 根据按钮状态决定打开还是关闭扬声器
         if (mSpeakerSwitch.isActivated()) {
             closeSpeaker();
         } else {
             openSpeaker();
         }
-        // 方法调用成功加个振动反馈
-        vibrate();
     }
 
     /**
      * 录制通话内容 TODO 后期实现
      */
     private void recordCall() {
+        // 振动反馈
+        vibrate();
         MLToast.makeToast(R.string.ml_toast_unrealized).show();
         // 根据开关状态决定是否开启录制
         if (mRecordSwitch.isActivated()) {
@@ -280,14 +286,14 @@ public class MLVoiceCallActivity extends MLCallActivity {
             mRecordSwitch.setActivated(true);
             MLCallStatus.getInstance().setRecord(true);
         }
-        // 方法调用成功加个振动反馈
-        vibrate();
     }
 
     /**
      * 拒绝通话
      */
     private void rejectCall() {
+        // 振动反馈
+        vibrate();
         // 结束通话时取消通话状态监听
         MLEasemobHelper.getInstance().removeCallStateChangeListener();
         // 拒绝通话后关闭通知铃音
@@ -313,6 +319,8 @@ public class MLVoiceCallActivity extends MLCallActivity {
      * 结束通话
      */
     private void endCall() {
+        // 振动反馈
+        vibrate();
         // 结束通话时取消通话状态监听
         MLEasemobHelper.getInstance().removeCallStateChangeListener();
         // 结束通话后关闭通知铃音
@@ -336,6 +344,8 @@ public class MLVoiceCallActivity extends MLCallActivity {
      * 接听通话
      */
     private void answerCall() {
+        // 振动反馈
+        vibrate();
         // 做一些接听时的操作，比如隐藏按钮，打开扬声器等
         mRejectCallFab.setVisibility(View.GONE);
         mAnswerCallFab.setVisibility(View.GONE);

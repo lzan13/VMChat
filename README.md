@@ -10,12 +10,12 @@ MLEaseChat
 ```gradle
 AndroidStudio 2.1.2
 Android SDK Tools 25.1.7
-Android SDK Build-tools 24.0.0
-Android SDK compileSdkVersion 23
+Android SDK Build-tools 24.0.1
+Android SDK compileSdkVersion 24
 Android SDK targetSdkVersion 22
 Android SDK minSdkVersion 15
 Gradle 2.12
-Genymotion 2.6
+Genymotion 2.7.2
 ```
 
 ### 所使用库的版本
@@ -38,6 +38,8 @@ Genymotion 2.6
     compile 'com.github.bumptech.glide:glide:3.7.0'
     // 观察者模式解耦库
     compile 'org.greenrobot:eventbus:3.0.0'
+    // 支持手势缩放的ImageView
+    compile 'com.bm.photoview:library:1.4.1'
     /**
      *  引入各种第三方 SDK jar包，在上边 fileTree 里已经包含了libs，这里可以不用再单独添加
      */
@@ -52,12 +54,16 @@ Genymotion 2.6
 这些都是作为一个聊天`APP`做必须的一些功能，都已经实现，如果你发现什么`bug`，可以`fork`本项目自己修改并提交`pull request`，感谢你的贡献
 
 - 文本消息的收发与显示
-- 图片文件的收发
+- 图片消息的收发
+- 查看大图
+- 文件消息
 - 消息的重发
 - 消息回执状态的展示
 - 消息监听与聊天界面刷新
 - 消息的下拉平滑加载
 - 好友申请监听与处理
+- 语音通话以及通话界面的最小化与恢复
+- 视频通话以及通话界面最小化，恢复后有bug，看不了对方图像，待解决
 
 
 #### 扩展模块
@@ -75,10 +81,9 @@ Genymotion 2.6
 这些功能都是暂时还没有实现的一些功能，不过后期会慢慢加上，尽请期待
 
 #### 基本模块
-- 查看大图
 - 联系人获取与展示
-- 位置的发送
-- 视频文件发送
+- 位置消息收发
+- 视频消息收发
 - 群组创建与加入
 - 群变化的监听
 - 群组的展示

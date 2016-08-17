@@ -44,7 +44,7 @@ public abstract class MLMessageItem extends LinearLayout {
 
     // 弹出框
     protected AlertDialog.Builder alertDialogBuilder;
-    protected AlertDialog menuDialog;
+    protected AlertDialog alertDialog;
 
     /**
      * 聊天界面不同的item 所有要显示的控件，每个item可能显示的个数不同，
@@ -171,8 +171,8 @@ public abstract class MLMessageItem extends LinearLayout {
     protected void onDetachedFromWindow() {
         MLLog.i("onDetachedFromWindow %s", mMessage.getMsgId());
         // 检查是否有弹出框，如果有则销毁，防止界面销毁时出现异常
-        if (menuDialog != null && menuDialog.isShowing()) {
-            menuDialog.dismiss();
+        if (alertDialog != null && alertDialog.isShowing()) {
+            alertDialog.dismiss();
         }
         super.onDetachedFromWindow();
     }

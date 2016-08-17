@@ -87,6 +87,8 @@ public class MLVideoCallActivity extends MLCallActivity {
     protected void initView() {
         super.initView();
 
+        MLLog.i("initView");
+
         // 设置通话类型为视频
         mCallType = 0;
 
@@ -239,6 +241,7 @@ public class MLVideoCallActivity extends MLCallActivity {
                 break;
             case R.id.ml_btn_exit_full_screen:
                 // 最小化通话界面
+                exitFullScreen();
                 break;
             case R.id.ml_btn_change_camera_switch:
                 // 切换摄像头
@@ -288,9 +291,21 @@ public class MLVideoCallActivity extends MLCallActivity {
     }
 
     /**
+     * 退出全屏通话界面
+     */
+    private void exitFullScreen() {
+        // 振动反馈
+        vibrate();
+        // 让应用回到桌面
+        //        mActivity.moveTaskToBack(true);
+        mActivity.finish();
+    }
+
+    /**
      * 切换摄像头
      */
     private void changeCamera() {
+        // 振动反馈
         vibrate();
         // 根据切换摄像头开关是否被激活确定当前是前置还是后置摄像头
         if (mChangeCameraSwitch.isActivated()) {
@@ -311,6 +326,8 @@ public class MLVideoCallActivity extends MLCallActivity {
      * TODO 3.1.4 SDK 语音通话暂时无效，视频
      */
     private void onMicrophone() {
+        // 振动反馈
+        vibrate();
         // 根据麦克风开关是否被激活来进行判断麦克风状态，然后进行下一步操作
         if (mMicSwitch.isActivated()) {
             // 暂停语音数据的传输
@@ -325,14 +342,14 @@ public class MLVideoCallActivity extends MLCallActivity {
             mMicSwitch.setActivated(true);
             MLCallStatus.getInstance().setMic(true);
         }
-        // 方法调用成功加个振动反馈
-        vibrate();
     }
 
     /**
      * 摄像头开关
      */
     private void onCamera() {
+        // 振动反馈
+        vibrate();
         // 根据摄像头开关按钮状态判断摄像头状态，然后进行下一步操作
         if (mCameraSwitch.isActivated()) {
             // 暂停视频数据的传输
@@ -347,28 +364,28 @@ public class MLVideoCallActivity extends MLCallActivity {
             mCameraSwitch.setActivated(true);
             MLCallStatus.getInstance().setCamera(true);
         }
-        // 方法调用成功加个振动反馈
-        vibrate();
     }
 
     /**
      * 扬声器开关
      */
     private void onSpeaker() {
+        // 振动反馈
+        vibrate();
         // 根据按钮状态决定打开还是关闭扬声器
         if (mSpeakerSwitch.isActivated()) {
             closeSpeaker();
         } else {
             openSpeaker();
         }
-        // 方法调用成功加个振动反馈
-        vibrate();
     }
 
     /**
      * 录制通话内容 TODO 后期实现
      */
     private void recordCall() {
+        // 振动反馈
+        vibrate();
         MLToast.makeToast(R.string.ml_toast_unrealized).show();
         // 根据开关状态决定是否开启录制
         if (mRecordSwitch.isActivated()) {
@@ -380,14 +397,14 @@ public class MLVideoCallActivity extends MLCallActivity {
             mRecordSwitch.setActivated(true);
             MLCallStatus.getInstance().setRecord(true);
         }
-        // 方法调用成功加个振动反馈
-        vibrate();
     }
 
     /**
      * 拒绝通话
      */
     private void rejectCall() {
+        // 振动反馈
+        vibrate();
         // 通话结束，重置通话状态
         MLCallStatus.getInstance().reset();
         // 结束通话时取消通话状态监听
@@ -413,6 +430,8 @@ public class MLVideoCallActivity extends MLCallActivity {
      * 结束通话
      */
     private void endCall() {
+        // 振动反馈
+        vibrate();
         // 通话结束，重置通话状态
         MLCallStatus.getInstance().reset();
         // 结束通话时取消通话状态监听
@@ -436,6 +455,8 @@ public class MLVideoCallActivity extends MLCallActivity {
      * 接听通话
      */
     private void answerCall() {
+        // 振动反馈
+        vibrate();
         // 做一些接听时的操作，比如隐藏按钮，打开扬声器等
         mRejectCallFab.setVisibility(View.GONE);
         mAnswerCallFab.setVisibility(View.GONE);
@@ -631,13 +652,11 @@ public class MLVideoCallActivity extends MLCallActivity {
 
     @Override
     protected void onUserLeaveHint() {
-        super.onUserLeaveHint();
-
         // 判断如果是通话中，暂停启动图像的传输
         if (MLCallStatus.getInstance().getCallState() == MLCallStatus.CALL_STATUS_ACCEPTED) {
             EMClient.getInstance().callManager().pauseVideoTransfer();
         }
-
+        super.onUserLeaveHint();
     }
 
 

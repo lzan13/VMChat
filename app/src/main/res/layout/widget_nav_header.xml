@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:src="@mipmap/bg_top"
-        android:tint="@color/ml_black_26"/>
+        android:tint="@color/ml_black_38"/>
 
     <LinearLayout
         android:layout_width="match_parent"

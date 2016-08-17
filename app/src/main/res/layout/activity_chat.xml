@@ -112,7 +112,7 @@
                         android:paddingBottom="@dimen/ml_dimen_8"
                         android:paddingTop="@dimen/ml_dimen_8"
                         android:textColor="@color/ml_black_87"
-                        android:textColorHint="@color/ml_black_26"
+                        android:textColorHint="@color/ml_black_38"
                         android:textSize="@dimen/ml_size_16"/>
                 </RelativeLayout>
 

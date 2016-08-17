@@ -86,10 +86,12 @@ public class MLCallMessageItem extends MLMessageItem {
         menus = new String[]{
                 mActivity.getResources().getString(R.string.ml_menu_chat_delete)
         };
+
         // 创建并显示 ListView 的长按弹出菜单，并设置弹出菜单 Item的点击监听
-        AlertDialog.Builder menuDialog = new AlertDialog.Builder(mActivity);
-        menuDialog.setTitle(R.string.ml_dialog_title_conversation);
-        menuDialog.setItems(menus, new DialogInterface.OnClickListener() {
+        alertDialogBuilder = new AlertDialog.Builder(mActivity);
+        // 弹出框标题
+        // alertDialogBuilder.setTitle(R.string.ml_dialog_title_conversation);
+        alertDialogBuilder.setItems(menus, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
@@ -99,7 +101,8 @@ public class MLCallMessageItem extends MLMessageItem {
                 }
             }
         });
-        menuDialog.show();
+        alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
     /**

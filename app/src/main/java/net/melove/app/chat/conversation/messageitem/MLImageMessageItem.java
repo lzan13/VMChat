@@ -156,7 +156,8 @@ public class MLImageMessageItem extends MLMessageItem {
 
         // 创建并显示 ListView 的长按弹出菜单，并设置弹出菜单 Item的点击监听
         alertDialogBuilder = new AlertDialog.Builder(mActivity);
-        alertDialogBuilder.setTitle(R.string.ml_dialog_title_conversation);
+        // 弹出框标题
+        // alertDialogBuilder.setTitle(R.string.ml_dialog_title_conversation);
         alertDialogBuilder.setItems(menus, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -173,8 +174,8 @@ public class MLImageMessageItem extends MLMessageItem {
                 }
             }
         });
-        menuDialog = alertDialogBuilder.create();
-        menuDialog.show();
+        alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
     /**

@@ -93,7 +93,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@mipmap/ic_pushpin_white_24dp"
-                    android:tint="@color/ml_black_26"
+                    android:tint="@color/ml_black_38"
                     android:visibility="gone"/>
 
                 <ImageView
@@ -101,7 +101,7 @@
                     android:layout_width="@dimen/ml_dimen_20"
                     android:layout_height="@dimen/ml_dimen_20"
                     android:src="@mipmap/ic_notifications_off_white_24dp"
-                    android:tint="@color/ml_black_26"
+                    android:tint="@color/ml_black_38"
                     android:visibility="gone"/>
             </LinearLayout>
         </LinearLayout>
