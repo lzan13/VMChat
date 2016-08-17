@@ -64,6 +64,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
+                            android:minHeight="@dimen/ml_dimen_72"
+                            android:minWidth="@dimen/ml_dimen_72"
                             melove:ml_border_width="@dimen/ml_dimen_0"
                             melove:ml_radius="@dimen/ml_dimen_2"/>
 
@@ -112,6 +114,7 @@
                                 android:text="@string/ml_hint_username"
                                 android:textColor="@color/ml_white_54"
                                 android:textSize="@dimen/ml_size_8"/>
+
                             <TextView
                                 android:id="@+id/ml_text_msg_time"
                                 android:layout_width="wrap_content"

@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMFileMessageBody;
 import com.hyphenate.chat.EMImageMessageBody;
@@ -23,7 +24,6 @@ import net.melove.app.chat.communal.util.MLBitmapUtil;
 import net.melove.app.chat.communal.module.MLBitmapCache;
 import net.melove.app.chat.communal.util.MLDateUtil;
 import net.melove.app.chat.communal.util.MLDimen;
-import net.melove.app.chat.communal.util.MLFileUtil;
 import net.melove.app.chat.conversation.MLMessageUtils;
 import net.melove.app.chat.communal.widget.MLImageView;
 import net.melove.app.chat.conversation.MLChatActivity;
@@ -41,7 +41,11 @@ import java.io.File;
  */
 public class MLImageMessageItem extends MLMessageItem {
 
+    // 定义图片缩略图限制
     private int thumbnailsMax = MLDimen.dp2px(R.dimen.ml_dimen_192);
+    private int thumbnailsMin = 192;
+    private int mViewWidth;
+    private int mViewHeight;
 
 
     /**
@@ -73,48 +77,58 @@ public class MLImageMessageItem extends MLMessageItem {
             mUsernameView.setText(message.getFrom());
             mUsernameView.setVisibility(View.VISIBLE);
         }
-
         // 设置消息时间
         mTimeView.setText(MLDateUtil.getRelativeTime(mMessage.getMsgTime()));
 
+        // 获取图片消息体
         EMImageMessageBody imgBody = (EMImageMessageBody) mMessage.getBody();
-        // 设置显示图片控件的默认大小
-        //        int[] size = MLBitmapUtil.getImageSize(imgBody.getWidth(), imgBody.getHeight());
-        //        mImageView.setLayoutParams(new RelativeLayout.LayoutParams(size[0] + 4, size[1] + 4));
+        // 取出图片原始宽高，这是在发送图片时发送方直接根据图片获得设置到body中的
         int width = imgBody.getWidth();
         int height = imgBody.getHeight();
         float scale = MLBitmapUtil.getZoomScale(width, height, thumbnailsMax);
         ViewGroup.LayoutParams lp = mImageView.getLayoutParams();
-        lp.width = (int) (width / scale);
-        lp.height = (int) (height / scale);
+        if (width <= thumbnailsMax && height <= thumbnailsMax) {
+            if (width < thumbnailsMin) {
+                lp.width = thumbnailsMin;
+                lp.height = height * thumbnailsMin / width;
+            } else {
+                lp.width = width;
+                lp.height = height;
+            }
+        } else {
+            lp.width = (int) (width / scale);
+            lp.height = (int) (height / scale);
+        }
+        mViewWidth = lp.width;
+        mViewHeight = lp.height;
+        // 设置显示图片控件的显示大小
         mImageView.setLayoutParams(lp);
+
 
         // 判断下是否是接收方的消息
         if (mViewType == MLConstants.MSG_TYPE_IMAGE_RECEIVED) {
             // 判断消息是否处于下载状态，如果是下载状态设置一个默认的图片
             if (imgBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.DOWNLOADING
                     || imgBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.PENDING) {
-                mImageView.setBackgroundResource(R.mipmap.image_default);
+                //                mImageView.setBackgroundResource(R.mipmap.image_default);
             }
         }
 
-        /**
-         * 获取当前图片的缩略图地址，以及原图地址
-         */
+        // 缩略图本地路径
         String thumbnailsPath = "";
+        // 原图在本地路径
         String fullSizePath = "";
         if (mViewType == MLConstants.MSG_TYPE_IMAGE_RECEIVED) {
             // 接收方获取缩略图的路径
             fullSizePath = imgBody.getLocalUrl();
             thumbnailsPath = imgBody.thumbnailLocalPath();
         } else {
+            // 发送方获取图片路径
             fullSizePath = imgBody.getLocalUrl();
             thumbnailsPath = MLMessageUtils.getThumbImagePath(fullSizePath);
         }
-
         // 为图片显示控件设置tag，在设置图片显示的时候，先判断下当前的tag是否是当前item的，是则显示图片
-        mImageView.setTag(thumbnailsPath);
-
+        //        mImageView.setTag(thumbnailsPath);
         // 设置缩略图的显示
         showThumbnailsImage(thumbnailsPath, fullSizePath, imgBody.getWidth(), imgBody.getHeight());
 
@@ -174,66 +188,102 @@ public class MLImageMessageItem extends MLMessageItem {
      * @param fullSizePath   原始图片的路径
      */
     private void showThumbnailsImage(final String thumbnailsPath, final String fullSizePath, final int width, final int height) {
-        Bitmap bitmap = MLBitmapCache.getInstance().optBitmap(thumbnailsPath);
-        if (bitmap != null) {
-            if (mImageView.getTag().equals(thumbnailsPath)) {
-                mImageView.setImageBitmap(bitmap);
-            }
-        } else {
-            // 暂时没有bitmap就设置一个默认的图片
-            mImageView.setBackgroundResource(R.mipmap.image_default);
-            new AsyncTask<Object, Integer, Bitmap>() {
-                @Override
-                protected Bitmap doInBackground(Object... params) {
-                    File thumbnailsFile = new File(thumbnailsPath);
-                    File fullSizeFile = new File(fullSizePath);
-                    Bitmap tempBitmap = null;
-
-                    // 首先判断原图以及缩略图是否都存在，如果不存在直接返回
-                    if (!fullSizeFile.exists() && !thumbnailsFile.exists()) {
-                        return tempBitmap;
-                    } else if ((!fullSizeFile.exists() && (width > thumbnailsMax || height > thumbnailsMax))
-                            || thumbnailsFile.exists() && thumbnailsFile.length() > 1024 * 10 * 2) {
-                        // 然后判断缩略图是否存在，并且足够清晰，则根据缩略图路径直接获取Bitmap
-                        tempBitmap = MLBitmapUtil.loadBitmapThumbnail(thumbnailsPath, thumbnailsMax);
-                    } else if (fullSizeFile.exists() && fullSizeFile.length() > 1024 * 10 * 5
-                            && (width > thumbnailsMax || height > thumbnailsMax)) {
-                        // 然后判断原图是否存在，通过原图重新生成缩略图
-                        tempBitmap = MLBitmapUtil.loadBitmapThumbnail(fullSizePath, thumbnailsMax);
-                        // 文件生成成功之后，把新的Bitmap保存到本地磁盘中
-                        MLFileUtil.saveBitmapToSDCard(tempBitmap, thumbnailsPath);
-                    } else {
-                        // 当图片本身就很小时，直接加在图片
-                        tempBitmap = MLBitmapUtil.loadBitmapByFile(thumbnailsPath, width);
-                    }
-                    return tempBitmap;
-                }
-
-                @Override
-                protected void onPostExecute(Bitmap bitmap) {
-                    if (bitmap != null) {
-                        // 设置图片控件为当前bitmap
-                        if (mImageView.getTag().equals(thumbnailsPath)) {
-                            mImageView.setImageBitmap(bitmap);
-                        }
-                        // 将Bitmap对象添加到缓存中去
-                        MLBitmapCache.getInstance().putBitmap(thumbnailsPath, bitmap);
-                    } else {
-                        // 判断当前消息的状态，如果是失败的消息，则去重新下载缩略图
-                        if (mMessage.status() == EMMessage.Status.FAIL) {
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    // 下载缩略图
-                                    EMClient.getInstance().chatManager().downloadThumbnail(mMessage);
-                                }
-                            }).start();
-                        }
-                    }
-                }
-            }.execute();
+        File thumbnailsFile = new File(thumbnailsPath);
+        File fullSizeFile = new File(fullSizePath);
+        // 根据图片存在情况加载缩略图显示
+        if (fullSizeFile.exists()) {
+            // 原图存在，直接通过原图加载缩略图
+            Glide.with(mContext)
+                    .load(fullSizeFile)
+                    .crossFade()
+                    .override(mViewWidth, mViewHeight)
+                    .into(mImageView);
+        } else if (!fullSizeFile.exists() && thumbnailsFile.exists()) {
+            // 原图不能存在，只存在缩略图
+            Glide.with(mContext)
+                    .load(thumbnailsFile)
+                    .crossFade()
+                    .override(mViewWidth, mViewHeight)
+                    .into(mImageView);
+        } else if (!fullSizeFile.exists() && !thumbnailsFile.exists()) {
+            // 原图和缩略图都不存在
+            Glide.with(mContext)
+                    .load(thumbnailsFile)
+                    .crossFade()
+                    .override(mViewWidth, mViewHeight)
+                    .into(mImageView);
         }
     }
+    /**
+     * 设置缩略图的显示，并将缩略图添加到缓存
+     *
+     * @param thumbnailsPath 缩略图的路径
+     * @param fullSizePath   原始图片的路径
+     */
+    //    private void showThumbnailsImage(final String thumbnailsPath, final String fullSizePath, final int width, final int height) {
+    //        Bitmap bitmap = MLBitmapCache.getInstance().optBitmap(thumbnailsPath);
+    //        if (bitmap != null) {
+    //            // 判断下当前tag是否是需要显示的图片路径
+    //            if (mImageView.getTag().equals(thumbnailsPath)) {
+    //                mImageView.setImageBitmap(bitmap);
+    //            }
+    //        } else {
+    //            // 暂时没有bitmap就设置一个默认的图片
+    //            mImageView.setBackgroundResource(R.mipmap.image_default);
+    //            // 开启一个异步任务加载缩略图
+    //            new AsyncTask<Object, Integer, Bitmap>() {
+    //                @Override
+    //                protected Bitmap doInBackground(Object... params) {
+    //                    File thumbnailsFile = new File(thumbnailsPath);
+    //                    File fullSizeFile = new File(fullSizePath);
+    //                    Bitmap tempBitmap = null;
+    //
+    //                    // 根据图片存在情况加载缩略图显示
+    //                    if ((width > thumbnailsMax || height > thumbnailsMax) && fullSizeFile.exists()) {
+    //                        // 原图较大且原图存在，直接通过原图加载缩略图
+    //                        tempBitmap = MLBitmapUtil.loadBitmapThumbnail(fullSizePath, thumbnailsMax);
+    //                    } else if ((width > thumbnailsMax || height > thumbnailsMax) && !fullSizeFile.exists() && thumbnailsFile.exists()) {
+    //                        // 原图较大，只存在缩略图
+    //                        tempBitmap = MLBitmapUtil.loadBitmapThumbnail(thumbnailsPath, thumbnailsMax);
+    //                    } else if ((width <= thumbnailsMax && height <= thumbnailsMax) && fullSizeFile.exists()) {
+    //                        // 原图较小，直接加在原图大小显示，不获取缩略图
+    //                        tempBitmap = MLBitmapUtil.loadBitmapByFile(fullSizePath);
+    //                    } else if ((width <= thumbnailsMax && height <= thumbnailsMax) && !fullSizeFile.exists() && thumbnailsFile.exists()) {
+    //                        // 原图较小，且只存在缩略图
+    //                        tempBitmap = MLBitmapUtil.loadBitmapByFile(thumbnailsPath);
+    //                    } else {
+    //                        // 原图和缩略图都不存在
+    //                    }
+    //                    return tempBitmap;
+    //                }
+    //
+    //                @Override
+    //                protected void onPostExecute(Bitmap bitmap) {
+    //                    if (bitmap != null) {
+    //                        // 设置图片控件为当前bitmap
+    //                        if (mImageView.getTag().equals(thumbnailsPath)) {
+    //                            mImageView.setImageBitmap(bitmap);
+    //                        }
+    //                        // 将Bitmap对象添加到缓存中去
+    //                        MLBitmapCache.getInstance().putBitmap(thumbnailsPath, bitmap);
+    //                    } else {
+    //                        // 判断当前消息的状态，如果是失败的消息，则去重新下载缩略图
+    //                        if (mMessage.status() == EMMessage.Status.FAIL) {
+    //                            new Thread(new Runnable() {
+    //                                @Override
+    //                                public void run() {
+    //                                    // 下载缩略图
+    //                                    EMClient.getInstance().chatManager().downloadThumbnail(mMessage);
+    //                                }
+    //                            }).start();
+    //                        } else {
+    //                            // 消息成功状态下，缩略图和原图都没有，可以判定为图片被删除
+    //                        }
+    //                    }
+    //                }
+    //            }.execute();
+    //        }
+    //    }
 
     /**
      * 刷新当前item

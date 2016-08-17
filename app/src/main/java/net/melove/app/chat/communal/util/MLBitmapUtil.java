@@ -66,6 +66,20 @@ public class MLBitmapUtil {
     }
 
     /**
+     * 获取图片文件的缩略图
+     *
+     * @param path 图片文件路径
+     * @return 返回加载的图片Bitmap
+     */
+    public static Bitmap loadBitmapByFile(String path) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        // 设置图片文件仅仅加载边界为false
+        options.inJustDecodeBounds = false;
+        // 加载图片到 Bitmap 对象并返回
+        return BitmapFactory.decodeFile(path, options);
+    }
+
+    /**
      * 通过文件加载图片，这里也可以加载大图，保证不会出现 OOM，
      *
      * @param path      要压缩的图片路径

@@ -82,7 +82,7 @@
     <string name="ml_group">群组</string>
     <string name="ml_room">聊天室</string>
     <string name="ml_call">通话</string>
-    <string name="ml_voice_call">语音电话</string>
+    <string name="ml_voice_call">语音通话</string>
     <string name="ml_video_call">视频通话</string>
     <string name="ml_apply_for">申请与通知</string>
     <string name="ml_help">帮助</string>
@@ -142,30 +142,31 @@
     <string name="ml_hint_msg_recall_by_user">此条消息已被 %1$s 撤回</string>
 
     <!--通话方面的提示信息-->
+    <string name="ml_call_accepted">通话已接通</string>
+    <string name="ml_call_busy">对方正忙，先发个给他吧</string>
+    <string name="ml_call_cancel">已取消</string>
+    <string name="ml_call_cancel_is_incoming">对方已取消</string>
     <string name="ml_call_connecting">正在呼叫对方...</string>
     <string name="ml_call_connected">正在等待对方接受呼叫申请...</string>
     <string name="ml_call_connected_is_incoming">对方申请与你进行通话</string>
-    <string name="ml_call_accepted">通话已接通</string>
+    <string name="ml_call_connection_fail">建立连接失败</string>
     <string name="ml_call_disconnected">通话已结束</string>
+    <string name="ml_call_duration_time">通话时长</string>
     <string name="ml_call_no_data">没有通话数据</string>
+    <string name="ml_call_not_answer">对方未接听</string>
+    <string name="ml_call_noresponse">对方手机不在身边，稍后再试</string>
+    <string name="ml_call_not_online">对方不在线，发个留言给他吧</string>
     <string name="ml_call_network_unsatble">网络状态不佳</string>
     <string name="ml_call_network_normal">网络状态良好</string>
+    <string name="ml_call_reject">对方已拒绝</string>
+    <string name="ml_call_reject_is_incoming">已拒绝</string>
+    <string name="ml_call_local_version_smaller">本地版本过低，无法通讯</string>
+    <string name="ml_call_opposite_version_smaller">对方版本过低，无法通讯</string>
+    <string name="ml_call_version_different">双方通讯协议不同，无法通讯</string>
     <string name="ml_call_video_pause">视频传输已暂停</string>
     <string name="ml_call_video_resume">视频传输已恢复</string>
     <string name="ml_call_voice_pause">语音传输已暂停</string>
     <string name="ml_call_voice_resume">语音传输已恢复</string>
-    <string name="ml_call_reject">对方拒绝了你的通话申请</string>
-    <string name="ml_call_not_online">对方不在线，稍后再呼叫吧</string>
-    <string name="ml_call_busy">对方正忙，先发个给他吧</string>
-    <string name="ml_call_not_answer">对方已拒绝</string>
-    <string name="ml_call_not_answer_is_incoming">已拒绝</string>
-    <string name="ml_call_cancel">已取消</string>
-    <string name="ml_call_cancel_is_incoming">对方已取消</string>
-    <string name="ml_call_connection_fail">建立连接失败</string>
-    <string name="ml_call_version_different">双方通讯协议不同，无法通讯</string>
-    <string name="ml_call_local_version_smaller">本地版本过低，无法通讯</string>
-    <string name="ml_call_opposite_version_smaller">对方版本过低，无法通讯</string>
-    <string name="ml_call_duration_time">通话时长</string>
 
     <!--Error 文字内容-->
     <string name="ml_error_field_required">此项是必须的</string>
@@ -237,11 +238,12 @@
     <string name="ml_toast_add_contacts_failed">发送好友请求失败-_-||，稍后重试</string>
     <string name="ml_toast_connected">已经连接到服务器</string>h
     <string name="ml_toast_content_copy_success">内容已复制</string>
-    <string name="ml_toast_msg_send_faild">消息发送失败，等下再发吧</string>
-    <string name="ml_toast_msg_resend_faild">消息重新发送失败，等下再发吧</string>
+    <string name="ml_toast_msg_send_faild">消息发送失败</string>
+    <string name="ml_toast_msg_file_too_big">文件过大</string>
+    <string name="ml_toast_msg_resend_faild">消息重新发送失败</string>
     <string name="ml_toast_msg_not_join_group">未加入当前群组，不能发送消息</string>
     <string name="ml_toast_msg_have_illegal">信息包含非法字符</string>
-    <string name="ml_toast_msg_recall_faild_max_time">消息已经超过两分钟，无法撤回</string>
+    <string name="ml_toast_msg_recall_faild_max_time">消息已经超过五分钟，无法撤回</string>
     <string name="ml_toast_msg_recall_faild">撤回失败 失败错误码</string>
     <string name="ml_toast_msg_delete_success">消息删除成功</string>
     <string name="ml_toast_chat_cant_yourself">不能和自己聊天</string>

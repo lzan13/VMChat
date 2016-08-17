@@ -10,6 +10,7 @@ import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 
 import net.melove.app.chat.application.MLConstants;
+import net.melove.app.chat.conversation.messageitem.MLCallMessageItem;
 import net.melove.app.chat.conversation.messageitem.MLFileMessageItem;
 import net.melove.app.chat.conversation.messageitem.MLImageMessageItem;
 import net.melove.app.chat.conversation.messageitem.MLMessageItem;
@@ -96,6 +97,9 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
         // 判断是否为撤回类型的消息
         if (message.getBooleanAttribute(MLConstants.ML_ATTR_RECALL, false)) {
             itemType = MLConstants.MSG_TYPE_SYS_RECALL;
+        } else if (message.getBooleanAttribute(MLConstants.ML_ATTR_CALL_VIDEO, false)
+                || message.getBooleanAttribute(MLConstants.ML_ATTR_CALL_VOICE, false)) {
+            itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_CALL_SEND : MLConstants.MSG_TYPE_CALL_RECEIVED;
         } else {
             switch (message.getType()) {
             case TXT:
@@ -151,6 +155,11 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
         // 回撤类消息
         case MLConstants.MSG_TYPE_SYS_RECALL:
             holder = new MessageViewHolder(new MLRecallMessageItem(mContext, this, viewType));
+            break;
+        // 通话类型消息
+        case MLConstants.MSG_TYPE_CALL_SEND:
+        case MLConstants.MSG_TYPE_CALL_RECEIVED:
+            holder = new MessageViewHolder(new MLCallMessageItem(mContext, this, viewType));
             break;
         }
         return holder;

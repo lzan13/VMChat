@@ -25,6 +25,7 @@ import com.hyphenate.media.EMLocalSurfaceView;
 import com.hyphenate.media.EMOppositeSurfaceView;
 
 import net.melove.app.chat.R;
+import net.melove.app.chat.application.MLConstants;
 import net.melove.app.chat.application.MLEasemobHelper;
 import net.melove.app.chat.application.eventbus.MLCallEvent;
 import net.melove.app.chat.communal.util.MLBitmapUtil;
@@ -88,6 +89,9 @@ public class MLVideoCallActivity extends MLCallActivity {
     protected void initView() {
         super.initView();
 
+        // 设置通话类型为视频
+        mCallType = 0;
+
         // 通话背景图
         mCallBackgroundView = (ImageView) findViewById(R.id.ml_img_call_bg);
         mCallBackgroundView.setImageResource(R.mipmap.ic_character_spider);
@@ -118,6 +122,7 @@ public class MLVideoCallActivity extends MLCallActivity {
 
         // 设置控件的点击监听
         mControlLayout.setOnClickListener(viewListener);
+        mCallBackgroundView.setOnClickListener(viewListener);
         mLocalSurfaceView.setOnClickListener(viewListener);
         mOppositeSurfaceView.setOnClickListener(viewListener);
         mExitFullScreenBtn.setOnClickListener(viewListener);
@@ -186,6 +191,7 @@ public class MLVideoCallActivity extends MLCallActivity {
         public void onClick(View v) {
             switch (v.getId()) {
             case R.id.ml_layout_call_control:
+            case R.id.ml_img_call_bg:
                 onControlLayout();
                 break;
             case R.id.ml_surface_view_local:
@@ -238,7 +244,7 @@ public class MLVideoCallActivity extends MLCallActivity {
      */
     private void onControlLayout() {
         if (mControlLayout.isShown()) {
-            mControlLayout.setVisibility(View.INVISIBLE);
+            mControlLayout.setVisibility(View.GONE);
         } else {
             mControlLayout.setVisibility(View.VISIBLE);
         }
@@ -339,6 +345,11 @@ public class MLVideoCallActivity extends MLCallActivity {
             e.printStackTrace();
             MLToast.errorToast("拒绝通话失败：error-" + e.getErrorCode() + "-" + e.getMessage()).show();
         }
+        // 拒绝通话设置通话状态为自己拒绝
+        mCallStatus = MLConstants.ML_CALL_REFUESD_IS_INCOMING;
+        // 保存一条通话消息
+        saveCallMessage();
+        // 结束界面
         onFinish();
     }
 
@@ -357,6 +368,9 @@ public class MLVideoCallActivity extends MLCallActivity {
             e.printStackTrace();
             MLToast.errorToast("结束通话失败：error-" + e.getErrorCode() + "-" + e.getMessage()).show();
         }
+        // 挂断电话调用保存消息方法
+        saveCallMessage();
+        // 结束界面
         onFinish();
     }
 
@@ -375,6 +389,8 @@ public class MLVideoCallActivity extends MLCallActivity {
         // 调用接通通话方法
         try {
             EMClient.getInstance().callManager().answerCall();
+            // 设置通话状态为正常结束
+            mCallStatus = MLConstants.ML_CALL_NORMAL;
         } catch (EMNoActiveCallException e) {
             e.printStackTrace();
             MLToast.errorToast("接听通话失败：error-" + e.getErrorCode() + "-" + e.getMessage()).show();
@@ -405,6 +421,7 @@ public class MLVideoCallActivity extends MLCallActivity {
             // 打开扬声器
             mAudioManager.setSpeakerphoneOn(true);
         }
+        // 设置声音模式为正常模式
         mAudioManager.setMode(AudioManager.MODE_NORMAL);
     }
 
@@ -424,7 +441,7 @@ public class MLVideoCallActivity extends MLCallActivity {
     }
 
     /**
-     *
+     * 实现订阅方法，订阅全局监听发来的通话状态事件
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventBus(MLCallEvent event) {
@@ -442,42 +459,63 @@ public class MLVideoCallActivity extends MLCallActivity {
             break;
         case ACCEPTED: // 通话已接通
             MLLog.i("通话已接通");
+            mCallStatusView.setText(R.string.ml_call_accepted);
             // 电话接通，停止播放提示音
             stopCallSound();
-            mCallStatusView.setText(R.string.ml_call_accepted);
+            // 通话已接通，设置通话状态为正常状态
+            mCallStatus = MLConstants.ML_CALL_NORMAL;
             // 通话接通，处理下SurfaceView的显示
             surfaceViewProcessor();
             break;
         case DISCONNNECTED: // 通话已中断
             MLLog.i("通话已结束" + callError);
             mCallStatusView.setText(R.string.ml_call_disconnected);
-
             if (callError == EMCallStateChangeListener.CallError.ERROR_INAVAILABLE) {
                 MLLog.i("对方不在线" + callError);
+                // 设置通话状态为对方不在线
+                mCallStatus = MLConstants.ML_CALL_OFFLINE;
                 mCallStatusView.setText(R.string.ml_call_not_online);
             } else if (callError == EMCallStateChangeListener.CallError.ERROR_BUSY) {
                 MLLog.i("对方正忙" + callError);
+                // 设置通话状态为对方在忙
+                mCallStatus = MLConstants.ML_CALL_BUSY;
                 mCallStatusView.setText(R.string.ml_call_busy);
             } else if (callError == EMCallStateChangeListener.CallError.REJECTED) {
                 MLLog.i("对方已拒绝" + callError);
+                // 设置通话状态为对方已拒绝
+                mCallStatus = MLConstants.ML_CALL_REFUESD;
                 mCallStatusView.setText(R.string.ml_call_reject);
             } else if (callError == EMCallStateChangeListener.CallError.ERROR_NORESPONSE) {
-                MLLog.i("对方未接听" + callError);
-                mCallStatusView.setText(R.string.ml_call_not_answer);
+                MLLog.i("对方未响应，可能手机不在身边" + callError);
+                // 设置通话状态为对方未响应
+                mCallStatus = MLConstants.ML_CALL_NORESPONSE;
+                mCallStatusView.setText(R.string.ml_call_noresponse);
             } else if (callError == EMCallStateChangeListener.CallError.ERROR_TRANSPORT) {
                 MLLog.i("连接建立失败" + callError);
+                // 设置通话状态为建立连接失败
+                mCallStatus = MLConstants.ML_CALL_CANCEL;
                 mCallStatusView.setText(R.string.ml_call_connection_fail);
             } else if (callError == EMCallStateChangeListener.CallError.ERROR_LOCAL_VERSION_SMALLER) {
                 MLLog.i("双方通讯协议不同" + callError);
+                // 设置通话状态为双方协议不同
+                mCallStatus = MLConstants.ML_CALL_VERSION_DIFFERENT;
                 mCallStatusView.setText(R.string.ml_call_local_version_smaller);
             } else if (callError == EMCallStateChangeListener.CallError.ERROR_PEER_VERSION_SMALLER) {
                 MLLog.i("双方通讯协议不同" + callError);
+                // 设置通话状态为双方协议不同
+                mCallStatus = MLConstants.ML_CALL_VERSION_DIFFERENT;
                 mCallStatusView.setText(R.string.ml_call_opposite_version_smaller);
             } else {
                 MLLog.i("通话已结束，时长：%s，error %s", "10:35", callError);
-                mCallStatusView.setText(R.string.ml_call_disconnected);
+                // 根据当前状态判断是正常结束，还是对方取消通话
+                if (mCallStatus == MLConstants.ML_CALL_CANCEL) {
+                    // 设置通话状态
+                    mCallStatus = MLConstants.ML_CALL_CANCEL_IS_INCOMING;
+                }
+                mCallStatusView.setText(R.string.ml_call_cancel_is_incoming);
             }
-
+            // 通话结束保存消息
+            saveCallMessage();
             // 结束通话时取消通话状态监听
             MLEasemobHelper.getInstance().removeCallStateChangeListener();
             // 结束通话关闭界面
@@ -517,6 +555,16 @@ public class MLVideoCallActivity extends MLCallActivity {
         }
     }
 
+    /**
+     * 结束通话时关闭界面
+     */
+    @Override
+    protected void onFinish() {
+        // 结束通话要把 SurfaceView 释放 重置为 null
+        mLocalSurfaceView = null;
+        mOppositeSurfaceView = null;
+        super.onFinish();
+    }
 
     @Override
     protected void onResume() {
