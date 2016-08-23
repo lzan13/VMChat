@@ -81,7 +81,7 @@ public class MLTestFragment extends MLBaseFragment {
     }
 
     private void init() {
-        String[] btns = {"登出", "Insert Message", "更新消息", "群消息", "创建群组", "Send CMD", "ChatRoom", "Test MLLog"};
+        String[] btns = {"登出", "Insert Message", "更新消息", "群消息", "创建群组", "Send CMD", "ChatRoom", "Test MLLog", "TestLogin"};
         viewGroup = (MLViewGroup) getView().findViewById(R.id.ml_view_custom_viewgroup);
         for (int i = 0; i < btns.length; i++) {
             Button btn = new Button(mActivity);
@@ -122,9 +122,54 @@ public class MLTestFragment extends MLBaseFragment {
             case 107:
                 testMLLog();
                 break;
+            case 108:
+                testLogin();
+                break;
             }
         }
     };
+
+    /**
+     * 测试退出重登录
+     */
+    private void testLogin() {
+        EMClient.getInstance().logout(false, new EMCallBack() {
+            @Override
+            public void onSuccess() {
+                MLLog.d("logout success");
+                try {
+                    Thread.sleep(1500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                EMClient.getInstance().login("lz2", "1", new EMCallBack() {
+                    @Override
+                    public void onSuccess() {
+                        MLLog.d("login success");
+                    }
+
+                    @Override
+                    public void onError(int i, String s) {
+                        MLLog.d("login error code:%d, error:%s", i, s);
+                    }
+
+                    @Override
+                    public void onProgress(int i, String s) {
+                    }
+                });
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                MLLog.d("logout error code:%d, error:%s", i, s);
+            }
+
+            @Override
+            public void onProgress(int i, String s) {
+
+            }
+        });
+    }
 
     /**
      * 测试 MLLog 类
