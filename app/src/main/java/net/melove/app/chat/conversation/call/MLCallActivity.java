@@ -87,13 +87,6 @@ public class MLCallActivity extends MLBaseActivity {
         } else {
             loadId = mSoundPool.load(mActivity, R.raw.sound_calling, 1);
         }
-        //  设置资源加载监听
-        mSoundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
-            @Override
-            public void onLoadComplete(SoundPool soundPool, int i, int i1) {
-                playCallSound();
-            }
-        });
     }
 
     /**
@@ -112,7 +105,7 @@ public class MLCallActivity extends MLBaseActivity {
         }
 
         switch (mCallStatus) {
-        case MLConstants.ML_CALL_NORMAL:
+        case MLConstants.ML_CALL_ACCEPTED:
             // 通话正常结束，要加上通话时间
             content = mActivity.getString(R.string.ml_call_duration_time);
             break;
@@ -166,6 +159,7 @@ public class MLCallActivity extends MLBaseActivity {
         } else {
             message.setAttribute(MLConstants.ML_ATTR_CALL_VOICE, true);
         }
+        message.setUnread(false);
         // 调用sdk的保存消息方法
         EMClient.getInstance().chatManager().saveMessage(message);
     }

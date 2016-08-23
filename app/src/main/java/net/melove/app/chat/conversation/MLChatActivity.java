@@ -46,6 +46,7 @@ import net.melove.app.chat.application.MLConstants;
 import net.melove.app.chat.communal.util.MLDateUtil;
 import net.melove.app.chat.communal.util.MLFileUtil;
 import net.melove.app.chat.communal.widget.MLToast;
+import net.melove.app.chat.conversation.call.MLCallStatus;
 import net.melove.app.chat.conversation.call.MLVideoCallActivity;
 import net.melove.app.chat.conversation.call.MLVoiceCallActivity;
 import net.melove.app.chat.notification.MLNotifier;
@@ -411,25 +412,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 int position = mConversation.getAllMessages().indexOf(message);
                 switch (action) {
                 case MLConstants.ML_ACTION_MSG_CLICK:
-                    if (message.getBooleanAttribute(MLConstants.ML_ATTR_CALL_VIDEO, false)) {
-                        // 视频通话
-                        Intent intent = new Intent();
-                        intent.setClass(mActivity, MLVideoCallActivity.class);
-                        // 设置被呼叫放的username
-                        intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mChatId);
-                        // 设置通话为自己呼叫出的
-                        intent.putExtra(MLConstants.ML_EXTRA_CALL_IS_INCOMING, false);
-                        mActivity.startActivity(intent);
-                    } else if (message.getBooleanAttribute(MLConstants.ML_ATTR_CALL_VOICE, false)) {
-                        // 语音通话
-                        Intent intent = new Intent();
-                        intent.setClass(mActivity, MLVoiceCallActivity.class);
-                        // 设置被呼叫放的username
-                        intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mChatId);
-                        // 设置通话为自己呼叫出的
-                        intent.putExtra(MLConstants.ML_EXTRA_CALL_IS_INCOMING, false);
-                        mActivity.startActivity(intent);
-                    }
+                    // 消息点击事件，不同的消息有不同的触发
+                    itemClick(message);
                     break;
                 case MLConstants.ML_ACTION_MSG_RESEND:
                     // 重发消息
@@ -454,6 +438,54 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 }
             }
         });
+    }
+
+    /**
+     * 消息点击事件，不同的消息有不同的触发
+     *
+     * @param message 点击的消息
+     */
+    private void itemClick(EMMessage message) {
+        if (message.getType() == EMMessage.Type.IMAGE) {
+            // 图片
+            Intent intent = new Intent();
+            intent.setClass(mActivity, MLBigImageActivity.class);
+            // 将被点击的消息ID传递过去
+            intent.putExtra(MLConstants.ML_EXTRA_CHAT_MSG_ID, message.getMsgId());
+            mActivity.startActivity(intent);
+        } else if (message.getBooleanAttribute(MLConstants.ML_ATTR_CALL_VIDEO, false)) {
+            // 如果进行语音通话中，就不能进行视频通话
+            if (MLCallStatus.getInstance().getCallType() == MLCallStatus.CALL_TYPE_VOICE) {
+                MLToast.makeToast(R.string.ml_call_voice_calling).show();
+            } else {
+                // 视频通话
+                Intent intent = new Intent();
+                intent.setClass(mActivity, MLVideoCallActivity.class);
+                // 设置被呼叫放的username
+                intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mChatId);
+                // 设置通话为自己呼叫出的
+                intent.putExtra(MLConstants.ML_EXTRA_CALL_IS_INCOMING, false);
+                // 设置当前通话类型为视频通话
+                MLCallStatus.getInstance().setCallType(MLCallStatus.CALL_TYPE_VIDEO);
+                mActivity.startActivity(intent);
+            }
+        } else if (message.getBooleanAttribute(MLConstants.ML_ATTR_CALL_VOICE, false)) {
+            // 同理，如果进行视频通话中，就不能进行语音通话
+            if (MLCallStatus.getInstance().getCallType() == MLCallStatus.CALL_TYPE_VIDEO) {
+                MLToast.makeToast(R.string.ml_call_video_calling).show();
+            } else {
+                // 语音通话
+                Intent intent = new Intent();
+                intent.setClass(mActivity, MLVoiceCallActivity.class);
+                // 设置被呼叫放的username
+                intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mChatId);
+                // 设置通话为自己呼叫出的
+                intent.putExtra(MLConstants.ML_EXTRA_CALL_IS_INCOMING, false);
+                // 设置当前通话类型为视频通话
+                MLCallStatus.getInstance().setCallType(MLCallStatus.CALL_TYPE_VOICE);
+                mActivity.startActivity(intent);
+            }
+        }
     }
 
     /**
@@ -867,39 +899,61 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      * 选择通话模式
      */
     private void selectCallMode() {
-        String[] menus = {
-                mActivity.getString(R.string.ml_video_call),
-                mActivity.getString(R.string.ml_voice_call)
-        };
-        if (alertDialogBuilder == null) {
-            alertDialogBuilder = new AlertDialog.Builder(mActivity);
-        }
-        // 设置菜单项及点击监听
-        alertDialogBuilder.setItems(menus, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent();
-                switch (which) {
-                case 0:
-                    // 视频通话
-                    intent.setClass(mActivity, MLVideoCallActivity.class);
-                    break;
-                case 1:
-                    // 语音通话
-                    intent.setClass(mActivity, MLVoiceCallActivity.class);
-                    break;
-                default:
-                    break;
-                }
-                // 设置被呼叫放的username
-                intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mChatId);
-                // 设置通话为自己呼叫出的
-                intent.putExtra(MLConstants.ML_EXTRA_CALL_IS_INCOMING, false);
-                mActivity.startActivity(intent);
+        if (MLCallStatus.getInstance().getCallState() == MLCallStatus.CALL_STATUS_NORMAL) {
+            String[] menus = {
+                    mActivity.getString(R.string.ml_video_call),
+                    mActivity.getString(R.string.ml_voice_call)
+            };
+            if (alertDialogBuilder == null) {
+                alertDialogBuilder = new AlertDialog.Builder(mActivity);
             }
-        });
-        callModeDialog = alertDialogBuilder.create();
-        callModeDialog.show();
+            // 设置菜单项及点击监听
+            alertDialogBuilder.setItems(menus, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent intent = new Intent();
+                    switch (which) {
+                    case 0:
+                        // 视频通话
+                        intent.setClass(mActivity, MLVideoCallActivity.class);
+                        // 设置当前通话类型为视频通话
+                        MLCallStatus.getInstance().setCallType(MLCallStatus.CALL_TYPE_VIDEO);
+                        break;
+                    case 1:
+                        // 语音通话
+                        intent.setClass(mActivity, MLVoiceCallActivity.class);
+                        // 设置当前通话类型为语音通话
+                        MLCallStatus.getInstance().setCallType(MLCallStatus.CALL_TYPE_VOICE);
+                        break;
+                    default:
+                        break;
+                    }
+                    // 设置被呼叫放的username
+                    intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mChatId);
+                    // 设置通话为自己呼叫出的
+                    intent.putExtra(MLConstants.ML_EXTRA_CALL_IS_INCOMING, false);
+                    mActivity.startActivity(intent);
+                }
+            });
+            callModeDialog = alertDialogBuilder.create();
+            callModeDialog.show();
+        } else if (MLCallStatus.getInstance().getCallType() == MLCallStatus.CALL_TYPE_VIDEO) {
+            // 视频通话
+            Intent intent = new Intent(mActivity, MLVideoCallActivity.class);
+            // 设置被呼叫放的username
+            intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mChatId);
+            // 设置通话为自己呼叫出的
+            intent.putExtra(MLConstants.ML_EXTRA_CALL_IS_INCOMING, false);
+            mActivity.startActivity(intent);
+        } else if (MLCallStatus.getInstance().getCallType() == MLCallStatus.CALL_TYPE_VOICE) {
+            // 语音通话
+            Intent intent = new Intent(mActivity, MLVoiceCallActivity.class);
+            // 设置被呼叫放的username
+            intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mChatId);
+            // 设置通话为自己呼叫出的
+            intent.putExtra(MLConstants.ML_EXTRA_CALL_IS_INCOMING, false);
+            mActivity.startActivity(intent);
+        }
     }
 
     /**
@@ -979,7 +1033,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     /**
      * ---------------------------- RecyclerView 刷新方法 -----------------------------------
      * 使用 EventBus 的订阅模式实现消息变化的监听，这里 EventBus 3.x 使用注解的方式确定方法调用的线程
-     * <p>
+     * <p/>
      * 这里调用下 {@link MLMessageAdapter}里封装的方法
      * 最终还是去调用{@link android.support.v7.widget.RecyclerView.Adapter}已有的 notify 方法
      * 消息的状态改变需要调用 item changed方法
@@ -1201,7 +1255,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     /**
      * --------------------------------- Message Listener -------------------------------------
      * 环信消息监听主要方法
-     * <p>
+     * <p/>
      * 收到新消息
      *
      * @param list 收到的新消息集合

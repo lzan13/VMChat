@@ -41,8 +41,12 @@ public class MLCallReceiver extends BroadcastReceiver {
             // 根据通话类型跳转到语音通话或视频通话界面
             if (callType.equals(TYPE_VIDEO)) {
                 callIntent.setClass(context, MLVideoCallActivity.class);
+                // 设置当前通话类型为视频通话
+                MLCallStatus.getInstance().setCallType(MLCallStatus.CALL_TYPE_VIDEO);
             } else if (callType.equals(TYPE_VOICE)) {
                 callIntent.setClass(context, MLVoiceCallActivity.class);
+                // 设置当前通话类型为语音通话
+                MLCallStatus.getInstance().setCallType(MLCallStatus.CALL_TYPE_VOICE);
             }
             // 设置 activity 启动方式
             callIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

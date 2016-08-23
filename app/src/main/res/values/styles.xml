@@ -36,15 +36,20 @@
     </style>
 
     <!--设置 Activity 透明主题-->
-    <style name="MLTheme.Call" parent="MLTheme.Base">
+    <style name="MLTheme.Transparent" parent="MLTheme.Base">
         <item name="android:windowAnimationStyle">@style/AnimFade</item>
-        <item name="android:windowBackground">@color/ml_black_26</item>
+        <item name="android:windowBackground">@color/ml_theme_background</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+    <!--设置 Activity 半透明主题-->
+    <style name="MLTheme.Translucent" parent="MLTheme.Base">
+        <item name="android:windowAnimationStyle">@style/AnimFade</item>
+        <item name="android:windowBackground">@color/ml_theme_background</item>
         <item name="android:windowIsTranslucent">true</item>
     </style>
 
     <!--默认主题-->
     <style name="MLTheme.Default" parent="MLTheme.Base">
-
         <!--按钮颜色-->
         <!--<item name="colorButtonNormal">@color/ml_orange_54</item>-->
         <!--<item name="android:colorButtonNormal">@color/ml_gray_87</item>-->
@@ -77,7 +82,7 @@
         <item name="android:activityCloseExitAnimation">@anim/ml_anim_slide_right_exit</item>
     </style>
 
-    <!--自定义 AppBar 样式，这里为了让文字显示为白色，继承黑色样式的ActionBar-->
+    <!--自定义默认 AppBar 样式，这里为了让文字显示为白色，继承黑色样式的ActionBar-->
     <style name="MLTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <!--Appbar 控制器颜色-->
         <item name="colorControlNormal">@color/ml_white_100</item>
@@ -91,7 +96,7 @@
         <!--<item name="android:actionOverflowButtonStyle">@style/MLTheme.ActionBarOverflow</item>-->
     </style>
 
-    <!--自定义 Toolbar 样式，这里为了让文字显示为白色，继承黑色样式的ActionBar-->
+    <!--自定义透明 Toolbar 样式，这里为了让文字显示为白色，继承黑色样式的ActionBar-->
     <style name="MLTheme.ToolbarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <!--Toolbar 控制器颜色-->
         <item name="colorControlNormal">@color/ml_white_100</item>

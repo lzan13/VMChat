@@ -129,14 +129,21 @@
         <!--视频通话界面-->
         <activity
             android:name=".conversation.call.MLVideoCallActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/MLTheme.Call"
+            android:theme="@style/MLTheme.Transparent"
             android:windowSoftInputMode="adjustNothing|stateAlwaysHidden"/>
         <!--语音通话界面-->
         <activity
             android:name=".conversation.call.MLVoiceCallActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/MLTheme.Call"
+            android:theme="@style/MLTheme.Transparent"
+            android:windowSoftInputMode="adjustNothing|stateAlwaysHidden"/>
+        <!--显示大图界面 使用半透明主题-->
+        <activity
+            android:name=".conversation.MLBigImageActivity"
+            android:theme="@style/MLTheme.Translucent"
             android:windowSoftInputMode="adjustNothing|stateAlwaysHidden"/>
         <!-- 搜索界面 -->
         <activity

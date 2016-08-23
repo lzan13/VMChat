@@ -2,6 +2,7 @@ package net.melove.app.chat.conversation.call;
 
 import android.graphics.Bitmap;
 import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -80,7 +81,7 @@ public class MLVoiceCallActivity extends MLCallActivity {
         // 初始化界面控件
         // 通话背景图
         mCallBackgroundView = (ImageView) findViewById(R.id.ml_img_call_bg);
-        mCallBackgroundView.setImageResource(R.mipmap.ic_character_spider);
+        mCallBackgroundView.setImageResource(R.mipmap.ic_character_penguin);
         // 显示通话状态控件
         mCallStatusView = (TextView) findViewById(R.id.ml_text_call_status);
         // 显示对方头像控件
@@ -97,9 +98,9 @@ public class MLVoiceCallActivity extends MLCallActivity {
         mEndCallFab = (FloatingActionButton) findViewById(R.id.ml_btn_fab_end_call);
         mAnswerCallFab = (FloatingActionButton) findViewById(R.id.ml_btn_fab_answer_call);
         // 设置按钮状态
-        mMicSwitch.setActivated(true);
-        mSpeakerSwitch.setActivated(true);
-        mRecordSwitch.setActivated(false);
+        mMicSwitch.setActivated(MLCallStatus.getInstance().isMic());
+        mSpeakerSwitch.setActivated(MLCallStatus.getInstance().isSpeaker());
+        mRecordSwitch.setActivated(MLCallStatus.getInstance().isRecord());
 
         // 设置按钮的点击监听
         mExitFullScreenBtn.setOnClickListener(viewListener);
@@ -112,18 +113,61 @@ public class MLVoiceCallActivity extends MLCallActivity {
 
         // 设置对方的名字以及界面其他控件的显示
         mUsernameView.setText(mChatId);
-        if (isInComingCall) {
+        // 判断下当前是否正在进行通话中
+        if (MLCallStatus.getInstance().getCallState() == MLCallStatus.CALL_STATUS_NORMAL) {
+            // 设置通话呼入呼出状态
+            MLCallStatus.getInstance().setInComing(isInComingCall);
+            //  设置资源加载监听
+            mSoundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+                @Override
+                public void onLoadComplete(SoundPool soundPool, int i, int i1) {
+                    playCallSound();
+                }
+            });
+            if (isInComingCall) {
+                // 收到通话请求，设置通话状态为被呼叫中
+                MLCallStatus.getInstance().setCallState(MLCallStatus.CALL_STATUS_CONNECTING_INCOMING);
+                // 设置通话状态为对方申请通话
+                mCallStatusView.setText(R.string.ml_call_connected_is_incoming);
+                mRejectCallFab.setVisibility(View.VISIBLE);
+                mEndCallFab.setVisibility(View.GONE);
+                mAnswerCallFab.setVisibility(View.VISIBLE);
+            } else {
+                // 收到通话请求，设置通话状态为呼叫中
+                MLCallStatus.getInstance().setCallState(MLCallStatus.CALL_STATUS_CONNECTING);
+                // 设置通话状态为正在呼叫中
+                mCallStatusView.setText(R.string.ml_call_connecting);
+                mRejectCallFab.setVisibility(View.GONE);
+                mEndCallFab.setVisibility(View.VISIBLE);
+                mAnswerCallFab.setVisibility(View.GONE);
+                // 自己是主叫方，调用呼叫方法
+                makeCall();
+            }
+        } else if (MLCallStatus.getInstance().getCallState() == MLCallStatus.CALL_STATUS_CONNECTING) {
+            // 设置通话呼入呼出状态
+            isInComingCall = MLCallStatus.getInstance().isInComing();
+            // 设置通话状态为正在呼叫中
+            mCallStatusView.setText(R.string.ml_call_connecting);
+            mRejectCallFab.setVisibility(View.GONE);
+            mEndCallFab.setVisibility(View.VISIBLE);
+            mAnswerCallFab.setVisibility(View.GONE);
+        } else if (MLCallStatus.getInstance().getCallState() == MLCallStatus.CALL_STATUS_CONNECTING_INCOMING) {
+            // 设置通话呼入呼出状态
+            isInComingCall = MLCallStatus.getInstance().isInComing();
+            // 设置通话状态为对方申请通话
             mCallStatusView.setText(R.string.ml_call_connected_is_incoming);
             mRejectCallFab.setVisibility(View.VISIBLE);
             mEndCallFab.setVisibility(View.GONE);
             mAnswerCallFab.setVisibility(View.VISIBLE);
         } else {
-            mCallStatusView.setText(R.string.ml_call_connecting);
+            // 设置通话呼入呼出状态
+            isInComingCall = MLCallStatus.getInstance().isInComing();
+            // 再次打开要设置状态为正常通话状态
+            mCallStatus = MLConstants.ML_CALL_ACCEPTED;
+            mCallStatusView.setText(R.string.ml_call_accepted);
             mRejectCallFab.setVisibility(View.GONE);
             mEndCallFab.setVisibility(View.VISIBLE);
             mAnswerCallFab.setVisibility(View.GONE);
-            // 自己是主叫方，调用呼叫方法
-            makeCall();
         }
     }
 
@@ -147,6 +191,7 @@ public class MLVoiceCallActivity extends MLCallActivity {
             switch (v.getId()) {
             case R.id.ml_btn_exit_full_screen:
                 // 最小化通话界面
+                exitFullScreen();
                 break;
             case R.id.ml_btn_mic_switch:
                 // 麦克风开关
@@ -176,58 +221,79 @@ public class MLVoiceCallActivity extends MLCallActivity {
         }
     };
 
+    /**
+     * 退出全屏通话界面
+     */
+    private void exitFullScreen() {
+        // 振动反馈
+        vibrate();
+        // 让应用回到桌面
+        //        mActivity.moveTaskToBack(true);
+        mActivity.finish();
+    }
 
     /**
      * 麦克风开关，主要调用环信语音数据传输方法
-     * TODO 3.1.4 SDK 暂时无效
+     * TODO 3.1.4 SDK 语音通话暂时无效
      */
     private void onMicrophone() {
+        // 振动反馈
+        vibrate();
+        // 根据麦克风开关是否被激活来进行判断麦克风状态，然后进行下一步操作
         if (mMicSwitch.isActivated()) {
-            mMicSwitch.setActivated(false);
             // 暂停语音数据的传输
             EMClient.getInstance().callManager().pauseVoiceTransfer();
+            // 设置按钮状态
+            mMicSwitch.setActivated(false);
+            MLCallStatus.getInstance().setMic(false);
         } else {
-            mMicSwitch.setActivated(true);
             // 恢复语音数据的传输
             EMClient.getInstance().callManager().resumeVoiceTransfer();
+            // 设置按钮状态
+            mMicSwitch.setActivated(true);
+            MLCallStatus.getInstance().setMic(true);
         }
-        // 方法调用成功加个振动反馈
-        vibrate();
     }
 
     /**
      * 扬声器开关
      */
     private void onSpeaker() {
+        // 振动反馈
+        vibrate();
         // 根据按钮状态决定打开还是关闭扬声器
         if (mSpeakerSwitch.isActivated()) {
             closeSpeaker();
         } else {
             openSpeaker();
         }
-        // 方法调用成功加个振动反馈
-        vibrate();
     }
 
     /**
      * 录制通话内容 TODO 后期实现
      */
     private void recordCall() {
+        // 振动反馈
+        vibrate();
         MLToast.makeToast(R.string.ml_toast_unrealized).show();
         // 根据开关状态决定是否开启录制
         if (mRecordSwitch.isActivated()) {
+            // 设置按钮状态
             mRecordSwitch.setActivated(false);
+            MLCallStatus.getInstance().setRecord(false);
         } else {
+            // 设置按钮状态
             mRecordSwitch.setActivated(true);
+            MLCallStatus.getInstance().setRecord(true);
         }
-        // 方法调用成功加个振动反馈
-        vibrate();
     }
 
     /**
      * 拒绝通话
      */
     private void rejectCall() {
+        // 振动反馈
+        vibrate();
         // 结束通话时取消通话状态监听
         MLEasemobHelper.getInstance().removeCallStateChangeListener();
         // 拒绝通话后关闭通知铃音
@@ -239,6 +305,8 @@ public class MLVoiceCallActivity extends MLCallActivity {
             e.printStackTrace();
             MLToast.errorToast("拒绝通话失败：error-" + e.getErrorCode() + "-" + e.getMessage()).show();
         }
+        // 通话结束，重置通话状态
+        MLCallStatus.getInstance().reset();
         // 拒绝通话设置通话状态为自己拒绝
         mCallStatus = MLConstants.ML_CALL_REFUESD_IS_INCOMING;
         // 保存一条通话消息
@@ -251,6 +319,8 @@ public class MLVoiceCallActivity extends MLCallActivity {
      * 结束通话
      */
     private void endCall() {
+        // 振动反馈
+        vibrate();
         // 结束通话时取消通话状态监听
         MLEasemobHelper.getInstance().removeCallStateChangeListener();
         // 结束通话后关闭通知铃音
@@ -262,6 +332,8 @@ public class MLVoiceCallActivity extends MLCallActivity {
             e.printStackTrace();
             MLToast.errorToast("结束通话失败：error-" + e.getErrorCode() + "-" + e.getMessage()).show();
         }
+        // 通话结束，重置通话状态
+        MLCallStatus.getInstance().reset();
         // 挂断电话调用保存消息方法
         saveCallMessage();
         // 结束界面
@@ -272,6 +344,8 @@ public class MLVoiceCallActivity extends MLCallActivity {
      * 接听通话
      */
     private void answerCall() {
+        // 振动反馈
+        vibrate();
         // 做一些接听时的操作，比如隐藏按钮，打开扬声器等
         mRejectCallFab.setVisibility(View.GONE);
         mAnswerCallFab.setVisibility(View.GONE);
@@ -284,7 +358,9 @@ public class MLVoiceCallActivity extends MLCallActivity {
         try {
             EMClient.getInstance().callManager().answerCall();
             // 设置通话状态为正常结束
-            mCallStatus = MLConstants.ML_CALL_NORMAL;
+            mCallStatus = MLConstants.ML_CALL_ACCEPTED;
+            // 设置通话状态为已接通
+            MLCallStatus.getInstance().setCallState(MLCallStatus.CALL_STATUS_ACCEPTED);
         } catch (EMNoActiveCallException e) {
             e.printStackTrace();
             MLToast.errorToast("接听通话失败：error-" + e.getErrorCode() + "-" + e.getMessage()).show();
@@ -299,9 +375,10 @@ public class MLVoiceCallActivity extends MLCallActivity {
      * 3、MODE_IN_COMMUNICATION：这个和 CALL 都表示通讯模式，不过 CALL 在华为上不好使，故使用 COMMUNICATION
      * 4、MODE_RINGTONE：铃声模式
      */
-
     private void openSpeaker() {
+        // 设置按钮状态
         mSpeakerSwitch.setActivated(true);
+        MLCallStatus.getInstance().setSpeaker(true);
         // 检查是否已经开启扬声器
         if (!mAudioManager.isSpeakerphoneOn()) {
             // 打开扬声器
@@ -316,7 +393,9 @@ public class MLVoiceCallActivity extends MLCallActivity {
      * 同上边{@link #openSpeaker()}
      */
     private void closeSpeaker() {
+        // 设置按钮状态
         mSpeakerSwitch.setActivated(false);
+        MLCallStatus.getInstance().setSpeaker(false);
         // 检查是否已经开启扬声器
         if (mAudioManager.isSpeakerphoneOn()) {
             // 打开扬声器
@@ -349,7 +428,7 @@ public class MLVoiceCallActivity extends MLCallActivity {
             mCallStatusView.setText(R.string.ml_call_accepted);
             stopCallSound();
             // 通话已接通，设置通话状态为正常状态
-            mCallStatus = MLConstants.ML_CALL_NORMAL;
+            mCallStatus = MLConstants.ML_CALL_ACCEPTED;
             break;
         case DISCONNNECTED: // 通话已中断
             MLLog.i("通话已结束" + callError);
@@ -377,7 +456,7 @@ public class MLVoiceCallActivity extends MLCallActivity {
             } else if (callError == EMCallStateChangeListener.CallError.ERROR_TRANSPORT) {
                 MLLog.i("连接建立失败" + callError);
                 // 设置通话状态为建立连接失败
-                mCallStatus = MLConstants.ML_CALL_CANCEL;
+                mCallStatus = MLConstants.ML_CALL_TRANSPORT;
                 mCallStatusView.setText(R.string.ml_call_connection_fail);
             } else if (callError == EMCallStateChangeListener.CallError.ERROR_LOCAL_VERSION_SMALLER) {
                 MLLog.i("双方通讯协议不同" + callError);

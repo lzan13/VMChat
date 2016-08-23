@@ -2,8 +2,8 @@ apply plugin: 'com.android.application'
 
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion '24.0.0'
+    compileSdkVersion 23
+    buildToolsVersion '24.0.1'
     defaultConfig {
         applicationId "net.melove.app.chat"
         minSdkVersion 15
@@ -15,9 +15,9 @@ android {
     // 配置签名信息
     signingConfigs {
         // Debug 使用默认签名
-        debug {
-            storeFile file("debug.keystore")
-        }
+//        debug {
+//            storeFile file("debug.keystore")
+//        }
         // 发布时用自己的签名
         release {
             storeFile file("lzan13.keystore")
@@ -90,7 +90,7 @@ dependencies {
      *   appcomat-v7
      *   recyclerView库
      */
-    compile 'com.android.support:design:24.0.0'
+    compile 'com.android.support:design:23.3.0'
     // 解决方法数超过65536问题扩展库
     compile 'com.android.support:multidex:1.0.0'
     // Google Play Service 库，使用GCM推送需要
@@ -103,6 +103,8 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
     // 观察者模式解耦库
     compile 'org.greenrobot:eventbus:3.0.0'
+    // 支持手势缩放的ImageView
+    compile 'com.bm.photoview:library:1.4.1'
     /**
      *   引入各种第三方 SDK jar包，在上边 fileTree 里已经包含了libs，这里可以不用再单独添加
      */

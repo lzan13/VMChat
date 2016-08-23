@@ -29,6 +29,7 @@ import net.melove.app.chat.communal.util.MLDateUtil;
 import net.melove.app.chat.communal.util.MLLog;
 import net.melove.app.chat.conversation.MLMessageUtils;
 import net.melove.app.chat.conversation.call.MLCallReceiver;
+import net.melove.app.chat.conversation.call.MLCallStatus;
 import net.melove.app.chat.database.MLDBHelper;
 import net.melove.app.chat.contacts.MLContacterEntity;
 import net.melove.app.chat.conversation.MLConversationExtUtils;
@@ -60,20 +61,22 @@ public class MLEasemobHelper {
     // 记录sdk是否初始化
     private boolean isInit;
 
-    // 环信的消息监听器
-    private EMMessageListener mMessageListener;
     // 通话广播监听器
     private MLCallReceiver mCallReceiver = null;
+    // 通话状态监听
+    private EMCallStateChangeListener callStateListener;
+    // 是否正在通话中
+    public int isBus;
 
-
+    // 环信的消息监听器
+    private EMMessageListener mMessageListener;
     // 环信联系人监听
     private EMContactListener mContactListener;
     // 环信连接监听
     private EMConnectionListener mConnectionListener;
     // 环信群组变化监听
     private EMGroupChangeListener mGroupChangeListener;
-    // 通话状态监听
-    private EMCallStateChangeListener callStateListener;
+
 
     // 表示是是否解绑Token，一般离线状态都要设置为false
     private boolean isUnbuildToken = true;
@@ -106,7 +109,6 @@ public class MLEasemobHelper {
         MLLog.d("------- init easemob start --------------");
 
         mContext = context;
-
         // 获取当前进程 id 并取得进程名
         int pid = android.os.Process.myPid();
         String processAppName = getAppName(pid);
@@ -236,30 +238,39 @@ public class MLEasemobHelper {
                     switch (callState) {
                     case CONNECTING: // 正在呼叫对方
                         MLLog.i("正在呼叫对方" + callError);
+                        MLCallStatus.getInstance().setCallState(MLCallStatus.CALL_STATUS_CONNECTING);
                         break;
                     case CONNECTED: // 正在等待对方接受呼叫申请（对方申请与你进行通话）
                         MLLog.i("正在等待对方接受呼叫申请" + callError);
+                        MLCallStatus.getInstance().setCallState(MLCallStatus.CALL_STATUS_CONNECTING);
                         break;
                     case ACCEPTED: // 通话已接通
                         MLLog.i("通话已接通");
+                        MLCallStatus.getInstance().setCallState(MLCallStatus.CALL_STATUS_ACCEPTED);
                         break;
                     case DISCONNNECTED: // 通话已中断
-                        MLLog.i("通话已中断" + callError);
-                        if (callError == CallError.ERROR_INAVAILABLE) {
+                        MLLog.i("通话已结束" + callError);
+                        // 通话结束，重置通话状态
+                        MLCallStatus.getInstance().reset();
+                        if (callError == EMCallStateChangeListener.CallError.ERROR_INAVAILABLE) {
                             MLLog.i("对方不在线" + callError);
-                        } else if (callError == CallError.ERROR_BUSY) {
-                            MLLog.i("对方正在通话中" + callError);
-                        } else if (callError == CallError.REJECTED) {
+                        } else if (callError == EMCallStateChangeListener.CallError.ERROR_BUSY) {
+                            MLLog.i("对方正忙" + callError);
+                        } else if (callError == EMCallStateChangeListener.CallError.REJECTED) {
                             MLLog.i("对方已拒绝" + callError);
-                        } else if (callError == CallError.ERROR_NORESPONSE) {
-                            MLLog.i("对方未接听" + callError);
-                        } else if (callError == CallError.ERROR_TRANSPORT) {
-                            MLLog.i("连接建立失败，等下再呼叫吧" + callError);
-                        } else if (callError == CallError.ERROR_LOCAL_VERSION_SMALLER || callError == CallError.ERROR_PEER_VERSION_SMALLER) {
+                        } else if (callError == EMCallStateChangeListener.CallError.ERROR_NORESPONSE) {
+                            MLLog.i("对方未响应，可能手机不在身边" + callError);
+                        } else if (callError == EMCallStateChangeListener.CallError.ERROR_TRANSPORT) {
+                            MLLog.i("连接建立失败" + callError);
+                        } else if (callError == EMCallStateChangeListener.CallError.ERROR_LOCAL_VERSION_SMALLER) {
+                            MLLog.i("双方通讯协议不同" + callError);
+                        } else if (callError == EMCallStateChangeListener.CallError.ERROR_PEER_VERSION_SMALLER) {
                             MLLog.i("双方通讯协议不同" + callError);
                         } else {
                             MLLog.i("通话已结束，时长：%s，error %s", "10:35", callError);
                         }
+                        // 结束通话时取消通话状态监听
+                        MLEasemobHelper.getInstance().removeCallStateChangeListener();
                         break;
                     case NETWORK_UNSTABLE:
                         if (callError == EMCallStateChangeListener.CallError.ERROR_NO_DATA) {
@@ -314,7 +325,7 @@ public class MLEasemobHelper {
              */
             @Override
             public void onConnected() {
-                MLLog.d("MLEasemobHelper - onConnected");
+                MLLog.d("onConnected");
                 isUnbuildToken = true;
                 // 设置链接监听变化状态
                 MLConnectionEvent event = new MLConnectionEvent();
@@ -330,7 +341,7 @@ public class MLEasemobHelper {
              */
             @Override
             public void onDisconnected(final int errorCode) {
-                MLLog.d("MLEasemobHelper - onDisconnected - %d", errorCode);
+                MLLog.d("onDisconnected - %d", errorCode);
                 // 在离线状态下，退出登录的时候需要设置为false，已经登录成功的状态要改为 false，这个在使用了推送功能时，调用logout需要传递
                 isUnbuildToken = false;
                 MLConnectionEvent event = new MLConnectionEvent();

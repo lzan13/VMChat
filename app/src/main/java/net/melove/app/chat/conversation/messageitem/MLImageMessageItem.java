@@ -2,8 +2,6 @@ package net.melove.app.chat.conversation.messageitem;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +10,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMFileMessageBody;
 import com.hyphenate.chat.EMImageMessageBody;
 import com.hyphenate.chat.EMMessage;
@@ -21,7 +18,6 @@ import net.melove.app.chat.R;
 import net.melove.app.chat.application.MLConstants;
 import net.melove.app.chat.application.eventbus.MLMessageEvent;
 import net.melove.app.chat.communal.util.MLBitmapUtil;
-import net.melove.app.chat.communal.module.MLBitmapCache;
 import net.melove.app.chat.communal.util.MLDateUtil;
 import net.melove.app.chat.communal.util.MLDimen;
 import net.melove.app.chat.conversation.MLMessageUtils;
@@ -86,6 +82,7 @@ public class MLImageMessageItem extends MLMessageItem {
         int width = imgBody.getWidth();
         int height = imgBody.getHeight();
         float scale = MLBitmapUtil.getZoomScale(width, height, thumbnailsMax);
+        // 根据图片原图大小，来计算缩略图要显示的大小，直接设置控件宽高
         ViewGroup.LayoutParams lp = mImageView.getLayoutParams();
         if (width <= thumbnailsMax && height <= thumbnailsMax) {
             if (width < thumbnailsMin) {
@@ -110,27 +107,26 @@ public class MLImageMessageItem extends MLMessageItem {
             // 判断消息是否处于下载状态，如果是下载状态设置一个默认的图片
             if (imgBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.DOWNLOADING
                     || imgBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.PENDING) {
-                //                mImageView.setBackgroundResource(R.mipmap.image_default);
             }
         }
 
         // 缩略图本地路径
         String thumbnailsPath = "";
         // 原图在本地路径
-        String fullSizePath = "";
+        String originalPath = "";
         if (mViewType == MLConstants.MSG_TYPE_IMAGE_RECEIVED) {
             // 接收方获取缩略图的路径
-            fullSizePath = imgBody.getLocalUrl();
+            originalPath = imgBody.getLocalUrl();
             thumbnailsPath = imgBody.thumbnailLocalPath();
         } else {
             // 发送方获取图片路径
-            fullSizePath = imgBody.getLocalUrl();
-            thumbnailsPath = MLMessageUtils.getThumbImagePath(fullSizePath);
+            originalPath = imgBody.getLocalUrl();
+            thumbnailsPath = MLMessageUtils.getThumbImagePath(originalPath);
         }
         // 为图片显示控件设置tag，在设置图片显示的时候，先判断下当前的tag是否是当前item的，是则显示图片
         //        mImageView.setTag(thumbnailsPath);
         // 设置缩略图的显示
-        showThumbnailsImage(thumbnailsPath, fullSizePath, imgBody.getWidth(), imgBody.getHeight());
+        showThumbnailsImage(thumbnailsPath, originalPath);
 
         // 刷新界面显示
         refreshView();
@@ -160,7 +156,8 @@ public class MLImageMessageItem extends MLMessageItem {
 
         // 创建并显示 ListView 的长按弹出菜单，并设置弹出菜单 Item的点击监听
         alertDialogBuilder = new AlertDialog.Builder(mActivity);
-        alertDialogBuilder.setTitle(R.string.ml_dialog_title_conversation);
+        // 弹出框标题
+        // alertDialogBuilder.setTitle(R.string.ml_dialog_title_conversation);
         alertDialogBuilder.setItems(menus, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -177,35 +174,35 @@ public class MLImageMessageItem extends MLMessageItem {
                 }
             }
         });
-        menuDialog = alertDialogBuilder.create();
-        menuDialog.show();
+        alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
     /**
      * 设置缩略图的显示，并将缩略图添加到缓存
      *
      * @param thumbnailsPath 缩略图的路径
-     * @param fullSizePath   原始图片的路径
+     * @param originalPath   原始图片的路径
      */
-    private void showThumbnailsImage(final String thumbnailsPath, final String fullSizePath, final int width, final int height) {
+    private void showThumbnailsImage(String thumbnailsPath, String originalPath) {
         File thumbnailsFile = new File(thumbnailsPath);
-        File fullSizeFile = new File(fullSizePath);
+        File originalFile = new File(originalPath);
         // 根据图片存在情况加载缩略图显示
-        if (fullSizeFile.exists()) {
+        if (originalFile.exists()) {
             // 原图存在，直接通过原图加载缩略图
             Glide.with(mContext)
-                    .load(fullSizeFile)
+                    .load(originalFile)
                     .crossFade()
                     .override(mViewWidth, mViewHeight)
                     .into(mImageView);
-        } else if (!fullSizeFile.exists() && thumbnailsFile.exists()) {
-            // 原图不能存在，只存在缩略图
+        } else if (!originalFile.exists() && thumbnailsFile.exists()) {
+            // 原图不存在，只存在缩略图
             Glide.with(mContext)
                     .load(thumbnailsFile)
                     .crossFade()
                     .override(mViewWidth, mViewHeight)
                     .into(mImageView);
-        } else if (!fullSizeFile.exists() && !thumbnailsFile.exists()) {
+        } else if (!originalFile.exists() && !thumbnailsFile.exists()) {
             // 原图和缩略图都不存在
             Glide.with(mContext)
                     .load(thumbnailsFile)
@@ -214,6 +211,7 @@ public class MLImageMessageItem extends MLMessageItem {
                     .into(mImageView);
         }
     }
+
     /**
      * 设置缩略图的显示，并将缩略图添加到缓存
      *
@@ -273,7 +271,7 @@ public class MLImageMessageItem extends MLMessageItem {
     //                                @Override
     //                                public void run() {
     //                                    // 下载缩略图
-    //                                    EMClient.getInstance().chatManager().downloadThumbnail(mMessage);
+//                                        EMClient.getInstance().chatManager().downloadThumbnail(mMessage);
     //                                }
     //                            }).start();
     //                        } else {

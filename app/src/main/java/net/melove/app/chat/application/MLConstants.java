@@ -66,6 +66,7 @@ public class MLConstants {
 
     // Intent 传递参数参数的 key
     public static final String ML_EXTRA_CALL_IS_INCOMING = "ml_call_is_incoming";
+    public static final String ML_EXTRA_CHAT_MSG_ID = "ml_chat_msg_id";
     public static final String ML_EXTRA_CHAT_ID = "ml_chat_id";
     public static final String ML_EXTRA_FROM = "from";
     public static final String ML_EXTRA_TO = "to";
@@ -86,7 +87,7 @@ public class MLConstants {
      * 通话结束状态码
      */
     // 正常结束通话
-    public static final int ML_CALL_NORMAL = 0x00;
+    public static final int ML_CALL_ACCEPTED = 0x00;
     // 自己取消通话
     public static final int ML_CALL_CANCEL = 0x01;
     // 对方取消通话

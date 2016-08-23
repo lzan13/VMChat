@@ -55,19 +55,22 @@
                         android:layout_centerVertical="true">
 
                         <!--语音按钮-->
-                        <ImageView
+                        <ImageButton
                             android:id="@+id/ml_img_chat_voice"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="@dimen/ml_dimen_48"
+                            android:layout_height="@dimen/ml_dimen_48"
                             android:layout_centerInParent="true"
+                            android:background="@drawable/ml_click_rectangle_white"
                             android:src="@mipmap/ic_keyboard_voice_white_24dp"
-                            android:tint="@color/ml_red_87"/>
+                            android:tint="@color/ml_red_87"
+                            android:visibility="visible"/>
                         <!--发送按钮-->
-                        <ImageView
+                        <ImageButton
                             android:id="@+id/ml_img_chat_send"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="@dimen/ml_dimen_48"
+                            android:layout_height="@dimen/ml_dimen_48"
                             android:layout_centerInParent="true"
+                            android:background="@drawable/ml_click_rectangle_white"
                             android:src="@mipmap/ic_send_white_24dp"
                             android:tint="@color/ml_red_87"
                             android:visibility="gone"/>
@@ -81,19 +84,21 @@
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true">
 
-                        <ImageView
+                        <ImageButton
                             android:id="@+id/ml_img_chat_emotion"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="@dimen/ml_dimen_48"
+                            android:layout_height="@dimen/ml_dimen_48"
                             android:layout_centerInParent="true"
+                            android:background="@drawable/ml_click_rectangle_white"
                             android:src="@mipmap/ic_keyboard_face_white_24dp"
                             android:tint="@color/ml_red_87"/>
 
-                        <ImageView
+                        <ImageButton
                             android:id="@+id/ml_img_chat_keyboard"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="@dimen/ml_dimen_48"
+                            android:layout_height="@dimen/ml_dimen_48"
                             android:layout_centerInParent="true"
+                            android:background="@drawable/ml_click_rectangle_white"
                             android:src="@mipmap/ic_keyboard_white_24dp"
                             android:tint="@color/ml_red_87"
                             android:visibility="gone"/>
@@ -112,7 +117,7 @@
                         android:paddingBottom="@dimen/ml_dimen_8"
                         android:paddingTop="@dimen/ml_dimen_8"
                         android:textColor="@color/ml_black_87"
-                        android:textColorHint="@color/ml_black_26"
+                        android:textColorHint="@color/ml_black_38"
                         android:textSize="@dimen/ml_size_16"/>
                 </RelativeLayout>
 
