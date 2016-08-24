@@ -11,7 +11,7 @@ MLEaseChat
 AndroidStudio 2.1.2
 Android SDK Tools 25.1.7
 Android SDK Build-tools 24.0.1
-Android SDK compileSdkVersion 24
+Android SDK compileSdkVersion 23
 Android SDK targetSdkVersion 22
 Android SDK minSdkVersion 15
 Gradle 2.12

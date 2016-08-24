@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 
 android {
-    compileSdkVersion 24
+    compileSdkVersion 23
     buildToolsVersion '24.0.1'
     defaultConfig {
         applicationId "net.melove.app.chat"
@@ -15,9 +15,9 @@ android {
     // 配置签名信息
     signingConfigs {
         // Debug 使用默认签名
-        debug {
-            storeFile file("debug.keystore")
-        }
+//        debug {
+//            storeFile file("debug.keystore")
+//        }
         // 发布时用自己的签名
         release {
             storeFile file("lzan13.keystore")
@@ -90,7 +90,7 @@ dependencies {
      *   appcomat-v7
      *   recyclerView库
      */
-    compile 'com.android.support:design:24.1.1'
+    compile 'com.android.support:design:23.3.0'
     // 解决方法数超过65536问题扩展库
     compile 'com.android.support:multidex:1.0.0'
     // Google Play Service 库，使用GCM推送需要
