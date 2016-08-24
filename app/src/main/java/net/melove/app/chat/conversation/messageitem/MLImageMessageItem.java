@@ -19,7 +19,7 @@ import net.melove.app.chat.application.MLConstants;
 import net.melove.app.chat.application.eventbus.MLMessageEvent;
 import net.melove.app.chat.communal.util.MLBitmapUtil;
 import net.melove.app.chat.communal.util.MLDateUtil;
-import net.melove.app.chat.communal.util.MLDimen;
+import net.melove.app.chat.communal.util.MLDimenUtil;
 import net.melove.app.chat.conversation.MLMessageUtils;
 import net.melove.app.chat.communal.widget.MLImageView;
 import net.melove.app.chat.conversation.MLChatActivity;
@@ -38,7 +38,7 @@ import java.io.File;
 public class MLImageMessageItem extends MLMessageItem {
 
     // 定义图片缩略图限制
-    private int thumbnailsMax = MLDimen.dp2px(R.dimen.ml_dimen_192);
+    private int thumbnailsMax = MLDimenUtil.getDimenPixel(R.dimen.ml_dimen_192);
     private int thumbnailsMin = 192;
     private int mViewWidth;
     private int mViewHeight;
