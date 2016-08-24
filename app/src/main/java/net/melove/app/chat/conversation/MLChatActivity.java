@@ -45,6 +45,8 @@ import net.melove.app.chat.communal.base.MLBaseActivity;
 import net.melove.app.chat.application.MLConstants;
 import net.melove.app.chat.communal.util.MLDateUtil;
 import net.melove.app.chat.communal.util.MLFileUtil;
+import net.melove.app.chat.communal.widget.MLRecordView;
+import net.melove.app.chat.communal.widget.MLRecorder;
 import net.melove.app.chat.communal.widget.MLToast;
 import net.melove.app.chat.conversation.call.MLCallStatus;
 import net.melove.app.chat.conversation.call.MLVideoCallActivity;
@@ -126,8 +128,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     private RelativeLayout mEmotionLayout;
     // 发送按钮
     private View mSendView;
-    // 语音按钮
-    private View mVoiceView;
+    // 录音控件
+    private MLRecordView mRecordView;
 
 
     @Override
@@ -174,12 +176,12 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         mKeyboardView = findViewById(R.id.ml_img_chat_keyboard);
         mEmotionLayout = (RelativeLayout) findViewById(R.id.ml_layout_chat_input_emotion);
         mSendView = findViewById(R.id.ml_img_chat_send);
-        mVoiceView = findViewById(R.id.ml_img_chat_voice);
+        mRecordView = (MLRecordView) findViewById(R.id.ml_view_chat_record_voice);
+        mRecordView.setRecordCallback(recordCallback);
 
         // 设置输入按钮控件的点击监听
         mEmotionView.setOnClickListener(viewListener);
         mKeyboardView.setOnClickListener(viewListener);
-        mVoiceView.setOnClickListener(viewListener);
         mSendView.setOnClickListener(viewListener);
 
         // 设置扩展菜单点击监听
@@ -375,10 +377,10 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             public void afterTextChanged(Editable s) {
                 if (s.toString().equals("")) {
                     mSendView.setVisibility(View.GONE);
-                    mVoiceView.setVisibility(View.VISIBLE);
+                    mRecordView.setVisibility(View.VISIBLE);
                 } else {
                     mSendView.setVisibility(View.VISIBLE);
-                    mVoiceView.setVisibility(View.GONE);
+                    mRecordView.setVisibility(View.GONE);
                 }
                 Timer timer = new Timer();
                 timer.purge();
@@ -675,7 +677,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         mInputView.setText("");
         // 设置界面按钮状态
         mSendView.setVisibility(View.GONE);
-        mVoiceView.setVisibility(View.VISIBLE);
+        mRecordView.setVisibility(View.VISIBLE);
         // 创建一条文本消息
         EMMessage textMessage = EMMessage.createTxtSendMessage(content, mChatId);
         // 调用刷新消息的方法，
@@ -711,6 +713,54 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         sendMessage(fileMessage);
 
     }
+
+    /**
+     * 发送语音消息
+     *
+     * @param path 语音文件的路径
+     */
+    private void sendVoiceMessage(String path, int time) {
+        EMMessage voiceMessage = EMMessage.createVoiceSendMessage(path, time, mChatId);
+        sendMessage(voiceMessage);
+    }
+
+    /**
+     * 录音控件回调接口，用来监听录音控件录制结果
+     */
+    private MLRecordView.MLRecordCallback recordCallback = new MLRecordView.MLRecordCallback() {
+        @Override
+        public void onCancel() {
+
+        }
+
+        @Override
+        public void onFailed(int error) {
+            switch (error) {
+            case MLRecorder.ERROR_FAILED:
+                // 录音失败，一般是权限问题
+                MLToast.errorToast(R.string.ml_error_voice_failed);
+                break;
+            case MLRecorder.ERROR_SHORT:
+                // 录音时间过短
+                MLToast.errorToast(R.string.ml_error_voice_short);
+                break;
+            case MLRecorder.ERROR_SYSTEM:
+                // 系统问题
+                break;
+            }
+
+        }
+
+        @Override
+        public void onStart() {
+
+        }
+
+        @Override
+        public void onSuccess(String path, int time) {
+            sendVoiceMessage(path, time);
+        }
+    };
 
     /**
      * 处理Activity的返回值得方法
@@ -1033,7 +1083,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     /**
      * ---------------------------- RecyclerView 刷新方法 -----------------------------------
      * 使用 EventBus 的订阅模式实现消息变化的监听，这里 EventBus 3.x 使用注解的方式确定方法调用的线程
-     * <p/>
+     * <p>
      * 这里调用下 {@link MLMessageAdapter}里封装的方法
      * 最终还是去调用{@link android.support.v7.widget.RecyclerView.Adapter}已有的 notify 方法
      * 消息的状态改变需要调用 item changed方法
@@ -1255,7 +1305,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     /**
      * --------------------------------- Message Listener -------------------------------------
      * 环信消息监听主要方法
-     * <p/>
+     * <p>
      * 收到新消息
      *
      * @param list 收到的新消息集合

@@ -15,7 +15,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipChildren="true"
+        android:animateLayoutChanges="true"
+        android:clipChildren="false"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <ImageView
@@ -30,6 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:animateLayoutChanges="true"
             android:background="@color/ml_white_87"
             android:clipChildren="false"
             android:orientation="vertical">
@@ -39,14 +41,17 @@
                 android:id="@+id/ml_layout_chat_input_top_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
                 android:clipChildren="false">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:animateLayoutChanges="true"
                     android:clipChildren="false"
                     android:minHeight="@dimen/ml_dimen_48">
 
+                    <!--发送按钮-->
                     <RelativeLayout
                         android:id="@+id/ml_layout_chat_input_bar_right"
                         android:layout_width="@dimen/ml_dimen_48"
@@ -63,7 +68,7 @@
                             android:background="@drawable/ml_click_rectangle_white"
                             android:src="@mipmap/ic_keyboard_voice_white_24dp"
                             android:tint="@color/ml_red_87"
-                            android:visibility="visible"/>
+                            android:visibility="gone"/>
                         <!--发送按钮-->
                         <ImageButton
                             android:id="@+id/ml_img_chat_send"
@@ -82,7 +87,8 @@
                         android:layout_width="@dimen/ml_dimen_48"
                         android:layout_height="@dimen/ml_dimen_48"
                         android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true">
+                        android:layout_centerVertical="true"
+                        android:animateLayoutChanges="true">
 
                         <ImageButton
                             android:id="@+id/ml_img_chat_emotion"
@@ -121,12 +127,25 @@
                         android:textSize="@dimen/ml_size_16"/>
                 </RelativeLayout>
 
-                <!--<net.melove.demo.chat.common.widget.MLRecordView-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="@dimen/ml_dimen_48"-->
-                <!--android:background="@color/ml_theme_background_primary"-->
-                <!--android:clipChildren="false"-->
-                <!--android:visibility="gone" />-->
+                <!--录音控件-->
+                <net.melove.app.chat.communal.widget.MLRecordView
+                    android:id="@+id/ml_view_chat_record_voice"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/ml_dimen_48"
+                    android:layout_alignParentRight="true"
+                    android:clipChildren="false"
+                    android:visibility="visible"
+                    app:ml_indicator_color="@color/ml_theme_primary_light"
+                    app:ml_indicator_size="@dimen/ml_dimen_16"
+                    app:ml_text_color="@color/ml_black_54"
+                    app:ml_text_size="@dimen/ml_size_16"
+                    app:ml_touch_color="@color/ml_red_100"
+                    app:ml_touch_icon="@mipmap/ic_mic_white_24dp"
+                    app:ml_touch_size="@dimen/ml_dimen_48"
+                    app:ml_touch_text="滑动取消"
+                    app:ml_waveform_color="@color/ml_orange_87"
+                    app:ml_waveform_interval="@dimen/ml_dimen_2"
+                    app:ml_waveform_width="@dimen/ml_dimen_2"/>
             </RelativeLayout>
 
             <!--聊天表情框-->

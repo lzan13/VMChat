@@ -25,4 +25,30 @@
         <!--是否拦截触摸事件-->
         <attr name="ml_dispatch_touch_event" format="boolean"/>
     </declare-styleable>
+
+    <!--自定义音频录制控件-->
+    <declare-styleable name="MLRecordView">
+        <!--触摸区域颜色-->
+        <attr name="ml_touch_color" format="color"/>
+        <!--触摸区域图标资源-->
+        <attr name="ml_touch_icon" format="reference"/>
+        <!--触摸区域半径-->
+        <attr name="ml_touch_size" format="dimension"/>
+        <!--触摸区域提示文字-->
+        <attr name="ml_touch_text" format="string|reference"/>
+        <!--波形刻度颜色-->
+        <attr name="ml_waveform_color" format="color"/>
+        <!--波形刻度间隔距离-->
+        <attr name="ml_waveform_interval" format="dimension"/>
+        <!--波形刻度宽度-->
+        <attr name="ml_waveform_width" format="dimension"/>
+        <!--录制指示器颜色-->
+        <attr name="ml_indicator_color" format="color"/>
+        <!--录制指示器大小-->
+        <attr name="ml_indicator_size" format="dimension"/>
+        <!--文字颜色-->
+        <attr name="ml_text_color" format="color"/>
+        <!--文字大小-->
+        <attr name="ml_text_size" format="dimension"/>
+    </declare-styleable>
 </resources>
