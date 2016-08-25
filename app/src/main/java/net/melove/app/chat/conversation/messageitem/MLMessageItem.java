@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -48,28 +49,40 @@ public abstract class MLMessageItem extends LinearLayout {
 
     /**
      * 聊天界面不同的item 所有要显示的控件，每个item可能显示的个数不同，
-     * 比如撤回消息只显示 mContentView和 mTimeView
+     * 比如撤回消息只显示 mContentView和 msgTimeView
      */
     // 显示聊天头像
-    protected MLImageView mAvatarView;
+    protected MLImageView avatarView;
     // 显示图片、文件消息显示文件图标
-    protected MLImageView mImageView;
+    protected MLImageView imageView;
     // 显示用户名
-    protected TextView mUsernameView;
-    // 显示聊天内容、文件消息就显示文件名
-    protected TextView mContentView;
-    // 文件消息显示文件大小
-    protected TextView mContentSizeView;
+    protected TextView usernameView;
     // 显示时间
-    protected TextView mTimeView;
+    protected TextView msgTimeView;
     // 重发按钮
-    protected ImageView mResendView;
-    // 消息进度
-    protected View mProgressLayout;
-    protected ProgressBar mProgressBar;
-    protected TextView mPercentView;
+    protected ImageView resendView;
     // Ack状态显示
-    protected ImageView mAckStatusView;
+    protected ImageView ackStatusView;
+
+    // 显示聊天内容、文件消息就显示文件名
+    protected TextView contentView;
+
+    // 消息进度布局部分
+    protected View progressLayout;
+    // 进度圈
+    protected ProgressBar msgProgressBar;
+    // 进度百分比
+    protected TextView percentView;
+
+    // 文件消息显示文件大小
+    protected TextView fileSizeView;
+
+    //  语音及视频类消息播放按钮
+    protected ImageButton playBtn;
+    // 语音及视频类消息持续时间
+    protected TextView durationView;
+    // 语音及视频类消息进度条
+    protected ProgressBar durationProgressBar;
 
 
     /**
@@ -149,15 +162,15 @@ public abstract class MLMessageItem extends LinearLayout {
         if (mViewType == MLConstants.MSG_TYPE_TEXT_SEND) {
             if (mMessage.isAcked()) {
                 // 表示对方已读消息，用两个对号表示
-                mAckStatusView.setImageResource(R.mipmap.ic_done_all_white_18dp);
+                ackStatusView.setImageResource(R.mipmap.ic_done_all_white_18dp);
             } else if (mMessage.isDelivered()) {
                 // 表示消息已经送达，对方收到了，用一个对号表示
-                mAckStatusView.setImageResource(R.mipmap.ic_done_white_18dp);
+                ackStatusView.setImageResource(R.mipmap.ic_done_white_18dp);
             } else {
-                mAckStatusView.setVisibility(View.GONE);
+                ackStatusView.setVisibility(View.GONE);
             }
         } else {
-            mAckStatusView.setVisibility(View.GONE);
+            ackStatusView.setVisibility(View.GONE);
         }
     }
 

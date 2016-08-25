@@ -39,7 +39,7 @@ public class MLRecallMessageItem extends MLMessageItem {
     public void onSetupView(EMMessage message) {
         mMessage = message;
         // 设置消息时间
-        mTimeView.setText(MLDateUtil.getRelativeTime(message.getMsgTime()));
+        msgTimeView.setText(MLDateUtil.getRelativeTime(message.getMsgTime()));
         // 设置显示内容
         String messageStr = null;
         if (mMessage.direct() == EMMessage.Direct.SEND) {
@@ -47,7 +47,7 @@ public class MLRecallMessageItem extends MLMessageItem {
         }else{
             messageStr = String.format(mContext.getString(R.string.ml_hint_msg_recall_by_user), message.getUserName());
         }
-        mContentView.setText(messageStr);
+        contentView.setText(messageStr);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class MLRecallMessageItem extends MLMessageItem {
     @Override
     protected void onInflateView() {
         mInflater.inflate(R.layout.item_msg_sys_recall, this);
-        mTimeView = (TextView) findViewById(R.id.ml_text_msg_time);
-        mContentView = (TextView) findViewById(R.id.ml_text_msg_content);
+        msgTimeView = (TextView) findViewById(R.id.ml_text_msg_time);
+        contentView = (TextView) findViewById(R.id.ml_text_msg_content);
     }
 }

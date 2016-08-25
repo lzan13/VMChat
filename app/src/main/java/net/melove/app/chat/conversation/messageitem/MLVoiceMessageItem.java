@@ -4,13 +4,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.hyphenate.chat.EMMessage;
-import com.hyphenate.chat.EMNormalFileMessageBody;
-import com.hyphenate.util.TextFormater;
+import com.hyphenate.chat.EMVoiceMessageBody;
 
 import net.melove.app.chat.R;
 import net.melove.app.chat.application.MLConstants;
@@ -25,10 +25,10 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 /**
- * Created by lz on 2016/3/20.
- * 图片消息处理类
+ * Created by lz on 2016/8/25.
+ * 语音消息处理类
  */
-public class MLFileMessageItem extends MLMessageItem {
+public class MLVoiceMessageItem extends MLMessageItem {
 
 
     /**
@@ -38,7 +38,7 @@ public class MLFileMessageItem extends MLMessageItem {
      * @param adapter  适配器
      * @param viewType item类型
      */
-    public MLFileMessageItem(Context context, MLMessageAdapter adapter, int viewType) {
+    public MLVoiceMessageItem(Context context, MLMessageAdapter adapter, int viewType) {
         super(context, adapter, viewType);
         onInflateView();
     }
@@ -62,14 +62,10 @@ public class MLFileMessageItem extends MLMessageItem {
         }
         // 设置消息时间
         msgTimeView.setText(MLDateUtil.getRelativeTime(mMessage.getMsgTime()));
-
-        EMNormalFileMessageBody fileBody = (EMNormalFileMessageBody) mMessage.getBody();
-        String filename = fileBody.getFileName();
-        // 设置文件名
-        contentView.setText(filename);
-        // 设置文件大小
-        String fileExtend = filename.substring(filename.lastIndexOf(".") + 1, filename.length());
-        fileSizeView.setText(TextFormater.getDataSize(fileBody.getFileSize()) + "  " + fileExtend);
+        // 获取语音消息体
+        EMVoiceMessageBody body = (EMVoiceMessageBody) mMessage.getBody();
+        // 设置语音消息持续时间
+        durationView.setText(String.format("%d'%d\"%d", body.getLength() / 1000 / 60, body.getLength() / 1000 % 60, body.getLength() % 1000 / 100));
 
         // 刷新界面显示
         refreshView();
@@ -83,15 +79,18 @@ public class MLFileMessageItem extends MLMessageItem {
     @Override
     protected void onItemLongClick() {
         String[] menus = null;
-        // 这里要根据消息的类型去判断要弹出的菜单，是否是发送方，并且是发送成功才能撤回
-        if (mViewType == MLConstants.MSG_TYPE_FILE_RECEIVED) {
+        /**
+         * 这里要根据消息的类型去判断要弹出的菜单，
+         * 是否是发送方，并且是发送成功才能撤回
+         * 这里是语音消息，所以不能转发，只能删除和撤回
+         * TODO 后期可以加上语音转文字
+         */
+        if (mViewType == MLConstants.MSG_TYPE_VOICE_RECEIVED) {
             menus = new String[]{
-                    mActivity.getResources().getString(R.string.ml_menu_chat_forward),
                     mActivity.getResources().getString(R.string.ml_menu_chat_delete)
             };
         } else {
             menus = new String[]{
-                    mActivity.getResources().getString(R.string.ml_menu_chat_forward),
                     mActivity.getResources().getString(R.string.ml_menu_chat_delete),
                     mActivity.getResources().getString(R.string.ml_menu_chat_recall)
             };
@@ -106,12 +105,9 @@ public class MLFileMessageItem extends MLMessageItem {
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                 case 0:
-                    mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_MSG_FORWARD);
-                    break;
-                case 1:
                     mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_MSG_DELETE);
                     break;
-                case 2:
+                case 1:
                     mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_MSG_RECALL);
                     break;
                 }
@@ -124,6 +120,7 @@ public class MLFileMessageItem extends MLMessageItem {
     /**
      * 刷新当前item
      */
+
     protected void refreshView() {
         // 判断是不是阅后即焚的消息
         if (mMessage.getBooleanAttribute(MLConstants.ML_ATTR_BURN, false)) {
@@ -133,14 +130,14 @@ public class MLFileMessageItem extends MLMessageItem {
         switch (mMessage.status()) {
         case SUCCESS:
             ackStatusView.setVisibility(View.VISIBLE);
-            progressLayout.setVisibility(View.GONE);
+            msgProgressBar.setVisibility(View.GONE);
             resendView.setVisibility(View.GONE);
             break;
         case FAIL:
         case CREATE:
             // 当消息在发送过程中被Kill，消息的状态会变成Create，而且永远不会发送成功，所以这里把CREATE状态莪要设置为失败
             ackStatusView.setVisibility(View.GONE);
-            progressLayout.setVisibility(View.GONE);
+            msgProgressBar.setVisibility(View.GONE);
             resendView.setVisibility(View.VISIBLE);
             resendView.setOnClickListener(new OnClickListener() {
                 @Override
@@ -151,7 +148,7 @@ public class MLFileMessageItem extends MLMessageItem {
             break;
         case INPROGRESS:
             ackStatusView.setVisibility(View.GONE);
-            progressLayout.setVisibility(View.VISIBLE);
+            msgProgressBar.setVisibility(View.VISIBLE);
             resendView.setVisibility(View.GONE);
             break;
         }
@@ -170,10 +167,6 @@ public class MLFileMessageItem extends MLMessageItem {
         if (!message.getMsgId().equals(mMessage.getMsgId())) {
             return;
         }
-        if (message.getType() == EMMessage.Type.IMAGE && event.getStatus() == EMMessage.Status.INPROGRESS) {
-            // 设置消息进度百分比
-            percentView.setText(String.valueOf(event.getProgress()));
-        }
     }
 
     /**
@@ -181,23 +174,21 @@ public class MLFileMessageItem extends MLMessageItem {
      */
     @Override
     protected void onInflateView() {
-        if (mViewType == MLConstants.MSG_TYPE_FILE_SEND) {
-            mInflater.inflate(R.layout.item_msg_file_send, this);
+        if (mViewType == MLConstants.MSG_TYPE_VOICE_SEND) {
+            mInflater.inflate(R.layout.item_msg_voice_send, this);
         } else {
-            mInflater.inflate(R.layout.item_msg_file_received, this);
+            mInflater.inflate(R.layout.item_msg_voice_received, this);
         }
 
         avatarView = (MLImageView) findViewById(R.id.ml_img_msg_avatar);
-        imageView = (MLImageView) findViewById(R.id.ml_img_msg_image);
         usernameView = (TextView) findViewById(R.id.ml_text_msg_username);
         msgTimeView = (TextView) findViewById(R.id.ml_text_msg_time);
-        contentView = (TextView) findViewById(R.id.ml_text_msg_content);
-        fileSizeView = (TextView) findViewById(R.id.ml_text_msg_size);
         resendView = (ImageView) findViewById(R.id.ml_img_msg_resend);
-        progressLayout = findViewById(R.id.ml_layout_progress);
         msgProgressBar = (ProgressBar) findViewById(R.id.ml_progressbar_msg);
-        percentView = (TextView) findViewById(R.id.ml_text_msg_progress_percent);
         ackStatusView = (ImageView) findViewById(R.id.ml_img_msg_ack);
+        playBtn = (ImageButton) findViewById(R.id.ml_btn_msg_play);
+        durationView = (TextView) findViewById(R.id.ml_text_msg_voice_duration);
+        durationProgressBar = (ProgressBar) findViewById(R.id.ml_progressbar_msg_voice);
     }
 
     @Override
