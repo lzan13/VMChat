@@ -738,14 +738,15 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             switch (error) {
             case MLRecorder.ERROR_FAILED:
                 // 录音失败，一般是权限问题
-                MLToast.errorToast(R.string.ml_error_voice_failed);
+                MLToast.errorToast(R.string.ml_error_voice_failed).show();
                 break;
             case MLRecorder.ERROR_SHORT:
                 // 录音时间过短
-                MLToast.errorToast(R.string.ml_error_voice_short);
+                MLToast.errorToast(R.string.ml_error_voice_short).show();
                 break;
             case MLRecorder.ERROR_SYSTEM:
                 // 系统问题
+                MLToast.errorToast(R.string.ml_error_voice_system).show();
                 break;
             }
 

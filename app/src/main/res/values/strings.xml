@@ -176,6 +176,7 @@
 
     <string name="ml_error_voice_failed">录音失败，请检查权限</string>
     <string name="ml_error_voice_short">录音时间过短</string>
+    <string name="ml_error_voice_system">录音机系统错误</string>
 
     <!--其他错误 x-->
     <string name="ml_error_em_no_error">无错误</string>

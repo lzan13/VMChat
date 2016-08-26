@@ -252,19 +252,19 @@ public class MLEasemobHelper {
                         MLLog.i("通话已结束" + callError);
                         // 通话结束，重置通话状态
                         MLCallStatus.getInstance().reset();
-                        if (callError == EMCallStateChangeListener.CallError.ERROR_INAVAILABLE) {
+                        if (callError == CallError.ERROR_UNAVAILABLE) {
                             MLLog.i("对方不在线" + callError);
-                        } else if (callError == EMCallStateChangeListener.CallError.ERROR_BUSY) {
+                        } else if (callError == CallError.ERROR_BUSY) {
                             MLLog.i("对方正忙" + callError);
-                        } else if (callError == EMCallStateChangeListener.CallError.REJECTED) {
+                        } else if (callError == CallError.REJECTED) {
                             MLLog.i("对方已拒绝" + callError);
-                        } else if (callError == EMCallStateChangeListener.CallError.ERROR_NORESPONSE) {
+                        } else if (callError == CallError.ERROR_NORESPONSE) {
                             MLLog.i("对方未响应，可能手机不在身边" + callError);
-                        } else if (callError == EMCallStateChangeListener.CallError.ERROR_TRANSPORT) {
+                        } else if (callError == CallError.ERROR_TRANSPORT) {
                             MLLog.i("连接建立失败" + callError);
-                        } else if (callError == EMCallStateChangeListener.CallError.ERROR_LOCAL_VERSION_SMALLER) {
+                        } else if (callError == CallError.ERROR_LOCAL_SDK_VERSION_OUTDATED) {
                             MLLog.i("双方通讯协议不同" + callError);
-                        } else if (callError == EMCallStateChangeListener.CallError.ERROR_PEER_VERSION_SMALLER) {
+                        } else if (callError == CallError.ERROR_REMOTE_SDK_VERSION_OUTDATED) {
                             MLLog.i("双方通讯协议不同" + callError);
                         } else {
                             MLLog.i("通话已结束，时长：%s，error %s", "10:35", callError);
@@ -731,7 +731,7 @@ public class MLEasemobHelper {
              * @param reason 理由
              */
             @Override
-            public void onInvitationAccpted(String groupId, String invitee, String reason) {
+            public void onInvitationAccepted(String groupId, String invitee, String reason) {
 
             }
 
@@ -764,7 +764,7 @@ public class MLEasemobHelper {
              * @param groupName 解散的群组名称
              */
             @Override
-            public void onGroupDestroy(String groupId, String groupName) {
+            public void onGroupDestroyed(String groupId, String groupName) {
 
             }
 

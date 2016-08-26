@@ -554,37 +554,37 @@ public class MLVideoCallActivity extends MLCallActivity {
         case DISCONNNECTED: // 通话已中断
             MLLog.i("通话已结束" + callError);
             mCallStatusView.setText(R.string.ml_call_disconnected);
-            if (callError == EMCallStateChangeListener.CallError.ERROR_INAVAILABLE) {
+            if (callError == CallError.ERROR_UNAVAILABLE) {
                 MLLog.i("对方不在线" + callError);
                 // 设置通话状态为对方不在线
                 mCallStatus = MLConstants.ML_CALL_OFFLINE;
                 mCallStatusView.setText(R.string.ml_call_not_online);
-            } else if (callError == EMCallStateChangeListener.CallError.ERROR_BUSY) {
+            } else if (callError == CallError.ERROR_BUSY) {
                 MLLog.i("对方正忙" + callError);
                 // 设置通话状态为对方在忙
                 mCallStatus = MLConstants.ML_CALL_BUSY;
                 mCallStatusView.setText(R.string.ml_call_busy);
-            } else if (callError == EMCallStateChangeListener.CallError.REJECTED) {
+            } else if (callError == CallError.REJECTED) {
                 MLLog.i("对方已拒绝" + callError);
                 // 设置通话状态为对方已拒绝
                 mCallStatus = MLConstants.ML_CALL_REFUESD;
                 mCallStatusView.setText(R.string.ml_call_reject);
-            } else if (callError == EMCallStateChangeListener.CallError.ERROR_NORESPONSE) {
+            } else if (callError == CallError.ERROR_NORESPONSE) {
                 MLLog.i("对方未响应，可能手机不在身边" + callError);
                 // 设置通话状态为对方未响应
                 mCallStatus = MLConstants.ML_CALL_NORESPONSE;
                 mCallStatusView.setText(R.string.ml_call_noresponse);
-            } else if (callError == EMCallStateChangeListener.CallError.ERROR_TRANSPORT) {
+            } else if (callError == CallError.ERROR_TRANSPORT) {
                 MLLog.i("连接建立失败" + callError);
                 // 设置通话状态为建立连接失败
                 mCallStatus = MLConstants.ML_CALL_TRANSPORT;
                 mCallStatusView.setText(R.string.ml_call_connection_fail);
-            } else if (callError == EMCallStateChangeListener.CallError.ERROR_LOCAL_VERSION_SMALLER) {
+            } else if (callError == CallError.ERROR_LOCAL_SDK_VERSION_OUTDATED) {
                 MLLog.i("双方通讯协议不同" + callError);
                 // 设置通话状态为双方协议不同
                 mCallStatus = MLConstants.ML_CALL_VERSION_DIFFERENT;
                 mCallStatusView.setText(R.string.ml_call_local_version_smaller);
-            } else if (callError == EMCallStateChangeListener.CallError.ERROR_PEER_VERSION_SMALLER) {
+            } else if (callError == CallError.ERROR_REMOTE_SDK_VERSION_OUTDATED) {
                 MLLog.i("双方通讯协议不同" + callError);
                 // 设置通话状态为双方协议不同
                 mCallStatus = MLConstants.ML_CALL_VERSION_DIFFERENT;
