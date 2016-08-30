@@ -135,17 +135,17 @@
                     android:layout_alignParentRight="true"
                     android:clipChildren="false"
                     android:visibility="visible"
-                    app:ml_indicator_color="@color/ml_theme_primary_light"
-                    app:ml_indicator_size="@dimen/ml_dimen_16"
-                    app:ml_text_color="@color/ml_black_54"
-                    app:ml_text_size="@dimen/ml_size_16"
-                    app:ml_touch_color="@color/ml_red_100"
-                    app:ml_touch_icon="@mipmap/ic_mic_white_24dp"
-                    app:ml_touch_size="@dimen/ml_dimen_48"
-                    app:ml_touch_text="滑动取消"
-                    app:ml_waveform_color="@color/ml_orange_87"
-                    app:ml_waveform_interval="@dimen/ml_dimen_2"
-                    app:ml_waveform_width="@dimen/ml_dimen_2"/>
+                    app:ml_record_indicator_color="@color/ml_theme_primary_light"
+                    app:ml_record_indicator_size="@dimen/ml_dimen_16"
+                    app:ml_record_text_color="@color/ml_black_54"
+                    app:ml_record_text_size="@dimen/ml_size_16"
+                    app:ml_record_touch_color="@color/ml_red_100"
+                    app:ml_record_touch_icon="@mipmap/ic_mic_white_24dp"
+                    app:ml_record_touch_size="@dimen/ml_dimen_48"
+                    app:ml_record_touch_text="滑动取消"
+                    app:ml_record_waveform_color="@color/ml_orange_87"
+                    app:ml_record_waveform_interval="@dimen/ml_dimen_1"
+                    app:ml_record_waveform_width="@dimen/ml_dimen_2"/>
             </RelativeLayout>
 
             <!--聊天表情框-->

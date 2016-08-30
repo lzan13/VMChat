@@ -155,7 +155,7 @@ public class MLConversationsFragment extends MLBaseFragment {
         // 将列表排序之后，要重新将置顶的item设置到顶部
         int count = 0;
         for (int i = 0; i < list.size(); i++) {
-            if (MLConversationExtUtils.getConversationPUSHPIN(list.get(i))) {
+            if (MLConversationExtUtils.getConversationPushpin(list.get(i))) {
                 mConversations.add(count, list.get(i));
                 count++;
             } else {
@@ -194,7 +194,7 @@ public class MLConversationsFragment extends MLBaseFragment {
             @Override
             public void onItemLongClick(final int position) {
                 final EMConversation conversation = mConversations.get(position);
-                final boolean isTop = MLConversationExtUtils.getConversationPUSHPIN(conversation);
+                final boolean isTop = MLConversationExtUtils.getConversationPushpin(conversation);
                 // 根据当前会话不同的状态来显示不同的长按菜单
                 List<String> menuList = new ArrayList<String>();
                 if (isTop) {

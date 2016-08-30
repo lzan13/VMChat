@@ -391,6 +391,12 @@ public class MLEasemobHelper {
                 }
                 // 遍历消息集合
                 for (EMMessage message : list) {
+                    // 更新会话时间
+                    if (message.getChatType() == EMMessage.ChatType.Chat) {
+                        MLConversationExtUtils.setConversationLastTime(EMClient.getInstance().chatManager().getConversation(message.getFrom()));
+                    } else {
+                        MLConversationExtUtils.setConversationLastTime(EMClient.getInstance().chatManager().getConversation(message.getTo()));
+                    }
                     // 使用 EventBus 发布消息，可以被订阅此类型消息的订阅者监听到
                     MLMessageEvent event = new MLMessageEvent();
                     event.setMessage(message);
@@ -695,7 +701,7 @@ public class MLEasemobHelper {
              */
             @Override
             public void onApplicationReceived(String groupId, String groupName, String applyer, String reason) {
-
+                MLLog.i("onApplicationAccept groupId:%s, groupName:%, reason:%s", groupId, groupName, reason);
             }
 
             /**
@@ -707,7 +713,7 @@ public class MLEasemobHelper {
              */
             @Override
             public void onApplicationAccept(String groupId, String groupName, String accepter) {
-
+                MLLog.i("onApplicationAccept groupId:%s, groupName:%, accepter:%s", groupId, groupName, accepter);
             }
 
             /**
@@ -720,7 +726,7 @@ public class MLEasemobHelper {
              */
             @Override
             public void onApplicationDeclined(String groupId, String groupName, String decliner, String reason) {
-
+                MLLog.i("onApplicationDeclined groupId:%s, decliner:%, sreason:%s", groupId, decliner, reason);
             }
 
             /**
@@ -732,6 +738,7 @@ public class MLEasemobHelper {
              */
             @Override
             public void onInvitationAccepted(String groupId, String invitee, String reason) {
+                MLLog.i("onInvitationAccepted groupId:%s, invitee:%, sreason:%s", groupId, invitee, reason);
 
             }
 
@@ -743,7 +750,7 @@ public class MLEasemobHelper {
              */
             @Override
             public void onInvitationDeclined(String groupId, String invitee, String reason) {
-
+                MLLog.i("onInvitationDeclined groupId:%s, invitee:%, sreason:%s", groupId, invitee, reason);
             }
 
             /**
@@ -754,7 +761,7 @@ public class MLEasemobHelper {
              */
             @Override
             public void onUserRemoved(String groupId, String groupName) {
-
+                MLLog.i("onUserRemoved groupId:%s, groupName:%s", groupId, groupName);
             }
 
             /**
@@ -765,7 +772,7 @@ public class MLEasemobHelper {
              */
             @Override
             public void onGroupDestroyed(String groupId, String groupName) {
-
+                MLLog.i("onGroupDestroyed groupId:%s, groupName:%s", groupId, groupName);
             }
 
 
@@ -778,7 +785,7 @@ public class MLEasemobHelper {
              */
             @Override
             public void onAutoAcceptInvitationFromGroup(String groupId, String inviter, String inviteMessage) {
-
+                MLLog.i("onAutoAcceptInvitationFromGroup groupId:%s, inviter:%s, inviteMessage:%s", groupId, inviter, inviteMessage);
             }
         };
         // 添加群组改变监听

@@ -17,6 +17,7 @@ import net.melove.app.chat.application.MLConstants;
 import net.melove.app.chat.application.eventbus.MLMessageEvent;
 import net.melove.app.chat.communal.util.MLDateUtil;
 import net.melove.app.chat.communal.widget.MLImageView;
+import net.melove.app.chat.communal.widget.MLWaveformView;
 import net.melove.app.chat.conversation.MLChatActivity;
 import net.melove.app.chat.conversation.MLMessageAdapter;
 
@@ -29,6 +30,8 @@ import org.greenrobot.eventbus.ThreadMode;
  * 语音消息处理类
  */
 public class MLVoiceMessageItem extends MLMessageItem {
+
+    private MLWaveformView mWaveformView;
 
 
     /**
@@ -67,9 +70,33 @@ public class MLVoiceMessageItem extends MLMessageItem {
         // 设置语音消息持续时间
         durationView.setText(String.format("%d'%d\"%d", body.getLength() / 1000 / 60, body.getLength() / 1000 % 60, body.getLength() % 1000 / 100));
 
+        mWaveformView.setWaveformCallback(waveformCallback);
+
         // 刷新界面显示
         refreshView();
     }
+
+    private MLWaveformView.MLWaveformCallback waveformCallback = new MLWaveformView.MLWaveformCallback() {
+        @Override
+        public void onStart() {
+
+        }
+
+        @Override
+        public void onStop() {
+
+        }
+
+        @Override
+        public void onDrag(int position) {
+
+        }
+
+        @Override
+        public void onError(int error) {
+
+        }
+    };
 
     /**
      * 实现当前Item 的长按操作，因为各个Item类型不同，需要的实现操作不同，所以长按菜单的弹出在Item中实现，
@@ -186,9 +213,8 @@ public class MLVoiceMessageItem extends MLMessageItem {
         resendView = (ImageView) findViewById(R.id.ml_img_msg_resend);
         msgProgressBar = (ProgressBar) findViewById(R.id.ml_progressbar_msg);
         ackStatusView = (ImageView) findViewById(R.id.ml_img_msg_ack);
-        playBtn = (ImageButton) findViewById(R.id.ml_btn_msg_play);
+        mWaveformView = (MLWaveformView) findViewById(R.id.ml_view_chat_waveform_voice);
         durationView = (TextView) findViewById(R.id.ml_text_msg_voice_duration);
-        durationProgressBar = (ProgressBar) findViewById(R.id.ml_progressbar_msg_voice);
     }
 
     @Override

@@ -138,7 +138,7 @@ public class MLVideoCallActivity extends MLCallActivity {
 
         // 初始化视频通话帮助类
         mVideoCallHelper = EMClient.getInstance().callManager().getVideoCallHelper();
-
+        mVideoCallHelper.setVideoOrientation(EMCallManager.EMVideoCallHelper.EMVideoOrientation.EMPortrait);
         // 设置自动码率  TODO 新的针对音视频优化的 SDK 不需要调用，默认直接开启
         mVideoCallHelper.setAdaptiveVideoFlag(true);
         // 设置视频通话分辨率 默认是(320, 240)

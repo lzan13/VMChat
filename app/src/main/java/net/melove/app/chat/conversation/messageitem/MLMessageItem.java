@@ -77,12 +77,8 @@ public abstract class MLMessageItem extends LinearLayout {
     // 文件消息显示文件大小
     protected TextView fileSizeView;
 
-    //  语音及视频类消息播放按钮
-    protected ImageButton playBtn;
     // 语音及视频类消息持续时间
     protected TextView durationView;
-    // 语音及视频类消息进度条
-    protected ProgressBar durationProgressBar;
 
 
     /**

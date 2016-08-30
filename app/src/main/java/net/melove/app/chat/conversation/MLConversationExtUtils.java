@@ -63,7 +63,7 @@ public class MLConversationExtUtils {
      * @param conversation 需要操作的会话对象
      * @return 返回当前会话是否置顶
      */
-    public static boolean getConversationPUSHPIN(EMConversation conversation) {
+    public static boolean getConversationPushpin(EMConversation conversation) {
         // 获取当前会话对象的扩展
         String ext = conversation.getExtField();
         // 判断扩展内容是否为空

@@ -166,25 +166,25 @@ public class MLRecordView extends View {
         if (attrs != null) {
             TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.MLRecordView);
             // 获取自定义属性值，如果没有设置就是默认值
-            touchColor = array.getColor(R.styleable.MLRecordView_ml_touch_color, touchColor);
-            touchIcon = array.getResourceId(R.styleable.MLRecordView_ml_touch_icon, touchIcon);
-            touchSize = array.getDimensionPixelOffset(R.styleable.MLRecordView_ml_touch_size, touchSize);
-            touchText = array.getString(R.styleable.MLRecordView_ml_touch_text);
+            touchColor = array.getColor(R.styleable.MLRecordView_ml_record_touch_color, touchColor);
+            touchIcon = array.getResourceId(R.styleable.MLRecordView_ml_record_touch_icon, touchIcon);
+            touchSize = array.getDimensionPixelOffset(R.styleable.MLRecordView_ml_record_touch_size, touchSize);
+            touchText = array.getString(R.styleable.MLRecordView_ml_record_touch_text);
 
-            waveformColor = array.getColor(R.styleable.MLRecordView_ml_waveform_color, waveformColor);
-            waveformInterval = array.getDimensionPixelOffset(R.styleable.MLRecordView_ml_waveform_interval, waveformInterval);
-            waveformWidth = array.getDimensionPixelOffset(R.styleable.MLRecordView_ml_waveform_width, waveformWidth);
+            waveformColor = array.getColor(R.styleable.MLRecordView_ml_record_waveform_color, waveformColor);
+            waveformInterval = array.getDimensionPixelOffset(R.styleable.MLRecordView_ml_record_waveform_interval, waveformInterval);
+            waveformWidth = array.getDimensionPixelOffset(R.styleable.MLRecordView_ml_record_waveform_width, waveformWidth);
 
-            indicatorColor = array.getColor(R.styleable.MLRecordView_ml_indicator_color, indicatorColor);
-            indicatorSize = array.getDimensionPixelOffset(R.styleable.MLRecordView_ml_indicator_size, indicatorSize);
+            indicatorColor = array.getColor(R.styleable.MLRecordView_ml_record_indicator_color, indicatorColor);
+            indicatorSize = array.getDimensionPixelOffset(R.styleable.MLRecordView_ml_record_indicator_size, indicatorSize);
 
-            textColor = array.getColor(R.styleable.MLRecordView_ml_text_color, textColor);
-            textSize = array.getDimensionPixelOffset(R.styleable.MLRecordView_ml_text_size, textSize);
+            textColor = array.getColor(R.styleable.MLRecordView_ml_record_text_color, textColor);
+            textSize = array.getDimensionPixelOffset(R.styleable.MLRecordView_ml_record_text_size, textSize);
             // 回收资源
             array.recycle();
         }
         if (touchText == null) {
-            touchText = "Slide to cancel";
+            touchText = "滑动取消";
         }
 
         // 实例化画笔
