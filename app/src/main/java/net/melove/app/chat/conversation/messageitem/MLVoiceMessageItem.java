@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -16,10 +16,12 @@ import net.melove.app.chat.R;
 import net.melove.app.chat.application.MLConstants;
 import net.melove.app.chat.application.eventbus.MLMessageEvent;
 import net.melove.app.chat.communal.util.MLDateUtil;
+import net.melove.app.chat.communal.util.MLDimenUtil;
 import net.melove.app.chat.communal.widget.MLImageView;
 import net.melove.app.chat.communal.widget.MLWaveformView;
 import net.melove.app.chat.conversation.MLChatActivity;
 import net.melove.app.chat.conversation.MLMessageAdapter;
+import net.melove.app.chat.conversation.MLVoiceManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -67,8 +69,23 @@ public class MLVoiceMessageItem extends MLMessageItem {
         msgTimeView.setText(MLDateUtil.getRelativeTime(mMessage.getMsgTime()));
         // 获取语音消息体
         EMVoiceMessageBody body = (EMVoiceMessageBody) mMessage.getBody();
-        // 设置语音消息持续时间
-        durationView.setText(String.format("%d'%d\"%d", body.getLength() / 1000 / 60, body.getLength() / 1000 % 60, body.getLength() % 1000 / 100));
+        int time = body.getLength();
+        // 设置持续时间
+        mWaveformView.setTimeText(time);
+
+        int width = 0;
+        if (time > 20 * 1000) {
+            // 音频持续时间大于60秒设置一个最大宽度
+            width = MLDimenUtil.getDimenPixel(R.dimen.ml_dimen_256);
+        } else if (time < 10 * 1000) {
+            // 音频持续时间小于8秒设置一个最小宽度
+            width = MLDimenUtil.getDimenPixel(R.dimen.ml_dimen_128);
+        } else {
+            width = MLDimenUtil.getDimenPixel(R.dimen.ml_dimen_256) * time / (20 * 1000);
+        }
+        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mWaveformView.getLayoutParams();
+        lp.width = width;
+        mWaveformView.setLayoutParams(lp);
 
         mWaveformView.setWaveformCallback(waveformCallback);
 
@@ -214,18 +231,23 @@ public class MLVoiceMessageItem extends MLMessageItem {
         msgProgressBar = (ProgressBar) findViewById(R.id.ml_progressbar_msg);
         ackStatusView = (ImageView) findViewById(R.id.ml_img_msg_ack);
         mWaveformView = (MLWaveformView) findViewById(R.id.ml_view_chat_waveform_voice);
-        durationView = (TextView) findViewById(R.id.ml_text_msg_voice_duration);
     }
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
+        // 注册订阅者
         EventBus.getDefault().register(this);
+        // 当Item可见时，启动数据采集
+        MLVoiceManager.getInstance().startVisualizer();
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+        // 取消订阅者
         EventBus.getDefault().unregister(this);
+        // 当Item不可见是取消音频数据的采集
+        MLVoiceManager.getInstance().stopVisualizer();
     }
 }

@@ -1397,7 +1397,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      */
     @Override
     public void onMessageChanged(EMMessage message, Object object) {
-        MLLog.i("onMessageChanged message:%s, object:%s", message.toString(), object.toString());
+        MLLog.i("onMessageChanged message:%s, object:%s", message.toString(), object);
         int position = mConversation.getMessagePosition(message);
         postRefreshEvent(position, 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);
     }

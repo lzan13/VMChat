@@ -64,8 +64,12 @@ public class MLWaveformView extends View {
     protected float touchCenterX;
     protected float touchCenterY;
 
-    // 时间字符内容
-    protected String textTime;
+    // 持续时间
+    protected String timeText;
+    // 文字颜色
+    protected int textColor;
+    // 文字大小
+    protected int textSize;
 
     // 波形刻度颜色
     protected int waveformColor;
@@ -119,7 +123,9 @@ public class MLWaveformView extends View {
         touchIconNormal = R.mipmap.ic_play_arrow_white_24dp;
         touchSize = MLDimenUtil.getDimenPixel(R.dimen.ml_dimen_36);
 
-        textTime = "Time";
+        timeText = "Time";
+        textColor = 0xddffffff;
+        textSize = MLDimenUtil.getDimenPixel(R.dimen.ml_size_12);
 
         // 获取控件的属性值
         if (attrs != null) {
@@ -129,6 +135,9 @@ public class MLWaveformView extends View {
             touchIconActive = array.getResourceId(R.styleable.MLWaveformView_ml_waveform_touch_icon_active, touchIconActive);
             touchIconNormal = array.getResourceId(R.styleable.MLWaveformView_ml_waveform_touch_icon_normal, touchIconNormal);
             touchSize = array.getDimensionPixelOffset(R.styleable.MLWaveformView_ml_waveform_touch_size, touchSize);
+
+            textColor = array.getColor(R.styleable.MLWaveformView_ml_waveform_text_color, textColor);
+            textSize = array.getDimensionPixelOffset(R.styleable.MLWaveformView_ml_waveform_text_size, textSize);
 
             waveformColor = array.getColor(R.styleable.MLWaveformView_ml_waveform_waveform_color, waveformColor);
             waveformInterval = array.getDimensionPixelOffset(R.styleable.MLWaveformView_ml_waveform_waveform_interval, waveformInterval);
@@ -168,12 +177,15 @@ public class MLWaveformView extends View {
      * @param canvas 当前控件画布
      */
     protected void drawText(Canvas canvas) {
-        textPaint.setTextSize(24);
-        textPaint.setColor(0xddffffff);
+        // 设置字体大小
+        textPaint.setTextSize(textSize);
+        // 设置字体颜色
+        textPaint.setColor(textColor);
         textPaint.setStrokeWidth(4);
-        float textWidth = MLDimenUtil.getTextWidth(textPaint, textTime);
+        float textWidth = MLDimenUtil.getTextWidth(textPaint, timeText);
         float textHeight = MLDimenUtil.getTextHeight(textPaint);
-        canvas.drawText(textTime, viewWidth - textWidth, textHeight, textPaint);
+        // 绘制字体
+        canvas.drawText(timeText, viewWidth - textWidth, textHeight, textPaint);
 
     }
 
@@ -213,6 +225,7 @@ public class MLWaveformView extends View {
 
         // 波形数据如果为 null 直接 return
         if (waveformBytes == null) {
+            canvas.drawLine(touchSize, viewHeight / 2, viewWidth, viewHeight, waveformPaint);
             return;
         }
 
@@ -280,6 +293,17 @@ public class MLWaveformView extends View {
         canvas.drawLines(waveformPoints, waveformPaint);
 
 
+    }
+
+    /**
+     * 设置控件持续时间
+     *
+     * @param time 持续时间
+     */
+    public void setTimeText(int time) {
+        timeText = String.format("%d'%d\"%d", time / 1000 / 60, time / 1000 % 60, time % 1000 / 100);
+        // 通知画布更新
+        postInvalidate();
     }
 
     @Override

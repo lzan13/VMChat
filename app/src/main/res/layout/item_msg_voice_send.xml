@@ -71,32 +71,20 @@
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
-                        <LinearLayout
+                        <!--语音播放并显示波形控件-->
+                        <net.melove.app.chat.communal.widget.MLWaveformView
+                            android:id="@+id/ml_view_chat_waveform_voice"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
-
-                            <!--语音播放并显示波形控件-->
-                            <net.melove.app.chat.communal.widget.MLWaveformView
-                                android:id="@+id/ml_view_chat_waveform_voice"
-                                android:layout_width="@dimen/ml_dimen_192"
-                                android:layout_height="@dimen/ml_dimen_36"
-                                android:layout_centerInParent="true"
-                                melove:ml_waveform_touch_color="@color/ml_green_87"
-                                melove:ml_waveform_touch_icon_active="@mipmap/ic_pause_white_24dp"
-                                melove:ml_waveform_touch_icon_normal="@mipmap/ic_play_arrow_white_24dp"
-                                melove:ml_waveform_touch_size="@dimen/ml_dimen_36"
-                                melove:ml_waveform_waveform_color="@color/ml_orange_87"
-                                melove:ml_waveform_waveform_width="@dimen/ml_dimen_2"/>
-                            <!--语音消息持续时间-->
-                            <TextView
-                                android:id="@+id/ml_text_msg_voice_duration"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/ml_app_name"
-                                android:textColor="@color/ml_white_54"
-                                android:textSize="@dimen/ml_size_10"/>
-                        </LinearLayout>
+                            android:layout_height="@dimen/ml_dimen_36"
+                            android:layout_centerInParent="true"
+                            melove:ml_waveform_text_color="@color/ml_white_87"
+                            melove:ml_waveform_text_size="@dimen/ml_size_10"
+                            melove:ml_waveform_touch_color="@color/ml_green_87"
+                            melove:ml_waveform_touch_icon_active="@mipmap/ic_pause_white_24dp"
+                            melove:ml_waveform_touch_icon_normal="@mipmap/ic_play_arrow_white_24dp"
+                            melove:ml_waveform_touch_size="@dimen/ml_dimen_36"
+                            melove:ml_waveform_waveform_color="@color/ml_orange_87"
+                            melove:ml_waveform_waveform_width="@dimen/ml_dimen_2"/>
                     </LinearLayout>
 
                     <LinearLayout

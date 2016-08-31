@@ -62,6 +62,10 @@
         <attr name="ml_waveform_touch_icon_active" format="reference"/>
         <!--触摸区域大小-->
         <attr name="ml_waveform_touch_size" format="dimension"/>
+        <!--文字颜色-->
+        <attr name="ml_waveform_text_color" format="color"/>
+        <!--文字大小-->
+        <attr name="ml_waveform_text_size" format="dimension"/>
         <!--波形颜色-->
         <attr name="ml_waveform_waveform_color" format="color"/>
         <!--波形间隔 树状图时才需要-->
