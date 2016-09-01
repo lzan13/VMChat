@@ -137,12 +137,12 @@ public class MLTestFragment extends MLBaseFragment {
             @Override
             public void onSuccess() {
                 MLLog.d("logout success");
-                try {
-                    Thread.sleep(1500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                EMClient.getInstance().login("lz2", "1", new EMCallBack() {
+//                try {
+//                    Thread.sleep(1500);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+                EMClient.getInstance().login("lz0", "1", new EMCallBack() {
                     @Override
                     public void onSuccess() {
                         MLLog.d("login success");

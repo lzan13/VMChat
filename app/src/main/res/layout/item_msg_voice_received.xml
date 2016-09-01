@@ -13,7 +13,6 @@
         android:orientation="horizontal">
 
         <LinearLayout
-            android:id="@+id/ml_layout_bubble"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -34,6 +33,7 @@
                     melove:ml_shape_type="round"/>
 
                 <LinearLayout
+                    android:id="@+id/ml_layout_bubble"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bubble_msg_received"
@@ -49,6 +49,14 @@
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
+                        <!--语音消息播放按钮-->
+                        <ImageButton
+                            android:id="@+id/ml_btn_chat_play_voice"
+                            android:layout_width="@dimen/ml_dimen_36"
+                            android:layout_height="@dimen/ml_dimen_36"
+                            android:background="@drawable/ml_click_rectangle_white"
+                            android:src="@drawable/ml_checkbox_play"/>
+
                         <!--语音播放并显示波形控件-->
                         <net.melove.app.chat.communal.widget.MLWaveformView
                             android:id="@+id/ml_view_chat_waveform_voice"
@@ -57,10 +65,6 @@
                             android:layout_centerInParent="true"
                             melove:ml_waveform_text_color="@color/ml_black_87"
                             melove:ml_waveform_text_size="@dimen/ml_size_10"
-                            melove:ml_waveform_touch_color="@color/ml_red_87"
-                            melove:ml_waveform_touch_icon_active="@mipmap/ic_pause_white_24dp"
-                            melove:ml_waveform_touch_icon_normal="@mipmap/ic_play_arrow_white_24dp"
-                            melove:ml_waveform_touch_size="@dimen/ml_dimen_36"
                             melove:ml_waveform_waveform_color="@color/ml_orange_87"
                             melove:ml_waveform_waveform_width="@dimen/ml_dimen_2"/>
                     </LinearLayout>

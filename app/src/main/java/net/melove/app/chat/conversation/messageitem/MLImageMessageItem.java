@@ -53,7 +53,6 @@ public class MLImageMessageItem extends MLMessageItem {
      */
     public MLImageMessageItem(Context context, MLMessageAdapter adapter, int viewType) {
         super(context, adapter, viewType);
-        onInflateView();
     }
 
     /**
@@ -350,6 +349,7 @@ public class MLImageMessageItem extends MLMessageItem {
         }
 
         // 通过 findViewById 实例化控件
+        bubbleLayout = findViewById(R.id.ml_layout_bubble);
         avatarView = (MLImageView) findViewById(R.id.ml_img_msg_avatar);
         imageView = (MLImageView) findViewById(R.id.ml_img_msg_image);
         usernameView = (TextView) findViewById(R.id.ml_text_msg_username);

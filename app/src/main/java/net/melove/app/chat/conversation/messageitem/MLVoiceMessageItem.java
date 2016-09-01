@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -33,6 +34,9 @@ import org.greenrobot.eventbus.ThreadMode;
  */
 public class MLVoiceMessageItem extends MLMessageItem {
 
+    // 播放按钮
+    protected ImageButton playVoiceBtn;
+    // 显示波形控件
     private MLWaveformView mWaveformView;
 
 
@@ -45,7 +49,6 @@ public class MLVoiceMessageItem extends MLMessageItem {
      */
     public MLVoiceMessageItem(Context context, MLMessageAdapter adapter, int viewType) {
         super(context, adapter, viewType);
-        onInflateView();
     }
 
     /**
@@ -67,12 +70,16 @@ public class MLVoiceMessageItem extends MLMessageItem {
         }
         // 设置消息时间
         msgTimeView.setText(MLDateUtil.getRelativeTime(mMessage.getMsgTime()));
+
         // 获取语音消息体
         EMVoiceMessageBody body = (EMVoiceMessageBody) mMessage.getBody();
         int time = body.getLength();
         // 设置持续时间
         mWaveformView.setTimeText(time);
+        // 设置当前播放中的 Item 的波形控件
+        MLVoiceManager.getInstance().setWaveformView(mWaveformView);
 
+        // 根据消息持续时间计算控件宽度
         int width = 0;
         if (time > 20 * 1000) {
             // 音频持续时间大于60秒设置一个最大宽度
@@ -83,34 +90,44 @@ public class MLVoiceMessageItem extends MLMessageItem {
         } else {
             width = MLDimenUtil.getDimenPixel(R.dimen.ml_dimen_256) * time / (20 * 1000);
         }
+        // 动态设置控件布局参数
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mWaveformView.getLayoutParams();
         lp.width = width;
         mWaveformView.setLayoutParams(lp);
 
+        // 设置波形控件回调，主要为了实现后期回调拖动进度
         mWaveformView.setWaveformCallback(waveformCallback);
+
+        // 判断当前语音是否在播放
+        if (MLVoiceManager.getInstance().isPlaying(message)) {
+            playVoiceBtn.setActivated(true);
+        } else {
+            playVoiceBtn.setActivated(false);
+        }
+
+        // 给按钮设置监听
+        playVoiceBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 改变按钮激活状态
+                if (playVoiceBtn.isActivated()) {
+                    playVoiceBtn.setActivated(false);
+                } else {
+                    playVoiceBtn.setActivated(true);
+                }
+                // 调用音频管理类
+                MLVoiceManager.getInstance().onPlay(mMessage);
+            }
+        });
 
         // 刷新界面显示
         refreshView();
     }
 
     private MLWaveformView.MLWaveformCallback waveformCallback = new MLWaveformView.MLWaveformCallback() {
-        @Override
-        public void onStart() {
-
-        }
-
-        @Override
-        public void onStop() {
-
-        }
 
         @Override
         public void onDrag(int position) {
-
-        }
-
-        @Override
-        public void onError(int error) {
 
         }
     };
@@ -224,13 +241,16 @@ public class MLVoiceMessageItem extends MLMessageItem {
             mInflater.inflate(R.layout.item_msg_voice_received, this);
         }
 
+        bubbleLayout = findViewById(R.id.ml_layout_bubble);
         avatarView = (MLImageView) findViewById(R.id.ml_img_msg_avatar);
         usernameView = (TextView) findViewById(R.id.ml_text_msg_username);
         msgTimeView = (TextView) findViewById(R.id.ml_text_msg_time);
         resendView = (ImageView) findViewById(R.id.ml_img_msg_resend);
         msgProgressBar = (ProgressBar) findViewById(R.id.ml_progressbar_msg);
         ackStatusView = (ImageView) findViewById(R.id.ml_img_msg_ack);
+        playVoiceBtn = (ImageButton) findViewById(R.id.ml_btn_chat_play_voice);
         mWaveformView = (MLWaveformView) findViewById(R.id.ml_view_chat_waveform_voice);
+
     }
 
     @Override

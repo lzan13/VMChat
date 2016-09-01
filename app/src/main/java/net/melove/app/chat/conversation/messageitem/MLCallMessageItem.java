@@ -34,9 +34,6 @@ public class MLCallMessageItem extends MLMessageItem {
      */
     public MLCallMessageItem(Context context, MLMessageAdapter adapter, int viewType) {
         super(context, adapter, viewType);
-
-        onInflateView();
-
     }
 
     /**
@@ -122,6 +119,7 @@ public class MLCallMessageItem extends MLMessageItem {
             mInflater.inflate(R.layout.item_msg_call_received, this);
         }
 
+        bubbleLayout = findViewById(R.id.ml_layout_bubble);
         avatarView = (MLImageView) findViewById(R.id.ml_img_msg_avatar);
         contentView = (TextView) findViewById(R.id.ml_text_msg_content);
         usernameView = (TextView) findViewById(R.id.ml_text_msg_username);

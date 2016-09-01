@@ -148,6 +148,8 @@ public class MLEasemobHelper {
          * http://www.easemob.com/apidoc/android/chat3.0/classcom_1_1hyphenate_1_1chat_1_1_e_m_options.html
          */
         EMOptions options = new EMOptions();
+        // 启动私有化配置
+        options.enableDNSConfig(true);
         // 设置Appkey，如果配置文件已经配置，这里可以不用设置
         options.setAppKey("lzan13#hxsdkdemo");
         // 设置自动登录

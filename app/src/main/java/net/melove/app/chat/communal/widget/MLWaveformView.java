@@ -48,21 +48,8 @@ public class MLWaveformView extends View {
 
     // 波形部分画笔
     protected Paint waveformPaint;
-    // 触摸部分画笔
-    protected Paint touchPaint;
     // 文字画笔
     protected Paint textPaint;
-
-    // 触摸部分颜色
-    protected int touchColor;
-    // 触摸部分图标
-    protected int touchIconActive;
-    protected int touchIconNormal;
-    // 触摸部分大小
-    protected int touchSize;
-    // 触摸区域中心坐标
-    protected float touchCenterX;
-    protected float touchCenterY;
 
     // 持续时间
     protected String timeText;
@@ -117,25 +104,15 @@ public class MLWaveformView extends View {
         waveformInterval = MLDimenUtil.getDimenPixel(R.dimen.ml_dimen_1);
         waveformWidth = MLDimenUtil.getDimenPixel(R.dimen.ml_dimen_2);
 
-        // 触摸部分默认参数
-        touchColor = 0xddff5722;
-        touchIconActive = R.mipmap.ic_pause_white_24dp;
-        touchIconNormal = R.mipmap.ic_play_arrow_white_24dp;
-        touchSize = MLDimenUtil.getDimenPixel(R.dimen.ml_dimen_36);
-
+        // 时间信息默认值
         timeText = "Time";
         textColor = 0xddffffff;
-        textSize = MLDimenUtil.getDimenPixel(R.dimen.ml_size_12);
+        textSize = MLDimenUtil.getDimenPixel(R.dimen.ml_size_10);
 
         // 获取控件的属性值
         if (attrs != null) {
             TypedArray array = mContext.obtainStyledAttributes(attrs, R.styleable.MLWaveformView);
             // 获取自定义属性值，如果没有设置就是默认值
-            touchColor = array.getColor(R.styleable.MLWaveformView_ml_waveform_touch_color, touchColor);
-            touchIconActive = array.getResourceId(R.styleable.MLWaveformView_ml_waveform_touch_icon_active, touchIconActive);
-            touchIconNormal = array.getResourceId(R.styleable.MLWaveformView_ml_waveform_touch_icon_normal, touchIconNormal);
-            touchSize = array.getDimensionPixelOffset(R.styleable.MLWaveformView_ml_waveform_touch_size, touchSize);
-
             textColor = array.getColor(R.styleable.MLWaveformView_ml_waveform_text_color, textColor);
             textSize = array.getDimensionPixelOffset(R.styleable.MLWaveformView_ml_waveform_text_size, textSize);
 
@@ -153,7 +130,6 @@ public class MLWaveformView extends View {
         waveformPaint.setAntiAlias(true);
 
         // 从前边的画笔创建新的画笔
-        touchPaint = new Paint(waveformPaint);
         textPaint = new Paint(waveformPaint);
     }
 
@@ -161,14 +137,11 @@ public class MLWaveformView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        // 绘制波形
-        drawFFT(canvas);
-
-        // 绘制触摸区域部分
-        drawTouchIcon(canvas);
-
         // 绘制文字
         drawText(canvas);
+
+        // 绘制波形
+        drawFFT(canvas);
     }
 
     /**
@@ -191,26 +164,6 @@ public class MLWaveformView extends View {
 
 
     /**
-     * 回执触摸图标
-     *
-     * @param canvas 当前控件的画布
-     */
-    protected void drawTouchIcon(Canvas canvas) {
-        touchPaint.setColor(touchColor);
-        // 绘制触摸区域圆形背景
-        canvas.drawCircle(touchCenterX, touchCenterY, touchSize / 2, touchPaint);
-
-        Bitmap bitmap = null;
-        if (isPlay) {
-            bitmap = BitmapFactory.decodeResource(mContext.getResources(), touchIconActive);
-        } else {
-            bitmap = BitmapFactory.decodeResource(mContext.getResources(), touchIconNormal);
-        }
-        // 绘制触摸图标
-        canvas.drawBitmap(bitmap, touchCenterX - bitmap.getWidth() / 2, touchCenterY - bitmap.getHeight() / 2, touchPaint);
-    }
-
-    /**
      * 绘制频谱波形图
      *
      * @param canvas
@@ -225,17 +178,17 @@ public class MLWaveformView extends View {
 
         // 波形数据如果为 null 直接 return
         if (waveformBytes == null) {
-            canvas.drawLine(touchSize, viewHeight / 2, viewWidth, viewHeight, waveformPaint);
+            canvas.drawLine(0, viewHeight / 2, viewWidth, viewHeight / 2, waveformPaint);
             return;
         }
 
         if (waveformPoints == null || waveformPoints.length < waveformBytes.length * 4) {
             waveformPoints = new float[waveformBytes.length * 4];
         }
-        float baseX = touchSize;
+        float baseX = 0;
         float baseY = viewHeight / 2;
         // 绘制时域型波形图
-        float interval = (viewWidth - touchSize) / (waveformBytes.length - 1);
+        float interval = viewWidth / (waveformBytes.length - 1);
         for (int i = 0; i < waveformBytes.length - 1; i++) {
             // 计算第i个点的x坐标
             waveformPoints[i * 4] = baseX + i * interval;
@@ -263,8 +216,8 @@ public class MLWaveformView extends View {
         // 设置画笔末尾样式
         waveformPaint.setStrokeCap(Paint.Cap.ROUND);
 
-        int count = (int) ((viewWidth - touchSize) / (waveformInterval + waveformWidth));
-        canvas.drawLine(touchSize, viewHeight, viewWidth, viewHeight, waveformPaint);
+        int count = (int) (viewWidth / (waveformInterval + waveformWidth));
+        canvas.drawLine(0, viewHeight, viewWidth, viewHeight, waveformPaint);
 
         // 波形数据如果为 null 直接 return
         if (waveformBytes == null) {
@@ -275,7 +228,7 @@ public class MLWaveformView extends View {
             waveformPoints = new float[waveformBytes.length * 4];
         }
 
-        float baseX = touchSize;
+        float baseX = 0;
         float baseY = viewHeight;
 
         // 回执频域型波形图
@@ -313,9 +266,6 @@ public class MLWaveformView extends View {
 
         viewWidth = viewBounds.right - viewBounds.left;
         viewHeight = viewBounds.bottom - viewBounds.top;
-
-        touchCenterX = 0 + touchSize / 2;
-        touchCenterY = viewHeight / 2;
     }
 
     @Override
@@ -325,27 +275,8 @@ public class MLWaveformView extends View {
         float y = event.getY();
         switch (event.getAction()) {
         case MotionEvent.ACTION_DOWN:
-            // 判断按下的位置是不是在触摸区域
-            if (x < touchCenterX - touchSize / 2 || x > touchCenterX + touchSize / 2
-                    || y < touchCenterY - touchSize / 2 || y > touchCenterY + touchSize / 2) {
-                return false;
-            }
-            isTouch = true;
-            // 设置画笔透明度
-            touchPaint.setAlpha(128);
-            invalidate();
             break;
         case MotionEvent.ACTION_UP:
-            if (isTouch) {
-                if (isPlay) {
-                    stopPlay();
-                } else {
-                    startPlay();
-                }
-            }
-            // 设置画笔透明度
-            touchPaint.setAlpha(255);
-            postInvalidate();
             break;
         case MotionEvent.ACTION_MOVE:
             if (isTouch) {
@@ -357,18 +288,7 @@ public class MLWaveformView extends View {
             break;
         }
         // 这里不调用系统的onTouchEvent方法，防止抬起时画面无法重绘
-        // return super.onTouchEvent(event);
-        return true;
-    }
-
-    private void startPlay() {
-        isPlay = true;
-        mWaveformCallback.onStart();
-    }
-
-    private void stopPlay() {
-        isPlay = false;
-        mWaveformCallback.onStop();
+        return super.onTouchEvent(event);
     }
 
     /**
@@ -406,15 +326,6 @@ public class MLWaveformView extends View {
      * 控件回调接口
      */
     public interface MLWaveformCallback {
-        /**
-         * 开始
-         */
-        public void onStart();
-
-        /**
-         * 停止
-         */
-        public void onStop();
 
         /**
          * 拖动
@@ -423,11 +334,5 @@ public class MLWaveformView extends View {
          */
         public void onDrag(int position);
 
-        /**
-         * 错误
-         *
-         * @param error
-         */
-        public void onError(int error);
     }
 }

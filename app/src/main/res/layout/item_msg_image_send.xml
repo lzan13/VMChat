@@ -13,7 +13,6 @@
         android:orientation="horizontal">
 
         <LinearLayout
-            android:id="@+id/ml_layout_bubble"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="right"
@@ -48,6 +47,7 @@
                 </RelativeLayout>
 
                 <LinearLayout
+                    android:id="@+id/ml_layout_bubble"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bubble_msg_send"

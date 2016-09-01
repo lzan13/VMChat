@@ -1,19 +1,25 @@
 package net.melove.app.chat.conversation;
 
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.audiofx.Visualizer;
 
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.EMVoiceMessageBody;
 
-import net.melove.app.chat.application.MLApplication;
+
+import net.melove.app.chat.communal.widget.MLWaveformView;
+
+import java.io.IOException;
 
 /**
  * Created by lzan13 on 2016/8/31.
+ * 音频播放管理类
  */
 public class MLVoiceManager {
 
-
+    private final int MEDIA_STATUS_NORMAL = 0;
+    private final int MEDIA_STATUS_PAUSING = 1;
+    private final int MEDIA_STATUS_PLAYING = 2;
     // 单例类的实例
     private static MLVoiceManager instance;
 
@@ -23,10 +29,14 @@ public class MLVoiceManager {
     // 音频可视化工具，主要是为了获取音频波形信息
     private Visualizer mVisualizer;
 
+    private EMVoiceMessageBody voiceMessageBody;
+
     // 是否有音频正在播放中
-    private boolean isPlay = false;
+    private int playStatus = MEDIA_STATUS_NORMAL;
     // 当前正在播放的消息ID
     private String currentMsgId;
+    // 当前播放的波形展示view
+    private MLWaveformView mWaveformView;
 
     /**
      * 私有构造方法
@@ -51,41 +61,115 @@ public class MLVoiceManager {
      * 播放
      */
     public void onPlay(EMMessage message) {
-        if (isPlay) {
-            onStop(message);
+        voiceMessageBody = (EMVoiceMessageBody) message.getBody();
+
+        if (playStatus == MEDIA_STATUS_NORMAL) {
+            // 如果正常，直接开始播放
+            playVoice();
+        } else if (playStatus == MEDIA_STATUS_PAUSING) {
             if (currentMsgId != null && currentMsgId.equals(message.getMsgId())) {
-                return;
+                // 从暂停状态恢复
+                resumePlayVoice();
+            } else {
+                // 将之前暂停的停止，开始播放新的
+                stopPlayVoice();
+                playVoice();
             }
-            // Create the MediaPlayer
+        } else if (playStatus == MEDIA_STATUS_PLAYING) {
+            if (currentMsgId != null && currentMsgId.equals(message.getMsgId())) {
+                // 点击的为正在播放的Item时 暂停播放
+                pausePlayVoice();
+            } else {
+                // 点击的不是当前播放的，停止播放之前的，播放新点击的
+                stopPlayVoice();
+                playVoice();
+            }
+        }
+        // 设置当前播放消息ID
+        currentMsgId = message.getMsgId();
+    }
+
+    /**
+     * 停止播放，并释放资源
+     */
+    public void stopPlayVoice() {
+        if (mVisualizer != null) {
+            // 释放音频可视化采集器
+            mVisualizer.release();
+            mVisualizer = null;
+        }
+
+        if (mMediaPlayer != null) {
+            // 停止播放
+            mMediaPlayer.stop();
+            // 释放 MediaPlayer
+            mMediaPlayer.release();
+            mMediaPlayer = null;
+        }
+
+    }
+
+    /**
+     * 暂停播放
+     */
+    public void pausePlayVoice() {
+        playStatus = MEDIA_STATUS_PAUSING;
+        if (mMediaPlayer != null) {
+            // 暂停播放
+            mMediaPlayer.pause();
+        }
+    }
+
+    /**
+     * 继续播放，从暂停状态恢复
+     */
+    public void resumePlayVoice() {
+        if (mMediaPlayer != null) {
+            // 当处于暂停状态时，直接调用 start 开始播放，否则重新开始加载音频文件播放
+            mMediaPlayer.start();
+        }
+    }
+
+    /**
+     * 最终播放操作
+     */
+    public void playVoice() {
+        try {
+            /**
+             * 通过 new() 的方式实例化 MediaPlayer ，也可以调用 create 方法，不过 create 必须传递Uri指向的文件
+             * 这里为了方便可以直接根据文件地址加载，使用 setDataSource() 的方法
+             *
+             * 当使用 new() 或者调用 reset() 方法时 MediaPlayer 会进入 Idle 状态
+             * 这两种方法的一个重要差别就是：如果在这个状态下调用了getDuration()等方法（相当于调用时机不正确），
+             * 通过reset()方法进入idle状态的话会触发OnErrorListener.onError()，并且MediaPlayer会进入Error状态；
+             * 如果是新创建的MediaPlayer对象，则并不会触发onError(),也不会进入Error状态；
+             */
             mMediaPlayer = new MediaPlayer();
-            mMediaPlayer.setDataSource(message.get);
-            // 设置是否循环播放 默认为 false
-            mMediaPlayer.setLooping(true);
+            // 设置数据源，即要播放的音频文件，MediaPlayer 进入 Initialized 状态，必须在 Idle 状态下调用
+            mMediaPlayer.setDataSource(voiceMessageBody.getLocalUrl());
+            // 准备 MediaPlayer 进入 Prepared 状态
+            mMediaPlayer.prepare();
+            // 设置是否循环播放 默认为 false，必须在 Prepared 状态下调用
+            mMediaPlayer.setLooping(false);
+
+            // 初始化设置 Visualizer
+//            onSetupVisualizer();
+
+            // 开始播放状态将变为 Started，必须在 Prepared 状态下进行
+            mMediaPlayer.start();
+
+            playStatus = MEDIA_STATUS_PLAYING;
 
             // 媒体播放结束监听
             mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 public void onCompletion(MediaPlayer mediaPlayer) {
                     // 取消激活 Visualizer
-                    mVisualizer.setEnabled(false);
+                    stopVisualizer();
                 }
             });
-        } else {
-
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-    }
-
-    /**
-     * 停止
-     */
-    public void onStop(EMMessage message) {
-
-    }
-
-    /**
-     * 暂停
-     */
-    public void onPause(EMMessage message) {
-
     }
 
     /**
@@ -141,23 +225,48 @@ public class MLVoiceManager {
                 true,
                 // 是否采集傅里叶变换数据
                 false);
+        startVisualizer();
     }
 
+    /**
+     * 获取当前是否播放中
+     *
+     * @return
+     */
+    public boolean isPlaying(EMMessage message) {
+        if (playStatus == MEDIA_STATUS_PLAYING && currentMsgId.equals(message.getMsgId())) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 设置当前播放中的控件
+     *
+     * @param view 当前
+     */
+    public void setWaveformView(MLWaveformView view) {
+        mWaveformView = view;
+    }
 
     /**
      * 激活 Visualizer 开始采集数据
      */
     public void startVisualizer() {
-        // 激活 Visualizer，确保需要采集数据的时候才激活他
-        mVisualizer.setEnabled(true);
+//        if (mVisualizer != null) {
+//            // 激活 Visualizer，确保需要采集数据的时候才激活他
+//            mVisualizer.setEnabled(true);
+//        }
     }
 
     /**
      * 停止数据的采集
      */
     public void stopVisualizer() {
-        // 停止 Visualizer
-        mVisualizer.setEnabled(false);
+//        if (mVisualizer != null) {
+//            // 停止 Visualizer
+//            mVisualizer.setEnabled(false);
+//        }
     }
 
 }

@@ -51,6 +51,7 @@ public abstract class MLMessageItem extends LinearLayout {
      * 聊天界面不同的item 所有要显示的控件，每个item可能显示的个数不同，
      * 比如撤回消息只显示 mContentView和 msgTimeView
      */
+    protected View bubbleLayout;
     // 显示聊天头像
     protected MLImageView avatarView;
     // 显示图片、文件消息显示文件图标
@@ -77,6 +78,7 @@ public abstract class MLMessageItem extends LinearLayout {
     // 文件消息显示文件大小
     protected TextView fileSizeView;
 
+
     /**
      * 构造方法，创建item的view，需要传递对应的参数
      *
@@ -92,24 +94,14 @@ public abstract class MLMessageItem extends LinearLayout {
         mAdapter = adapter;
         mViewType = viewType;
 
-        this.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 设置 Item 项点击的 Action
-                mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_MSG_CLICK);
-            }
-        });
-        this.setOnLongClickListener(new OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                onItemLongClick();
-                return false;
-            }
-        });
+        onInflateView();
+        onBubbleListener();
     }
 
+
+
     /**
-     * 抽象方法，填充当前 Item，子类必须实现
+     * 填充当前 Item，子类必须实现
      * 解析对应的xml 布局，填充当前 ItemView，并初始化控件
      */
     protected abstract void onInflateView();
@@ -120,6 +112,36 @@ public abstract class MLMessageItem extends LinearLayout {
      * @param message 需要展示的 EMMessage 对象
      */
     public abstract void onSetupView(EMMessage message);
+
+    /**
+     * 设置Item 气泡点击以及长按监听
+     */
+    protected void onBubbleListener() {
+        if (bubbleLayout != null) {
+            // 设置Item 气泡的点击监听
+            bubbleLayout.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemClick();
+                }
+            });
+            // 设置Item 气泡的长按监听
+            bubbleLayout.setOnLongClickListener(new OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    onItemLongClick();
+                    return false;
+                }
+            });
+        }
+    }
+    /**
+     * 当前 Item 的点击监听
+     */
+    protected void onItemClick() {
+        // 设置 Item 项点击的 Action
+        mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_MSG_CLICK);
+    }
 
     /**
      * 当前Item 长按监听

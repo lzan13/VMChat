@@ -54,14 +54,6 @@
     </declare-styleable>
 
     <declare-styleable name="MLWaveformView">
-        <!--触摸区域颜色-->
-        <attr name="ml_waveform_touch_color" format="color"/>
-        <!--触摸图标正常状态-->
-        <attr name="ml_waveform_touch_icon_normal" format="reference"/>
-        <!--触摸图标激活状态-->
-        <attr name="ml_waveform_touch_icon_active" format="reference"/>
-        <!--触摸区域大小-->
-        <attr name="ml_waveform_touch_size" format="dimension"/>
         <!--文字颜色-->
         <attr name="ml_waveform_text_color" format="color"/>
         <!--文字大小-->
