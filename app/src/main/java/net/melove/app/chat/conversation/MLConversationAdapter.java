@@ -1,8 +1,6 @@
 package net.melove.app.chat.conversation;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
@@ -25,7 +23,6 @@ import com.hyphenate.chat.EMTextMessageBody;
 
 import net.melove.app.chat.R;
 import net.melove.app.chat.application.MLConstants;
-import net.melove.app.chat.communal.base.MLBaseActivity;
 import net.melove.app.chat.communal.util.MLDateUtil;
 import net.melove.app.chat.communal.util.MLLog;
 import net.melove.app.chat.communal.widget.MLImageView;
@@ -81,12 +78,8 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
          * 这里改为通过给 EMConversation 对象添加了一个时间扩展，这样可以避免在会话没有消息时，无法显示时间的问题
          * 调用{@link MLConversationExtUtils#getConversationLastTime(EMConversation)}获取扩展里的时间
          */
-        long timestamp = 0L;
-        if (conversation.getAllMessages().size() == 0) {
-            timestamp = MLConversationExtUtils.getConversationLastTime(conversation);
-        } else {
-            timestamp = conversation.getLastMessage().getMsgTime();
-        }
+        long timestamp = MLConversationExtUtils.getConversationLastTime(conversation);
+
         // 设置时间
         holder.timeView.setText(MLDateUtil.getRelativeTime(timestamp));
 
@@ -199,7 +192,7 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
          * 判断当前会话是否置顶
          * 调用工具类{@link MLConversationExtUtils#setConversationPushpin(EMConversation, boolean)}进行设置
          */
-        if (MLConversationExtUtils.getConversationPUSHPIN(conversation)) {
+        if (MLConversationExtUtils.getConversationPushpin(conversation)) {
             holder.pushpinView.setVisibility(View.VISIBLE);
         } else {
             holder.pushpinView.setVisibility(View.GONE);

@@ -53,7 +53,6 @@ public class MLImageMessageItem extends MLMessageItem {
      */
     public MLImageMessageItem(Context context, MLMessageAdapter adapter, int viewType) {
         super(context, adapter, viewType);
-        onInflateView();
     }
 
     /**
@@ -67,14 +66,14 @@ public class MLImageMessageItem extends MLMessageItem {
 
         // 判断如果是单聊或者消息是发送方，不显示username
         if (mMessage.getChatType() == EMMessage.ChatType.Chat || mMessage.direct() == EMMessage.Direct.SEND) {
-            mUsernameView.setVisibility(View.GONE);
+            usernameView.setVisibility(View.GONE);
         } else {
             // 设置消息消息发送者的名称
-            mUsernameView.setText(message.getFrom());
-            mUsernameView.setVisibility(View.VISIBLE);
+            usernameView.setText(message.getFrom());
+            usernameView.setVisibility(View.VISIBLE);
         }
         // 设置消息时间
-        mTimeView.setText(MLDateUtil.getRelativeTime(mMessage.getMsgTime()));
+        msgTimeView.setText(MLDateUtil.getRelativeTime(mMessage.getMsgTime()));
 
         // 获取图片消息体
         EMImageMessageBody imgBody = (EMImageMessageBody) mMessage.getBody();
@@ -83,7 +82,7 @@ public class MLImageMessageItem extends MLMessageItem {
         int height = imgBody.getHeight();
         float scale = MLBitmapUtil.getZoomScale(width, height, thumbnailsMax);
         // 根据图片原图大小，来计算缩略图要显示的大小，直接设置控件宽高
-        ViewGroup.LayoutParams lp = mImageView.getLayoutParams();
+        ViewGroup.LayoutParams lp = imageView.getLayoutParams();
         if (width <= thumbnailsMax && height <= thumbnailsMax) {
             if (width < thumbnailsMin) {
                 lp.width = thumbnailsMin;
@@ -99,7 +98,7 @@ public class MLImageMessageItem extends MLMessageItem {
         mViewWidth = lp.width;
         mViewHeight = lp.height;
         // 设置显示图片控件的显示大小
-        mImageView.setLayoutParams(lp);
+        imageView.setLayoutParams(lp);
 
 
         // 判断下是否是接收方的消息
@@ -124,7 +123,7 @@ public class MLImageMessageItem extends MLMessageItem {
             thumbnailsPath = MLMessageUtils.getThumbImagePath(originalPath);
         }
         // 为图片显示控件设置tag，在设置图片显示的时候，先判断下当前的tag是否是当前item的，是则显示图片
-        //        mImageView.setTag(thumbnailsPath);
+        //        imageView.setTag(thumbnailsPath);
         // 设置缩略图的显示
         showThumbnailsImage(thumbnailsPath, originalPath);
 
@@ -194,21 +193,21 @@ public class MLImageMessageItem extends MLMessageItem {
                     .load(originalFile)
                     .crossFade()
                     .override(mViewWidth, mViewHeight)
-                    .into(mImageView);
+                    .into(imageView);
         } else if (!originalFile.exists() && thumbnailsFile.exists()) {
             // 原图不存在，只存在缩略图
             Glide.with(mContext)
                     .load(thumbnailsFile)
                     .crossFade()
                     .override(mViewWidth, mViewHeight)
-                    .into(mImageView);
+                    .into(imageView);
         } else if (!originalFile.exists() && !thumbnailsFile.exists()) {
             // 原图和缩略图都不存在
             Glide.with(mContext)
                     .load(thumbnailsFile)
                     .crossFade()
                     .override(mViewWidth, mViewHeight)
-                    .into(mImageView);
+                    .into(imageView);
         }
     }
 
@@ -222,12 +221,12 @@ public class MLImageMessageItem extends MLMessageItem {
     //        Bitmap bitmap = MLBitmapCache.getInstance().optBitmap(thumbnailsPath);
     //        if (bitmap != null) {
     //            // 判断下当前tag是否是需要显示的图片路径
-    //            if (mImageView.getTag().equals(thumbnailsPath)) {
-    //                mImageView.setImageBitmap(bitmap);
+    //            if (imageView.getTag().equals(thumbnailsPath)) {
+    //                imageView.setImageBitmap(bitmap);
     //            }
     //        } else {
     //            // 暂时没有bitmap就设置一个默认的图片
-    //            mImageView.setBackgroundResource(R.mipmap.image_default);
+    //            imageView.setBackgroundResource(R.mipmap.image_default);
     //            // 开启一个异步任务加载缩略图
     //            new AsyncTask<Object, Integer, Bitmap>() {
     //                @Override
@@ -259,8 +258,8 @@ public class MLImageMessageItem extends MLMessageItem {
     //                protected void onPostExecute(Bitmap bitmap) {
     //                    if (bitmap != null) {
     //                        // 设置图片控件为当前bitmap
-    //                        if (mImageView.getTag().equals(thumbnailsPath)) {
-    //                            mImageView.setImageBitmap(bitmap);
+    //                        if (imageView.getTag().equals(thumbnailsPath)) {
+    //                            imageView.setImageBitmap(bitmap);
     //                        }
     //                        // 将Bitmap对象添加到缓存中去
     //                        MLBitmapCache.getInstance().putBitmap(thumbnailsPath, bitmap);
@@ -294,17 +293,17 @@ public class MLImageMessageItem extends MLMessageItem {
         // 判断消息的状态，如果发送失败就显示重发按钮，并设置重发按钮的监听
         switch (mMessage.status()) {
         case SUCCESS:
-            mAckStatusView.setVisibility(View.VISIBLE);
-            mProgressLayout.setVisibility(View.GONE);
-            mResendView.setVisibility(View.GONE);
+            ackStatusView.setVisibility(View.VISIBLE);
+            progressLayout.setVisibility(View.GONE);
+            resendView.setVisibility(View.GONE);
             break;
         // 当消息在发送过程中被Kill，消息的状态会变成Create，而且永远不会发送成功，所以这里把CREATE状态莪要设置为失败
         case FAIL:
         case CREATE:
-            mAckStatusView.setVisibility(View.GONE);
-            mProgressLayout.setVisibility(View.GONE);
-            mResendView.setVisibility(View.VISIBLE);
-            mResendView.setOnClickListener(new View.OnClickListener() {
+            ackStatusView.setVisibility(View.GONE);
+            progressLayout.setVisibility(View.GONE);
+            resendView.setVisibility(View.VISIBLE);
+            resendView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_MSG_RESEND);
@@ -312,9 +311,9 @@ public class MLImageMessageItem extends MLMessageItem {
             });
             break;
         case INPROGRESS:
-            mAckStatusView.setVisibility(View.GONE);
-            mProgressLayout.setVisibility(View.VISIBLE);
-            mResendView.setVisibility(View.GONE);
+            ackStatusView.setVisibility(View.GONE);
+            progressLayout.setVisibility(View.VISIBLE);
+            resendView.setVisibility(View.GONE);
             break;
         }
         // 设置消息ACK 状态
@@ -334,7 +333,7 @@ public class MLImageMessageItem extends MLMessageItem {
         }
         if (message.getType() == EMMessage.Type.IMAGE && event.getStatus() == EMMessage.Status.INPROGRESS) {
             // 设置消息进度百分比
-            mPercentView.setText(String.valueOf(event.getProgress()));
+            percentView.setText(String.valueOf(event.getProgress()));
         }
     }
 
@@ -350,15 +349,16 @@ public class MLImageMessageItem extends MLMessageItem {
         }
 
         // 通过 findViewById 实例化控件
-        mAvatarView = (MLImageView) findViewById(R.id.ml_img_msg_avatar);
-        mImageView = (MLImageView) findViewById(R.id.ml_img_msg_image);
-        mUsernameView = (TextView) findViewById(R.id.ml_text_msg_username);
-        mTimeView = (TextView) findViewById(R.id.ml_text_msg_time);
-        mResendView = (ImageView) findViewById(R.id.ml_img_msg_resend);
-        mProgressLayout = findViewById(R.id.ml_layout_progress);
-        mProgressBar = (ProgressBar) findViewById(R.id.ml_progressbar_msg);
-        mPercentView = (TextView) findViewById(R.id.ml_text_msg_progress_percent);
-        mAckStatusView = (ImageView) findViewById(R.id.ml_img_msg_ack);
+        bubbleLayout = findViewById(R.id.ml_layout_bubble);
+        avatarView = (MLImageView) findViewById(R.id.ml_img_msg_avatar);
+        imageView = (MLImageView) findViewById(R.id.ml_img_msg_image);
+        usernameView = (TextView) findViewById(R.id.ml_text_msg_username);
+        msgTimeView = (TextView) findViewById(R.id.ml_text_msg_time);
+        resendView = (ImageView) findViewById(R.id.ml_img_msg_resend);
+        progressLayout = findViewById(R.id.ml_layout_progress);
+        msgProgressBar = (ProgressBar) findViewById(R.id.ml_progressbar_msg);
+        percentView = (TextView) findViewById(R.id.ml_text_msg_progress_percent);
+        ackStatusView = (ImageView) findViewById(R.id.ml_img_msg_ack);
     }
 
     @Override

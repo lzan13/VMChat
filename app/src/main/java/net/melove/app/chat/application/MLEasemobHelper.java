@@ -148,6 +148,8 @@ public class MLEasemobHelper {
          * http://www.easemob.com/apidoc/android/chat3.0/classcom_1_1hyphenate_1_1chat_1_1_e_m_options.html
          */
         EMOptions options = new EMOptions();
+        // 启动私有化配置
+        options.enableDNSConfig(true);
         // 设置Appkey，如果配置文件已经配置，这里可以不用设置
         options.setAppKey("lzan13#hxsdkdemo");
         // 设置自动登录
@@ -252,19 +254,19 @@ public class MLEasemobHelper {
                         MLLog.i("通话已结束" + callError);
                         // 通话结束，重置通话状态
                         MLCallStatus.getInstance().reset();
-                        if (callError == EMCallStateChangeListener.CallError.ERROR_INAVAILABLE) {
+                        if (callError == CallError.ERROR_UNAVAILABLE) {
                             MLLog.i("对方不在线" + callError);
-                        } else if (callError == EMCallStateChangeListener.CallError.ERROR_BUSY) {
+                        } else if (callError == CallError.ERROR_BUSY) {
                             MLLog.i("对方正忙" + callError);
-                        } else if (callError == EMCallStateChangeListener.CallError.REJECTED) {
+                        } else if (callError == CallError.REJECTED) {
                             MLLog.i("对方已拒绝" + callError);
-                        } else if (callError == EMCallStateChangeListener.CallError.ERROR_NORESPONSE) {
+                        } else if (callError == CallError.ERROR_NORESPONSE) {
                             MLLog.i("对方未响应，可能手机不在身边" + callError);
-                        } else if (callError == EMCallStateChangeListener.CallError.ERROR_TRANSPORT) {
+                        } else if (callError == CallError.ERROR_TRANSPORT) {
                             MLLog.i("连接建立失败" + callError);
-                        } else if (callError == EMCallStateChangeListener.CallError.ERROR_LOCAL_VERSION_SMALLER) {
+                        } else if (callError == CallError.ERROR_LOCAL_SDK_VERSION_OUTDATED) {
                             MLLog.i("双方通讯协议不同" + callError);
-                        } else if (callError == EMCallStateChangeListener.CallError.ERROR_PEER_VERSION_SMALLER) {
+                        } else if (callError == CallError.ERROR_REMOTE_SDK_VERSION_OUTDATED) {
                             MLLog.i("双方通讯协议不同" + callError);
                         } else {
                             MLLog.i("通话已结束，时长：%s，error %s", "10:35", callError);
@@ -391,6 +393,12 @@ public class MLEasemobHelper {
                 }
                 // 遍历消息集合
                 for (EMMessage message : list) {
+                    // 更新会话时间
+                    if (message.getChatType() == EMMessage.ChatType.Chat) {
+                        MLConversationExtUtils.setConversationLastTime(EMClient.getInstance().chatManager().getConversation(message.getFrom()));
+                    } else {
+                        MLConversationExtUtils.setConversationLastTime(EMClient.getInstance().chatManager().getConversation(message.getTo()));
+                    }
                     // 使用 EventBus 发布消息，可以被订阅此类型消息的订阅者监听到
                     MLMessageEvent event = new MLMessageEvent();
                     event.setMessage(message);
@@ -695,7 +703,7 @@ public class MLEasemobHelper {
              */
             @Override
             public void onApplicationReceived(String groupId, String groupName, String applyer, String reason) {
-
+                MLLog.i("onApplicationAccept groupId:%s, groupName:%, reason:%s", groupId, groupName, reason);
             }
 
             /**
@@ -707,7 +715,7 @@ public class MLEasemobHelper {
              */
             @Override
             public void onApplicationAccept(String groupId, String groupName, String accepter) {
-
+                MLLog.i("onApplicationAccept groupId:%s, groupName:%, accepter:%s", groupId, groupName, accepter);
             }
 
             /**
@@ -720,7 +728,7 @@ public class MLEasemobHelper {
              */
             @Override
             public void onApplicationDeclined(String groupId, String groupName, String decliner, String reason) {
-
+                MLLog.i("onApplicationDeclined groupId:%s, decliner:%, sreason:%s", groupId, decliner, reason);
             }
 
             /**
@@ -731,7 +739,8 @@ public class MLEasemobHelper {
              * @param reason 理由
              */
             @Override
-            public void onInvitationAccpted(String groupId, String invitee, String reason) {
+            public void onInvitationAccepted(String groupId, String invitee, String reason) {
+                MLLog.i("onInvitationAccepted groupId:%s, invitee:%, sreason:%s", groupId, invitee, reason);
 
             }
 
@@ -743,7 +752,7 @@ public class MLEasemobHelper {
              */
             @Override
             public void onInvitationDeclined(String groupId, String invitee, String reason) {
-
+                MLLog.i("onInvitationDeclined groupId:%s, invitee:%, sreason:%s", groupId, invitee, reason);
             }
 
             /**
@@ -754,7 +763,7 @@ public class MLEasemobHelper {
              */
             @Override
             public void onUserRemoved(String groupId, String groupName) {
-
+                MLLog.i("onUserRemoved groupId:%s, groupName:%s", groupId, groupName);
             }
 
             /**
@@ -764,8 +773,8 @@ public class MLEasemobHelper {
              * @param groupName 解散的群组名称
              */
             @Override
-            public void onGroupDestroy(String groupId, String groupName) {
-
+            public void onGroupDestroyed(String groupId, String groupName) {
+                MLLog.i("onGroupDestroyed groupId:%s, groupName:%s", groupId, groupName);
             }
 
 
@@ -778,7 +787,7 @@ public class MLEasemobHelper {
              */
             @Override
             public void onAutoAcceptInvitationFromGroup(String groupId, String inviter, String inviteMessage) {
-
+                MLLog.i("onAutoAcceptInvitationFromGroup groupId:%s, inviter:%s, inviteMessage:%s", groupId, inviter, inviteMessage);
             }
         };
         // 添加群组改变监听

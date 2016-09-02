@@ -13,7 +13,6 @@
         android:orientation="horizontal">
 
         <LinearLayout
-            android:id="@+id/ml_layout_bubble"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -23,7 +22,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="bottom"
                 android:orientation="horizontal">
-
+                <!--消息发送者头像-->
                 <net.melove.app.chat.communal.widget.MLImageView
                     android:id="@+id/ml_img_msg_avatar"
                     android:layout_width="@dimen/ml_dimen_40"
@@ -34,6 +33,7 @@
                     melove:ml_shape_type="round"/>
 
                 <LinearLayout
+                    android:id="@+id/ml_layout_bubble"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bubble_msg_received"
@@ -42,7 +42,7 @@
                     android:paddingLeft="@dimen/ml_dimen_12"
                     android:paddingRight="@dimen/ml_dimen_8"
                     android:paddingTop="@dimen/ml_dimen_8">
-
+                    <!--消息内容-->
                     <TextView
                         android:id="@+id/ml_text_msg_content"
                         android:layout_width="wrap_content"
@@ -60,7 +60,7 @@
                         android:layout_marginBottom="@dimen/ml_dimen_2"
                         android:layout_marginTop="@dimen/ml_dimen_4"
                         android:orientation="horizontal">
-
+                        <!--消息发送者名称-->
                         <TextView
                             android:id="@+id/ml_text_msg_username"
                             android:layout_width="wrap_content"
@@ -69,7 +69,7 @@
                             android:text="@string/ml_hint_username"
                             android:textColor="@color/ml_black_54"
                             android:textSize="@dimen/ml_size_8"/>
-
+                        <!--消息时间-->
                         <TextView
                             android:id="@+id/ml_text_msg_time"
                             android:layout_width="wrap_content"
@@ -83,22 +83,23 @@
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/ml_dimen_4">
+                    android:layout_marginRight="@dimen/ml_dimen_4">
 
+                    <!--消息发送进度圈-->
+                    <ProgressBar
+                        android:id="@+id/ml_progressbar_msg"
+                        android:layout_width="@dimen/ml_dimen_24"
+                        android:layout_height="@dimen/ml_dimen_24"
+                        android:layout_centerInParent="true"
+                        android:visibility="gone"/>
+                    <!--重发按钮-->
                     <ImageView
                         android:id="@+id/ml_img_msg_resend"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@mipmap/ic_retry_normal"
                         android:visibility="gone"/>
-
-                    <ProgressBar
-                        android:id="@+id/ml_progressbar_msg"
-                        android:layout_width="@dimen/ml_dimen_16"
-                        android:layout_height="@dimen/ml_dimen_16"
-                        android:layout_centerInParent="true"
-                        android:visibility="gone"/>
-
+                    <!--消息ACK状态图标-->
                     <ImageView
                         android:id="@+id/ml_img_msg_ack"
                         android:layout_width="wrap_content"

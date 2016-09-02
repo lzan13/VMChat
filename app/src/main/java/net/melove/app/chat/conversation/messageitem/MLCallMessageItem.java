@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.hyphenate.chat.EMMessage;
@@ -35,9 +34,6 @@ public class MLCallMessageItem extends MLMessageItem {
      */
     public MLCallMessageItem(Context context, MLMessageAdapter adapter, int viewType) {
         super(context, adapter, viewType);
-
-        onInflateView();
-
     }
 
     /**
@@ -51,19 +47,19 @@ public class MLCallMessageItem extends MLMessageItem {
 
         // 判断如果是单聊或者消息是发送方，不显示username
         if (mMessage.getChatType() == EMMessage.ChatType.Chat || mMessage.direct() == EMMessage.Direct.SEND) {
-            mUsernameView.setVisibility(View.GONE);
+            usernameView.setVisibility(View.GONE);
         } else {
             // 设置消息消息发送者的名称
-            mUsernameView.setText(message.getFrom());
-            mUsernameView.setVisibility(View.VISIBLE);
+            usernameView.setText(message.getFrom());
+            usernameView.setVisibility(View.VISIBLE);
         }
 
         // 设置消息时间
-        mTimeView.setText(MLDateUtil.getRelativeTime(message.getMsgTime()));
+        msgTimeView.setText(MLDateUtil.getRelativeTime(message.getMsgTime()));
 
         EMTextMessageBody body = (EMTextMessageBody) mMessage.getBody();
         String messageStr = body.getMessage().toString();
-        mContentView.setText(messageStr);
+        contentView.setText(messageStr);
 
         if (mMessage.getBooleanAttribute(MLConstants.ML_ATTR_CALL_VIDEO, false)) {
             mCallIcon.setImageResource(R.mipmap.ic_videocam_white_24dp);
@@ -123,10 +119,11 @@ public class MLCallMessageItem extends MLMessageItem {
             mInflater.inflate(R.layout.item_msg_call_received, this);
         }
 
-        mAvatarView = (MLImageView) findViewById(R.id.ml_img_msg_avatar);
-        mContentView = (TextView) findViewById(R.id.ml_text_msg_content);
-        mUsernameView = (TextView) findViewById(R.id.ml_text_msg_username);
-        mTimeView = (TextView) findViewById(R.id.ml_text_msg_time);
+        bubbleLayout = findViewById(R.id.ml_layout_bubble);
+        avatarView = (MLImageView) findViewById(R.id.ml_img_msg_avatar);
+        contentView = (TextView) findViewById(R.id.ml_text_msg_content);
+        usernameView = (TextView) findViewById(R.id.ml_text_msg_username);
+        msgTimeView = (TextView) findViewById(R.id.ml_text_msg_time);
         mCallIcon = (ImageView) findViewById(R.id.ml_img_msg_call);
     }
 

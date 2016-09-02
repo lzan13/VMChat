@@ -10,11 +10,11 @@ MLEaseChat
 ```gradle
 AndroidStudio 2.1.2
 Android SDK Tools 25.1.7
-Android SDK Build-tools 24.0.1
-Android SDK compileSdkVersion 23
+Android SDK Build-tools 24.0.2
+Android SDK compileSdkVersion 24
 Android SDK targetSdkVersion 22
 Android SDK minSdkVersion 15
-Gradle 2.12
+Gradle 2.10
 Genymotion 2.7.2
 ```
 
@@ -22,18 +22,21 @@ Genymotion 2.7.2
 ```gradle
     compile fileTree(include: ['*.jar'], dir: 'libs')
     /**
-     *  新的遵循 Android  Material design 设计风格库，此扩展库已经包含了一下三个扩展库，如果引入了design，就不需要再单独引入其他库
-     *  support-v4
-     *  appcomat-v7
-     *  recyclerView库
+     *   新的遵循 Android  Material design 设计风格库，此扩展库已经包含了一下三个扩展库，如果引入了design，
+     *   就不需要再单独引入其他库
+     *   support-v4
+     *   appcomat-v7
+     *   recyclerView库
      */
-    compile 'com.android.support:design:23.3.0'
+    compile 'com.android.support:design:24.2.0'
+    // 解决方法数超过65536问题扩展库
+    compile 'com.android.support:multidex:1.0.0'
     // Google Play Service 库，使用GCM推送需要
-    compile "com.google.android.gms:play-services-gcm:9.0.0"
+    compile 'com.google.android.gms:play-services-gcm:9.0.0'
     // LeakCanary Debug库，开源捕获内存溢出的库
-    compile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
     // LeakCanary 发版的库
-    // compile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
     // 第三方图片加载库
     compile 'com.github.bumptech.glide:glide:3.7.0'
     // 观察者模式解耦库
@@ -41,10 +44,11 @@ Genymotion 2.7.2
     // 支持手势缩放的ImageView
     compile 'com.bm.photoview:library:1.4.1'
     /**
-     *  引入各种第三方 SDK jar包，在上边 fileTree 里已经包含了libs，这里可以不用再单独添加
+     *   引入各种第三方 SDK jar包，在上边 fileTree 里已经包含了libs，这里可以不用再单独添加
      */
-    compile files('libs/MiPush_SDK_Client_2_2_21.jar')
-    compile files('libs/hyphenatechat_3.1.3.jar')
+    compile files('libs/MiPush_SDK_Client_3_0_3.jar')
+    compile files('libs/hyphenatechat_3.1.5.jar')
+    compile files('libs/HwPush_SDK_V2705.jar')
 ```
 
 已实现模块儿
@@ -56,7 +60,8 @@ Genymotion 2.7.2
 - 文本消息的收发与显示
 - 图片消息的收发
 - 查看大图
-- 文件消息
+- 文件消息收发
+- 语音消息的收发，以及录制语音控件的自定义实现
 - 消息的重发
 - 消息回执状态的展示
 - 消息监听与聊天界面刷新
@@ -64,6 +69,7 @@ Genymotion 2.7.2
 - 好友申请监听与处理
 - 语音通话以及通话界面的最小化与恢复
 - 视频通话以及通话界面最小化，恢复后有bug，看不了对方图像，待解决
+
 
 
 #### 扩展模块

@@ -40,7 +40,6 @@ public class MLFileMessageItem extends MLMessageItem {
      */
     public MLFileMessageItem(Context context, MLMessageAdapter adapter, int viewType) {
         super(context, adapter, viewType);
-        onInflateView();
     }
 
     /**
@@ -54,22 +53,22 @@ public class MLFileMessageItem extends MLMessageItem {
 
         // 判断如果是单聊或者消息是发送方，不显示username
         if (mMessage.getChatType() == EMMessage.ChatType.Chat || mMessage.direct() == EMMessage.Direct.SEND) {
-            mUsernameView.setVisibility(View.GONE);
+            usernameView.setVisibility(View.GONE);
         } else {
             // 设置消息消息发送者的名称
-            mUsernameView.setText(message.getFrom());
-            mUsernameView.setVisibility(View.VISIBLE);
+            usernameView.setText(message.getFrom());
+            usernameView.setVisibility(View.VISIBLE);
         }
         // 设置消息时间
-        mTimeView.setText(MLDateUtil.getRelativeTime(mMessage.getMsgTime()));
+        msgTimeView.setText(MLDateUtil.getRelativeTime(mMessage.getMsgTime()));
 
         EMNormalFileMessageBody fileBody = (EMNormalFileMessageBody) mMessage.getBody();
         String filename = fileBody.getFileName();
         // 设置文件名
-        mContentView.setText(filename);
+        contentView.setText(filename);
         // 设置文件大小
         String fileExtend = filename.substring(filename.lastIndexOf(".") + 1, filename.length());
-        mContentSizeView.setText(TextFormater.getDataSize(fileBody.getFileSize()) + "  " + fileExtend);
+        fileSizeView.setText(TextFormater.getDataSize(fileBody.getFileSize()) + "  " + fileExtend);
 
         // 刷新界面显示
         refreshView();
@@ -132,17 +131,17 @@ public class MLFileMessageItem extends MLMessageItem {
         // 判断消息的状态，如果发送失败就显示重发按钮，并设置重发按钮的监听
         switch (mMessage.status()) {
         case SUCCESS:
-            mAckStatusView.setVisibility(View.VISIBLE);
-            mProgressLayout.setVisibility(View.GONE);
-            mResendView.setVisibility(View.GONE);
+            ackStatusView.setVisibility(View.VISIBLE);
+            progressLayout.setVisibility(View.GONE);
+            resendView.setVisibility(View.GONE);
             break;
         case FAIL:
         case CREATE:
             // 当消息在发送过程中被Kill，消息的状态会变成Create，而且永远不会发送成功，所以这里把CREATE状态莪要设置为失败
-            mAckStatusView.setVisibility(View.GONE);
-            mProgressLayout.setVisibility(View.GONE);
-            mResendView.setVisibility(View.VISIBLE);
-            mResendView.setOnClickListener(new OnClickListener() {
+            ackStatusView.setVisibility(View.GONE);
+            progressLayout.setVisibility(View.GONE);
+            resendView.setVisibility(View.VISIBLE);
+            resendView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_MSG_RESEND);
@@ -150,9 +149,9 @@ public class MLFileMessageItem extends MLMessageItem {
             });
             break;
         case INPROGRESS:
-            mAckStatusView.setVisibility(View.GONE);
-            mProgressLayout.setVisibility(View.VISIBLE);
-            mResendView.setVisibility(View.GONE);
+            ackStatusView.setVisibility(View.GONE);
+            progressLayout.setVisibility(View.VISIBLE);
+            resendView.setVisibility(View.GONE);
             break;
         }
         // 设置消息ACK 状态
@@ -172,7 +171,7 @@ public class MLFileMessageItem extends MLMessageItem {
         }
         if (message.getType() == EMMessage.Type.IMAGE && event.getStatus() == EMMessage.Status.INPROGRESS) {
             // 设置消息进度百分比
-            mPercentView.setText(String.valueOf(event.getProgress()));
+            percentView.setText(String.valueOf(event.getProgress()));
         }
     }
 
@@ -187,17 +186,18 @@ public class MLFileMessageItem extends MLMessageItem {
             mInflater.inflate(R.layout.item_msg_file_received, this);
         }
 
-        mAvatarView = (MLImageView) findViewById(R.id.ml_img_msg_avatar);
-        mImageView = (MLImageView) findViewById(R.id.ml_img_msg_image);
-        mUsernameView = (TextView) findViewById(R.id.ml_text_msg_username);
-        mTimeView = (TextView) findViewById(R.id.ml_text_msg_time);
-        mContentView = (TextView) findViewById(R.id.ml_text_msg_content);
-        mContentSizeView = (TextView) findViewById(R.id.ml_text_msg_size);
-        mResendView = (ImageView) findViewById(R.id.ml_img_msg_resend);
-        mProgressLayout = findViewById(R.id.ml_layout_progress);
-        mProgressBar = (ProgressBar) findViewById(R.id.ml_progressbar_msg);
-        mPercentView = (TextView) findViewById(R.id.ml_text_msg_progress_percent);
-        mAckStatusView = (ImageView) findViewById(R.id.ml_img_msg_ack);
+        bubbleLayout = findViewById(R.id.ml_layout_bubble);
+        avatarView = (MLImageView) findViewById(R.id.ml_img_msg_avatar);
+        imageView = (MLImageView) findViewById(R.id.ml_img_msg_image);
+        usernameView = (TextView) findViewById(R.id.ml_text_msg_username);
+        msgTimeView = (TextView) findViewById(R.id.ml_text_msg_time);
+        contentView = (TextView) findViewById(R.id.ml_text_msg_content);
+        fileSizeView = (TextView) findViewById(R.id.ml_text_msg_size);
+        resendView = (ImageView) findViewById(R.id.ml_img_msg_resend);
+        progressLayout = findViewById(R.id.ml_layout_progress);
+        msgProgressBar = (ProgressBar) findViewById(R.id.ml_progressbar_msg);
+        percentView = (TextView) findViewById(R.id.ml_text_msg_progress_percent);
+        ackStatusView = (ImageView) findViewById(R.id.ml_img_msg_ack);
     }
 
     @Override

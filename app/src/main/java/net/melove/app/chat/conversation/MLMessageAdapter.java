@@ -16,6 +16,7 @@ import net.melove.app.chat.conversation.messageitem.MLImageMessageItem;
 import net.melove.app.chat.conversation.messageitem.MLMessageItem;
 import net.melove.app.chat.conversation.messageitem.MLRecallMessageItem;
 import net.melove.app.chat.conversation.messageitem.MLTextMessageItem;
+import net.melove.app.chat.conversation.messageitem.MLVoiceMessageItem;
 
 import java.util.List;
 
@@ -94,22 +95,31 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
     public int getItemViewType(int position) {
         EMMessage message = mMessages.get(position);
         int itemType = -1;
-        // 判断是否为撤回类型的消息
+        // 判断消息类型
         if (message.getBooleanAttribute(MLConstants.ML_ATTR_RECALL, false)) {
+            // 撤回消息
             itemType = MLConstants.MSG_TYPE_SYS_RECALL;
         } else if (message.getBooleanAttribute(MLConstants.ML_ATTR_CALL_VIDEO, false)
                 || message.getBooleanAttribute(MLConstants.ML_ATTR_CALL_VOICE, false)) {
+            // 音视频消息
             itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_CALL_SEND : MLConstants.MSG_TYPE_CALL_RECEIVED;
         } else {
             switch (message.getType()) {
             case TXT:
+                // 文本消息
                 itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_TEXT_SEND : MLConstants.MSG_TYPE_TEXT_RECEIVED;
                 break;
             case IMAGE:
+                // 语音消息
                 itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_IMAGE_SEND : MLConstants.MSG_TYPE_IMAGE_RECEIVED;
                 break;
             case FILE:
+                // 文件消息
                 itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_FILE_SEND : MLConstants.MSG_TYPE_FILE_RECEIVED;
+                break;
+            case VOICE:
+                // 语音消息
+                itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_VOICE_SEND : MLConstants.MSG_TYPE_VOICE_RECEIVED;
                 break;
             default:
                 // 默认返回txt类型
@@ -148,6 +158,11 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
         case MLConstants.MSG_TYPE_FILE_SEND:
         case MLConstants.MSG_TYPE_FILE_RECEIVED:
             holder = new MessageViewHolder(new MLFileMessageItem(mContext, this, viewType));
+            break;
+        // 正常的语音消息
+        case MLConstants.MSG_TYPE_VOICE_SEND:
+        case MLConstants.MSG_TYPE_VOICE_RECEIVED:
+            holder = new MessageViewHolder(new MLVoiceMessageItem(mContext, this, viewType));
             break;
         /**
          * 自定义类型的消息

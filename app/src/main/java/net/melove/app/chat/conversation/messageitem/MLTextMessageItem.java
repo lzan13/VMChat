@@ -35,8 +35,6 @@ public class MLTextMessageItem extends MLMessageItem {
     public MLTextMessageItem(Context context, MLMessageAdapter adapter, int viewType) {
         super(context, adapter, viewType);
 
-        onInflateView();
-
     }
 
     /**
@@ -50,19 +48,19 @@ public class MLTextMessageItem extends MLMessageItem {
 
         // 判断如果是单聊或者消息是发送方，不显示username
         if (mMessage.getChatType() == EMMessage.ChatType.Chat || mMessage.direct() == EMMessage.Direct.SEND) {
-            mUsernameView.setVisibility(View.GONE);
+            usernameView.setVisibility(View.GONE);
         } else {
             // 设置消息消息发送者的名称
-            mUsernameView.setText(message.getFrom());
-            mUsernameView.setVisibility(View.VISIBLE);
+            usernameView.setText(message.getFrom());
+            usernameView.setVisibility(View.VISIBLE);
         }
 
         // 设置消息时间
-        mTimeView.setText(MLDateUtil.getRelativeTime(message.getMsgTime()));
+        msgTimeView.setText(MLDateUtil.getRelativeTime(message.getMsgTime()));
 
         EMTextMessageBody body = (EMTextMessageBody) mMessage.getBody();
         String messageStr = body.getMessage().toString();
-        mContentView.setText(messageStr);
+        contentView.setText(messageStr);
 
         // 刷新界面显示
         refreshView();
@@ -126,17 +124,17 @@ public class MLTextMessageItem extends MLMessageItem {
         // 判断消息的状态，如果发送失败就显示重发按钮，并设置重发按钮的监听
         switch (mMessage.status()) {
         case SUCCESS:
-            mAckStatusView.setVisibility(View.VISIBLE);
-            mProgressBar.setVisibility(View.GONE);
-            mResendView.setVisibility(View.GONE);
+            ackStatusView.setVisibility(View.VISIBLE);
+            msgProgressBar.setVisibility(View.GONE);
+            resendView.setVisibility(View.GONE);
             break;
         // 当消息在发送过程中被Kill，消息的状态会变成Create，而且永远不会发送成功，这里把Create和Fail归为同一个状态
         case FAIL:
         case CREATE:
-            mAckStatusView.setVisibility(View.GONE);
-            mProgressBar.setVisibility(View.GONE);
-            mResendView.setVisibility(View.VISIBLE);
-            mResendView.setOnClickListener(new View.OnClickListener() {
+            ackStatusView.setVisibility(View.GONE);
+            msgProgressBar.setVisibility(View.GONE);
+            resendView.setVisibility(View.VISIBLE);
+            resendView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_MSG_RESEND);
@@ -144,9 +142,9 @@ public class MLTextMessageItem extends MLMessageItem {
             });
             break;
         case INPROGRESS:
-            mAckStatusView.setVisibility(View.GONE);
-            mProgressBar.setVisibility(View.VISIBLE);
-            mResendView.setVisibility(View.GONE);
+            ackStatusView.setVisibility(View.GONE);
+            msgProgressBar.setVisibility(View.VISIBLE);
+            resendView.setVisibility(View.GONE);
             break;
         }
         // 设置消息ACK 状态
@@ -164,13 +162,14 @@ public class MLTextMessageItem extends MLMessageItem {
             mInflater.inflate(R.layout.item_msg_text_received, this);
         }
 
-        mAvatarView = (MLImageView) findViewById(R.id.ml_img_msg_avatar);
-        mContentView = (TextView) findViewById(R.id.ml_text_msg_content);
-        mUsernameView = (TextView) findViewById(R.id.ml_text_msg_username);
-        mTimeView = (TextView) findViewById(R.id.ml_text_msg_time);
-        mResendView = (ImageView) findViewById(R.id.ml_img_msg_resend);
-        mProgressBar = (ProgressBar) findViewById(R.id.ml_progressbar_msg);
-        mAckStatusView = (ImageView) findViewById(R.id.ml_img_msg_ack);
+        bubbleLayout = findViewById(R.id.ml_layout_bubble);
+        avatarView = (MLImageView) findViewById(R.id.ml_img_msg_avatar);
+        contentView = (TextView) findViewById(R.id.ml_text_msg_content);
+        usernameView = (TextView) findViewById(R.id.ml_text_msg_username);
+        msgTimeView = (TextView) findViewById(R.id.ml_text_msg_time);
+        resendView = (ImageView) findViewById(R.id.ml_img_msg_resend);
+        msgProgressBar = (ProgressBar) findViewById(R.id.ml_progressbar_msg);
+        ackStatusView = (ImageView) findViewById(R.id.ml_img_msg_ack);
     }
 
 }
