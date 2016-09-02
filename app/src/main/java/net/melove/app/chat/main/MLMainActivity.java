@@ -459,7 +459,7 @@ public class MLMainActivity extends MLBaseActivity implements
             }
             return true;
         }
-        return false;
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override

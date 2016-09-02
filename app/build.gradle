@@ -90,26 +90,26 @@ dependencies {
      *   appcomat-v7
      *   recyclerView库
      */
-    compile 'com.android.support:design:24.2.0'
     // 解决方法数超过65536问题扩展库
-    compile 'com.android.support:multidex:1.0.0'
     // Google Play Service 库，使用GCM推送需要
-    compile 'com.google.android.gms:play-services-gcm:9.0.0'
     // LeakCanary Debug库，开源捕获内存溢出的库
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
     // LeakCanary 发版的库
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
     // 第三方图片加载库
-    compile 'com.github.bumptech.glide:glide:3.7.0'
     // 观察者模式解耦库
-    compile 'org.greenrobot:eventbus:3.0.0'
     // 支持手势缩放的ImageView
-    compile 'com.bm.photoview:library:1.4.1'
     /**
      *   引入各种第三方 SDK jar包，在上边 fileTree 里已经包含了libs，这里可以不用再单独添加
      */
     compile files('libs/MiPush_SDK_Client_3_0_3.jar')
     compile files('libs/hyphenatechat_3.1.5.jar')
     compile files('libs/HwPush_SDK_V2705.jar')
+    compile 'com.android.support:design:24.2.0'
+    compile 'com.android.support:multidex:1.0.0'
+    compile 'com.google.android.gms:play-services-gcm:9.4.0'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'org.greenrobot:eventbus:3.0.0'
+    compile 'com.bm.photoview:library:1.4.1'
 }
 
