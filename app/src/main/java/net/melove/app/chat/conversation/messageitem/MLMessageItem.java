@@ -99,7 +99,6 @@ public abstract class MLMessageItem extends LinearLayout {
     }
 
 
-
     /**
      * 填充当前 Item，子类必须实现
      * 解析对应的xml 布局，填充当前 ItemView，并初始化控件
@@ -135,6 +134,7 @@ public abstract class MLMessageItem extends LinearLayout {
             });
         }
     }
+
     /**
      * 当前 Item 的点击监听
      */
@@ -190,13 +190,13 @@ public abstract class MLMessageItem extends LinearLayout {
 
     @Override
     protected void onAttachedToWindow() {
-        MLLog.i("onAttachedToWindow %s", mMessage.getMsgId());
+        //        MLLog.i("onAttachedToWindow %s", mMessage.getMsgId());
         super.onAttachedToWindow();
     }
 
     @Override
     protected void onDetachedFromWindow() {
-        MLLog.i("onDetachedFromWindow %s", mMessage.getMsgId());
+        //        MLLog.i("onDetachedFromWindow %s", mMessage.getMsgId());
         // 检查是否有弹出框，如果有则销毁，防止界面销毁时出现异常
         if (alertDialog != null && alertDialog.isShowing()) {
             alertDialog.dismiss();

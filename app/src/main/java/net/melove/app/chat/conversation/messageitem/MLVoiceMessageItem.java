@@ -95,31 +95,31 @@ public class MLVoiceMessageItem extends MLMessageItem {
         lp.width = width;
         mWaveformView.setLayoutParams(lp);
 
-        // 设置波形控件回调，主要为了实现后期回调拖动进度
-        mWaveformView.setWaveformCallback(waveformCallback);
+        // 设置播放状态
+        setPlayStatus();
 
-        // 判断当前语音是否在播放
-        if (MLVoiceManager.getInstance().isPlaying(message)) {
-            playVoiceBtn.setActivated(true);
-        } else {
-            playVoiceBtn.setActivated(false);
+        // 判断当前Item 是否正在播放，然后设置数据更新回调
+        if (MLVoiceManager.getInstance().isPlaying(mMessage)) {
+            MLVoiceManager.getInstance().setVoiceCallback(voiceCallback);
         }
 
         // 给按钮设置监听
         playVoiceBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 改变按钮激活状态
-                if (playVoiceBtn.isActivated()) {
-                    playVoiceBtn.setActivated(false);
-                } else {
-                    playVoiceBtn.setActivated(true);
+                // 判断当前Item 是否正在播放，然后设置数据更新回调，这里点击和上边的判断不同，这里要主动去设置
+                if (!MLVoiceManager.getInstance().isPlaying(mMessage)) {
+                    MLVoiceManager.getInstance().setVoiceCallback(voiceCallback);
                 }
                 // 调用音频管理类
                 MLVoiceManager.getInstance().onPlay(mMessage);
+                // 设置播放状态
+                setPlayStatus();
             }
         });
 
+        // 设置波形控件回调，主要为了实现后期回调拖动进度
+        mWaveformView.setWaveformCallback(waveformCallback);
         // 刷新界面显示
         refreshView();
     }
@@ -129,6 +129,18 @@ public class MLVoiceMessageItem extends MLMessageItem {
         @Override
         public void onDrag(int position) {
 
+        }
+    };
+
+    private MLVoiceManager.MLVoiceCallback voiceCallback = new MLVoiceManager.MLVoiceCallback() {
+        @Override
+        public void onUpdateData(byte[] data, int position) {
+            mWaveformView.updateWaveformData(data, position);
+        }
+
+        @Override
+        public void onStop() {
+            setPlayStatus();
         }
     };
 
@@ -176,6 +188,19 @@ public class MLVoiceMessageItem extends MLMessageItem {
         });
         alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+    }
+
+    /**
+     * 设置消息播放状态，这里根据当前是否正在播放来判断状态，
+     * 需要和{@link MLVoiceManager}联系起来
+     */
+    private void setPlayStatus() {
+        // 判断当前语音是否在播放
+        if (MLVoiceManager.getInstance().isPlaying(mMessage)) {
+            playVoiceBtn.setActivated(true);
+        } else {
+            playVoiceBtn.setActivated(false);
+        }
     }
 
     /**
@@ -259,7 +284,7 @@ public class MLVoiceMessageItem extends MLMessageItem {
         // 注册订阅者
         EventBus.getDefault().register(this);
         // 当Item可见时，启动数据采集
-        MLVoiceManager.getInstance().startVisualizer();
+        //        MLVoiceManager.getInstance().startVisualizer();
     }
 
     @Override
@@ -268,6 +293,6 @@ public class MLVoiceMessageItem extends MLMessageItem {
         // 取消订阅者
         EventBus.getDefault().unregister(this);
         // 当Item不可见是取消音频数据的采集
-        MLVoiceManager.getInstance().stopVisualizer();
+        //        MLVoiceManager.getInstance().stopVisualizer();
     }
 }

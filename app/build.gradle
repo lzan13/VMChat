@@ -2,8 +2,8 @@ apply plugin: 'com.android.application'
 
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion '24.0.1'
+    compileSdkVersion 24
+    buildToolsVersion '24.0.2'
     defaultConfig {
         applicationId "net.melove.app.chat"
         minSdkVersion 15
@@ -90,7 +90,7 @@ dependencies {
      *   appcomat-v7
      *   recyclerView库
      */
-    compile 'com.android.support:design:23.3.0'
+    compile 'com.android.support:design:24.2.0'
     // 解决方法数超过65536问题扩展库
     compile 'com.android.support:multidex:1.0.0'
     // Google Play Service 库，使用GCM推送需要

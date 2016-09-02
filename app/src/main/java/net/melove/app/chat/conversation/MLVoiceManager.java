@@ -23,6 +23,8 @@ public class MLVoiceManager {
     // 单例类的实例
     private static MLVoiceManager instance;
 
+    private MLVoiceCallback mVoiceCallback;
+
     // 媒体播放器
     private MediaPlayer mMediaPlayer;
 
@@ -93,12 +95,17 @@ public class MLVoiceManager {
      * 停止播放，并释放资源
      */
     public void stopPlayVoice() {
+        // 设置当前状态为正常
+        playStatus = MEDIA_STATUS_NORMAL;
+        currentMsgId = null;
+
+        // 释放 Visualizer
         if (mVisualizer != null) {
             // 释放音频可视化采集器
             mVisualizer.release();
             mVisualizer = null;
         }
-
+        // 释放 MediaPlayer
         if (mMediaPlayer != null) {
             // 停止播放
             mMediaPlayer.stop();
@@ -106,17 +113,26 @@ public class MLVoiceManager {
             mMediaPlayer.release();
             mMediaPlayer = null;
         }
-
+        // 调用停止回调，通知实现回调的类
+        if (mVoiceCallback != null) {
+            mVoiceCallback.onStop();
+        }
     }
 
     /**
      * 暂停播放
      */
     public void pausePlayVoice() {
-        playStatus = MEDIA_STATUS_PAUSING;
+        // 取消Visualizer 采集数据
+        unableVisualizer();
         if (mMediaPlayer != null) {
             // 暂停播放
             mMediaPlayer.pause();
+            // 设置当前状态为暂停中
+            playStatus = MEDIA_STATUS_PAUSING;
+        } else {
+            // 设置当前状态为正常
+            playStatus = MEDIA_STATUS_NORMAL;
         }
     }
 
@@ -124,9 +140,17 @@ public class MLVoiceManager {
      * 继续播放，从暂停状态恢复
      */
     public void resumePlayVoice() {
+        // 激活Visualizer 采集数据
+        enableVisualizer();
+
         if (mMediaPlayer != null) {
             // 当处于暂停状态时，直接调用 start 开始播放，否则重新开始加载音频文件播放
             mMediaPlayer.start();
+            // 设置当前状态为播放中
+            playStatus = MEDIA_STATUS_PLAYING;
+        } else {
+            // 设置当前状态为正常
+            playStatus = MEDIA_STATUS_NORMAL;
         }
     }
 
@@ -153,18 +177,19 @@ public class MLVoiceManager {
             mMediaPlayer.setLooping(false);
 
             // 初始化设置 Visualizer
-//            onSetupVisualizer();
+            onSetupVisualizer();
 
             // 开始播放状态将变为 Started，必须在 Prepared 状态下进行
             mMediaPlayer.start();
 
+            // 设置当前状态为播放中
             playStatus = MEDIA_STATUS_PLAYING;
 
             // 媒体播放结束监听
             mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 public void onCompletion(MediaPlayer mediaPlayer) {
-                    // 取消激活 Visualizer
-                    stopVisualizer();
+                    // 调用停止播放方法，主要是为了释放资源
+                    stopPlayVoice();
                 }
             });
         } catch (IOException e) {
@@ -202,8 +227,10 @@ public class MLVoiceManager {
                      */
                     @Override
                     public void onFftDataCapture(Visualizer visualizer, byte[] fft, int samplingRate) {
-                        // 用 FFT 频域傅里叶变换数据更新 mVisualizerView 组件
-                        mWaveformView.updateFFTData(fft, mMediaPlayer.getCurrentPosition());
+                        // 用 FFT 频域傅里叶变换数据更新
+                        if (mVoiceCallback != null) {
+                            mVoiceCallback.onUpdateData(fft, mMediaPlayer.getCurrentPosition());
+                        }
                     }
 
                     /**
@@ -215,8 +242,10 @@ public class MLVoiceManager {
                      */
                     @Override
                     public void onWaveFormDataCapture(Visualizer visualizer, byte[] waveform, int samplingRate) {
-                        // 用 Waveform 波形数据更新 mVisualizerView 组件
-                        mWaveformView.updateWaveformData(waveform, mMediaPlayer.getCurrentPosition());
+                        // 用 Waveform 波形数据更新
+                        if (mVoiceCallback != null) {
+                            mVoiceCallback.onUpdateData(waveform, mMediaPlayer.getCurrentPosition());
+                        }
                     }
                 },
                 // 最大采样率
@@ -225,7 +254,7 @@ public class MLVoiceManager {
                 true,
                 // 是否采集傅里叶变换数据
                 false);
-        startVisualizer();
+        enableVisualizer();
     }
 
     /**
@@ -252,21 +281,43 @@ public class MLVoiceManager {
     /**
      * 激活 Visualizer 开始采集数据
      */
-    public void startVisualizer() {
-//        if (mVisualizer != null) {
-//            // 激活 Visualizer，确保需要采集数据的时候才激活他
-//            mVisualizer.setEnabled(true);
-//        }
+    public void enableVisualizer() {
+        if (mVisualizer != null) {
+            // 激活 Visualizer，确保需要采集数据的时候才激活他
+            mVisualizer.setEnabled(true);
+        }
     }
 
     /**
      * 停止数据的采集
      */
-    public void stopVisualizer() {
-//        if (mVisualizer != null) {
-//            // 停止 Visualizer
-//            mVisualizer.setEnabled(false);
-//        }
+    public void unableVisualizer() {
+        if (mVisualizer != null) {
+            // 停止 Visualizer
+            mVisualizer.setEnabled(false);
+        }
+    }
+
+    public void setVoiceCallback(MLVoiceCallback callback) {
+        mVoiceCallback = callback;
+    }
+
+    /**
+     * 语音播放管理类的回调函数，主要是给当前播放的 Item 回调变化数据
+     */
+    public interface MLVoiceCallback {
+        /**
+         * 更新播放中采集到的数据
+         *
+         * @param data     音频数据信息
+         * @param position 当前播放进度
+         */
+        public void onUpdateData(byte[] data, int position);
+
+        /**
+         * 停止播放，一般是播放完成
+         */
+        public void onStop();
     }
 
 }
