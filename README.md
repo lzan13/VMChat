@@ -10,8 +10,8 @@ MLEaseChat
 ```gradle
 AndroidStudio 2.1.2
 Android SDK Tools 25.1.7
-Android SDK Build-tools 24.0.1
-Android SDK compileSdkVersion 23
+Android SDK Build-tools 24.0.2
+Android SDK compileSdkVersion 24
 Android SDK targetSdkVersion 22
 Android SDK minSdkVersion 15
 Gradle 2.10
@@ -28,7 +28,7 @@ Genymotion 2.7.2
      *   appcomat-v7
      *   recyclerView库
      */
-    compile 'com.android.support:design:24.0.0'
+    compile 'com.android.support:design:24.2.0'
     // 解决方法数超过65536问题扩展库
     compile 'com.android.support:multidex:1.0.0'
     // Google Play Service 库，使用GCM推送需要
@@ -47,7 +47,7 @@ Genymotion 2.7.2
      *   引入各种第三方 SDK jar包，在上边 fileTree 里已经包含了libs，这里可以不用再单独添加
      */
     compile files('libs/MiPush_SDK_Client_3_0_3.jar')
-    compile files('libs/hyphenatechat_3.1.4.jar')
+    compile files('libs/hyphenatechat_3.1.5.jar')
     compile files('libs/HwPush_SDK_V2705.jar')
 ```
 
@@ -61,7 +61,7 @@ Genymotion 2.7.2
 - 图片消息的收发
 - 查看大图
 - 文件消息收发
-- 语音消息的收发
+- 语音消息的收发，以及录制语音控件的自定义实现
 - 消息的重发
 - 消息回执状态的展示
 - 消息监听与聊天界面刷新
