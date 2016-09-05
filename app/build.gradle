@@ -10,36 +10,42 @@ android {
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
+        //默认渠道
+        manifestPlaceholders = [UMENG_CHANNEL: "dev"]
     }
 
     // 配置签名信息
     signingConfigs {
         // Debug 使用默认签名
-//        debug {
-//            storeFile file("debug.keystore")
-//        }
-        // 发布时用自己的签名
+        debug {
+
+        }
+        // 发布时用自己的签名，这里因为是敏感信息，等下读取配置文件来设置
         release {
-            storeFile file("lzan13.keystore")
-            storePassword "lzan13"
-            keyAlias "lzan13"
-            keyPassword "lzan13"
+            storeFile
+            storePassword
+            keyAlias
+            keyPassword
         }
     }
+    // 获取签名配置信息
+    optSigningConfigs()
 
     buildTypes {
         debug {
-//            applicationIdSuffix ".debug"
-//            signingConfig signingConfigs.debug
+            // 给debug包的包名加上后缀
+            applicationIdSuffix ".debug"
+            signingConfig signingConfigs.debug
         }
         release {
-            signingConfig signingConfigs.release
             // 是否开启压缩
             zipAlignEnabled true
             // 是否开启混淆
             minifyEnabled true
             // 打包时删除无用资源 依赖于混淆，必须和 minifyEnabled 一起使用
             shrinkResources true
+            // 设置正式打包的签名
+            signingConfig signingConfigs.release
             // 混淆文件
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -53,24 +59,14 @@ android {
 //    }
 
     // 多渠道打包配置
-//    productFlavors {
-//        baidu {}
-//        googlePlay {}
-//        qihu360 {}
-//        wandoujia {}
-//        xiaomi {}
-//    }
-//    productFlavors.all {
-//        flavor -> flavor.manifestPlaceholders = [ML_CHANNEL_ID: name]
-//    }
-
-    // 多appkey 打包
-//    productFlavors {
-//        "lzan13#hxsdkdemo" {}
-//    }
-//    productFlavors.all {
-//        flavor -> flavor.manifestPlaceholders = [EM_APPKEY: name]
-//    }
+    productFlavors {
+        googlePlay {}
+        wandoujia {}
+        xiaomi {}
+    }
+    productFlavors.all {
+        flavor -> flavor.manifestPlaceholders = [ML_CHANNEL_ID: name]
+    }
 
     // 增量编译
     dexOptions {
@@ -113,3 +109,31 @@ dependencies {
     compile 'com.bm.photoview:library:1.4.1'
 }
 
+//读取签名配置文件
+def optSigningConfigs() {
+
+    // 设置要读取的配置文件
+    def propFile = file('app-config.properties')
+    if (propFile.canRead()) {
+        def Properties props = new Properties()
+        props.load(new FileInputStream(propFile))
+        // 判断签名配置信息是否存在
+        if (props != null && props.containsKey('ML_STORE_FILE')
+                && props.containsKey('ML_STORE_PASSWORD')
+                && props.containsKey('ML_KEY_ALIAS')
+                && props.containsKey('ML_KEY_PASSWORD')) {
+            android.signingConfigs.release.storeFile = file(props['ML_STORE_FILE'])
+            android.signingConfigs.release.storePassword = props['ML_STORE_PASSWORD']
+            android.signingConfigs.release.keyAlias = props['ML_KEY_ALIAS']
+            android.signingConfigs.release.keyPassword = props['ML_KEY_PASSWORD']
+        } else {
+            // 当配置文件签名项为空时，将 release 时的签名设置为null
+            println 'app-config.properties 找不到签名项，检查配置文件'
+            android.buildTypes.release.signingConfig = null
+        }
+    } else {
+        // 当配置文件为空时，将 release 时的签名设置为null
+        println 'app-config.properties 找不到配置文件'
+        android.buildTypes.release.signingConfig = null
+    }
+}
