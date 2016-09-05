@@ -1084,7 +1084,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     /**
      * ---------------------------- RecyclerView 刷新方法 -----------------------------------
      * 使用 EventBus 的订阅模式实现消息变化的监听，这里 EventBus 3.x 使用注解的方式确定方法调用的线程
-     * <p>
+     * <p/>
      * 这里调用下 {@link MLMessageAdapter}里封装的方法
      * 最终还是去调用{@link android.support.v7.widget.RecyclerView.Adapter}已有的 notify 方法
      * 消息的状态改变需要调用 item changed方法
@@ -1094,12 +1094,12 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemMoved(int, int)}
      * 新插入消息需要调用 item inserted
      * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemInserted(int)}
-     * TODO 改变多条需要 item range changed
+     * 条目改变刷新方法，改变多条需要 item range changed
      * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRangeChanged(int, int)}
      * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRangeChanged(int, int, Object)}
      * 插入多条消息需要调用 item range inserted（加载更多消息时需要此刷新）
      * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRangeInserted(int, int)}
-     * 删除多条内容需要 item range removed（TODO 清空或者删除多条消息需要此方法）
+     * 删除多条内容需要 item range removed（清空或者删除多条消息需要此方法）
      * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRangeRemoved(int, int)}
      * 删除消息需要 item removed
      * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRemoved(int)}
@@ -1108,6 +1108,14 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventBus(MLRefreshEvent event) {
+        /**
+         * 睡眠 100 毫秒，防止刷新时消息还没有加入到 conversation 中，导致界面没有出现新消息
+         */
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         MLLog.i("onEventBus -0- adapter item count %d, conversation %d", mLayoutManger.getItemCount(), mConversation.getAllMessages().size());
         /**
          * 先调用{@link MLMessageAdapter#refreshMessageData()}更新{@link MLMessageAdapter}的数据源，
@@ -1306,7 +1314,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     /**
      * --------------------------------- Message Listener -------------------------------------
      * 环信消息监听主要方法
-     * <p>
+     * <p/>
      * 收到新消息
      *
      * @param list 收到的新消息集合

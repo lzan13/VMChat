@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 
-
 android {
     compileSdkVersion 24
     buildToolsVersion '24.0.2'
@@ -9,7 +8,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 22
         versionCode 1
-        versionName '1.0'
+        versionName '1.0.0'
     }
 
     // 配置签名信息
@@ -27,7 +26,7 @@ android {
         }
     }
     // 获取签名配置信息
-    optSigningConfigs()
+    optConfigs()
 
     buildTypes {
         debug {
@@ -46,6 +45,17 @@ android {
             signingConfig signingConfigs.release
             // 混淆文件
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            //修改生成的apk名字，格式为 app名_版本号_打包时间_渠道名_release.apk
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    def oldFile = output.outputFile
+                    if (variant.buildType.name.equals('release')) {
+                        def releaseApkName = "MLChat_v${defaultConfig.versionName}_${releaseTime()}_" + variant.productFlavors[0].name + '_release.apk'
+                        output.outputFile = new File(oldFile.parent, releaseApkName)
+                    }
+                }
+            }
         }
     }
     // 文件路径映射配置
@@ -77,11 +87,11 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     /**
-     *    新的遵循 Android  Material design 设计风格库，此扩展库已经包含了一下三个扩展库，如果引入了design，
-     *    就不需要再单独引入其他库
-     *    support-v4
-     *    appcomat-v7
-     *    recyclerView库
+     *     新的遵循 Android  Material design 设计风格库，此扩展库已经包含了一下三个扩展库，如果引入了design，
+     *     就不需要再单独引入其他库
+     *     support-v4
+     *     appcomat-v7
+     *     recyclerView库
      */
     compile 'com.android.support:design:24.2.0'
     // 解决方法数超过65536问题扩展库
@@ -98,9 +108,8 @@ dependencies {
     compile 'org.greenrobot:eventbus:3.0.0'
     // 支持手势缩放的ImageView
     compile 'com.bm.photoview:library:1.4.1'
-
     /**
-     *    引入各种第三方 SDK jar包，在上边 fileTree 里已经包含了libs，这里可以不用再单独添加
+     *     引入各种第三方 SDK jar包，在上边 fileTree 里已经包含了libs，这里可以不用再单独添加
      */
     compile files('libs/xiaomi_push_v303.jar')
     compile files('libs/huanxin_chat_v315.jar')
@@ -108,9 +117,8 @@ dependencies {
     compile files('libs/talkingdata_analytics_v2230.jar')
 }
 
-//读取签名配置文件
-def optSigningConfigs() {
-
+//读取配置文件
+def optConfigs() {
     // 设置要读取的配置文件
     def propFile = file('app-config.properties')
     if (propFile.canRead()) {
@@ -135,4 +143,9 @@ def optSigningConfigs() {
         println 'app-config.properties 找不到配置文件'
         android.buildTypes.release.signingConfig = null
     }
+}
+
+// 获取当前系统时间
+def releaseTime() {
+    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
 }
