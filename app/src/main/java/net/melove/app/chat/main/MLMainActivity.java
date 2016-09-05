@@ -83,9 +83,9 @@ public class MLMainActivity extends MLBaseActivity implements
             EMClient.getInstance().groupManager().loadAllGroups();
             // 加载所有本地会话到内存
             EMClient.getInstance().chatManager().loadAllConversations();
-            // 获取加载回话使用的时间差 毫秒表示
+            // 获取加载回话和群组数据消耗时间毫秒表示
             long costTime = System.currentTimeMillis() - start;
-            MLLog.d("Load groups and load conversations cost time %d" + costTime);
+            MLLog.d("Load groups and load conversations cost time %d", costTime);
         } else {
             // 跳转到登录界面
             Intent intent = new Intent(this, MLSigninActivity.class);

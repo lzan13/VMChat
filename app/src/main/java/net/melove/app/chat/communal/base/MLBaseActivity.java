@@ -203,7 +203,6 @@ public class MLBaseActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        mActivity = this;
         MLLog.i("%s onStart", className);
         // 将 activity 添加到集合中去
         MLEasemobHelper.getInstance().addActivity(mActivity);

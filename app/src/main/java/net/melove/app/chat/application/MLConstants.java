@@ -17,6 +17,9 @@ public class MLConstants {
     // 华为推送 APPID
     public static final String ML_HUAWEI_APP_ID = "10598250";
 
+    // TalkingData统计平台 APPID
+    public static final String TD_APP_ID = "6227388DE1332BBBF47E55EB85290B58";
+
     /**
      * 设置自己扩展的 key，包括会话对象{@link com.hyphenate.chat.EMConversation}扩展，
      * 以及消息{@link com.hyphenate.chat.EMMessage}扩展

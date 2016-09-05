@@ -264,9 +264,13 @@
         </receiver>
         <!-- 小米推送 end -->
 
-        <!-- 设置多渠道打包的渠道名，ML_CHANNEL_ID 是渠道名占位符 -->
+        <!--这里使用TalkingData进行统计-->
         <meta-data
-            android:name="ML_CHANNEL_NAME"
+            android:name="TD_APP_ID"
+            android:value="6227388DE1332BBBF47E55EB85290B58"/>
+        <!-- 设置多渠道打包的渠道名，ML_CHANNEL_ID 是渠道名占位符-->
+        <meta-data
+            android:name="TD_CHANNEL_ID"
             android:value="${ML_CHANNEL_ID}"/>
 
     </application>
