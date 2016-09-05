@@ -102,10 +102,10 @@ dependencies {
     /**
      *    引入各种第三方 SDK jar包，在上边 fileTree 里已经包含了libs，这里可以不用再单独添加
      */
-    compile files('libs/MiPush_SDK_Client_3_0_3.jar')
-    compile files('libs/hyphenatechat_3.1.5.jar')
-    compile files('libs/HwPush_SDK_V2705.jar')
-    compile files('libs/TalkingData_Analytics_SDK_V2.2.30.jar')
+    compile files('libs/xiaomi_push_v303.jar')
+    compile files('libs/huanxin_chat_v315.jar')
+    compile files('libs/huawei_push_v2705.jar')
+    compile files('libs/talkingdata_analytics_v2230.jar')
 }
 
 //读取签名配置文件
