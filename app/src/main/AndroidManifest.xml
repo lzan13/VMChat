@@ -17,8 +17,6 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <!-- 读取手机状态 -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <!--唤醒锁屏-->
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <!-- 写入外部存储 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <!-- 访问精确定位 -->
@@ -174,9 +172,6 @@
         <meta-data
             android:name="EASEMOB_APPKEY"
             android:value="lzan13#hxsdkdemo"/>
-        <!--<meta-data-->
-        <!--android:name="EASEMOB_APPKEY"-->
-        <!--android:value="${EM_APPKEY}"/>-->
         <!--配置私有化聊天地址-->
         <!--<meta-data-->
         <!--android:name="EASEMOB_CHAT_ADDRESS"-->
@@ -269,10 +264,14 @@
         </receiver>
         <!-- 小米推送 end -->
 
-        <!-- 设置多渠道打包的渠道名，ML_CHANNEL_ID 是渠道名占位符 -->
-        <!-- <meta-data -->
-        <!-- android:name="ML_CHANNEL_NAME" -->
-        <!-- android:value="${ML_CHANNEL_ID}"/> -->
+        <!--这里使用TalkingData进行统计-->
+        <meta-data
+            android:name="TD_APP_ID"
+            android:value="6227388DE1332BBBF47E55EB85290B58"/>
+        <!-- 设置多渠道打包的渠道名，ML_CHANNEL_ID 是渠道名占位符-->
+        <meta-data
+            android:name="TD_CHANNEL_ID"
+            android:value="${ML_CHANNEL_ID}"/>
 
     </application>
 

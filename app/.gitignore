@@ -2,4 +2,6 @@
 #/libs
 #/src/main/jniLibs
 /app.iml
-/debug.keysotre
+/debug.keystore
+/app-config.properties
+/keystore.jks
