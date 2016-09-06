@@ -1175,13 +1175,14 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             mToolbar.setTitle(mChatId);
         }
         /**
-         * 睡眠 100 毫秒，防止刷新时消息还没有加入到 conversation 中，导致界面没有出现新消息
+         * TODO 因为发送消息时是通过线程池处理，导致发送时可能没加到内存，下个版本会移出线程操作
+         * 所以睡眠 100 毫秒，防止刷新时消息还没有加入到 conversation 中，导致界面没有出现新消息
          */
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Thread.sleep(100);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
         MLLog.i("onEventBus -0- adapter item count %d, conversation %d", mLayoutManger.getItemCount(), mConversation.getAllMessages().size());
         /**
          * 先调用{@link MLMessageAdapter#refreshMessageData()}更新{@link MLMessageAdapter}的数据源，
