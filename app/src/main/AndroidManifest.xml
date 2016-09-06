@@ -151,7 +151,6 @@
         <!-- 测试 Activity -->
         <activity
             android:name=".test.MLTestActivity"
-            android:label="@string/title_activity_mltest"
             android:parentActivityName=".communal.base.MLBaseActivity"
             android:theme="@style/MLTheme.Default">
             <meta-data

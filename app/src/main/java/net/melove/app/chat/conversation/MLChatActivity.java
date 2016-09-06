@@ -64,6 +64,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by lzan13 on 2015/10/12 15:00.
@@ -73,10 +74,19 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
 
     // 界面控件
     private Toolbar mToolbar;
+
+    // 对话框
+    private AlertDialog.Builder alertDialogBuilder;
+    private AlertDialog photoModeDialog;
+    private AlertDialog callModeDialog;
+    // 进度对话框
+    private ProgressDialog progressDialog;
+
     // 消息监听器
     private EMMessageListener mMessageListener;
     // 当前聊天的 ID
     private String mChatId;
+    // 当前登录账户username
     private String mCurrUsername;
     // 当前会话对象
     private EMConversation mConversation;
@@ -97,35 +107,34 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     // 当前是否在最底部
     private boolean isBottom = true;
 
-    // 聊天扩展菜单主要打开图片、视频、文件、位置等
-    private LinearLayout mAttachMenuLayout;
-    private GridView mAttachMenuGridView;
-    private Uri mCameraImageUri = null;
-
-
-    // 对话框
-    private AlertDialog.Builder alertDialogBuilder;
-    private AlertDialog photoModeDialog;
-    private AlertDialog callModeDialog;
-
-    private ProgressDialog progressDialog;
-
-
     // 是否发送原图
     private boolean isOrigin = true;
 
     // 是否为阅后即焚
     private boolean isBurn;
+    // 检测输入状态的开始时间
+    private long mOldTime;
+    // 定时器，主要用来更新对方输入状态
+    private Timer mTimer;
+    // 记录对方输入状态
+    private boolean isInput;
 
     // 设置每次下拉分页加载多少条
     private int mPageSize = 15;
 
+    // 聊天扩展菜单主要打开图片、视频、文件、位置等
+    private LinearLayout mAttachMenuLayout;
+    private GridView mAttachMenuGridView;
+    private Uri mCameraImageUri = null;
+
     // 聊天内容输入框
     private EditText mInputView;
+
     // 表情按钮
     private View mEmotionView;
     private View mKeyboardView;
     private RelativeLayout mEmotionLayout;
+
     // 发送按钮
     private View mSendView;
     // 录音控件
@@ -169,7 +178,9 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
 
         // 初始化输入框控件，并添加输入框监听
         mInputView = (EditText) findViewById(R.id.ml_edit_chat_input);
-        setTextWatcher();
+        mOldTime = 0;
+        // 设置输入框的内容变化简体呢
+        setEditTextWatcher();
 
         // 获取输入按钮控件对象
         mEmotionView = findViewById(R.id.ml_img_chat_emotion);
@@ -356,25 +367,49 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     }
 
     /**
-     * 设置输入框监听
+     * 设置输入框内容的监听 在调用此方法的地方要加一个判断，只有当聊天为群聊时才需要监视
      */
-    private void setTextWatcher() {
+    private void setEditTextWatcher() {
         mInputView.addTextChangedListener(new TextWatcher() {
+            /**
+             * 输入框内容改变之前
+             * params s         输入框内容改变前的内容
+             * params start     输入框内容开始变化的索引位置，从0开始计数
+             * params count     输入框内容将要减少的变化的字符数 大于0 表示删除字符
+             * params after     输入框内容将要增加的文本的长度，大于0 表示增加字符
+             */
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                MLLog.d("beforeTextChanged s-%s, start-%d, count-%d, after-%d", s, start, count, after);
             }
 
             /**
-             * 检测输入框内容变化
-             *
-             * @param s 输入框内容
+             * 输入框内容改变
+             * params s         输入框内容改变后的内容
+             * params start     输入框内容开始变化的索引位置，从0开始计数
+             * params before    输入框内容减少的文本的长度
+             * params count     输入框内容改变的字符数量
+             */
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                MLLog.d("onTextChanged s-%s, start-%d, before-%d, count-%d", s, start, before, count);
+                // 当新增内容长度为1时采取判断增加的字符是否为@符号
+                if (mConversation.getType() == EMConversation.EMConversationType.Chat) {
+                    if ((MLDateUtil.getCurrentMillisecond() - mOldTime) > MLConstants.ML_TIME_INPUT_STATUS) {
+                        mOldTime = System.currentTimeMillis();
+                        // 调用发送输入状态方法
+                        MLMessageUtils.sendInputStatusMessage(mChatId);
+                    }
+                }
+            }
+
+            /**
+             * 输入框内容改变之后
+             * params s 输入框最终的内容
              */
             @Override
             public void afterTextChanged(Editable s) {
+                MLLog.d("afterTextChanged s-" + s);
                 if (s.toString().equals("")) {
                     mSendView.setVisibility(View.GONE);
                     mRecordView.setVisibility(View.VISIBLE);
@@ -382,8 +417,6 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                     mSendView.setVisibility(View.VISIBLE);
                     mRecordView.setVisibility(View.GONE);
                 }
-                Timer timer = new Timer();
-                timer.purge();
             }
         });
     }
@@ -627,7 +660,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             @Override
             public void onSuccess() {
                 MLLog.i("消息发送成功 msgId %s, content %s", message.getMsgId(), message.getBody());
-                // 创建并发出一个消息事件
+                // 创建并发出一个可订阅的关于的消息事件
                 MLMessageEvent event = new MLMessageEvent();
                 event.setMessage(message);
                 event.setStatus(message.status());
@@ -637,7 +670,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             @Override
             public void onError(final int i, final String s) {
                 MLLog.i("消息发送失败 code: %d, error: %s", i, s);
-                // 创建并发出一个消息事件
+                // 创建并发出一个可订阅的关于的消息事件
                 MLMessageEvent event = new MLMessageEvent();
                 event.setMessage(message);
                 event.setStatus(message.status());
@@ -652,7 +685,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             public void onProgress(int i, String s) {
                 // TODO 消息发送进度，这里不处理，留给消息Item自己去更新
                 MLLog.i("消息发送中 progress: %d, %s", i, s);
-                // 创建并发出一个消息事件
+                // 创建并发出一个可订阅的关于的消息事件
                 MLMessageEvent event = new MLMessageEvent();
                 event.setMessage(message);
                 event.setStatus(message.status());
@@ -1023,6 +1056,34 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         }
     }
 
+    /**
+     * 设置对方正在输入状态，主要是接收到CMD消息后，得知对方正在输入
+     */
+    private void setInputStatus() {
+        // 设置title为正在输入状态
+        mToolbar.setTitle(R.string.ml_title_input_status);
+        if (mTimer == null) {
+            mTimer = new Timer();
+        } else {
+            mTimer.purge();
+        }
+        // 创建定时器任务
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                // 执行定时器把当前对方输入状态设置为false
+                isInput = false;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mToolbar.setTitle(mChatId);
+                    }
+                });
+            }
+        };
+        // 设置定时任务
+        mTimer.schedule(task, MLConstants.ML_TIME_INPUT_STATUS);
+    }
 
     /**
      * 使用注解的方式订阅消息改变事件，主要监听发送消息的回调状态改变：
@@ -1037,12 +1098,14 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     public void onEventBus(MLMessageEvent event) {
         // 获取订阅事件包含的消息对象
         EMMessage message = event.getMessage();
+        // 判断是不是对方输入状态的信息
+        if (message.getType() == EMMessage.Type.CMD && isInput) {
+            setInputStatus();
+            return;
+        }
         // 获取消息状态
         EMMessage.Status status = event.getStatus();
-        if (status == EMMessage.Status.SUCCESS) {
-            // 消息状态回调完毕，刷新当前消息显示，这里不论成功失败都要刷新，TODO 进度的改变交由个字的Item自己去实现
-            postRefreshEvent(mConversation.getMessagePosition(message), 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);
-        } else if (status == EMMessage.Status.FAIL) {
+        if (status == EMMessage.Status.FAIL) {
             String errorMessage = null;
             int errorCode = event.getErrorCode();
             if (errorCode == EMError.MESSAGE_INCLUDE_ILLEGAL_CONTENT) {
@@ -1059,9 +1122,9 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 errorMessage = mActivity.getString(R.string.ml_toast_msg_send_faild);
             }
             MLToast.errorToast(errorMessage + event.getErrorMessage() + "-" + errorCode).show();
-            // 消息状态回调完毕，刷新当前消息显示，这里不论成功失败都要刷新，TODO 进度的改变交由个字的Item自己去实现
-            postRefreshEvent(mConversation.getMessagePosition(message), 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);
         }
+        // 消息状态回调完毕，刷新当前消息显示，这里不论成功失败都要刷新，TODO 进度的改变交由个字的Item自己去实现
+        postRefreshEvent(mConversation.getMessagePosition(message), 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);
     }
 
     /**
@@ -1108,6 +1171,9 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventBus(MLRefreshEvent event) {
+        if (!isInput) {
+            mToolbar.setTitle(mChatId);
+        }
         /**
          * 睡眠 100 毫秒，防止刷新时消息还没有加入到 conversation 中，导致界面没有出现新消息
          */
@@ -1331,6 +1397,9 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 // 调用刷新方法，因为到来的消息可能不是当前会话的，所以要循环判断
                 int position = mConversation.getMessagePosition(message);
                 postRefreshEvent(position, 1, MLConstants.ML_NOTIFY_REFRESH_INSERTED);
+
+                // 收到新消息就把对方正在输入状态设置为false
+                isInput = false;
             } else {
                 // 如果消息不是当前会话的消息发送通知栏通知
                 MLNotifier.getInstance().sendNotificationMessage(message);
@@ -1352,11 +1421,23 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             // 判断是不是撤回消息的透传
             if (body.action().equals(MLConstants.ML_ATTR_RECALL)) {
                 boolean result = MLMessageUtils.receiveRecallMessage(mActivity, cmdMessage);
-                if (result) {
+                // 撤回消息之后，判断是否当前聊天界面，用来刷新界面
+                if (mChatId.equals(cmdMessage.getFrom()) && result) {
                     String msgId = cmdMessage.getStringAttribute(MLConstants.ML_ATTR_MSG_ID, null);
                     int position = mConversation.getMessagePosition(mConversation.getMessage(msgId, true));
                     postRefreshEvent(position, 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);
                 }
+            }
+            // 判断消息是否是当前会话的消息，并且收到的CMD是否是输入状态的消息
+            if (mChatId.equals(cmdMessage.getFrom()) && body.action().equals(MLConstants.ML_ATTR_INPUT_STATUS)
+                    && cmdMessage.getChatType() == EMMessage.ChatType.Chat
+                    && cmdMessage.getFrom().equals(mChatId)) {
+                // 收到输入状态新消息则把对方正在输入状态设置为true
+                isInput = true;
+                // 创建并发出一个可订阅的关于的消息事件
+                MLMessageEvent event = new MLMessageEvent();
+                event.setMessage(cmdMessage);
+                EventBus.getDefault().post(event);
             }
         }
     }
