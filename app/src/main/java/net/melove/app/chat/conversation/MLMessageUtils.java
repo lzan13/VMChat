@@ -6,6 +6,7 @@ import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.PathUtil;
 
 import net.melove.app.chat.application.MLConstants;
@@ -98,6 +99,21 @@ public class MLMessageUtils {
         // 更新消息
         result = EMClient.getInstance().chatManager().updateMessage(message);
         return result;
+    }
+
+    /**
+     * 发送输入状态，这里通过cmd消息来进行发送，告知对方自己正在输入
+     *
+     * @param to 接收方的名字
+     */
+    public static void sendInputStatusMessage(String to) {
+        EMMessage cmdMessage = EMMessage.createSendMessage(EMMessage.Type.CMD);
+        cmdMessage.setReceipt(to);
+        // 创建CMD 消息的消息体 并设置 action 为输入状态
+        EMCmdMessageBody body = new EMCmdMessageBody(MLConstants.ML_ATTR_INPUT_STATUS);
+        cmdMessage.addBody(body);
+        // 确认无误，开始表示发送输入状态的透传
+        EMClient.getInstance().chatManager().sendMessage(cmdMessage);
     }
 
     /**

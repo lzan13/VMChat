@@ -93,7 +93,9 @@
     <string name="ml_more">更多</string>
     <string name="ml_drawer_open">打开</string>
     <string name="ml_drawer_close">关闭</string>
+    <string name="ml_title_input_status">正在输入...</string>
 
+    <!--扩展菜单文字-->
     <string name="ml_photo">图片</string>
     <string name="ml_voice">声音</string>
     <string name="ml_video">视频</string>
@@ -264,7 +266,6 @@
     <string name="ml_input_limit_full">0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIGKLMNOPQRSTUVWXYZ-_.</string>
     <!--Copyright-->
     <string name="ml_copy_right">©2015 melove.net</string>
-    <string name="title_activity_mltest">MLTestActivity</string>
 
 
     <string name="test_unicode_smiling">\uD83D\uDE01</string>

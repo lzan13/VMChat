@@ -151,7 +151,6 @@
         <!-- 测试 Activity -->
         <activity
             android:name=".test.MLTestActivity"
-            android:label="@string/title_activity_mltest"
             android:parentActivityName=".communal.base.MLBaseActivity"
             android:theme="@style/MLTheme.Default">
             <meta-data
@@ -187,7 +186,8 @@
         <!-- 声明sdk所需的 Service SDK核心功能 -->
         <service
             android:name="com.hyphenate.chat.EMChatService"
-            android:exported="true"/>
+            android:exported="true"
+            android:process=":MLChat"/>
         <!-- 声明sdk所需的receiver -->
         <receiver android:name="com.hyphenate.chat.EMMonitorReceiver">
             <intent-filter>

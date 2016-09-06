@@ -421,6 +421,12 @@ public class MLEasemobHelper {
              */
             @Override
             public void onCmdMessageReceived(List<EMMessage> list) {
+                // 判断当前活动界面是不是聊天界面，如果是，全局不处理消息
+                if (MLEasemobHelper.getInstance().getActivityList().size() > 0) {
+                    if (MLEasemobHelper.getInstance().getTopActivity().getClass().getSimpleName().equals("MLChatActivity")) {
+                        return;
+                    }
+                }
                 for (EMMessage cmdMessage : list) {
                     EMCmdMessageBody body = (EMCmdMessageBody) cmdMessage.getBody();
 
@@ -432,12 +438,6 @@ public class MLEasemobHelper {
 
                     // 判断是不是撤回消息的透传
                     if (body.action().equals(MLConstants.ML_ATTR_RECALL)) {
-                        // 判断当前活动界面是不是聊天界面，如果是，全局不处理消息，聊天界面已经处理了撤回
-                        if (MLEasemobHelper.getInstance().getActivityList().size() > 0) {
-                            if (MLEasemobHelper.getInstance().getTopActivity().getClass().getName().equals("MLChatActivity")) {
-                                return;
-                            }
-                        }
                         MLMessageUtils.receiveRecallMessage(mContext, cmdMessage);
                     }
                 }

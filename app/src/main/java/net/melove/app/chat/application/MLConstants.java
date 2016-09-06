@@ -2,7 +2,7 @@ package net.melove.app.chat.application;
 
 /**
  * Class ${FILE_NAME}
- * <p>
+ * <p/>
  * Created by lzan13 on 2015/9/10 22:04.
  */
 public class MLConstants {
@@ -56,6 +56,8 @@ public class MLConstants {
     public static final String ML_ATTR_UNREAD = "ml_attr_unread";
     // 用户名
     public static final String ML_ATTR_USERNAME = "ml_attr_username";
+    // 输入状态
+    public static final String ML_ATTR_INPUT_STATUS = "ml_attr_input_status";
 
     /**
      * 自定义一些错误码，表示一些固定的错误
@@ -66,6 +68,8 @@ public class MLConstants {
     public static final String ML_ERROR_S_RECALL_TIME = "ml_max_time";
     // 消息允许撤回时间
     public static final int ML_TIME_RECALL = 300000;
+    // 输入状态检测时间
+    public static final int ML_TIME_INPUT_STATUS = 5000;
 
     // Intent 传递参数参数的 key
     public static final String ML_EXTRA_CALL_IS_INCOMING = "ml_call_is_incoming";
