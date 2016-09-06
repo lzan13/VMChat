@@ -22,17 +22,17 @@ Genymotion 2.7.2
 ```gradle
     compile fileTree(include: ['*.jar'], dir: 'libs')
     /**
-     *   新的遵循 Android  Material design 设计风格库，此扩展库已经包含了一下三个扩展库，如果引入了design，
-     *   就不需要再单独引入其他库
-     *   support-v4
-     *   appcomat-v7
-     *   recyclerView库
+     *     新的遵循 Android  Material design 设计风格库，此扩展库已经包含了一下三个扩展库，如果引入了design，
+     *     就不需要再单独引入其他库
+     *     support-v4
+     *     appcomat-v7
+     *     recyclerView库
      */
     compile 'com.android.support:design:24.2.0'
     // 解决方法数超过65536问题扩展库
     compile 'com.android.support:multidex:1.0.0'
     // Google Play Service 库，使用GCM推送需要
-    compile 'com.google.android.gms:play-services-gcm:9.0.0'
+    compile 'com.google.android.gms:play-services-gcm:9.4.0'
     // LeakCanary Debug库，开源捕获内存溢出的库
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
     // LeakCanary 发版的库
@@ -44,11 +44,12 @@ Genymotion 2.7.2
     // 支持手势缩放的ImageView
     compile 'com.bm.photoview:library:1.4.1'
     /**
-     *   引入各种第三方 SDK jar包，在上边 fileTree 里已经包含了libs，这里可以不用再单独添加
+     *     引入各种第三方 SDK jar包，在上边 fileTree 里已经包含了libs，这里可以不用再单独添加
      */
-    compile files('libs/MiPush_SDK_Client_3_0_3.jar')
-    compile files('libs/hyphenatechat_3.1.5.jar')
-    compile files('libs/HwPush_SDK_V2705.jar')
+    compile files('libs/xiaomi_push_v303.jar')
+    compile files('libs/huanxin_chat_v315.jar')
+    compile files('libs/huawei_push_v2705.jar')
+    compile files('libs/talkingdata_analytics_v2230.jar')
 ```
 
 已实现模块儿
@@ -71,6 +72,7 @@ Genymotion 2.7.2
 - 视频通话以及通话界面最小化，恢复后有bug，看不了对方图像，待解决
 
 
+
 #### 扩展模块
 
 关于扩展模块，这些都是通过环信SDK原有的一些功能扩展而来，比如会话置顶是给`Conversation.setExtFiled()`的方式实现
@@ -79,7 +81,6 @@ Genymotion 2.7.2
 - 记录会话最后时间
 - 消息回撤
 - 消息草稿
-- 输入状态提醒
 
 
 待实现模块儿
