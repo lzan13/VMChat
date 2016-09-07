@@ -2,7 +2,6 @@ package net.melove.app.chat.application;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.support.multidex.MultiDexApplication;
 
@@ -53,10 +52,10 @@ public class MLApplication extends MultiDexApplication {
     }
 
     /**
-     * 初始化sdk的一些操作，封装在 MLEasemobHelper 类中
+     * 初始化sdk的一些操作，封装在 MLEasemob 类中
      */
     private void initEasemob() {
-        MLEasemobHelper.getInstance().initEasemob(context);
+        MLEasemob.getInstance().initEasemob(context);
     }
 
 

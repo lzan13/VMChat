@@ -85,7 +85,7 @@ android {
  * 项目依赖，包含引入的第三方 SDK以及Android官方 Support 库
  */
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+//    compile fileTree(include: ['*.jar'], dir: 'libs')
     /**
      *     新的遵循 Android  Material design 设计风格库，此扩展库已经包含了一下三个扩展库，如果引入了design，
      *     就不需要再单独引入其他库

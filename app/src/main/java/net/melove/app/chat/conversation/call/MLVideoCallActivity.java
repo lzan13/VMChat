@@ -24,7 +24,7 @@ import com.hyphenate.media.EMOppositeSurfaceView;
 
 import net.melove.app.chat.R;
 import net.melove.app.chat.application.MLConstants;
-import net.melove.app.chat.application.MLEasemobHelper;
+import net.melove.app.chat.application.MLEasemob;
 import net.melove.app.chat.application.eventbus.MLCallEvent;
 import net.melove.app.chat.communal.util.MLBitmapUtil;
 import net.melove.app.chat.communal.util.MLDateUtil;
@@ -138,6 +138,7 @@ public class MLVideoCallActivity extends MLCallActivity {
 
         // 初始化视频通话帮助类
         mVideoCallHelper = EMClient.getInstance().callManager().getVideoCallHelper();
+        // 设置视频通话横竖屏
         mVideoCallHelper.setVideoOrientation(EMCallManager.EMVideoCallHelper.EMVideoOrientation.EMPortrait);
         // 设置自动码率  TODO 新的针对音视频优化的 SDK 不需要调用，默认直接开启
         mVideoCallHelper.setAdaptiveVideoFlag(true);
@@ -408,7 +409,7 @@ public class MLVideoCallActivity extends MLCallActivity {
         // 通话结束，重置通话状态
         MLCallStatus.getInstance().reset();
         // 结束通话时取消通话状态监听
-        MLEasemobHelper.getInstance().removeCallStateChangeListener();
+        MLEasemob.getInstance().removeCallStateChangeListener();
         // 拒绝通话后关闭通知铃音
         stopCallSound();
         try {
@@ -435,7 +436,7 @@ public class MLVideoCallActivity extends MLCallActivity {
         // 通话结束，重置通话状态
         MLCallStatus.getInstance().reset();
         // 结束通话时取消通话状态监听
-        MLEasemobHelper.getInstance().removeCallStateChangeListener();
+        MLEasemob.getInstance().removeCallStateChangeListener();
         // 结束通话后关闭通知铃音
         stopCallSound();
         try {
@@ -601,7 +602,7 @@ public class MLVideoCallActivity extends MLCallActivity {
             // 通话结束保存消息
             saveCallMessage();
             // 结束通话时取消通话状态监听
-            MLEasemobHelper.getInstance().removeCallStateChangeListener();
+            MLEasemob.getInstance().removeCallStateChangeListener();
             // 结束通话关闭界面
             onFinish();
             break;

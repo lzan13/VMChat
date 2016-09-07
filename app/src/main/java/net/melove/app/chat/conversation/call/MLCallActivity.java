@@ -16,7 +16,7 @@ import com.hyphenate.chat.EMTextMessageBody;
 
 import net.melove.app.chat.R;
 import net.melove.app.chat.application.MLConstants;
-import net.melove.app.chat.application.MLEasemobHelper;
+import net.melove.app.chat.application.MLEasemob;
 import net.melove.app.chat.communal.base.MLBaseActivity;
 import net.melove.app.chat.communal.util.MLDateUtil;
 
@@ -69,7 +69,7 @@ public class MLCallActivity extends MLBaseActivity {
         mCallStatus = MLConstants.ML_CALL_CANCEL;
 
         // 收到呼叫或者呼叫对方时初始化通话状态监听
-        MLEasemobHelper.getInstance().setCallStateChangeListener();
+        MLEasemob.getInstance().setCallStateChangeListener();
 
         // 初始化振动器
         mVibrator = (Vibrator) mActivity.getSystemService(Context.VIBRATOR_SERVICE);
