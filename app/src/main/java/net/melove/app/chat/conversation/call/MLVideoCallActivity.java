@@ -1,6 +1,7 @@
 package net.melove.app.chat.conversation.call;
 
 import android.graphics.Bitmap;
+import android.hardware.Camera;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Build;
@@ -19,6 +20,7 @@ import com.hyphenate.chat.EMCallStateChangeListener.CallState;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.exceptions.EMNoActiveCallException;
 import com.hyphenate.exceptions.EMServiceNotReadyException;
+import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.media.EMLocalSurfaceView;
 import com.hyphenate.media.EMOppositeSurfaceView;
 
@@ -114,7 +116,7 @@ public class MLVideoCallActivity extends MLCallActivity {
         mAnswerCallFab = (FloatingActionButton) findViewById(R.id.ml_btn_fab_answer_call);
 
         // 设置按钮状态
-        mChangeCameraSwitch.setActivated(MLCallStatus.getInstance().isFrontCamera());
+        mChangeCameraSwitch.setActivated(false);
         mMicSwitch.setActivated(MLCallStatus.getInstance().isMic());
         mCameraSwitch.setActivated(MLCallStatus.getInstance().isCamera());
         mSpeakerSwitch.setActivated(MLCallStatus.getInstance().isSpeaker());
@@ -149,6 +151,13 @@ public class MLVideoCallActivity extends MLCallActivity {
         // 设置本地预览图像显示在最上层，一定要提前设置，否则无效
         mLocalSurfaceView.setZOrderMediaOverlay(true);
         mLocalSurfaceView.setZOrderOnTop(true);
+
+        try {
+            // 设置默认摄像头为前置
+            EMClient.getInstance().callManager().setCameraFacing(Camera.CameraInfo.CAMERA_FACING_FRONT);
+        } catch (HyphenateException e) {
+            e.printStackTrace();
+        }
 
         // 设置本地以及对方显示画面控件 TODO 这个要设置在上边几个方法之后，不然会概率出现接收方无画面
         EMClient.getInstance().callManager().setSurfaceView(mLocalSurfaceView, mOppositeSurfaceView);
@@ -313,12 +322,10 @@ public class MLVideoCallActivity extends MLCallActivity {
             EMClient.getInstance().callManager().switchCamera();
             // 设置按钮状态
             mChangeCameraSwitch.setActivated(false);
-            MLCallStatus.getInstance().setFrontCamera(false);
         } else {
             EMClient.getInstance().callManager().switchCamera();
             // 设置按钮状态
             mChangeCameraSwitch.setActivated(true);
-            MLCallStatus.getInstance().setFrontCamera(true);
         }
     }
 

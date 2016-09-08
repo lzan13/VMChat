@@ -27,8 +27,6 @@ public class MLCallStatus {
 
     // 是否是呼入的通话
     private boolean isInComing;
-    // 是否是前摄像头
-    private boolean isFrontCamera;
     // 是否开启麦克风
     private boolean isMic;
     // 是否开启了摄像头
@@ -45,7 +43,6 @@ public class MLCallStatus {
     private MLCallStatus() {
         setCallType(CALL_TYPE_NORMAL);
         setCallState(CALL_STATUS_NORMAL);
-        setFrontCamera(true);
         setMic(true);
         setCamera(true);
         setSpeaker(true);
@@ -106,14 +103,6 @@ public class MLCallStatus {
 
     public void setCamera(boolean camera) {
         isCamera = camera;
-    }
-
-    public boolean isFrontCamera() {
-        return isFrontCamera;
-    }
-
-    public void setFrontCamera(boolean frontCamera) {
-        isFrontCamera = frontCamera;
     }
 
     public boolean isMic() {

@@ -31,7 +31,7 @@ android {
     buildTypes {
         debug {
             // 给debug包的包名加上后缀
-            applicationIdSuffix '.debug'
+//            applicationIdSuffix '.debug'
             signingConfig signingConfigs.debug
         }
         release {
