@@ -84,12 +84,14 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
 
     // 消息监听器
     private EMMessageListener mMessageListener;
-    // 当前聊天的 ID
-    private String mChatId;
+
     // 当前登录账户username
     private String mCurrUsername;
     // 当前会话对象
     private EMConversation mConversation;
+    // 当前聊天的 ID
+    private String mChatId;
+    private EMConversation.EMConversationType mConversationType;
 
     // RecyclerView 用来显示消息
     private RecyclerView mRecyclerView;
@@ -172,9 +174,10 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
 
         mRootView = findViewById(R.id.ml_layout_coordinator);
 
+        mCurrUsername = EMClient.getInstance().getCurrentUser();
         // 获取当前聊天对象的id
         mChatId = getIntent().getStringExtra(MLConstants.ML_EXTRA_CHAT_ID);
-        mCurrUsername = EMClient.getInstance().getCurrentUser();
+        mConversationType = (EMConversation.EMConversationType) getIntent().getExtras().get(MLConstants.ML_EXTRA_TYPE);
 
         // 初始化输入框控件，并添加输入框监听
         mInputView = (EditText) findViewById(R.id.ml_edit_chat_input);
@@ -224,7 +227,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
          * 第二个是绘画类型可以为空
          * 第三个表示如果会话不存在是否创建
          */
-        mConversation = EMClient.getInstance().chatManager().getConversation(mChatId, null, true);
+        mConversation = EMClient.getInstance().chatManager().getConversation(mChatId, mConversationType, true);
         // 设置当前会话未读数为 0
         mConversation.markAllMessagesAsRead();
         MLConversationExtUtils.setConversationUnread(mConversation, false);
@@ -254,7 +257,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
          * 并实现{@link RecyclerView#setItemAnimator(RecyclerView.ItemAnimator)}
          */
         mLayoutManger = new LinearLayoutManager(mActivity);
-        // 设置 RecyclerView 显示状态固定掉底部
+        // 设置 RecyclerView 显示状态固定到底部
         mLayoutManger.setStackFromEnd(true);
         // 初始化ListView控件对象
         mRecyclerView = (RecyclerView) findViewById(R.id.ml_recyclerview_message);
@@ -646,6 +649,14 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      * @param message 需要发送的消息
      */
     private void sendMessage(final EMMessage message) {
+        // 设置不同的会话类型，
+        if (mConversationType == EMConversation.EMConversationType.Chat) {
+            message.setChatType(EMMessage.ChatType.Chat);
+        } else if (mConversationType == EMConversation.EMConversationType.GroupChat) {
+            message.setChatType(EMMessage.ChatType.GroupChat);
+        } else if (mConversationType == EMConversation.EMConversationType.ChatRoom) {
+            message.setChatType(EMMessage.ChatType.ChatRoom);
+        }
         // 调用设置消息扩展方法
         setMessageAttribute(message);
 
@@ -1396,8 +1407,14 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         MLLog.i("onMessageReceived list.size:%d", list.size());
         // 循环遍历当前收到的消息
         for (EMMessage message : list) {
+            String username = "";
+            if(mConversationType == EMConversation.EMConversationType.Chat){
+                username = message.getFrom();
+            }else{
+                username = message.getTo();
+            }
             // 判断消息是否是当前会话的消息
-            if (mChatId.equals(message.getFrom())) {
+            if (mChatId.equals(username)) {
                 // 设置消息为已读
                 mConversation.markMessageAsRead(message.getMsgId());
                 // 调用刷新方法，因为到来的消息可能不是当前会话的，所以要循环判断
@@ -1535,6 +1552,9 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_chat, menu);
+        if (mConversationType == EMConversation.EMConversationType.GroupChat) {
+            menu.findItem(R.id.ml_action_call).setVisible(false);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
