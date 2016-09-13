@@ -22,7 +22,7 @@ import com.hyphenate.exceptions.EMServiceNotReadyException;
 
 import net.melove.app.chat.R;
 import net.melove.app.chat.application.MLConstants;
-import net.melove.app.chat.application.MLEasemobHelper;
+import net.melove.app.chat.application.MLEasemob;
 import net.melove.app.chat.application.eventbus.MLCallEvent;
 import net.melove.app.chat.communal.util.MLBitmapUtil;
 import net.melove.app.chat.communal.util.MLDateUtil;
@@ -294,7 +294,7 @@ public class MLVoiceCallActivity extends MLCallActivity {
         // 振动反馈
         vibrate();
         // 结束通话时取消通话状态监听
-        MLEasemobHelper.getInstance().removeCallStateChangeListener();
+        MLEasemob.getInstance().removeCallStateChangeListener();
         // 拒绝通话后关闭通知铃音
         stopCallSound();
         try {
@@ -321,7 +321,7 @@ public class MLVoiceCallActivity extends MLCallActivity {
         // 振动反馈
         vibrate();
         // 结束通话时取消通话状态监听
-        MLEasemobHelper.getInstance().removeCallStateChangeListener();
+        MLEasemob.getInstance().removeCallStateChangeListener();
         // 结束通话后关闭通知铃音
         stopCallSound();
         try {
@@ -479,7 +479,7 @@ public class MLVoiceCallActivity extends MLCallActivity {
             // 通话结束保存消息
             saveCallMessage();
             // 结束通话时取消通话状态监听
-            MLEasemobHelper.getInstance().removeCallStateChangeListener();
+            MLEasemob.getInstance().removeCallStateChangeListener();
             // 结束通话关闭界面
             onFinish();
             break;

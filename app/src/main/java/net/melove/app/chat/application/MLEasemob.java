@@ -46,13 +46,13 @@ import java.util.List;
  * Created by lzan13 on 2015/7/13.
  * 自定义初始化类做一些环信sdk的初始化操作
  */
-public class MLEasemobHelper {
+public class MLEasemob {
 
     // 上下文对象
     private Context mContext;
 
-    // MLEasemobHelper 单例对象
-    private static MLEasemobHelper instance;
+    // MLEasemob 单例对象
+    private static MLEasemob instance;
 
     // 保存当前运行的 activity 对象，可用来判断程序是否处于前台，以及完全退出app等操作
     private List<MLBaseActivity> mActivityList = new ArrayList<MLBaseActivity>();
@@ -86,9 +86,9 @@ public class MLEasemobHelper {
      *
      * @return 返回当前类的实例
      */
-    public static MLEasemobHelper getInstance() {
+    public static MLEasemob getInstance() {
         if (instance == null) {
-            instance = new MLEasemobHelper();
+            instance = new MLEasemob();
         }
         return instance;
     }
@@ -96,7 +96,7 @@ public class MLEasemobHelper {
     /**
      * 私有的构造方法
      */
-    private MLEasemobHelper() {
+    private MLEasemob() {
     }
 
     /**
@@ -272,7 +272,7 @@ public class MLEasemobHelper {
                             MLLog.i("通话已结束，时长：%s，error %s", "10:35", callError);
                         }
                         // 结束通话时取消通话状态监听
-                        MLEasemobHelper.getInstance().removeCallStateChangeListener();
+                        MLEasemob.getInstance().removeCallStateChangeListener();
                         break;
                     case NETWORK_UNSTABLE:
                         if (callError == EMCallStateChangeListener.CallError.ERROR_NO_DATA) {
@@ -386,8 +386,8 @@ public class MLEasemobHelper {
             @Override
             public void onMessageReceived(List<EMMessage> list) {
                 // 判断当前活动界面是不是聊天界面，如果是，全局不处理消息
-                if (MLEasemobHelper.getInstance().getActivityList().size() > 0) {
-                    if (MLEasemobHelper.getInstance().getTopActivity().getClass().getSimpleName().equals("MLChatActivity")) {
+                if (MLEasemob.getInstance().getActivityList().size() > 0) {
+                    if (MLEasemob.getInstance().getTopActivity().getClass().getSimpleName().equals("MLChatActivity")) {
                         return;
                     }
                 }
@@ -422,8 +422,8 @@ public class MLEasemobHelper {
             @Override
             public void onCmdMessageReceived(List<EMMessage> list) {
                 // 判断当前活动界面是不是聊天界面，如果是，全局不处理消息
-                if (MLEasemobHelper.getInstance().getActivityList().size() > 0) {
-                    if (MLEasemobHelper.getInstance().getTopActivity().getClass().getSimpleName().equals("MLChatActivity")) {
+                if (MLEasemob.getInstance().getActivityList().size() > 0) {
+                    if (MLEasemob.getInstance().getTopActivity().getClass().getSimpleName().equals("MLChatActivity")) {
                         return;
                     }
                 }

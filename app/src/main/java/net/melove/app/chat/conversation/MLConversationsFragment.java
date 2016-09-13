@@ -183,6 +183,7 @@ public class MLConversationsFragment extends MLBaseFragment {
                 } else {
                     intent.setClass(mActivity, MLChatActivity.class);
                     intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mConversations.get(position).getUserName());
+                    intent.putExtra(MLConstants.ML_EXTRA_TYPE, mConversations.get(position).getType());
                 }
                 mActivity.startActivity(intent);
             }

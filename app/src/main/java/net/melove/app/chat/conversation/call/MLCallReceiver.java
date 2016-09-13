@@ -7,7 +7,7 @@ import android.content.Intent;
 import com.hyphenate.chat.EMClient;
 
 import net.melove.app.chat.application.MLConstants;
-import net.melove.app.chat.application.MLEasemobHelper;
+import net.melove.app.chat.application.MLEasemob;
 
 
 /**
@@ -23,7 +23,7 @@ public class MLCallReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         // 判断环信是否登录成功
-        if (!MLEasemobHelper.getInstance().isLoginedInBefore()) {
+        if (!MLEasemob.getInstance().isLoginedInBefore()) {
             return;
         }
 

@@ -25,7 +25,7 @@ import com.hyphenate.chat.EMClient;
 
 import net.melove.app.chat.R;
 import net.melove.app.chat.application.MLConstants;
-import net.melove.app.chat.application.MLEasemobHelper;
+import net.melove.app.chat.application.MLEasemob;
 import net.melove.app.chat.application.eventbus.MLConnectionEvent;
 import net.melove.app.chat.authentication.MLSigninActivity;
 import net.melove.app.chat.communal.base.MLBaseActivity;
@@ -76,7 +76,7 @@ public class MLMainActivity extends MLBaseActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // 判断当前是否已经登录
-        if (MLEasemobHelper.getInstance().isLoginedInBefore()) {
+        if (MLEasemob.getInstance().isLoginedInBefore()) {
             // 获取当前系统时间毫秒数
             long start = System.currentTimeMillis();
             // 加载群组到内存
@@ -120,7 +120,7 @@ public class MLMainActivity extends MLBaseActivity implements
         // 网络连接提示按钮
         mConnectionFabBtn = (FloatingActionButton) findViewById(R.id.ml_btn_fab_connection);
         mConnectionFabBtn.setOnClickListener(viewListener);
-        if (MLEasemobHelper.getInstance().isConnection()) {
+        if (MLEasemob.getInstance().isConnection()) {
             mConnectionFabBtn.setImageResource(R.mipmap.ic_signal_wifi_on_white_24dp);
             mConnectionFabBtn.setVisibility(View.GONE);
         } else {
@@ -465,7 +465,7 @@ public class MLMainActivity extends MLBaseActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        if (!MLEasemobHelper.getInstance().isLoginedInBefore()) {
+        if (!MLEasemob.getInstance().isLoginedInBefore()) {
             // 跳转到登录界面
             Intent intent = new Intent(this, MLSigninActivity.class);
             superJump(intent);

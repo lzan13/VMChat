@@ -1,4 +1,4 @@
-package net.melove.app.chat.conversation;
+package net.melove.app.chat.application;
 
 import android.app.NotificationManager;
 import android.content.Context;

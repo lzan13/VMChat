@@ -16,13 +16,12 @@ import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMGroupManager;
 import com.hyphenate.chat.EMMessage;
-import com.hyphenate.chat.EMMessageBody;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.exceptions.HyphenateException;
 
 import net.melove.app.chat.R;
 import net.melove.app.chat.application.MLConstants;
-import net.melove.app.chat.application.MLEasemobHelper;
+import net.melove.app.chat.application.MLEasemob;
 import net.melove.app.chat.communal.base.MLBaseFragment;
 import net.melove.app.chat.communal.util.MLDateUtil;
 import net.melove.app.chat.communal.util.MLLog;
@@ -413,7 +412,7 @@ public class MLTestFragment extends MLBaseFragment {
      * 退出登录
      */
     private void signOut() {
-        MLEasemobHelper.getInstance().signOut(new EMCallBack() {
+        MLEasemob.getInstance().signOut(new EMCallBack() {
             @Override
             public void onSuccess() {
                 mListener.onFragmentClick(0x00, 0x01, null);

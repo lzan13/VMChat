@@ -16,7 +16,7 @@ import com.squareup.leakcanary.RefWatcher;
 import net.melove.app.chat.R;
 import net.melove.app.chat.application.MLApplication;
 import net.melove.app.chat.application.MLConstants;
-import net.melove.app.chat.application.MLEasemobHelper;
+import net.melove.app.chat.application.MLEasemob;
 import net.melove.app.chat.application.eventbus.MLConnectionEvent;
 import net.melove.app.chat.communal.util.MLLog;
 import net.melove.app.chat.main.MLMainActivity;
@@ -128,7 +128,7 @@ public class MLBaseActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // 确认按钮，退出app
-                List<MLBaseActivity> lists = MLEasemobHelper.getInstance().getActivityList();
+                List<MLBaseActivity> lists = MLEasemob.getInstance().getActivityList();
                 for (MLBaseActivity activity : lists) {
                     activity.onFinish();
                 }
@@ -167,7 +167,7 @@ public class MLBaseActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // 确认按钮，退出app
-                List<MLBaseActivity> lists = MLEasemobHelper.getInstance().getActivityList();
+                List<MLBaseActivity> lists = MLEasemob.getInstance().getActivityList();
                 for (MLBaseActivity activity : lists) {
                     activity.onFinish();
                 }
@@ -205,7 +205,7 @@ public class MLBaseActivity extends AppCompatActivity {
         super.onStart();
         MLLog.i("%s onStart", className);
         // 将 activity 添加到集合中去
-        MLEasemobHelper.getInstance().addActivity(mActivity);
+        MLEasemob.getInstance().addActivity(mActivity);
         // 注册订阅者
         EventBus.getDefault().register(this);
     }
@@ -227,7 +227,7 @@ public class MLBaseActivity extends AppCompatActivity {
         super.onStop();
         MLLog.i("%s onStop", className);
         // 将 activity 从集合中移除
-        MLEasemobHelper.getInstance().removeActivity(mActivity);
+        MLEasemob.getInstance().removeActivity(mActivity);
         // 取消订阅者的注册
         EventBus.getDefault().unregister(this);
     }
