@@ -9,7 +9,7 @@
     android:background="@color/ml_theme_background"
     android:clipToPadding="false"
     android:fitsSystemWindows="false"
-    tools:context=".conversation.call.MLVoiceCallActivity">
+    tools:context=".ui.chat.call.MLVoiceCallActivity">
 
     <!--通话界面背景-->
     <ImageView
@@ -56,7 +56,7 @@
             android:gravity="center"
             android:orientation="vertical">
             <!--当前通话的头像-->
-            <net.melove.app.chat.communal.widget.MLImageView
+            <net.melove.app.chat.ui.widget.MLImageView
                 android:id="@+id/ml_img_call_avatar"
                 android:layout_width="@dimen/ml_dimen_96"
                 android:layout_height="@dimen/ml_dimen_96"

@@ -28,11 +28,11 @@
     <output-test url="file://$MODULE_DIR$/build/intermediates/classes/test/wandoujia/debug" />
     <exclude-output />
     <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/apt/wandoujia/debug" isTestSource="false" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/source/r/wandoujia/debug" isTestSource="false" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/source/aidl/wandoujia/debug" isTestSource="false" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/source/buildConfig/wandoujia/debug" isTestSource="false" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/source/rs/wandoujia/debug" isTestSource="false" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/apt/wandoujia/debug" isTestSource="false" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/wandoujia/debug" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/res/resValues/wandoujia/debug" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/wandoujiaDebug/res" type="java-resource" />
@@ -66,14 +66,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/wandoujia/jni" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/wandoujia/rs" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/wandoujia/shaders" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/testWandoujia/res" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/testWandoujia/resources" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/testWandoujia/assets" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/testWandoujia/aidl" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/testWandoujia/java" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/testWandoujia/jni" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/testWandoujia/rs" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/testWandoujia/shaders" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTestWandoujia/res" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTestWandoujia/resources" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTestWandoujia/assets" type="java-test-resource" />
@@ -82,6 +74,14 @@
       <sourceFolder url="file://$MODULE_DIR$/src/androidTestWandoujia/jni" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTestWandoujia/rs" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTestWandoujia/shaders" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testWandoujia/res" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testWandoujia/resources" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testWandoujia/assets" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testWandoujia/aidl" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testWandoujia/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testWandoujia/jni" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testWandoujia/rs" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testWandoujia/shaders" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/assets" type="java-resource" />
@@ -106,14 +106,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/jni" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/rs" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/shaders" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/res" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/resources" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/assets" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/aidl" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/java" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/jni" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/rs" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/shaders" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/res" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/assets" type="java-test-resource" />
@@ -122,6 +114,15 @@
       <sourceFolder url="file://$MODULE_DIR$/src/test/jni" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/rs" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/shaders" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/res" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/resources" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/assets" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/aidl" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/jni" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/rs" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/shaders" isTestSource="true" />
+      <excludeFolder url="file://$MODULE_DIR$/build/.DS_Store" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/assets" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/blame" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/classes" />
@@ -144,6 +145,8 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.google.android.gms/play-services-gcm/9.4.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.google.android.gms/play-services-iid/9.4.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.google.android.gms/play-services-tasks/9.4.0/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.hyphenate/hyphenate-sdk/3.1.5/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.jakewharton/butterknife/8.4.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.squareup.leakcanary/leakcanary-android/1.4-beta2/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental-classes" />
@@ -194,7 +197,9 @@
     <orderEntry type="library" exported="" name="eventbus-3.0.0" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-24.2.1" level="project" />
     <orderEntry type="library" exported="" name="multidex-1.0.1" level="project" />
-    <orderEntry type="library" exported="" name="huanxin_chat_v315" level="project" />
+    <orderEntry type="library" exported="" name="butterknife-annotations-8.4.0" level="project" />
     <orderEntry type="library" exported="" name="leakcanary-watcher-1.4-beta2" level="project" />
+    <orderEntry type="library" exported="" name="butterknife-8.4.0" level="project" />
+    <orderEntry type="library" exported="" name="hyphenate-sdk-3.1.5" level="project" />
   </component>
 </module>

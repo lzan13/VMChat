@@ -8,7 +8,7 @@ import android.text.TextUtils;
 import com.hyphenate.util.HanziToPinyin;
 
 import net.melove.app.chat.application.MLApplication;
-import net.melove.app.chat.contacts.MLContacterEntity;
+import net.melove.app.chat.ui.contacts.MLContacterEntity;
 
 import java.util.ArrayList;
 import java.util.List;

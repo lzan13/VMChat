@@ -22,7 +22,7 @@
         app:theme="@style/MLTheme.ToolbarOverlay">
 
         <!--头像-->
-        <!--<net.melove.app.chat.communal.widget.MLImageView-->
+        <!--<net.melove.app.chat.ui.widget.MLImageView-->
             <!--android:id="@+id/ml_img_avatar"-->
             <!--android:layout_width="@dimen/ml_dimen_36"-->
             <!--android:layout_height="@dimen/ml_dimen_36"-->

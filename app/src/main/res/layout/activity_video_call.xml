@@ -9,7 +9,7 @@
     android:background="@color/ml_theme_background"
     android:clipToPadding="false"
     android:fitsSystemWindows="false"
-    tools:context=".conversation.call.MLVideoCallActivity">
+    tools:context=".ui.chat.call.MLVideoCallActivity">
 
     <!--界面背景-->
     <ImageView

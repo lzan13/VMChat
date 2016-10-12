@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
 
 android {
     compileSdkVersion 24
@@ -74,24 +75,23 @@ android {
     productFlavors.all {
         flavor -> flavor.manifestPlaceholders = [ML_CHANNEL_ID: name]
     }
-
-    // 增量编译
-    dexOptions {
-        incremental true
-    }
 }
 
 /**
  * 项目依赖，包含引入的第三方 SDK以及Android官方 Support 库
  */
 dependencies {
-//    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+
+    // 引入 ButterKnife 库
+    apt 'com.jakewharton:butterknife-compiler:8.4.0'
+    compile 'com.jakewharton:butterknife:8.4.0'
+
     /**
-     *     新的遵循 Android  Material design 设计风格库，此扩展库已经包含了一下三个扩展库，如果引入了design，
-     *     就不需要再单独引入其他库
+     * 新的遵循 Android  Material design 设计风格库，此扩展库已经包含了一下三个扩展库，如果引入了design，就不需要再单独引入其他库
      *     support-v4
      *     appcomat-v7
-     *     recyclerView库
+     *     recyclerView
      */
     compile 'com.android.support:design:24.2.1'
     // 解决方法数超过65536问题扩展库
@@ -108,13 +108,17 @@ dependencies {
     compile 'org.greenrobot:eventbus:3.0.0'
     // 支持手势缩放的ImageView
     compile 'com.bm.photoview:library:1.4.1'
+    // 环信这边提供的 aar 方式引入的sdk
+    compile 'com.hyphenate:hyphenate-sdk:3.1.5'
+
     /**
      *     引入各种第三方 SDK jar包，在上边 fileTree 里已经包含了libs，这里可以不用再单独添加
      */
     compile files('libs/xiaomi_push_v303.jar')
-    compile files('libs/huanxin_chat_v315.jar')
     compile files('libs/huawei_push_v2705.jar')
     compile files('libs/talkingdata_analytics_v2230.jar')
+
+
 }
 
 //读取配置文件

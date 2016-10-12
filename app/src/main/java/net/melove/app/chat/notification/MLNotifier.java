@@ -13,8 +13,8 @@ import com.hyphenate.chat.EMTextMessageBody;
 import net.melove.app.chat.R;
 import net.melove.app.chat.application.MLApplication;
 import net.melove.app.chat.application.MLConstants;
-import net.melove.app.chat.conversation.MLChatActivity;
-import net.melove.app.chat.main.MLMainActivity;
+import net.melove.app.chat.ui.chat.MLChatActivity;
+import net.melove.app.chat.ui.main.MLMainActivity;
 
 import java.util.List;
 

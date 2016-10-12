@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
 import net.melove.app.chat.R;
-import net.melove.app.chat.communal.base.MLBaseActivity;
+import net.melove.app.chat.ui.MLBaseActivity;
 
 public class MLTestActivity extends MLBaseActivity {
 

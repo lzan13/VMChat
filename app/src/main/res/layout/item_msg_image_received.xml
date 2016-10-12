@@ -23,7 +23,7 @@
                 android:gravity="bottom"
                 android:orientation="horizontal">
                 <!--消息发送者头像-->
-                <net.melove.app.chat.communal.widget.MLImageView
+                <net.melove.app.chat.ui.widget.MLImageView
                     android:id="@+id/ml_img_msg_avatar"
                     android:layout_width="@dimen/ml_dimen_40"
                     android:layout_height="@dimen/ml_dimen_40"
@@ -43,7 +43,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/ml_dimen_2">
                         <!--图片消息显示控件-->
-                        <net.melove.app.chat.communal.widget.MLImageView
+                        <net.melove.app.chat.ui.widget.MLImageView
                             android:id="@+id/ml_img_msg_image"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

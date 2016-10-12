@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import com.hyphenate.chat.EMHuaweiPushReceiver;
 
-import net.melove.app.chat.communal.util.MLLog;
+import net.melove.app.chat.util.MLLog;
 
 /*
  * 接收Push所有消息的广播接收器

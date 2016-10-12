@@ -23,11 +23,11 @@ import com.hyphenate.exceptions.HyphenateException;
 
 import net.melove.app.chat.R;
 import net.melove.app.chat.application.MLConstants;
-import net.melove.app.chat.application.MLEasemob;
-import net.melove.app.chat.communal.base.MLBaseFragment;
-import net.melove.app.chat.communal.util.MLDateUtil;
-import net.melove.app.chat.communal.util.MLLog;
-import net.melove.app.chat.communal.widget.MLViewGroup;
+import net.melove.app.chat.application.MLHyphenate;
+import net.melove.app.chat.ui.MLBaseFragment;
+import net.melove.app.chat.util.MLDateUtil;
+import net.melove.app.chat.util.MLLog;
+import net.melove.app.chat.ui.widget.MLViewGroup;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -457,7 +457,7 @@ public class MLTestFragment extends MLBaseFragment {
      * 退出登录
      */
     private void signOut() {
-        MLEasemob.getInstance().signOut(new EMCallBack() {
+        MLHyphenate.getInstance().signOut(new EMCallBack() {
             @Override
             public void onSuccess() {
                 mListener.onFragmentClick(0x00, 0x01, null);

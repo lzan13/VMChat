@@ -3,9 +3,16 @@
 buildscript {
     repositories {
         jcenter()
+        // 为当前项目添加自己的仓库地址,这里添加的是环信 sdk 仓库地址
+        maven {
+            url "https://raw.githubusercontent.com/HyphenateInc/Hyphenate-SDK-Android/master/repository"
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.0'
+
+        // 添加 ButterKnife Android 插件
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -15,5 +22,9 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        // 为所有项目添加自己的仓库地址,这里添加的是环信 sdk 仓库地址
+        maven {
+            url "https://raw.githubusercontent.com/HyphenateInc/Hyphenate-SDK-Android/master/repository"
+        }
     }
 }

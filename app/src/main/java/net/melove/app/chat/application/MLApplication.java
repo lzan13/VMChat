@@ -9,12 +9,11 @@ import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 import com.tendcloud.tenddata.TCAgent;
 
-import net.melove.app.chat.communal.util.MLLog;
+import net.melove.app.chat.util.MLLog;
 
 /**
  * Created by lzan13 on 2015/8/10
- * MLApplication类，项目的入口，做一些初始化操作，
- * 这里继承自MultiDex的Application，解决项目方法数超过65536问题
+ * MLApplication类，项目的入口，做一些初始化操作， 这里继承自MultiDex的Application，解决项目方法数超过65536问题
  */
 public class MLApplication extends MultiDexApplication {
 
@@ -31,8 +30,8 @@ public class MLApplication extends MultiDexApplication {
 
         context = this;
 
-        // 调用自定义初始化方法
-        initEasemob();
+        // 调用自定义初始化方法,封装在 MLHyphenate 类中
+        MLHyphenate.getInstance().initHyphenate(context);
 
         // 调用 TalkingData 初始化统计平台代码
         initTalkingData();
@@ -49,13 +48,6 @@ public class MLApplication extends MultiDexApplication {
 
     public static RefWatcher getRefWatcher() {
         return watcher;
-    }
-
-    /**
-     * 初始化sdk的一些操作，封装在 MLEasemob 类中
-     */
-    private void initEasemob() {
-        MLEasemob.getInstance().initEasemob(context);
     }
 
 

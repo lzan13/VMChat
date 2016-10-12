@@ -48,7 +48,7 @@
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/MLTheme.PopupOverlay">
                 <!--头像-->
-                <!--<net.melove.app.chat.communal.widget.MLImageView-->
+                <!--<net.melove.app.chat.ui.widget.MLImageView-->
                 <!--android:id="@+id/ml_img_contacter_avatar"-->
                 <!--android:layout_width="@dimen/ml_dimen_36"-->
                 <!--android:layout_height="@dimen/ml_dimen_36"-->
@@ -185,7 +185,7 @@
         app:layout_anchor="@id/ml_widget_appbar"
         app:layout_anchorGravity="bottom|center">
 
-        <net.melove.app.chat.communal.widget.MLImageView
+        <net.melove.app.chat.ui.widget.MLImageView
             android:id="@+id/ml_img_contacter_avatar"
             android:layout_width="@dimen/ml_dimen_72"
             android:layout_height="@dimen/ml_dimen_72"
