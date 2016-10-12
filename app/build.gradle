@@ -93,9 +93,9 @@ dependencies {
      *     appcomat-v7
      *     recyclerView库
      */
-    compile 'com.android.support:design:24.2.0'
+    compile 'com.android.support:design:24.2.1'
     // 解决方法数超过65536问题扩展库
-    compile 'com.android.support:multidex:1.0.0'
+    compile 'com.android.support:multidex:1.0.1'
     // Google Play Service 库，使用GCM推送需要
     compile 'com.google.android.gms:play-services-gcm:9.4.0'
     // LeakCanary Debug库，开源捕获内存溢出的库

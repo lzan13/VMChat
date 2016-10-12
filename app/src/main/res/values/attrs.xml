@@ -16,7 +16,7 @@
         <attr name="ml_press_color" format="color"/>
         <!--控件圆角半径-->
         <attr name="ml_radius" format="dimension"/>
-        <!--自定义控件的几种枚举样式 0 正常、1 圆形、2 矩形-->
+        <!--自定义控件的几种枚举样式 0 正常、1 圆形、2 圆角矩形-->
         <attr name="ml_shape_type" format="enum">
             <enum name="normal" value="0"/>
             <enum name="round" value="1"/>

@@ -25,8 +25,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 /**
- * Created by lzan13 on 2015/8/28.
- * 好友申请通知界面
+ * Created by lzan13 on 2015/8/28. 好友申请通知界面
  */
 public class MLApplyForActivity extends MLBaseActivity {
 
@@ -155,18 +154,18 @@ public class MLApplyForActivity extends MLBaseActivity {
             @Override
             public void onItemAction(int position, int action) {
                 switch (action) {
-                case MLConstants.ML_ACTION_APPLY_FOR_CLICK:
-                    jumpUserInfo(position);
-                    break;
-                case MLConstants.ML_ACTION_APPLY_FOR_AGREE:
-                    agreeInvited(position);
-                    break;
-                case MLConstants.ML_ACTION_APPLY_FOR_REFUSE:
-                    refuseInvited(position);
-                    break;
-                case MLConstants.ML_ACTION_APPLY_FOR_DELETE:
-                    deleteInvited(position);
-                    break;
+                    case MLConstants.ML_ACTION_APPLY_FOR_CLICK:
+                        jumpUserInfo(position);
+                        break;
+                    case MLConstants.ML_ACTION_APPLY_FOR_AGREE:
+                        agreeInvited(position);
+                        break;
+                    case MLConstants.ML_ACTION_APPLY_FOR_REFUSE:
+                        refuseInvited(position);
+                        break;
+                    case MLConstants.ML_ACTION_APPLY_FOR_DELETE:
+                        deleteInvited(position);
+                        break;
                 }
             }
         });
@@ -193,22 +192,22 @@ public class MLApplyForActivity extends MLBaseActivity {
         dialog.setMessage(mActivity.getResources().getString(R.string.ml_dialog_message_waiting));
         dialog.show();
 
-        //        final MLInvitedEntity invitedEntity = mInvitedList.get(position);
-        //        new Thread(new Runnable() {
-        //            @Override
-        //            public void run() {
-        //                try {
-        //                    EMClient.getInstance().contactManager().acceptInvitation(invitedEntity.getUserName());
-        //                    invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.AGREED);
-        //                    invitedEntity.setTime(MLDateUtil.getCurrentMillisecond());
-        //                    // 更新当前的申请信息
-        //                    MLInvitedDao.getInstance().updateInvited(invitedEntity);
-        //                    dialog.dismiss();
-        //                } catch (HyphenateException e) {
-        //                    e.printStackTrace();
-        //                }
-        //            }
-        //        }).start();
+//        final MLInvitedEntity invitedEntity = mInvitedList.get(position);
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    EMClient.getInstance().contactManager().acceptInvitation(invitedEntity.getUserName());
+//                    invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.AGREED);
+//                    invitedEntity.setTime(MLDateUtil.getCurrentMillisecond());
+//                    // 更新当前的申请信息
+//                    MLInvitedDao.getInstance().updateInvited(invitedEntity);
+//                    dialog.dismiss();
+//                } catch (HyphenateException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }).start();
 
 
     }

@@ -174,6 +174,7 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
 
         // 设置当前会话未读数
         int unreadCount = conversation.getUnreadMsgCount();
+        MLLog.i("conversation unread count %d", unreadCount);
         if (unreadCount == 0) {
             if (MLConversationExtUtils.getConversationUnread(conversation)) {
                 holder.countView.setVisibility(View.VISIBLE);

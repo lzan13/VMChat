@@ -3,12 +3,14 @@ package net.melove.app.chat.test;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.hyphenate.EMCallBack;
+import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMChatRoom;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCmdMessageBody;
@@ -35,10 +37,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 测试Fragment，
- * 继承自自定义的MLBaseFramgnet类，为了减少代码量，在MLBaseFrament类中定义接口回调
- * 包含此Fragment的活动窗口必须实现{@link MLBaseFragment.OnMLFragmentListener}接口,
- * 定义创建实例的工厂方法 {@link MLTestFragment#newInstance}，可使用此方法创建实例
+ * 测试Fragment， 继承自自定义的MLBaseFramgnet类，为了减少代码量，在MLBaseFrament类中定义接口回调 包含此Fragment的活动窗口必须实现{@link
+ * MLBaseFragment.OnMLFragmentListener}接口, 定义创建实例的工厂方法 {@link MLTestFragment#newInstance}，可使用此方法创建实例
  */
 public class MLTestFragment extends MLBaseFragment {
 
@@ -67,8 +67,7 @@ public class MLTestFragment extends MLBaseFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_test, container, false);
     }
 
@@ -80,7 +79,7 @@ public class MLTestFragment extends MLBaseFragment {
     }
 
     private void init() {
-        String[] btns = {"登出", "Insert Message", "更新消息", "群消息", "创建群组", "Send CMD", "ChatRoom", "Test MLLog", "TestLogin"};
+        String[] btns = {"登出", "Insert Message", "更新消息", "群消息", "创建群组", "Send CMD", "ChatRoom", "Test MLLog", "TestLogin", "Get Contacts"};
         viewGroup = (MLViewGroup) getView().findViewById(R.id.ml_view_custom_viewgroup);
         for (int i = 0; i < btns.length; i++) {
             Button btn = new Button(mActivity);
@@ -98,35 +97,62 @@ public class MLTestFragment extends MLBaseFragment {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-            case 100:
-                signOut();
-                break;
-            case 101:
-                insertMessage();
-                break;
-            case 102:
-                updateMessage();
-                break;
-            case 103:
-                sendGroupMessage();
-                break;
-            case 104:
-                testCreateGroup();
-                break;
-            case 105:
-                sendCMDMessage();
-                break;
-            case 106:
-                break;
-            case 107:
-                testMLLog();
-                break;
-            case 108:
-                testLogin();
-                break;
+                case 100:
+                    signOut();
+                    break;
+                case 101:
+                    insertMessage();
+                    break;
+                case 102:
+                    updateMessage();
+                    break;
+                case 103:
+                    sendGroupMessage();
+                    break;
+                case 104:
+                    testCreateGroup();
+                    break;
+                case 105:
+                    sendCMDMessage();
+                    break;
+                case 106:
+                    break;
+                case 107:
+                    testMLLog();
+                    break;
+                case 108:
+                    testLogin();
+                    break;
+                case 109:
+                    testGetContacts();
+                    break;
             }
         }
     };
+
+    /**
+     * 测试同步好友列表
+     */
+    private void testGetContacts() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<String> contacts = new ArrayList<String>();
+                // TODO 切换账户时会出现第二个账户获取到的联系人是第一个账户的好友
+                EMClient.getInstance().contactManager().aysncGetAllContactsFromServer(new EMValueCallBack<List<String>>() {
+                    @Override
+                    public void onSuccess(List<String> list) {
+                        MLLog.i("contacts count %d, names %s", list.size(), list.toString());
+                    }
+
+                    @Override
+                    public void onError(int i, String s) {
+
+                    }
+                });
+            }
+        }).start();
+    }
 
     /**
      * 测试退出重登录
@@ -213,6 +239,8 @@ public class MLTestFragment extends MLBaseFragment {
         EMClient.getInstance().chatManager().sendMessage(cmdMessage);
     }
 
+    int count = 0;
+
     /**
      * 测试创建群组
      */
@@ -238,15 +266,32 @@ public class MLTestFragment extends MLBaseFragment {
                 EMGroupManager.EMGroupOptions option = new EMGroupManager.EMGroupOptions();
                 option.maxUsers = 100;
                 option.style = EMGroupManager.EMGroupStyle.EMGroupStylePublicJoinNeedApproval;
-                String[] members = {"lz1", "lz2"};
+                String[] members = {"lz1", "lz2", "lz3"};
                 try {
-                    EMGroup group = EMClient.getInstance().groupManager().createGroup("SDK测试群组2", "SDK端创建群组，测试默认属性", members, "这个群不错", option);
-                    MLLog.i("group is members only - " + group.isMembersOnly());
+                    EMGroup group = EMClient.getInstance().groupManager().createGroup("测试群组" + count++, "SDK端创建群组，测试默认属性", members, "这个群不错", option);
+                    Log.i("lzan13", "group id: %s" + group.getGroupId() + "members: " + group.getMembers());
                 } catch (HyphenateException e) {
                     e.printStackTrace();
                 }
             }
         }).start();
+    }
+
+    /**
+     * 测试从服务器获取群详情
+     */
+    private void testGetGroup() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    // 这个操作会导致 so 请求群详情崩溃
+                    EMGroup group = EMClient.getInstance().groupManager().getGroupFromServer("");
+                } catch (HyphenateException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     /**
@@ -316,14 +361,14 @@ public class MLTestFragment extends MLBaseFragment {
     private void insertMessage() {
         // 测试插入一条消息
         EMConversation conversation = EMClient.getInstance().chatManager().getConversation("lz1", EMConversation.EMConversationType.Chat, true);
-        EMMessage textMessage = EMMessage.createSendMessage(EMMessage.Type.TXT);
-        textMessage.setFrom("lz0");
-        textMessage.setReceipt("lz1");
+        EMMessage textMessage = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
+        textMessage.setFrom("lz1");
+        textMessage.setReceipt("lz0");
         textMessage.setStatus(EMMessage.Status.SUCCESS);
         EMTextMessageBody body = new EMTextMessageBody("test insert message");
         textMessage.addBody(body);
         conversation.insertMessage(textMessage);
-
+        conversation.markMessageAsRead(textMessage.getMsgId());
     }
 
     /**

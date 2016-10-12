@@ -1395,128 +1395,6 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
 
 
     /**
-     * --------------------------------- Message Listener -------------------------------------
-     * 环信消息监听主要方法
-     * <p>
-     * 收到新消息
-     *
-     * @param list 收到的新消息集合
-     */
-    @Override
-    public void onMessageReceived(List<EMMessage> list) {
-        MLLog.i("onMessageReceived list.size:%d", list.size());
-        // 循环遍历当前收到的消息
-        for (EMMessage message : list) {
-            String username = "";
-            if(mConversationType == EMConversation.EMConversationType.Chat){
-                username = message.getFrom();
-            }else{
-                username = message.getTo();
-            }
-            // 判断消息是否是当前会话的消息
-            if (mChatId.equals(username)) {
-                // 设置消息为已读
-                mConversation.markMessageAsRead(message.getMsgId());
-                // 调用刷新方法，因为到来的消息可能不是当前会话的，所以要循环判断
-                int position = mConversation.getMessagePosition(message);
-                postRefreshEvent(position, 1, MLConstants.ML_NOTIFY_REFRESH_INSERTED);
-
-                // 收到新消息就把对方正在输入状态设置为false
-                isInput = false;
-            } else {
-                // 如果消息不是当前会话的消息发送通知栏通知
-                MLNotifier.getInstance().sendNotificationMessage(message);
-            }
-        }
-    }
-
-    /**
-     * 收到新的 CMD 消息nani
-     *
-     * @param list
-     */
-    @Override
-    public void onCmdMessageReceived(List<EMMessage> list) {
-        for (int i = 0; i < list.size(); i++) {
-            // 透传消息
-            EMMessage cmdMessage = list.get(i);
-            EMCmdMessageBody body = (EMCmdMessageBody) cmdMessage.getBody();
-            // 判断是不是撤回消息的透传
-            if (body.action().equals(MLConstants.ML_ATTR_RECALL)) {
-                // 收到透传的CMD消息后，调用撤回消息方法进行处理
-                boolean result = MLMessageUtils.receiveRecallMessage(mActivity, cmdMessage);
-                // 撤回消息之后，判断是否当前聊天界面，用来刷新界面
-                if (mChatId.equals(cmdMessage.getFrom()) && result) {
-                    String msgId = cmdMessage.getStringAttribute(MLConstants.ML_ATTR_MSG_ID, null);
-                    int position = mConversation.getMessagePosition(mConversation.getMessage(msgId, true));
-                    postRefreshEvent(position, 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);
-                }
-            }
-            // 判断消息是否是当前会话的消息，并且收到的CMD是否是输入状态的消息
-            if (mChatId.equals(cmdMessage.getFrom()) && body.action().equals(MLConstants.ML_ATTR_INPUT_STATUS)
-                    && cmdMessage.getChatType() == EMMessage.ChatType.Chat
-                    && cmdMessage.getFrom().equals(mChatId)) {
-                // 收到输入状态新消息则把对方正在输入状态设置为true
-                isInput = true;
-                // 创建并发出一个可订阅的关于的消息事件
-                MLMessageEvent event = new MLMessageEvent();
-                event.setMessage(cmdMessage);
-                EventBus.getDefault().post(event);
-            }
-        }
-    }
-
-    /**
-     * 收到消息的已读回执
-     *
-     * @param list 收到消息已读回执
-     */
-    @Override
-    public void onMessageReadAckReceived(List<EMMessage> list) {
-        MLLog.i("onMessageReadAckReceived list.size:%d", list.size());
-        for (EMMessage message : list) {
-            // 判断消息是否是当前会话的消息
-            if (mChatId.equals(message.getTo())) {
-                // 调用刷新方法，因为到来的消息可能不是当前会话的，所以要循环判断
-                int position = mConversation.getMessagePosition(message);
-                postRefreshEvent(position, 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);
-            }
-        }
-    }
-
-    /**
-     * 收到消息的已送达回执
-     *
-     * @param list 收到发送回执的消息集合
-     */
-    @Override
-    public void onMessageDeliveryAckReceived(List<EMMessage> list) {
-        MLLog.i("onMessageDeliveryAckReceived list.size:%d", list.size());
-        for (EMMessage message : list) {
-            // 判断消息是否是当前会话的消息
-            if (mChatId.equals(message.getTo())) {
-                // 调用刷新方法，因为到来的消息可能不是当前会话的，所以要循环判断
-                int position = mConversation.getMessagePosition(message);
-                postRefreshEvent(position, 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);
-            }
-        }
-    }
-
-    /**
-     * 消息的改变
-     *
-     * @param message 发生改变的消息
-     * @param object  包含改变的消息
-     */
-    @Override
-    public void onMessageChanged(EMMessage message, Object object) {
-        MLLog.i("onMessageChanged message:%s, object:%s", message.toString(), object);
-        int position = mConversation.getMessagePosition(message);
-        postRefreshEvent(position, 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);
-    }
-    /*-------------------------------------- 消息监听 end ---------------------------------------*/
-
-    /**
      * 重写菜单项的选择事件
      *
      * @param item 点击的是哪一个菜单项
@@ -1655,4 +1533,133 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         }
         super.onDestroy();
     }
+
+
+
+    /**
+     * --------------------------------- Message Listener -------------------------------------
+     * 环信消息监听主要方法
+     * <p>
+     * 收到新消息
+     *
+     * @param list 收到的新消息集合
+     */
+    @Override
+    public void onMessageReceived(List<EMMessage> list) {
+        MLLog.i("onMessageReceived list.size:%d", list.size());
+        boolean isNotify = false;
+        // 循环遍历当前收到的消息
+        for (EMMessage message : list) {
+            String username = "";
+            if(mConversationType == EMConversation.EMConversationType.Chat){
+                username = message.getFrom();
+            }else{
+                username = message.getTo();
+            }
+            // 判断消息是否是当前会话的消息
+            if (mChatId.equals(username)) {
+                // 设置消息为已读
+                mConversation.markMessageAsRead(message.getMsgId());
+                // 调用刷新方法，因为到来的消息可能不是当前会话的，所以要循环判断
+                int position = mConversation.getMessagePosition(message);
+                postRefreshEvent(position, 1, MLConstants.ML_NOTIFY_REFRESH_INSERTED);
+
+                // 收到新消息就把对方正在输入状态设置为false
+                isInput = false;
+            } else {
+                isNotify = true;
+            }
+        }
+        if(isNotify){
+            // 如果消息不是当前会话的消息发送通知栏通知
+            MLNotifier.getInstance().sendNotificationMessageList(list);
+        }
+    }
+
+    /**
+     * 收到新的 CMD 消息nani
+     *
+     * @param list
+     */
+    @Override
+    public void onCmdMessageReceived(List<EMMessage> list) {
+        for (int i = 0; i < list.size(); i++) {
+            // 透传消息
+            EMMessage cmdMessage = list.get(i);
+            EMCmdMessageBody body = (EMCmdMessageBody) cmdMessage.getBody();
+            // 判断是不是撤回消息的透传
+            if (body.action().equals(MLConstants.ML_ATTR_RECALL)) {
+                // 收到透传的CMD消息后，调用撤回消息方法进行处理
+                boolean result = MLMessageUtils.receiveRecallMessage(mActivity, cmdMessage);
+                // 撤回消息之后，判断是否当前聊天界面，用来刷新界面
+                if (mChatId.equals(cmdMessage.getFrom()) && result) {
+                    String msgId = cmdMessage.getStringAttribute(MLConstants.ML_ATTR_MSG_ID, null);
+                    int position = mConversation.getMessagePosition(mConversation.getMessage(msgId, true));
+                    postRefreshEvent(position, 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);
+                }
+            }
+            // 判断消息是否是当前会话的消息，并且收到的CMD是否是输入状态的消息
+            if (mChatId.equals(cmdMessage.getFrom()) && body.action().equals(MLConstants.ML_ATTR_INPUT_STATUS)
+                    && cmdMessage.getChatType() == EMMessage.ChatType.Chat
+                    && cmdMessage.getFrom().equals(mChatId)) {
+                // 收到输入状态新消息则把对方正在输入状态设置为true
+                isInput = true;
+                // 创建并发出一个可订阅的关于的消息事件
+                MLMessageEvent event = new MLMessageEvent();
+                event.setMessage(cmdMessage);
+                EventBus.getDefault().post(event);
+            }
+        }
+    }
+
+    /**
+     * 收到消息的已读回执
+     *
+     * @param list 收到消息已读回执
+     */
+    @Override
+    public void onMessageReadAckReceived(List<EMMessage> list) {
+        MLLog.i("onMessageReadAckReceived list.size:%d", list.size());
+        for (EMMessage message : list) {
+            // 判断消息是否是当前会话的消息
+            if (mChatId.equals(message.getTo())) {
+                // 调用刷新方法，因为到来的消息可能不是当前会话的，所以要循环判断
+                int position = mConversation.getMessagePosition(message);
+                postRefreshEvent(position, 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);
+            }
+        }
+    }
+
+    /**
+     * 收到消息的已送达回执
+     *
+     * @param list 收到发送回执的消息集合
+     */
+    @Override
+    public void onMessageDeliveryAckReceived(List<EMMessage> list) {
+        MLLog.i("onMessageDeliveryAckReceived list.size:%d", list.size());
+        for (EMMessage message : list) {
+            // 判断消息是否是当前会话的消息
+            if (mChatId.equals(message.getTo())) {
+                // 调用刷新方法，因为到来的消息可能不是当前会话的，所以要循环判断
+                int position = mConversation.getMessagePosition(message);
+                postRefreshEvent(position, 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);
+            }
+        }
+    }
+
+    /**
+     * 消息的改变
+     *
+     * @param message 发生改变的消息
+     * @param object  包含改变的消息
+     */
+    @Override
+    public void onMessageChanged(EMMessage message, Object object) {
+        MLLog.i("onMessageChanged message:%s, object:%s", message.toString(), object);
+        int position = mConversation.getMessagePosition(message);
+        postRefreshEvent(position, 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);
+    }
+    /*-------------------------------------- 消息监听 end ---------------------------------------*/
+
 }

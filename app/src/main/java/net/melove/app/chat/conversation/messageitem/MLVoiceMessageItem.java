@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -29,13 +28,10 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 /**
- * Created by lz on 2016/8/25.
- * 语音消息处理类
+ * Created by lz on 2016/8/25. 语音消息处理类
  */
 public class MLVoiceMessageItem extends MLMessageItem {
 
-    // 播放按钮
-    protected ImageButton playVoiceBtn;
     // 显示波形控件
     private MLWaveformView mWaveformView;
 
@@ -103,21 +99,6 @@ public class MLVoiceMessageItem extends MLMessageItem {
             MLVoiceManager.getInstance().setVoiceCallback(voiceCallback);
         }
 
-        // 给按钮设置监听
-        playVoiceBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 判断当前Item 是否正在播放，然后设置数据更新回调，这里点击和上边的判断不同，这里要主动去设置
-                if (!MLVoiceManager.getInstance().isPlaying(mMessage)) {
-                    MLVoiceManager.getInstance().setVoiceCallback(voiceCallback);
-                }
-                // 调用音频管理类
-                MLVoiceManager.getInstance().onPlay(mMessage);
-                // 设置播放状态
-                setPlayStatus();
-            }
-        });
-
         // 设置波形控件回调，主要为了实现后期回调拖动进度
         mWaveformView.setWaveformCallback(waveformCallback);
         // 刷新界面显示
@@ -132,6 +113,9 @@ public class MLVoiceMessageItem extends MLMessageItem {
         }
     };
 
+    /**
+     * 播放声音回调函数
+     */
     private MLVoiceManager.MLVoiceCallback voiceCallback = new MLVoiceManager.MLVoiceCallback() {
         @Override
         public void onUpdateData(byte[] data, int position) {
@@ -144,10 +128,23 @@ public class MLVoiceMessageItem extends MLMessageItem {
         }
     };
 
+    @Override
+    protected void onItemClick() {
+        //        super.onItemClick();
+        // 判断当前Item 是否正在播放，然后设置数据更新回调，这里点击和上边的判断不同，这里要主动去设置
+        if (!MLVoiceManager.getInstance().isPlaying(mMessage)) {
+            MLVoiceManager.getInstance().setVoiceCallback(voiceCallback);
+        }
+        // 调用音频管理类
+        MLVoiceManager.getInstance().onPlay(mMessage);
+        // 设置播放状态
+        setPlayStatus();
+    }
+
     /**
-     * 实现当前Item 的长按操作，因为各个Item类型不同，需要的实现操作不同，所以长按菜单的弹出在Item中实现，
-     * 然后长按菜单项需要的操作，通过回调的方式传递到{@link MLChatActivity#setItemClickListener()}中去实现
-     * TODO 现在这种实现并不是最优，因为在每一个 Item 中都要去实现弹出一个 Dialog，但是又不想自定义dialog
+     * 实现当前Item 的长按操作，因为各个Item类型不同，需要的实现操作不同，所以长按菜单的弹出在Item中实现， 然后长按菜单项需要的操作，通过回调的方式传递到{@link
+     * MLChatActivity#setItemClickListener()}中去实现 TODO 现在这种实现并不是最优，因为在每一个 Item 中都要去实现弹出一个
+     * Dialog，但是又不想自定义dialog
      */
     @Override
     protected void onItemLongClick() {
@@ -159,14 +156,9 @@ public class MLVoiceMessageItem extends MLMessageItem {
          * TODO 后期可以加上语音转文字
          */
         if (mViewType == MLConstants.MSG_TYPE_VOICE_RECEIVED) {
-            menus = new String[]{
-                    mActivity.getResources().getString(R.string.ml_menu_chat_delete)
-            };
+            menus = new String[]{mActivity.getResources().getString(R.string.ml_menu_chat_delete)};
         } else {
-            menus = new String[]{
-                    mActivity.getResources().getString(R.string.ml_menu_chat_delete),
-                    mActivity.getResources().getString(R.string.ml_menu_chat_recall)
-            };
+            menus = new String[]{mActivity.getResources().getString(R.string.ml_menu_chat_delete), mActivity.getResources().getString(R.string.ml_menu_chat_recall)};
         }
 
         // 创建并显示 ListView 的长按弹出菜单，并设置弹出菜单 Item的点击监听
@@ -177,12 +169,12 @@ public class MLVoiceMessageItem extends MLMessageItem {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
-                case 0:
-                    mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_MSG_DELETE);
-                    break;
-                case 1:
-                    mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_MSG_RECALL);
-                    break;
+                    case 0:
+                        mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_MSG_DELETE);
+                        break;
+                    case 1:
+                        mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_MSG_RECALL);
+                        break;
                 }
             }
         });
@@ -191,15 +183,14 @@ public class MLVoiceMessageItem extends MLMessageItem {
     }
 
     /**
-     * 设置消息播放状态，这里根据当前是否正在播放来判断状态，
-     * 需要和{@link MLVoiceManager}联系起来
+     * 设置消息播放状态，这里根据当前是否正在播放来判断状态， 需要和{@link MLVoiceManager}联系起来
      */
     private void setPlayStatus() {
         // 判断当前语音是否在播放
         if (MLVoiceManager.getInstance().isPlaying(mMessage)) {
-            playVoiceBtn.setActivated(true);
+            //            playVoiceBtn.setActivated(true);
         } else {
-            playVoiceBtn.setActivated(false);
+            //            playVoiceBtn.setActivated(false);
         }
     }
 
@@ -214,29 +205,29 @@ public class MLVoiceMessageItem extends MLMessageItem {
         }
         // 判断消息的状态，如果发送失败就显示重发按钮，并设置重发按钮的监听
         switch (mMessage.status()) {
-        case SUCCESS:
-            ackStatusView.setVisibility(View.VISIBLE);
-            msgProgressBar.setVisibility(View.GONE);
-            resendView.setVisibility(View.GONE);
-            break;
-        case FAIL:
-        case CREATE:
-            // 当消息在发送过程中被Kill，消息的状态会变成Create，而且永远不会发送成功，所以这里把CREATE状态莪要设置为失败
-            ackStatusView.setVisibility(View.GONE);
-            msgProgressBar.setVisibility(View.GONE);
-            resendView.setVisibility(View.VISIBLE);
-            resendView.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_MSG_RESEND);
-                }
-            });
-            break;
-        case INPROGRESS:
-            ackStatusView.setVisibility(View.GONE);
-            msgProgressBar.setVisibility(View.VISIBLE);
-            resendView.setVisibility(View.GONE);
-            break;
+            case SUCCESS:
+                ackStatusView.setVisibility(View.VISIBLE);
+                msgProgressBar.setVisibility(View.GONE);
+                resendView.setVisibility(View.GONE);
+                break;
+            case FAIL:
+            case CREATE:
+                // 当消息在发送过程中被Kill，消息的状态会变成Create，而且永远不会发送成功，所以这里把CREATE状态莪要设置为失败
+                ackStatusView.setVisibility(View.GONE);
+                msgProgressBar.setVisibility(View.GONE);
+                resendView.setVisibility(View.VISIBLE);
+                resendView.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_MSG_RESEND);
+                    }
+                });
+                break;
+            case INPROGRESS:
+                ackStatusView.setVisibility(View.GONE);
+                msgProgressBar.setVisibility(View.VISIBLE);
+                resendView.setVisibility(View.GONE);
+                break;
         }
         // 设置消息ACK 状态
         setAckStatusView();
@@ -273,7 +264,6 @@ public class MLVoiceMessageItem extends MLMessageItem {
         resendView = (ImageView) findViewById(R.id.ml_img_msg_resend);
         msgProgressBar = (ProgressBar) findViewById(R.id.ml_progressbar_msg);
         ackStatusView = (ImageView) findViewById(R.id.ml_img_msg_ack);
-        playVoiceBtn = (ImageButton) findViewById(R.id.ml_btn_chat_play_voice);
         mWaveformView = (MLWaveformView) findViewById(R.id.ml_view_chat_waveform_voice);
 
     }

@@ -43,8 +43,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Created by lzan13 on 2015/7/13.
- * 自定义初始化类做一些环信sdk的初始化操作
+ * Created by lzan13 on 2015/7/13. 自定义初始化类做一些环信sdk的初始化操作
  */
 public class MLEasemob {
 
@@ -103,6 +102,7 @@ public class MLEasemob {
      * 初始化环信的SDK
      *
      * @param context 上下文菜单
+     *
      * @return 返回初始化状态是否成功
      */
     public synchronized boolean initEasemob(Context context) {
@@ -151,7 +151,7 @@ public class MLEasemob {
         // 启动私有化配置
         options.enableDNSConfig(true);
         // 设置Appkey，如果配置文件已经配置，这里可以不用设置
-        options.setAppKey("lzan13#hxsdkdemo");
+        //        options.setAppKey("lzan13#hxsdkdemo");
         // 设置自动登录
         options.setAutoLogin(true);
         // 设置是否按照服务器时间排序，false按照本地时间排序
@@ -162,12 +162,10 @@ public class MLEasemob {
         options.setRequireDeliveryAck(true);
         // 设置是否需要服务器收到消息确认
         options.setRequireServerAck(true);
-        // TODO 设置初始化数据库DB时，每个会话要加载的Message数量，这个在后期会删除
-        // options.setNumberOfMessagesLoaded(1);
         // 收到好友申请是否自动同意，如果是自动同意就不会收到好友请求的回调，因为sdk会自动处理，默认为true
         options.setAcceptInvitationAlways(false);
         // 设置是否自动接收加群邀请，如果设置了当收到群邀请会自动同意加入
-        options.setAutoAcceptGroupInvitation(false);
+        options.setAutoAcceptGroupInvitation(true);
         // 设置（主动或被动）退出群组时，是否删除群聊聊天记录
         options.setDeleteMessagesAsExitGroup(false);
         // 设置是否允许聊天室的Owner 离开并删除聊天室的会话
@@ -187,11 +185,8 @@ public class MLEasemob {
     }
 
     /**
-     * 初始化全局监听，其中包括：
-     * 连接监听 {@link #setConnectionListener()}
-     * 消息监听 {@link #setMessageListener()}
-     * 联系人监听 {@link #setContactListener()}
-     * 群组监听 {@link #setGroupChangeListener()}
+     * 初始化全局监听，其中包括： 连接监听 {@link #setConnectionListener()} 消息监听 {@link #setMessageListener()} 联系人监听
+     * {@link #setContactListener()} 群组监听 {@link #setGroupChangeListener()}
      */
     public void initGlobalListener() {
         MLLog.d("------- listener start --------------");
@@ -238,66 +233,66 @@ public class MLEasemob {
                     EventBus.getDefault().post(event);
 
                     switch (callState) {
-                    case CONNECTING: // 正在呼叫对方
-                        MLLog.i("正在呼叫对方" + callError);
-                        MLCallStatus.getInstance().setCallState(MLCallStatus.CALL_STATUS_CONNECTING);
-                        break;
-                    case CONNECTED: // 正在等待对方接受呼叫申请（对方申请与你进行通话）
-                        MLLog.i("正在等待对方接受呼叫申请" + callError);
-                        MLCallStatus.getInstance().setCallState(MLCallStatus.CALL_STATUS_CONNECTING);
-                        break;
-                    case ACCEPTED: // 通话已接通
-                        MLLog.i("通话已接通");
-                        MLCallStatus.getInstance().setCallState(MLCallStatus.CALL_STATUS_ACCEPTED);
-                        break;
-                    case DISCONNNECTED: // 通话已中断
-                        MLLog.i("通话已结束" + callError);
-                        // 通话结束，重置通话状态
-                        MLCallStatus.getInstance().reset();
-                        if (callError == CallError.ERROR_UNAVAILABLE) {
-                            MLLog.i("对方不在线" + callError);
-                        } else if (callError == CallError.ERROR_BUSY) {
-                            MLLog.i("对方正忙" + callError);
-                        } else if (callError == CallError.REJECTED) {
-                            MLLog.i("对方已拒绝" + callError);
-                        } else if (callError == CallError.ERROR_NORESPONSE) {
-                            MLLog.i("对方未响应，可能手机不在身边" + callError);
-                        } else if (callError == CallError.ERROR_TRANSPORT) {
-                            MLLog.i("连接建立失败" + callError);
-                        } else if (callError == CallError.ERROR_LOCAL_SDK_VERSION_OUTDATED) {
-                            MLLog.i("双方通讯协议不同" + callError);
-                        } else if (callError == CallError.ERROR_REMOTE_SDK_VERSION_OUTDATED) {
-                            MLLog.i("双方通讯协议不同" + callError);
-                        } else {
-                            MLLog.i("通话已结束，时长：%s，error %s", "10:35", callError);
-                        }
-                        // 结束通话时取消通话状态监听
-                        MLEasemob.getInstance().removeCallStateChangeListener();
-                        break;
-                    case NETWORK_UNSTABLE:
-                        if (callError == EMCallStateChangeListener.CallError.ERROR_NO_DATA) {
-                            MLLog.i("没有通话数据" + callError);
-                        } else {
-                            MLLog.i("网络不稳定" + callError);
-                        }
-                        break;
-                    case NETWORK_NORMAL:
-                        MLLog.i("网络正常");
-                        break;
-                    case VIDEO_PAUSE:
-                        MLLog.i("视频传输已暂停");
-                        break;
-                    case VIDEO_RESUME:
-                        MLLog.i("视频传输已恢复");
-                        break;
-                    case VOICE_PAUSE:
-                        MLLog.i("语音传输已暂停");
-                        break;
-                    case VOICE_RESUME:
-                        MLLog.i("语音传输已恢复");
-                        break;
-                    default:
-                        break;
+                        case CONNECTING: // 正在呼叫对方
+                            MLLog.i("正在呼叫对方" + callError);
+                            MLCallStatus.getInstance().setCallState(MLCallStatus.CALL_STATUS_CONNECTING);
+                            break;
+                        case CONNECTED: // 正在等待对方接受呼叫申请（对方申请与你进行通话）
+                            MLLog.i("正在等待对方接受呼叫申请" + callError);
+                            MLCallStatus.getInstance().setCallState(MLCallStatus.CALL_STATUS_CONNECTING);
+                            break;
+                        case ACCEPTED: // 通话已接通
+                            MLLog.i("通话已接通");
+                            MLCallStatus.getInstance().setCallState(MLCallStatus.CALL_STATUS_ACCEPTED);
+                            break;
+                        case DISCONNNECTED: // 通话已中断
+                            MLLog.i("通话已结束" + callError);
+                            // 通话结束，重置通话状态
+                            MLCallStatus.getInstance().reset();
+                            if (callError == CallError.ERROR_UNAVAILABLE) {
+                                MLLog.i("对方不在线" + callError);
+                            } else if (callError == CallError.ERROR_BUSY) {
+                                MLLog.i("对方正忙" + callError);
+                            } else if (callError == CallError.REJECTED) {
+                                MLLog.i("对方已拒绝" + callError);
+                            } else if (callError == CallError.ERROR_NORESPONSE) {
+                                MLLog.i("对方未响应，可能手机不在身边" + callError);
+                            } else if (callError == CallError.ERROR_TRANSPORT) {
+                                MLLog.i("连接建立失败" + callError);
+                            } else if (callError == CallError.ERROR_LOCAL_SDK_VERSION_OUTDATED) {
+                                MLLog.i("双方通讯协议不同" + callError);
+                            } else if (callError == CallError.ERROR_REMOTE_SDK_VERSION_OUTDATED) {
+                                MLLog.i("双方通讯协议不同" + callError);
+                            } else {
+                                MLLog.i("通话已结束，时长：%s，error %s", "10:35", callError);
+                            }
+                            // 结束通话时取消通话状态监听
+                            MLEasemob.getInstance().removeCallStateChangeListener();
+                            break;
+                        case NETWORK_UNSTABLE:
+                            if (callError == EMCallStateChangeListener.CallError.ERROR_NO_DATA) {
+                                MLLog.i("没有通话数据" + callError);
+                            } else {
+                                MLLog.i("网络不稳定" + callError);
+                            }
+                            break;
+                        case NETWORK_NORMAL:
+                            MLLog.i("网络正常");
+                            break;
+                        case VIDEO_PAUSE:
+                            MLLog.i("视频传输已暂停");
+                            break;
+                        case VIDEO_RESUME:
+                            MLLog.i("视频传输已恢复");
+                            break;
+                        case VOICE_PAUSE:
+                            MLLog.i("语音传输已暂停");
+                            break;
+                        case VOICE_RESUME:
+                            MLLog.i("语音传输已恢复");
+                            break;
+                        default:
+                            break;
                     }
                 }
             };
@@ -316,8 +311,7 @@ public class MLEasemob {
     }
 
     /**
-     * ------------------------------- Connection Listener ---------------------
-     * 链接监听，监听与服务器连接状况
+     * ------------------------------- Connection Listener --------------------- 链接监听，监听与服务器连接状况
      */
     private void setConnectionListener() {
         mConnectionListener = new EMConnectionListener() {
@@ -370,8 +364,7 @@ public class MLEasemob {
     }
 
     /**
-     * ---------------------------------- Message Listener ----------------------------
-     * 初始化全局的消息监听
+     * ---------------------------------- Message Listener ---------------------------- 初始化全局的消息监听
      */
     protected void setMessageListener() {
         mMessageListener = new EMMessageListener() {
@@ -861,6 +854,7 @@ public class MLEasemob {
      * 根据Pid获取当前进程的名字，一般就是当前app的包名
      *
      * @param pid 进程的id
+     *
      * @return 返回进程的名字
      */
     private String getAppName(int pid) {

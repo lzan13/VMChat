@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-
     <!--透明颜色-->
     <!--Application 基色-->
     <color name="ml_transparent">#00000000</color>
@@ -64,7 +63,7 @@
     <color name="ml_blue_38">#612384fe</color>
     <color name="ml_blue_12">#1e2384fe</color>
 
-    <!--蓝色-->
+    <!--绿色-->
     <color name="ml_green_100">#ff039e00</color>
     <color name="ml_green_87">#dd039e00</color>
     <color name="ml_green_54">#89039e00</color>

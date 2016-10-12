@@ -27,7 +27,7 @@
         <!--设置 Dialog 样式 在4.x上会导致ProgressDialog有双重背景，暂时取消设置-->
         <!--<item name="android:dialogTheme">@style/MLTheme.DialogOverlay</item>-->
 
-    </style>
+    </style>Set the ActionMode effect to prevent ActionMode from squeezing the Toolbar
 
     <!--启动时的主题样式-->
     <style name="MLTheme.Launcher" parent="MLTheme.Base">
@@ -114,7 +114,7 @@
         <item name="android:src">@mipmap/ic_add_white_24dp</item>
     </style>
 
-    <!--自定 Toolbar 弹出 PopupMenu 样式，要想此设置生肖，在布局文件必须要自定义命名空间 xmlns：app-->
+    <!--自定 Toolbar 弹出 PopupMenu 样式，要想此设置生效，在布局文件必须要自定义命名空间 xmlns：app-->
     <style name="MLTheme.PopupOverlay" parent="@style/ThemeOverlay.AppCompat.Light">
         <!--设置菜单项文字的背景-->
         <!--<item name="android:background">@drawable/ml_popup_backaground</item>-->
