@@ -2,7 +2,7 @@ package net.melove.app.chat.ui.chat.call;
 
 /**
  * Created by lzan13 on 2016/8/16.
- * 通话状态记录类，这里做成一个单例类，因为通话同一时间只会存在一个
+ * 语音和视频通话状态类，这是一个单例类，因为通话同一时间只会存在一个
  */
 public class MLCallStatus {
 

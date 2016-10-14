@@ -1,5 +1,5 @@
-MLEaseChat
-================
+MLChat
+======
 此项目是使用`AndroidStudio`通过集成环信`SDK3.x`集成的一个聊天项目，此项目旨在帮助开发者更好的集成聊天，
 并且项目遵循`Android Medital Design`设计模式，方便开发者参考做出更符合`Android`自身风格的应用；
 最主要的是此项目注释详细，每个类、方法都有进行说明 ^_^
@@ -8,48 +8,49 @@ MLEaseChat
 如果大家的开发环境版本过低建议及时进行更新，因为最新的`SDK-Tools`已经不需要翻墙就可以更新了，开发工具就像我们的武器，
 可以免费更换好武器，你还一直抱着你的老三八大盖不放，这样干不过别人啊
 ```gradle
-AndroidStudio 2.1.2
-Android SDK Tools 25.1.7
+AndroidStudio 2.2.1
+Android SDK Tools 25.2.2
 Android SDK Build-tools 24.0.2
 Android SDK compileSdkVersion 24
 Android SDK targetSdkVersion 22
 Android SDK minSdkVersion 15
-Gradle 2.10
-Genymotion 2.7.2
+Gradle 2.14.1
 ```
 
 ### 所使用库的版本
 ```gradle
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    /**
-     *     新的遵循 Android  Material design 设计风格库，此扩展库已经包含了一下三个扩展库，如果引入了design，
-     *     就不需要再单独引入其他库
-     *     support-v4
-     *     appcomat-v7
-     *     recyclerView库
-     */
-    compile 'com.android.support:design:24.2.0'
-    // 解决方法数超过65536问题扩展库
-    compile 'com.android.support:multidex:1.0.0'
-    // Google Play Service 库，使用GCM推送需要
-    compile 'com.google.android.gms:play-services-gcm:9.4.0'
-    // LeakCanary Debug库，开源捕获内存溢出的库
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
-    // LeakCanary 发版的库
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
-    // 第三方图片加载库
-    compile 'com.github.bumptech.glide:glide:3.7.0'
-    // 观察者模式解耦库
-    compile 'org.greenrobot:eventbus:3.0.0'
-    // 支持手势缩放的ImageView
-    compile 'com.bm.photoview:library:1.4.1'
-    /**
-     *     引入各种第三方 SDK jar包，在上边 fileTree 里已经包含了libs，这里可以不用再单独添加
-     */
-    compile files('libs/xiaomi_push_v303.jar')
-    compile files('libs/huanxin_chat_v315.jar')
-    compile files('libs/huawei_push_v2705.jar')
-    compile files('libs/talkingdata_analytics_v2230.jar')
+     compile fileTree(include: ['*.jar'], dir: 'libs')
+ 
+     // 引入 ButterKnife 库
+     apt 'com.jakewharton:butterknife-compiler:8.4.0'
+     compile 'com.jakewharton:butterknife:8.4.0'
+ 
+     /**
+      * 新的遵循 Android  Material design 设计风格库，此扩展库已经包含了support-v4,appcomat-v7,recyclerView扩展库，
+      * 如果引入了design，就不需要再单独引入其他库
+      */
+     compile 'com.android.support:design:24.2.1'
+     // 解决方法数超过65536问题扩展库
+     compile 'com.android.support:multidex:1.0.1'
+     // Google Play Service 库，使用GCM推送需要
+     compile 'com.google.android.gms:play-services-gcm:9.4.0'
+     // LeakCanary Debug库，开源捕获内存溢出的库
+     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
+     // LeakCanary 发版的库
+     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
+     // 第三方图片加载库
+     compile 'com.github.bumptech.glide:glide:3.7.0'
+     // 观察者模式解耦库
+     compile 'org.greenrobot:eventbus:3.0.0'
+     // 支持手势缩放的ImageView
+     compile 'com.bm.photoview:library:1.4.1'
+     // 环信这边提供的 aar 方式引入的sdk
+     compile 'com.hyphenate:hyphenate-sdk:3.1.5'
+ 
+     // 引入各种第三方 SDK jar包，在上边 fileTree 里已经包含了libs，这里可以不用再单独添加
+     compile files('libs/xiaomi_push_v303.jar')
+     compile files('libs/huawei_push_v2705.jar')
+     compile files('libs/talkingdata_analytics_v2230.jar')
 ```
 
 已实现模块儿

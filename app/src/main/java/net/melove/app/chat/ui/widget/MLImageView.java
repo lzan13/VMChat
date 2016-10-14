@@ -48,7 +48,7 @@ public class MLImageView extends ImageView {
     protected int pressColor;
     // 圆角半径
     protected int radius;
-    // 图片类型（矩形，圆形）
+    // 图片类型（0正常, 1圆形, 2圆角）
     protected int shapeType;
     // 当前控件是否继续分发触摸事件，默认继续分发，即不拦截触摸事件
     protected boolean isDispatchTouchEvent = true;
@@ -158,11 +158,7 @@ public class MLImageView extends ImageView {
         //Paint 的 Xfermode，PorterDuff.Mode.SRC_IN 取两层图像的交集部门, 只显示上层图像。
         PorterDuffXfermode xfermode = new PorterDuffXfermode(PorterDuff.Mode.SRC_IN);
         // 标志
-        int saveFlags = Canvas.MATRIX_SAVE_FLAG
-                | Canvas.CLIP_SAVE_FLAG
-                | Canvas.HAS_ALPHA_LAYER_SAVE_FLAG
-                | Canvas.FULL_COLOR_LAYER_SAVE_FLAG
-                | Canvas.CLIP_TO_LAYER_SAVE_FLAG;
+        int saveFlags = Canvas.MATRIX_SAVE_FLAG | Canvas.CLIP_SAVE_FLAG | Canvas.HAS_ALPHA_LAYER_SAVE_FLAG | Canvas.FULL_COLOR_LAYER_SAVE_FLAG | Canvas.CLIP_TO_LAYER_SAVE_FLAG;
         canvas.saveLayer(0, 0, width, height, null, saveFlags);
 
         if (shapeType == 1) {
@@ -225,8 +221,7 @@ public class MLImageView extends ImageView {
                 canvas.drawCircle(width / 2, height / 2, (width - borderWidth) / 2, paint);
             } else if (shapeType == 2) {
                 // 当ShapeType = 1 时 图片为圆角矩形
-                RectF rectf = new RectF(borderWidth / 2, borderWidth / 2, getWidth() - borderWidth / 2,
-                        getHeight() - borderWidth / 2);
+                RectF rectf = new RectF(borderWidth / 2, borderWidth / 2, getWidth() - borderWidth / 2, getHeight() - borderWidth / 2);
                 canvas.drawRoundRect(rectf, radius, radius, paint);
             }
         }
@@ -251,6 +246,7 @@ public class MLImageView extends ImageView {
      * View 的事件分发
      *
      * @param event
+     *
      * @return
      */
     @Override
@@ -265,26 +261,27 @@ public class MLImageView extends ImageView {
      * 重写 onTouchEvent 监听方法，用来响应控件触摸
      *
      * @param event
+     *
      * @return
      */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
-        case MotionEvent.ACTION_DOWN:
-            pressPaint.setAlpha(pressAlpha);
-            invalidate();
-            break;
-        case MotionEvent.ACTION_UP:
-            pressPaint.setAlpha(0);
-            invalidate();
-            break;
-        case MotionEvent.ACTION_MOVE:
+            case MotionEvent.ACTION_DOWN:
+                pressPaint.setAlpha(pressAlpha);
+                invalidate();
+                break;
+            case MotionEvent.ACTION_UP:
+                pressPaint.setAlpha(0);
+                invalidate();
+                break;
+            case MotionEvent.ACTION_MOVE:
 
-            break;
-        default:
-            pressPaint.setAlpha(0);
-            invalidate();
-            break;
+                break;
+            default:
+                pressPaint.setAlpha(0);
+                invalidate();
+                break;
         }
         return super.onTouchEvent(event);
     }
@@ -295,6 +292,7 @@ public class MLImageView extends ImageView {
      * 这里是通过drawable不同的类型来进行获取Bitmap
      *
      * @param drawable
+     *
      * @return
      */
     private Bitmap getBitmapFromDrawable(Drawable drawable) {
@@ -305,8 +303,7 @@ public class MLImageView extends ImageView {
             } else if (drawable instanceof ColorDrawable) {
                 bitmap = Bitmap.createBitmap(COLORDRAWABLE_DIMENSION, COLORDRAWABLE_DIMENSION, BITMAP_CONFIG);
             } else {
-                bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(),
-                        BITMAP_CONFIG);
+                bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), BITMAP_CONFIG);
             }
             Canvas canvas = new Canvas(bitmap);
             drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());

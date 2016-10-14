@@ -29,9 +29,6 @@ import org.greenrobot.eventbus.ThreadMode;
  */
 public class MLApplyForActivity extends MLBaseActivity {
 
-
-    private Toolbar mToolbar;
-
     // 当前会话对象，这里主要是记录申请与记录信息
     private EMConversation mConversation;
     // 每次加载申请与通知消息的条数

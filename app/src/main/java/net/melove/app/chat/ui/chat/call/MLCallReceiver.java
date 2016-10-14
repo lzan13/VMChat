@@ -36,7 +36,6 @@ public class MLCallReceiver extends BroadcastReceiver {
 
         // 判断下当前被呼叫的为自己的时候才启动通话界面 TODO 这个当不同appkey下相同的username时就无效了
         if (callTo.equals(EMClient.getInstance().getCurrentUser())) {
-            // 创建界面跳转 intent
             Intent callIntent = new Intent();
             // 根据通话类型跳转到语音通话或视频通话界面
             if (callType.equals(TYPE_VIDEO)) {
@@ -54,7 +53,6 @@ public class MLCallReceiver extends BroadcastReceiver {
             callIntent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, callFrom);
             // 设置通话为对方打来
             callIntent.putExtra(MLConstants.ML_EXTRA_CALL_IS_INCOMING, true);
-            // 根据 intent 跳转到相应的界面
             context.startActivity(callIntent);
         }
     }

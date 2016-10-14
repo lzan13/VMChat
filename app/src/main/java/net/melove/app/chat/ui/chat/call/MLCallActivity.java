@@ -45,7 +45,7 @@ public class MLCallActivity extends MLBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // 设置通话界面属性，保持屏幕常亮，关闭输入法，一届解锁
+        // 设置通话界面属性，保持屏幕常亮，关闭输入法，以及解锁
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
                 | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
                 | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
@@ -105,50 +105,50 @@ public class MLCallActivity extends MLBaseActivity {
         }
 
         switch (mCallStatus) {
-        case MLConstants.ML_CALL_ACCEPTED:
-            // 通话正常结束，要加上通话时间
-            content = mActivity.getString(R.string.ml_call_duration_time);
-            break;
-        case MLConstants.ML_CALL_CANCEL:
-            // 自己取消
-            content = mActivity.getString(R.string.ml_call_cancel);
-            break;
-        case MLConstants.ML_CALL_CANCEL_IS_INCOMING:
-            // 对方取消
-            content = mActivity.getString(R.string.ml_call_cancel_is_incoming);
-            break;
-        case MLConstants.ML_CALL_BUSY:
-            // 对方正忙
-            content = mActivity.getString(R.string.ml_call_busy);
-            break;
-        case MLConstants.ML_CALL_OFFLINE:
-            // 对方不在线
-            content = mActivity.getString(R.string.ml_call_not_online);
-            break;
-        case MLConstants.ML_CALL_REFUESD_IS_INCOMING:
-            // 自己已拒绝
-            content = mActivity.getString(R.string.ml_call_reject_is_incoming);
-            break;
-        case MLConstants.ML_CALL_REFUESD:
-            // 对方拒绝
-            content = mActivity.getString(R.string.ml_call_reject);
-            break;
-        case MLConstants.ML_CALL_NORESPONSE:
-            // 对方无响应
-            content = mActivity.getString(R.string.ml_call_noresponse);
-            break;
-        case MLConstants.ML_CALL_TRANSPORT:
-            // 建立连接失败
-            content = mActivity.getString(R.string.ml_call_connection_fail);
-            break;
-        case MLConstants.ML_CALL_VERSION_DIFFERENT:
-            // 双方通话协议版本不同
-            content = mActivity.getString(R.string.ml_call_not_online);
-            break;
-        default:
-            // 默认为取消
-            content = mActivity.getString(R.string.ml_call_cancel);
-            break;
+            case MLConstants.ML_CALL_ACCEPTED:
+                // 通话正常结束，要加上通话时间
+                content = mActivity.getString(R.string.ml_call_duration_time);
+                break;
+            case MLConstants.ML_CALL_CANCEL:
+                // 自己取消
+                content = mActivity.getString(R.string.ml_call_cancel);
+                break;
+            case MLConstants.ML_CALL_CANCEL_IS_INCOMING:
+                // 对方取消
+                content = mActivity.getString(R.string.ml_call_cancel_is_incoming);
+                break;
+            case MLConstants.ML_CALL_BUSY:
+                // 对方正忙
+                content = mActivity.getString(R.string.ml_call_busy);
+                break;
+            case MLConstants.ML_CALL_OFFLINE:
+                // 对方不在线
+                content = mActivity.getString(R.string.ml_call_not_online);
+                break;
+            case MLConstants.ML_CALL_REFUESD_IS_INCOMING:
+                // 自己已拒绝
+                content = mActivity.getString(R.string.ml_call_reject_is_incoming);
+                break;
+            case MLConstants.ML_CALL_REFUESD:
+                // 对方拒绝
+                content = mActivity.getString(R.string.ml_call_reject);
+                break;
+            case MLConstants.ML_CALL_NORESPONSE:
+                // 对方无响应
+                content = mActivity.getString(R.string.ml_call_noresponse);
+                break;
+            case MLConstants.ML_CALL_TRANSPORT:
+                // 建立连接失败
+                content = mActivity.getString(R.string.ml_call_connection_fail);
+                break;
+            case MLConstants.ML_CALL_VERSION_DIFFERENT:
+                // 双方通话协议版本不同
+                content = mActivity.getString(R.string.ml_call_not_online);
+                break;
+            default:
+                // 默认为取消
+                content = mActivity.getString(R.string.ml_call_cancel);
+                break;
         }
         body = new EMTextMessageBody(content);
         message.addBody(body);
@@ -185,8 +185,7 @@ public class MLCallActivity extends MLBaseActivity {
         mAudioManager.setMode(AudioManager.MODE_RINGTONE);
         // 播放提示音，返回一个播放的音频id，等下停止播放需要用到
         if (mSoundPool != null) {
-            streamID = mSoundPool.play(
-                    loadId, // 播放资源id；就是加载到SoundPool里的音频资源顺序，这里就是第一个，也是唯一的一个
+            streamID = mSoundPool.play(loadId, // 播放资源id；就是加载到SoundPool里的音频资源顺序，这里就是第一个，也是唯一的一个
                     0.5f,   // 左声道音量
                     0.5f,   // 右声道音量
                     1,      // 优先级，这里至于一个提示音，不需要关注
@@ -215,9 +214,7 @@ public class MLCallActivity extends MLBaseActivity {
     protected void createSoundPoolWithBuilder() {
         AudioAttributes attributes = new AudioAttributes.Builder()
                 // 设置音频要用在什么地方，这里选择电话通知铃音
-                .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
-                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                .build();
+                .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE).setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build();
         // 使用 build 的方式实例化 SoundPool
         mSoundPool = new SoundPool.Builder().setAudioAttributes(attributes).setMaxStreams(1).build();
     }

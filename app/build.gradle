@@ -88,10 +88,8 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.4.0'
 
     /**
-     * 新的遵循 Android  Material design 设计风格库，此扩展库已经包含了一下三个扩展库，如果引入了design，就不需要再单独引入其他库
-     *     support-v4
-     *     appcomat-v7
-     *     recyclerView
+     * 新的遵循 Android  Material design 设计风格库，此扩展库已经包含了support-v4,appcomat-v7,recyclerView扩展库，
+     * 如果引入了design，就不需要再单独引入其他库
      */
     compile 'com.android.support:design:24.2.1'
     // 解决方法数超过65536问题扩展库
@@ -111,13 +109,10 @@ dependencies {
     // 环信这边提供的 aar 方式引入的sdk
     compile 'com.hyphenate:hyphenate-sdk:3.1.5'
 
-    /**
-     *     引入各种第三方 SDK jar包，在上边 fileTree 里已经包含了libs，这里可以不用再单独添加
-     */
+    // 引入各种第三方 SDK jar包，在上边 fileTree 里已经包含了libs，这里可以不用再单独添加
     compile files('libs/xiaomi_push_v303.jar')
     compile files('libs/huawei_push_v2705.jar')
     compile files('libs/talkingdata_analytics_v2230.jar')
-
 
 }
 

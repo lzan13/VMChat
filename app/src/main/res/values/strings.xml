@@ -124,7 +124,7 @@
     <string name="ml_hint_count">数量</string>
     <string name="ml_hint_empty">- 空 -</string>
     <string name="ml_hint_input_not_null">输入内容不能为空</string>
-    <string name="ml_hint_loading">加载中...</string>
+    <string name="ml_hint_loading">正在加载</string>
     <string name="ml_hint_password">密码</string>
     <string name="ml_hint_time">时间</string>
     <string name="ml_hint_reason">申请理由</string>
@@ -148,8 +148,8 @@
     <string name="ml_call_busy">对方正忙，先发个给他吧</string>
     <string name="ml_call_cancel">已取消</string>
     <string name="ml_call_cancel_is_incoming">对方已取消</string>
-    <string name="ml_call_connecting">正在呼叫对方...</string>
-    <string name="ml_call_connected">正在等待对方接受呼叫申请...</string>
+    <string name="ml_call_connecting">正在呼叫对方</string>
+    <string name="ml_call_connected">正在等待对方接受呼叫申请</string>
     <string name="ml_call_connected_is_incoming">对方申请与你进行通话</string>
     <string name="ml_call_connection_fail">建立连接失败</string>
     <string name="ml_call_disconnected">通话已结束</string>

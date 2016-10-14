@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,6 +35,9 @@ import java.util.List;
 public class MLBaseActivity extends AppCompatActivity {
 
     protected String className = this.getClass().getSimpleName();
+
+    //
+    protected Toolbar mToolbar;
 
     // 当前布局RootView
     protected View mRootView;
@@ -84,17 +88,17 @@ public class MLBaseActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventBus(MLConnectionEvent event) {
         switch (event.getType()) {
-        case MLConstants.ML_CONNECTION_USER_LOGIN_OTHER_DIVERS:
-            onConflictDialog();
-            break;
-        case MLConstants.ML_CONNECTION_USER_REMOVED:
-            onRemovedDialog();
-            break;
-        case MLConstants.ML_CONNECTION_CONNECTED:
-            break;
-        case MLConstants.ML_CONNECTION_DISCONNECTED:
+            case MLConstants.ML_CONNECTION_USER_LOGIN_OTHER_DIVERS:
+                onConflictDialog();
+                break;
+            case MLConstants.ML_CONNECTION_USER_REMOVED:
+                onRemovedDialog();
+                break;
+            case MLConstants.ML_CONNECTION_CONNECTED:
+                break;
+            case MLConstants.ML_CONNECTION_DISCONNECTED:
 
-            break;
+                break;
         }
     }
 
