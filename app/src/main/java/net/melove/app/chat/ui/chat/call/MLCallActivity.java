@@ -64,7 +64,7 @@ public class MLCallActivity extends MLBaseActivity {
 
         // 获取通话对方的username
         mChatId = getIntent().getStringExtra(MLConstants.ML_EXTRA_CHAT_ID);
-        isInComingCall = getIntent().getBooleanExtra(MLConstants.ML_EXTRA_CALL_IS_INCOMING, false);
+        isInComingCall = getIntent().getBooleanExtra(MLConstants.ML_EXTRA_IS_INCOMING_CALL, false);
         // 默认通话状态为自己取消
         mCallStatus = MLConstants.ML_CALL_CANCEL;
 
@@ -113,7 +113,7 @@ public class MLCallActivity extends MLBaseActivity {
                 // 自己取消
                 content = mActivity.getString(R.string.ml_call_cancel);
                 break;
-            case MLConstants.ML_CALL_CANCEL_IS_INCOMING:
+            case MLConstants.ML_CALL_CANCEL_INCOMING_CALL:
                 // 对方取消
                 content = mActivity.getString(R.string.ml_call_cancel_is_incoming);
                 break;
@@ -125,11 +125,11 @@ public class MLCallActivity extends MLBaseActivity {
                 // 对方不在线
                 content = mActivity.getString(R.string.ml_call_not_online);
                 break;
-            case MLConstants.ML_CALL_REFUESD_IS_INCOMING:
+            case MLConstants.ML_CALL_REJECT_INCOMING_CALL:
                 // 自己已拒绝
                 content = mActivity.getString(R.string.ml_call_reject_is_incoming);
                 break;
-            case MLConstants.ML_CALL_REFUESD:
+            case MLConstants.ML_CALL_REJECT:
                 // 对方拒绝
                 content = mActivity.getString(R.string.ml_call_reject);
                 break;

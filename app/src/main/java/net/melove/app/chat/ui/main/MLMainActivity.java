@@ -41,9 +41,7 @@ import net.melove.app.chat.ui.widget.MLToast;
  * Created by lzan13 on 2015/7/2.
  * 主Activity类，整个程序启动的主界面
  */
-public class MLMainActivity extends MLBaseActivity implements
-        NavigationView.OnNavigationItemSelectedListener,
-        MLBaseFragment.OnMLFragmentListener {
+public class MLMainActivity extends MLBaseActivity implements NavigationView.OnNavigationItemSelectedListener, MLBaseFragment.OnMLFragmentListener {
 
     /**
      * 主界面的一些系统控件
@@ -76,16 +74,11 @@ public class MLMainActivity extends MLBaseActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // 判断当前是否已经登录
-        if (MLHyphenate.getInstance().isLoginedInBefore()) {
-            // 获取当前系统时间毫秒数
-            long start = System.currentTimeMillis();
+        if (EMClient.getInstance().isLoggedInBefore()) {
             // 加载群组到内存
             EMClient.getInstance().groupManager().loadAllGroups();
             // 加载所有本地会话到内存
             EMClient.getInstance().chatManager().loadAllConversations();
-            // 获取加载回话和群组数据消耗时间毫秒表示
-            long costTime = System.currentTimeMillis() - start;
-            MLLog.d("Load groups and load conversations cost time %d", costTime);
         } else {
             // 跳转到登录界面
             Intent intent = new Intent(this, MLSigninActivity.class);
@@ -120,7 +113,7 @@ public class MLMainActivity extends MLBaseActivity implements
         // 网络连接提示按钮
         mConnectionFabBtn = (FloatingActionButton) findViewById(R.id.ml_btn_fab_connection);
         mConnectionFabBtn.setOnClickListener(viewListener);
-        if (MLHyphenate.getInstance().isConnection()) {
+        if (EMClient.getInstance().isConnected()) {
             mConnectionFabBtn.setImageResource(R.mipmap.ic_signal_wifi_on_white_24dp);
             mConnectionFabBtn.setVisibility(View.GONE);
         } else {
@@ -144,8 +137,7 @@ public class MLMainActivity extends MLBaseActivity implements
         mNavigationView.setNavigationItemSelectedListener(this);
 
         // 设置Toolbar与DrawerLayout 联动的按钮，并重写DrawerToggle 的几个方法，主要是为了实现抽屉关闭后再加界面
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,
-                R.string.ml_drawer_open, R.string.ml_drawer_close) {
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.ml_drawer_open, R.string.ml_drawer_close) {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
                 super.onDrawerSlide(drawerView, slideOffset);
@@ -161,17 +153,17 @@ public class MLMainActivity extends MLBaseActivity implements
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
                 switch (mMenuType) {
-                case 0:
-                    mFragmentTransaction = getSupportFragmentManager().beginTransaction();
-                    mFragmentTransaction.setCustomAnimations(R.anim.ml_anim_fade_enter, R.anim.ml_anim_fade_exit);
-                    mFragmentTransaction.replace(R.id.ml_framelayout_container, mCurrentFragment);
-                    mFragmentTransaction.commit();
-                    break;
-                case 1:
+                    case 0:
+                        mFragmentTransaction = getSupportFragmentManager().beginTransaction();
+                        mFragmentTransaction.setCustomAnimations(R.anim.ml_anim_fade_enter, R.anim.ml_anim_fade_exit);
+                        mFragmentTransaction.replace(R.id.ml_framelayout_container, mCurrentFragment);
+                        mFragmentTransaction.commit();
+                        break;
+                    case 1:
 
-                    break;
-                default:
-                    break;
+                        break;
+                    default:
+                        break;
                 }
             }
 
@@ -205,27 +197,25 @@ public class MLMainActivity extends MLBaseActivity implements
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-            case R.id.ml_img_nav_avatar:
+                case R.id.ml_img_nav_avatar:
 
-                break;
-            case R.id.ml_btn_fab_connection:
-                Intent intent = null;
-                /**
-                 * 判断手机系统的版本！如果API大于10 就是3.0+
-                 * 因为3.0以上的版本的设置和3.0以下的设置不一样，调用的方法不同
-                 */
-                if (android.os.Build.VERSION.SDK_INT > 10) {
-                    intent = new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS);
-                } else {
-                    intent = new Intent();
-                    ComponentName component = new ComponentName(
-                            "com.android.settings",
-                            "com.android.settings.WirelessSettings");
-                    intent.setComponent(component);
-                    intent.setAction("android.intent.action.VIEW");
-                }
-                startActivity(intent);
-                break;
+                    break;
+                case R.id.ml_btn_fab_connection:
+                    Intent intent = null;
+                    /**
+                     * 判断手机系统的版本！如果API大于10 就是3.0+
+                     * 因为3.0以上的版本的设置和3.0以下的设置不一样，调用的方法不同
+                     */
+                    if (android.os.Build.VERSION.SDK_INT > 10) {
+                        intent = new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS);
+                    } else {
+                        intent = new Intent();
+                        ComponentName component = new ComponentName("com.android.settings", "com.android.settings.WirelessSettings");
+                        intent.setComponent(component);
+                        intent.setAction("android.intent.action.VIEW");
+                    }
+                    startActivity(intent);
+                    break;
             }
         }
     };
@@ -234,44 +224,45 @@ public class MLMainActivity extends MLBaseActivity implements
      * 侧滑导航的点击事件
      *
      * @param item
+     *
      * @return
      */
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
-        case R.id.ml_nav_home:
-            mMenuType = 0;
-            mCurrentFragment = MLMainFragment.newInstance();
-            mToolbar.setTitle(R.string.ml_chat);
-            break;
-        case R.id.ml_nav_group:
-            mMenuType = 0;
-            mCurrentFragment = MLOtherFragment.newInstance();
-            mToolbar.setTitle(R.string.ml_group);
-            break;
-        case R.id.ml_nav_room:
-            mMenuType = 1;
-            mToolbar.setTitle(R.string.ml_room);
+            case R.id.ml_nav_home:
+                mMenuType = 0;
+                mCurrentFragment = MLMainFragment.newInstance();
+                mToolbar.setTitle(R.string.ml_chat);
+                break;
+            case R.id.ml_nav_group:
+                mMenuType = 0;
+                mCurrentFragment = MLOtherFragment.newInstance();
+                mToolbar.setTitle(R.string.ml_group);
+                break;
+            case R.id.ml_nav_room:
+                mMenuType = 1;
+                mToolbar.setTitle(R.string.ml_room);
 
-            break;
-        case R.id.ml_nav_notification:
-            mMenuType = 1;
-            Intent intent = new Intent();
-            intent.setClass(mActivity, MLApplyForActivity.class);
-            mActivity.startActivity(intent);
-            break;
-        case R.id.ml_nav_help:
-            mMenuType = 1;
+                break;
+            case R.id.ml_nav_notification:
+                mMenuType = 1;
+                Intent intent = new Intent();
+                intent.setClass(mActivity, MLApplyForActivity.class);
+                mActivity.startActivity(intent);
+                break;
+            case R.id.ml_nav_help:
+                mMenuType = 1;
 
-            break;
-        case R.id.ml_nav_setting:
-            mMenuType = 1;
+                break;
+            case R.id.ml_nav_setting:
+                mMenuType = 1;
 
-            break;
-        default:
-            mMenuType = 1;
-            break;
+                break;
+            default:
+                mMenuType = 1;
+                break;
         }
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
@@ -336,37 +327,37 @@ public class MLMainActivity extends MLBaseActivity implements
         Intent intent = null;
         int w = a | b;
         switch (w) {
-        // 0x0x 表示系统级调用
-        case 0x00:
-            // 设置当前 Toolbar title内容
-            mToolbar.setTitle(s);
-            break;
-        case 0x01:
-            // 退出登录，跳转到登录界面
-            intent = new Intent(mActivity, MLSigninActivity.class);
-            superJump(intent);
-            onFinish();
-            break;
-        // 0x1x 表示其他调用
-        case 0x10:
+            // 0x0x 表示系统级调用
+            case 0x00:
+                // 设置当前 Toolbar title内容
+                mToolbar.setTitle(s);
+                break;
+            case 0x01:
+                // 退出登录，跳转到登录界面
+                intent = new Intent(mActivity, MLSigninActivity.class);
+                superJump(intent);
+                onFinish();
+                break;
+            // 0x1x 表示其他调用
+            case 0x10:
 
-            break;
-        case 0x11:
+                break;
+            case 0x11:
 
-            break;
-        case 0x12:
+                break;
+            case 0x12:
 
-            break;
-        case 0x13:
+                break;
+            case 0x13:
 
-            break;
-        // 0x2x 暂时表示Test
-        case 0x20:
+                break;
+            // 0x2x 暂时表示Test
+            case 0x20:
 
-            break;
-        default:
-            MLToast.makeToast(mActivity.getResources().getString(R.string.ml_test)).show();
-            break;
+                break;
+            default:
+                MLToast.makeToast(mActivity.getResources().getString(R.string.ml_test)).show();
+                break;
         }
         //        mDrawerLayout.closeDrawer(GravityCompat.START);
     }
@@ -402,6 +393,7 @@ public class MLMainActivity extends MLBaseActivity implements
      * 重载加载菜单布局方法
      *
      * @param menu 菜单对象
+     *
      * @return 返回加载结果
      */
     @Override
@@ -414,23 +406,24 @@ public class MLMainActivity extends MLBaseActivity implements
      * 重载菜单项选择方法
      *
      * @param item 被选择的菜单项
+     *
      * @return 返回处理结果，是否向下传递
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-        case R.id.ml_action_search:
+            case R.id.ml_action_search:
 
-            break;
-        case R.id.ml_action_add_conversation:
-            // 创建新绘会话
-            createNewConversation();
-            break;
-        case R.id.ml_action_add_contacts:
-            startSearch();
-            break;
-        case R.id.ml_action_add_group:
-            break;
+                break;
+            case R.id.ml_action_add_conversation:
+                // 创建新绘会话
+                createNewConversation();
+                break;
+            case R.id.ml_action_add_contacts:
+                startSearch();
+                break;
+            case R.id.ml_action_add_group:
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -445,6 +438,7 @@ public class MLMainActivity extends MLBaseActivity implements
      *
      * @param keyCode 按键Code
      * @param event   按键事件
+     *
      * @return 返回值表示是否向下继续传递按键事件
      */
     @Override
@@ -465,7 +459,7 @@ public class MLMainActivity extends MLBaseActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        if (!MLHyphenate.getInstance().isLoginedInBefore()) {
+        if (!EMClient.getInstance().isLoggedInBefore()) {
             // 跳转到登录界面
             Intent intent = new Intent(this, MLSigninActivity.class);
             superJump(intent);

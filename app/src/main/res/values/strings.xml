@@ -53,8 +53,8 @@
 
     <string name="ml_agreed">已同意</string>
     <string name="ml_be_agreed">对方已同意</string>
-    <string name="ml_refused">已拒绝</string>
-    <string name="ml_be_refused">对方已拒绝</string>
+    <string name="ml_reject">已拒绝</string>
+    <string name="ml_be_reject">对方已拒绝</string>
     <string name="ml_waiting_dispose">等待处理</string>
     <string name="ml_waiting_respond">等待对方回应</string>
     <string name="ml_add_contacts">添加联系人</string>

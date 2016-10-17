@@ -66,7 +66,7 @@ public class MLVoiceManager {
     public void onPlay(EMMessage message) {
         // 如果是没有听过的语音就设置已听，并发送ACK
         if (!message.isListened()) {
-            EMClient.getInstance().chatManager().setVoiceMessageListened(message);
+            EMClient.getInstance().chatManager().setMessageListened(message);
             try {
                 // 发送已读ACK，告诉对方自己已经听了语音
                 EMClient.getInstance().chatManager().ackMessageRead(message.getFrom(), message.getMsgId());

@@ -5,8 +5,12 @@
 /.idea/misc.xml
 /.idea/vcs.xml
 .DS_Store
+
 /app/build
 /app/app.iml
+/app/libs
+
+
 /build
 /captures
 /reports

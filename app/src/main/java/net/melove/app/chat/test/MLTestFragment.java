@@ -269,7 +269,6 @@ public class MLTestFragment extends MLBaseFragment {
                 String[] members = {"lz1", "lz2", "lz3"};
                 try {
                     EMGroup group = EMClient.getInstance().groupManager().createGroup("测试群组" + count++, "SDK端创建群组，测试默认属性", members, "这个群不错", option);
-                    group.getMemberCount()
                     Log.i("lzan13", "group id: %s" + group.getGroupId() + "members: " + group.getMembers());
                 } catch (HyphenateException e) {
                     e.printStackTrace();

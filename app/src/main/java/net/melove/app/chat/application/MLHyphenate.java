@@ -19,7 +19,7 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMOptions;
 import com.hyphenate.chat.EMTextMessageBody;
 
-import net.melove.app.chat.application.eventbus.MLCallEvent;
+import net.melove.app.chat.ui.chat.call.MLCallEvent;
 import net.melove.app.chat.application.eventbus.MLConnectionEvent;
 import net.melove.app.chat.application.eventbus.MLContactsEvent;
 import net.melove.app.chat.application.eventbus.MLApplyForEvent;
@@ -147,7 +147,7 @@ public class MLHyphenate {
          * http://www.easemob.com/apidoc/android/chat3.0/classcom_1_1hyphenate_1_1chat_1_1_e_m_options.html
          */
         EMOptions options = new EMOptions();
-        // 启动私有化配置
+        // 是否启动 DNS 信息配置
         options.enableDNSConfig(true);
         // 设置Appkey，如果配置文件已经配置，这里可以不用设置
         //        options.setAppKey("lzan13#hxsdkdemo");
@@ -244,7 +244,7 @@ public class MLHyphenate {
                             MLLog.i("通话已接通");
                             MLCallStatus.getInstance().setCallState(MLCallStatus.CALL_STATUS_ACCEPTED);
                             break;
-                        case DISCONNNECTED: // 通话已中断
+                        case DISCONNECTED: // 通话已中断
                             MLLog.i("通话已结束" + callError);
                             // 通话结束，重置通话状态
                             MLCallStatus.getInstance().reset();
@@ -441,7 +441,7 @@ public class MLHyphenate {
              * @param list 收到消息已读回执
              */
             @Override
-            public void onMessageRead(List<EMMessage> list) {
+            public void onMessageReadAckReceived(List<EMMessage> list) {
 
             }
 
@@ -451,7 +451,7 @@ public class MLHyphenate {
              * @param list 收到发送回执的消息集合
              */
             @Override
-            public void onMessageDelivered(List<EMMessage> list) {
+            public void onMessageDeliveryAckReceived(List<EMMessage> list) {
 
             }
 
@@ -574,7 +574,7 @@ public class MLHyphenate {
              * @param username 对方的username
              */
             @Override
-            public void onFriendRequestAccepted(String username) {
+            public void onContactAgreed(String username) {
                 MLLog.d("onContactAgreed - username:%s", username);
                 // 根据申请者的 username 和当前登录账户 username 拼接出msgId方便后边更新申请信息（申请者在前）
                 String msgId = EMClient.getInstance().getCurrentUser() + username;
@@ -622,7 +622,7 @@ public class MLHyphenate {
              * @param username 对方的username
              */
             @Override
-            public void onFriendRequestDeclined(String username) {
+            public void onContactRefused(String username) {
                 MLLog.d("onContactRefused - username:%s", username);
                 // 根据申请者的 username 和当前登录账户 username 拼接出msgId方便后边更新申请信息（申请者在前）
                 String msgId = EMClient.getInstance().getCurrentUser() + username;
@@ -687,7 +687,6 @@ public class MLHyphenate {
                 EMGroup group = EMClient.getInstance().groupManager().getGroup(groupId);
             }
 
-
             /**
              * 用户申请加入群组
              *
@@ -697,7 +696,7 @@ public class MLHyphenate {
              * @param reason    申请加入的reason
              */
             @Override
-            public void onRequestToJoinReceived(String groupId, String groupName, String applyer, String reason) {
+            public void onApplicationReceived(String groupId, String groupName, String applyer, String reason) {
                 MLLog.i("onApplicationAccept groupId:%s, groupName:%, reason:%s", groupId, groupName, reason);
             }
 
@@ -709,7 +708,7 @@ public class MLHyphenate {
              * @param accepter 同意申请的用户名（一般就是群主）
              */
             @Override
-            public void onRequestToJoinAccepted(String groupId, String groupName, String accepter) {
+            public void onApplicationAccept(String groupId, String groupName, String accepter) {
                 MLLog.i("onApplicationAccept groupId:%s, groupName:%, accepter:%s", groupId, groupName, accepter);
             }
 
@@ -722,7 +721,7 @@ public class MLHyphenate {
              * @param reason 拒绝理由
              */
             @Override
-            public void onRequestToJoinDeclined(String groupId, String groupName, String decliner, String reason) {
+            public void onApplicationDeclined(String groupId, String groupName, String decliner, String reason) {
                 MLLog.i("onApplicationDeclined groupId:%s, decliner:%, sreason:%s", groupId, decliner, reason);
             }
 
@@ -832,24 +831,6 @@ public class MLHyphenate {
      */
     private void resetApp() {
         MLDBHelper.getInstance(mContext).resetDBHelper();
-    }
-
-    /**
-     * 判断是否登录成功过，并且没有调用logout和被踢
-     *
-     * @return 返回一个boolean值 表示是否登录成功过
-     */
-    public boolean isLoginedInBefore() {
-        return EMClient.getInstance().isLoggedInBefore();
-    }
-
-    /**
-     * 判断当前app是否连接聊天服务器
-     *
-     * @return 返回连接服务器状态
-     */
-    public boolean isConnection() {
-        return EMClient.getInstance().isConnected();
     }
 
     /**

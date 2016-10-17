@@ -72,7 +72,7 @@ public class MLConstants {
     public static final int ML_TIME_INPUT_STATUS = 5000;
 
     // Intent 传递参数参数的 key
-    public static final String ML_EXTRA_CALL_IS_INCOMING = "ml_call_is_incoming";
+    public static final String ML_EXTRA_IS_INCOMING_CALL = "ml_is_incoming_call";
     public static final String ML_EXTRA_CHAT_MSG_ID = "ml_chat_msg_id";
     public static final String ML_EXTRA_CHAT_ID = "ml_chat_id";
     public static final String ML_EXTRA_FROM = "from";
@@ -98,15 +98,15 @@ public class MLConstants {
     // 自己取消通话
     public static final int ML_CALL_CANCEL = 0x01;
     // 对方取消通话
-    public static final int ML_CALL_CANCEL_IS_INCOMING = 0x02;
+    public static final int ML_CALL_CANCEL_INCOMING_CALL = 0x02;
     // 对方在忙
     public static final int ML_CALL_BUSY = 0x03;
     // 对方不在线
     public static final int ML_CALL_OFFLINE = 0x04;
     // 对方拒绝自己的通话申请
-    public static final int ML_CALL_REFUESD = 0x05;
+    public static final int ML_CALL_REJECT = 0x05;
     // 自己拒绝打来的通话
-    public static final int ML_CALL_REFUESD_IS_INCOMING = 0x06;
+    public static final int ML_CALL_REJECT_INCOMING_CALL = 0x06;
     // 对方未接听
     public static final int ML_CALL_NORESPONSE = 0x07;
     // 建立连接失败
@@ -153,9 +153,9 @@ public class MLConstants {
     public static final int ML_ACTION_APPLY_FOR_DELETE = 0X12;
     // 申请与请求的状态
     public static final int ML_STATUS_AGREED = 0x00;         // 同意
-    public static final int ML_STATUS_REFUSED = 0x01;        // 拒绝
+    public static final int ML_STATUS_REJECT = 0x01;        // 拒绝
     public static final int ML_STATUS_BE_AGREED = 0x02;      // 对方同意
-    public static final int ML_STATUS_BE_REFUSED = 0x03;     // 对方拒绝
+    public static final int ML_STATUS_BE_REJECT = 0x03;     // 对方拒绝
     public static final int ML_STATUS_APPLY_FOR = 0x04;      // 自己申请
     public static final int ML_STATUS_BE_APPLY_FOR = 0x05;   // 对方申请
     // 申请与通知类型

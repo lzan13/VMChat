@@ -23,7 +23,7 @@ public class MLCallReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         // 判断环信是否登录成功
-        if (!MLHyphenate.getInstance().isLoginedInBefore()) {
+        if (!EMClient.getInstance().isLoggedInBefore()) {
             return;
         }
 
@@ -52,7 +52,7 @@ public class MLCallReceiver extends BroadcastReceiver {
             // 设置呼叫方 username 参数
             callIntent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, callFrom);
             // 设置通话为对方打来
-            callIntent.putExtra(MLConstants.ML_EXTRA_CALL_IS_INCOMING, true);
+            callIntent.putExtra(MLConstants.ML_EXTRA_IS_INCOMING_CALL, true);
             context.startActivity(callIntent);
         }
     }

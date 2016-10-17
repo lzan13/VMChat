@@ -307,8 +307,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      */
     private void initAttachMenuGridView() {
         mAttachMenuGridView = (GridView) findViewById(R.id.ml_gridview_chat_attach_menu);
-        int[] menuPhotos = {
-                R.mipmap.ic_attach_photo, R.mipmap.ic_attach_video,
+        int[] menuPhotos = {R.mipmap.ic_attach_photo, R.mipmap.ic_attach_video,
                 R.mipmap.ic_attach_file, R.mipmap.ic_attach_location,
                 R.mipmap.ic_attach_gift, R.mipmap.ic_attach_contacts};
         String[] menuTitles = {mActivity.getString(R.string.ml_photo), mActivity.getString(R.string.ml_video), mActivity.getString(R.string.ml_file), mActivity.getString(R.string.ml_location), mActivity.getString(R.string.ml_gift), mActivity.getString(R.string.ml_contacts)};
@@ -490,7 +489,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 // 设置被呼叫放的username
                 intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mChatId);
                 // 设置通话为自己呼叫出的
-                intent.putExtra(MLConstants.ML_EXTRA_CALL_IS_INCOMING, false);
+                intent.putExtra(MLConstants.ML_EXTRA_IS_INCOMING_CALL, false);
                 // 设置当前通话类型为视频通话
                 MLCallStatus.getInstance().setCallType(MLCallStatus.CALL_TYPE_VIDEO);
                 mActivity.startActivity(intent);
@@ -506,7 +505,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 // 设置被呼叫放的username
                 intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mChatId);
                 // 设置通话为自己呼叫出的
-                intent.putExtra(MLConstants.ML_EXTRA_CALL_IS_INCOMING, false);
+                intent.putExtra(MLConstants.ML_EXTRA_IS_INCOMING_CALL, false);
                 // 设置当前通话类型为视频通话
                 MLCallStatus.getInstance().setCallType(MLCallStatus.CALL_TYPE_VOICE);
                 mActivity.startActivity(intent);
@@ -1007,7 +1006,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                     // 设置被呼叫放的username
                     intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mChatId);
                     // 设置通话为自己呼叫出的
-                    intent.putExtra(MLConstants.ML_EXTRA_CALL_IS_INCOMING, false);
+                    intent.putExtra(MLConstants.ML_EXTRA_IS_INCOMING_CALL, false);
                     mActivity.startActivity(intent);
                 }
             });
@@ -1019,7 +1018,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             // 设置被呼叫放的username
             intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mChatId);
             // 设置通话为自己呼叫出的
-            intent.putExtra(MLConstants.ML_EXTRA_CALL_IS_INCOMING, false);
+            intent.putExtra(MLConstants.ML_EXTRA_IS_INCOMING_CALL, false);
             mActivity.startActivity(intent);
         } else if (MLCallStatus.getInstance().getCallType() == MLCallStatus.CALL_TYPE_VOICE) {
             // 语音通话
@@ -1027,7 +1026,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             // 设置被呼叫放的username
             intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mChatId);
             // 设置通话为自己呼叫出的
-            intent.putExtra(MLConstants.ML_EXTRA_CALL_IS_INCOMING, false);
+            intent.putExtra(MLConstants.ML_EXTRA_IS_INCOMING_CALL, false);
             mActivity.startActivity(intent);
         }
     }
@@ -1577,13 +1576,14 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         }
     }
 
+
     /**
      * 收到消息的已读回执
      *
      * @param list 收到消息已读回执
      */
     @Override
-    public void onMessageRead(List<EMMessage> list) {
+    public void onMessageReadAckReceived(List<EMMessage> list) {
         MLLog.i("onMessageReadAckReceived list.size:%d", list.size());
         for (EMMessage message : list) {
             // 判断消息是否是当前会话的消息
@@ -1601,7 +1601,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      * @param list 收到发送回执的消息集合
      */
     @Override
-    public void onMessageDelivered(List<EMMessage> list) {
+    public void onMessageDeliveryAckReceived(List<EMMessage> list) {
         MLLog.i("onMessageDeliveryAckReceived list.size:%d", list.size());
         for (EMMessage message : list) {
             // 判断消息是否是当前会话的消息

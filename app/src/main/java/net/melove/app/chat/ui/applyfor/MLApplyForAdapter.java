@@ -86,8 +86,8 @@ public class MLApplyForAdapter extends RecyclerView.Adapter<MLApplyForAdapter.In
             holder.textViewStatus.setVisibility(View.VISIBLE);
             holder.btnAgree.setVisibility(View.GONE);
             break;
-        case MLConstants.ML_STATUS_REFUSED:
-            holder.textViewStatus.setText(R.string.ml_refused);
+        case MLConstants.ML_STATUS_REJECT:
+            holder.textViewStatus.setText(R.string.ml_reject);
             holder.textViewStatus.setVisibility(View.VISIBLE);
             holder.btnAgree.setVisibility(View.GONE);
             break;
@@ -96,8 +96,8 @@ public class MLApplyForAdapter extends RecyclerView.Adapter<MLApplyForAdapter.In
             holder.textViewStatus.setVisibility(View.VISIBLE);
             holder.btnAgree.setVisibility(View.GONE);
             break;
-        case MLConstants.ML_STATUS_BE_REFUSED:
-            holder.textViewStatus.setText(R.string.ml_be_refused);
+        case MLConstants.ML_STATUS_BE_REJECT:
+            holder.textViewStatus.setText(R.string.ml_be_reject);
             holder.textViewStatus.setVisibility(View.VISIBLE);
             holder.btnAgree.setVisibility(View.GONE);
             break;

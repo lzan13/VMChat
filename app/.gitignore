@@ -1,6 +1,6 @@
 /build
-#/libs
-#/src/main/jniLibs
+/libs
+/src/main/jniLibs
 /app.iml
 /debug.keystore
 /app-config.properties
