@@ -13,7 +13,7 @@
 
     <!--通话界面背景-->
     <ImageView
-        android:id="@+id/ml_img_call_bg"
+        android:id="@+id/ml_img_call_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
@@ -124,7 +124,7 @@
                 android:orientation="horizontal">
                 <!--拒绝接听-->
                 <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/ml_btn_fab_reject_call"
+                    android:id="@+id/ml_fab_reject_call"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
@@ -134,7 +134,7 @@
 
                 <!--结束通话-->
                 <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/ml_btn_fab_end_call"
+                    android:id="@+id/ml_fab_end_call"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
@@ -145,7 +145,7 @@
 
                 <!--接听通话-->
                 <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/ml_btn_fab_answer_call"
+                    android:id="@+id/ml_fab_answer_call"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"

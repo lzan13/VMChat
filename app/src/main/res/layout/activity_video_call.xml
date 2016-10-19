@@ -9,43 +9,64 @@
     android:background="@color/ml_theme_background"
     android:clipToPadding="false"
     android:fitsSystemWindows="false"
-    tools:context=".ui.chat.call.MLVideoCallActivity">
+    tools:context=".ui.chat.call.MLVideoCallActivity"
+    >
 
     <!--界面背景-->
     <ImageView
-        android:id="@+id/ml_img_call_bg"
+        android:id="@+id/ml_img_call_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:src="@mipmap/bg_chat"/>
+        android:src="@mipmap/bg_chat"
+        />
 
-    <!--显示对方画面控件-->
-    <com.hyphenate.media.EMOppositeSurfaceView
-        android:id="@+id/ml_surface_view_opposite"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible"/>
+        >
+        <RelativeLayout
+            android:id="@+id/ml_layout_opposite"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+            <!--显示对方画面控件-->
+            <com.hyphenate.media.EMOppositeSurfaceView
+                android:id="@+id/ml_surface_view_opposite"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                />
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/ml_layout_local"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+            <!--显示本地画面控件-->
+            <com.hyphenate.media.EMLocalSurfaceView
+                android:id="@+id/ml_surface_view_local"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                />
+        </RelativeLayout>
+    </RelativeLayout>
 
     <!--控制按钮层布局-->
     <RelativeLayout
         android:id="@+id/ml_layout_call_control"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
-
-        <!--显示本地画面控件-->
-        <com.hyphenate.media.EMLocalSurfaceView
-            android:id="@+id/ml_surface_view_local"
-            android:layout_width="120dp"
-            android:layout_height="160dp"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="@dimen/ml_dimen_96"/>
+        android:fitsSystemWindows="true"
+        >
 
         <!--头部状态以及最小化操作-->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/ml_dimen_24">
+            android:layout_marginTop="@dimen/ml_dimen_24"
+            >
             <!--切换摄像头-->
             <ImageButton
                 android:id="@+id/ml_btn_change_camera_switch"
@@ -54,7 +75,8 @@
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="@dimen/ml_dimen_16"
                 android:background="@drawable/ml_click_rectangle_white"
-                android:src="@drawable/ml_checkbox_change_camera"/>
+                android:src="@drawable/ml_checkbox_change_camera"
+                />
             <!--通话状态-->
             <TextView
                 android:id="@+id/ml_text_call_status"
@@ -62,7 +84,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="@string/ml_app_name"
-                android:textColor="@color/ml_white_87"/>
+                android:textColor="@color/ml_white_87"
+                />
             <!--界面最小化按钮-->
             <ImageButton
                 android:id="@+id/ml_btn_exit_full_screen"
@@ -71,7 +94,8 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="@dimen/ml_dimen_16"
                 android:background="@drawable/ml_click_rectangle_white"
-                android:src="@mipmap/ic_fullscreen_exit_white_24dp"/>
+                android:src="@mipmap/ic_fullscreen_exit_white_24dp"
+                />
         </RelativeLayout>
 
 
@@ -82,13 +106,15 @@
             android:layout_alignParentBottom="true"
             android:background="@color/ml_black_38"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            >
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/ml_dimen_8"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                >
 
                 <!--麦克风开关-->
                 <ImageButton
@@ -97,7 +123,8 @@
                     android:layout_height="@dimen/ml_dimen_48"
                     android:layout_margin="@dimen/ml_dimen_8"
                     android:background="@drawable/ml_click_rectangle_white"
-                    android:src="@drawable/ml_checkbox_mic"/>
+                    android:src="@drawable/ml_checkbox_mic"
+                    />
 
                 <!--摄像头开关-->
                 <ImageButton
@@ -106,7 +133,8 @@
                     android:layout_height="@dimen/ml_dimen_48"
                     android:layout_margin="@dimen/ml_dimen_8"
                     android:background="@drawable/ml_click_rectangle_white"
-                    android:src="@drawable/ml_checkbox_camera"/>
+                    android:src="@drawable/ml_checkbox_camera"
+                    />
 
                 <!--扬声器开关-->
                 <ImageButton
@@ -115,7 +143,8 @@
                     android:layout_height="@dimen/ml_dimen_48"
                     android:layout_margin="@dimen/ml_dimen_8"
                     android:background="@drawable/ml_click_rectangle_white"
-                    android:src="@drawable/ml_checkbox_speaker"/>
+                    android:src="@drawable/ml_checkbox_speaker"
+                    />
 
                 <!--录制开关-->
                 <ImageButton
@@ -124,45 +153,50 @@
                     android:layout_height="@dimen/ml_dimen_48"
                     android:layout_margin="@dimen/ml_dimen_8"
                     android:background="@drawable/ml_click_rectangle_white"
-                    android:src="@drawable/ml_checkbox_record"/>
+                    android:src="@drawable/ml_checkbox_record"
+                    />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                >
                 <!--拒绝接听-->
                 <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/ml_btn_fab_reject_call"
+                    android:id="@+id/ml_fab_reject_call"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_margin="@dimen/ml_dimen_24"
                     android:src="@mipmap/ic_call_end_white_24dp"
-                    app:fabSize="normal"/>
+                    app:fabSize="normal"
+                    />
 
                 <!--结束通话-->
                 <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/ml_btn_fab_end_call"
+                    android:id="@+id/ml_fab_end_call"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_margin="@dimen/ml_dimen_24"
                     android:src="@mipmap/ic_call_end_white_24dp"
                     android:visibility="gone"
-                    app:fabSize="normal"/>
+                    app:fabSize="normal"
+                    />
 
                 <!--接听通话-->
                 <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/ml_btn_fab_answer_call"
+                    android:id="@+id/ml_fab_answer_call"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_margin="@dimen/ml_dimen_24"
                     android:src="@mipmap/ic_call_white_24dp"
                     app:backgroundTint="@color/ml_green_87"
-                    app:fabSize="normal"/>
+                    app:fabSize="normal"
+                    />
 
             </LinearLayout>
         </LinearLayout>

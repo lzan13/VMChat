@@ -27,7 +27,7 @@
         <!--设置 Dialog 样式 在4.x上会导致ProgressDialog有双重背景，暂时取消设置-->
         <!--<item name="android:dialogTheme">@style/MLTheme.DialogOverlay</item>-->
 
-    </style>Set the ActionMode effect to prevent ActionMode from squeezing the Toolbar
+    </style>
 
     <!--启动时的主题样式-->
     <style name="MLTheme.Launcher" parent="MLTheme.Base">

@@ -9,7 +9,6 @@ import com.hyphenate.chat.EMClient;
 import net.melove.app.chat.application.MLConstants;
 import net.melove.app.chat.application.MLHyphenate;
 
-
 /**
  * 通话呼叫监听广播实现，用来监听其他账户对自己的呼叫
  */
@@ -20,8 +19,7 @@ public class MLCallReceiver extends BroadcastReceiver {
     public MLCallReceiver() {
     }
 
-    @Override
-    public void onReceive(Context context, Intent intent) {
+    @Override public void onReceive(Context context, Intent intent) {
         // 判断环信是否登录成功
         if (!EMClient.getInstance().isLoggedInBefore()) {
             return;

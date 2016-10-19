@@ -156,9 +156,9 @@
     <string name="ml_call_duration_time">通话时长</string>
     <string name="ml_call_no_data">没有通话数据</string>
     <string name="ml_call_not_answer">对方未接听</string>
-    <string name="ml_call_noresponse">对方手机不在身边，稍后再试</string>
+    <string name="ml_call_no_response">对方手机不在身边，稍后再试</string>
     <string name="ml_call_not_online">对方不在线，发个留言给他吧</string>
-    <string name="ml_call_network_unsatble">网络状态不佳</string>
+    <string name="ml_call_network_unstable">网络状态不佳</string>
     <string name="ml_call_network_normal">网络状态良好</string>
     <string name="ml_call_reject">对方已拒绝</string>
     <string name="ml_call_reject_is_incoming">已拒绝</string>

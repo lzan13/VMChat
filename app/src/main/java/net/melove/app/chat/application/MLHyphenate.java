@@ -10,7 +10,6 @@ import com.hyphenate.EMContactListener;
 import com.hyphenate.EMError;
 import com.hyphenate.EMGroupChangeListener;
 import com.hyphenate.EMMessageListener;
-import com.hyphenate.chat.EMCallStateChangeListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMConversation;
@@ -19,17 +18,16 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMOptions;
 import com.hyphenate.chat.EMTextMessageBody;
 
-import net.melove.app.chat.ui.chat.call.MLCallEvent;
 import net.melove.app.chat.application.eventbus.MLConnectionEvent;
 import net.melove.app.chat.application.eventbus.MLContactsEvent;
 import net.melove.app.chat.application.eventbus.MLApplyForEvent;
 import net.melove.app.chat.application.eventbus.MLMessageEvent;
 import net.melove.app.chat.ui.MLBaseActivity;
+import net.melove.app.chat.ui.chat.call.MLCallStateChangeListener;
 import net.melove.app.chat.util.MLDateUtil;
 import net.melove.app.chat.util.MLLog;
 import net.melove.app.chat.ui.chat.MLMessageUtils;
 import net.melove.app.chat.ui.chat.call.MLCallReceiver;
-import net.melove.app.chat.ui.chat.call.MLCallStatus;
 import net.melove.app.chat.database.MLDBHelper;
 import net.melove.app.chat.ui.contacts.MLContacterEntity;
 import net.melove.app.chat.ui.chat.MLConversationExtUtils;
@@ -63,9 +61,7 @@ public class MLHyphenate {
     // 通话广播监听器
     private MLCallReceiver mCallReceiver = null;
     // 通话状态监听
-    private EMCallStateChangeListener callStateListener;
-    // 是否正在通话中
-    public int isBus;
+    private MLCallStateChangeListener callStateListener;
 
     // 环信的消息监听器
     private EMMessageListener mMessageListener;
@@ -78,7 +74,7 @@ public class MLHyphenate {
 
 
     // 表示是是否解绑Token，一般离线状态都要设置为false
-    private boolean isUnbuildToken = true;
+    private boolean unbuildToken = true;
 
     /**
      * 单例类，用来初始化环信的sdk
@@ -222,81 +218,9 @@ public class MLHyphenate {
      */
     public void setCallStateChangeListener() {
         if (callStateListener == null) {
-            callStateListener = new EMCallStateChangeListener() {
-                @Override
-                public void onCallStateChanged(CallState callState, CallError callError) {
-
-                    MLCallEvent event = new MLCallEvent();
-                    event.setCallState(callState);
-                    event.setCallError(callError);
-                    EventBus.getDefault().post(event);
-
-                    switch (callState) {
-                        case CONNECTING: // 正在呼叫对方
-                            MLLog.i("正在呼叫对方" + callError);
-                            MLCallStatus.getInstance().setCallState(MLCallStatus.CALL_STATUS_CONNECTING);
-                            break;
-                        case CONNECTED: // 正在等待对方接受呼叫申请（对方申请与你进行通话）
-                            MLLog.i("正在等待对方接受呼叫申请" + callError);
-                            MLCallStatus.getInstance().setCallState(MLCallStatus.CALL_STATUS_CONNECTING);
-                            break;
-                        case ACCEPTED: // 通话已接通
-                            MLLog.i("通话已接通");
-                            MLCallStatus.getInstance().setCallState(MLCallStatus.CALL_STATUS_ACCEPTED);
-                            break;
-                        case DISCONNECTED: // 通话已中断
-                            MLLog.i("通话已结束" + callError);
-                            // 通话结束，重置通话状态
-                            MLCallStatus.getInstance().reset();
-                            if (callError == CallError.ERROR_UNAVAILABLE) {
-                                MLLog.i("对方不在线" + callError);
-                            } else if (callError == CallError.ERROR_BUSY) {
-                                MLLog.i("对方正忙" + callError);
-                            } else if (callError == CallError.REJECTED) {
-                                MLLog.i("对方已拒绝" + callError);
-                            } else if (callError == CallError.ERROR_NORESPONSE) {
-                                MLLog.i("对方未响应，可能手机不在身边" + callError);
-                            } else if (callError == CallError.ERROR_TRANSPORT) {
-                                MLLog.i("连接建立失败" + callError);
-                            } else if (callError == CallError.ERROR_LOCAL_SDK_VERSION_OUTDATED) {
-                                MLLog.i("双方通讯协议不同" + callError);
-                            } else if (callError == CallError.ERROR_REMOTE_SDK_VERSION_OUTDATED) {
-                                MLLog.i("双方通讯协议不同" + callError);
-                            } else {
-                                MLLog.i("通话已结束，时长：%s，error %s", "10:35", callError);
-                            }
-                            // 结束通话时取消通话状态监听
-                            MLHyphenate.getInstance().removeCallStateChangeListener();
-                            break;
-                        case NETWORK_UNSTABLE:
-                            if (callError == EMCallStateChangeListener.CallError.ERROR_NO_DATA) {
-                                MLLog.i("没有通话数据" + callError);
-                            } else {
-                                MLLog.i("网络不稳定" + callError);
-                            }
-                            break;
-                        case NETWORK_NORMAL:
-                            MLLog.i("网络正常");
-                            break;
-                        case VIDEO_PAUSE:
-                            MLLog.i("视频传输已暂停");
-                            break;
-                        case VIDEO_RESUME:
-                            MLLog.i("视频传输已恢复");
-                            break;
-                        case VOICE_PAUSE:
-                            MLLog.i("语音传输已暂停");
-                            break;
-                        case VOICE_RESUME:
-                            MLLog.i("语音传输已恢复");
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            };
-            EMClient.getInstance().callManager().addCallStateChangeListener(callStateListener);
+            callStateListener = new MLCallStateChangeListener();
         }
+        EMClient.getInstance().callManager().addCallStateChangeListener(callStateListener);
     }
 
     /**
@@ -321,7 +245,7 @@ public class MLHyphenate {
             @Override
             public void onConnected() {
                 MLLog.d("onConnected");
-                isUnbuildToken = true;
+                unbuildToken = true;
                 // 设置链接监听变化状态
                 MLConnectionEvent event = new MLConnectionEvent();
                 event.setType(MLConstants.ML_CONNECTION_CONNECTED);
@@ -338,7 +262,7 @@ public class MLHyphenate {
             public void onDisconnected(final int errorCode) {
                 MLLog.d("onDisconnected - %d", errorCode);
                 // 在离线状态下，退出登录的时候需要设置为false，已经登录成功的状态要改为 false，这个在使用了推送功能时，调用logout需要传递
-                isUnbuildToken = false;
+                unbuildToken = false;
                 MLConnectionEvent event = new MLConnectionEvent();
                 if (errorCode == EMError.USER_LOGIN_ANOTHER_DEVICE) {
                     MLLog.d("user login another device - " + errorCode);
@@ -800,10 +724,10 @@ public class MLHyphenate {
          * boolean 第一个是必须的，表示要解绑Token，如果离线状态这个参数要设置为false
          * callback 可选参数，用来接收推出的登录的结果
          */
-        EMClient.getInstance().logout(isUnbuildToken, new EMCallBack() {
+        EMClient.getInstance().logout(unbuildToken, new EMCallBack() {
             @Override
             public void onSuccess() {
-                isUnbuildToken = true;
+                unbuildToken = true;
                 if (callback != null) {
                     callback.onSuccess();
                 }
@@ -811,7 +735,7 @@ public class MLHyphenate {
 
             @Override
             public void onError(int i, String s) {
-                isUnbuildToken = true;
+                unbuildToken = true;
                 if (callback != null) {
                     callback.onError(i, s);
                 }

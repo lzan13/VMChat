@@ -1,5 +1,6 @@
 package net.melove.app.chat.ui.chat.call;
 
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.media.AudioManager;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hyphenate.chat.EMCallManager;
@@ -23,6 +25,7 @@ import com.hyphenate.exceptions.EMServiceNotReadyException;
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.media.EMLocalSurfaceView;
 import com.hyphenate.media.EMOppositeSurfaceView;
+import com.superrtc.sdk.VideoView;
 
 import net.melove.app.chat.R;
 import net.melove.app.chat.application.MLConstants;
@@ -35,6 +38,10 @@ import net.melove.app.chat.ui.widget.MLToast;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class MLVideoCallActivity extends MLCallActivity {
 
     // 视频通话帮助类
@@ -42,50 +49,41 @@ public class MLVideoCallActivity extends MLCallActivity {
     // 摄像头数据处理器
     private MLCameraDataProcessor mCameraDataProcessor;
 
-    // 控制按钮层布局
-    private View mControlLayout;
-    // 显示视频通话画面的控件
-    private EMLocalSurfaceView mLocalSurfaceView;
-    private EMOppositeSurfaceView mOppositeSurfaceView;
+    // 当前显示画面状态，0 正常，1 本地为大图
+    private int surfaceViewState = 0;
 
-    // 通话背景图
-    private ImageView mCallBackgroundView;
-    // 通话状态控件
-    private TextView mCallStatusView;
-    // 切换摄像头按钮
-    private ImageButton mChangeCameraSwitch;
-    // 通话界面最小化按钮
-    private ImageButton mExitFullScreenBtn;
-    // 麦克风开关
-    private ImageButton mMicSwitch;
-    // 摄像头开关
-    private ImageButton mCameraSwitch;
-    // 扬声器开关
-    private ImageButton mSpeakerSwitch;
-    // 录制开关
-    private ImageButton mRecordSwitch;
-    // 拒绝接听按钮
-    private FloatingActionButton mRejectCallFab;
-    // 结束通话按钮
-    private FloatingActionButton mEndCallFab;
-    // 接听通话按钮
-    private FloatingActionButton mAnswerCallFab;
+    // 使用 ButterKnife 注解的方式获取控件
+    @BindView(R.id.ml_layout_call_control) View mControlLayout;
+    @BindView(R.id.ml_layout_local) RelativeLayout localLayout;
+    @BindView(R.id.ml_layout_opposite) RelativeLayout oppositeLayout;
+    @BindView(R.id.ml_surface_view_local) EMLocalSurfaceView mLocalSurfaceView;
+    @BindView(R.id.ml_surface_view_opposite) EMOppositeSurfaceView mOppositeSurfaceView;
 
+    @BindView(R.id.ml_img_call_background) ImageView mCallBackgroundView;
+    @BindView(R.id.ml_text_call_status) TextView mCallStatusView;
+    @BindView(R.id.ml_btn_change_camera_switch) ImageButton mChangeCameraSwitch;
+    @BindView(R.id.ml_btn_exit_full_screen) ImageButton mExitFullScreenBtn;
+    @BindView(R.id.ml_btn_camera_switch) ImageButton mCameraSwitch;
+    @BindView(R.id.ml_btn_mic_switch) ImageButton mMicSwitch;
+    @BindView(R.id.ml_btn_speaker_switch) ImageButton mSpeakerSwitch;
+    @BindView(R.id.ml_btn_record_switch) ImageButton mRecordSwitch;
+    @BindView(R.id.ml_fab_reject_call) FloatingActionButton mRejectCallFab;
+    @BindView(R.id.ml_fab_end_call) FloatingActionButton mEndCallFab;
+    @BindView(R.id.ml_fab_answer_call) FloatingActionButton mAnswerCallFab;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_call);
 
-        initView();
+        ButterKnife.bind(this);
 
+        initView();
     }
 
     /**
      * 重载父类方法,实现一些当前通话的操作，
      */
-    @Override
-    protected void initView() {
+    @Override protected void initView() {
         super.initView();
 
         MLLog.i("initView");
@@ -93,26 +91,7 @@ public class MLVideoCallActivity extends MLCallActivity {
         // 设置通话类型为视频
         mCallType = 0;
 
-        // 通话背景图
-        mCallBackgroundView = (ImageView) findViewById(R.id.ml_img_call_bg);
         mCallBackgroundView.setImageResource(R.mipmap.ic_character_blackcat);
-        // 初始化控制层
-        mControlLayout = findViewById(R.id.ml_layout_call_control);
-        // 初始化界面控件
-        mLocalSurfaceView = (EMLocalSurfaceView) findViewById(R.id.ml_surface_view_local);
-        mOppositeSurfaceView = (EMOppositeSurfaceView) findViewById(R.id.ml_surface_view_opposite);
-        // 通话状态控件
-        mCallStatusView = (TextView) findViewById(R.id.ml_text_call_status);
-        // 界面操作按钮
-        mExitFullScreenBtn = (ImageButton) findViewById(R.id.ml_btn_exit_full_screen);
-        mChangeCameraSwitch = (ImageButton) findViewById(R.id.ml_btn_change_camera_switch);
-        mMicSwitch = (ImageButton) findViewById(R.id.ml_btn_mic_switch);
-        mCameraSwitch = (ImageButton) findViewById(R.id.ml_btn_camera_switch);
-        mSpeakerSwitch = (ImageButton) findViewById(R.id.ml_btn_speaker_switch);
-        mRecordSwitch = (ImageButton) findViewById(R.id.ml_btn_record_switch);
-        mRejectCallFab = (FloatingActionButton) findViewById(R.id.ml_btn_fab_reject_call);
-        mEndCallFab = (FloatingActionButton) findViewById(R.id.ml_btn_fab_end_call);
-        mAnswerCallFab = (FloatingActionButton) findViewById(R.id.ml_btn_fab_answer_call);
 
         // 设置按钮状态
         mChangeCameraSwitch.setActivated(false);
@@ -121,43 +100,33 @@ public class MLVideoCallActivity extends MLCallActivity {
         mSpeakerSwitch.setActivated(MLCallStatus.getInstance().isSpeaker());
         mRecordSwitch.setActivated(MLCallStatus.getInstance().isRecord());
 
-        // 设置控件的点击监听
-        mControlLayout.setOnClickListener(viewListener);
-        mCallBackgroundView.setOnClickListener(viewListener);
-        mLocalSurfaceView.setOnClickListener(viewListener);
-        mOppositeSurfaceView.setOnClickListener(viewListener);
-        mExitFullScreenBtn.setOnClickListener(viewListener);
-        mChangeCameraSwitch.setOnClickListener(viewListener);
-        mMicSwitch.setOnClickListener(viewListener);
-        mCameraSwitch.setOnClickListener(viewListener);
-        mSpeakerSwitch.setOnClickListener(viewListener);
-        mRecordSwitch.setOnClickListener(viewListener);
-        mRejectCallFab.setOnClickListener(viewListener);
-        mEndCallFab.setOnClickListener(viewListener);
-        mAnswerCallFab.setOnClickListener(viewListener);
-
-
         // 初始化视频通话帮助类
         mVideoCallHelper = EMClient.getInstance().callManager().getVideoCallHelper();
-        // 设置自动码率  TODO 新的针对音视频优化的 SDK 不需要调用，默认直接开启
-        mVideoCallHelper.setAdaptiveVideoFlag(true);
         // 设置视频通话分辨率 默认是(320, 240)
         mVideoCallHelper.setResolution(640, 480);
         // 设置视频通话比特率 默认是(150)
         mVideoCallHelper.setVideoBitrate(300);
         // 设置本地预览图像显示在最上层，一定要提前设置，否则无效
-        mLocalSurfaceView.setZOrderMediaOverlay(true);
-        mLocalSurfaceView.setZOrderOnTop(true);
+        //mLocalSurfaceView.setZOrderMediaOverlay(true);
+        //mLocalSurfaceView.setZOrderOnTop(true);
+
+        mLocalSurfaceView.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
+        mOppositeSurfaceView.setScaleMode(
+                VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFit);
 
         try {
             // 设置默认摄像头为前置
-            EMClient.getInstance().callManager().setCameraFacing(Camera.CameraInfo.CAMERA_FACING_FRONT);
+            EMClient.getInstance()
+                    .callManager()
+                    .setCameraFacing(Camera.CameraInfo.CAMERA_FACING_FRONT);
         } catch (HyphenateException e) {
             e.printStackTrace();
         }
 
-        // 设置本地以及对方显示画面控件 TODO 这个要设置在上边几个方法之后，不然会概率出现接收方无画面
-        EMClient.getInstance().callManager().setSurfaceView(mLocalSurfaceView, mOppositeSurfaceView);
+        // 设置本地以及对方显示画面控件，这个要设置在上边几个方法之后，不然会概率出现接收方无画面
+        EMClient.getInstance()
+                .callManager()
+                .setSurfaceView(mLocalSurfaceView, mOppositeSurfaceView);
         // 初始化视频数据处理器
         mCameraDataProcessor = new MLCameraDataProcessor();
         // 设置视频通话数据处理类
@@ -168,13 +137,6 @@ public class MLVideoCallActivity extends MLCallActivity {
         if (MLCallStatus.getInstance().getCallState() == MLCallStatus.CALL_STATUS_NORMAL) {
             // 设置通话呼入呼出状态
             MLCallStatus.getInstance().setInComing(isInComingCall);
-            //  设置资源加载监听
-            mSoundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
-                @Override
-                public void onLoadComplete(SoundPool soundPool, int i, int i1) {
-                    playCallSound();
-                }
-            });
             if (isInComingCall) {
                 // 设置通话状态为对方申请通话
                 mCallStatusView.setText(R.string.ml_call_connected_is_incoming);
@@ -190,7 +152,8 @@ public class MLVideoCallActivity extends MLCallActivity {
                 // 自己是主叫方，调用呼叫方法
                 makeCall();
             }
-        } else if (MLCallStatus.getInstance().getCallState() == MLCallStatus.CALL_STATUS_CONNECTING) {
+        } else if (MLCallStatus.getInstance().getCallState()
+                == MLCallStatus.CALL_STATUS_CONNECTING) {
             // 设置通话呼入呼出状态
             isInComingCall = MLCallStatus.getInstance().isInComing();
             // 设置通话状态为正在呼叫中
@@ -198,7 +161,8 @@ public class MLVideoCallActivity extends MLCallActivity {
             mRejectCallFab.setVisibility(View.GONE);
             mEndCallFab.setVisibility(View.VISIBLE);
             mAnswerCallFab.setVisibility(View.GONE);
-        } else if (MLCallStatus.getInstance().getCallState() == MLCallStatus.CALL_STATUS_CONNECTING_INCOMING) {
+        } else if (MLCallStatus.getInstance().getCallState()
+                == MLCallStatus.CALL_STATUS_CONNECTING_INCOMING) {
             // 设置通话呼入呼出状态
             isInComingCall = MLCallStatus.getInstance().isInComing();
             // 设置通话状态为对方申请通话
@@ -232,59 +196,62 @@ public class MLVideoCallActivity extends MLCallActivity {
     /**
      * 界面控件点击监听器
      */
-    private View.OnClickListener viewListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.ml_layout_call_control:
-                case R.id.ml_img_call_bg:
-                    onControlLayout();
-                    break;
-                case R.id.ml_surface_view_local:
-                    onControlLayout();
-                    break;
-                case R.id.ml_surface_view_opposite:
-                    onControlLayout();
-                    break;
-                case R.id.ml_btn_exit_full_screen:
-                    // 最小化通话界面
-                    exitFullScreen();
-                    break;
-                case R.id.ml_btn_change_camera_switch:
-                    // 切换摄像头
-                    changeCamera();
-                    break;
-                case R.id.ml_btn_mic_switch:
-                    // 麦克风开关
-                    onMicrophone();
-                    break;
-                case R.id.ml_btn_camera_switch:
-                    // 摄像头开关
-                    onCamera();
-                    break;
-                case R.id.ml_btn_speaker_switch:
-                    // 扬声器开关
-                    onSpeaker();
-                    break;
-                case R.id.ml_btn_record_switch:
-                    // 录制开关
-                    recordCall();
-                    break;
-                case R.id.ml_btn_fab_reject_call:
-                    // 拒绝接听通话
-                    rejectCall();
-                    break;
-                case R.id.ml_btn_fab_end_call:
-                    // 结束通话
-                    endCall();
-                    break;
-                case R.id.ml_btn_fab_answer_call:
-                    // 接听通话
-                    answerCall();
-                    break;
-            }
+    @OnClick({
+            R.id.ml_img_call_background, R.id.ml_layout_call_control, R.id.ml_surface_view_local,
+            R.id.ml_surface_view_opposite, R.id.ml_btn_exit_full_screen,
+            R.id.ml_btn_change_camera_switch, R.id.ml_btn_mic_switch, R.id.ml_btn_camera_switch,
+            R.id.ml_btn_speaker_switch, R.id.ml_btn_record_switch, R.id.ml_fab_reject_call,
+            R.id.ml_fab_end_call, R.id.ml_fab_answer_call
+    }) void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.ml_layout_call_control:
+            case R.id.ml_img_call_background:
+                onControlLayout();
+                break;
+            case R.id.ml_surface_view_local:
+                changeSurfaceViewSize();
+                break;
+            case R.id.ml_surface_view_opposite:
+                onControlLayout();
+                break;
+            case R.id.ml_btn_exit_full_screen:
+                // 最小化通话界面
+                exitFullScreen();
+                break;
+            case R.id.ml_btn_change_camera_switch:
+                // 切换摄像头
+                changeCamera();
+                break;
+            case R.id.ml_btn_mic_switch:
+                // 麦克风开关
+                onMicrophone();
+                break;
+            case R.id.ml_btn_camera_switch:
+                // 摄像头开关
+                onCamera();
+                break;
+            case R.id.ml_btn_speaker_switch:
+                // 扬声器开关
+                onSpeaker();
+                break;
+            case R.id.ml_btn_record_switch:
+                // 录制开关
+                recordCall();
+                break;
+            case R.id.ml_fab_reject_call:
+                // 拒绝接听通话
+                rejectCall();
+                break;
+            case R.id.ml_fab_end_call:
+                // 结束通话
+                endCall();
+                break;
+            case R.id.ml_fab_answer_call:
+                // 接听通话
+                answerCall();
+                break;
         }
-    };
+    }
 
     /**
      * 控制界面的显示与隐藏
@@ -295,6 +262,32 @@ public class MLVideoCallActivity extends MLCallActivity {
         } else {
             mControlLayout.setVisibility(View.VISIBLE);
         }
+    }
+
+    /**
+     * 改变通话界面大小显示
+     */
+    private void changeSurfaceViewSize() {
+        RelativeLayout.LayoutParams localLayoutParams =
+                (RelativeLayout.LayoutParams) mLocalSurfaceView.getLayoutParams();
+        RelativeLayout.LayoutParams oppositeLayoutParams =
+                (RelativeLayout.LayoutParams) mOppositeSurfaceView.getLayoutParams();
+        if (surfaceViewState == 1) {
+            surfaceViewState = 0;
+            localLayoutParams.width = 240;
+            localLayoutParams.height = 320;
+            oppositeLayoutParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+            oppositeLayoutParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
+        } else {
+            surfaceViewState = 1;
+            localLayoutParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+            localLayoutParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
+            oppositeLayoutParams.width = 240;
+            oppositeLayoutParams.height = 320;
+        }
+
+        mLocalSurfaceView.setLayoutParams(localLayoutParams);
+        mOppositeSurfaceView.setLayoutParams(oppositeLayoutParams);
     }
 
     /**
@@ -328,7 +321,6 @@ public class MLVideoCallActivity extends MLCallActivity {
 
     /**
      * 麦克风开关，主要调用环信语音数据传输方法
-     * TODO 3.1.4 SDK 语音通话暂时无效，视频
      */
     private void onMicrophone() {
         // 振动反馈
@@ -379,7 +371,6 @@ public class MLVideoCallActivity extends MLCallActivity {
             MLLog.e("exception code: %d, %s", e.getErrorCode(), e.getMessage());
             e.printStackTrace();
         }
-
     }
 
     /**
@@ -500,6 +491,12 @@ public class MLVideoCallActivity extends MLCallActivity {
     private void surfaceViewProcessor() {
         // 设置显示对方图像控件显示
         mOppositeSurfaceView.setVisibility(View.VISIBLE);
+
+        RelativeLayout.LayoutParams lp =
+                (RelativeLayout.LayoutParams) mLocalSurfaceView.getLayoutParams();
+        lp.width = 180;
+        lp.height = 240;
+        mLocalSurfaceView.setLayoutParams(lp);
     }
 
     /**
@@ -525,7 +522,7 @@ public class MLVideoCallActivity extends MLCallActivity {
 
     /**
      * 关闭扬声器，即开启听筒播放模式
-     * 同上边{@link #openSpeaker()}
+     * 更多内容看{@link #openSpeaker()}
      */
     private void closeSpeaker() {
         // 设置按钮状态
@@ -533,7 +530,7 @@ public class MLVideoCallActivity extends MLCallActivity {
         MLCallStatus.getInstance().setSpeaker(false);
         // 检查是否已经开启扬声器
         if (mAudioManager.isSpeakerphoneOn()) {
-            // 打开扬声器
+            // 关闭扬声器
             mAudioManager.setSpeakerphoneOn(false);
         }
         // 设置声音模式为通讯模式，即使用听筒播放
@@ -543,8 +540,7 @@ public class MLVideoCallActivity extends MLCallActivity {
     /**
      * 实现订阅方法，订阅全局监听发来的通话状态事件
      */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventBus(MLCallEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(MLCallEvent event) {
         CallError callError = event.getCallError();
         CallState callState = event.getCallState();
 
@@ -589,7 +585,7 @@ public class MLVideoCallActivity extends MLCallActivity {
                     MLLog.i("对方未响应，可能手机不在身边" + callError);
                     // 设置通话状态为对方未响应
                     mCallStatus = MLConstants.ML_CALL_NORESPONSE;
-                    mCallStatusView.setText(R.string.ml_call_noresponse);
+                    mCallStatusView.setText(R.string.ml_call_no_response);
                 } else if (callError == CallError.ERROR_TRANSPORT) {
                     MLLog.i("连接建立失败" + callError);
                     // 设置通话状态为建立连接失败
@@ -627,7 +623,7 @@ public class MLVideoCallActivity extends MLCallActivity {
                     mCallStatusView.setText(R.string.ml_call_no_data);
                 } else {
                     MLLog.i("网络不稳定" + callError);
-                    mCallStatusView.setText(R.string.ml_call_network_unsatble);
+                    mCallStatusView.setText(R.string.ml_call_network_unstable);
                 }
                 break;
             case NETWORK_NORMAL:
@@ -658,16 +654,14 @@ public class MLVideoCallActivity extends MLCallActivity {
     /**
      * 结束通话时关闭界面
      */
-    @Override
-    protected void onFinish() {
+    @Override protected void onFinish() {
         // 结束通话要把 SurfaceView 释放 重置为 null
         mLocalSurfaceView = null;
         mOppositeSurfaceView = null;
         super.onFinish();
     }
 
-    @Override
-    protected void onUserLeaveHint() {
+    @Override protected void onUserLeaveHint() {
         // 判断如果是通话中，暂停启动图像的传输
         if (MLCallStatus.getInstance().getCallState() == MLCallStatus.CALL_STATUS_ACCEPTED) {
             try {
@@ -679,9 +673,7 @@ public class MLVideoCallActivity extends MLCallActivity {
         super.onUserLeaveHint();
     }
 
-
-    @Override
-    protected void onResume() {
+    @Override protected void onResume() {
         super.onResume();
         // 判断如果是通话中，重新启动图像的传输
         if (MLCallStatus.getInstance().getCallState() == MLCallStatus.CALL_STATUS_ACCEPTED) {
@@ -693,39 +685,50 @@ public class MLVideoCallActivity extends MLCallActivity {
         }
 
         // 添加控件监听，监听背景图加载是否完成
-        mCallBackgroundView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                // 移除控件加载图片监听
-                mCallBackgroundView.getViewTreeObserver().removeOnPreDrawListener(this);
-                MLLog.i("blur bitmap - 0 - %d", MLDateUtil.getCurrentMillisecond());
-                mCallBackgroundView.setDrawingCacheEnabled(true);
-                Bitmap bitmap = mCallBackgroundView.getDrawingCache();
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                    mCallBackgroundView.setImageBitmap(MLBitmapUtil.stackBlurBitmap(bitmap, mActivity.getResources().getInteger(R.integer.ml_img_blur_16), mActivity.getResources().getInteger(R.integer.ml_img_blur_8), false));
-                } else {
-                    mCallBackgroundView.setImageBitmap(MLBitmapUtil.rsBlurBitmp(mActivity, bitmap, mActivity.getResources().getInteger(R.integer.ml_img_blur_16), mActivity.getResources().getInteger(R.integer.ml_img_blur_8)));
-                }
-                mCallBackgroundView.setDrawingCacheEnabled(false);
-                MLLog.i("blur bitmap - 1 - %d", MLDateUtil.getCurrentMillisecond());
-                return false;
-            }
-        });
+        mCallBackgroundView.getViewTreeObserver()
+                .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                    @Override public boolean onPreDraw() {
+                        // 移除控件加载图片监听
+                        mCallBackgroundView.getViewTreeObserver().removeOnPreDrawListener(this);
+                        MLLog.i("blur bitmap - 0 - %d", MLDateUtil.getCurrentMillisecond());
+                        mCallBackgroundView.setDrawingCacheEnabled(true);
+                        Bitmap bitmap = mCallBackgroundView.getDrawingCache();
+                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                            mCallBackgroundView.setImageBitmap(MLBitmapUtil.stackBlurBitmap(bitmap,
+                                    mActivity.getResources().getInteger(R.integer.ml_img_blur_16),
+                                    mActivity.getResources().getInteger(R.integer.ml_img_blur_8),
+                                    false));
+                        } else {
+                            mCallBackgroundView.setImageBitmap(
+                                    MLBitmapUtil.rsBlurBitmp(mActivity, bitmap,
+                                            mActivity.getResources()
+                                                    .getInteger(R.integer.ml_img_blur_16), mActivity
+                                                    .getResources()
+                                                    .getInteger(R.integer.ml_img_blur_8)));
+                        }
+                        mCallBackgroundView.setDrawingCacheEnabled(false);
+                        MLLog.i("blur bitmap - 1 - %d", MLDateUtil.getCurrentMillisecond());
+                        return false;
+                    }
+                });
     }
 
+    /**
+     * Screen configuration changed
+     */
+    @Override public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+    }
 
-    @Override
-    protected void onStart() {
+    @Override protected void onStart() {
         super.onStart();
     }
 
-    @Override
-    protected void onStop() {
+    @Override protected void onStop() {
         super.onStop();
     }
 
-    @Override
-    protected void onDestroy() {
+    @Override protected void onDestroy() {
         super.onDestroy();
     }
 }

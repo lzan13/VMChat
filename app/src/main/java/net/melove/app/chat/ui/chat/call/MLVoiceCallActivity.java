@@ -33,37 +33,44 @@ import net.melove.app.chat.ui.widget.MLToast;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class MLVoiceCallActivity extends MLCallActivity {
 
 
-    // 通话背景图
-    private ImageView mCallBackgroundView;
-    // 通话状态控件
-    private TextView mCallStatusView;
-    // 显示对方头像的控件
-    private MLImageView mAvatarView;
-    // 显示对方名字
-    private TextView mUsernameView;
-    // 通话界面最小化按钮
-    private ImageButton mExitFullScreenBtn;
-    // 麦克风开关
-    private ImageButton mMicSwitch;
-    // 扬声器开关
-    private ImageButton mSpeakerSwitch;
-    // 录制开关
-    private ImageButton mRecordSwitch;
-    // 拒绝接听按钮
-    private FloatingActionButton mRejectCallFab;
-    // 结束通话按钮
-    private FloatingActionButton mEndCallFab;
-    // 接听通话按钮
-    private FloatingActionButton mAnswerCallFab;
+    // 使用 ButterKnife 注解的方式获取控件
+    @BindView (R.id.ml_img_call_background)
+    ImageView mCallBackgroundView;
+    @BindView (R.id.ml_text_call_status)
+    TextView mCallStatusView;
+    @BindView (R.id.ml_img_call_avatar)
+    MLImageView mAvatarView;
+    @BindView (R.id.ml_text_call_username)
+    TextView mUsernameView;
+    @BindView (R.id.ml_btn_exit_full_screen)
+    ImageButton mExitFullScreenBtn;
+    @BindView (R.id.ml_btn_mic_switch)
+    ImageButton mMicSwitch;
+    @BindView (R.id.ml_btn_speaker_switch)
+    ImageButton mSpeakerSwitch;
+    @BindView (R.id.ml_btn_record_switch)
+    ImageButton mRecordSwitch;
+    @BindView (R.id.ml_fab_reject_call)
+    FloatingActionButton mRejectCallFab;
+    @BindView (R.id.ml_fab_end_call)
+    FloatingActionButton mEndCallFab;
+    @BindView (R.id.ml_fab_answer_call)
+    FloatingActionButton mAnswerCallFab;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_voice_call);
+
+        ButterKnife.bind(this);
 
         initView();
     }
@@ -78,38 +85,12 @@ public class MLVoiceCallActivity extends MLCallActivity {
         // 设置通话类型为语音
         mCallType = 1;
 
-        // 初始化界面控件
-        // 通话背景图
-        mCallBackgroundView = (ImageView) findViewById(R.id.ml_img_call_bg);
         mCallBackgroundView.setImageResource(R.mipmap.ic_character_penguin);
-        // 显示通话状态控件
-        mCallStatusView = (TextView) findViewById(R.id.ml_text_call_status);
-        // 显示对方头像控件
-        mAvatarView = (MLImageView) findViewById(R.id.ml_img_call_avatar);
-        // 显示对方用户名控件
-        mUsernameView = (TextView) findViewById(R.id.ml_text_call_username);
 
-        // 最小化按钮
-        mExitFullScreenBtn = (ImageButton) findViewById(R.id.ml_btn_exit_full_screen);
-        mMicSwitch = (ImageButton) findViewById(R.id.ml_btn_mic_switch);
-        mSpeakerSwitch = (ImageButton) findViewById(R.id.ml_btn_speaker_switch);
-        mRecordSwitch = (ImageButton) findViewById(R.id.ml_btn_record_switch);
-        mRejectCallFab = (FloatingActionButton) findViewById(R.id.ml_btn_fab_reject_call);
-        mEndCallFab = (FloatingActionButton) findViewById(R.id.ml_btn_fab_end_call);
-        mAnswerCallFab = (FloatingActionButton) findViewById(R.id.ml_btn_fab_answer_call);
         // 设置按钮状态
         mMicSwitch.setActivated(MLCallStatus.getInstance().isMic());
         mSpeakerSwitch.setActivated(MLCallStatus.getInstance().isSpeaker());
         mRecordSwitch.setActivated(MLCallStatus.getInstance().isRecord());
-
-        // 设置按钮的点击监听
-        mExitFullScreenBtn.setOnClickListener(viewListener);
-        mMicSwitch.setOnClickListener(viewListener);
-        mSpeakerSwitch.setOnClickListener(viewListener);
-        mRecordSwitch.setOnClickListener(viewListener);
-        mRejectCallFab.setOnClickListener(viewListener);
-        mEndCallFab.setOnClickListener(viewListener);
-        mAnswerCallFab.setOnClickListener(viewListener);
 
         // 设置对方的名字以及界面其他控件的显示
         mUsernameView.setText(mChatId);
@@ -117,13 +98,6 @@ public class MLVoiceCallActivity extends MLCallActivity {
         if (MLCallStatus.getInstance().getCallState() == MLCallStatus.CALL_STATUS_NORMAL) {
             // 设置通话呼入呼出状态
             MLCallStatus.getInstance().setInComing(isInComingCall);
-            //  设置资源加载监听
-            mSoundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
-                @Override
-                public void onLoadComplete(SoundPool soundPool, int i, int i1) {
-                    playCallSound();
-                }
-            });
             if (isInComingCall) {
                 // 收到通话请求，设置通话状态为被呼叫中
                 MLCallStatus.getInstance().setCallState(MLCallStatus.CALL_STATUS_CONNECTING_INCOMING);
@@ -185,41 +159,39 @@ public class MLVoiceCallActivity extends MLCallActivity {
     /**
      * 界面控件点击监听器
      */
-    private View.OnClickListener viewListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.ml_btn_exit_full_screen:
-                    // 最小化通话界面
-                    exitFullScreen();
-                    break;
-                case R.id.ml_btn_mic_switch:
-                    // 麦克风开关
-                    onMicrophone();
-                    break;
-                case R.id.ml_btn_speaker_switch:
-                    // 扬声器开关
-                    onSpeaker();
-                    break;
-                case R.id.ml_btn_record_switch:
-                    // 录制开关
-                    recordCall();
-                    break;
-                case R.id.ml_btn_fab_reject_call:
-                    // 拒绝接听通话
-                    rejectCall();
-                    break;
-                case R.id.ml_btn_fab_end_call:
-                    // 结束通话
-                    endCall();
-                    break;
-                case R.id.ml_btn_fab_answer_call:
-                    // 接听通话
-                    answerCall();
-                    break;
-            }
+    @OnClick ({R.id.ml_btn_exit_full_screen, R.id.ml_btn_mic_switch, R.id.ml_btn_speaker_switch, R.id.ml_btn_record_switch, R.id.ml_fab_reject_call, R.id.ml_fab_end_call, R.id.ml_fab_answer_call})
+    void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.ml_btn_exit_full_screen:
+                // 最小化通话界面
+                exitFullScreen();
+                break;
+            case R.id.ml_btn_mic_switch:
+                // 麦克风开关
+                onMicrophone();
+                break;
+            case R.id.ml_btn_speaker_switch:
+                // 扬声器开关
+                onSpeaker();
+                break;
+            case R.id.ml_btn_record_switch:
+                // 录制开关
+                recordCall();
+                break;
+            case R.id.ml_fab_reject_call:
+                // 拒绝接听通话
+                rejectCall();
+                break;
+            case R.id.ml_fab_end_call:
+                // 结束通话
+                endCall();
+                break;
+            case R.id.ml_fab_answer_call:
+                // 接听通话
+                answerCall();
+                break;
         }
-    };
+    }
 
     /**
      * 退出全屏通话界面
@@ -412,7 +384,7 @@ public class MLVoiceCallActivity extends MLCallActivity {
     /**
      * 实现订阅方法，订阅全局监听发来的通话状态事件
      */
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe (threadMode = ThreadMode.MAIN)
     public void onEventBus(MLCallEvent event) {
         CallError callError = event.getCallError();
         CallState callState = event.getCallState();
@@ -456,7 +428,7 @@ public class MLVoiceCallActivity extends MLCallActivity {
                     MLLog.i("对方未响应，可能手机不在身边" + callError);
                     // 设置通话状态为对方未响应
                     mCallStatus = MLConstants.ML_CALL_NORESPONSE;
-                    mCallStatusView.setText(R.string.ml_call_noresponse);
+                    mCallStatusView.setText(R.string.ml_call_no_response);
                 } else if (callError == CallError.ERROR_TRANSPORT) {
                     MLLog.i("连接建立失败" + callError);
                     // 设置通话状态为建立连接失败
@@ -494,7 +466,7 @@ public class MLVoiceCallActivity extends MLCallActivity {
                     mCallStatusView.setText(R.string.ml_call_no_data);
                 } else {
                     MLLog.i("网络不稳定" + callError);
-                    mCallStatusView.setText(R.string.ml_call_network_unsatble);
+                    mCallStatusView.setText(R.string.ml_call_network_unstable);
                 }
                 break;
             case NETWORK_NORMAL:

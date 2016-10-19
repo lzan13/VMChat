@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="net.melove.app.chat"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="net.melove.app.chat">
 
     <!-- 项目权限配置 -->
     <!-- 相机 -->
@@ -127,8 +127,8 @@
         <!--视频通话界面-->
         <activity
             android:name=".ui.chat.call.MLVideoCallActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Transparent"
             android:windowSoftInputMode="adjustNothing|stateAlwaysHidden"/>
         <!--语音通话界面-->

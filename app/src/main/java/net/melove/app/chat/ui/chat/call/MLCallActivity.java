@@ -46,10 +46,7 @@ public class MLCallActivity extends MLBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // 设置通话界面属性，保持屏幕常亮，关闭输入法，以及解锁
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-                | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
-                | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-                | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
     }
 
     // 振动器
@@ -81,11 +78,20 @@ public class MLCallActivity extends MLBaseActivity {
         } else {
             createSoundPoolWithConstructor();
         }
-        // 根据通话呼叫与被呼叫加载不同的提示音效
-        if (isInComingCall) {
-            loadId = mSoundPool.load(mActivity, R.raw.sound_call_incoming, 1);
-        } else {
-            loadId = mSoundPool.load(mActivity, R.raw.sound_calling, 1);
+        if (MLCallStatus.getInstance().getCallState() == MLCallStatus.CALL_STATUS_NORMAL) {
+            // 根据通话呼叫与被呼叫加载不同的提示音效
+            if (isInComingCall) {
+                loadId = mSoundPool.load(mActivity, R.raw.sound_call_incoming, 1);
+            } else {
+                loadId = mSoundPool.load(mActivity, R.raw.sound_calling, 1);
+            }
+            //  设置资源加载监听
+            mSoundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+                @Override
+                public void onLoadComplete(SoundPool soundPool, int i, int i1) {
+                    playCallSound();
+                }
+            });
         }
     }
 
@@ -135,7 +141,7 @@ public class MLCallActivity extends MLBaseActivity {
                 break;
             case MLConstants.ML_CALL_NORESPONSE:
                 // 对方无响应
-                content = mActivity.getString(R.string.ml_call_noresponse);
+                content = mActivity.getString(R.string.ml_call_no_response);
                 break;
             case MLConstants.ML_CALL_TRANSPORT:
                 // 建立连接失败
