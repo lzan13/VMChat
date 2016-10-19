@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.WindowManager;
 
+import android.widget.Chronometer;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
@@ -31,6 +32,9 @@ public class MLCallActivity extends MLBaseActivity {
     // 是否是拨打进来的电话
     protected boolean isInComingCall;
 
+    // 通话计时控件
+    protected Chronometer mChronometer;
+
     // 通话结束状态，用来保存通话结束后的消息提示
     protected int mCallStatus;
     // 通话类型，用于区分语音和视频通话 0 代表视频，1 代表语音
@@ -42,16 +46,17 @@ public class MLCallActivity extends MLBaseActivity {
     protected int streamID;
     protected int loadId;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // 设置通话界面属性，保持屏幕常亮，关闭输入法，以及解锁
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-    }
-
     // 振动器
     protected Vibrator mVibrator;
 
+    @Override protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // 设置通话界面属性，保持屏幕常亮，关闭输入法，以及解锁
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
+                | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+    }
 
     /**
      * 初始化界面方法，做一些界面的初始化操作
@@ -87,8 +92,7 @@ public class MLCallActivity extends MLBaseActivity {
             }
             //  设置资源加载监听
             mSoundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
-                @Override
-                public void onLoadComplete(SoundPool soundPool, int i, int i1) {
+                @Override public void onLoadComplete(SoundPool soundPool, int i, int i1) {
                     playCallSound();
                 }
             });
@@ -113,7 +117,7 @@ public class MLCallActivity extends MLBaseActivity {
         switch (mCallStatus) {
             case MLConstants.ML_CALL_ACCEPTED:
                 // 通话正常结束，要加上通话时间
-                content = mActivity.getString(R.string.ml_call_duration_time);
+                content = mChronometer.getText().toString();
                 break;
             case MLConstants.ML_CALL_CANCEL:
                 // 自己取消
@@ -216,30 +220,29 @@ public class MLCallActivity extends MLBaseActivity {
     /**
      * 当系统的 SDK 版本高于21时，使用另一种方式创建 SoundPool
      */
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    protected void createSoundPoolWithBuilder() {
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP) protected void createSoundPoolWithBuilder() {
         AudioAttributes attributes = new AudioAttributes.Builder()
                 // 设置音频要用在什么地方，这里选择电话通知铃音
-                .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE).setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build();
+                .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build();
         // 使用 build 的方式实例化 SoundPool
-        mSoundPool = new SoundPool.Builder().setAudioAttributes(attributes).setMaxStreams(1).build();
+        mSoundPool =
+                new SoundPool.Builder().setAudioAttributes(attributes).setMaxStreams(1).build();
     }
 
     /**
      * 使用构造函数实例化 SoundPool
      */
-    @SuppressWarnings("deprecation")
-    protected void createSoundPoolWithConstructor() {
+    @SuppressWarnings("deprecation") protected void createSoundPoolWithConstructor() {
         // 老版本使用构造函数方式实例化 SoundPool，MODE 设置为铃音 MODE_RINGTONE
         mSoundPool = new SoundPool(1, AudioManager.MODE_RINGTONE, 0);
     }
 
-
     /**
      * 销毁界面时做一些自己的操作
      */
-    @Override
-    protected void onFinish() {
+    @Override protected void onFinish() {
         // 关闭音效并释放资源
         stopCallSound();
         super.onFinish();
@@ -248,10 +251,8 @@ public class MLCallActivity extends MLBaseActivity {
     /**
      * 重载返回键
      */
-    @Override
-    public void onBackPressed() {
+    @Override public void onBackPressed() {
         // super.onBackPressed();
 
     }
-
 }

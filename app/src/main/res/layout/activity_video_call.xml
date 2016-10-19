@@ -25,32 +25,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
-        <RelativeLayout
-            android:id="@+id/ml_layout_opposite"
+        <!--显示对方画面控件-->
+        <com.hyphenate.media.EMOppositeSurfaceView
+            android:id="@+id/ml_surface_view_opposite"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            >
-            <!--显示对方画面控件-->
-            <com.hyphenate.media.EMOppositeSurfaceView
-                android:id="@+id/ml_surface_view_opposite"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone"
-                />
-        </RelativeLayout>
-        <RelativeLayout
-            android:id="@+id/ml_layout_local"
+            android:visibility="gone"
+            />
+        <!--显示本地画面控件-->
+        <com.hyphenate.media.EMLocalSurfaceView
+            android:id="@+id/ml_surface_view_local"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            >
-            <!--显示本地画面控件-->
-            <com.hyphenate.media.EMLocalSurfaceView
-                android:id="@+id/ml_surface_view_local"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                />
-        </RelativeLayout>
+            android:layout_alignParentRight="true"
+            />
     </RelativeLayout>
 
     <!--控制按钮层布局-->
@@ -65,7 +53,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/ml_dimen_24"
+            android:layout_marginTop="@dimen/ml_dimen_36"
             >
             <!--切换摄像头-->
             <ImageButton
@@ -77,15 +65,30 @@
                 android:background="@drawable/ml_click_rectangle_white"
                 android:src="@drawable/ml_checkbox_change_camera"
                 />
-            <!--通话状态-->
-            <TextView
-                android:id="@+id/ml_text_call_status"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="@string/ml_app_name"
-                android:textColor="@color/ml_white_87"
-                />
+                android:gravity="center"
+                android:orientation="vertical"
+                >
+                <!--通话状态-->
+                <TextView
+                    android:id="@+id/ml_text_call_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ml_app_name"
+                    android:textColor="@color/ml_white_87"
+                    />
+                <!--通话计时控件-->
+                <Chronometer
+                    android:id="@+id/ml_chronometer_call_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/ml_white_87"
+                    />
+            </LinearLayout>
+
             <!--界面最小化按钮-->
             <ImageButton
                 android:id="@+id/ml_btn_exit_full_screen"

@@ -5,13 +5,15 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.Chronometer;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 
 import com.hyphenate.chat.EMCallStateChangeListener;
 import com.hyphenate.chat.EMCallStateChangeListener.CallError;
@@ -39,34 +41,20 @@ import butterknife.OnClick;
 
 public class MLVoiceCallActivity extends MLCallActivity {
 
-
     // 使用 ButterKnife 注解的方式获取控件
-    @BindView (R.id.ml_img_call_background)
-    ImageView mCallBackgroundView;
-    @BindView (R.id.ml_text_call_status)
-    TextView mCallStatusView;
-    @BindView (R.id.ml_img_call_avatar)
-    MLImageView mAvatarView;
-    @BindView (R.id.ml_text_call_username)
-    TextView mUsernameView;
-    @BindView (R.id.ml_btn_exit_full_screen)
-    ImageButton mExitFullScreenBtn;
-    @BindView (R.id.ml_btn_mic_switch)
-    ImageButton mMicSwitch;
-    @BindView (R.id.ml_btn_speaker_switch)
-    ImageButton mSpeakerSwitch;
-    @BindView (R.id.ml_btn_record_switch)
-    ImageButton mRecordSwitch;
-    @BindView (R.id.ml_fab_reject_call)
-    FloatingActionButton mRejectCallFab;
-    @BindView (R.id.ml_fab_end_call)
-    FloatingActionButton mEndCallFab;
-    @BindView (R.id.ml_fab_answer_call)
-    FloatingActionButton mAnswerCallFab;
+    @BindView(R.id.ml_img_call_background) ImageView mCallBackgroundView;
+    @BindView(R.id.ml_text_call_status) TextView mCallStatusView;
+    @BindView(R.id.ml_img_call_avatar) MLImageView mAvatarView;
+    @BindView(R.id.ml_text_call_username) TextView mUsernameView;
+    @BindView(R.id.ml_btn_exit_full_screen) ImageButton mExitFullScreenBtn;
+    @BindView(R.id.ml_btn_mic_switch) ImageButton mMicSwitch;
+    @BindView(R.id.ml_btn_speaker_switch) ImageButton mSpeakerSwitch;
+    @BindView(R.id.ml_btn_record_switch) ImageButton mRecordSwitch;
+    @BindView(R.id.ml_fab_reject_call) FloatingActionButton mRejectCallFab;
+    @BindView(R.id.ml_fab_end_call) FloatingActionButton mEndCallFab;
+    @BindView(R.id.ml_fab_answer_call) FloatingActionButton mAnswerCallFab;
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_voice_call);
 
@@ -78,12 +66,13 @@ public class MLVoiceCallActivity extends MLCallActivity {
     /**
      * 重载父类方法,实现一些当前通话的操作，
      */
-    @Override
-    protected void initView() {
+    @Override protected void initView() {
         super.initView();
 
         // 设置通话类型为语音
         mCallType = 1;
+
+        mChronometer = (Chronometer) findViewById(R.id.ml_chronometer_call_time);
 
         mCallBackgroundView.setImageResource(R.mipmap.ic_character_penguin);
 
@@ -100,7 +89,8 @@ public class MLVoiceCallActivity extends MLCallActivity {
             MLCallStatus.getInstance().setInComing(isInComingCall);
             if (isInComingCall) {
                 // 收到通话请求，设置通话状态为被呼叫中
-                MLCallStatus.getInstance().setCallState(MLCallStatus.CALL_STATUS_CONNECTING_INCOMING);
+                MLCallStatus.getInstance()
+                        .setCallState(MLCallStatus.CALL_STATUS_CONNECTING_INCOMING);
                 // 设置通话状态为对方申请通话
                 mCallStatusView.setText(R.string.ml_call_connected_is_incoming);
                 mRejectCallFab.setVisibility(View.VISIBLE);
@@ -117,7 +107,8 @@ public class MLVoiceCallActivity extends MLCallActivity {
                 // 自己是主叫方，调用呼叫方法
                 makeCall();
             }
-        } else if (MLCallStatus.getInstance().getCallState() == MLCallStatus.CALL_STATUS_CONNECTING) {
+        } else if (MLCallStatus.getInstance().getCallState()
+                == MLCallStatus.CALL_STATUS_CONNECTING) {
             // 设置通话呼入呼出状态
             isInComingCall = MLCallStatus.getInstance().isInComing();
             // 设置通话状态为正在呼叫中
@@ -125,7 +116,8 @@ public class MLVoiceCallActivity extends MLCallActivity {
             mRejectCallFab.setVisibility(View.GONE);
             mEndCallFab.setVisibility(View.VISIBLE);
             mAnswerCallFab.setVisibility(View.GONE);
-        } else if (MLCallStatus.getInstance().getCallState() == MLCallStatus.CALL_STATUS_CONNECTING_INCOMING) {
+        } else if (MLCallStatus.getInstance().getCallState()
+                == MLCallStatus.CALL_STATUS_CONNECTING_INCOMING) {
             // 设置通话呼入呼出状态
             isInComingCall = MLCallStatus.getInstance().isInComing();
             // 设置通话状态为对方申请通话
@@ -159,8 +151,11 @@ public class MLVoiceCallActivity extends MLCallActivity {
     /**
      * 界面控件点击监听器
      */
-    @OnClick ({R.id.ml_btn_exit_full_screen, R.id.ml_btn_mic_switch, R.id.ml_btn_speaker_switch, R.id.ml_btn_record_switch, R.id.ml_fab_reject_call, R.id.ml_fab_end_call, R.id.ml_fab_answer_call})
-    void onClick(View v) {
+    @OnClick({
+            R.id.ml_btn_exit_full_screen, R.id.ml_btn_mic_switch, R.id.ml_btn_speaker_switch,
+            R.id.ml_btn_record_switch, R.id.ml_fab_reject_call, R.id.ml_fab_end_call,
+            R.id.ml_fab_answer_call
+    }) void onClick(View v) {
         switch (v.getId()) {
             case R.id.ml_btn_exit_full_screen:
                 // 最小化通话界面
@@ -384,8 +379,7 @@ public class MLVoiceCallActivity extends MLCallActivity {
     /**
      * 实现订阅方法，订阅全局监听发来的通话状态事件
      */
-    @Subscribe (threadMode = ThreadMode.MAIN)
-    public void onEventBus(MLCallEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(MLCallEvent event) {
         CallError callError = event.getCallError();
         CallState callState = event.getCallState();
 
@@ -405,9 +399,14 @@ public class MLVoiceCallActivity extends MLCallActivity {
                 stopCallSound();
                 // 通话已接通，设置通话状态为正常状态
                 mCallStatus = MLConstants.ML_CALL_ACCEPTED;
+                // 开始计时
+                mChronometer.setBase(SystemClock.elapsedRealtime());
+                mChronometer.start();
                 break;
             case DISCONNECTED: // 通话已中断
                 MLLog.i("通话已结束" + callError);
+                // 停止计时
+                mChronometer.stop();
                 mCallStatusView.setText(R.string.ml_call_disconnected);
                 if (callError == CallError.ERROR_UNAVAILABLE) {
                     MLLog.i("对方不在线" + callError);
@@ -486,43 +485,47 @@ public class MLVoiceCallActivity extends MLCallActivity {
         }
     }
 
-    @Override
-    protected void onResume() {
+    @Override protected void onResume() {
         super.onResume();
 
         // 添加控件监听，监听背景图加载是否完成
-        mCallBackgroundView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                // 移除控件加载图片监听
-                mCallBackgroundView.getViewTreeObserver().removeOnPreDrawListener(this);
-                MLLog.i("blur bitmap - 0 - %d", MLDateUtil.getCurrentMillisecond());
-                mCallBackgroundView.setDrawingCacheEnabled(true);
-                Bitmap bitmap = mCallBackgroundView.getDrawingCache();
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                    mCallBackgroundView.setImageBitmap(MLBitmapUtil.stackBlurBitmap(bitmap, mActivity.getResources().getInteger(R.integer.ml_img_blur_16), mActivity.getResources().getInteger(R.integer.ml_img_blur_8), false));
-                } else {
-                    mCallBackgroundView.setImageBitmap(MLBitmapUtil.rsBlurBitmp(mActivity, bitmap, mActivity.getResources().getInteger(R.integer.ml_img_blur_16), mActivity.getResources().getInteger(R.integer.ml_img_blur_8)));
-                }
-                mCallBackgroundView.setDrawingCacheEnabled(false);
-                MLLog.i("blur bitmap - 1 - %d", MLDateUtil.getCurrentMillisecond());
-                return false;
-            }
-        });
+        mCallBackgroundView.getViewTreeObserver()
+                .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                    @Override public boolean onPreDraw() {
+                        // 移除控件加载图片监听
+                        mCallBackgroundView.getViewTreeObserver().removeOnPreDrawListener(this);
+                        MLLog.i("blur bitmap - 0 - %d", MLDateUtil.getCurrentMillisecond());
+                        mCallBackgroundView.setDrawingCacheEnabled(true);
+                        Bitmap bitmap = mCallBackgroundView.getDrawingCache();
+                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                            mCallBackgroundView.setImageBitmap(MLBitmapUtil.stackBlurBitmap(bitmap,
+                                    mActivity.getResources().getInteger(R.integer.ml_img_blur_16),
+                                    mActivity.getResources().getInteger(R.integer.ml_img_blur_8),
+                                    false));
+                        } else {
+                            mCallBackgroundView.setImageBitmap(
+                                    MLBitmapUtil.rsBlurBitmp(mActivity, bitmap,
+                                            mActivity.getResources()
+                                                    .getInteger(R.integer.ml_img_blur_16), mActivity
+                                                    .getResources()
+                                                    .getInteger(R.integer.ml_img_blur_8)));
+                        }
+                        mCallBackgroundView.setDrawingCacheEnabled(false);
+                        MLLog.i("blur bitmap - 1 - %d", MLDateUtil.getCurrentMillisecond());
+                        return false;
+                    }
+                });
     }
 
-    @Override
-    protected void onStart() {
+    @Override protected void onStart() {
         super.onStart();
     }
 
-    @Override
-    protected void onStop() {
+    @Override protected void onStop() {
         super.onStop();
     }
 
-    @Override
-    protected void onDestroy() {
+    @Override protected void onDestroy() {
         super.onDestroy();
     }
 }

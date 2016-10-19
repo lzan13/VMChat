@@ -102,8 +102,6 @@ public class MLMainActivity extends MLBaseActivity implements NavigationView.OnN
         mActivity = this;
         mMenuType = 0;
 
-        mRootView = findViewById(R.id.ml_layout_coordinator);
-
         mDrawerLayout = (DrawerLayout) findViewById(R.id.ml_layout_drawer);
         mNavigationView = (NavigationView) findViewById(R.id.ml_widget_navigation);
         // 侧滑用户头像

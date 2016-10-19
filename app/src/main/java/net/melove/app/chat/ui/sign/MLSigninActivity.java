@@ -64,7 +64,6 @@ public class MLSigninActivity extends MLBaseActivity {
      */
     private void initView() {
         mActivity = this;
-        mRootView = findViewById(R.id.ml_layout_coordinator);
 
         mUsername = (String) MLSPUtil.get(mActivity, MLConstants.ML_SHARED_USERNAME, "");
 

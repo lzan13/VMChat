@@ -39,28 +39,22 @@ public class MLBaseActivity extends AppCompatActivity {
     //
     protected Toolbar mToolbar;
 
-    // 当前布局RootView
-    protected View mRootView;
-
     // 当前界面的上下文菜单对象
     protected MLBaseActivity mActivity;
 
     protected AlertDialog.Builder dialog;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MLLog.i("%s onCreate", className);
         mActivity = this;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    @Override public boolean onCreateOptionsMenu(Menu menu) {
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -79,14 +73,12 @@ public class MLBaseActivity extends AppCompatActivity {
          */
     }
 
-
     /**
      * 使用 EventBus 的订阅模式实现链接状态变化的监听，这里 EventBus 3.x 使用注解的方式确定方法调用的线程
      *
      * @param event 订阅的消息类型
      */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventBus(MLConnectionEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(MLConnectionEvent event) {
         switch (event.getType()) {
             case MLConstants.ML_CONNECTION_USER_LOGIN_OTHER_DIVERS:
                 onConflictDialog();
@@ -119,8 +111,7 @@ public class MLBaseActivity extends AppCompatActivity {
         dialog.setMessage(R.string.ml_dialog_message_conflict);
         // 弹出框自定义操作按钮
         dialog.setNeutralButton(R.string.ml_sign_in_restart, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+            @Override public void onClick(DialogInterface dialog, int which) {
                 // 自定义操作按钮
                 Intent intent = new Intent();
                 intent.setClass(mActivity, MLMainActivity.class);
@@ -129,8 +120,7 @@ public class MLBaseActivity extends AppCompatActivity {
         });
         // 弹出框确认按钮
         dialog.setPositiveButton(R.string.ml_btn_i_know, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+            @Override public void onClick(DialogInterface dialog, int which) {
                 // 确认按钮，退出app
                 List<MLBaseActivity> lists = MLHyphenate.getInstance().getActivityList();
                 for (MLBaseActivity activity : lists) {
@@ -158,8 +148,7 @@ public class MLBaseActivity extends AppCompatActivity {
         dialog.setMessage(R.string.ml_dialog_message_conflict);
         // 弹出框自定义操作按钮
         dialog.setNeutralButton(R.string.ml_sign_in_restart, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+            @Override public void onClick(DialogInterface dialog, int which) {
                 // 自定义操作按钮
                 Intent intent = new Intent();
                 intent.setClass(mActivity, MLMainActivity.class);
@@ -168,8 +157,7 @@ public class MLBaseActivity extends AppCompatActivity {
         });
         // 弹出框确认按钮
         dialog.setPositiveButton(R.string.ml_btn_i_know, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+            @Override public void onClick(DialogInterface dialog, int which) {
                 // 确认按钮，退出app
                 List<MLBaseActivity> lists = MLHyphenate.getInstance().getActivityList();
                 for (MLBaseActivity activity : lists) {
@@ -180,12 +168,10 @@ public class MLBaseActivity extends AppCompatActivity {
         dialog.show();
     }
 
-
     /**
      * 自定义返回方法
      */
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    protected void onFinish() {
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP) protected void onFinish() {
 
         mActivity.finish();
 
@@ -197,15 +183,12 @@ public class MLBaseActivity extends AppCompatActivity {
         //        }
     }
 
-
-    @Override
-    protected void onRestart() {
+    @Override protected void onRestart() {
         super.onRestart();
         MLLog.i("%s onRestart", className);
     }
 
-    @Override
-    protected void onStart() {
+    @Override protected void onStart() {
         super.onStart();
         MLLog.i("%s onStart", className);
         // 将 activity 添加到集合中去
@@ -214,20 +197,17 @@ public class MLBaseActivity extends AppCompatActivity {
         EventBus.getDefault().register(this);
     }
 
-    @Override
-    protected void onResume() {
+    @Override protected void onResume() {
         super.onResume();
         MLLog.i("%s onResume", className);
     }
 
-    @Override
-    protected void onPause() {
+    @Override protected void onPause() {
         super.onPause();
         MLLog.i("%s onPause", className);
     }
 
-    @Override
-    protected void onStop() {
+    @Override protected void onStop() {
         super.onStop();
         MLLog.i("%s onStop", className);
         // 将 activity 从集合中移除
@@ -236,8 +216,7 @@ public class MLBaseActivity extends AppCompatActivity {
         EventBus.getDefault().unregister(this);
     }
 
-    @Override
-    protected void onDestroy() {
+    @Override protected void onDestroy() {
         super.onDestroy();
         MLLog.i("%s onDestroy", className);
         // 用来检测内存泄漏

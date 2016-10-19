@@ -54,7 +54,6 @@ public class MLSignupActivity extends MLBaseActivity {
      */
     private void initView() {
         mActivity = this;
-        mRootView = findViewById(R.id.ml_layout_coordinator);
 
         // 实例化控件
         mUsernameView = (EditText) findViewById(R.id.ml_edit_sign_up_username);

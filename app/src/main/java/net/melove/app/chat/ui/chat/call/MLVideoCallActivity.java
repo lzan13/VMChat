@@ -7,9 +7,11 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.Chronometer;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -49,13 +51,11 @@ public class MLVideoCallActivity extends MLCallActivity {
     // 摄像头数据处理器
     private MLCameraDataProcessor mCameraDataProcessor;
 
-    // 当前显示画面状态，0 正常，1 本地为大图
+    // 当前显示画面状态，0 local 小，1  opposite 小
     private int surfaceViewState = 0;
 
     // 使用 ButterKnife 注解的方式获取控件
     @BindView(R.id.ml_layout_call_control) View mControlLayout;
-    @BindView(R.id.ml_layout_local) RelativeLayout localLayout;
-    @BindView(R.id.ml_layout_opposite) RelativeLayout oppositeLayout;
     @BindView(R.id.ml_surface_view_local) EMLocalSurfaceView mLocalSurfaceView;
     @BindView(R.id.ml_surface_view_opposite) EMOppositeSurfaceView mOppositeSurfaceView;
 
@@ -86,10 +86,10 @@ public class MLVideoCallActivity extends MLCallActivity {
     @Override protected void initView() {
         super.initView();
 
-        MLLog.i("initView");
-
         // 设置通话类型为视频
         mCallType = 0;
+
+        mChronometer = (Chronometer) findViewById(R.id.ml_chronometer_call_time);
 
         mCallBackgroundView.setImageResource(R.mipmap.ic_character_blackcat);
 
@@ -209,10 +209,18 @@ public class MLVideoCallActivity extends MLCallActivity {
                 onControlLayout();
                 break;
             case R.id.ml_surface_view_local:
-                changeSurfaceViewSize();
+                if (surfaceViewState == 0) {
+                    changeSurfaceViewSize();
+                } else {
+                    onControlLayout();
+                }
                 break;
             case R.id.ml_surface_view_opposite:
-                onControlLayout();
+                if (surfaceViewState == 1) {
+                    changeSurfaceViewSize();
+                } else {
+                    onControlLayout();
+                }
                 break;
             case R.id.ml_btn_exit_full_screen:
                 // 最小化通话界面
@@ -268,26 +276,30 @@ public class MLVideoCallActivity extends MLCallActivity {
      * 改变通话界面大小显示
      */
     private void changeSurfaceViewSize() {
-        RelativeLayout.LayoutParams localLayoutParams =
-                (RelativeLayout.LayoutParams) mLocalSurfaceView.getLayoutParams();
-        RelativeLayout.LayoutParams oppositeLayoutParams =
-                (RelativeLayout.LayoutParams) mOppositeSurfaceView.getLayoutParams();
-        if (surfaceViewState == 1) {
-            surfaceViewState = 0;
-            localLayoutParams.width = 240;
-            localLayoutParams.height = 320;
-            oppositeLayoutParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
-            oppositeLayoutParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
-        } else {
-            surfaceViewState = 1;
-            localLayoutParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
-            localLayoutParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
-            oppositeLayoutParams.width = 240;
-            oppositeLayoutParams.height = 320;
-        }
-
-        mLocalSurfaceView.setLayoutParams(localLayoutParams);
-        mOppositeSurfaceView.setLayoutParams(oppositeLayoutParams);
+        //RelativeLayout.LayoutParams localLayoutParams =
+        //        (RelativeLayout.LayoutParams) mLocalSurfaceView.getLayoutParams();
+        //RelativeLayout.LayoutParams oppositeLayoutParams =
+        //        (RelativeLayout.LayoutParams) mOppositeSurfaceView.getLayoutParams();
+        //if (surfaceViewState == 1) {
+        //    surfaceViewState = 0;
+        //    localLayoutParams.width = 240;
+        //    localLayoutParams.height = 320;
+        //    localLayoutParams.setMargins(0,
+        //            mActivity.getResources().getDimensionPixelOffset(R.dimen.ml_dimen_128), 0, 0);
+        //    oppositeLayoutParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+        //    oppositeLayoutParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
+        //} else {
+        //    surfaceViewState = 1;
+        //    localLayoutParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+        //    localLayoutParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
+        //    oppositeLayoutParams.width = 240;
+        //    oppositeLayoutParams.height = 320;
+        //    oppositeLayoutParams.setMargins(0,
+        //            mActivity.getResources().getDimensionPixelOffset(R.dimen.ml_dimen_128), 0, 0);
+        //}
+        //
+        //mLocalSurfaceView.setLayoutParams(localLayoutParams);
+        //mOppositeSurfaceView.setLayoutParams(oppositeLayoutParams);
     }
 
     /**
@@ -494,8 +506,8 @@ public class MLVideoCallActivity extends MLCallActivity {
 
         RelativeLayout.LayoutParams lp =
                 (RelativeLayout.LayoutParams) mLocalSurfaceView.getLayoutParams();
-        lp.width = 180;
-        lp.height = 240;
+        lp.width = mActivity.getResources().getDimensionPixelSize(R.dimen.ml_dimen_192);
+        lp.height = mActivity.getResources().getDimensionPixelSize(R.dimen.ml_dimen_192);
         mLocalSurfaceView.setLayoutParams(lp);
     }
 
@@ -562,9 +574,15 @@ public class MLVideoCallActivity extends MLCallActivity {
                 mCallStatus = MLConstants.ML_CALL_ACCEPTED;
                 // 通话接通，处理下SurfaceView的显示
                 surfaceViewProcessor();
+
+                // 开始计时
+                mChronometer.setBase(SystemClock.elapsedRealtime());
+                mChronometer.start();
                 break;
             case DISCONNECTED: // 通话已中断
                 MLLog.i("通话已结束" + callError);
+                // 停止计时
+                mChronometer.stop();
                 mCallStatusView.setText(R.string.ml_call_disconnected);
                 if (callError == CallError.ERROR_UNAVAILABLE) {
                     MLLog.i("对方不在线" + callError);

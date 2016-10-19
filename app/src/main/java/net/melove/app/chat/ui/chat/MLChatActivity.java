@@ -171,8 +171,6 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         // 初始化阅后即焚模式为false
         isBurn = false;
 
-        mRootView = findViewById(R.id.ml_layout_coordinator);
-
         mCurrUsername = EMClient.getInstance().getCurrentUser();
         // 获取当前聊天对象的id
         mChatId = getIntent().getStringExtra(MLConstants.ML_EXTRA_CHAT_ID);
