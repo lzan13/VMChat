@@ -56,6 +56,9 @@ public class MLVideoCallActivity extends MLCallActivity {
 
     // 使用 ButterKnife 注解的方式获取控件
     @BindView(R.id.ml_layout_call_control) View mControlLayout;
+    @BindView(R.id.ml_layout_surface_container) RelativeLayout mSurfaceViewContainer;
+    @BindView(R.id.ml_layout_local_surface) RelativeLayout mLocalSurfaceLayout;
+    @BindView(R.id.ml_layout_opposite_surface) RelativeLayout mOppositeSurfaceLayout;
     @BindView(R.id.ml_surface_view_local) EMLocalSurfaceView mLocalSurfaceView;
     @BindView(R.id.ml_surface_view_opposite) EMOppositeSurfaceView mOppositeSurfaceView;
 
@@ -282,20 +285,37 @@ public class MLVideoCallActivity extends MLCallActivity {
         //        (RelativeLayout.LayoutParams) mOppositeSurfaceView.getLayoutParams();
         //if (surfaceViewState == 1) {
         //    surfaceViewState = 0;
-        //    localLayoutParams.width = 240;
-        //    localLayoutParams.height = 320;
+        //    localLayoutParams.width =
+        //            mActivity.getResources().getDimensionPixelSize(R.dimen.ml_dimen_128);
+        //    localLayoutParams.height =
+        //            mActivity.getResources().getDimensionPixelSize(R.dimen.ml_dimen_144);
         //    localLayoutParams.setMargins(0,
         //            mActivity.getResources().getDimensionPixelOffset(R.dimen.ml_dimen_128), 0, 0);
+        //
         //    oppositeLayoutParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
         //    oppositeLayoutParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
+        //
+        //    mLocalSurfaceView.setZOrderMediaOverlay(true);
+        //    mLocalSurfaceView.setZOrderOnTop(true);
+        //    mOppositeSurfaceView.setZOrderMediaOverlay(false);
+        //    mOppositeSurfaceView.setZOrderOnTop(false);
+        //    mSurfaceViewContainer.bringChildToFront(mLocalSurfaceLayout);
         //} else {
         //    surfaceViewState = 1;
         //    localLayoutParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
         //    localLayoutParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
-        //    oppositeLayoutParams.width = 240;
-        //    oppositeLayoutParams.height = 320;
+        //    oppositeLayoutParams.width =
+        //            mActivity.getResources().getDimensionPixelSize(R.dimen.ml_dimen_128);
+        //    oppositeLayoutParams.height =
+        //            mActivity.getResources().getDimensionPixelSize(R.dimen.ml_dimen_144);
         //    oppositeLayoutParams.setMargins(0,
         //            mActivity.getResources().getDimensionPixelOffset(R.dimen.ml_dimen_128), 0, 0);
+        //
+        //    mLocalSurfaceView.setZOrderMediaOverlay(false);
+        //    mLocalSurfaceView.setZOrderOnTop(false);
+        //    mOppositeSurfaceView.setZOrderMediaOverlay(true);
+        //    mOppositeSurfaceView.setZOrderOnTop(true);
+        //    mSurfaceViewContainer.bringChildToFront(mOppositeSurfaceLayout);
         //}
         //
         //mLocalSurfaceView.setLayoutParams(localLayoutParams);
@@ -506,8 +526,10 @@ public class MLVideoCallActivity extends MLCallActivity {
 
         RelativeLayout.LayoutParams lp =
                 (RelativeLayout.LayoutParams) mLocalSurfaceView.getLayoutParams();
-        lp.width = mActivity.getResources().getDimensionPixelSize(R.dimen.ml_dimen_192);
-        lp.height = mActivity.getResources().getDimensionPixelSize(R.dimen.ml_dimen_192);
+        lp.width = mActivity.getResources().getDimensionPixelSize(R.dimen.ml_dimen_128);
+        lp.height = mActivity.getResources().getDimensionPixelSize(R.dimen.ml_dimen_144);
+        lp.setMargins(0, mActivity.getResources().getDimensionPixelOffset(R.dimen.ml_dimen_128), 0,
+                0);
         mLocalSurfaceView.setLayoutParams(lp);
     }
 

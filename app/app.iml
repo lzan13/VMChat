@@ -43,6 +43,13 @@
       <sourceFolder url="file://$MODULE_DIR$/src/wandoujiaDebug/jni" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/wandoujiaDebug/rs" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/wandoujiaDebug/shaders" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/r/androidTest/wandoujia/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/aidl/androidTest/wandoujia/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/buildConfig/androidTest/wandoujia/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/rs/androidTest/wandoujia/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/apt/androidTest/wandoujia/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/androidTest/wandoujia/debug" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/resValues/androidTest/wandoujia/debug" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/testWandoujiaDebug/res" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/testWandoujiaDebug/resources" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/testWandoujiaDebug/assets" type="java-test-resource" />
@@ -51,13 +58,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/testWandoujiaDebug/jni" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/testWandoujiaDebug/rs" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/testWandoujiaDebug/shaders" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/r/androidTest/wandoujia/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/aidl/androidTest/wandoujia/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/buildConfig/androidTest/wandoujia/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/rs/androidTest/wandoujia/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/apt/androidTest/wandoujia/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/androidTest/wandoujia/debug" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/resValues/androidTest/wandoujia/debug" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/wandoujia/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/wandoujia/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/wandoujia/assets" type="java-resource" />
@@ -66,14 +66,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/wandoujia/jni" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/wandoujia/rs" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/wandoujia/shaders" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTestWandoujia/res" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTestWandoujia/resources" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTestWandoujia/assets" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTestWandoujia/aidl" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTestWandoujia/java" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTestWandoujia/jni" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTestWandoujia/rs" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTestWandoujia/shaders" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/testWandoujia/res" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/testWandoujia/resources" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/testWandoujia/assets" type="java-test-resource" />
@@ -82,6 +74,14 @@
       <sourceFolder url="file://$MODULE_DIR$/src/testWandoujia/jni" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/testWandoujia/rs" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/testWandoujia/shaders" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestWandoujia/res" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestWandoujia/resources" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestWandoujia/assets" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestWandoujia/aidl" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestWandoujia/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestWandoujia/jni" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestWandoujia/rs" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestWandoujia/shaders" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/assets" type="java-resource" />
@@ -124,6 +124,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/test/shaders" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/assets" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/blame" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/builds" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/classes" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/dependency-cache" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/24.2.1/jars" />
