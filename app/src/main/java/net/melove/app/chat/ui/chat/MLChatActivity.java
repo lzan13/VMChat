@@ -141,9 +141,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     // 录音控件
     private MLRecordView mRecordView;
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
@@ -174,7 +172,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         mCurrUsername = EMClient.getInstance().getCurrentUser();
         // 获取当前聊天对象的id
         mChatId = getIntent().getStringExtra(MLConstants.ML_EXTRA_CHAT_ID);
-        mConversationType = (EMConversation.EMConversationType) getIntent().getExtras().get(MLConstants.ML_EXTRA_TYPE);
+        mConversationType = (EMConversation.EMConversationType) getIntent().getExtras()
+                .get(MLConstants.ML_EXTRA_TYPE);
 
         // 初始化输入框控件，并添加输入框监听
         mInputView = (EditText) findViewById(R.id.ml_edit_chat_input);
@@ -224,7 +223,9 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
          * 第二个是绘画类型可以为空
          * 第三个表示如果会话不存在是否创建
          */
-        mConversation = EMClient.getInstance().chatManager().getConversation(mChatId, mConversationType, true);
+        mConversation = EMClient.getInstance()
+                .chatManager()
+                .getConversation(mChatId, mConversationType, true);
         // 设置当前会话未读数为 0
         mConversation.markAllMessagesAsRead();
         MLConversationExtUtils.setConversationUnread(mConversation, false);
@@ -273,13 +274,12 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         // 初始化下拉刷新控件对象
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.ml_widget_chat_refreshlayout);
         // 设置下拉刷新控件颜色
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.ml_red_100, R.color.ml_blue_100, R.color.ml_orange_100);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.ml_red_100, R.color.ml_blue_100,
+                R.color.ml_orange_100);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
+            @Override public void onRefresh() {
                 new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
+                    @Override public void run() {
                         // 防止在下拉刷新的时候，当前界面关闭导致错误
                         if (mActivity.isFinishing()) {
                             return;
@@ -287,10 +287,12 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                         // 只有当前会话不为空时才可以下拉加载更多，否则会出现错误
                         if (mConversation.getAllMessages().size() > 0) {
                             // 加载更多消息到当前会话的内存中
-                            List<EMMessage> messages = mConversation.loadMoreMsgFromDB(mConversation.getAllMessages().get(0).getMsgId(), mPageSize);
+                            List<EMMessage> messages = mConversation.loadMoreMsgFromDB(
+                                    mConversation.getAllMessages().get(0).getMsgId(), mPageSize);
                             if (messages.size() > 0) {
                                 // 调用 Adapter 刷新方法
-                                postRefreshEvent(0, messages.size(), MLConstants.ML_NOTIFY_REFRESH_RANGE_INSERTED);
+                                postRefreshEvent(0, messages.size(),
+                                        MLConstants.ML_NOTIFY_REFRESH_RANGE_INSERTED);
                             }
                         }
                         mSwipeRefreshLayout.setRefreshing(false);
@@ -305,12 +307,17 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      */
     private void initAttachMenuGridView() {
         mAttachMenuGridView = (GridView) findViewById(R.id.ml_gridview_chat_attach_menu);
-        int[] menuPhotos = {R.mipmap.ic_attach_photo, R.mipmap.ic_attach_video,
-                R.mipmap.ic_attach_file, R.mipmap.ic_attach_location,
-                R.mipmap.ic_attach_gift, R.mipmap.ic_attach_contacts};
-        String[] menuTitles = {mActivity.getString(R.string.ml_photo), mActivity.getString(R.string.ml_video), mActivity.getString(R.string.ml_file), mActivity.getString(R.string.ml_location), mActivity.getString(R.string.ml_gift), mActivity.getString(R.string.ml_contacts)};
-        String[] from = {"photo", "title"};
-        int[] to = {R.id.ml_img_menu_photo, R.id.ml_text_menu_title};
+        int[] menuPhotos = {
+                R.mipmap.ic_attach_photo, R.mipmap.ic_attach_video, R.mipmap.ic_attach_file,
+                R.mipmap.ic_attach_location, R.mipmap.ic_attach_gift, R.mipmap.ic_attach_contacts
+        };
+        String[] menuTitles = {
+                mActivity.getString(R.string.ml_photo), mActivity.getString(R.string.ml_video),
+                mActivity.getString(R.string.ml_file), mActivity.getString(R.string.ml_location),
+                mActivity.getString(R.string.ml_gift), mActivity.getString(R.string.ml_contacts)
+        };
+        String[] from = { "photo", "title" };
+        int[] to = { R.id.ml_img_menu_photo, R.id.ml_text_menu_title };
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         Map<String, Object> map = null;
         for (int i = 0; i < menuPhotos.length; i++) {
@@ -319,7 +326,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             map.put("title", menuTitles[i]);
             list.add(map);
         }
-        SimpleAdapter adapter = new SimpleAdapter(mActivity, list, R.layout.item_gridview_menu, from, to);
+        SimpleAdapter adapter =
+                new SimpleAdapter(mActivity, list, R.layout.item_gridview_menu, from, to);
         mAttachMenuGridView.setAdapter(adapter);
         mAttachMenuGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -366,9 +374,10 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
              * params count     输入框内容将要减少的变化的字符数 大于0 表示删除字符
              * params after     输入框内容将要增加的文本的长度，大于0 表示增加字符
              */
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                MLLog.d("beforeTextChanged s-%s, start-%d, count-%d, after-%d", s, start, count, after);
+            @Override public void beforeTextChanged(CharSequence s, int start, int count,
+                    int after) {
+                MLLog.d("beforeTextChanged s-%s, start-%d, count-%d, after-%d", s, start, count,
+                        after);
             }
 
             /**
@@ -378,12 +387,13 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
              * params before    输入框内容减少的文本的长度
              * params count     输入框内容改变的字符数量
              */
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                MLLog.d("onTextChanged s-%s, start-%d, before-%d, count-%d", s, start, before, count);
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                MLLog.d("onTextChanged s-%s, start-%d, before-%d, count-%d", s, start, before,
+                        count);
                 // 当新增内容长度为1时采取判断增加的字符是否为@符号
                 if (mConversation.getType() == EMConversation.EMConversationType.Chat) {
-                    if ((MLDateUtil.getCurrentMillisecond() - mOldTime) > MLConstants.ML_TIME_INPUT_STATUS) {
+                    if ((MLDateUtil.getCurrentMillisecond() - mOldTime)
+                            > MLConstants.ML_TIME_INPUT_STATUS) {
                         mOldTime = System.currentTimeMillis();
                         // 调用发送输入状态方法
                         MLMessageUtils.sendInputStatusMessage(mChatId);
@@ -395,8 +405,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
              * 输入框内容改变之后
              * params s 输入框最终的内容
              */
-            @Override
-            public void afterTextChanged(Editable s) {
+            @Override public void afterTextChanged(Editable s) {
                 MLLog.d("afterTextChanged s-" + s);
                 if (s.toString().equals("")) {
                     mSendView.setVisibility(View.GONE);
@@ -430,8 +439,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
              * @param message 需要操作的 Item 的 EMMessage 对象
              * @param action  要处理的动作，比如 复制、转发、删除、撤回等
              */
-            @Override
-            public void onItemAction(EMMessage message, int action) {
+            @Override public void onItemAction(EMMessage message, int action) {
                 int position = mConversation.getAllMessages().indexOf(message);
                 switch (action) {
                     case MLConstants.ML_ACTION_MSG_CLICK:
@@ -533,9 +541,11 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      */
     private void copyMessage(EMMessage message) {
         // 获取剪切板管理者
-        ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipboardManager clipboardManager =
+                (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         // 创建剪切板数据对象
-        ClipData clipData = ClipData.newPlainText("message", ((EMTextMessageBody) message.getBody()).getMessage());
+        ClipData clipData = ClipData.newPlainText("message",
+                ((EMTextMessageBody) message.getBody()).getMessage());
         // 将刚创建的数据对象添加到剪切板
         clipboardManager.setPrimaryClip(clipData);
         // 弹出提醒
@@ -576,15 +586,15 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         progressDialog.setMessage("正在撤回 请稍候……");
         progressDialog.show();
         MLMessageUtils.sendRecallMessage(message, new EMCallBack() {
-            @Override
-            public void onSuccess() {
+            @Override public void onSuccess() {
                 // 关闭进度对话框
                 progressDialog.dismiss();
                 // 设置扩展为撤回消息类型，是为了区分消息的显示
                 message.setAttribute(MLConstants.ML_ATTR_RECALL, true);
                 // 更新消息
                 EMClient.getInstance().chatManager().updateMessage(message);
-                postRefreshEvent(mConversation.getMessagePosition(message), 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);
+                postRefreshEvent(mConversation.getMessagePosition(message), 1,
+                        MLConstants.ML_NOTIFY_REFRESH_CHANGED);
             }
 
             /**
@@ -592,24 +602,23 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
              * @param i 失败的错误码
              * @param s 失败的错误信息
              */
-            @Override
-            public void onError(final int i, final String s) {
+            @Override public void onError(final int i, final String s) {
                 progressDialog.dismiss();
                 runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
+                    @Override public void run() {
                         // 弹出错误提示
                         if (s.equals(MLConstants.ML_ERROR_S_RECALL_TIME)) {
                             MLToast.rightToast(R.string.ml_toast_msg_recall_faild_max_time).show();
                         } else {
-                            MLToast.rightToast(mActivity.getResources().getString(R.string.ml_toast_msg_recall_faild) + i + "-" + s).show();
+                            MLToast.rightToast(mActivity.getResources()
+                                    .getString(R.string.ml_toast_msg_recall_faild) + i + "-" + s)
+                                    .show();
                         }
                     }
                 });
             }
 
-            @Override
-            public void onProgress(int i, String s) {
+            @Override public void onProgress(int i, String s) {
 
             }
         });
@@ -652,8 +661,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
          *  所以这里在发送之前先设置消息的状态回调
          */
         message.setMessageStatusCallback(new EMCallBack() {
-            @Override
-            public void onSuccess() {
+            @Override public void onSuccess() {
                 MLLog.i("消息发送成功 msgId %s, content %s", message.getMsgId(), message.getBody());
                 // 创建并发出一个可订阅的关于的消息事件
                 MLMessageEvent event = new MLMessageEvent();
@@ -662,8 +670,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 EventBus.getDefault().post(event);
             }
 
-            @Override
-            public void onError(final int i, final String s) {
+            @Override public void onError(final int i, final String s) {
                 MLLog.i("消息发送失败 code: %d, error: %s", i, s);
                 // 创建并发出一个可订阅的关于的消息事件
                 MLMessageEvent event = new MLMessageEvent();
@@ -676,8 +683,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 EventBus.getDefault().post(event);
             }
 
-            @Override
-            public void onProgress(int i, String s) {
+            @Override public void onProgress(int i, String s) {
                 // TODO 消息发送进度，这里不处理，留给消息Item自己去更新
                 MLLog.i("消息发送中 progress: %d, %s", i, s);
                 // 创建并发出一个可订阅的关于的消息事件
@@ -694,7 +700,6 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
 
         // 点击发送后马上刷新界面，无论消息有没有成功，先刷新显示
         postRefreshEvent(position, 1, MLConstants.ML_NOTIFY_REFRESH_INSERTED);
-
     }
 
     /**
@@ -739,7 +744,6 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
          */
         EMMessage fileMessage = EMMessage.createFileSendMessage(path, mChatId);
         sendMessage(fileMessage);
-
     }
 
     /**
@@ -756,13 +760,11 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      * 录音控件回调接口，用来监听录音控件录制结果
      */
     private MLRecordView.MLRecordCallback recordCallback = new MLRecordView.MLRecordCallback() {
-        @Override
-        public void onCancel() {
+        @Override public void onCancel() {
 
         }
 
-        @Override
-        public void onFailed(int error) {
+        @Override public void onFailed(int error) {
             switch (error) {
                 case MLRecorder.ERROR_FAILED:
                     // 录音失败，一般是权限问题
@@ -777,16 +779,13 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                     MLToast.errorToast(R.string.ml_error_voice_system).show();
                     break;
             }
+        }
+
+        @Override public void onStart() {
 
         }
 
-        @Override
-        public void onStart() {
-
-        }
-
-        @Override
-        public void onSuccess(String path, int time) {
+        @Override public void onSuccess(String path, int time) {
             sendVoiceMessage(path, time);
         }
     };
@@ -795,11 +794,10 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      * 处理Activity的返回值得方法
      *
      * @param requestCode 请求码
-     * @param resultCode  返回码
-     * @param data        返回的数据
+     * @param resultCode 返回码
+     * @param data 返回的数据
      */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         MLLog.d("onActivityResult requestCode %d, resultCode %d", requestCode, resultCode);
         if (resultCode != RESULT_OK) {
@@ -845,13 +843,11 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         }
     }
 
-
     /**
      * 聊天界面按钮监听事件
      */
     private View.OnClickListener viewListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
+        @Override public void onClick(View v) {
             switch (v.getId()) {
                 case -1:
                     // 结束当前Activity
@@ -882,7 +878,10 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      * 弹出选择图片发方式，是使用相机还是图库
      */
     private void selectPhotoMode() {
-        String[] menus = {mActivity.getString(R.string.ml_menu_chat_camera), mActivity.getString(R.string.ml_menu_chat_gallery)};
+        String[] menus = {
+                mActivity.getString(R.string.ml_menu_chat_camera),
+                mActivity.getString(R.string.ml_menu_chat_gallery)
+        };
         if (alertDialogBuilder == null) {
             alertDialogBuilder = new AlertDialog.Builder(mActivity);
         }
@@ -890,8 +889,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         //        alertDialogBuilder.setTitle(mActivity.getString(R.string.ml_dialog_title_select_photo_mode));
         // 设置弹出框的菜单项及点击事件
         alertDialogBuilder.setItems(menus, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+            @Override public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case 0:
                         // 打开相机直接拍照
@@ -916,7 +914,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      */
     private void openCamera() {
         // 定义拍照后图片保存的路径以及文件名
-        String imagePath = MLFileUtil.getDCIM() + "IMG" + MLDateUtil.getDateTimeNoSpacing() + ".jpg";
+        String imagePath =
+                MLFileUtil.getDCIM() + "IMG" + MLDateUtil.getDateTimeNoSpacing() + ".jpg";
         // 激活相机
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // 判断存储卡是否可以用，可用进行存储
@@ -976,14 +975,16 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      */
     private void selectCallMode() {
         if (MLCallStatus.getInstance().getCallState() == MLCallStatus.CALL_STATUS_NORMAL) {
-            String[] menus = {mActivity.getString(R.string.ml_video_call), mActivity.getString(R.string.ml_voice_call)};
+            String[] menus = {
+                    mActivity.getString(R.string.ml_video_call),
+                    mActivity.getString(R.string.ml_voice_call)
+            };
             if (alertDialogBuilder == null) {
                 alertDialogBuilder = new AlertDialog.Builder(mActivity);
             }
             // 设置菜单项及点击监听
             alertDialogBuilder.setItems(menus, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
+                @Override public void onClick(DialogInterface dialog, int which) {
                     Intent intent = new Intent();
                     switch (which) {
                         case 0:
@@ -1058,13 +1059,11 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         }
         // 创建定时器任务
         TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
+            @Override public void run() {
                 // 执行定时器把当前对方输入状态设置为false
                 isInput = false;
                 runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
+                    @Override public void run() {
                         mToolbar.setTitle(mChatId);
                     }
                 });
@@ -1080,8 +1079,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      *
      * @param event 包含消息的事件
      */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventBus(MLMessageEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(MLMessageEvent event) {
         // 获取订阅事件包含的消息对象
         EMMessage message = event.getMessage();
         // 判断是不是对方输入状态的信息
@@ -1109,10 +1107,12 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             }
             MLToast.errorToast(errorMessage + event.getErrorMessage() + "-" + errorCode).show();
             // 消息状态回调完毕，刷新当前消息显示，这里不论成功失败都要刷新
-            postRefreshEvent(mConversation.getMessagePosition(message), 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);
+            postRefreshEvent(mConversation.getMessagePosition(message), 1,
+                    MLConstants.ML_NOTIFY_REFRESH_CHANGED);
         } else if (status == EMMessage.Status.SUCCESS) {
             // 消息状态回调完毕，刷新当前消息显示，这里不论成功失败都要刷新
-            postRefreshEvent(mConversation.getMessagePosition(message), 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);
+            postRefreshEvent(mConversation.getMessagePosition(message), 1,
+                    MLConstants.ML_NOTIFY_REFRESH_CHANGED);
         } else {
             // 如果是进度变化就不做刷新，留给Item自己刷新
         }
@@ -1122,8 +1122,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      * 发送可订阅的刷新事件
      *
      * @param position 刷新事件记录的位置
-     * @param count    刷新事件记录打的数量
-     * @param type     刷新事件的类型方式
+     * @param count 刷新事件记录打的数量
+     * @param type 刷新事件的类型方式
      */
     private void postRefreshEvent(int position, int count, int type) {
         // 实例刷新事件MLRefreshEvent，并填充数据
@@ -1133,7 +1133,6 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         event.setType(type);
         EventBus.getDefault().post(event);
     }
-
 
     /**
      * ---------------------------- RecyclerView 刷新方法 ----------------------------------- 使用
@@ -1151,8 +1150,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      *
      * @param event 订阅的消息类型
      */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventBus(MLRefreshEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(MLRefreshEvent event) {
         if (!isInput) {
             mToolbar.setTitle(mChatId);
         }
@@ -1165,7 +1163,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        MLLog.i("onEventBus -0- adapter item count %d, conversation %d", mLayoutManger.getItemCount(), mConversation.getAllMessages().size());
+        MLLog.i("onEventBus -0- adapter item count %d, conversation %d",
+                mLayoutManger.getItemCount(), mConversation.getAllMessages().size());
         /**
          * 先调用{@link MLMessageAdapter#refreshMessageData()}更新{@link MLMessageAdapter}的数据源，
          * 这个方法不能调用过早，因为有时conversation内存中的消息还没有加载进来
@@ -1189,7 +1188,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 mMessageAdapter.notifyItemRangeChanged(position, count);
                 break;
             case MLConstants.ML_NOTIFY_REFRESH_INSERTED:
-                MLLog.i("onEventBus -2- adapter item count %d, conversation %d", mLayoutManger.getItemCount(), mConversation.getAllMessages().size());
+                MLLog.i("onEventBus -2- adapter item count %d, conversation %d",
+                        mLayoutManger.getItemCount(), mConversation.getAllMessages().size());
                 // 这里在调用一次刷新数据源是为了防止conversation没有及时的添加发送的消息
                 mMessageAdapter.refreshMessageData();
                 // 插入一条消息
@@ -1222,7 +1222,6 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     }
     /*--------------------------------- 刷新代码结束 -----------------------------------------*/
 
-
     /**
      * ----------------------------- RecyclerView 滚动监听 -----------------------------------
      * 监听RecyclerView 的滚动，实现滚动到指定位置
@@ -1231,7 +1230,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      * @param isScroll 是否需要滚动效果
      */
     private void scrollToItem(int position, boolean isScroll) {
-        MLLog.i("scrollToItem adapter item count %d, position %d", mLayoutManger.getItemCount(), position);
+        MLLog.i("scrollToItem adapter item count %d, position %d", mLayoutManger.getItemCount(),
+                position);
         if (position < 0 || position >= mMessageAdapter.getItemCount()) {
             return;
         }
@@ -1253,7 +1253,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      * @param position 需要滚动到的位置
      */
     private void smoothScrollToItem(int position) {
-        MLLog.i("smoothScrollToItem - item count %d; conversation size %d", mLayoutManger.getChildCount(), mConversation.getAllMessages().size());
+        MLLog.i("smoothScrollToItem - item count %d; conversation size %d",
+                mLayoutManger.getChildCount(), mConversation.getAllMessages().size());
         // RecyclerView 当前在屏幕上显示的第一个item的位置
         int firstItem = mLayoutManger.findFirstVisibleItemPosition();
         // RecyclerView 当前在屏幕上显示的最后一个item的位置
@@ -1276,7 +1277,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      * @param position 需要滚动到的位置
      */
     private void scrollToItem(int position) {
-        MLLog.i("scrollToItem - item count %d; conversation size %d", mLayoutManger.getChildCount(), mConversation.getAllMessages().size());
+        MLLog.i("scrollToItem - item count %d; conversation size %d", mLayoutManger.getChildCount(),
+                mConversation.getAllMessages().size());
         // RecyclerView 当前在屏幕上显示的第一个item的索引位置
         int firstItem = mLayoutManger.findFirstVisibleItemPosition();
         // RecyclerView 当前在屏幕上显示的最后一个item的索引位置
@@ -1304,10 +1306,9 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
          * 监听 RecyclerView 滚动状态的变化
          *
          * @param recyclerView 当前监听的 RecyclerView 控件
-         * @param newState     RecyclerView 变化的状态
+         * @param newState RecyclerView 变化的状态
          */
-        @Override
-        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+        @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
             super.onScrollStateChanged(recyclerView, newState);
             if (isNeedScroll && newState == RecyclerView.SCROLL_STATE_IDLE && isSmoothScroll) {
                 isNeedScroll = false;
@@ -1335,11 +1336,10 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
          * RecyclerView 正在滚动中
          *
          * @param recyclerView 当前监听的 RecyclerView 控件
-         * @param dx           水平变化值，表示水平滚动，正表示向右，负表示向左
-         * @param dy           垂直变化值，表示上下滚动，正表示向下，负表示向上
+         * @param dx 水平变化值，表示水平滚动，正表示向右，负表示向左
+         * @param dy 垂直变化值，表示上下滚动，正表示向下，负表示向上
          */
-        @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+        @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
             if (isNeedScroll && !isSmoothScroll) {
                 isNeedScroll = false;
@@ -1359,16 +1359,12 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     }
     /*------------------------------- RecyclerView 滚动监听及处理结束 ------------------------------*/
 
-
     /**
      * 重写菜单项的选择事件
      *
      * @param item 点击的是哪一个菜单项
-     *
-     * @return
      */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
         // 获取当前会话内存中的消息数量
         int count = mConversation.getAllMessages().size();
 
@@ -1394,8 +1390,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    @Override public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_chat, menu);
         if (mConversationType == EMConversation.EMConversationType.GroupChat) {
             menu.findItem(R.id.ml_action_call).setVisible(false);
@@ -1406,8 +1401,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     /**
      * 自定义返回方法，做一些不能在 onDestroy 里做的操作
      */
-    @Override
-    protected void onFinish() {
+    @Override protected void onFinish() {
         /**
          * 当会话聊天界面销毁的时候，
          * 通过{@link MLConversationExtUtils#setConversationLastTime(EMConversation)}设置会话的最后时间
@@ -1449,8 +1443,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      *
      * @param intent 带有参数的intent
      */
-    @Override
-    protected void onNewIntent(Intent intent) {
+    @Override protected void onNewIntent(Intent intent) {
         String chatId = intent.getStringExtra(MLConstants.ML_EXTRA_CHAT_ID);
         // 判断 intent 携带的数据是否是当前聊天对象
         if (mChatId.equals(chatId)) {
@@ -1461,31 +1454,27 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         }
     }
 
-    @Override
-    public void onBackPressed() {
+    @Override public void onBackPressed() {
         // super.onBackPressed();
         onFinish();
     }
 
-
-    @Override
-    protected void onResume() {
+    @Override protected void onResume() {
         super.onResume();
         // 刷新界面
-        postRefreshEvent(mConversation.getAllMessages().size() - 1, 1, MLConstants.ML_NOTIFY_REFRESH_INSERTED);
+        postRefreshEvent(mConversation.getAllMessages().size() - 1, 1,
+                MLConstants.ML_NOTIFY_REFRESH_INSERTED);
         // 注册环信的消息监听器
         EMClient.getInstance().chatManager().addMessageListener(mMessageListener);
     }
 
-    @Override
-    protected void onStop() {
+    @Override protected void onStop() {
         super.onStop();
         // 再当前界面处于非活动状态时 移除消息监听
         EMClient.getInstance().chatManager().removeMessageListener(mMessageListener);
     }
 
-    @Override
-    protected void onDestroy() {
+    @Override protected void onDestroy() {
         mActivity = null;
         mToolbar = null;
         // 检测弹出框是否显示状态，如果是显示中则销毁，避免 activity 的销毁导致错误
@@ -1501,15 +1490,13 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         super.onDestroy();
     }
 
-
     /**
      * --------------------------------- Message Listener -------------------------------------
      * 环信消息监听主要方法 <p> 收到新消息
      *
      * @param list 收到的新消息集合
      */
-    @Override
-    public void onMessageReceived(List<EMMessage> list) {
+    @Override public void onMessageReceived(List<EMMessage> list) {
         MLLog.i("onMessageReceived list.size:%d", list.size());
         boolean isNotify = false;
         // 循环遍历当前收到的消息
@@ -1542,11 +1529,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
 
     /**
      * 收到新的 CMD 消息nani
-     *
-     * @param list
      */
-    @Override
-    public void onCmdMessageReceived(List<EMMessage> list) {
+    @Override public void onCmdMessageReceived(List<EMMessage> list) {
         for (int i = 0; i < list.size(); i++) {
             // 透传消息
             EMMessage cmdMessage = list.get(i);
@@ -1558,12 +1542,17 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 // 撤回消息之后，判断是否当前聊天界面，用来刷新界面
                 if (mChatId.equals(cmdMessage.getFrom()) && result) {
                     String msgId = cmdMessage.getStringAttribute(MLConstants.ML_ATTR_MSG_ID, null);
-                    int position = mConversation.getMessagePosition(mConversation.getMessage(msgId, true));
+                    int position =
+                            mConversation.getMessagePosition(mConversation.getMessage(msgId, true));
                     postRefreshEvent(position, 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);
                 }
             }
             // 判断消息是否是当前会话的消息，并且收到的CMD是否是输入状态的消息
-            if (mChatId.equals(cmdMessage.getFrom()) && body.action().equals(MLConstants.ML_ATTR_INPUT_STATUS) && cmdMessage.getChatType() == EMMessage.ChatType.Chat && cmdMessage.getFrom().equals(mChatId)) {
+            if (mChatId.equals(cmdMessage.getFrom())
+                    && body.action()
+                    .equals(MLConstants.ML_ATTR_INPUT_STATUS)
+                    && cmdMessage.getChatType() == EMMessage.ChatType.Chat
+                    && cmdMessage.getFrom().equals(mChatId)) {
                 // 收到输入状态新消息则把对方正在输入状态设置为true
                 isInput = true;
                 // 创建并发出一个可订阅的关于的消息事件
@@ -1574,14 +1563,12 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         }
     }
 
-
     /**
      * 收到消息的已读回执
      *
      * @param list 收到消息已读回执
      */
-    @Override
-    public void onMessageReadAckReceived(List<EMMessage> list) {
+    @Override public void onMessageReadAckReceived(List<EMMessage> list) {
         MLLog.i("onMessageReadAckReceived list.size:%d", list.size());
         for (EMMessage message : list) {
             // 判断消息是否是当前会话的消息
@@ -1598,8 +1585,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      *
      * @param list 收到发送回执的消息集合
      */
-    @Override
-    public void onMessageDeliveryAckReceived(List<EMMessage> list) {
+    @Override public void onMessageDeliveryAckReceived(List<EMMessage> list) {
         MLLog.i("onMessageDeliveryAckReceived list.size:%d", list.size());
         for (EMMessage message : list) {
             // 判断消息是否是当前会话的消息
@@ -1615,14 +1601,12 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      * 消息的改变
      *
      * @param message 发生改变的消息
-     * @param object  包含改变的消息
+     * @param object 包含改变的消息
      */
-    @Override
-    public void onMessageChanged(EMMessage message, Object object) {
+    @Override public void onMessageChanged(EMMessage message, Object object) {
         MLLog.i("onMessageChanged message:%s, object:%s", message.toString(), object);
         int position = mConversation.getMessagePosition(message);
         postRefreshEvent(position, 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);
     }
     /*-------------------------------------- 消息监听 end ---------------------------------------*/
-
 }

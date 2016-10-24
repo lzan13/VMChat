@@ -54,7 +54,6 @@ public class MLHyphenate {
     // 保存当前运行的 activity 对象，可用来判断程序是否处于前台，以及完全退出app等操作
     private List<MLBaseActivity> mActivityList = new ArrayList<MLBaseActivity>();
 
-
     // 记录sdk是否初始化
     private boolean isInit;
 
@@ -71,7 +70,6 @@ public class MLHyphenate {
     private EMConnectionListener mConnectionListener;
     // 环信群组变化监听
     private EMGroupChangeListener mGroupChangeListener;
-
 
     // 表示是是否解绑Token，一般离线状态都要设置为false
     private boolean unbuildToken = true;
@@ -98,7 +96,6 @@ public class MLHyphenate {
      * 初始化环信的SDK
      *
      * @param context 上下文菜单
-     *
      * @return 返回初始化状态是否成功
      */
     public synchronized boolean initHyphenate(Context context) {
@@ -123,6 +120,10 @@ public class MLHyphenate {
 
         // 调用初始化方法初始化sdk
         EMClient.getInstance().init(mContext, initOptions());
+
+        // TODO 测试设置视频通话分辨率
+        EMClient.getInstance().callManager().getCallOptions().setVideoKbps(800);
+        EMClient.getInstance().callManager().getCallOptions().setVideoResolution(640, 480);
 
         // 设置开启debug模式
         EMClient.getInstance().setDebugMode(true);
@@ -176,6 +177,7 @@ public class MLHyphenate {
         options.setHuaweiPushAppId(MLConstants.ML_HUAWEI_APP_ID);
         // TODO 主动调用华为官方的注册华为推送 测试用，SDK内部已经调用
         // PushManager.requestToken(mContext);
+
         return options;
     }
 
@@ -205,7 +207,8 @@ public class MLHyphenate {
      */
     private void setCallReceiverListener() {
         // 设置通话广播监听器过滤内容
-        IntentFilter callFilter = new IntentFilter(EMClient.getInstance().callManager().getIncomingCallBroadcastAction());
+        IntentFilter callFilter = new IntentFilter(
+                EMClient.getInstance().callManager().getIncomingCallBroadcastAction());
         if (mCallReceiver == null) {
             mCallReceiver = new MLCallReceiver();
         }
@@ -242,8 +245,7 @@ public class MLHyphenate {
             /**
              * 链接聊天服务器成功
              */
-            @Override
-            public void onConnected() {
+            @Override public void onConnected() {
                 MLLog.d("onConnected");
                 unbuildToken = true;
                 // 设置链接监听变化状态
@@ -258,8 +260,7 @@ public class MLHyphenate {
              *
              * @param errorCode 连接失败错误码
              */
-            @Override
-            public void onDisconnected(final int errorCode) {
+            @Override public void onDisconnected(final int errorCode) {
                 MLLog.d("onDisconnected - %d", errorCode);
                 // 在离线状态下，退出登录的时候需要设置为false，已经登录成功的状态要改为 false，这个在使用了推送功能时，调用logout需要传递
                 unbuildToken = false;
@@ -299,11 +300,14 @@ public class MLHyphenate {
              *
              * @param list 收到的新消息集合，离线和在线都是走这个监听
              */
-            @Override
-            public void onMessageReceived(List<EMMessage> list) {
+            @Override public void onMessageReceived(List<EMMessage> list) {
                 // 判断当前活动界面是不是聊天界面，如果是，全局不处理消息
                 if (MLHyphenate.getInstance().getActivityList().size() > 0) {
-                    if (MLHyphenate.getInstance().getTopActivity().getClass().getSimpleName().equals("MLChatActivity")) {
+                    if (MLHyphenate.getInstance()
+                            .getTopActivity()
+                            .getClass()
+                            .getSimpleName()
+                            .equals("MLChatActivity")) {
                         return;
                     }
                 }
@@ -311,9 +315,13 @@ public class MLHyphenate {
                 for (EMMessage message : list) {
                     // 更新会话时间
                     if (message.getChatType() == EMMessage.ChatType.Chat) {
-                        MLConversationExtUtils.setConversationLastTime(EMClient.getInstance().chatManager().getConversation(message.getFrom()));
+                        MLConversationExtUtils.setConversationLastTime(EMClient.getInstance()
+                                .chatManager()
+                                .getConversation(message.getFrom()));
                     } else {
-                        MLConversationExtUtils.setConversationLastTime(EMClient.getInstance().chatManager().getConversation(message.getTo()));
+                        MLConversationExtUtils.setConversationLastTime(EMClient.getInstance()
+                                .chatManager()
+                                .getConversation(message.getTo()));
                     }
                     // 使用 EventBus 发布消息，可以被订阅此类型消息的订阅者监听到
                     MLMessageEvent event = new MLMessageEvent();
@@ -335,11 +343,14 @@ public class MLHyphenate {
              *
              * @param list 收到的透传消息集合
              */
-            @Override
-            public void onCmdMessageReceived(List<EMMessage> list) {
+            @Override public void onCmdMessageReceived(List<EMMessage> list) {
                 // 判断当前活动界面是不是聊天界面，如果是，全局不处理消息
                 if (MLHyphenate.getInstance().getActivityList().size() > 0) {
-                    if (MLHyphenate.getInstance().getTopActivity().getClass().getSimpleName().equals("MLChatActivity")) {
+                    if (MLHyphenate.getInstance()
+                            .getTopActivity()
+                            .getClass()
+                            .getSimpleName()
+                            .equals("MLChatActivity")) {
                         return;
                     }
                 }
@@ -364,8 +375,7 @@ public class MLHyphenate {
              *
              * @param list 收到消息已读回执
              */
-            @Override
-            public void onMessageReadAckReceived(List<EMMessage> list) {
+            @Override public void onMessageReadAckReceived(List<EMMessage> list) {
 
             }
 
@@ -374,8 +384,7 @@ public class MLHyphenate {
              *
              * @param list 收到发送回执的消息集合
              */
-            @Override
-            public void onMessageDeliveryAckReceived(List<EMMessage> list) {
+            @Override public void onMessageDeliveryAckReceived(List<EMMessage> list) {
 
             }
 
@@ -385,8 +394,7 @@ public class MLHyphenate {
              * @param message 发生改变的消息
              * @param object  包含改变的消息
              */
-            @Override
-            public void onMessageChanged(EMMessage message, Object object) {
+            @Override public void onMessageChanged(EMMessage message, Object object) {
             }
         };
         // 注册消息监听
@@ -406,8 +414,7 @@ public class MLHyphenate {
              *
              * @param username 被添加的联系人
              */
-            @Override
-            public void onContactAdded(String username) {
+            @Override public void onContactAdded(String username) {
                 // 创建一个新的联系人对象，并保存到本地
                 MLContacterEntity contacts = new MLContacterEntity();
                 contacts.setUserName(username);
@@ -425,8 +432,7 @@ public class MLHyphenate {
              *
              * @param username 被删除的联系人
              */
-            @Override
-            public void onContactDeleted(String username) {
+            @Override public void onContactDeleted(String username) {
                 /**
                  * 监听到联系人被删除，删除本地的数据
                  * 调用{@link MLContactsDao#deleteContacts(String)} 去删除指定的联系人
@@ -443,8 +449,7 @@ public class MLHyphenate {
              * @param username 发送好友申请者username
              * @param reason 申请理由
              */
-            @Override
-            public void onContactInvited(String username, String reason) {
+            @Override public void onContactInvited(String username, String reason) {
                 MLLog.d("onContactInvited - username:%s, reaseon:%s", username, reason);
 
                 // 根据申请者的 username 和当前登录账户 username 拼接出msgId方便后边更新申请信息
@@ -456,7 +461,8 @@ public class MLHyphenate {
                     // 申请理由
                     message.setAttribute(MLConstants.ML_ATTR_REASON, reason);
                     // 当前申请的消息状态
-                    message.setAttribute(MLConstants.ML_ATTR_STATUS, MLConstants.ML_STATUS_BE_APPLY_FOR);
+                    message.setAttribute(MLConstants.ML_ATTR_STATUS,
+                            MLConstants.ML_STATUS_BE_APPLY_FOR);
                     // 更新消息时间
                     message.setMsgTime(MLDateUtil.getCurrentMillisecond());
                     message.setLocalTime(message.getMsgTime());
@@ -474,9 +480,11 @@ public class MLHyphenate {
                     // 申请理由
                     message.setAttribute(MLConstants.ML_ATTR_REASON, reason);
                     // 当前申请的消息状态
-                    message.setAttribute(MLConstants.ML_ATTR_STATUS, MLConstants.ML_STATUS_BE_APPLY_FOR);
+                    message.setAttribute(MLConstants.ML_ATTR_STATUS,
+                            MLConstants.ML_STATUS_BE_APPLY_FOR);
                     // 申请与通知类型
-                    message.setAttribute(MLConstants.ML_ATTR_TYPE, MLConstants.ML_APPLY_FOR_CONTACTS);
+                    message.setAttribute(MLConstants.ML_ATTR_TYPE,
+                            MLConstants.ML_APPLY_FOR_CONTACTS);
                     // 设置消息发送方
                     message.setFrom(MLConstants.ML_CONVERSATION_ID_APPLY_FOR);
                     // 设置
@@ -497,8 +505,7 @@ public class MLHyphenate {
              *
              * @param username 对方的username
              */
-            @Override
-            public void onContactAgreed(String username) {
+            @Override public void onContactAgreed(String username) {
                 MLLog.d("onContactAgreed - username:%s", username);
                 // 根据申请者的 username 和当前登录账户 username 拼接出msgId方便后边更新申请信息（申请者在前）
                 String msgId = EMClient.getInstance().getCurrentUser() + username;
@@ -507,7 +514,8 @@ public class MLHyphenate {
                 EMMessage message = EMClient.getInstance().chatManager().getMessage(msgId);
                 if (message != null) {
                     // 当前申请的消息状态
-                    message.setAttribute(MLConstants.ML_ATTR_STATUS, MLConstants.ML_STATUS_BE_AGREED);
+                    message.setAttribute(MLConstants.ML_ATTR_STATUS,
+                            MLConstants.ML_STATUS_BE_AGREED);
                     // 更新消息到本地
                     EMClient.getInstance().chatManager().updateMessage(message);
                 } else {
@@ -522,9 +530,11 @@ public class MLHyphenate {
                     // 申请理由
                     message.setAttribute(MLConstants.ML_ATTR_REASON, "我同意你的好友申请");
                     // 当前申请的消息状态
-                    message.setAttribute(MLConstants.ML_ATTR_STATUS, MLConstants.ML_STATUS_BE_AGREED);
+                    message.setAttribute(MLConstants.ML_ATTR_STATUS,
+                            MLConstants.ML_STATUS_BE_AGREED);
                     // 申请与通知类型
-                    message.setAttribute(MLConstants.ML_ATTR_TYPE, MLConstants.ML_APPLY_FOR_CONTACTS);
+                    message.setAttribute(MLConstants.ML_ATTR_TYPE,
+                            MLConstants.ML_APPLY_FOR_CONTACTS);
                     // 设置消息发送方
                     message.setFrom(MLConstants.ML_CONVERSATION_ID_APPLY_FOR);
                     // 设置
@@ -545,8 +555,7 @@ public class MLHyphenate {
              *
              * @param username 对方的username
              */
-            @Override
-            public void onContactRefused(String username) {
+            @Override public void onContactRefused(String username) {
                 MLLog.d("onContactRefused - username:%s", username);
                 // 根据申请者的 username 和当前登录账户 username 拼接出msgId方便后边更新申请信息（申请者在前）
                 String msgId = EMClient.getInstance().getCurrentUser() + username;
@@ -555,7 +564,8 @@ public class MLHyphenate {
                 EMMessage message = EMClient.getInstance().chatManager().getMessage(msgId);
                 if (message != null) {
                     // 当前申请的消息状态
-                    message.setAttribute(MLConstants.ML_ATTR_STATUS, MLConstants.ML_STATUS_BE_AGREED);
+                    message.setAttribute(MLConstants.ML_ATTR_STATUS,
+                            MLConstants.ML_STATUS_BE_AGREED);
                     // 更新消息到本地
                     EMClient.getInstance().chatManager().updateMessage(message);
                 } else {
@@ -570,9 +580,11 @@ public class MLHyphenate {
                     // 申请理由
                     message.setAttribute(MLConstants.ML_ATTR_REASON, "我同意你的好友申请");
                     // 当前申请的消息状态
-                    message.setAttribute(MLConstants.ML_ATTR_STATUS, MLConstants.ML_STATUS_BE_AGREED);
+                    message.setAttribute(MLConstants.ML_ATTR_STATUS,
+                            MLConstants.ML_STATUS_BE_AGREED);
                     // 申请与通知类型
-                    message.setAttribute(MLConstants.ML_ATTR_TYPE, MLConstants.ML_APPLY_FOR_CONTACTS);
+                    message.setAttribute(MLConstants.ML_ATTR_TYPE,
+                            MLConstants.ML_APPLY_FOR_CONTACTS);
                     // 设置消息发送方
                     message.setFrom(MLConstants.ML_CONVERSATION_ID_APPLY_FOR);
                     // 设置
@@ -606,8 +618,8 @@ public class MLHyphenate {
              * @param inviter   邀请者
              * @param reason    邀请理由
              */
-            @Override
-            public void onInvitationReceived(String groupId, String groupName, String inviter, String reason) {
+            @Override public void onInvitationReceived(String groupId, String groupName,
+                    String inviter, String reason) {
                 EMGroup group = EMClient.getInstance().groupManager().getGroup(groupId);
             }
 
@@ -619,9 +631,10 @@ public class MLHyphenate {
              * @param applyer   申请人的username
              * @param reason    申请加入的reason
              */
-            @Override
-            public void onApplicationReceived(String groupId, String groupName, String applyer, String reason) {
-                MLLog.i("onApplicationAccept groupId:%s, groupName:%, reason:%s", groupId, groupName, reason);
+            @Override public void onApplicationReceived(String groupId, String groupName,
+                    String applyer, String reason) {
+                MLLog.i("onApplicationAccept groupId:%s, groupName:%, reason:%s", groupId,
+                        groupName, reason);
             }
 
             /**
@@ -631,9 +644,10 @@ public class MLHyphenate {
              * @param groupName 申请加入的群组名称
              * @param accepter 同意申请的用户名（一般就是群主）
              */
-            @Override
-            public void onApplicationAccept(String groupId, String groupName, String accepter) {
-                MLLog.i("onApplicationAccept groupId:%s, groupName:%, accepter:%s", groupId, groupName, accepter);
+            @Override public void onApplicationAccept(String groupId, String groupName,
+                    String accepter) {
+                MLLog.i("onApplicationAccept groupId:%s, groupName:%, accepter:%s", groupId,
+                        groupName, accepter);
             }
 
             /**
@@ -644,9 +658,10 @@ public class MLHyphenate {
              * @param decliner 拒绝者的用户名（一般就是群主）
              * @param reason 拒绝理由
              */
-            @Override
-            public void onApplicationDeclined(String groupId, String groupName, String decliner, String reason) {
-                MLLog.i("onApplicationDeclined groupId:%s, decliner:%, sreason:%s", groupId, decliner, reason);
+            @Override public void onApplicationDeclined(String groupId, String groupName,
+                    String decliner, String reason) {
+                MLLog.i("onApplicationDeclined groupId:%s, decliner:%, sreason:%s", groupId,
+                        decliner, reason);
             }
 
             /**
@@ -656,10 +671,10 @@ public class MLHyphenate {
              * @param invitee 被邀请者
              * @param reason 理由
              */
-            @Override
-            public void onInvitationAccepted(String groupId, String invitee, String reason) {
-                MLLog.i("onInvitationAccepted groupId:%s, invitee:%, sreason:%s", groupId, invitee, reason);
-
+            @Override public void onInvitationAccepted(String groupId, String invitee,
+                    String reason) {
+                MLLog.i("onInvitationAccepted groupId:%s, invitee:%, sreason:%s", groupId, invitee,
+                        reason);
             }
 
             /**
@@ -668,9 +683,10 @@ public class MLHyphenate {
              * @param invitee 被邀请的人（拒绝群组邀请的人）
              * @param reason 拒绝理由
              */
-            @Override
-            public void onInvitationDeclined(String groupId, String invitee, String reason) {
-                MLLog.i("onInvitationDeclined groupId:%s, invitee:%, sreason:%s", groupId, invitee, reason);
+            @Override public void onInvitationDeclined(String groupId, String invitee,
+                    String reason) {
+                MLLog.i("onInvitationDeclined groupId:%s, invitee:%, sreason:%s", groupId, invitee,
+                        reason);
             }
 
             /**
@@ -679,8 +695,7 @@ public class MLHyphenate {
              * @param groupId 被移出的群组id
              * @param groupName 被移出的群组名称
              */
-            @Override
-            public void onUserRemoved(String groupId, String groupName) {
+            @Override public void onUserRemoved(String groupId, String groupName) {
                 MLLog.i("onUserRemoved groupId:%s, groupName:%s", groupId, groupName);
             }
 
@@ -690,11 +705,9 @@ public class MLHyphenate {
              * @param groupId 解散的群组id
              * @param groupName 解散的群组名称
              */
-            @Override
-            public void onGroupDestroyed(String groupId, String groupName) {
+            @Override public void onGroupDestroyed(String groupId, String groupName) {
                 MLLog.i("onGroupDestroyed groupId:%s, groupName:%s", groupId, groupName);
             }
-
 
             /**
              * 自动同意加入群组 sdk会先加入这个群组，并通过此回调通知应用
@@ -703,9 +716,10 @@ public class MLHyphenate {
              * @param inviter 邀请者
              * @param inviteMessage 邀请信息
              */
-            @Override
-            public void onAutoAcceptInvitationFromGroup(String groupId, String inviter, String inviteMessage) {
-                MLLog.i("onAutoAcceptInvitationFromGroup groupId:%s, inviter:%s, inviteMessage:%s", groupId, inviter, inviteMessage);
+            @Override public void onAutoAcceptInvitationFromGroup(String groupId, String inviter,
+                    String inviteMessage) {
+                MLLog.i("onAutoAcceptInvitationFromGroup groupId:%s, inviter:%s, inviteMessage:%s",
+                        groupId, inviter, inviteMessage);
             }
         };
         // 添加群组改变监听
@@ -725,24 +739,21 @@ public class MLHyphenate {
          * callback 可选参数，用来接收推出的登录的结果
          */
         EMClient.getInstance().logout(unbuildToken, new EMCallBack() {
-            @Override
-            public void onSuccess() {
+            @Override public void onSuccess() {
                 unbuildToken = true;
                 if (callback != null) {
                     callback.onSuccess();
                 }
             }
 
-            @Override
-            public void onError(int i, String s) {
+            @Override public void onError(int i, String s) {
                 unbuildToken = true;
                 if (callback != null) {
                     callback.onError(i, s);
                 }
             }
 
-            @Override
-            public void onProgress(int i, String s) {
+            @Override public void onProgress(int i, String s) {
                 if (callback != null) {
                     callback.onProgress(i, s);
                 }
@@ -761,16 +772,17 @@ public class MLHyphenate {
      * 根据Pid获取当前进程的名字，一般就是当前app的包名
      *
      * @param pid 进程的id
-     *
      * @return 返回进程的名字
      */
     private String getAppName(int pid) {
         String processName = null;
-        ActivityManager activityManager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+        ActivityManager activityManager =
+                (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
         List list = activityManager.getRunningAppProcesses();
         Iterator i = list.iterator();
         while (i.hasNext()) {
-            ActivityManager.RunningAppProcessInfo info = (ActivityManager.RunningAppProcessInfo) (i.next());
+            ActivityManager.RunningAppProcessInfo info =
+                    (ActivityManager.RunningAppProcessInfo) (i.next());
             try {
                 if (info.pid == pid) {
                     // 根据进程的信息获取当前进程的名字
@@ -794,7 +806,6 @@ public class MLHyphenate {
     public List<MLBaseActivity> getActivityList() {
         return mActivityList;
     }
-
 
     /**
      * 获取当前运行的 activity

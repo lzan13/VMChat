@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hyphenate.chat.EMCallManager;
+import com.hyphenate.chat.EMCallOptions;
 import com.hyphenate.chat.EMCallStateChangeListener;
 import com.hyphenate.chat.EMCallStateChangeListener.CallError;
 import com.hyphenate.chat.EMCallStateChangeListener.CallState;
@@ -103,12 +104,14 @@ public class MLVideoCallActivity extends MLCallActivity {
         mSpeakerSwitch.setActivated(MLCallStatus.getInstance().isSpeaker());
         mRecordSwitch.setActivated(MLCallStatus.getInstance().isRecord());
 
-        // 初始化视频通话帮助类
+         // 初始化视频通话帮助类
         mVideoCallHelper = EMClient.getInstance().callManager().getVideoCallHelper();
+        //EMClient.getInstance().callManager().getCallOptions().setVideoResolution(640, 480);
+        //EMClient.getInstance().callManager().getCallOptions().setVideoKbps(800);
         // 设置视频通话分辨率 默认是(320, 240)
-        mVideoCallHelper.setResolution(640, 480);
+        //mVideoCallHelper.setResolution(640, 480);
         // 设置视频通话比特率 默认是(150)
-        mVideoCallHelper.setVideoBitrate(300);
+        //mVideoCallHelper.setVideoBitrate(300);
         // 设置本地预览图像显示在最上层，一定要提前设置，否则无效
         //mLocalSurfaceView.setZOrderMediaOverlay(true);
         //mLocalSurfaceView.setZOrderOnTop(true);
@@ -577,6 +580,17 @@ public class MLVideoCallActivity extends MLCallActivity {
     @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(MLCallEvent event) {
         CallError callError = event.getCallError();
         CallState callState = event.getCallState();
+        MLLog.d("video call \n"
+                        + "local bit:%d \n"
+                        + "remote bit: %d \n"
+                        + "width: %d \n"
+                        + "height: %d \n"
+                        + "latency: %d \n"
+                        + "frame rate: %d \n"
+                        + "lost rate: %d \n", mVideoCallHelper.getLocalBitrate(),
+                mVideoCallHelper.getRemoteBitrate(), mVideoCallHelper.getVideoWidth(),
+                mVideoCallHelper.getVideoHeight(), mVideoCallHelper.getVideoLatency(),
+                mVideoCallHelper.getVideoFrameRate(), mVideoCallHelper.getVideoLostRate());
 
         switch (callState) {
             case CONNECTING: // 正在呼叫对方

@@ -1,6 +1,5 @@
 package net.melove.app.chat.test;
 
-
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -61,25 +60,26 @@ public class MLTestFragment extends MLBaseFragment {
         // Required empty public constructor
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
+    @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_test, container, false);
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
+    @Override public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mActivity = getParentFragment().getActivity();
         init();
     }
 
     private void init() {
-        String[] btns = {"登出", "Insert Message", "更新消息", "群消息", "创建群组", "Send CMD", "ChatRoom", "Test MLLog", "TestLogin", "Get Contacts"};
+        String[] btns = {
+                "登出", "Insert Message", "更新消息", "群消息", "创建群组", "Send CMD", "ChatRoom", "Test MLLog",
+                "TestLogin", "Get Contacts"
+        };
         viewGroup = (MLViewGroup) getView().findViewById(R.id.ml_view_custom_viewgroup);
         for (int i = 0; i < btns.length; i++) {
             Button btn = new Button(mActivity);
@@ -94,14 +94,13 @@ public class MLTestFragment extends MLBaseFragment {
      * 测试按钮的监听事件
      */
     private View.OnClickListener viewListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
+        @Override public void onClick(View v) {
             switch (v.getId()) {
                 case 100:
                     signOut();
                     break;
                 case 101:
-                    insertMessage();
+                    saveMessage();
                     break;
                 case 102:
                     updateMessage();
@@ -135,21 +134,21 @@ public class MLTestFragment extends MLBaseFragment {
      */
     private void testGetContacts() {
         new Thread(new Runnable() {
-            @Override
-            public void run() {
+            @Override public void run() {
                 List<String> contacts = new ArrayList<String>();
                 // TODO 切换账户时会出现第二个账户获取到的联系人是第一个账户的好友
-                EMClient.getInstance().contactManager().aysncGetAllContactsFromServer(new EMValueCallBack<List<String>>() {
-                    @Override
-                    public void onSuccess(List<String> list) {
-                        MLLog.i("contacts count %d, names %s", list.size(), list.toString());
-                    }
+                EMClient.getInstance()
+                        .contactManager()
+                        .aysncGetAllContactsFromServer(new EMValueCallBack<List<String>>() {
+                            @Override public void onSuccess(List<String> list) {
+                                MLLog.i("contacts count %d, names %s", list.size(),
+                                        list.toString());
+                            }
 
-                    @Override
-                    public void onError(int i, String s) {
+                            @Override public void onError(int i, String s) {
 
-                    }
-                });
+                            }
+                        });
             }
         }).start();
     }
@@ -159,8 +158,7 @@ public class MLTestFragment extends MLBaseFragment {
      */
     private void testLogin() {
         EMClient.getInstance().logout(false, new EMCallBack() {
-            @Override
-            public void onSuccess() {
+            @Override public void onSuccess() {
                 MLLog.d("logout success");
                 //                try {
                 //                    Thread.sleep(1500);
@@ -168,29 +166,24 @@ public class MLTestFragment extends MLBaseFragment {
                 //                    e.printStackTrace();
                 //                }
                 EMClient.getInstance().login("lz0", "1", new EMCallBack() {
-                    @Override
-                    public void onSuccess() {
+                    @Override public void onSuccess() {
                         MLLog.d("login success");
                     }
 
-                    @Override
-                    public void onError(int i, String s) {
+                    @Override public void onError(int i, String s) {
                         MLLog.d("login error code:%d, error:%s", i, s);
                     }
 
-                    @Override
-                    public void onProgress(int i, String s) {
+                    @Override public void onProgress(int i, String s) {
                     }
                 });
             }
 
-            @Override
-            public void onError(int i, String s) {
+            @Override public void onError(int i, String s) {
                 MLLog.d("logout error code:%d, error:%s", i, s);
             }
 
-            @Override
-            public void onProgress(int i, String s) {
+            @Override public void onProgress(int i, String s) {
 
             }
         });
@@ -202,8 +195,7 @@ public class MLTestFragment extends MLBaseFragment {
     private void testMLLog() {
         MLLog.i("testMLLog main thread");
         new Thread(new Runnable() {
-            @Override
-            public void run() {
+            @Override public void run() {
                 try {
                     Thread.sleep(3000);
                     MLLog.i("testMLLog sub thread");
@@ -219,7 +211,8 @@ public class MLTestFragment extends MLBaseFragment {
      */
     private void getChatRoom() {
         try {
-            EMChatRoom chatRoom = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer("", true);
+            EMChatRoom chatRoom =
+                    EMClient.getInstance().chatroomManager().fetchChatRoomFromServer("", true);
             chatRoom.getMemberList();
         } catch (HyphenateException e) {
             e.printStackTrace();
@@ -246,8 +239,7 @@ public class MLTestFragment extends MLBaseFragment {
      */
     private void testCreateGroup() {
         new Thread(new Runnable() {
-            @Override
-            public void run() {
+            @Override public void run() {
                 /**
                  * 创建群组
                  * @param groupName 群组名称
@@ -266,10 +258,14 @@ public class MLTestFragment extends MLBaseFragment {
                 EMGroupManager.EMGroupOptions option = new EMGroupManager.EMGroupOptions();
                 option.maxUsers = 100;
                 option.style = EMGroupManager.EMGroupStyle.EMGroupStylePublicJoinNeedApproval;
-                String[] members = {"lz1", "lz2", "lz3"};
+                String[] members = { "lz1", "lz2", "lz3" };
                 try {
-                    EMGroup group = EMClient.getInstance().groupManager().createGroup("测试群组" + count++, "SDK端创建群组，测试默认属性", members, "这个群不错", option);
-                    Log.i("lzan13", "group id: %s" + group.getGroupId() + "members: " + group.getMembers());
+                    EMGroup group = EMClient.getInstance()
+                            .groupManager()
+                            .createGroup("测试群组" + count++, "SDK端创建群组，测试默认属性", members, "这个群不错",
+                                    option);
+                    Log.i("lzan13",
+                            "group id: %s" + group.getGroupId() + "members: " + group.getMembers());
                 } catch (HyphenateException e) {
                     e.printStackTrace();
                 }
@@ -282,8 +278,7 @@ public class MLTestFragment extends MLBaseFragment {
      */
     private void testGetGroup() {
         new Thread(new Runnable() {
-            @Override
-            public void run() {
+            @Override public void run() {
                 try {
                     // 这个操作会导致 so 请求群详情崩溃
                     EMGroup group = EMClient.getInstance().groupManager().getGroupFromServer("");
@@ -299,24 +294,23 @@ public class MLTestFragment extends MLBaseFragment {
      */
     private void sendGroupMessage() {
         //创建一条文本消息,content为消息文字内容，toChatUsername为对方用户或者群聊的id，后文皆是如此
-        EMMessage message = EMMessage.createTxtSendMessage("群消息" + MLDateUtil.getCurrentMillisecond(), "1460022071257");
+        EMMessage message =
+                EMMessage.createTxtSendMessage("群消息" + MLDateUtil.getCurrentMillisecond(),
+                        "1460022071257");
         //如果是群聊，设置chattype,默认是单聊
         message.setChatType(EMMessage.ChatType.GroupChat);
         //发送消息
         EMClient.getInstance().chatManager().sendMessage(message);
         message.setMessageStatusCallback(new EMCallBack() {
-            @Override
-            public void onSuccess() {
+            @Override public void onSuccess() {
                 MLLog.i("message send success!");
             }
 
-            @Override
-            public void onError(int i, String s) {
+            @Override public void onError(int i, String s) {
                 MLLog.i("message send error code:%d, error:%s", i, s);
             }
 
-            @Override
-            public void onProgress(int i, String s) {
+            @Override public void onProgress(int i, String s) {
 
             }
         });
@@ -329,7 +323,9 @@ public class MLTestFragment extends MLBaseFragment {
         EMMessage message = EMMessage.createTxtSendMessage("", "");
         // 更改要撤销的消息的内容，替换为消息已经撤销的提示内容
         EMMessage recallMessage = EMMessage.createSendMessage(EMMessage.Type.TXT);
-        EMTextMessageBody body = new EMTextMessageBody(String.format(mActivity.getString(R.string.ml_hint_msg_recall_by_user), message.getUserName()));
+        EMTextMessageBody body = new EMTextMessageBody(
+                String.format(mActivity.getString(R.string.ml_hint_msg_recall_by_user),
+                        message.getUserName()));
         recallMessage.addBody(body);
         recallMessage.setReceipt(message.getFrom());
         // 设置新消息的 msgId为撤销消息的 msgId
@@ -360,7 +356,9 @@ public class MLTestFragment extends MLBaseFragment {
      */
     private void insertMessage() {
         // 测试插入一条消息
-        EMConversation conversation = EMClient.getInstance().chatManager().getConversation("lz1", EMConversation.EMConversationType.Chat, true);
+        EMConversation conversation = EMClient.getInstance()
+                .chatManager()
+                .getConversation("lz1", EMConversation.EMConversationType.Chat, true);
         EMMessage textMessage = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
         textMessage.setFrom("lz1");
         textMessage.setReceipt("lz0");
@@ -452,31 +450,26 @@ public class MLTestFragment extends MLBaseFragment {
         }
     }
 
-
     /**
      * 退出登录
      */
     private void signOut() {
         MLHyphenate.getInstance().signOut(new EMCallBack() {
-            @Override
-            public void onSuccess() {
+            @Override public void onSuccess() {
                 mListener.onFragmentClick(0x00, 0x01, null);
             }
 
-            @Override
-            public void onError(int i, String s) {
+            @Override public void onError(int i, String s) {
 
             }
 
-            @Override
-            public void onProgress(int i, String s) {
+            @Override public void onProgress(int i, String s) {
 
             }
         });
     }
 
-    @Override
-    public void onAttach(Context context) {
+    @Override public void onAttach(Context context) {
         super.onAttach(context);
         try {
             mListener = (OnMLFragmentListener) context;
