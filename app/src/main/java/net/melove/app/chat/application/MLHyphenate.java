@@ -121,8 +121,9 @@ public class MLHyphenate {
         // 调用初始化方法初始化sdk
         EMClient.getInstance().init(mContext, initOptions());
 
-        // TODO 测试设置视频通话分辨率
+        // 设置视频通话比特率 默认是(150)
         EMClient.getInstance().callManager().getCallOptions().setVideoKbps(800);
+        // 设置视频通话分辨率 默认是(320, 240)
         EMClient.getInstance().callManager().getCallOptions().setVideoResolution(640, 480);
 
         // 设置开启debug模式

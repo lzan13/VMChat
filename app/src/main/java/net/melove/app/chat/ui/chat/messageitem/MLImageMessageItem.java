@@ -43,12 +43,11 @@ public class MLImageMessageItem extends MLMessageItem {
     private int mViewWidth;
     private int mViewHeight;
 
-
     /**
      * 构造方法，创建item的view，需要传递对应的参数
      *
-     * @param context  上下文对象
-     * @param adapter  适配器
+     * @param context 上下文对象
+     * @param adapter 适配器
      * @param viewType item类型
      */
     public MLImageMessageItem(Context context, MLMessageAdapter adapter, int viewType) {
@@ -60,12 +59,11 @@ public class MLImageMessageItem extends MLMessageItem {
      *
      * @param message 需要展示的 EMMessage 对象
      */
-    @Override
-    public void onSetupView(EMMessage message) {
+    @Override public void onSetupView(EMMessage message) {
         mMessage = message;
-
         // 判断如果是单聊或者消息是发送方，不显示username
-        if (mMessage.getChatType() == EMMessage.ChatType.Chat || mMessage.direct() == EMMessage.Direct.SEND) {
+        if (mMessage.getChatType() == EMMessage.ChatType.Chat
+                || mMessage.direct() == EMMessage.Direct.SEND) {
             usernameView.setVisibility(View.GONE);
         } else {
             // 设置消息消息发送者的名称
@@ -100,12 +98,12 @@ public class MLImageMessageItem extends MLMessageItem {
         // 设置显示图片控件的显示大小
         imageView.setLayoutParams(lp);
 
-
         // 判断下是否是接收方的消息
         if (mViewType == MLConstants.MSG_TYPE_IMAGE_RECEIVED) {
             // 判断消息是否处于下载状态，如果是下载状态设置一个默认的图片
             if (imgBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.DOWNLOADING
-                    || imgBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.PENDING) {
+                    || imgBody.thumbnailDownloadStatus()
+                    == EMFileMessageBody.EMDownloadStatus.PENDING) {
             }
         }
 
@@ -136,17 +134,16 @@ public class MLImageMessageItem extends MLMessageItem {
      * 然后长按菜单项需要的操作，通过回调的方式传递到{@link MLChatActivity#setItemClickListener()}中去实现
      * TODO 现在这种实现并不是最优，因为在每一个 Item 中都要去实现弹出一个 Dialog，但是又不想自定义dialog
      */
-    @Override
-    protected void onItemLongClick() {
+    @Override protected void onItemLongClick() {
         String[] menus = null;
         // 这里要根据消息的类型去判断要弹出的菜单，是否是发送方，并且是发送成功才能撤回
         if (mViewType == MLConstants.MSG_TYPE_IMAGE_RECEIVED) {
-            menus = new String[]{
+            menus = new String[] {
                     mActivity.getResources().getString(R.string.ml_menu_chat_forward),
                     mActivity.getResources().getString(R.string.ml_menu_chat_delete)
             };
         } else {
-            menus = new String[]{
+            menus = new String[] {
                     mActivity.getResources().getString(R.string.ml_menu_chat_forward),
                     mActivity.getResources().getString(R.string.ml_menu_chat_delete),
                     mActivity.getResources().getString(R.string.ml_menu_chat_recall)
@@ -158,18 +155,17 @@ public class MLImageMessageItem extends MLMessageItem {
         // 弹出框标题
         // alertDialogBuilder.setTitle(R.string.ml_dialog_title_conversation);
         alertDialogBuilder.setItems(menus, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+            @Override public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
-                case 0:
-                    mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_MSG_FORWARD);
-                    break;
-                case 1:
-                    mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_MSG_DELETE);
-                    break;
-                case 2:
-                    mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_MSG_RECALL);
-                    break;
+                    case 0:
+                        mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_MSG_FORWARD);
+                        break;
+                    case 1:
+                        mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_MSG_DELETE);
+                        break;
+                    case 2:
+                        mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_MSG_RECALL);
+                        break;
                 }
             }
         });
@@ -181,7 +177,7 @@ public class MLImageMessageItem extends MLMessageItem {
      * 设置缩略图的显示，并将缩略图添加到缓存
      *
      * @param thumbnailsPath 缩略图的路径
-     * @param originalPath   原始图片的路径
+     * @param originalPath 原始图片的路径
      */
     private void showThumbnailsImage(String thumbnailsPath, String originalPath) {
         File thumbnailsFile = new File(thumbnailsPath);
@@ -270,7 +266,7 @@ public class MLImageMessageItem extends MLMessageItem {
     //                                @Override
     //                                public void run() {
     //                                    // 下载缩略图
-//                                        EMClient.getInstance().chatManager().downloadThumbnail(mMessage);
+    //                                        EMClient.getInstance().chatManager().downloadThumbnail(mMessage);
     //                                }
     //                            }).start();
     //                        } else {
@@ -292,29 +288,28 @@ public class MLImageMessageItem extends MLMessageItem {
         }
         // 判断消息的状态，如果发送失败就显示重发按钮，并设置重发按钮的监听
         switch (mMessage.status()) {
-        case SUCCESS:
-            ackStatusView.setVisibility(View.VISIBLE);
-            progressLayout.setVisibility(View.GONE);
-            resendView.setVisibility(View.GONE);
-            break;
-        // 当消息在发送过程中被Kill，消息的状态会变成Create，而且永远不会发送成功，所以这里把CREATE状态莪要设置为失败
-        case FAIL:
-        case CREATE:
-            ackStatusView.setVisibility(View.GONE);
-            progressLayout.setVisibility(View.GONE);
-            resendView.setVisibility(View.VISIBLE);
-            resendView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_MSG_RESEND);
-                }
-            });
-            break;
-        case INPROGRESS:
-            ackStatusView.setVisibility(View.GONE);
-            progressLayout.setVisibility(View.VISIBLE);
-            resendView.setVisibility(View.GONE);
-            break;
+            case SUCCESS:
+                ackStatusView.setVisibility(View.VISIBLE);
+                progressLayout.setVisibility(View.GONE);
+                resendView.setVisibility(View.GONE);
+                break;
+            // 当消息在发送过程中被Kill，消息的状态会变成Create，而且永远不会发送成功，所以这里把CREATE状态莪要设置为失败
+            case FAIL:
+            case CREATE:
+                ackStatusView.setVisibility(View.GONE);
+                progressLayout.setVisibility(View.GONE);
+                resendView.setVisibility(View.VISIBLE);
+                resendView.setOnClickListener(new View.OnClickListener() {
+                    @Override public void onClick(View v) {
+                        mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_MSG_RESEND);
+                    }
+                });
+                break;
+            case INPROGRESS:
+                ackStatusView.setVisibility(View.GONE);
+                progressLayout.setVisibility(View.VISIBLE);
+                resendView.setVisibility(View.GONE);
+                break;
         }
         // 设置消息ACK 状态
         setAckStatusView();
@@ -325,13 +320,13 @@ public class MLImageMessageItem extends MLMessageItem {
      *
      * @param event 要监听的事件类型
      */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventBus(MLMessageEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(MLMessageEvent event) {
         EMMessage message = event.getMessage();
         if (!message.getMsgId().equals(mMessage.getMsgId())) {
             return;
         }
-        if (message.getType() == EMMessage.Type.IMAGE && event.getStatus() == EMMessage.Status.INPROGRESS) {
+        if (message.getType() == EMMessage.Type.IMAGE
+                && event.getStatus() == EMMessage.Status.INPROGRESS) {
             // 设置消息进度百分比
             percentView.setText(String.valueOf(event.getProgress()));
         }
@@ -340,8 +335,7 @@ public class MLImageMessageItem extends MLMessageItem {
     /**
      * 解析对应的xml 布局，填充当前 ItemView，并初始化控件
      */
-    @Override
-    protected void onInflateView() {
+    @Override protected void onInflateView() {
         if (mViewType == MLConstants.MSG_TYPE_IMAGE_SEND) {
             mInflater.inflate(R.layout.item_msg_image_send, this);
         } else {
@@ -361,14 +355,12 @@ public class MLImageMessageItem extends MLMessageItem {
         ackStatusView = (ImageView) findViewById(R.id.ml_img_msg_ack);
     }
 
-    @Override
-    protected void onAttachedToWindow() {
+    @Override protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         EventBus.getDefault().register(this);
     }
 
-    @Override
-    protected void onDetachedFromWindow() {
+    @Override protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         EventBus.getDefault().unregister(this);
     }

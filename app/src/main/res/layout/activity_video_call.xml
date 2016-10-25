@@ -26,34 +26,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
-        <RelativeLayout
-            android:id="@+id/ml_layout_opposite_surface"
+        <!--显示对方画面控件-->
+        <com.hyphenate.media.EMOppositeSurfaceView
+            android:id="@+id/ml_surface_view_opposite"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/ml_red_38"
-            >
-            <!--显示对方画面控件-->
-            <com.hyphenate.media.EMOppositeSurfaceView
-                android:id="@+id/ml_surface_view_opposite"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone"
-                />
-        </RelativeLayout>
-        <RelativeLayout
-            android:id="@+id/ml_layout_local_surface"
+            android:visibility="gone"
+            />
+        <!--显示本地画面控件-->
+        <com.hyphenate.media.EMLocalSurfaceView
+            android:id="@+id/ml_surface_view_local"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/ml_green_38"
-            >
-            <!--显示本地画面控件-->
-            <com.hyphenate.media.EMLocalSurfaceView
-                android:id="@+id/ml_surface_view_local"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                />
-        </RelativeLayout>
+            android:layout_alignParentRight="true"
+            />
     </RelativeLayout>
 
     <!--控制按钮层布局-->

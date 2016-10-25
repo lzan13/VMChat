@@ -58,8 +58,6 @@ public class MLVideoCallActivity extends MLCallActivity {
     // 使用 ButterKnife 注解的方式获取控件
     @BindView(R.id.ml_layout_call_control) View mControlLayout;
     @BindView(R.id.ml_layout_surface_container) RelativeLayout mSurfaceViewContainer;
-    @BindView(R.id.ml_layout_local_surface) RelativeLayout mLocalSurfaceLayout;
-    @BindView(R.id.ml_layout_opposite_surface) RelativeLayout mOppositeSurfaceLayout;
     @BindView(R.id.ml_surface_view_local) EMLocalSurfaceView mLocalSurfaceView;
     @BindView(R.id.ml_surface_view_opposite) EMOppositeSurfaceView mOppositeSurfaceView;
 
@@ -104,14 +102,8 @@ public class MLVideoCallActivity extends MLCallActivity {
         mSpeakerSwitch.setActivated(MLCallStatus.getInstance().isSpeaker());
         mRecordSwitch.setActivated(MLCallStatus.getInstance().isRecord());
 
-         // 初始化视频通话帮助类
+        // 初始化视频通话帮助类
         mVideoCallHelper = EMClient.getInstance().callManager().getVideoCallHelper();
-        //EMClient.getInstance().callManager().getCallOptions().setVideoResolution(640, 480);
-        //EMClient.getInstance().callManager().getCallOptions().setVideoKbps(800);
-        // 设置视频通话分辨率 默认是(320, 240)
-        //mVideoCallHelper.setResolution(640, 480);
-        // 设置视频通话比特率 默认是(150)
-        //mVideoCallHelper.setVideoBitrate(300);
         // 设置本地预览图像显示在最上层，一定要提前设置，否则无效
         //mLocalSurfaceView.setZOrderMediaOverlay(true);
         //mLocalSurfaceView.setZOrderOnTop(true);
@@ -323,6 +315,16 @@ public class MLVideoCallActivity extends MLCallActivity {
         //
         //mLocalSurfaceView.setLayoutParams(localLayoutParams);
         //mOppositeSurfaceView.setLayoutParams(oppositeLayoutParams);
+
+        if (surfaceViewState == 1) {
+            mSurfaceViewContainer.removeView(mOppositeSurfaceView);
+            mSurfaceViewContainer.addView(mOppositeSurfaceView);
+            mOppositeSurfaceView.setVisibility(View.VISIBLE);
+        } else {
+            mSurfaceViewContainer.removeView(mLocalSurfaceView);
+            mSurfaceViewContainer.addView(mLocalSurfaceView);
+            mLocalSurfaceView.setVisibility(View.VISIBLE);
+        }
     }
 
     /**
