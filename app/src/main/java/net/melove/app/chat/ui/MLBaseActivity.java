@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.squareup.leakcanary.RefWatcher;
 
@@ -18,7 +17,7 @@ import net.melove.app.chat.R;
 import net.melove.app.chat.application.MLApplication;
 import net.melove.app.chat.application.MLConstants;
 import net.melove.app.chat.application.MLHyphenate;
-import net.melove.app.chat.application.eventbus.MLConnectionEvent;
+import net.melove.app.chat.event.MLConnectionEvent;
 import net.melove.app.chat.util.MLLog;
 import net.melove.app.chat.ui.main.MLMainActivity;
 

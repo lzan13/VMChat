@@ -39,8 +39,8 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 
 import net.melove.app.chat.R;
-import net.melove.app.chat.application.eventbus.MLMessageEvent;
-import net.melove.app.chat.application.eventbus.MLRefreshEvent;
+import net.melove.app.chat.event.MLMessageEvent;
+import net.melove.app.chat.event.MLRefreshEvent;
 import net.melove.app.chat.ui.MLBaseActivity;
 import net.melove.app.chat.application.MLConstants;
 import net.melove.app.chat.util.MLDateUtil;
@@ -1538,7 +1538,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             // 判断是不是撤回消息的透传
             if (body.action().equals(MLConstants.ML_ATTR_RECALL)) {
                 // 收到透传的CMD消息后，调用撤回消息方法进行处理
-                boolean result = MLMessageUtils.receiveRecallMessage(mActivity, cmdMessage);
+                boolean result = MLMessageUtils.receiveRecallMessage(cmdMessage);
                 // 撤回消息之后，判断是否当前聊天界面，用来刷新界面
                 if (mChatId.equals(cmdMessage.getFrom()) && result) {
                     String msgId = cmdMessage.getStringAttribute(MLConstants.ML_ATTR_MSG_ID, null);

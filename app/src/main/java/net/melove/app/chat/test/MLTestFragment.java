@@ -77,8 +77,9 @@ public class MLTestFragment extends MLBaseFragment {
 
     private void init() {
         String[] btns = {
-                "登出", "Insert Message", "更新消息", "群消息", "创建群组", "Send CMD", "ChatRoom", "Test MLLog",
-                "TestLogin", "Get Contacts"
+                "Sign out", "Import Message", "Insert Message", "Save Message", "Update Message",
+                "Send Group", "Get Group", "Create Group", "Send CMD", "Get ChatRoom",
+                "Get Contacts", "Customer"
         };
         viewGroup = (MLViewGroup) getView().findViewById(R.id.ml_view_custom_viewgroup);
         for (int i = 0; i < btns.length; i++) {
@@ -100,34 +101,80 @@ public class MLTestFragment extends MLBaseFragment {
                     signOut();
                     break;
                 case 101:
-                    saveMessage();
+                    importMessages();
                     break;
                 case 102:
-                    updateMessage();
+                    insertMessage();
                     break;
                 case 103:
-                    sendGroupMessage();
+                    saveMessage();
                     break;
                 case 104:
-                    testCreateGroup();
+                    updateMessage();
                     break;
                 case 105:
-                    sendCMDMessage();
+                    sendGroupMessage();
                     break;
                 case 106:
+                    testGetGroup();
                     break;
                 case 107:
-                    testMLLog();
+                    testCreateGroup();
                     break;
                 case 108:
-                    testLogin();
+                    sendCMDMessage();
                     break;
                 case 109:
+                    getChatRoom();
+                    break;
+                case 110:
                     testGetContacts();
+                    break;
+                case 111:
+                    testCustomer();
                     break;
             }
         }
     };
+
+    /**
+     * 测试联系客服发送扩展
+     */
+    private void testCustomer() {
+        //创建一条文本消息,content为消息文字内容，toChatUsername为对方用户或者群聊的id，后文皆是如此
+        EMMessage message =
+                EMMessage.createTxtSendMessage("测试联系客服 " + MLDateUtil.getCurrentMillisecond(),
+                        "ml_customer_01");
+        //如果是群聊，设置chattype,默认是单聊
+        message.setChatType(EMMessage.ChatType.Chat);
+        try {
+            JSONObject weichat = new JSONObject();
+            JSONObject visitor = new JSONObject();
+            visitor.put("trueName", "风中小莫");
+            visitor.put("qq", "1234567890");
+            visitor.put("email", "lzan13@easemob.com");
+            weichat.put("visitor", visitor);
+            message.setAttribute("weichat", weichat);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        //发送消息
+        EMClient.getInstance().chatManager().sendMessage(message);
+        message.setMessageStatusCallback(new EMCallBack() {
+            @Override public void onSuccess() {
+                MLLog.i("message send success!");
+            }
+
+            @Override public void onError(int i, String s) {
+                MLLog.i("message send error code:%d, error:%s", i, s);
+            }
+
+            @Override public void onProgress(int i, String s) {
+
+            }
+        });
+    }
 
     /**
      * 测试同步好友列表
@@ -149,59 +196,6 @@ public class MLTestFragment extends MLBaseFragment {
 
                             }
                         });
-            }
-        }).start();
-    }
-
-    /**
-     * 测试退出重登录
-     */
-    private void testLogin() {
-        EMClient.getInstance().logout(false, new EMCallBack() {
-            @Override public void onSuccess() {
-                MLLog.d("logout success");
-                //                try {
-                //                    Thread.sleep(1500);
-                //                } catch (InterruptedException e) {
-                //                    e.printStackTrace();
-                //                }
-                EMClient.getInstance().login("lz0", "1", new EMCallBack() {
-                    @Override public void onSuccess() {
-                        MLLog.d("login success");
-                    }
-
-                    @Override public void onError(int i, String s) {
-                        MLLog.d("login error code:%d, error:%s", i, s);
-                    }
-
-                    @Override public void onProgress(int i, String s) {
-                    }
-                });
-            }
-
-            @Override public void onError(int i, String s) {
-                MLLog.d("logout error code:%d, error:%s", i, s);
-            }
-
-            @Override public void onProgress(int i, String s) {
-
-            }
-        });
-    }
-
-    /**
-     * 测试 MLLog 类
-     */
-    private void testMLLog() {
-        MLLog.i("testMLLog main thread");
-        new Thread(new Runnable() {
-            @Override public void run() {
-                try {
-                    Thread.sleep(3000);
-                    MLLog.i("testMLLog sub thread");
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
             }
         }).start();
     }
@@ -281,12 +275,16 @@ public class MLTestFragment extends MLBaseFragment {
             @Override public void run() {
                 try {
                     // 这个操作会导致 so 请求群详情崩溃
-                    EMGroup group = EMClient.getInstance().groupManager().getGroupFromServer("");
+                    EMGroup group = EMClient.getInstance()
+                            .groupManager()
+                            .getGroupFromServer("1476160492861");
+                    MLLog.i("group: name %s, member count %d, members", group.getGroupName(),
+                            group.getMemberCount(), group.getMembers().toArray().toString());
                 } catch (HyphenateException e) {
                     e.printStackTrace();
                 }
             }
-        });
+        }).start();
     }
 
     /**

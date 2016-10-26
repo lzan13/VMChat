@@ -130,8 +130,10 @@
 -keepattributes Signature
 -keepattributes InnerClasses
 
-# 环信 SDK 混淆代码
+# 环信 SDK 混淆代码，新版 sdk 添加了 superrtc 包，要加上 rtc  keep 代码
 -keep class com.hyphenate.** {*;}
+-keep class com.superrtc.** {*;}
+
 -dontwarn  com.hyphenate.**
 -keep class org.jivesoftware.** {*;}
 -keep class org.apache.** {*;}

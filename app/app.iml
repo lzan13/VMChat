@@ -43,13 +43,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/wandoujiaDebug/jni" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/wandoujiaDebug/rs" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/wandoujiaDebug/shaders" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/r/androidTest/wandoujia/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/aidl/androidTest/wandoujia/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/buildConfig/androidTest/wandoujia/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/rs/androidTest/wandoujia/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/apt/androidTest/wandoujia/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/androidTest/wandoujia/debug" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/resValues/androidTest/wandoujia/debug" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/testWandoujiaDebug/res" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/testWandoujiaDebug/resources" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/testWandoujiaDebug/assets" type="java-test-resource" />
@@ -58,6 +51,13 @@
       <sourceFolder url="file://$MODULE_DIR$/src/testWandoujiaDebug/jni" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/testWandoujiaDebug/rs" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/testWandoujiaDebug/shaders" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/r/androidTest/wandoujia/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/aidl/androidTest/wandoujia/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/buildConfig/androidTest/wandoujia/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/rs/androidTest/wandoujia/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/apt/androidTest/wandoujia/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/androidTest/wandoujia/debug" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/resValues/androidTest/wandoujia/debug" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/wandoujia/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/wandoujia/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/wandoujia/assets" type="java-resource" />

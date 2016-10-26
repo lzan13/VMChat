@@ -8,29 +8,27 @@ import com.hyphenate.chat.EMHuaweiPushReceiver;
 
 import net.melove.app.chat.util.MLLog;
 
-/*
- * 接收Push所有消息的广播接收器
+/**
+ * Create by lzan13 2016/6/6
+ * 华为离线推送通知的接收实现类
  */
 public class MLHWPushReceiver extends EMHuaweiPushReceiver {
 
-    /*
+    /**
      * 显示Push消息
      */
     public void showPushMessage(String msg) {
         MLLog.i("push message %s", msg);
     }
 
-    @Override
-    public void onToken(Context context, String token, Bundle extras) {
+    @Override public void onToken(Context context, String token, Bundle extras) {
         super.onToken(context, token, extras);
         String belongId = extras.getString("belongId");
         String content = "获取token和belongId成功，token = " + token + ",belongId = " + belongId;
         MLLog.i("onToken %s", content);
     }
 
-
-    @Override
-    public boolean onPushMsg(Context context, byte[] msg, Bundle bundle) {
+    @Override public boolean onPushMsg(Context context, byte[] msg, Bundle bundle) {
         try {
             String content = "收到一条Push消息： " + new String(msg, "UTF-8");
             MLLog.i(content);
@@ -44,7 +42,8 @@ public class MLHWPushReceiver extends EMHuaweiPushReceiver {
         if (Event.NOTIFICATION_OPENED.equals(event) || Event.NOTIFICATION_CLICK_BTN.equals(event)) {
             int notifyId = extras.getInt(BOUND_KEY.pushNotifyId, 0);
             if (0 != notifyId) {
-                NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                NotificationManager manager = (NotificationManager) context.getSystemService(
+                        Context.NOTIFICATION_SERVICE);
                 manager.cancel(notifyId);
             }
             String content = "收到通知附加消息： " + extras.getString(BOUND_KEY.pushMsgKey);

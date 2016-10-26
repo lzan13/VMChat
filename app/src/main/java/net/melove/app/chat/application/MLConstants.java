@@ -1,9 +1,8 @@
 package net.melove.app.chat.application;
 
 /**
- * Class ${FILE_NAME}
- * <p/>
  * Created by lzan13 on 2015/9/10 22:04.
+ * 静态变量类
  */
 public class MLConstants {
 
@@ -79,7 +78,6 @@ public class MLConstants {
     public static final String ML_EXTRA_TO = "to";
     public static final String ML_EXTRA_TYPE = "type";
 
-
     // 定义好友申请与通知的 Conversation Id
     public static final String ML_CONVERSATION_ID_APPLY_FOR = "ml_conversation_id_apply_for";
 
@@ -88,7 +86,6 @@ public class MLConstants {
      */
     public static final String ML_SHARED_USERNAME = "ml_username";
     public static final String ML_SHARED_PASSWORD = "ml_password";
-
 
     /**
      * 通话结束状态码
@@ -121,7 +118,6 @@ public class MLConstants {
     public static final int ML_CONNECTION_USER_REMOVED = 0x01;
     public static final int ML_CONNECTION_CONNECTED = 0x02;
     public static final int ML_CONNECTION_DISCONNECTED = 0x03;
-
 
     /**
      * 当界面跳转需要返回结果时，定义跳转请求码
@@ -201,5 +197,4 @@ public class MLConstants {
     // 礼物消息
     public static final int MSG_TYPE_GIFT_SEND = 0x15;
     public static final int MSG_TYPE_GIFT_RECEIVED = 0x16;
-
 }

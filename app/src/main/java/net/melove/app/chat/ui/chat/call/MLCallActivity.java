@@ -71,7 +71,7 @@ public class MLCallActivity extends MLBaseActivity {
         mCallStatus = MLConstants.ML_CALL_CANCEL;
 
         // 收到呼叫或者呼叫对方时初始化通话状态监听
-        MLHyphenate.getInstance().setCallStateChangeListener();
+        MLHyphenate.getInstance().registerCallStateListener();
 
         // 初始化振动器
         mVibrator = (Vibrator) mActivity.getSystemService(Context.VIBRATOR_SERVICE);

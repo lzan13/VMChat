@@ -25,11 +25,9 @@ import com.hyphenate.chat.EMClient;
 
 import net.melove.app.chat.R;
 import net.melove.app.chat.application.MLConstants;
-import net.melove.app.chat.application.MLHyphenate;
-import net.melove.app.chat.application.eventbus.MLConnectionEvent;
+import net.melove.app.chat.event.MLConnectionEvent;
 import net.melove.app.chat.ui.sign.MLSigninActivity;
 import net.melove.app.chat.ui.MLBaseActivity;
-import net.melove.app.chat.util.MLLog;
 import net.melove.app.chat.util.MLSPUtil;
 import net.melove.app.chat.ui.chat.MLChatActivity;
 import net.melove.app.chat.ui.applyfor.MLApplyForActivity;

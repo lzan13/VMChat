@@ -20,8 +20,8 @@ import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.exceptions.HyphenateException;
 
 import net.melove.app.chat.R;
-import net.melove.app.chat.application.eventbus.MLApplyForEvent;
-import net.melove.app.chat.application.eventbus.MLConnectionEvent;
+import net.melove.app.chat.event.MLApplyForEvent;
+import net.melove.app.chat.event.MLConnectionEvent;
 import net.melove.app.chat.ui.MLBaseActivity;
 import net.melove.app.chat.application.MLConstants;
 import net.melove.app.chat.util.MLDateUtil;

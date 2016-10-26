@@ -2,11 +2,9 @@ package net.melove.app.chat.ui.chat.call;
 
 import android.graphics.Bitmap;
 import android.media.AudioManager;
-import android.media.SoundPool;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -266,7 +264,7 @@ public class MLVoiceCallActivity extends MLCallActivity {
         // 振动反馈
         vibrate();
         // 结束通话时取消通话状态监听
-        MLHyphenate.getInstance().removeCallStateChangeListener();
+        MLHyphenate.getInstance().removeCallStateListener();
         // 拒绝通话后关闭通知铃音
         stopCallSound();
         try {
@@ -293,7 +291,7 @@ public class MLVoiceCallActivity extends MLCallActivity {
         // 振动反馈
         vibrate();
         // 结束通话时取消通话状态监听
-        MLHyphenate.getInstance().removeCallStateChangeListener();
+        MLHyphenate.getInstance().removeCallStateListener();
         // 结束通话后关闭通知铃音
         stopCallSound();
         try {
@@ -455,7 +453,7 @@ public class MLVoiceCallActivity extends MLCallActivity {
                 // 通话结束保存消息
                 saveCallMessage();
                 // 结束通话时取消通话状态监听
-                MLHyphenate.getInstance().removeCallStateChangeListener();
+                MLHyphenate.getInstance().removeCallStateListener();
                 // 结束通话关闭界面
                 onFinish();
                 break;

@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import net.melove.app.chat.R;
-import net.melove.app.chat.application.eventbus.MLContactsEvent;
 import net.melove.app.chat.database.MLContactsDao;
+import net.melove.app.chat.event.MLContactsEvent;
 import net.melove.app.chat.ui.MLBaseFragment;
 
 import org.greenrobot.eventbus.Subscribe;

@@ -4,7 +4,6 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.media.AudioManager;
-import android.media.SoundPool;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -18,7 +17,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hyphenate.chat.EMCallManager;
-import com.hyphenate.chat.EMCallOptions;
 import com.hyphenate.chat.EMCallStateChangeListener;
 import com.hyphenate.chat.EMCallStateChangeListener.CallError;
 import com.hyphenate.chat.EMCallStateChangeListener.CallState;
@@ -452,7 +450,7 @@ public class MLVideoCallActivity extends MLCallActivity {
         // 通话结束，重置通话状态
         MLCallStatus.getInstance().reset();
         // 结束通话时取消通话状态监听
-        MLHyphenate.getInstance().removeCallStateChangeListener();
+        MLHyphenate.getInstance().removeCallStateListener();
         // 拒绝通话后关闭通知铃音
         stopCallSound();
         try {
@@ -479,7 +477,7 @@ public class MLVideoCallActivity extends MLCallActivity {
         // 通话结束，重置通话状态
         MLCallStatus.getInstance().reset();
         // 结束通话时取消通话状态监听
-        MLHyphenate.getInstance().removeCallStateChangeListener();
+        MLHyphenate.getInstance().removeCallStateListener();
         // 结束通话后关闭通知铃音
         stopCallSound();
         try {
@@ -669,7 +667,7 @@ public class MLVideoCallActivity extends MLCallActivity {
                 // 通话结束保存消息
                 saveCallMessage();
                 // 结束通话时取消通话状态监听
-                MLHyphenate.getInstance().removeCallStateChangeListener();
+                MLHyphenate.getInstance().removeCallStateListener();
                 // 结束通话关闭界面
                 onFinish();
                 break;

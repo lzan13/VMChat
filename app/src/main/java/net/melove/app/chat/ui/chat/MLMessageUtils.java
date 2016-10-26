@@ -78,7 +78,7 @@ public class MLMessageUtils {
      * @param cmdMessage 收到的透传消息，包含需要撤回的消息的 msgId
      * @return 返回撤回结果是否成功
      */
-    public static boolean receiveRecallMessage(Context context, EMMessage cmdMessage) {
+    public static boolean receiveRecallMessage(EMMessage cmdMessage) {
         boolean result = false;
         // 从cmd扩展中获取要撤回消息的id
         String msgId = cmdMessage.getStringAttribute(MLConstants.ML_ATTR_MSG_ID, null);

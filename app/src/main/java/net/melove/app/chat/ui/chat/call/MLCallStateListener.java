@@ -13,7 +13,7 @@ import org.greenrobot.eventbus.EventBus;
  * 通话状态监听类，用来监听通话过程中状态的变化
  */
 
-public class MLCallStateChangeListener implements EMCallStateChangeListener {
+public class MLCallStateListener implements EMCallStateChangeListener {
 
     @Override
     public void onCallStateChanged(CallState callState, CallError callError) {
@@ -62,7 +62,7 @@ public class MLCallStateChangeListener implements EMCallStateChangeListener {
                     MLLog.i("通话已结束，时长：%s，error %s", "10:35", callError);
                 }
                 // 结束通话时取消通话状态监听
-                MLHyphenate.getInstance().removeCallStateChangeListener();
+                MLHyphenate.getInstance().removeCallStateListener();
                 break;
             case NETWORK_UNSTABLE:
                 if (callError == EMCallStateChangeListener.CallError.ERROR_NO_DATA) {
