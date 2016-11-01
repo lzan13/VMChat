@@ -1,4 +1,4 @@
-package net.melove.app.chat.application;
+package net.melove.app.chat;
 
 /**
  * Created by lzan13 on 2015/9/10 22:04.

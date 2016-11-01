@@ -14,7 +14,7 @@ import com.hyphenate.exceptions.HyphenateException;
 
 import net.melove.app.chat.R;
 import net.melove.app.chat.ui.MLBaseActivity;
-import net.melove.app.chat.application.MLConstants;
+import net.melove.app.chat.MLConstants;
 import net.melove.app.chat.util.MLLog;
 import net.melove.app.chat.util.MLSPUtil;
 import net.melove.app.chat.ui.widget.MLToast;

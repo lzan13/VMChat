@@ -1,4 +1,4 @@
-package net.melove.app.chat.application;
+package net.melove.app.chat.module.receiver;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -16,7 +16,7 @@ import android.util.Log;
  * Create by lzan13 2016/6/6
  * Google GCM 推送信息接收处理实现类
  */
-public class MLGCMBroadCast extends BroadcastReceiver {
+public class MLGCMBroadcastReceiver extends BroadcastReceiver {
 
     @Override public void onReceive(Context context, Intent intent) {
         Log.i("info", "gcmpush onreceive");

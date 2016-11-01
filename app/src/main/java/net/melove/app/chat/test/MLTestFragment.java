@@ -21,8 +21,8 @@ import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.exceptions.HyphenateException;
 
 import net.melove.app.chat.R;
-import net.melove.app.chat.application.MLConstants;
-import net.melove.app.chat.application.MLHyphenate;
+import net.melove.app.chat.MLConstants;
+import net.melove.app.chat.MLHyphenate;
 import net.melove.app.chat.ui.MLBaseFragment;
 import net.melove.app.chat.util.MLDateUtil;
 import net.melove.app.chat.util.MLLog;
@@ -238,7 +238,7 @@ public class MLTestFragment extends MLBaseFragment {
                  * 创建群组
                  * @param groupName 群组名称
                  * @param desc 群组简介
-                 * @param allMembers 群组初始成员，如果只有自己传null即可
+                 * @param allMembers 群组初始成员，如果没有就传空数组，不能为 null
                  * @param reason 邀请成员加入的reason
                  * @param option 群组类型选项，可以设置群组最大用户数(默认200)及群组类型@see {@link EMGroupStyle}
                  *               option里的GroupStyle分别为：

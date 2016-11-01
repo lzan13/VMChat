@@ -39,10 +39,10 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 
 import net.melove.app.chat.R;
-import net.melove.app.chat.event.MLMessageEvent;
-import net.melove.app.chat.event.MLRefreshEvent;
+import net.melove.app.chat.module.event.MLMessageEvent;
+import net.melove.app.chat.module.event.MLRefreshEvent;
 import net.melove.app.chat.ui.MLBaseActivity;
-import net.melove.app.chat.application.MLConstants;
+import net.melove.app.chat.MLConstants;
 import net.melove.app.chat.util.MLDateUtil;
 import net.melove.app.chat.util.MLFileUtil;
 import net.melove.app.chat.ui.widget.MLRecordView;
@@ -51,7 +51,7 @@ import net.melove.app.chat.ui.widget.MLToast;
 import net.melove.app.chat.ui.chat.call.MLCallStatus;
 import net.melove.app.chat.ui.chat.call.MLVideoCallActivity;
 import net.melove.app.chat.ui.chat.call.MLVoiceCallActivity;
-import net.melove.app.chat.notification.MLNotifier;
+import net.melove.app.chat.module.notification.MLNotifier;
 import net.melove.app.chat.util.MLLog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -1492,7 +1492,9 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
 
     /**
      * --------------------------------- Message Listener -------------------------------------
-     * 环信消息监听主要方法 <p> 收到新消息
+     * 环信消息监听主要方法
+     *
+     * 收到新消息
      *
      * @param list 收到的新消息集合
      */
@@ -1608,5 +1610,4 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         int position = mConversation.getMessagePosition(message);
         postRefreshEvent(position, 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);
     }
-    /*-------------------------------------- 消息监听 end ---------------------------------------*/
 }

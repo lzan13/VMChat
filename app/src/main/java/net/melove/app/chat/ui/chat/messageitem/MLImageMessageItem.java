@@ -15,8 +15,8 @@ import com.hyphenate.chat.EMImageMessageBody;
 import com.hyphenate.chat.EMMessage;
 
 import net.melove.app.chat.R;
-import net.melove.app.chat.application.MLConstants;
-import net.melove.app.chat.event.MLMessageEvent;
+import net.melove.app.chat.MLConstants;
+import net.melove.app.chat.module.event.MLMessageEvent;
 import net.melove.app.chat.util.MLBitmapUtil;
 import net.melove.app.chat.util.MLDateUtil;
 import net.melove.app.chat.util.MLDimenUtil;

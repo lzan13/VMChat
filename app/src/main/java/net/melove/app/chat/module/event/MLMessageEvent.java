@@ -1,4 +1,4 @@
-package net.melove.app.chat.event;
+package net.melove.app.chat.module.event;
 
 import com.hyphenate.chat.EMMessage;
 

@@ -9,7 +9,7 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 
-import net.melove.app.chat.application.MLConstants;
+import net.melove.app.chat.MLConstants;
 import net.melove.app.chat.ui.chat.messageitem.MLCallMessageItem;
 import net.melove.app.chat.ui.chat.messageitem.MLFileMessageItem;
 import net.melove.app.chat.ui.chat.messageitem.MLImageMessageItem;
@@ -164,6 +164,7 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
         case MLConstants.MSG_TYPE_VOICE_RECEIVED:
             holder = new MessageViewHolder(new MLVoiceMessageItem(mContext, this, viewType));
             break;
+
         /**
          * 自定义类型的消息
          */

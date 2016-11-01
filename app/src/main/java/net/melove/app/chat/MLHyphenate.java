@@ -1,4 +1,4 @@
-package net.melove.app.chat.application;
+package net.melove.app.chat;
 
 import android.app.ActivityManager;
 import android.content.Context;
@@ -8,14 +8,15 @@ import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMOptions;
 
+import net.melove.app.chat.module.listener.MLConnectionListener;
 import net.melove.app.chat.ui.MLBaseActivity;
-import net.melove.app.chat.ui.chat.MLMessageListener;
-import net.melove.app.chat.ui.chat.call.MLCallStateListener;
-import net.melove.app.chat.ui.contacts.MLContactsListener;
-import net.melove.app.chat.ui.group.MLGroupListener;
+import net.melove.app.chat.module.listener.MLMessageListener;
+import net.melove.app.chat.module.listener.MLCallStateListener;
+import net.melove.app.chat.module.listener.MLContactsListener;
+import net.melove.app.chat.module.listener.MLGroupListener;
 import net.melove.app.chat.util.MLLog;
 import net.melove.app.chat.ui.chat.call.MLCallReceiver;
-import net.melove.app.chat.database.MLDBHelper;
+import net.melove.app.chat.module.database.MLDBHelper;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -130,7 +131,7 @@ public class MLHyphenate {
         // 是否启动 DNS 信息配置
         options.enableDNSConfig(true);
         // 设置Appkey，如果配置文件已经配置，这里可以不用设置
-        //        options.setAppKey("lzan13#hxsdkdemo");
+        options.setAppKey("yangqianguan#yqgtest");
         // 设置自动登录
         options.setAutoLogin(true);
         // 设置是否按照服务器时间排序，false按照本地时间排序
@@ -151,7 +152,7 @@ public class MLHyphenate {
         options.allowChatroomOwnerLeave(true);
 
         // 设置google GCM推送id，国内可以不用设置
-        // options.setGCMNumber(MLConstants.ML_GCM_NUMBER);
+        options.setGCMNumber(MLConstants.ML_GCM_NUMBER);
 
         // 设置集成小米推送的appid和appkey
         options.setMipushConfig(MLConstants.ML_MI_APP_ID, MLConstants.ML_MI_APP_KEY);

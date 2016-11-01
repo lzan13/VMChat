@@ -1,4 +1,4 @@
-package net.melove.app.chat.database;
+package net.melove.app.chat.module.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -7,7 +7,7 @@ import android.text.TextUtils;
 
 import com.hyphenate.util.HanziToPinyin;
 
-import net.melove.app.chat.application.MLApplication;
+import net.melove.app.chat.MLApplication;
 import net.melove.app.chat.ui.contacts.MLContacterEntity;
 
 import java.util.ArrayList;

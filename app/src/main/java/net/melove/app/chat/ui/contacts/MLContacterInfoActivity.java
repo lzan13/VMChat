@@ -20,17 +20,17 @@ import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.exceptions.HyphenateException;
 
 import net.melove.app.chat.R;
-import net.melove.app.chat.event.MLApplyForEvent;
-import net.melove.app.chat.event.MLConnectionEvent;
+import net.melove.app.chat.module.event.MLApplyForEvent;
+import net.melove.app.chat.module.event.MLConnectionEvent;
 import net.melove.app.chat.ui.MLBaseActivity;
-import net.melove.app.chat.application.MLConstants;
+import net.melove.app.chat.MLConstants;
 import net.melove.app.chat.util.MLDateUtil;
 import net.melove.app.chat.ui.widget.MLImageView;
 import net.melove.app.chat.ui.widget.MLToast;
 import net.melove.app.chat.ui.chat.MLChatActivity;
-import net.melove.app.chat.database.MLContactsDao;
+import net.melove.app.chat.module.database.MLContactsDao;
 import net.melove.app.chat.util.MLLog;
-import net.melove.app.chat.notification.MLNotifier;
+import net.melove.app.chat.module.notification.MLNotifier;
 
 import org.greenrobot.eventbus.EventBus;
 

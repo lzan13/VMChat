@@ -69,9 +69,10 @@
         android:protectionLevel="signature"/>
     <uses-permission android:name="net.melove.app.chat.permission.MIPUSH_RECEIVE"/>
     <!-- GCM permission end -->
+
     <!-- 程序的入口 -->
     <application
-        android:name=".application.MLApplication"
+        android:name=".MLApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/ml_app_name"
@@ -188,7 +189,7 @@
             android:name="com.hyphenate.chat.EMChatService"
             android:exported="true"
             android:process=":MLChat"/>
-        <!-- 声明sdk所需的receiver -->
+        <!-- 声明 SDK 所需的receiver -->
         <receiver android:name="com.hyphenate.chat.EMMonitorReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_REMOVED"/>
@@ -203,9 +204,35 @@
         </receiver>
         <!-- 环信sdk配置 end -->
 
-        <!--华为推送 start-->
-        <!-- 第三方相关 :接收Push消息（注册、Push消息、Push连接状态、标签，LBS上报结果）广播 -->
-        <receiver android:name="net.melove.app.chat.application.MLHWPushReceiver">
+        <!--GCM 推送配置-->
+        <receiver
+            android:name="com.hyphenate.chat.EMGCMBroadcastReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+                <category android:name="net.melove.app.chat"/>
+            </intent-filter>
+        </receiver>
+        <!--接收 GCM 推送的本地 Service-->
+        <service
+            android:name="com.hyphenate.chat.EMGCMListenerService"
+            android:exported="false">
+        </service>
+        <!--自定义实现 GCM 推送信息接收处理类-->
+        <receiver
+            android:name=".module.receiver.MLGCMBroadcastReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.hyphenate.sdk.push"/>
+                <category android:name="net.melove.app.chat"/>
+            </intent-filter>
+        </receiver>
+        <!--GCM推送配置 end-->
+
+        <!--华为推送推送配置-->
+        <!-- 第三方相关, 接收Push消息（注册、Push消息、Push连接状态、标签，LBS上报结果）广播 -->
+        <receiver android:name=".module.receiver.MLHWPushReceiver">
             <intent-filter>
                 <!-- 必须,用于接收token-->
                 <action android:name="com.huawei.android.push.intent.REGISTRATION"/>
@@ -222,9 +249,7 @@
                 android:name="CS_cloud_ablitity"
                 android:value="successRateAnalytics"/>
         </receiver>
-
-        <!-- 备注：Push相关的android组件需要添加到业务的AndroidManifest.xml,
-        	 Push相关android组件运行在另外一个进程是为了防止Push服务异常而影响主业务 -->
+        <!-- 备注：Push相关的android组件需要添加到业务的AndroidManifest.xml, Push相关android组件运行在另外一个进程是为了防止Push服务异常而影响主业务 -->
         <!-- PushSDK:PushSDK接收外部请求事件入口 -->
         <receiver
             android:name="com.huawei.android.pushagent.PushEventReceiver"
@@ -260,7 +285,7 @@
         </service>
         <!--华为推送 end-->
 
-        <!-- 小米推送 start -->
+        <!-- 小米推送 -->
         <service
             android:name="com.xiaomi.mipush.sdk.PushMessageHandler"
             android:enabled="true"
@@ -282,9 +307,9 @@
                 <action android:name="com.xiaomi.mipush.ERROR"/>
             </intent-filter>
         </receiver>
-        <!-- 小米推送 end -->
+        <!--小米推送 end-->
 
-        <!--这里使用TalkingData进行统计-->
+        <!--这里使用TalkingData进行数据统计-->
         <meta-data
             android:name="TD_APP_ID"
             android:value="6227388DE1332BBBF47E55EB85290B58"/>

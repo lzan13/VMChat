@@ -24,8 +24,8 @@ import android.widget.TextView;
 import com.hyphenate.chat.EMClient;
 
 import net.melove.app.chat.R;
-import net.melove.app.chat.application.MLConstants;
-import net.melove.app.chat.event.MLConnectionEvent;
+import net.melove.app.chat.MLConstants;
+import net.melove.app.chat.module.event.MLConnectionEvent;
 import net.melove.app.chat.ui.sign.MLSigninActivity;
 import net.melove.app.chat.ui.MLBaseActivity;
 import net.melove.app.chat.util.MLSPUtil;

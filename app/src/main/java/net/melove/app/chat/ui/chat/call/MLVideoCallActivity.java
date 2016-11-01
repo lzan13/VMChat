@@ -29,8 +29,8 @@ import com.hyphenate.media.EMOppositeSurfaceView;
 import com.superrtc.sdk.VideoView;
 
 import net.melove.app.chat.R;
-import net.melove.app.chat.application.MLConstants;
-import net.melove.app.chat.application.MLHyphenate;
+import net.melove.app.chat.MLConstants;
+import net.melove.app.chat.MLHyphenate;
 import net.melove.app.chat.util.MLBitmapUtil;
 import net.melove.app.chat.util.MLDateUtil;
 import net.melove.app.chat.util.MLLog;

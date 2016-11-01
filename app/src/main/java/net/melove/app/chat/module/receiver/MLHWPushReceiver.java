@@ -1,4 +1,4 @@
-package net.melove.app.chat.application;
+package net.melove.app.chat.module.receiver;
 
 import android.app.NotificationManager;
 import android.content.Context;

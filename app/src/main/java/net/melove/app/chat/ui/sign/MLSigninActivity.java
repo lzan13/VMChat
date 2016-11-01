@@ -17,7 +17,7 @@ import net.melove.app.chat.R;
 import net.melove.app.chat.ui.MLBaseActivity;
 import net.melove.app.chat.ui.widget.MLToast;
 import net.melove.app.chat.ui.main.MLMainActivity;
-import net.melove.app.chat.application.MLConstants;
+import net.melove.app.chat.MLConstants;
 import net.melove.app.chat.util.MLLog;
 import net.melove.app.chat.util.MLSPUtil;
 

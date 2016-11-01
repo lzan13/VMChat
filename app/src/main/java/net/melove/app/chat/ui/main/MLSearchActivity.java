@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import net.melove.app.chat.R;
-import net.melove.app.chat.application.MLConstants;
+import net.melove.app.chat.MLConstants;
 import net.melove.app.chat.ui.MLBaseActivity;
 import net.melove.app.chat.ui.contacts.MLContacterInfoActivity;
 

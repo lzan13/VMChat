@@ -1,4 +1,4 @@
-package net.melove.app.chat.database;
+package net.melove.app.chat.module.database;
 
 import android.content.ContentValues;
 import android.content.Context;

@@ -1,4 +1,4 @@
-package net.melove.app.chat.ui.group;
+package net.melove.app.chat.module.listener;
 
 import com.hyphenate.EMGroupChangeListener;
 import com.hyphenate.chat.EMClient;

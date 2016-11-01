@@ -11,7 +11,7 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 
 import net.melove.app.chat.R;
-import net.melove.app.chat.application.MLConstants;
+import net.melove.app.chat.MLConstants;
 import net.melove.app.chat.util.MLDateUtil;
 import net.melove.app.chat.ui.widget.MLImageView;
 import net.melove.app.chat.ui.chat.MLChatActivity;

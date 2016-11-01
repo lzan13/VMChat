@@ -1,4 +1,4 @@
-package net.melove.app.chat.ui.chat;
+package net.melove.app.chat.module.listener;
 
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
@@ -6,10 +6,12 @@ import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import java.util.List;
-import net.melove.app.chat.application.MLConstants;
-import net.melove.app.chat.application.MLHyphenate;
-import net.melove.app.chat.event.MLMessageEvent;
-import net.melove.app.chat.notification.MLNotifier;
+import net.melove.app.chat.MLConstants;
+import net.melove.app.chat.MLHyphenate;
+import net.melove.app.chat.module.event.MLMessageEvent;
+import net.melove.app.chat.module.notification.MLNotifier;
+import net.melove.app.chat.ui.chat.MLConversationExtUtils;
+import net.melove.app.chat.ui.chat.MLMessageUtils;
 import org.greenrobot.eventbus.EventBus;
 
 /**

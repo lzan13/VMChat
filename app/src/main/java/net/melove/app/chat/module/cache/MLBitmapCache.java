@@ -1,4 +1,4 @@
-package net.melove.app.chat.communal.module;
+package net.melove.app.chat.module.cache;
 
 import android.graphics.Bitmap;
 import android.util.LruCache;

@@ -1,4 +1,4 @@
-package net.melove.app.chat.event;
+package net.melove.app.chat.module.event;
 
 /**
  * Created by lzan13 on 2016/5/30.

@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentActivity;
 
 import com.squareup.leakcanary.RefWatcher;
 
-import net.melove.app.chat.application.MLApplication;
+import net.melove.app.chat.MLApplication;
 import net.melove.app.chat.util.MLLog;
 
 /**

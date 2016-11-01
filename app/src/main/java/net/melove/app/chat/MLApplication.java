@@ -1,4 +1,4 @@
-package net.melove.app.chat.application;
+package net.melove.app.chat;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
@@ -23,9 +23,7 @@ public class MLApplication extends MultiDexApplication {
     // 内存溢出检测观察者
     private static RefWatcher watcher;
 
-
-    @Override
-    public void onCreate() {
+    @Override public void onCreate() {
         super.onCreate();
 
         context = this;
@@ -38,18 +36,20 @@ public class MLApplication extends MultiDexApplication {
 
         // 初始化 LeakCanary
         watcher = LeakCanary.install(this);
-
     }
 
     public static Context getContext() {
         return context;
     }
 
-
+    /**
+     * 获取内存泄露观察者
+     *
+     * @return 返回内存泄露观察者对象
+     */
     public static RefWatcher getRefWatcher() {
         return watcher;
     }
-
 
     /**
      * TalkingData 统计平台初始化
@@ -58,7 +58,8 @@ public class MLApplication extends MultiDexApplication {
         TCAgent.LOG_ON = true;
         String channel = "";
         try {
-            ApplicationInfo ai = this.getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
+            ApplicationInfo ai = this.getPackageManager()
+                    .getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
             channel = ai.metaData.getString("TD_CHANNEL_ID", "dev");
             MLLog.i("channel %s", channel);
         } catch (NullPointerException e) {
@@ -71,5 +72,4 @@ public class MLApplication extends MultiDexApplication {
         // 是否启用 TalkingData 的错误报告
         TCAgent.setReportUncaughtExceptions(true);
     }
-
 }

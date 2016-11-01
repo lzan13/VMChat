@@ -14,10 +14,10 @@ import android.view.MenuItem;
 import com.squareup.leakcanary.RefWatcher;
 
 import net.melove.app.chat.R;
-import net.melove.app.chat.application.MLApplication;
-import net.melove.app.chat.application.MLConstants;
-import net.melove.app.chat.application.MLHyphenate;
-import net.melove.app.chat.event.MLConnectionEvent;
+import net.melove.app.chat.MLApplication;
+import net.melove.app.chat.MLConstants;
+import net.melove.app.chat.MLHyphenate;
+import net.melove.app.chat.module.event.MLConnectionEvent;
 import net.melove.app.chat.util.MLLog;
 import net.melove.app.chat.ui.main.MLMainActivity;
 

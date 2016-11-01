@@ -15,8 +15,8 @@ import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 
 import net.melove.app.chat.R;
-import net.melove.app.chat.application.MLConstants;
-import net.melove.app.chat.event.MLApplyForEvent;
+import net.melove.app.chat.MLConstants;
+import net.melove.app.chat.module.event.MLApplyForEvent;
 import net.melove.app.chat.ui.MLBaseActivity;
 import net.melove.app.chat.ui.contacts.MLContacterInfoActivity;
 import net.melove.app.chat.ui.chat.MLConversationExtUtils;
@@ -42,7 +42,6 @@ public class MLApplyForActivity extends MLBaseActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_apply_for);
-
 
         initView();
         initToolbar();

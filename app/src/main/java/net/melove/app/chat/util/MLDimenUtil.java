@@ -9,7 +9,7 @@ import android.view.Display;
 import android.view.WindowManager;
 
 
-import net.melove.app.chat.application.MLApplication;
+import net.melove.app.chat.MLApplication;
 
 import java.lang.reflect.Method;
 

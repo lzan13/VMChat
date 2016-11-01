@@ -1,14 +1,12 @@
 package net.melove.app.chat.ui.chat;
 
-import android.content.Context;
-
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.util.PathUtil;
 
-import net.melove.app.chat.application.MLConstants;
+import net.melove.app.chat.MLConstants;
 import net.melove.app.chat.util.MLCryptoUtil;
 import net.melove.app.chat.util.MLDateUtil;
 import net.melove.app.chat.util.MLLog;

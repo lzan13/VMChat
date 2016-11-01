@@ -1,4 +1,4 @@
-package net.melove.app.chat.database;
+package net.melove.app.chat.module.database;
 
 /**
  * Created by lzan13 on 2015/7/24.

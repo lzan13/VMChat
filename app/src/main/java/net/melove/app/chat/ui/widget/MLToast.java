@@ -10,7 +10,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import net.melove.app.chat.application.MLApplication;
+import net.melove.app.chat.MLApplication;
 import net.melove.app.chat.R;
 import net.melove.app.chat.util.MLBitmapUtil;
 

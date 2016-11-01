@@ -1,10 +1,10 @@
-package net.melove.app.chat.database;
+package net.melove.app.chat.module.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import net.melove.app.chat.application.MLConstants;
+import net.melove.app.chat.MLConstants;
 import net.melove.app.chat.util.MLSPUtil;
 
 

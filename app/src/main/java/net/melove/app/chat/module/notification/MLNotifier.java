@@ -1,4 +1,4 @@
-package net.melove.app.chat.notification;
+package net.melove.app.chat.module.notification;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -11,8 +11,8 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 
 import net.melove.app.chat.R;
-import net.melove.app.chat.application.MLApplication;
-import net.melove.app.chat.application.MLConstants;
+import net.melove.app.chat.MLApplication;
+import net.melove.app.chat.MLConstants;
 import net.melove.app.chat.ui.chat.MLChatActivity;
 import net.melove.app.chat.ui.main.MLMainActivity;
 
