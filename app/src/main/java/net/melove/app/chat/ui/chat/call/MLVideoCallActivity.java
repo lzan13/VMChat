@@ -43,6 +43,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+/**
+ * Create by lzan13 2016/8/8
+ * 视频通话界面
+ */
 public class MLVideoCallActivity extends MLCallActivity {
 
     // 视频通话帮助类
@@ -54,12 +58,12 @@ public class MLVideoCallActivity extends MLCallActivity {
     private int surfaceViewState = 0;
 
     // 使用 ButterKnife 注解的方式获取控件
-    @BindView(R.id.ml_layout_call_control) View mControlLayout;
+    @BindView(R.id.ml_layout_control) View mControlLayout;
     @BindView(R.id.ml_layout_surface_container) RelativeLayout mSurfaceViewContainer;
     @BindView(R.id.ml_surface_view_local) EMLocalSurfaceView mLocalSurfaceView;
     @BindView(R.id.ml_surface_view_opposite) EMOppositeSurfaceView mOppositeSurfaceView;
 
-    @BindView(R.id.ml_img_call_background) ImageView mCallBackgroundView;
+    @BindView(R.id.ml_img_background) ImageView mCallBackgroundView;
     @BindView(R.id.ml_text_call_status) TextView mCallStatusView;
     @BindView(R.id.ml_btn_change_camera_switch) ImageButton mChangeCameraSwitch;
     @BindView(R.id.ml_btn_exit_full_screen) ImageButton mExitFullScreenBtn;
@@ -70,6 +74,17 @@ public class MLVideoCallActivity extends MLCallActivity {
     @BindView(R.id.ml_fab_reject_call) FloatingActionButton mRejectCallFab;
     @BindView(R.id.ml_fab_end_call) FloatingActionButton mEndCallFab;
     @BindView(R.id.ml_fab_answer_call) FloatingActionButton mAnswerCallFab;
+
+    // 显示通话信息部分
+    @BindView(R.id.ml_layout_call_info) View mCallInfoLayout;
+    @BindView(R.id.ml_text_resolution) TextView mResolutionView;
+    @BindView(R.id.ml_text_time_latency) TextView mTimeLatencyView;
+    @BindView(R.id.ml_text_frame_rate) TextView mFrameRateView;
+    @BindView(R.id.ml_text_lost_rate) TextView mLostRateView;
+    @BindView(R.id.ml_text_local_bitrate) TextView mLocalBitrateView;
+    @BindView(R.id.ml_text_remote_bitrate) TextView mRemoteBitrateView;
+
+    private boolean mMonitor = true;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -193,15 +208,16 @@ public class MLVideoCallActivity extends MLCallActivity {
      * 界面控件点击监听器
      */
     @OnClick({
-            R.id.ml_img_call_background, R.id.ml_layout_call_control, R.id.ml_surface_view_local,
+            R.id.ml_img_background, R.id.ml_layout_control, R.id.ml_surface_view_local,
             R.id.ml_surface_view_opposite, R.id.ml_btn_exit_full_screen,
             R.id.ml_btn_change_camera_switch, R.id.ml_btn_mic_switch, R.id.ml_btn_camera_switch,
-            R.id.ml_btn_speaker_switch, R.id.ml_btn_record_switch, R.id.ml_fab_reject_call,
-            R.id.ml_fab_end_call, R.id.ml_fab_answer_call
+            R.id.ml_btn_speaker_switch, R.id.ml_btn_record_switch, R.id.ml_btn_call_info,
+            R.id.ml_layout_call_info, R.id.ml_fab_reject_call, R.id.ml_fab_end_call,
+            R.id.ml_fab_answer_call
     }) void onClick(View v) {
         switch (v.getId()) {
-            case R.id.ml_layout_call_control:
-            case R.id.ml_img_call_background:
+            case R.id.ml_layout_control:
+            case R.id.ml_img_background:
                 onControlLayout();
                 break;
             case R.id.ml_surface_view_local:
@@ -242,6 +258,12 @@ public class MLVideoCallActivity extends MLCallActivity {
                 // 录制开关
                 recordCall();
                 break;
+            case R.id.ml_btn_call_info:
+                mCallInfoLayout.setVisibility(View.VISIBLE);
+                break;
+            case R.id.ml_layout_call_info:
+                mCallInfoLayout.setVisibility(View.GONE);
+                break;
             case R.id.ml_fab_reject_call:
                 // 拒绝接听通话
                 rejectCall();
@@ -272,57 +294,50 @@ public class MLVideoCallActivity extends MLCallActivity {
      * 改变通话界面大小显示
      */
     private void changeSurfaceViewSize() {
-        //RelativeLayout.LayoutParams localLayoutParams =
-        //        (RelativeLayout.LayoutParams) mLocalSurfaceView.getLayoutParams();
-        //RelativeLayout.LayoutParams oppositeLayoutParams =
-        //        (RelativeLayout.LayoutParams) mOppositeSurfaceView.getLayoutParams();
-        //if (surfaceViewState == 1) {
-        //    surfaceViewState = 0;
-        //    localLayoutParams.width =
-        //            mActivity.getResources().getDimensionPixelSize(R.dimen.ml_dimen_128);
-        //    localLayoutParams.height =
-        //            mActivity.getResources().getDimensionPixelSize(R.dimen.ml_dimen_144);
-        //    localLayoutParams.setMargins(0,
-        //            mActivity.getResources().getDimensionPixelOffset(R.dimen.ml_dimen_128), 0, 0);
-        //
-        //    oppositeLayoutParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
-        //    oppositeLayoutParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
-        //
-        //    mLocalSurfaceView.setZOrderMediaOverlay(true);
-        //    mLocalSurfaceView.setZOrderOnTop(true);
-        //    mOppositeSurfaceView.setZOrderMediaOverlay(false);
-        //    mOppositeSurfaceView.setZOrderOnTop(false);
-        //    mSurfaceViewContainer.bringChildToFront(mLocalSurfaceLayout);
-        //} else {
-        //    surfaceViewState = 1;
-        //    localLayoutParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
-        //    localLayoutParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
-        //    oppositeLayoutParams.width =
-        //            mActivity.getResources().getDimensionPixelSize(R.dimen.ml_dimen_128);
-        //    oppositeLayoutParams.height =
-        //            mActivity.getResources().getDimensionPixelSize(R.dimen.ml_dimen_144);
-        //    oppositeLayoutParams.setMargins(0,
-        //            mActivity.getResources().getDimensionPixelOffset(R.dimen.ml_dimen_128), 0, 0);
-        //
-        //    mLocalSurfaceView.setZOrderMediaOverlay(false);
-        //    mLocalSurfaceView.setZOrderOnTop(false);
-        //    mOppositeSurfaceView.setZOrderMediaOverlay(true);
-        //    mOppositeSurfaceView.setZOrderOnTop(true);
-        //    mSurfaceViewContainer.bringChildToFront(mOppositeSurfaceLayout);
-        //}
-        //
-        //mLocalSurfaceView.setLayoutParams(localLayoutParams);
-        //mOppositeSurfaceView.setLayoutParams(oppositeLayoutParams);
-
+        RelativeLayout.LayoutParams localLayoutParams =
+                (RelativeLayout.LayoutParams) mLocalSurfaceView.getLayoutParams();
+        RelativeLayout.LayoutParams oppositeLayoutParams =
+                (RelativeLayout.LayoutParams) mOppositeSurfaceView.getLayoutParams();
         if (surfaceViewState == 1) {
-            mSurfaceViewContainer.removeView(mOppositeSurfaceView);
-            mSurfaceViewContainer.addView(mOppositeSurfaceView);
-            mOppositeSurfaceView.setVisibility(View.VISIBLE);
+            surfaceViewState = 0;
+            localLayoutParams.width =
+                    mActivity.getResources().getDimensionPixelSize(R.dimen.ml_call_small_width);
+            localLayoutParams.height =
+                    mActivity.getResources().getDimensionPixelSize(R.dimen.ml_call_small_height);
+            localLayoutParams.setMargins(0,
+                    mActivity.getResources().getDimensionPixelOffset(R.dimen.ml_call_small_width),
+                    0, 0);
+
+            oppositeLayoutParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+            oppositeLayoutParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
+            oppositeLayoutParams.setMargins(0, 0, 0, 0);
+
+            mLocalSurfaceView.setZOrderMediaOverlay(true);
+            mLocalSurfaceView.setZOrderOnTop(true);
+            mOppositeSurfaceView.setZOrderMediaOverlay(false);
+            mOppositeSurfaceView.setZOrderOnTop(false);
         } else {
-            mSurfaceViewContainer.removeView(mLocalSurfaceView);
-            mSurfaceViewContainer.addView(mLocalSurfaceView);
-            mLocalSurfaceView.setVisibility(View.VISIBLE);
+            surfaceViewState = 1;
+            localLayoutParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+            localLayoutParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
+            localLayoutParams.setMargins(0, 0, 0, 0);
+
+            oppositeLayoutParams.width =
+                    mActivity.getResources().getDimensionPixelSize(R.dimen.ml_call_small_width);
+            oppositeLayoutParams.height =
+                    mActivity.getResources().getDimensionPixelSize(R.dimen.ml_call_small_height);
+            oppositeLayoutParams.setMargins(0,
+                    mActivity.getResources().getDimensionPixelOffset(R.dimen.ml_call_small_width),
+                    0, 0);
+
+            mLocalSurfaceView.setZOrderMediaOverlay(false);
+            mLocalSurfaceView.setZOrderOnTop(false);
+            mOppositeSurfaceView.setZOrderMediaOverlay(true);
+            mOppositeSurfaceView.setZOrderOnTop(true);
         }
+
+        mLocalSurfaceView.setLayoutParams(localLayoutParams);
+        mOppositeSurfaceView.setLayoutParams(oppositeLayoutParams);
     }
 
     /**
@@ -331,9 +346,10 @@ public class MLVideoCallActivity extends MLCallActivity {
     private void exitFullScreen() {
         // 振动反馈
         vibrate();
+        MLToast.makeToast("暂不支持视频通话最小化").show();
         // 让应用回到桌面
         //        mActivity.moveTaskToBack(true);
-        mActivity.finish();
+        //mActivity.finish();
     }
 
     /**
@@ -529,9 +545,10 @@ public class MLVideoCallActivity extends MLCallActivity {
 
         RelativeLayout.LayoutParams lp =
                 (RelativeLayout.LayoutParams) mLocalSurfaceView.getLayoutParams();
-        lp.width = mActivity.getResources().getDimensionPixelSize(R.dimen.ml_dimen_128);
-        lp.height = mActivity.getResources().getDimensionPixelSize(R.dimen.ml_dimen_144);
-        lp.setMargins(0, mActivity.getResources().getDimensionPixelOffset(R.dimen.ml_dimen_128), 0,
+        lp.width = mActivity.getResources().getDimensionPixelSize(R.dimen.ml_call_small_width);
+        lp.height = mActivity.getResources().getDimensionPixelSize(R.dimen.ml_call_small_height);
+        lp.setMargins(0,
+                mActivity.getResources().getDimensionPixelOffset(R.dimen.ml_call_small_width), 0,
                 0);
         mLocalSurfaceView.setLayoutParams(lp);
     }
@@ -580,17 +597,6 @@ public class MLVideoCallActivity extends MLCallActivity {
     @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(MLCallEvent event) {
         CallError callError = event.getCallError();
         CallState callState = event.getCallState();
-        MLLog.d("video call \n"
-                        + "local bit:%d \n"
-                        + "remote bit: %d \n"
-                        + "width: %d \n"
-                        + "height: %d \n"
-                        + "latency: %d \n"
-                        + "frame rate: %d \n"
-                        + "lost rate: %d \n", mVideoCallHelper.getLocalBitrate(),
-                mVideoCallHelper.getRemoteBitrate(), mVideoCallHelper.getVideoWidth(),
-                mVideoCallHelper.getVideoHeight(), mVideoCallHelper.getVideoLatency(),
-                mVideoCallHelper.getVideoFrameRate(), mVideoCallHelper.getVideoLostRate());
 
         switch (callState) {
             case CONNECTING: // 正在呼叫对方
@@ -610,10 +616,11 @@ public class MLVideoCallActivity extends MLCallActivity {
                 mCallStatus = MLConstants.ML_CALL_ACCEPTED;
                 // 通话接通，处理下SurfaceView的显示
                 surfaceViewProcessor();
-
                 // 开始计时
                 mChronometer.setBase(SystemClock.elapsedRealtime());
                 mChronometer.start();
+                // 开始获取并更新通话信息
+                startCallInofMonitor();
                 break;
             case DISCONNECTED: // 通话已中断
                 MLLog.i("通话已结束" + callError);
@@ -706,9 +713,46 @@ public class MLVideoCallActivity extends MLCallActivity {
     }
 
     /**
+     * 开始更新通话信息的获取与显示
+     */
+    private void startCallInofMonitor() {
+        new Thread(new Runnable() {
+            @Override public void run() {
+                while (mMonitor) {
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            mResolutionView.setText(mVideoCallHelper.getVideoWidth()
+                                    + " x "
+                                    + mVideoCallHelper.getVideoHeight()
+                                    + " px");
+                            mTimeLatencyView.setText(mVideoCallHelper.getVideoLatency() + " ms");
+                            mFrameRateView.setText(mVideoCallHelper.getVideoFrameRate() + " fps");
+                            mLostRateView.setText(mVideoCallHelper.getVideoLostRate() + "%");
+                            mLocalBitrateView.setText(mVideoCallHelper.getLocalBitrate() + " KB");
+                            mRemoteBitrateView.setText(mVideoCallHelper.getRemoteBitrate() + " KB");
+                        }
+                    });
+                    try {
+                        Thread.sleep(1500);
+                    } catch (InterruptedException e) {
+                    }
+                }
+            }
+        }, "MLCallMonitor").start();
+    }
+
+    /**
+     * 停止更新通话信息的获取与显示
+     */
+    private void stopCallInfoMonitor() {
+        mMonitor = false;
+    }
+
+    /**
      * 结束通话时关闭界面
      */
     @Override protected void onFinish() {
+        stopCallInfoMonitor();
         // 结束通话要把 SurfaceView 释放 重置为 null
         mLocalSurfaceView = null;
         mOppositeSurfaceView = null;

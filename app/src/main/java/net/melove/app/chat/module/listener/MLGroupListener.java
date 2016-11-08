@@ -16,12 +16,11 @@ public class MLGroupListener implements EMGroupChangeListener {
      *
      * @param groupId 要加入的群的id
      * @param groupName 要加入的群的名称
-     * @param inviter 邀请者
+     * @param username 邀请者
      * @param reason 邀请理由
      */
-    @Override public void onInvitationReceived(String groupId, String groupName, String inviter,
+    @Override public void onInvitationReceived(String groupId, String groupName, String username,
             String reason) {
-        EMGroup group = EMClient.getInstance().groupManager().getGroup(groupId);
     }
 
     /**
@@ -29,10 +28,10 @@ public class MLGroupListener implements EMGroupChangeListener {
      *
      * @param groupId 要加入的群的id
      * @param groupName 要加入的群的名称
-     * @param applyer 申请人的username
+     * @param username 申请人的username
      * @param reason 申请加入的reason
      */
-    @Override public void onApplicationReceived(String groupId, String groupName, String applyer,
+    @Override public void onApplicationReceived(String groupId, String groupName, String username,
             String reason) {
         MLLog.i("onApplicationAccept groupId:%s, groupName:%, reason:%s", groupId, groupName,
                 reason);
@@ -43,11 +42,11 @@ public class MLGroupListener implements EMGroupChangeListener {
      *
      * @param groupId 申请加入的群组id
      * @param groupName 申请加入的群组名称
-     * @param accepter 同意申请的用户名（一般就是群主）
+     * @param username 同意申请的用户名（一般就是群主）
      */
-    @Override public void onApplicationAccept(String groupId, String groupName, String accepter) {
+    @Override public void onApplicationAccept(String groupId, String groupName, String username) {
         MLLog.i("onApplicationAccept groupId:%s, groupName:%, accepter:%s", groupId, groupName,
-                accepter);
+                username);
     }
 
     /**
@@ -55,12 +54,12 @@ public class MLGroupListener implements EMGroupChangeListener {
      *
      * @param groupId 申请加入的群组id
      * @param groupName 申请加入的群组名称
-     * @param decliner 拒绝者的用户名（一般就是群主）
+     * @param username 拒绝者的用户名（一般就是群主）
      * @param reason 拒绝理由
      */
-    @Override public void onApplicationDeclined(String groupId, String groupName, String decliner,
+    @Override public void onApplicationDeclined(String groupId, String groupName, String username,
             String reason) {
-        MLLog.i("onApplicationDeclined groupId:%s, decliner:%, sreason:%s", groupId, decliner,
+        MLLog.i("onApplicationDeclined groupId:%s, decliner:%, sreason:%s", groupId, username,
                 reason);
     }
 
@@ -68,22 +67,24 @@ public class MLGroupListener implements EMGroupChangeListener {
      * 对方接受群组邀请
      *
      * @param groupId 邀请对方加入的群组
-     * @param invitee 被邀请者
+     * @param username 被邀请者
      * @param reason 理由
      */
-    @Override public void onInvitationAccepted(String groupId, String invitee, String reason) {
-        MLLog.i("onInvitationAccepted groupId:%s, invitee:%, sreason:%s", groupId, invitee, reason);
+    @Override public void onInvitationAccepted(String groupId, String username, String reason) {
+        MLLog.i("onInvitationAccepted groupId:%s, invitee:%, sreason:%s", groupId, username,
+                reason);
     }
 
     /**
      * 对方拒绝群组邀请
      *
      * @param groupId 邀请对方加入的群组
-     * @param invitee 被邀请的人（拒绝群组邀请的人）
+     * @param username 被邀请的人（拒绝群组邀请的人）
      * @param reason 拒绝理由
      */
-    @Override public void onInvitationDeclined(String groupId, String invitee, String reason) {
-        MLLog.i("onInvitationDeclined groupId:%s, invitee:%, sreason:%s", groupId, invitee, reason);
+    @Override public void onInvitationDeclined(String groupId, String username, String reason) {
+        MLLog.i("onInvitationDeclined groupId:%s, invitee:%, sreason:%s", groupId, username,
+                reason);
     }
 
     /**
@@ -110,12 +111,12 @@ public class MLGroupListener implements EMGroupChangeListener {
      * 自动同意加入群组 sdk会先加入这个群组，并通过此回调通知应用
      *
      * @param groupId 收到邀请加入的群组id
-     * @param inviter 邀请者
+     * @param username 邀请者
      * @param inviteMessage 邀请信息
      */
-    @Override public void onAutoAcceptInvitationFromGroup(String groupId, String inviter,
+    @Override public void onAutoAcceptInvitationFromGroup(String groupId, String username,
             String inviteMessage) {
         MLLog.i("onAutoAcceptInvitationFromGroup groupId:%s, inviter:%s, inviteMessage:%s", groupId,
-                inviter, inviteMessage);
+                username, inviteMessage);
     }
 }

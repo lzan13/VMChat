@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.hyphenate.chat.EMClient;
@@ -18,7 +17,7 @@ import net.melove.app.chat.R;
 import net.melove.app.chat.MLConstants;
 import net.melove.app.chat.module.event.MLApplyForEvent;
 import net.melove.app.chat.ui.MLBaseActivity;
-import net.melove.app.chat.ui.contacts.MLContacterInfoActivity;
+import net.melove.app.chat.ui.contacts.MLUserActivity;
 import net.melove.app.chat.ui.chat.MLConversationExtUtils;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -32,37 +31,17 @@ public class MLApplyForActivity extends MLBaseActivity {
     // 当前会话对象，这里主要是记录申请与记录信息
     private EMConversation mConversation;
     // 每次加载申请与通知消息的条数
-    private int mPageSize = 30;
+    private int mPageSize = 20;
 
     private RecyclerView mRecyclerView;
     private MLApplyForAdapter mApplyForAdapter;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_apply_for);
+        setContentView(R.layout.activity_apply);
 
         initView();
-        initToolbar();
         initListView();
-
-    }
-
-    /**
-     * 初始化Toolbar组件
-     */
-    private void initToolbar() {
-        mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
-        mToolbar.setTitle(R.string.ml_apply_for);
-        setSupportActionBar(mToolbar);
-        mToolbar.setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onFinish();
-            }
-        });
     }
 
     /**
@@ -71,6 +50,14 @@ public class MLApplyForActivity extends MLBaseActivity {
     private void initView() {
         mActivity = this;
 
+        setSupportActionBar(getToolbar());
+        getToolbar().setTitle(R.string.ml_apply);
+        getToolbar().setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
+        getToolbar().setNavigationOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+                onFinish();
+            }
+        });
     }
 
     /**
@@ -84,7 +71,9 @@ public class MLApplyForActivity extends MLBaseActivity {
          * 第三个表示如果会话不存在是否创建
          * 因为申请与通知信息都是通过 EMConversation 保存的，所以这里也是通过 EMConversation 来获取
          */
-        mConversation = EMClient.getInstance().chatManager().getConversation(MLConstants.ML_CONVERSATION_ID_APPLY_FOR, null, true);
+        mConversation = EMClient.getInstance()
+                .chatManager()
+                .getConversation(MLConstants.ML_CONVERSATION_APPLY, null, true);
         // 设置当前会话未读数为 0
         mConversation.markAllMessagesAsRead();
         MLConversationExtUtils.setConversationUnread(mConversation, false);
@@ -98,7 +87,7 @@ public class MLApplyForActivity extends MLBaseActivity {
 
         // 实例化适配器
         mApplyForAdapter = new MLApplyForAdapter(mActivity);
-        mRecyclerView = (RecyclerView) findViewById(R.id.ml_recyclerview_invited);
+        mRecyclerView = (RecyclerView) findViewById(R.id.ml_recycler_view);
 
         /**
          * 为RecyclerView 设置布局管理器，这里使用线性布局
@@ -125,10 +114,6 @@ public class MLApplyForActivity extends MLBaseActivity {
      * 刷新邀请信息列表
      */
     private void refreshInvited() {
-        /**
-         * 更新数据源的数据
-         * 这里清空之后要使用 addAll() 的方式填充数据，不能直接 = ，否则Adapter的数据源将改变
-         */
         if (mApplyForAdapter != null) {
             mApplyForAdapter.notifyDataSetChanged();
         }
@@ -147,8 +132,7 @@ public class MLApplyForActivity extends MLBaseActivity {
              * @param position 需要操作的Item的位置
              * @param action   长按菜单需要处理的动作，
              */
-            @Override
-            public void onItemAction(int position, int action) {
+            @Override public void onItemAction(int position, int action) {
                 switch (action) {
                     case MLConstants.ML_ACTION_APPLY_FOR_CLICK:
                         jumpUserInfo(position);
@@ -175,8 +159,9 @@ public class MLApplyForActivity extends MLBaseActivity {
     private void jumpUserInfo(int position) {
         EMMessage message = mConversation.getAllMessages().get(position);
         Intent intent = new Intent();
-        intent.setClass(mActivity, MLContacterInfoActivity.class);
-        intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, message.getStringAttribute(MLConstants.ML_ATTR_USERNAME, "null"));
+        intent.setClass(mActivity, MLUserActivity.class);
+        intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID,
+                message.getStringAttribute(MLConstants.ML_ATTR_USERNAME, "null"));
         mActivity.startActivity(intent);
     }
 
@@ -188,23 +173,22 @@ public class MLApplyForActivity extends MLBaseActivity {
         dialog.setMessage(mActivity.getResources().getString(R.string.ml_dialog_message_waiting));
         dialog.show();
 
-//        final MLInvitedEntity invitedEntity = mInvitedList.get(position);
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    EMClient.getInstance().contactManager().acceptInvitation(invitedEntity.getUserName());
-//                    invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.AGREED);
-//                    invitedEntity.setTime(MLDateUtil.getCurrentMillisecond());
-//                    // 更新当前的申请信息
-//                    MLInvitedDao.getInstance().updateInvited(invitedEntity);
-//                    dialog.dismiss();
-//                } catch (HyphenateException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }).start();
-
+        //        final MLInvitedEntity invitedEntity = mInvitedList.get(position);
+        //        new Thread(new Runnable() {
+        //            @Override
+        //            public void run() {
+        //                try {
+        //                    EMClient.getInstance().contactManager().acceptInvitation(invitedEntity.getUserName());
+        //                    invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.AGREED);
+        //                    invitedEntity.setTime(MLDateUtil.getCurrentMillisecond());
+        //                    // 更新当前的申请信息
+        //                    MLInvitedDao.getInstance().updateInvited(invitedEntity);
+        //                    dialog.dismiss();
+        //                } catch (HyphenateException e) {
+        //                    e.printStackTrace();
+        //                }
+        //            }
+        //        }).start();
 
     }
 
@@ -237,17 +221,17 @@ public class MLApplyForActivity extends MLBaseActivity {
     private void deleteInvited(final int position) {
         final int index = position;
         AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
-        dialog.setTitle(mActivity.getResources().getString(R.string.ml_dialog_title_apply_for));
-        dialog.setMessage(mActivity.getResources().getString(R.string.ml_dialog_content_delete_invited));
+        dialog.setTitle(mActivity.getResources().getString(R.string.ml_dialog_title_apply));
+        dialog.setMessage(
+                mActivity.getResources().getString(R.string.ml_dialog_content_delete_invited));
         dialog.setPositiveButton(R.string.ml_btn_ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mConversation.removeMessage(mConversation.getAllMessages().get(position).getMsgId());
+            @Override public void onClick(DialogInterface dialog, int which) {
+                mConversation.removeMessage(
+                        mConversation.getAllMessages().get(position).getMsgId());
             }
         });
         dialog.setNegativeButton(R.string.ml_btn_cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+            @Override public void onClick(DialogInterface dialog, int which) {
 
             }
         });
@@ -256,19 +240,15 @@ public class MLApplyForActivity extends MLBaseActivity {
 
     /**
      * 使用 EventBus 的订阅方式监听事件的变化，这里 EventBus 3.x 使用注解的方式确定方法调用的线程
-     *
-     * @param event
      */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventBus(MLApplyForEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(MLApplyForEvent event) {
         refreshInvited();
     }
 
     /**
      * 重写父类的onResume方法， 在这里注册广播
      */
-    @Override
-    public void onResume() {
+    @Override public void onResume() {
         super.onResume();
         refreshInvited();
     }
@@ -276,13 +256,11 @@ public class MLApplyForActivity extends MLBaseActivity {
     /**
      * 重写父类的onStop方法，在这里边记得将注册的广播取消
      */
-    @Override
-    public void onStop() {
+    @Override public void onStop() {
         super.onStop();
     }
 
-    @Override
-    protected void onDestroy() {
+    @Override protected void onDestroy() {
         super.onDestroy();
     }
 }

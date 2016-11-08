@@ -8,12 +8,16 @@ import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMOptions;
 
+import java.util.HashMap;
+import java.util.Map;
+import net.melove.app.chat.module.database.MLUserDao;
 import net.melove.app.chat.module.listener.MLConnectionListener;
 import net.melove.app.chat.ui.MLBaseActivity;
 import net.melove.app.chat.module.listener.MLMessageListener;
 import net.melove.app.chat.module.listener.MLCallStateListener;
 import net.melove.app.chat.module.listener.MLContactsListener;
 import net.melove.app.chat.module.listener.MLGroupListener;
+import net.melove.app.chat.ui.contacts.MLUserEntity;
 import net.melove.app.chat.util.MLLog;
 import net.melove.app.chat.ui.chat.call.MLCallReceiver;
 import net.melove.app.chat.module.database.MLDBHelper;
@@ -37,6 +41,8 @@ public class MLHyphenate {
     // 保存当前运行的 activity 对象，可用来判断程序是否处于前台，以及完全退出app等操作
     private List<MLBaseActivity> mActivityList = new ArrayList<MLBaseActivity>();
 
+    private Map<String, MLUserEntity> userMap = new HashMap<String, MLUserEntity>();
+
     // 记录sdk是否初始化
     private boolean isInit;
 
@@ -44,7 +50,6 @@ public class MLHyphenate {
     private MLCallReceiver mCallReceiver = null;
     // 通话状态监听
     private MLCallStateListener callStateListener;
-
     // 环信连接监听
     private MLConnectionListener mConnectionListener;
     // 环信的消息监听器
@@ -55,7 +60,7 @@ public class MLHyphenate {
     private MLGroupListener mGroupChangeListener;
 
     // 表示是是否解绑Token，一般离线状态都要设置为false
-    public boolean unbuildToken = true;
+    public boolean unBuildToken = true;
 
     /**
      * 单例类，用来初始化环信的sdk
@@ -104,13 +109,11 @@ public class MLHyphenate {
         // 调用初始化方法初始化sdk
         EMClient.getInstance().init(mContext, initOptions());
 
-        // 设置视频通话比特率 默认是(150)
-        EMClient.getInstance().callManager().getCallOptions().setVideoKbps(800);
-        // 设置视频通话分辨率 默认是(320, 240)
-        EMClient.getInstance().callManager().getCallOptions().setVideoResolution(640, 480);
-
         // 设置开启debug模式
         EMClient.getInstance().setDebugMode(true);
+
+        // 初始化通话相关设置
+        initCallOptions();
 
         // 初始化全局监听
         initGlobalListener();
@@ -119,6 +122,18 @@ public class MLHyphenate {
         isInit = true;
         MLLog.d("SDK init end =====");
         return isInit;
+    }
+
+    /**
+     * SDK 3.2.0 版本通话相关设置
+     */
+    private void initCallOptions() {
+        // 设置视频通话比特率 默认是(150)
+        EMClient.getInstance().callManager().getCallOptions().setVideoKbps(800);
+        // 设置视频通话分辨率 默认是(320, 240)
+        EMClient.getInstance().callManager().getCallOptions().setVideoResolution(640, 480);
+        // 设置通话过程中对方如果离线是否发送离线推送通知
+        EMClient.getInstance().callManager().getCallOptions().setIsSendPushIfOffline(false);
     }
 
     private EMOptions initOptions() {
@@ -131,7 +146,7 @@ public class MLHyphenate {
         // 是否启动 DNS 信息配置
         options.enableDNSConfig(true);
         // 设置Appkey，如果配置文件已经配置，这里可以不用设置
-        options.setAppKey("yangqianguan#yqgtest");
+        //options.setAppKey("ysx#jingdiandaodu");
         // 设置自动登录
         options.setAutoLogin(true);
         // 设置是否按照服务器时间排序，false按照本地时间排序
@@ -244,8 +259,10 @@ public class MLHyphenate {
      * 详细实现见{@link MLContactsListener}
      */
     private void registerContactListener() {
-
-        mContactListener = new MLContactsListener();
+        if (mContactListener == null) {
+            mContactListener = new MLContactsListener(mContext);
+        }
+        // 设置联系人变化监听
         EMClient.getInstance().contactManager().setContactListener(mContactListener);
     }
 
@@ -273,16 +290,16 @@ public class MLHyphenate {
          * boolean 第一个是必须的，表示要解绑Token，如果离线状态这个参数要设置为false
          * callback 可选参数，用来接收推出的登录的结果
          */
-        EMClient.getInstance().logout(unbuildToken, new EMCallBack() {
+        EMClient.getInstance().logout(unBuildToken, new EMCallBack() {
             @Override public void onSuccess() {
-                unbuildToken = true;
+                unBuildToken = true;
                 if (callback != null) {
                     callback.onSuccess();
                 }
             }
 
             @Override public void onError(int i, String s) {
-                unbuildToken = true;
+                unBuildToken = true;
                 if (callback != null) {
                     callback.onError(i, s);
                 }
@@ -374,5 +391,65 @@ public class MLHyphenate {
         if (mActivityList.contains(activity)) {
             mActivityList.remove(activity);
         }
+    }
+
+    /**
+     * 保存联系人列表
+     */
+    public void saveUserList(List<MLUserEntity> list) {
+        MLUserDao.getInstance().saveUserList(list);
+    }
+
+    /**
+     * 获取用户列表，这里为了省去每次都去数据库读取，将联系人保存在内存的一个集合中
+     *
+     * @return 返回用户列表
+     */
+    public Map<String, MLUserEntity> getUserList() {
+        if (userMap.isEmpty()) {
+            userMap = MLUserDao.getInstance().getUserList();
+        }
+        return userMap;
+    }
+
+    /**
+     * 根据用户名获取用户对象
+     *
+     * @param username 需要获取的用户名
+     * @return 返回获取到的用户对象
+     */
+    public MLUserEntity getUser(String username) {
+        MLUserEntity userEntity = null;
+        if (!userMap.isEmpty()) {
+            userEntity = userMap.get(username);
+        }
+        if (userEntity == null) {
+            userEntity = MLUserDao.getInstance().getUser(username);
+        }
+        return userEntity;
+    }
+
+    /**
+     * 保存用户
+     *
+     * @param userEntity 需要保存的用户对象
+     */
+    public void saveUser(MLUserEntity userEntity) {
+        if (userMap != null) {
+            userMap.put(userEntity.getUserName(), userEntity);
+        }
+        MLUserDao.getInstance().saveUser(userEntity);
+    }
+
+    /**
+     * 删除用户
+     *
+     * @param userEntity 要删除的用户对象
+     */
+    public void deleteUser(MLUserEntity userEntity) {
+        if (userMap != null) {
+            userMap.remove(userEntity);
+        }
+        MLUserDao.getInstance().deleteUser(userEntity.getUserName());
     }
 }

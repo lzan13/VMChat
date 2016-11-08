@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
-    android:id="@+id/ml_layout_coordinator"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ml_layout_coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/ml_theme_background"
     android:fitsSystemWindows="true"
-    tools:context="net.melove.app.chat.ui.chat.MLChatActivity">
+    tools:context="net.melove.app.chat.ui.chat.MLChatActivity"
+    >
 
     <include layout="@layout/widget_toolbar_communal"/>
 
@@ -17,106 +18,115 @@
         android:layout_height="match_parent"
         android:animateLayoutChanges="true"
         android:clipChildren="false"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        >
 
         <ImageView
-            android:id="@+id/ml_img_chat_bg"
+            android:id="@+id/ml_img_background"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@mipmap/bg_chat"/>
+            android:src="@mipmap/bg_chat"
+            />
 
         <LinearLayout
-            android:id="@+id/ml_layout_chat_input"
+            android:id="@+id/ml_layout_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:animateLayoutChanges="true"
             android:background="@color/ml_white_87"
             android:clipChildren="false"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            >
 
             <!--输入条布局-->
             <RelativeLayout
-                android:id="@+id/ml_layout_chat_input_top_bar"
+                android:id="@+id/ml_layout_input_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:animateLayoutChanges="true"
-                android:clipChildren="false">
+                android:clipChildren="false"
+                >
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:animateLayoutChanges="true"
                     android:clipChildren="false"
-                    android:minHeight="@dimen/ml_dimen_48">
+                    android:minHeight="@dimen/ml_dimen_48"
+                    >
 
-                    <!--发送按钮-->
                     <RelativeLayout
-                        android:id="@+id/ml_layout_chat_input_bar_right"
+                        android:id="@+id/ml_layout_input_right"
                         android:layout_width="@dimen/ml_dimen_48"
                         android:layout_height="@dimen/ml_dimen_48"
                         android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true">
+                        android:layout_centerVertical="true"
+                        >
 
                         <!--语音按钮-->
                         <ImageButton
-                            android:id="@+id/ml_img_chat_voice"
+                            android:id="@+id/ml_img_voice"
                             android:layout_width="@dimen/ml_dimen_48"
                             android:layout_height="@dimen/ml_dimen_48"
                             android:layout_centerInParent="true"
                             android:background="@drawable/ml_click_rectangle_white"
                             android:src="@mipmap/ic_keyboard_voice_white_24dp"
                             android:tint="@color/ml_red_87"
-                            android:visibility="gone"/>
+                            android:visibility="gone"
+                            />
                         <!--发送按钮-->
                         <ImageButton
-                            android:id="@+id/ml_img_chat_send"
+                            android:id="@+id/ml_img_send"
                             android:layout_width="@dimen/ml_dimen_48"
                             android:layout_height="@dimen/ml_dimen_48"
                             android:layout_centerInParent="true"
                             android:background="@drawable/ml_click_rectangle_white"
                             android:src="@mipmap/ic_send_white_24dp"
                             android:tint="@color/ml_red_87"
-                            android:visibility="gone"/>
+                            android:visibility="gone"
+                            />
 
                     </RelativeLayout>
-                    <!--表情按钮-->
                     <RelativeLayout
-                        android:id="@+id/ml_layout_chat_input_bar_left"
+                        android:id="@+id/ml_layout_input_left"
                         android:layout_width="@dimen/ml_dimen_48"
                         android:layout_height="@dimen/ml_dimen_48"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
-                        android:animateLayoutChanges="true">
+                        android:animateLayoutChanges="true"
+                        >
 
                         <ImageButton
-                            android:id="@+id/ml_img_chat_emotion"
+                            android:id="@+id/ml_img_emotion"
                             android:layout_width="@dimen/ml_dimen_48"
                             android:layout_height="@dimen/ml_dimen_48"
                             android:layout_centerInParent="true"
                             android:background="@drawable/ml_click_rectangle_white"
                             android:src="@mipmap/ic_keyboard_face_white_24dp"
-                            android:tint="@color/ml_red_87"/>
+                            android:tint="@color/ml_red_87"
+                            />
 
                         <ImageButton
-                            android:id="@+id/ml_img_chat_keyboard"
+                            android:id="@+id/ml_img_keyboard"
                             android:layout_width="@dimen/ml_dimen_48"
                             android:layout_height="@dimen/ml_dimen_48"
                             android:layout_centerInParent="true"
                             android:background="@drawable/ml_click_rectangle_white"
                             android:src="@mipmap/ic_keyboard_white_24dp"
                             android:tint="@color/ml_red_87"
-                            android:visibility="gone"/>
+                            android:visibility="gone"
+                            />
                     </RelativeLayout>
                     <!--输入框-->
                     <EditText
-                        android:id="@+id/ml_edit_chat_input"
+                        android:id="@+id/ml_edit_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_toLeftOf="@id/ml_layout_chat_input_bar_right"
-                        android:layout_toRightOf="@id/ml_layout_chat_input_bar_left"
+                        android:layout_toLeftOf="@id/ml_layout_input_right"
+                        android:layout_toRightOf="@id/ml_layout_input_left"
                         android:background="@null"
                         android:hint="@string/ml_hint_chat"
                         android:maxLines="3"
@@ -124,12 +134,13 @@
                         android:paddingTop="@dimen/ml_dimen_8"
                         android:textColor="@color/ml_black_87"
                         android:textColorHint="@color/ml_black_38"
-                        android:textSize="@dimen/ml_size_16"/>
+                        android:textSize="@dimen/ml_size_16"
+                        />
                 </RelativeLayout>
 
                 <!--录音控件-->
                 <net.melove.app.chat.ui.widget.MLRecordView
-                    android:id="@+id/ml_view_chat_record_voice"
+                    android:id="@+id/ml_view_record_voice"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/ml_dimen_48"
                     android:layout_alignParentRight="true"
@@ -145,20 +156,23 @@
                     app:ml_record_touch_text="滑动取消"
                     app:ml_record_waveform_color="@color/ml_orange_87"
                     app:ml_record_waveform_interval="@dimen/ml_dimen_1"
-                    app:ml_record_waveform_width="@dimen/ml_dimen_2"/>
+                    app:ml_record_waveform_width="@dimen/ml_dimen_2"
+                    />
             </RelativeLayout>
 
             <!--聊天表情框-->
             <RelativeLayout
-                android:id="@+id/ml_layout_chat_input_emotion"
+                android:id="@+id/ml_layout_emotion"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/ml_dimen_224"
-                android:visibility="gone">
+                android:visibility="gone"
+                >
 
                 <GridView
-                    android:id="@+id/ml_gridview_caht_input_smilies"
+                    android:id="@+id/ml_grid_view_emotion"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    >
 
                 </GridView>
             </RelativeLayout>
@@ -167,55 +181,63 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/ml_layout_chat_input"
+            android:layout_above="@id/ml_layout_input"
             android:layout_alignParentTop="true"
-            android:clipChildren="true">
+            android:clipChildren="true"
+            >
             <!--官方下拉刷新控件-->
             <android.support.v4.widget.SwipeRefreshLayout
-                android:id="@+id/ml_widget_chat_refreshlayout"
+                android:id="@+id/ml_refresh_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                >
 
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/ml_recyclerview_message"
+                    android:id="@+id/ml_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:fadeScrollbars="true"
                     android:fadingEdge="none"
-                    android:scrollbars="vertical"/>
+                    android:scrollbars="vertical"
+                    />
             </android.support.v4.widget.SwipeRefreshLayout>
         </LinearLayout>
 
+        <!--显示有多少条新消息-->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@id/ml_layout_chat_input"
-            android:layout_alignParentRight="true">
+            android:layout_above="@id/ml_layout_input"
+            android:layout_alignParentRight="true"
+            >
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/ml_hint_msg_new"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                />
 
         </LinearLayout>
         <!--扩展菜单布局-->
         <LinearLayout
-            android:id="@+id/ml_layout_chat_attach_menu"
+            android:id="@+id/ml_layout_attach_menu"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/ml_black_54"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="gone"
+            >
 
             <GridView
-                android:id="@+id/ml_gridview_chat_attach_menu"
+                android:id="@+id/ml_grid_view_attach_menu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/ml_white_100"
                 android:numColumns="4"
                 android:paddingLeft="@dimen/ml_dimen_12"
-                android:paddingRight="@dimen/ml_dimen_12"/>
+                android:paddingRight="@dimen/ml_dimen_12"
+                />
 
         </LinearLayout>
     </RelativeLayout>

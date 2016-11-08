@@ -20,7 +20,7 @@ public class MLConnectionListener implements EMConnectionListener {
      */
     @Override public void onConnected() {
         MLLog.d("onConnected");
-        MLHyphenate.getInstance().unbuildToken = true;
+        MLHyphenate.getInstance().unBuildToken = true;
         // 设置链接监听变化状态
         MLConnectionEvent event = new MLConnectionEvent();
         event.setType(MLConstants.ML_CONNECTION_CONNECTED);
@@ -36,7 +36,7 @@ public class MLConnectionListener implements EMConnectionListener {
     @Override public void onDisconnected(final int errorCode) {
         MLLog.d("onDisconnected - %d", errorCode);
         // 在离线状态下，退出登录的时候需要设置为false，已经登录成功的状态要改为 false，这个在使用了推送功能时，调用logout需要传递
-        MLHyphenate.getInstance().unbuildToken = false;
+        MLHyphenate.getInstance().unBuildToken = false;
         MLConnectionEvent event = new MLConnectionEvent();
         if (errorCode == EMError.USER_LOGIN_ANOTHER_DEVICE) {
             MLLog.d("user login another device - " + errorCode);

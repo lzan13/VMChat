@@ -11,6 +11,9 @@
     <dimen name="navigation_header_vertical_spacing">16dp</dimen>
     <dimen name="navigation_header_horizontal_spacing">16dp</dimen>
 
+    <dimen name="ml_call_small_width">120dp</dimen>
+    <dimen name="ml_call_small_height">160dp</dimen>
+
     <!--默认公用的尺寸 自己定义-->
     <dimen name="ml_dimen_px_1">1px</dimen>
     <dimen name="ml_dimen_0">0dp</dimen>

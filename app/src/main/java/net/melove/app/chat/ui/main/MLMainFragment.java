@@ -79,7 +79,7 @@ public class MLMainFragment extends MLBaseFragment {
                 mActivity.getResources().getString(R.string.ml_test)
         };
 
-        mTabLayout = (TabLayout) getView().findViewById(R.id.ml_widget_tablayout);
+        mTabLayout = (TabLayout) getView().findViewById(R.id.ml_widget_tab_layout);
         mViewPager = (ViewPager) getView().findViewById(R.id.ml_view_viewpager);
 
         mMLContactsFragment = MLContactsFragment.newInstance();

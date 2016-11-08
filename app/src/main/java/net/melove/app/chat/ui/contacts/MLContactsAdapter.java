@@ -20,10 +20,10 @@ public class MLContactsAdapter extends RecyclerView.Adapter<MLContactsAdapter.Co
 
     private Context mContext;
     private LayoutInflater mInflater;
-    private List<MLContacterEntity> mContactsList;
+    private List<MLUserEntity> mContactsList;
 
 
-    public MLContactsAdapter(Context context, List<MLContacterEntity> list) {
+    public MLContactsAdapter(Context context, List<MLUserEntity> list) {
         mContext = context;
         mContactsList = list;
     }
@@ -40,7 +40,7 @@ public class MLContactsAdapter extends RecyclerView.Adapter<MLContactsAdapter.Co
 
     @Override
     public ContactsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = mInflater.inflate(R.layout.item_contacts, parent, false);
+        View itemView = mInflater.inflate(R.layout.item_user, parent, false);
         return new ContactsViewHolder(itemView);
     }
 
@@ -73,8 +73,8 @@ public class MLContactsAdapter extends RecyclerView.Adapter<MLContactsAdapter.Co
          */
         public ContactsViewHolder(View itemView) {
             super(itemView);
-            imageViewAvatar = (MLImageView) itemView.findViewById(R.id.ml_img_user_avatar);
-            textViewUsername = (TextView) itemView.findViewById(R.id.ml_text_user_signature);
+            imageViewAvatar = (MLImageView) itemView.findViewById(R.id.ml_img_avatar);
+            textViewUsername = (TextView) itemView.findViewById(R.id.ml_text_username);
 
         }
     }

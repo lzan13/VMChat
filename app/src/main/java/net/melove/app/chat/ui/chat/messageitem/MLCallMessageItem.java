@@ -120,11 +120,11 @@ public class MLCallMessageItem extends MLMessageItem {
         }
 
         bubbleLayout = findViewById(R.id.ml_layout_bubble);
-        avatarView = (MLImageView) findViewById(R.id.ml_img_msg_avatar);
-        contentView = (TextView) findViewById(R.id.ml_text_msg_content);
-        usernameView = (TextView) findViewById(R.id.ml_text_msg_username);
-        msgTimeView = (TextView) findViewById(R.id.ml_text_msg_time);
-        mCallIcon = (ImageView) findViewById(R.id.ml_img_msg_call);
+        avatarView = (MLImageView) findViewById(R.id.ml_img_avatar);
+        contentView = (TextView) findViewById(R.id.ml_text_content);
+        usernameView = (TextView) findViewById(R.id.ml_text_username);
+        msgTimeView = (TextView) findViewById(R.id.ml_text_time);
+        mCallIcon = (ImageView) findViewById(R.id.ml_img_call_icon);
     }
 
 }

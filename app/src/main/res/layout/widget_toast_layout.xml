@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clipChildren="false"
-                android:fitsSystemWindows="true">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:clipChildren="false"
+    android:fitsSystemWindows="true"
+    >
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -18,13 +19,15 @@
         android:gravity="center_vertical"
         android:minHeight="@dimen/ml_dimen_40"
         android:orientation="horizontal"
-        android:padding="@dimen/ml_dimen_8">
+        android:padding="@dimen/ml_dimen_8"
+        >
 
         <ImageView
             android:id="@+id/ml_img_toast_icon"
             android:layout_width="@dimen/ml_dimen_24"
             android:layout_height="@dimen/ml_dimen_24"
-            android:tint="@color/ml_theme_primary"/>
+            android:tint="@color/ml_theme_primary"
+            />
 
         <TextView
             android:id="@+id/ml_text_toast_text"
@@ -35,7 +38,8 @@
             android:gravity="center_vertical"
             android:text="@string/ml_app_name"
             android:textColor="@color/ml_black_87"
-            android:textSize="@dimen/ml_size_14"/>
+            android:textSize="@dimen/ml_size_14"
+            />
     </LinearLayout>
 
 </RelativeLayout>

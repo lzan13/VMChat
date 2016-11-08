@@ -1,6 +1,5 @@
 package net.melove.app.chat.ui.contacts;
 
-
 import android.content.BroadcastReceiver;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
@@ -9,9 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import net.melove.app.chat.MLHyphenate;
 import net.melove.app.chat.R;
-import net.melove.app.chat.module.database.MLContactsDao;
-import net.melove.app.chat.module.event.MLContactsEvent;
+import net.melove.app.chat.module.event.MLUserEvent;
 import net.melove.app.chat.ui.MLBaseFragment;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -32,7 +31,7 @@ public class MLContactsFragment extends MLBaseFragment {
     private MLContactsAdapter mContactsAdapter;
     private View mHeadView;
 
-    private List<MLContacterEntity> mContactsList = new ArrayList<MLContacterEntity>();
+    private List<MLUserEntity> mContactsList = new ArrayList<MLUserEntity>();
 
     // 应用内广播管理器，为了完全这里使用局域广播
     private LocalBroadcastManager mLocalBroadcastManager;
@@ -55,24 +54,20 @@ public class MLContactsFragment extends MLBaseFragment {
         // Required empty public constructor
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
+    @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_contacts, container, false);
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
+    @Override public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         initView();
-
     }
 
     /**
@@ -133,39 +128,35 @@ public class MLContactsFragment extends MLBaseFragment {
     }
 
     /**
-     * 加载联系人列表，TODO 后期需要实现排序
+     * 获取用户列表，TODO 后期需要实现排序
      *
-     * @return 返回加载的联系人集合
+     * @return 返回加载的用户集合
      */
-    private List<MLContacterEntity> loadUserList() {
+    private List<MLUserEntity> loadUserList() {
         // TODO 这里暂时只进行了简单的获取用户列表，后期需要实现排序
-        List<MLContacterEntity> list = MLContactsDao.getInstance().getContactList();
-        return list;
+        List<MLUserEntity> userList = new ArrayList<>();
+        userList.addAll(MLHyphenate.getInstance().getUserList().values());
+        return userList;
     }
 
     /**
      *
      */
     private View.OnClickListener viewListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
+        @Override public void onClick(View v) {
             switch (v.getId()) {
             }
         }
     };
 
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventBus(MLContactsEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(MLUserEvent event) {
         refreshContacts();
-
     }
 
     /**
      * 重写父类的onResume方法， 在这里注册广播
      */
-    @Override
-    public void onResume() {
+    @Override public void onResume() {
         super.onResume();
         // 刷新联系人界面
         refreshContacts();
@@ -174,8 +165,7 @@ public class MLContactsFragment extends MLBaseFragment {
     /**
      * 重写父类的onStop方法，在这里边记得将注册的广播取消
      */
-    @Override
-    public void onStop() {
+    @Override public void onStop() {
         super.onStop();
     }
 }

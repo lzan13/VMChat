@@ -14,7 +14,7 @@
 
     <!--通话界面背景-->
     <ImageView
-        android:id="@+id/ml_img_call_background"
+        android:id="@+id/ml_img_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"

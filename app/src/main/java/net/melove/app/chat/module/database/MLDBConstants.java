@@ -8,7 +8,7 @@ public class MLDBConstants {
 
     public static final String TB_INVITED = "invited";
     public static final String TB_GROUP = "group";
-    public static final String TB_CONTACTS = "contacts";
+    public static final String TB_USER = "contacts";
 
     // column name
     public static final String COL_USERNAME = "username";
@@ -37,7 +37,7 @@ public class MLDBConstants {
 
     /*创建联系人信息表*/
     public static final String SQL_CONTACTS = "create table if not exists '"
-            + TB_CONTACTS + "' ("
+            + TB_USER + "' ("
             + COL_USERNAME + " varchar(128) primary key, "
             + COL_NICKNAME + " varchar(128), "
             + COL_EMAIL + " varchar(128), "

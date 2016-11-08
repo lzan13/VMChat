@@ -3,11 +3,13 @@ package net.melove.app.chat.ui.sign;
 import android.app.ProgressDialog;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import com.hyphenate.EMError;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.exceptions.HyphenateException;
@@ -23,80 +25,58 @@ import net.melove.app.chat.ui.widget.MLToast;
  * Created by lzan13 on 2015/7/4.
  * 注册逻辑处理类
  */
-public class MLSignupActivity extends MLBaseActivity {
-    // Toolbar 控件
-    private Toolbar mToolbar;
+public class MLSignUpActivity extends MLBaseActivity {
+
     // 调用注册按钮时显示的进度对话框
     private ProgressDialog mDialog;
 
-    // 用户名和密码输入框
-    private EditText mUsernameView;
-    private EditText mPasswordView;
+    // 输入框
+    @BindView(R.id.ml_edit_username) EditText mUsernameView;
+    @BindView(R.id.ml_edit_password) EditText mPasswordView;
     // 用户名和密码
     private String mUsername;
     private String mPassword;
 
-    // 注册按钮
-    private View mSignupBtn;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        initView();
-        initToolbar();
+        mActivity = this;
 
+        ButterKnife.bind(mActivity);
+
+        initView();
     }
 
     /**
      * 界面ＵＩ初始化方法，一般是为了先通过 findViewById 实例化控件
      */
     private void initView() {
-        mActivity = this;
-
-        // 实例化控件
-        mUsernameView = (EditText) findViewById(R.id.ml_edit_sign_up_username);
-        mPasswordView = (EditText) findViewById(R.id.ml_edit_sign_up_password);
-
-        mSignupBtn = findViewById(R.id.ml_btn_sign_up);
-        mSignupBtn.setOnClickListener(viewListener);
-
+        setSupportActionBar(getToolbar());
+        getToolbar().setTitle(R.string.ml_sign_up);
+        getToolbar().setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
+        getToolbar().setNavigationOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                onFinish();
+            }
+        });
     }
 
-
-    /**
-     * 初始化Toolbar组件
-     */
-    private void initToolbar() {
-        mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
-
-        mToolbar.setTitle(R.string.ml_sign_up);
-        setSupportActionBar(mToolbar);
-        mToolbar.setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
-        mToolbar.setNavigationOnClickListener(viewListener);
-    }
-
-    private View.OnClickListener viewListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-            case -1:
+    @OnClick(R.id.ml_btn_sign_up) void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.ml_btn_sign_in:
                 onFinish();
                 break;
             case R.id.ml_btn_sign_up:
-                attemptSignup();
+                attemptSignUp();
                 break;
-            default:
-                break;
-            }
         }
-    };
+    }
 
     /**
      * 检测登陆，主要先判断是否满足登陆条件
      */
-    private void attemptSignup() {
+    private void attemptSignUp() {
 
         // 重置错误
         mUsernameView.setError(null);
@@ -125,27 +105,25 @@ public class MLSignupActivity extends MLBaseActivity {
         if (cancel) {
             focusView.requestFocus();
         } else {
-            signup();
+            signUp();
         }
     }
 
     /**
      * 注册方法
      */
-    private void signup() {
+    private void signUp() {
         final Resources res = mActivity.getResources();
         // 注册是耗时过程，所以要显示一个dialog来提示下用户
         mDialog = new ProgressDialog(mActivity);
         mDialog.setMessage(res.getString(R.string.ml_sign_up_begin));
         mDialog.show();
         new Thread(new Runnable() {
-            @Override
-            public void run() {
+            @Override public void run() {
                 try {
                     EMClient.getInstance().createAccount(mUsername, mPassword);
                     runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
+                        @Override public void run() {
                             if (!mActivity.isFinishing()) {
                                 mDialog.dismiss();
                             }
@@ -159,39 +137,40 @@ public class MLSignupActivity extends MLBaseActivity {
                 } catch (final HyphenateException e) {
                     e.printStackTrace();
                     runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
+                        @Override public void run() {
                             if (!mActivity.isFinishing()) {
                                 mDialog.dismiss();
                             }
                             int errorCode = e.getErrorCode();
-                            MLLog.d("MLSignupActivity - signup - errorCode:%d, errorMsg:%s", errorCode, e.getMessage());
+                            MLLog.d("MLSignUpActivity - signUp - errorCode:%d, errorMsg:%s",
+                                    errorCode, e.getMessage());
                             String error = "";
                             switch (errorCode) {
-                            // 网络错误
-                            case EMError.NETWORK_ERROR:
-                                error = res.getString(R.string.ml_error_network_error);
-                                break;
-                            // 用户已存在
-                            case EMError.USER_ALREADY_EXIST:
-                                error = res.getString(R.string.ml_error_user_already_exits);
-                                break;
-                            // 参数不合法，一般情况是username 使用了uuid导致，不能使用uuid注册
-                            case EMError.USER_ILLEGAL_ARGUMENT:
-                                error = res.getString(R.string.ml_error_user_illegal_argument);
-                                break;
-                            // 服务器未知错误
-                            case EMError.SERVER_UNKNOWN_ERROR:
-                                error = res.getString(R.string.ml_error_server_unknown_error);
-                                break;
-                            case EMError.USER_REG_FAILED:
-                                error = res.getString(R.string.ml_error_user_reg_failed);
-                                break;
-                            default:
-                                error = res.getString(R.string.ml_sign_up_failed);
-                                break;
+                                // 网络错误
+                                case EMError.NETWORK_ERROR:
+                                    error = res.getString(R.string.ml_error_network_error);
+                                    break;
+                                // 用户已存在
+                                case EMError.USER_ALREADY_EXIST:
+                                    error = res.getString(R.string.ml_error_user_already_exits);
+                                    break;
+                                // 参数不合法，一般情况是username 使用了uuid导致，不能使用uuid注册
+                                case EMError.USER_ILLEGAL_ARGUMENT:
+                                    error = res.getString(R.string.ml_error_user_illegal_argument);
+                                    break;
+                                // 服务器未知错误
+                                case EMError.SERVER_UNKNOWN_ERROR:
+                                    error = res.getString(R.string.ml_error_server_unknown_error);
+                                    break;
+                                case EMError.USER_REG_FAILED:
+                                    error = res.getString(R.string.ml_error_user_reg_failed);
+                                    break;
+                                default:
+                                    error = res.getString(R.string.ml_sign_up_failed);
+                                    break;
                             }
-                            MLToast.errorToast(error + "-" + errorCode + "-" + e.getMessage()).show();
+                            MLToast.errorToast(error + "-" + errorCode + "-" + e.getMessage())
+                                    .show();
                         }
                     });
                 } catch (Exception e) {
@@ -201,14 +180,11 @@ public class MLSignupActivity extends MLBaseActivity {
         }).start();
     }
 
-    @Override
-    protected void onDestroy() {
+    @Override protected void onDestroy() {
         super.onDestroy();
     }
 
-    @Override
-    protected void onResume() {
+    @Override protected void onResume() {
         super.onResume();
     }
-
 }

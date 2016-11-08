@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto"
-      xmlns:tools="http://schemas.android.com/tools"
-      tools:context=".MainActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
     <item
         android:id="@+id/ml_action_search"
         android:icon="@mipmap/ic_search_white_24dp"
@@ -15,10 +15,10 @@
         android:title="@string/ml_create_conversation"
         app:showAsAction="never"/>
     <item
-        android:id="@+id/ml_action_add_contacts"
+        android:id="@+id/ml_action_add_friend"
         android:icon="@mipmap/ic_add_contacts_white_24dp"
         android:orderInCategory="101"
-        android:title="@string/ml_add_contacts"
+        android:title="@string/ml_add_friend"
         app:showAsAction="never"/>
     <item
         android:id="@+id/ml_action_add_group"

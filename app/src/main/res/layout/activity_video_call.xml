@@ -14,7 +14,7 @@
 
     <!--界面背景-->
     <ImageView
-        android:id="@+id/ml_img_call_background"
+        android:id="@+id/ml_img_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
@@ -44,7 +44,7 @@
 
     <!--控制按钮层布局-->
     <RelativeLayout
-        android:id="@+id/ml_layout_call_control"
+        android:id="@+id/ml_layout_control"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
@@ -160,6 +160,15 @@
                     android:src="@drawable/ml_checkbox_record"
                     />
 
+                <!--通话信息-->
+                <ImageButton
+                    android:id="@+id/ml_btn_call_info"
+                    android:layout_width="@dimen/ml_dimen_48"
+                    android:layout_height="@dimen/ml_dimen_48"
+                    android:layout_margin="@dimen/ml_dimen_8"
+                    android:background="@drawable/ml_click_rectangle_white"
+                    android:src="@mipmap/ic_info_outline_white_24dp"
+                    />
             </LinearLayout>
 
             <LinearLayout
@@ -205,4 +214,165 @@
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
+    <TableLayout
+        android:id="@+id/ml_layout_call_info"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/ml_white_87"
+        android:gravity="center"
+        android:padding="@dimen/ml_dimen_16"
+        android:stretchColumns="0,1"
+        android:visibility="gone"
+        >
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/ml_dimen_48"
+                android:gravity="center_vertical"
+                android:text="分辨率"
+                android:textColor="@color/ml_black_54"
+                android:textSize="@dimen/ml_size_14"
+                />
+            <TextView
+                android:id="@+id/ml_text_resolution"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ml_app_name"
+                android:textColor="@color/ml_black_87"
+                android:textSize="@dimen/ml_size_14"
+                android:textStyle="bold"
+                />
+        </TableRow>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/ml_black_12"
+            />
+
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/ml_dimen_48"
+                android:gravity="center_vertical"
+                android:text="延时"
+                android:textColor="@color/ml_black_54"
+                android:textSize="@dimen/ml_size_14"
+                />
+            <TextView
+                android:id="@+id/ml_text_time_latency"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/ml_app_name"
+                android:textColor="@color/ml_black_87"
+                android:textSize="@dimen/ml_size_14"
+                android:textStyle="bold"
+                />
+        </TableRow>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/ml_black_38"
+            />
+
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/ml_dimen_48"
+                android:gravity="center_vertical"
+                android:text="帧率"
+                android:textColor="@color/ml_black_54"
+                android:textSize="@dimen/ml_size_14"
+                />
+            <TextView
+                android:id="@+id/ml_text_frame_rate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/ml_app_name"
+                android:textColor="@color/ml_black_87"
+                android:textSize="@dimen/ml_size_14"
+                android:textStyle="bold"
+                />
+        </TableRow>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/ml_black_12"
+            />
+
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/ml_dimen_48"
+                android:gravity="center_vertical"
+                android:text="丢失帧率"
+                android:textColor="@color/ml_black_54"
+                android:textSize="@dimen/ml_size_14"
+                />
+            <TextView
+                android:id="@+id/ml_text_lost_rate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ml_app_name"
+                android:textColor="@color/ml_black_87"
+                android:textSize="@dimen/ml_size_14"
+                android:textStyle="bold"
+                />
+        </TableRow>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/ml_black_12"
+            />
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/ml_dimen_48"
+                android:gravity="center_vertical"
+                android:text="本地比特率"
+                android:textColor="@color/ml_black_54"
+                android:textSize="@dimen/ml_size_14"
+                />
+            <TextView
+                android:id="@+id/ml_text_local_bitrate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ml_app_name"
+                android:textColor="@color/ml_black_87"
+                android:textSize="@dimen/ml_size_14"
+                android:textStyle="bold"
+                />
+        </TableRow>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/ml_black_12"
+            />
+
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/ml_dimen_48"
+                android:gravity="center_vertical"
+                android:text="对方比特率"
+                android:textColor="@color/ml_black_54"
+                android:textSize="@dimen/ml_size_14"
+                />
+            <TextView
+                android:id="@+id/ml_text_remote_bitrate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ml_app_name"
+                android:textColor="@color/ml_black_87"
+                android:textSize="@dimen/ml_size_14"
+                android:textStyle="bold"
+                />
+        </TableRow>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/ml_black_12"
+            />
+    </TableLayout>
 </android.support.design.widget.CoordinatorLayout>

@@ -79,7 +79,7 @@ public class MLTestFragment extends MLBaseFragment {
         String[] btns = {
                 "Sign out", "Import Message", "Insert Message", "Save Message", "Update Message",
                 "Send Group", "Get Group", "Create Group", "Send CMD", "Get ChatRoom",
-                "Get Contacts", "Customer"
+                "Get User", "Customer"
         };
         viewGroup = (MLViewGroup) getView().findViewById(R.id.ml_view_custom_viewgroup);
         for (int i = 0; i < btns.length; i++) {
@@ -128,7 +128,7 @@ public class MLTestFragment extends MLBaseFragment {
                     getChatRoom();
                     break;
                 case 110:
-                    testGetContacts();
+                    testGetUser();
                     break;
                 case 111:
                     testCustomer();
@@ -179,7 +179,7 @@ public class MLTestFragment extends MLBaseFragment {
     /**
      * 测试同步好友列表
      */
-    private void testGetContacts() {
+    private void testGetUser() {
         new Thread(new Runnable() {
             @Override public void run() {
                 List<String> contacts = new ArrayList<String>();
@@ -271,15 +271,27 @@ public class MLTestFragment extends MLBaseFragment {
      * 测试从服务器获取群详情
      */
     private void testGetGroup() {
+        //new Thread(new Runnable() {
+        //    @Override public void run() {
+        //        try {
+        //            // 这个操作会导致 so 请求群详情崩溃
+        //            EMGroup group = EMClient.getInstance()
+        //                    .groupManager()
+        //                    .getGroupFromServer("1476160492861");
+        //            MLLog.i("group: name %s, member count %d, members", group.getGroupName(),
+        //                    group.getMemberCount(), group.getMembers().toArray().toString());
+        //        } catch (HyphenateException e) {
+        //            e.printStackTrace();
+        //        }
+        //    }
+        //}).start();
+
         new Thread(new Runnable() {
             @Override public void run() {
                 try {
-                    // 这个操作会导致 so 请求群详情崩溃
-                    EMGroup group = EMClient.getInstance()
-                            .groupManager()
-                            .getGroupFromServer("1476160492861");
-                    MLLog.i("group: name %s, member count %d, members", group.getGroupName(),
-                            group.getMemberCount(), group.getMembers().toArray().toString());
+                    List<EMGroup> groups =
+                            EMClient.getInstance().groupManager().getJoinedGroupsFromServer();
+                    MLLog.i("groups count: %d", groups.size());
                 } catch (HyphenateException e) {
                     e.printStackTrace();
                 }

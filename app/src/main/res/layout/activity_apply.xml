@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/ml_theme_background"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    >
 
     <include layout="@layout/widget_toolbar_communal"/>
 
@@ -13,16 +14,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        >
 
-        <!--使用RecyclerView-->
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/ml_recyclerview_invited"
+        <!--官方下拉刷新控件-->
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/ml_refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbarStyle="outsideInset"
-            android:scrollbars="vertical"/>
+            >
 
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/ml_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fadeScrollbars="true"
+                android:fadingEdge="none"
+                android:scrollbarStyle="outsideInset"
+                android:scrollbars="vertical"
+                />
+        </android.support.v4.widget.SwipeRefreshLayout>
         <!--空数据时显示的布局-->
         <!--<RelativeLayout-->
         <!--android:id="@+id/ml_layout_empty"-->

@@ -254,13 +254,13 @@ public class MLVoiceMessageItem extends MLMessageItem {
         }
 
         bubbleLayout = findViewById(R.id.ml_layout_bubble);
-        avatarView = (MLImageView) findViewById(R.id.ml_img_msg_avatar);
-        usernameView = (TextView) findViewById(R.id.ml_text_msg_username);
-        msgTimeView = (TextView) findViewById(R.id.ml_text_msg_time);
-        resendView = (ImageView) findViewById(R.id.ml_img_msg_resend);
-        msgProgressBar = (ProgressBar) findViewById(R.id.ml_progressbar_msg);
+        avatarView = (MLImageView) findViewById(R.id.ml_img_avatar);
+        usernameView = (TextView) findViewById(R.id.ml_text_username);
+        msgTimeView = (TextView) findViewById(R.id.ml_text_time);
+        resendView = (ImageView) findViewById(R.id.ml_img_resend);
+        msgProgressBar = (ProgressBar) findViewById(R.id.ml_progress_bar);
         ackStatusView = (ImageView) findViewById(R.id.ml_img_msg_ack);
-        mWaveformView = (MLWaveformView) findViewById(R.id.ml_view_chat_waveform_voice);
+        mWaveformView = (MLWaveformView) findViewById(R.id.ml_view_waveform);
     }
 
     @Override protected void onAttachedToWindow() {

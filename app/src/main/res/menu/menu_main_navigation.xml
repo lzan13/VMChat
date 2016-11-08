@@ -16,7 +16,7 @@
         <item
             android:id="@+id/ml_nav_notification"
             android:icon="@mipmap/ic_notifications_white_24dp"
-            android:title="@string/ml_apply_for" />
+            android:title="@string/ml_apply" />
 
     </group>
     <item android:title="@string/ml_settings">

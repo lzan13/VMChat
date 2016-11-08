@@ -344,14 +344,14 @@ public class MLImageMessageItem extends MLMessageItem {
 
         // 通过 findViewById 实例化控件
         bubbleLayout = findViewById(R.id.ml_layout_bubble);
-        avatarView = (MLImageView) findViewById(R.id.ml_img_msg_avatar);
-        imageView = (MLImageView) findViewById(R.id.ml_img_msg_image);
-        usernameView = (TextView) findViewById(R.id.ml_text_msg_username);
-        msgTimeView = (TextView) findViewById(R.id.ml_text_msg_time);
-        resendView = (ImageView) findViewById(R.id.ml_img_msg_resend);
+        avatarView = (MLImageView) findViewById(R.id.ml_img_avatar);
+        imageView = (MLImageView) findViewById(R.id.ml_img_image);
+        usernameView = (TextView) findViewById(R.id.ml_text_username);
+        msgTimeView = (TextView) findViewById(R.id.ml_text_time);
+        resendView = (ImageView) findViewById(R.id.ml_img_resend);
         progressLayout = findViewById(R.id.ml_layout_progress);
-        msgProgressBar = (ProgressBar) findViewById(R.id.ml_progressbar_msg);
-        percentView = (TextView) findViewById(R.id.ml_text_msg_progress_percent);
+        msgProgressBar = (ProgressBar) findViewById(R.id.ml_progress_bar);
+        percentView = (TextView) findViewById(R.id.ml_text_progress_percent);
         ackStatusView = (ImageView) findViewById(R.id.ml_img_msg_ack);
     }
 

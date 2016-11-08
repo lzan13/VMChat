@@ -7,20 +7,23 @@
     android:animateLayoutChanges="true"
     android:background="@color/ml_black_100"
     android:clipToPadding="false"
-    android:fitsSystemWindows="false">
+    android:fitsSystemWindows="false"
+    >
 
     <com.bm.library.PhotoView
-        android:id="@+id/ml_img_big_image"
+        android:id="@+id/ml_img_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerInside"
-        android:src="@mipmap/bg_chat"/>
+        android:src="@mipmap/bg_chat"
+        />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="false"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        >
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/ml_widget_appbar"
@@ -28,7 +31,8 @@
             android:layout_height="@dimen/ml_dimen_56"
             android:background="@null"
             app:elevation="@dimen/ml_dimen_0"
-            app:theme="@style/MLTheme.AppBarOverlay">
+            app:theme="@style/MLTheme.AppBarOverlay"
+            >
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/ml_widget_toolbar"
@@ -38,8 +42,8 @@
                 android:minHeight="?attr/actionBarSize"
                 android:transitionName="@string/ml_shared_element_toolbar"
                 app:elevation="@dimen/ml_dimen_0"
-                app:theme="@style/MLTheme.ToolbarOverlay">
-
+                app:theme="@style/MLTheme.ToolbarOverlay"
+                >
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>
     </RelativeLayout>

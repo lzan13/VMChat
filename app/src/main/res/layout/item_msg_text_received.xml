@@ -1,36 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:melove="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/ml_dimen_8"
-                android:gravity="center_vertical">
+    xmlns:melove="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/ml_dimen_8"
+    android:gravity="center_vertical"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="left|bottom"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        >
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            >
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="bottom"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                >
                 <!--消息发送者头像-->
                 <net.melove.app.chat.ui.widget.MLImageView
-                    android:id="@+id/ml_img_msg_avatar"
+                    android:id="@+id/ml_img_avatar"
                     android:layout_width="@dimen/ml_dimen_40"
                     android:layout_height="@dimen/ml_dimen_40"
                     android:src="@mipmap/ic_character_blackcat"
                     melove:ml_border_color="@color/ml_white_87"
                     melove:ml_border_width="@dimen/ml_dimen_2"
-                    melove:ml_shape_type="round"/>
+                    melove:ml_shape_type="round"
+                    />
 
                 <LinearLayout
                     android:id="@+id/ml_layout_bubble"
@@ -41,17 +46,19 @@
                     android:orientation="vertical"
                     android:paddingLeft="@dimen/ml_dimen_12"
                     android:paddingRight="@dimen/ml_dimen_8"
-                    android:paddingTop="@dimen/ml_dimen_8">
+                    android:paddingTop="@dimen/ml_dimen_8"
+                    >
                     <!--消息内容-->
                     <TextView
-                        android:id="@+id/ml_text_msg_content"
+                        android:id="@+id/ml_text_content"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:maxWidth="@dimen/ml_dimen_256"
                         android:text="@string/ml_app_name"
                         android:textColor="@color/ml_black_87"
-                        android:textSize="@dimen/ml_size_14"/>
+                        android:textSize="@dimen/ml_size_14"
+                        />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -59,46 +66,52 @@
                         android:layout_gravity="right"
                         android:layout_marginBottom="@dimen/ml_dimen_2"
                         android:layout_marginTop="@dimen/ml_dimen_4"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        >
                         <!--消息发送者名称-->
                         <TextView
-                            android:id="@+id/ml_text_msg_username"
+                            android:id="@+id/ml_text_username"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="@dimen/ml_dimen_8"
                             android:text="@string/ml_hint_username"
                             android:textColor="@color/ml_black_54"
-                            android:textSize="@dimen/ml_size_8"/>
+                            android:textSize="@dimen/ml_size_8"
+                            />
                         <!--消息时间-->
                         <TextView
-                            android:id="@+id/ml_text_msg_time"
+                            android:id="@+id/ml_text_time"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/ml_hint_time"
                             android:textColor="@color/ml_black_54"
-                            android:textSize="@dimen/ml_size_8"/>
+                            android:textSize="@dimen/ml_size_8"
+                            />
                     </LinearLayout>
                 </LinearLayout>
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/ml_dimen_4">
+                    android:layout_marginRight="@dimen/ml_dimen_4"
+                    >
 
                     <!--消息发送进度圈-->
                     <ProgressBar
-                        android:id="@+id/ml_progressbar_msg"
+                        android:id="@+id/ml_progress_bar"
                         android:layout_width="@dimen/ml_dimen_24"
                         android:layout_height="@dimen/ml_dimen_24"
                         android:layout_centerInParent="true"
-                        android:visibility="gone"/>
+                        android:visibility="gone"
+                        />
                     <!--重发按钮-->
                     <ImageView
-                        android:id="@+id/ml_img_msg_resend"
+                        android:id="@+id/ml_img_resend"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@mipmap/ic_retry_normal"
-                        android:visibility="gone"/>
+                        android:visibility="gone"
+                        />
                     <!--消息ACK状态图标-->
                     <ImageView
                         android:id="@+id/ml_img_msg_ack"
@@ -106,7 +119,8 @@
                         android:layout_height="wrap_content"
                         android:src="@mipmap/ic_done_white_18dp"
                         android:tint="@color/ml_orange_100"
-                        android:visibility="gone"/>
+                        android:visibility="gone"
+                        />
                 </RelativeLayout>
             </LinearLayout>
         </LinearLayout>

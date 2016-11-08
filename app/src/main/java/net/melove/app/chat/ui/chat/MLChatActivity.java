@@ -176,17 +176,17 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 .get(MLConstants.ML_EXTRA_TYPE);
 
         // 初始化输入框控件，并添加输入框监听
-        mInputView = (EditText) findViewById(R.id.ml_edit_chat_input);
+        mInputView = (EditText) findViewById(R.id.ml_edit_input);
         mOldTime = 0;
         // 设置输入框的内容变化简体呢
         setEditTextWatcher();
 
         // 获取输入按钮控件对象
-        mEmotionView = findViewById(R.id.ml_img_chat_emotion);
-        mKeyboardView = findViewById(R.id.ml_img_chat_keyboard);
-        mEmotionLayout = (RelativeLayout) findViewById(R.id.ml_layout_chat_input_emotion);
-        mSendView = findViewById(R.id.ml_img_chat_send);
-        mRecordView = (MLRecordView) findViewById(R.id.ml_view_chat_record_voice);
+        mEmotionView = findViewById(R.id.ml_img_emotion);
+        mKeyboardView = findViewById(R.id.ml_img_keyboard);
+        mEmotionLayout = (RelativeLayout) findViewById(R.id.ml_layout_emotion);
+        mSendView = findViewById(R.id.ml_img_send);
+        mRecordView = (MLRecordView) findViewById(R.id.ml_view_record_voice);
         mRecordView.setRecordCallback(recordCallback);
 
         // 设置输入按钮控件的点击监听
@@ -195,7 +195,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         mSendView.setOnClickListener(viewListener);
 
         // 设置扩展菜单点击监听
-        mAttachMenuLayout = (LinearLayout) findViewById(R.id.ml_layout_chat_attach_menu);
+        mAttachMenuLayout = (LinearLayout) findViewById(R.id.ml_layout_attach_menu);
         // 菜单布局点击事件，主要是实现点击空白处关闭附件扩展菜单
         mAttachMenuLayout.setOnClickListener(viewListener);
     }
@@ -258,7 +258,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         // 设置 RecyclerView 显示状态固定到底部
         mLayoutManger.setStackFromEnd(true);
         // 初始化ListView控件对象
-        mRecyclerView = (RecyclerView) findViewById(R.id.ml_recyclerview_message);
+        mRecyclerView = (RecyclerView) findViewById(R.id.ml_recycler_view);
         // 实例化消息适配器
         mMessageAdapter = new MLMessageAdapter(mActivity, mChatId);
         mRecyclerView.setLayoutManager(mLayoutManger);
@@ -272,7 +272,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
 
     private void initSwipeRefreshLayout() {
         // 初始化下拉刷新控件对象
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.ml_widget_chat_refreshlayout);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.ml_refresh_layout);
         // 设置下拉刷新控件颜色
         mSwipeRefreshLayout.setColorSchemeResources(R.color.ml_red_100, R.color.ml_blue_100,
                 R.color.ml_orange_100);
@@ -306,7 +306,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      * 初始化附件菜单网格列表，并设置网格点击监听
      */
     private void initAttachMenuGridView() {
-        mAttachMenuGridView = (GridView) findViewById(R.id.ml_gridview_chat_attach_menu);
+        mAttachMenuGridView = (GridView) findViewById(R.id.ml_grid_view_attach_menu);
         int[] menuPhotos = {
                 R.mipmap.ic_attach_photo, R.mipmap.ic_attach_video, R.mipmap.ic_attach_file,
                 R.mipmap.ic_attach_location, R.mipmap.ic_attach_gift, R.mipmap.ic_attach_contacts
@@ -835,7 +835,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             case MLConstants.ML_REQUEST_CODE_GIFT:
                 // TODO 发送礼物
                 break;
-            case MLConstants.ML_REQUEST_CODE_CONTACTS:
+            case MLConstants.ML_REQUEST_CODE_USER:
                 // TODO 发送联系人名片
                 break;
             default:
@@ -853,20 +853,20 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                     // 结束当前Activity
                     onFinish();
                     break;
-                case R.id.ml_img_chat_emotion:
-                case R.id.ml_img_chat_keyboard:
+                case R.id.ml_img_emotion:
+                case R.id.ml_img_keyboard:
                     // 表情按钮
                     onEmotion();
                     break;
-                case R.id.ml_img_chat_send:
+                case R.id.ml_img_send:
                     // 发送按钮
                     sendTextMessage();
                     break;
-                case R.id.ml_img_chat_voice:
+                case R.id.ml_img_voice:
                     // 语音按钮
                     mInputView.setText(mActivity.getString(R.string.test_unicode_smiling));
                     break;
-                case R.id.ml_layout_chat_attach_menu:
+                case R.id.ml_layout_attach_menu:
                     // 附件菜单背景，点击空白处用来关闭菜单
                     onAttachMenu();
                     break;
@@ -1476,7 +1476,6 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
 
     @Override protected void onDestroy() {
         mActivity = null;
-        mToolbar = null;
         // 检测弹出框是否显示状态，如果是显示中则销毁，避免 activity 的销毁导致错误
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();

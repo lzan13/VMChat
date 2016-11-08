@@ -25,8 +25,6 @@ public class MLConstants {
      */
     // at(@)
     public static final String ML_ATTR_AT = "ml_attr_at";
-    // 是不是申请与通知类型
-    public static final String ML_ATTR_APPLY_FOR = "ml_attr_apply_for";
     // 阅后即焚
     public static final String ML_ATTR_BURN = "ml_attr_burn";
     // 视频通话扩展
@@ -79,7 +77,7 @@ public class MLConstants {
     public static final String ML_EXTRA_TYPE = "type";
 
     // 定义好友申请与通知的 Conversation Id
-    public static final String ML_CONVERSATION_ID_APPLY_FOR = "ml_conversation_id_apply_for";
+    public static final String ML_CONVERSATION_APPLY = "ml_conversation_apply";
 
     /**
      * 保存数据到 {@link android.content.SharedPreferences}的 key
@@ -128,7 +126,7 @@ public class MLConstants {
     public static final int ML_REQUEST_CODE_FILE = 0x04;
     public static final int ML_REQUEST_CODE_LOCATION = 0x05;
     public static final int ML_REQUEST_CODE_GIFT = 0x06;
-    public static final int ML_REQUEST_CODE_CONTACTS = 0x07;
+    public static final int ML_REQUEST_CODE_USER = 0x07;
 
     /**
      * 自定义聊天界面消息列表项的点击与长按 Action
@@ -147,16 +145,10 @@ public class MLConstants {
     public static final int ML_ACTION_APPLY_FOR_AGREE = 0X10;
     public static final int ML_ACTION_APPLY_FOR_REFUSE = 0X11;
     public static final int ML_ACTION_APPLY_FOR_DELETE = 0X12;
-    // 申请与请求的状态
-    public static final int ML_STATUS_AGREED = 0x00;         // 同意
-    public static final int ML_STATUS_REJECT = 0x01;        // 拒绝
-    public static final int ML_STATUS_BE_AGREED = 0x02;      // 对方同意
-    public static final int ML_STATUS_BE_REJECT = 0x03;     // 对方拒绝
-    public static final int ML_STATUS_APPLY_FOR = 0x04;      // 自己申请
-    public static final int ML_STATUS_BE_APPLY_FOR = 0x05;   // 对方申请
+
     // 申请与通知类型
-    public static final int ML_APPLY_FOR_CONTACTS = 0x00;   // 联系人申请
-    public static final int ML_APPLY_FOR_GROUP = 0x01;      // 群组申请
+    public static final int ML_APPLY_TYPE_USER = 0x00;   // 联系人申请
+    public static final int ML_APPLY_TYPE_GROUP = 0x01;      // 群组申请
 
     /**
      * RecyclerView Adapter 列表刷新类型

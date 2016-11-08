@@ -37,10 +37,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+/**
+ * Create by lzan13 2016/8/8
+ * 语音通话界面
+ */
 public class MLVoiceCallActivity extends MLCallActivity {
 
     // 使用 ButterKnife 注解的方式获取控件
-    @BindView(R.id.ml_img_call_background) ImageView mCallBackgroundView;
+    @BindView(R.id.ml_img_background) ImageView mCallBackgroundView;
     @BindView(R.id.ml_text_call_status) TextView mCallStatusView;
     @BindView(R.id.ml_img_call_avatar) MLImageView mAvatarView;
     @BindView(R.id.ml_text_call_username) TextView mUsernameView;

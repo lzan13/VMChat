@@ -33,10 +33,10 @@ import java.util.List;
  */
 public class MLBaseActivity extends AppCompatActivity {
 
-    protected String className = this.getClass().getSimpleName();
+    protected String mClassName = this.getClass().getSimpleName();
 
-    //
-    protected Toolbar mToolbar;
+    // Toolbar
+    private Toolbar mToolbar;
 
     // 当前界面的上下文菜单对象
     protected MLBaseActivity mActivity;
@@ -45,7 +45,7 @@ public class MLBaseActivity extends AppCompatActivity {
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MLLog.i("%s onCreate", className);
+        MLLog.i("%s onCreate", mClassName);
         mActivity = this;
     }
 
@@ -55,6 +55,18 @@ public class MLBaseActivity extends AppCompatActivity {
 
     @Override public boolean onCreateOptionsMenu(Menu menu) {
         return super.onCreateOptionsMenu(menu);
+    }
+
+    /**
+     * 父类封装 Toolbar
+     *
+     * @return 返回公用的 Toolbar 控件
+     */
+    public Toolbar getToolbar() {
+        if (mToolbar == null) {
+            mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
+        }
+        return mToolbar;
     }
 
     /**
@@ -170,26 +182,26 @@ public class MLBaseActivity extends AppCompatActivity {
     /**
      * 自定义返回方法
      */
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP) protected void onFinish() {
+    protected void onFinish() {
 
         mActivity.finish();
 
         // 根据不同的系统版本选择不同的 finish 方法
-        //        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-        //            mActivity.finish();
-        //        } else {
-        //            mActivity.finishAfterTransition();
-        //        }
+        //if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+        //    mActivity.finish();
+        //} else {
+        //    mActivity.finishAfterTransition();
+        //}
     }
 
     @Override protected void onRestart() {
         super.onRestart();
-        MLLog.i("%s onRestart", className);
+        MLLog.i("%s onRestart", mClassName);
     }
 
     @Override protected void onStart() {
         super.onStart();
-        MLLog.i("%s onStart", className);
+        MLLog.i("%s onStart", mClassName);
         // 将 activity 添加到集合中去
         MLHyphenate.getInstance().addActivity(mActivity);
         // 注册订阅者
@@ -198,17 +210,17 @@ public class MLBaseActivity extends AppCompatActivity {
 
     @Override protected void onResume() {
         super.onResume();
-        MLLog.i("%s onResume", className);
+        MLLog.i("%s onResume", mClassName);
     }
 
     @Override protected void onPause() {
         super.onPause();
-        MLLog.i("%s onPause", className);
+        MLLog.i("%s onPause", mClassName);
     }
 
     @Override protected void onStop() {
         super.onStop();
-        MLLog.i("%s onStop", className);
+        MLLog.i("%s onStop", mClassName);
         // 将 activity 从集合中移除
         MLHyphenate.getInstance().removeActivity(mActivity);
         // 取消订阅者的注册
@@ -217,7 +229,10 @@ public class MLBaseActivity extends AppCompatActivity {
 
     @Override protected void onDestroy() {
         super.onDestroy();
-        MLLog.i("%s onDestroy", className);
+        mActivity = null;
+        mToolbar = null;
+
+        MLLog.i("%s onDestroy", mClassName);
         // 用来检测内存泄漏
         RefWatcher refWatcher = MLApplication.getRefWatcher();
         refWatcher.watch(this);

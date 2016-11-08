@@ -1,25 +1,7 @@
 <resources>
     <string name="ml_app_name">MLChat</string>
     <string name="ml_test">Test</string>
-    <string name="ml_test_text">公司介绍\n\n
-        环信成立于2013年4月，是一家全通讯能力云服务提供商。产品包括全球最大的即时通讯云PaaS平台——环信即时通讯云，
-        以及全球首创的全媒体智能云客服平台—环信移动客服。\n\n\n
-        提供服务：\n
-        环信移动客服 — 全媒体智能云客服倡领者\n\n
-        环信移动客服是全球首创的全媒体智能云客服平台。支持全媒体接入，包括网页在线客服、社交媒体客服（微博、微信）
-        和移动端客服等多种渠道。基于环信业界领先的IM长连接技术保证消息必达，并通过独创的智能机器人技术极大降低人工客服工作量。\n\n
-        环信即时通讯云 — 全球最大的即时通讯云PaaS平台\n\n
-        环信即时通讯云是全球最大的即时通讯云PaaS平台。为开发者提供基于移动互联网的即时通讯能力，如单聊、群聊、
-        发语音、发图片、发位置、实时音频、实时视频等，让开发者摆脱繁重的移动IM通讯底层开发，24小时即可让App拥有内置IM能力。\n\n\n
-        融资情况：\n\n
-        环信目前一年时间已经完成了4轮融资。天使轮为经纬中国500万人民币、A轮为SIG 500万美元、A+轮为红杉资本300万美元，
-        B轮融资1250万美金，由红杉资本领投，经纬中国和SIG跟投。是即时通讯云领域上线早、融资快、资金最充裕的平台。\n\n\n
-        业绩规模：\n\n
-        环信即时通讯云于2014年6月上线，上线后快速发展，截至2015年上半年，环信的App注册用户23062万家，
-        环信SDK覆盖C端用户数2.51亿，环信平台日发送消息过亿条。作为国内起步最早、规模最大的即时通讯云平台，
-        在一年时间里环信即时通讯云在市场占有率、月活用户数、品牌认知度、用户满意度以及融资总额五个方面排名即时
-        通讯云行业第一。同时，环信的移动客服产品已经签约了4万家付费客服席位，典型用户包括国美在线、58到家、
-        楚楚街9块9等上百家互联网巨头企业客户。\n\n\n</string>
+    <string name="ml_test_text">hell test text</string>
 
 
     <!--登录与注册-->
@@ -44,33 +26,36 @@
 
     <!--Button 按钮相关-->
     <string name="ml_btn_ok">确定</string>
-    <string name="ml_btn_i_know">我知道了</string>
     <string name="ml_btn_cancel">取消</string>
+    <string name="ml_btn_i_know">我知道了</string>
     <string name="ml_btn_agree">同意</string>
     <string name="ml_btn_refuse">拒绝</string>
     <string name="ml_btn_reply">先聊聊</string>
     <string name="ml_btn_start_chat">开始聊天</string>
 
     <string name="ml_agreed">已同意</string>
-    <string name="ml_be_agreed">对方已同意</string>
-    <string name="ml_reject">已拒绝</string>
-    <string name="ml_be_reject">对方已拒绝</string>
-    <string name="ml_waiting_dispose">等待处理</string>
-    <string name="ml_waiting_respond">等待对方回应</string>
-    <string name="ml_add_contacts">添加联系人</string>
+    <string name="ml_be_agreed_user">对方已同意你的好友申请</string>
+    <string name="ml_be_agreed_group">对方已同意你的入群申请</string>
+    <string name="ml_be_agreed_group_invite">对方已同意你的入群邀请</string>
+    <string name="ml_reject_user">已拒绝</string>
+    <string name="ml_be_reject_user">对方已拒绝你的好友申请</string>
+    <string name="ml_be_reject_group">对方已拒绝你的入群申请</string>
+    <string name="ml_be_reject_group_invite">对方已拒绝你的入群邀请</string>
+
+    <string name="ml_add_friend">添加好友</string>
     <string name="ml_add_group">添加群组</string>
     <string name="ml_create_group">新建群组</string>
     <string name="ml_create_conversation">创建新会话</string>
-    <string name="ml_add_contact_reason">嗨！加个好友吧 ^_^~</string>
+    <string name="ml_add_friend_reason">嗨！交个朋友吧 ^_^~</string>
 
     <!--Dialog-->
     <string name="ml_dialog_title_conversation">操作会话</string>
-    <string name="ml_dialog_title_apply_for">操作申请与通知</string>
+    <string name="ml_dialog_title_apply">操作申请与通知</string>
     <string name="ml_dialog_title_message">操作消息</string>
     <string name="ml_dialog_title_conflict">账户登录冲突</string>
     <string name="ml_dialog_title_select_photo_mode">选择图片方式</string>
     <string name="ml_dialog_title_select_call_mode">选择通话方式</string>
-    <string name="ml_dialog_content_add_contact_reason">输入你的申请理由，让对方容易通过你的请求，也可以输入你的姓名，让对方知道你是谁，更容易通过请求</string>
+    <string name="ml_dialog_content_add_friend_reason">输入你的申请理由，让对方容易通过你的请求，也可以输入你的姓名，让对方知道你是谁，更容易通过请求</string>
     <string name="ml_dialog_content_create_conversation">演示环信不需要互为好友就能发起会话，只需要知道对方环信账户，即可跳转到聊天界面进行聊天，请输入对方的username</string>
     <string name="ml_dialog_content_delete_invited">确定要删除用户申请么</string>
     <string name="ml_dialog_message_waiting">正在处理，请稍候……</string>
@@ -84,7 +69,7 @@
     <string name="ml_call">通话</string>
     <string name="ml_voice_call">语音通话</string>
     <string name="ml_video_call">视频通话</string>
-    <string name="ml_apply_for">申请与通知</string>
+    <string name="ml_apply">申请与通知</string>
     <string name="ml_help">帮助</string>
     <string name="ml_search">搜索</string>
     <string name="ml_settings">设置</string>
@@ -242,8 +227,8 @@
     <string name="ml_error_chatroom_permission_denied">聊天室权限不够</string>
 
     <!--Toast 提示内容-->
-    <string name="ml_toast_add_contacts_success">发送好友请求成功，等待对方同意^_^</string>
-    <string name="ml_toast_add_contacts_failed">发送好友请求失败-_-||，稍后重试</string>
+    <string name="ml_toast_add_friend_success">发送好友请求成功，等待对方同意^_^</string>
+    <string name="ml_toast_add_friend_failed">发送好友请求失败-_-||，稍后重试</string>
     <string name="ml_toast_connected">已经连接到服务器</string>h
     <string name="ml_toast_content_copy_success">内容已复制</string>
     <string name="ml_toast_msg_send_faild">消息发送失败</string>
@@ -262,8 +247,8 @@
     <string name="ml_shared_element_toolbar">Toolbar</string>
 
     <!--输入框限制输入内容-->
-    <string name="ml_input_limit">0123456789abcdefghigklmnopqrstuvwxyz-_.</string>
-    <string name="ml_input_limit_full">0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIGKLMNOPQRSTUVWXYZ-_.</string>
+    <string name="ml_input_limit">0123456789abcdefghijklmnopqrstuvwxyz-_.</string>
+    <string name="ml_input_limit_full">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIGKLMNOPQRSTUVWXYZ-_.</string>
     <!--Copyright-->
     <string name="ml_copy_right">©2015 melove.net</string>
 

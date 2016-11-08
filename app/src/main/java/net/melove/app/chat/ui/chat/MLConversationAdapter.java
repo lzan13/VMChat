@@ -157,8 +157,8 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
         // 设置当前会话联系人名称
         if (conversation.getType() == EMConversation.EMConversationType.Chat) {
             // 这里有一些特殊的会话，因为是使用会话保存的申请与通知，处理下会话的标题
-            if (conversation.getUserName().equals(MLConstants.ML_CONVERSATION_ID_APPLY_FOR)) {
-                holder.titleView.setText(R.string.ml_apply_for);
+            if (conversation.getUserName().equals(MLConstants.ML_CONVERSATION_APPLY)) {
+                holder.titleView.setText(R.string.ml_apply);
             } else {
                 holder.titleView.setText(conversation.getUserName());
             }
@@ -284,12 +284,12 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
          */
         public ConversationViewHolder(View itemView) {
             super(itemView);
-            avatarView = (MLImageView) itemView.findViewById(R.id.ml_img_conversation_avatar);
-            titleView = (TextView) itemView.findViewById(R.id.ml_text_conversation_title);
-            contentView = (TextView) itemView.findViewById(R.id.ml_text_conversation_content);
-            timeView = (TextView) itemView.findViewById(R.id.ml_text_conversation_time);
-            pushpinView = (ImageView) itemView.findViewById(R.id.ml_img_conversation_pushpin);
-            countView = (TextView) itemView.findViewById(R.id.ml_text_conversation_count);
+            avatarView = (MLImageView) itemView.findViewById(R.id.ml_img_avatar);
+            titleView = (TextView) itemView.findViewById(R.id.ml_text_name);
+            contentView = (TextView) itemView.findViewById(R.id.ml_text_content);
+            timeView = (TextView) itemView.findViewById(R.id.ml_text_time);
+            pushpinView = (ImageView) itemView.findViewById(R.id.ml_img_pushpin);
+            countView = (TextView) itemView.findViewById(R.id.ml_text_unread_count);
         }
     }
 

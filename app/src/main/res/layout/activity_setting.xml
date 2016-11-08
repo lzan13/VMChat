@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ml_gray_38"
+    android:clipChildren="false"
+    android:fitsSystemWindows="true"
+    tools:context="net.melove.app.chat.ui.setting.MLSettingsActivity"
+    >
+    <include layout="@layout/widget_toolbar_communal"/>
+    <FrameLayout
+        android:id="@+id/ml_layout_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+    </FrameLayout>
+
+</android.support.design.widget.CoordinatorLayout>

@@ -1,25 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:melove="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/navigation_header_height">
+    xmlns:melove="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/navigation_header_height"
+    >
 
     <ImageView
-        android:id="@+id/ml_img_nav_top"
+        android:id="@+id/ml_img_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:src="@mipmap/bg_top"
-        android:tint="@color/ml_black_38"/>
+        android:tint="@color/ml_black_38"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="bottom"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
 
         <net.melove.app.chat.ui.widget.MLImageView
-            android:id="@+id/ml_img_nav_avatar"
+            android:id="@+id/ml_img_avatar"
             android:layout_width="@dimen/ml_dimen_56"
             android:layout_height="@dimen/ml_dimen_56"
             android:layout_marginLeft="@dimen/ml_dimen_16"
@@ -28,7 +31,8 @@
             melove:ml_border_color="@color/ml_white_87"
             melove:ml_border_width="@dimen/ml_dimen_2"
             melove:ml_dispatch_touch_event="false"
-            melove:ml_shape_type="round"/>
+            melove:ml_shape_type="round"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -36,24 +40,27 @@
             android:layout_marginBottom="@dimen/ml_dimen_8"
             android:gravity="center|left"
             android:orientation="vertical"
-            android:paddingLeft="@dimen/ml_dimen_16">
+            android:paddingLeft="@dimen/ml_dimen_16"
+            >
 
             <TextView
-                android:id="@+id/ml_text_nav_username"
+                android:id="@+id/ml_text_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="穿裤衩闯天下"
                 android:textColor="@color/ml_white_87"
                 android:textSize="@dimen/ml_size_14"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                />
 
             <TextView
-                android:id="@+id/ml_text_nav_email"
+                android:id="@+id/ml_text_signature"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="lzan13.gg@gmail.com"
                 android:textColor="@color/ml_white_87"
-                android:textSize="@dimen/ml_size_14"/>
+                android:textSize="@dimen/ml_size_14"
+                />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

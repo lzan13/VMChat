@@ -63,7 +63,7 @@ public class MLBigImageActivity extends MLBaseActivity {
     private void initView() {
         mActivity = this;
 
-        mPhotoView = (PhotoView) findViewById(R.id.ml_img_big_image);
+        mPhotoView = (PhotoView) findViewById(R.id.ml_img_image);
         // 启动图片缩放功能
         mPhotoView.enable();
 

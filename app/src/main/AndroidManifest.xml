@@ -98,13 +98,13 @@
         </activity>
         <!-- 登录界面 -->
         <activity
-            android:name=".ui.sign.MLSigninActivity"
+            android:name=".ui.sign.MLSignInActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Default"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
         <!-- 注册界面 -->
         <activity
-            android:name=".ui.sign.MLSignupActivity"
+            android:name=".ui.sign.MLSignUpActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Default"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
@@ -116,7 +116,7 @@
             android:windowSoftInputMode="adjustResize|stateHidden"/>
         <!-- 账户信息界面 -->
         <activity
-            android:name=".ui.contacts.MLContacterInfoActivity"
+            android:name=".ui.contacts.MLUserActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Default"/>
         <!-- 聊天界面 -->
@@ -149,6 +149,11 @@
             android:name=".ui.main.MLSearchActivity"
             android:theme="@style/MLTheme.Default"
             android:windowSoftInputMode="adjustResize|stateVisible"/>
+        <activity
+            android:name=".ui.setting.MLSettingsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MLTheme.Default"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
         <!-- 测试 Activity -->
         <activity
             android:name=".test.MLTestActivity"
