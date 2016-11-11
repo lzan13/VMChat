@@ -133,8 +133,8 @@
 # 环信 SDK 混淆代码，新版 sdk 添加了 superrtc 包，要加上 rtc  keep 代码
 -keep class com.hyphenate.** {*;}
 -keep class com.superrtc.** {*;}
-
 -dontwarn  com.hyphenate.**
+
 -keep class org.jivesoftware.** {*;}
 -keep class org.apache.** {*;}
 # 2.0.9后加入语音通话功能，如需使用此功能的api，加入以下keep

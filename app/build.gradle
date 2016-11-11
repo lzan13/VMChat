@@ -15,9 +15,7 @@ android {
     // 配置签名信息
     signingConfigs {
         // Debug 使用默认签名
-        debug {
-
-        }
+        debug {}
         // 发布时用自己的签名，这里因为是敏感信息，等下读取配置文件来设置
         release {
             storeFile
@@ -32,7 +30,7 @@ android {
     buildTypes {
         debug {
             // 给debug包的包名加上后缀
-//            applicationIdSuffix '.debug'
+            //            applicationIdSuffix '.debug'
             signingConfig signingConfigs.debug
         }
         release {
@@ -52,7 +50,9 @@ android {
                 variant.outputs.each { output ->
                     def oldFile = output.outputFile
                     if (variant.buildType.name.equals('release')) {
-                        def releaseApkName = "MLChat_v${defaultConfig.versionName}_${releaseTime()}_" + variant.productFlavors[0].name + '_release.apk'
+                        def releaseApkName = "MLChat_v${defaultConfig.versionName}_${releaseTime()}_" +
+                                variant.productFlavors[0].name +
+                                '_release.apk'
                         output.outputFile = new File(oldFile.parent, releaseApkName)
                     }
                 }
@@ -60,26 +60,24 @@ android {
         }
     }
     // 文件路径映射配置
-//    sourceSets {
-//        main {
-//            // 设置Jni so文件路径 如果有jniLibs目录就不需要设置
-//            jniLibs.srcDirs = ['libs']
-//        }
-//    }
+    //    sourceSets {
+    //        main {
+    //            // 设置Jni so文件路径 如果有jniLibs目录就不需要设置
+    //            jniLibs.srcDirs = ['libs']
+    //        }
+    //    }
 
     // 多渠道打包配置
     productFlavors {
         wandoujia {}
         xiaomi {}
     }
-    productFlavors.all {
-        flavor -> flavor.manifestPlaceholders = [ML_CHANNEL_ID: name]
+    productFlavors.all { flavor -> flavor.manifestPlaceholders = [ML_CHANNEL_ID: name]
     }
 }
 
 /**
- * 项目依赖，包含引入的第三方 SDK以及Android官方 Support 库
- */
+ * 项目依赖，包含引入的第三方 SDK以及Android官方 Support 库*/
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     // 引入 ButterKnife 库
@@ -87,8 +85,7 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.4.0'
     /**
      *  新的遵循 Android  Material design 设计风格库，此扩展库已经包含了support-v4,appcomat-v7,recyclerView扩展库，
-     *  如果引入了design，就不需要再单独引入其他库
-     */
+     *  如果引入了design，就不需要再单独引入其他库*/
     compile 'com.android.support:design:25.0.0'
     // 解决方法数超过65536问题扩展库
     compile 'com.android.support:multidex:1.0.1'
@@ -121,10 +118,11 @@ def optConfigs() {
         def Properties props = new Properties()
         props.load(new FileInputStream(propFile))
         // 判断签名配置信息是否存在
-        if (props != null && props.containsKey('ML_STORE_FILE')
-                && props.containsKey('ML_STORE_PASSWORD')
-                && props.containsKey('ML_KEY_ALIAS')
-                && props.containsKey('ML_KEY_PASSWORD')) {
+        if (props != null &&
+                props.containsKey('ML_STORE_FILE') &&
+                props.containsKey('ML_STORE_PASSWORD') &&
+                props.containsKey('ML_KEY_ALIAS') &&
+                props.containsKey('ML_KEY_PASSWORD')) {
             android.signingConfigs.release.storeFile = file(props['ML_STORE_FILE'])
             android.signingConfigs.release.storePassword = props['ML_STORE_PASSWORD']
             android.signingConfigs.release.keyAlias = props['ML_KEY_ALIAS']

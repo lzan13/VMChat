@@ -11,7 +11,7 @@
     >
 
     <net.melove.app.chat.ui.widget.MLImageView
-        android:id="@+id/ml_img_menu_photo"
+        android:id="@+id/img_menu_photo"
         android:layout_width="@dimen/ml_dimen_52"
         android:layout_height="@dimen/ml_dimen_52"
         android:layout_marginBottom="@dimen/ml_dimen_8"
@@ -22,7 +22,7 @@
         />
 
     <TextView
-        android:id="@+id/ml_text_menu_title"
+        android:id="@+id/text_menu_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/ml_photo"

@@ -44,17 +44,17 @@ import butterknife.OnClick;
 public class MLVoiceCallActivity extends MLCallActivity {
 
     // 使用 ButterKnife 注解的方式获取控件
-    @BindView(R.id.ml_img_background) ImageView mCallBackgroundView;
-    @BindView(R.id.ml_text_call_status) TextView mCallStatusView;
-    @BindView(R.id.ml_img_call_avatar) MLImageView mAvatarView;
-    @BindView(R.id.ml_text_call_username) TextView mUsernameView;
-    @BindView(R.id.ml_btn_exit_full_screen) ImageButton mExitFullScreenBtn;
-    @BindView(R.id.ml_btn_mic_switch) ImageButton mMicSwitch;
-    @BindView(R.id.ml_btn_speaker_switch) ImageButton mSpeakerSwitch;
-    @BindView(R.id.ml_btn_record_switch) ImageButton mRecordSwitch;
-    @BindView(R.id.ml_fab_reject_call) FloatingActionButton mRejectCallFab;
-    @BindView(R.id.ml_fab_end_call) FloatingActionButton mEndCallFab;
-    @BindView(R.id.ml_fab_answer_call) FloatingActionButton mAnswerCallFab;
+    @BindView(R.id.img_background) ImageView mCallBackgroundView;
+    @BindView(R.id.text_call_status) TextView mCallStatusView;
+    @BindView(R.id.img_call_avatar) MLImageView mAvatarView;
+    @BindView(R.id.text_call_username) TextView mUsernameView;
+    @BindView(R.id.btn_exit_full_screen) ImageButton mExitFullScreenBtn;
+    @BindView(R.id.btn_mic_switch) ImageButton mMicSwitch;
+    @BindView(R.id.btn_speaker_switch) ImageButton mSpeakerSwitch;
+    @BindView(R.id.btn_record_switch) ImageButton mRecordSwitch;
+    @BindView(R.id.fab_reject_call) FloatingActionButton mRejectCallFab;
+    @BindView(R.id.fab_end_call) FloatingActionButton mEndCallFab;
+    @BindView(R.id.fab_answer_call) FloatingActionButton mAnswerCallFab;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,7 +74,7 @@ public class MLVoiceCallActivity extends MLCallActivity {
         // 设置通话类型为语音
         mCallType = 1;
 
-        mChronometer = (Chronometer) findViewById(R.id.ml_chronometer_call_time);
+        mChronometer = (Chronometer) findViewById(R.id.chronometer_call_time);
 
         mCallBackgroundView.setImageResource(R.mipmap.ic_character_penguin);
 
@@ -154,36 +154,36 @@ public class MLVoiceCallActivity extends MLCallActivity {
      * 界面控件点击监听器
      */
     @OnClick({
-            R.id.ml_btn_exit_full_screen, R.id.ml_btn_mic_switch, R.id.ml_btn_speaker_switch,
-            R.id.ml_btn_record_switch, R.id.ml_fab_reject_call, R.id.ml_fab_end_call,
-            R.id.ml_fab_answer_call
+            R.id.btn_exit_full_screen, R.id.btn_mic_switch, R.id.btn_speaker_switch,
+            R.id.btn_record_switch, R.id.fab_reject_call, R.id.fab_end_call,
+            R.id.fab_answer_call
     }) void onClick(View v) {
         switch (v.getId()) {
-            case R.id.ml_btn_exit_full_screen:
+            case R.id.btn_exit_full_screen:
                 // 最小化通话界面
                 exitFullScreen();
                 break;
-            case R.id.ml_btn_mic_switch:
+            case R.id.btn_mic_switch:
                 // 麦克风开关
                 onMicrophone();
                 break;
-            case R.id.ml_btn_speaker_switch:
+            case R.id.btn_speaker_switch:
                 // 扬声器开关
                 onSpeaker();
                 break;
-            case R.id.ml_btn_record_switch:
+            case R.id.btn_record_switch:
                 // 录制开关
                 recordCall();
                 break;
-            case R.id.ml_fab_reject_call:
+            case R.id.fab_reject_call:
                 // 拒绝接听通话
                 rejectCall();
                 break;
-            case R.id.ml_fab_end_call:
+            case R.id.fab_end_call:
                 // 结束通话
                 endCall();
                 break;
-            case R.id.ml_fab_answer_call:
+            case R.id.fab_answer_call:
                 // 接听通话
                 answerCall();
                 break;

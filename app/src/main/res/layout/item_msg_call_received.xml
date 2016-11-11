@@ -22,7 +22,7 @@
             >
             <!--消息发送者头像-->
             <net.melove.app.chat.ui.widget.MLImageView
-                android:id="@+id/ml_img_avatar"
+                android:id="@+id/img_avatar"
                 android:layout_width="@dimen/ml_dimen_40"
                 android:layout_height="@dimen/ml_dimen_40"
                 android:src="@mipmap/ic_character_blackcat"
@@ -32,7 +32,7 @@
                 />
 
             <LinearLayout
-                android:id="@+id/ml_layout_bubble"
+                android:id="@+id/layout_bubble"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bubble_msg_received"
@@ -50,7 +50,7 @@
                     >
                     <!--通话类型图标-->
                     <ImageView
-                        android:id="@+id/ml_img_call_icon"
+                        android:id="@+id/img_call_icon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/ml_dimen_8"
@@ -59,7 +59,7 @@
                         />
                     <!--通话内容-->
                     <TextView
-                        android:id="@+id/ml_text_content"
+                        android:id="@+id/text_content"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -80,7 +80,7 @@
                     >
                     <!--消息发送者名称-->
                     <TextView
-                        android:id="@+id/ml_text_username"
+                        android:id="@+id/text_username"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/ml_dimen_8"
@@ -90,7 +90,7 @@
                         />
                     <!--消息时间-->
                     <TextView
-                        android:id="@+id/ml_text_time"
+                        android:id="@+id/text_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/ml_hint_time"

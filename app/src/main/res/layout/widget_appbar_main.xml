@@ -2,7 +2,7 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/ml_layout_coordinator"
+    android:id="@+id/layout_coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="true"
@@ -10,7 +10,7 @@
     >
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/ml_widget_appbar"
+        android:id="@+id/widget_appbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/ml_dimen_56"
         android:theme="@style/MLTheme.AppBarOverlay"
@@ -19,7 +19,7 @@
 
         <!--主界面 Toolbar-->
         <android.support.v7.widget.Toolbar
-            android:id="@+id/ml_widget_toolbar"
+            android:id="@+id/widget_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
@@ -33,7 +33,7 @@
 
     <!--中间内容布局-->
     <FrameLayout
-        android:id="@+id/ml_layout_container"
+        android:id="@+id/layout_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -41,7 +41,7 @@
 
     <!--显示连接状态图标-->
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/ml_fab_connection"
+        android:id="@+id/fab_connection"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"

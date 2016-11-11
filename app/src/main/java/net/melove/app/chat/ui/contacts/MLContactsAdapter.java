@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import net.melove.app.chat.R;
+import net.melove.app.chat.module.listener.MLItemCallBack;
 import net.melove.app.chat.ui.widget.MLImageView;
 
 import java.util.List;
@@ -19,13 +20,15 @@ import java.util.List;
 public class MLContactsAdapter extends RecyclerView.Adapter<MLContactsAdapter.ContactsViewHolder> {
 
     private Context mContext;
+    private MLItemCallBack mCallBack;
+
     private LayoutInflater mInflater;
     private List<MLUserEntity> mContactsList;
-
 
     public MLContactsAdapter(Context context, List<MLUserEntity> list) {
         mContext = context;
         mContactsList = list;
+        mInflater = LayoutInflater.from(mContext);
     }
 
     /**
@@ -33,13 +36,11 @@ public class MLContactsAdapter extends RecyclerView.Adapter<MLContactsAdapter.Co
      *
      * @return 返回当前适配器数据源 Item 个数
      */
-    @Override
-    public int getItemCount() {
+    @Override public int getItemCount() {
         return mContactsList.size();
     }
 
-    @Override
-    public ContactsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @Override public ContactsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = mInflater.inflate(R.layout.item_user, parent, false);
         return new ContactsViewHolder(itemView);
     }
@@ -48,15 +49,18 @@ public class MLContactsAdapter extends RecyclerView.Adapter<MLContactsAdapter.Co
      * @param holder
      * @param position
      */
-    @Override
-    public void onBindViewHolder(ContactsViewHolder holder, int position) {
+    @Override public void onBindViewHolder(ContactsViewHolder holder, int position) {
+        MLUserEntity userEntity = mContactsList.get(position);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            @Override public void onClick(View v) {
 
             }
         });
+    }
+
+    public void setItemCallBack(MLItemCallBack callback) {
+        mCallBack = callback;
     }
 
     /**
@@ -73,9 +77,8 @@ public class MLContactsAdapter extends RecyclerView.Adapter<MLContactsAdapter.Co
          */
         public ContactsViewHolder(View itemView) {
             super(itemView);
-            imageViewAvatar = (MLImageView) itemView.findViewById(R.id.ml_img_avatar);
-            textViewUsername = (TextView) itemView.findViewById(R.id.ml_text_username);
-
+            imageViewAvatar = (MLImageView) itemView.findViewById(R.id.img_avatar);
+            textViewUsername = (TextView) itemView.findViewById(R.id.text_username);
         }
     }
 }

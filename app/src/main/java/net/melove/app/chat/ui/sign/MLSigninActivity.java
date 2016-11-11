@@ -33,8 +33,8 @@ public class MLSignInActivity extends MLBaseActivity {
     private ProgressDialog mDialog;
 
     // 输入框
-    @BindView(R.id.ml_edit_username) EditText mUsernameView;
-    @BindView(R.id.ml_edit_password) EditText mPasswordView;
+    @BindView(R.id.edit_username) EditText mUsernameView;
+    @BindView(R.id.edit_password) EditText mPasswordView;
     private String mUsername;
     private String mPassword;
 
@@ -68,17 +68,17 @@ public class MLSignInActivity extends MLBaseActivity {
     /**
      * 界面内控件的点击事件监听器
      */
-    @OnClick({ R.id.ml_btn_sign_in, R.id.ml_btn_sign_up, R.id.ml_btn_forget_password })
+    @OnClick({ R.id.btn_sign_in, R.id.btn_sign_up, R.id.btn_forget_password })
     void onClick(View v) {
         switch (v.getId()) {
-            case R.id.ml_btn_sign_in:
+            case R.id.btn_sign_in:
                 attemptLogin();
                 break;
-            case R.id.ml_btn_sign_up:
+            case R.id.btn_sign_up:
                 Intent intent = new Intent(mActivity, MLSignUpActivity.class);
                 superJump(intent);
                 break;
-            case R.id.ml_btn_forget_password:
+            case R.id.btn_forget_password:
                 forgetPassword();
                 break;
         }

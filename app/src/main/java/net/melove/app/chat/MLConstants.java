@@ -70,7 +70,7 @@ public class MLConstants {
 
     // Intent 传递参数参数的 key
     public static final String ML_EXTRA_IS_INCOMING_CALL = "ml_is_incoming_call";
-    public static final String ML_EXTRA_CHAT_MSG_ID = "ml_chat_msg_id";
+    public static final String ML_EXTRA_MSG_ID = "ml_chat_msg_id";
     public static final String ML_EXTRA_CHAT_ID = "ml_chat_id";
     public static final String ML_EXTRA_FROM = "from";
     public static final String ML_EXTRA_TO = "to";
@@ -146,9 +146,25 @@ public class MLConstants {
     public static final int ML_ACTION_APPLY_FOR_REFUSE = 0X11;
     public static final int ML_ACTION_APPLY_FOR_DELETE = 0X12;
 
+    /**
+     * 回调的 action
+     */
+    public static final int ML_ACTION_CLICK = 0x00;
+    public static final int ML_ACTION_LONG_CLICK = 0x01;
+    public static final int ML_ACTION_DELETE = 0x02;
+
+    public static final int ML_ACTION_RESEND = 0x10;    // 重发
+    public static final int ML_ACTION_COPY = 0x11;      // 复制
+    public static final int ML_ACTION_SAVE = 0x12;      // 保存
+    public static final int ML_ACTION_FORWARD = 0x13;   // 转发
+    public static final int ML_ACTION_RECALL = 0x14;    // 撤回
+    public static final int ML_ACTION_TRANSLATE = 0x15; // 翻译
+    public static final int ML_ACTION_ = 0x1;
+    public static final int ML_ACTION = 0x1;
+
     // 申请与通知类型
-    public static final int ML_APPLY_TYPE_USER = 0x00;   // 联系人申请
-    public static final int ML_APPLY_TYPE_GROUP = 0x01;      // 群组申请
+    public static final int ML_APPLY_TYPE_USER = 0x00;      // 联系人申请
+    public static final int ML_APPLY_TYPE_GROUP = 0x01;     // 群组申请
 
     /**
      * RecyclerView Adapter 列表刷新类型

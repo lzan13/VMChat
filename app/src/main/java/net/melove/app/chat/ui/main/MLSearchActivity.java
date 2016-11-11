@@ -38,8 +38,8 @@ public class MLSearchActivity extends MLBaseActivity {
     }
 
     private void initView() {
-        mSearchView = (EditText) findViewById(R.id.ml_edit_search);
-        mSearchBtn = (Button) findViewById(R.id.ml_btn_search);
+        mSearchView = (EditText) findViewById(R.id.edit_search);
+        mSearchBtn = (Button) findViewById(R.id.btn_search);
 
         mSearchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,7 +54,7 @@ public class MLSearchActivity extends MLBaseActivity {
      * 初始化Toolbar组件
      */
     private void initToolbar() {
-        mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.widget_toolbar);
 
         mToolbar.setTitle(R.string.ml_search);
         setSupportActionBar(mToolbar);

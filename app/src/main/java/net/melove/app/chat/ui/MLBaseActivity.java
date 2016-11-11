@@ -64,7 +64,7 @@ public class MLBaseActivity extends AppCompatActivity {
      */
     public Toolbar getToolbar() {
         if (mToolbar == null) {
-            mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
+            mToolbar = (Toolbar) findViewById(R.id.widget_toolbar);
         }
         return mToolbar;
     }

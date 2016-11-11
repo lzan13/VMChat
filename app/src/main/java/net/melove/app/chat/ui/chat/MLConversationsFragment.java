@@ -93,7 +93,7 @@ public class MLConversationsFragment extends MLBaseFragment {
         // 实例化会话列表的 Adapter 对象
         mConversationAdapter = new MLConversationAdapter(mActivity, mConversations);
         // 初始化会话列表的 ListView 控件
-        mRecyclerView = (RecyclerView) getView().findViewById(R.id.ml_recycler_view);
+        mRecyclerView = (RecyclerView) getView().findViewById(R.id.recycler_view);
         /**
          * 为RecyclerView 设置布局管理器，这里使用线性布局
          * RececlerView 默认的布局管理器：

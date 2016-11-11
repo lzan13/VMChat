@@ -6,7 +6,7 @@
     >
 
     <ImageView
-        android:id="@+id/ml_img_background"
+        android:id="@+id/img_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
@@ -22,7 +22,7 @@
         >
 
         <net.melove.app.chat.ui.widget.MLImageView
-            android:id="@+id/ml_img_avatar"
+            android:id="@+id/img_avatar"
             android:layout_width="@dimen/ml_dimen_56"
             android:layout_height="@dimen/ml_dimen_56"
             android:layout_marginLeft="@dimen/ml_dimen_16"
@@ -44,7 +44,7 @@
             >
 
             <TextView
-                android:id="@+id/ml_text_username"
+                android:id="@+id/text_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="穿裤衩闯天下"
@@ -54,7 +54,7 @@
                 />
 
             <TextView
-                android:id="@+id/ml_text_signature"
+                android:id="@+id/text_signature"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="lzan13.gg@gmail.com"

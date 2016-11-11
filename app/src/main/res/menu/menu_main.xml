@@ -3,25 +3,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
     <item
-        android:id="@+id/ml_action_search"
+        android:id="@+id/action_search"
         android:icon="@mipmap/ic_search_white_24dp"
         android:orderInCategory="50"
         android:title="@string/ml_search"
         app:showAsAction="always"/>
     <item
-        android:id="@+id/ml_action_add_conversation"
+        android:id="@+id/action_add_conversation"
         android:icon="@mipmap/ic_add_white_24dp"
         android:orderInCategory="101"
         android:title="@string/ml_create_conversation"
         app:showAsAction="never"/>
     <item
-        android:id="@+id/ml_action_add_friend"
+        android:id="@+id/action_add_friend"
         android:icon="@mipmap/ic_add_contacts_white_24dp"
         android:orderInCategory="101"
         android:title="@string/ml_add_friend"
         app:showAsAction="never"/>
     <item
-        android:id="@+id/ml_action_add_group"
+        android:id="@+id/action_add_group"
         android:icon="@mipmap/ic_add_group_white_24dp"
         android:orderInCategory="101"
         android:title="@string/ml_add_group"

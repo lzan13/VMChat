@@ -14,7 +14,7 @@
 
     <!--通话界面背景-->
     <ImageView
-        android:id="@+id/ml_img_background"
+        android:id="@+id/img_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
@@ -43,7 +43,7 @@
                 >
                 <!--通话状态-->
                 <TextView
-                    android:id="@+id/ml_text_call_status"
+                    android:id="@+id/text_call_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/ml_app_name"
@@ -51,7 +51,7 @@
                     />
                 <!--通话计时控件-->
                 <Chronometer
-                    android:id="@+id/ml_chronometer_call_time"
+                    android:id="@+id/chronometer_call_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/ml_white_87"
@@ -59,7 +59,7 @@
             </LinearLayout>
             <!--通话界面最小化-->
             <ImageButton
-                android:id="@+id/ml_btn_exit_full_screen"
+                android:id="@+id/btn_exit_full_screen"
                 android:layout_width="@dimen/ml_dimen_48"
                 android:layout_height="@dimen/ml_dimen_48"
                 android:layout_alignParentRight="true"
@@ -78,7 +78,7 @@
             >
             <!--当前通话的头像-->
             <net.melove.app.chat.ui.widget.MLImageView
-                android:id="@+id/ml_img_call_avatar"
+                android:id="@+id/img_call_avatar"
                 android:layout_width="@dimen/ml_dimen_96"
                 android:layout_height="@dimen/ml_dimen_96"
                 android:src="@mipmap/ic_character_spider"
@@ -87,7 +87,7 @@
                 />
             <!--当前通话的账户名-->
             <TextView
-                android:id="@+id/ml_text_call_username"
+                android:id="@+id/text_call_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/ml_dimen_8"
@@ -99,7 +99,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/ml_layout_calling"
+            android:id="@+id/layout_calling"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -116,7 +116,7 @@
 
                 <!--麦克风开关-->
                 <ImageButton
-                    android:id="@+id/ml_btn_mic_switch"
+                    android:id="@+id/btn_mic_switch"
                     android:layout_width="@dimen/ml_dimen_48"
                     android:layout_height="@dimen/ml_dimen_48"
                     android:layout_margin="@dimen/ml_dimen_8"
@@ -126,7 +126,7 @@
 
                 <!--扬声器开关-->
                 <ImageButton
-                    android:id="@+id/ml_btn_speaker_switch"
+                    android:id="@+id/btn_speaker_switch"
                     android:layout_width="@dimen/ml_dimen_48"
                     android:layout_height="@dimen/ml_dimen_48"
                     android:layout_margin="@dimen/ml_dimen_8"
@@ -136,7 +136,7 @@
 
                 <!--录制开关-->
                 <ImageButton
-                    android:id="@+id/ml_btn_record_switch"
+                    android:id="@+id/btn_record_switch"
                     android:layout_width="@dimen/ml_dimen_48"
                     android:layout_height="@dimen/ml_dimen_48"
                     android:layout_margin="@dimen/ml_dimen_8"
@@ -153,7 +153,7 @@
                 >
                 <!--拒绝接听-->
                 <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/ml_fab_reject_call"
+                    android:id="@+id/fab_reject_call"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
@@ -164,7 +164,7 @@
 
                 <!--结束通话-->
                 <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/ml_fab_end_call"
+                    android:id="@+id/fab_end_call"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
@@ -176,7 +176,7 @@
 
                 <!--接听通话-->
                 <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/ml_fab_answer_call"
+                    android:id="@+id/fab_answer_call"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"

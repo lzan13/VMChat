@@ -284,12 +284,12 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
          */
         public ConversationViewHolder(View itemView) {
             super(itemView);
-            avatarView = (MLImageView) itemView.findViewById(R.id.ml_img_avatar);
-            titleView = (TextView) itemView.findViewById(R.id.ml_text_name);
-            contentView = (TextView) itemView.findViewById(R.id.ml_text_content);
-            timeView = (TextView) itemView.findViewById(R.id.ml_text_time);
-            pushpinView = (ImageView) itemView.findViewById(R.id.ml_img_pushpin);
-            countView = (TextView) itemView.findViewById(R.id.ml_text_unread_count);
+            avatarView = (MLImageView) itemView.findViewById(R.id.img_avatar);
+            titleView = (TextView) itemView.findViewById(R.id.text_name);
+            contentView = (TextView) itemView.findViewById(R.id.text_content);
+            timeView = (TextView) itemView.findViewById(R.id.text_time);
+            pushpinView = (ImageView) itemView.findViewById(R.id.img_pushpin);
+            countView = (TextView) itemView.findViewById(R.id.text_unread_count);
         }
     }
 

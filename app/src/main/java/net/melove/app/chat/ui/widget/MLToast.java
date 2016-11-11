@@ -102,7 +102,7 @@ public class MLToast {
     private void initToast(int id, String text) {
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mToastView = inflater.inflate(R.layout.widget_toast_layout, null);
-        ImageView imageView = (ImageView) mToastView.findViewById(R.id.ml_img_toast_icon);
+        ImageView imageView = (ImageView) mToastView.findViewById(R.id.img_toast_icon);
         if (id == 0) {
             imageView.setImageBitmap(MLBitmapUtil.string2Bitmap(rightIcon));
         } else if (id == 1) {
@@ -111,7 +111,7 @@ public class MLToast {
             imageView.setImageResource(id);
         }
 
-        TextView textView = (TextView) mToastView.findViewById(R.id.ml_text_toast_text);
+        TextView textView = (TextView) mToastView.findViewById(R.id.text_toast_text);
         textView.setText(text);
 
         mWindowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);

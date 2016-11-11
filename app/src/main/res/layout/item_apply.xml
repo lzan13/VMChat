@@ -16,7 +16,7 @@
         >
         <!--头像-->
         <net.melove.app.chat.ui.widget.MLImageView
-            android:id="@+id/ml_img_avatar"
+            android:id="@+id/img_avatar"
             android:layout_width="@dimen/ml_dimen_40"
             android:layout_height="@dimen/ml_dimen_40"
             android:layout_alignParentLeft="true"
@@ -28,7 +28,7 @@
             />
 
         <LinearLayout
-            android:id="@+id/ml_layout_right"
+            android:id="@+id/layout_right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -37,7 +37,7 @@
             >
             <!--同意按钮-->
             <Button
-                android:id="@+id/ml_btn_agree"
+                android:id="@+id/btn_agree"
                 android:layout_width="@dimen/ml_dimen_48"
                 android:layout_height="@dimen/ml_dimen_36"
                 android:background="@drawable/ml_click_rectangle_white"
@@ -50,7 +50,7 @@
                 />
             <!--状态-->
             <TextView
-                android:id="@+id/ml_text_status"
+                android:id="@+id/text_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/ml_dimen_8"
@@ -66,13 +66,13 @@
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/ml_dimen_56"
-            android:layout_toLeftOf="@id/ml_layout_right"
+            android:layout_toLeftOf="@id/layout_right"
             android:gravity="center_vertical"
             android:orientation="vertical"
             >
             <!--名字-->
             <TextView
-                android:id="@+id/ml_text_username"
+                android:id="@+id/text_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxWidth="@dimen/ml_dimen_224"
@@ -82,7 +82,7 @@
                 />
             <!--理由-->
             <TextView
-                android:id="@+id/ml_text_reason"
+                android:id="@+id/text_reason"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/ml_hint_reason"

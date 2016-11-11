@@ -17,7 +17,7 @@
         >
         <!--头像-->
         <net.melove.app.chat.ui.widget.MLImageView
-            android:id="@+id/ml_img_avatar"
+            android:id="@+id/img_avatar"
             android:layout_width="@dimen/ml_dimen_40"
             android:layout_height="@dimen/ml_dimen_40"
             android:layout_alignParentLeft="true"
@@ -38,7 +38,7 @@
             >
             <!--会话名称-->
             <TextView
-                android:id="@+id/ml_text_name"
+                android:id="@+id/text_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxWidth="@dimen/ml_dimen_224"
@@ -48,7 +48,7 @@
                 />
             <!--最后一条消息内容-->
             <TextView
-                android:id="@+id/ml_text_content"
+                android:id="@+id/text_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxWidth="@dimen/ml_dimen_224"
@@ -69,7 +69,7 @@
             >
             <!--会话时间-->
             <TextView
-                android:id="@+id/ml_text_time"
+                android:id="@+id/text_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/ml_dimen_4"
@@ -87,7 +87,7 @@
                 >
                 <!--未读数-->
                 <TextView
-                    android:id="@+id/ml_text_unread_count"
+                    android:id="@+id/text_unread_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@mipmap/ic_unread_count"
@@ -100,7 +100,7 @@
 
                 <!--置顶标记-->
                 <ImageView
-                    android:id="@+id/ml_img_pushpin"
+                    android:id="@+id/img_pushpin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@mipmap/ic_pushpin_white_24dp"
@@ -109,7 +109,7 @@
                     />
 
                 <ImageView
-                    android:id="@+id/ml_img_dnd"
+                    android:id="@+id/img_dnd"
                     android:layout_width="@dimen/ml_dimen_20"
                     android:layout_height="@dimen/ml_dimen_20"
                     android:src="@mipmap/ic_notifications_off_white_24dp"

@@ -18,22 +18,15 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
-import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.exceptions.HyphenateException;
 
 import net.melove.app.chat.MLHyphenate;
 import net.melove.app.chat.R;
-import net.melove.app.chat.module.event.MLApplyForEvent;
 import net.melove.app.chat.ui.MLBaseActivity;
 import net.melove.app.chat.MLConstants;
-import net.melove.app.chat.util.MLDateUtil;
-import net.melove.app.chat.ui.widget.MLImageView;
 import net.melove.app.chat.ui.widget.MLToast;
 import net.melove.app.chat.ui.chat.MLChatActivity;
 import net.melove.app.chat.util.MLLog;
-import net.melove.app.chat.module.notification.MLNotifier;
-
-import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by lzan13 on 2015/8/29.
@@ -41,18 +34,21 @@ import org.greenrobot.eventbus.EventBus;
  */
 public class MLUserActivity extends MLBaseActivity {
 
-    @BindView(R.id.ml_widget_collapsing) CollapsingToolbarLayout mCollapsingToolbarLayout;
-    @BindView(R.id.ml_fab_add_or_chat) FloatingActionButton mAddOrChatFab;
-    @BindView(R.id.ml_img_avatar) MLImageView mAvatarView;
-    @BindView(R.id.ml_text_call_username) TextView mUsernameView;
-    @BindView(R.id.ml_text_reason) TextView mReasonView;
-    @BindView(R.id.ml_btn_agree) Button mAgreeBtn;
-    @BindView(R.id.ml_btn_reject) Button mRejectBtn;
+    @BindView(R.id.widget_collapsing) CollapsingToolbarLayout mCollapsingToolbarLayout;
+    @BindView(R.id.fab_add_or_chat) FloatingActionButton mAddOrChatFab;
+    //@BindView(R.id.img_avatar) MLImageView mAvatarView;
+    //@BindView(R.id.text_username) TextView mUsernameView;
+    @BindView(R.id.layout_apply_control) View mApplyLayout;
+    @BindView(R.id.text_reason) TextView mReasonView;
+    @BindView(R.id.btn_agree) Button mAgreeBtn;
+    @BindView(R.id.btn_reject) Button mRejectBtn;
 
-    // 当前联系人的username
-    private String mChatId;
     // 当前登录用户username
     private String mCurrUsername;
+    // 当前联系人的username
+    private String mChatId;
+    // 申请与通知消息 id
+    private String mApplyMsgId;
 
     // 用户信息实体类
     private MLUserEntity mUserEntity;
@@ -77,6 +73,8 @@ public class MLUserActivity extends MLBaseActivity {
     private void initView() {
         mCurrUsername = EMClient.getInstance().getCurrentUser();
         mChatId = getIntent().getStringExtra(MLConstants.ML_EXTRA_CHAT_ID);
+        mApplyMsgId = getIntent().getStringExtra(MLConstants.ML_EXTRA_MSG_ID);
+
         // 根据 Username 获取User对象
         mUserEntity = MLHyphenate.getInstance().getUser(mChatId);
 
@@ -100,26 +98,27 @@ public class MLUserActivity extends MLBaseActivity {
         } else {
             mAddOrChatFab.setImageResource(R.mipmap.ic_add_white_24dp);
         }
+        // 检查申请与通知部分是否需要显示
+        checkApplyLayout();
     }
 
     /**
      * 界面控件点击监听
      */
-    @OnClick({ R.id.ml_btn_agree, R.id.ml_btn_reject, R.id.ml_fab_add_or_chat }) void onClick(
-            View v) {
+    @OnClick({ R.id.btn_agree, R.id.btn_reject, R.id.fab_add_or_chat }) void onClick(View v) {
         switch (v.getId()) {
-            case R.id.ml_fab_add_or_chat:
+            case R.id.fab_add_or_chat:
                 if (mUserEntity != null && mUserEntity.getUserName() != null) {
                     startChat();
                 } else {
                     addContact();
                 }
                 break;
-            case R.id.ml_btn_agree:
-                agreeInvited();
+            case R.id.btn_agree:
+                agreeApply();
                 break;
-            case R.id.ml_btn_reject:
-                refuseInvited();
+            case R.id.btn_reject:
+                rejectApply();
                 break;
             default:
                 break;
@@ -133,10 +132,10 @@ public class MLUserActivity extends MLBaseActivity {
         alertDialogBuilder = new AlertDialog.Builder(mActivity);
         alertDialogBuilder.setTitle(R.string.ml_add_friend);
         View view = mActivity.getLayoutInflater().inflate(R.layout.dialog_communal, null);
-        TextView textView = (TextView) view.findViewById(R.id.ml_dialog_text_message);
+        TextView textView = (TextView) view.findViewById(R.id.dialog_text_message);
         textView.setText(R.string.ml_dialog_content_add_friend_reason);
 
-        final EditText editText = (EditText) view.findViewById(R.id.ml_dialog_edit_input);
+        final EditText editText = (EditText) view.findViewById(R.id.dialog_edit_input);
         editText.setHint(R.string.ml_hint_input_not_null);
         alertDialogBuilder.setView(view);
         alertDialogBuilder.setPositiveButton(R.string.ml_btn_ok,
@@ -198,16 +197,32 @@ public class MLUserActivity extends MLBaseActivity {
     /**
      * 同意好友请求，环信的同意和拒绝好友请求 都需要异步处理，这里新建线程去调用
      */
-    private void agreeInvited() {
+    private void agreeApply() {
         final ProgressDialog dialog = new ProgressDialog(mActivity);
         dialog.setMessage(mActivity.getResources().getString(R.string.ml_dialog_message_waiting));
         dialog.show();
+
         new Thread(new Runnable() {
             @Override public void run() {
                 try {
-                    EMClient.getInstance().contactManager().acceptInvitation("");
-                    // 关闭对话框
-                    dialog.dismiss();
+                    // 同意好友申请
+                    EMMessage message = EMClient.getInstance()
+                            .chatManager()
+                            .getConversation(MLConstants.ML_CONVERSATION_APPLY)
+                            .getMessage(mApplyMsgId, false);
+                    String username = message.getStringAttribute(MLConstants.ML_ATTR_USERNAME, "");
+                    EMClient.getInstance().contactManager().acceptInvitation(username);
+
+                    // 更新当前的申请信息
+                    message.setAttribute(MLConstants.ML_ATTR_STATUS,
+                            mActivity.getString(R.string.ml_agreed));
+                    EMClient.getInstance().chatManager().updateMessage(message);
+                    runOnUiThread(new Runnable() {
+                        @Override public void run() {
+                            dialog.dismiss();
+                            checkApplyLayout();
+                        }
+                    });
                 } catch (HyphenateException e) {
                     e.printStackTrace();
                 }
@@ -218,35 +233,59 @@ public class MLUserActivity extends MLBaseActivity {
     /**
      * 拒绝好友请求，环信的同意和拒绝好友请求 都需要异步处理，这里新建线程去调用
      */
-    private void refuseInvited() {
+    private void rejectApply() {
         final ProgressDialog dialog = new ProgressDialog(mActivity);
         dialog.setMessage(mActivity.getResources().getString(R.string.ml_dialog_message_waiting));
         dialog.show();
-        //        new Thread(new Runnable() {
-        //            @Override
-        //            public void run() {
-        //                try {
-        //                    EMClient.getInstance().contactManager().declineInvitation(mInvitedEntity.getUserName());
-        //                    // 修改当前申请消息的状态
-        //                    mInvitedEntity.setStatus(MLInvitedEntity.InvitedStatus.REFUSED);
-        //                    mInvitedEntity.setTime(MLDateUtil.getCurrentMillisecond());
-        //                    MLInvitedDao.getInstance().updateInvited(mInvitedEntity);
-        //                    dialog.dismiss();
-        //                    mHandler.sendMessage(mHandler.obtainMessage(0));
-        //                } catch (HyphenateException e) {
-        //                    e.printStackTrace();
-        //                }
-        //            }
-        //        }).start();
+
+        new Thread(new Runnable() {
+            @Override public void run() {
+                try {
+                    // 拒绝好友申请
+                    EMMessage message = EMClient.getInstance()
+                            .chatManager()
+                            .getConversation(MLConstants.ML_CONVERSATION_APPLY)
+                            .getMessage(mApplyMsgId, false);
+                    String username = message.getStringAttribute(MLConstants.ML_ATTR_USERNAME, "");
+                    EMClient.getInstance().contactManager().declineInvitation(username);
+
+                    // 更新当前的申请信息
+                    message.setAttribute(MLConstants.ML_ATTR_STATUS,
+                            mActivity.getString(R.string.ml_rejected));
+                    EMClient.getInstance().chatManager().updateMessage(message);
+                    runOnUiThread(new Runnable() {
+                        @Override public void run() {
+                            dialog.dismiss();
+                            checkApplyLayout();
+                        }
+                    });
+                } catch (HyphenateException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
-    @Override protected void onResume() {
-        super.onResume();
-        initView();
-    }
-
-    @Override protected void onStop() {
-        super.onStop();
+    /**
+     * 检查是否需要显示申请与通知部分
+     */
+    private void checkApplyLayout() {
+        if (mApplyMsgId == null) {
+            mApplyLayout.setVisibility(View.GONE);
+            return;
+        }
+        // 获取申请与通知的信息
+        EMMessage applyMessage = EMClient.getInstance()
+                .chatManager()
+                .getConversation(MLConstants.ML_CONVERSATION_APPLY)
+                .getMessage(mApplyMsgId, false);
+        if (TextUtils.isEmpty(applyMessage.getStringAttribute(MLConstants.ML_ATTR_STATUS, ""))) {
+            mApplyLayout.setVisibility(View.GONE);
+            return;
+        }
+        mApplyLayout.setVisibility(View.VISIBLE);
+        // 设置理由
+        mReasonView.setText(applyMessage.getStringAttribute(MLConstants.ML_ATTR_REASON, ""));
     }
 
     @Override protected void onDestroy() {

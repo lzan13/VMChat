@@ -100,15 +100,15 @@ public class MLMainActivity extends MLBaseActivity
     private void initView() {
         mMenuType = 0;
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.ml_layout_drawer);
-        mNavigationView = (NavigationView) findViewById(R.id.ml_widget_navigation);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.layout_drawer);
+        mNavigationView = (NavigationView) findViewById(R.id.widget_navigation);
         // 侧滑用户头像
         mAvatarView =
-                (MLImageView) mNavigationView.getHeaderView(0).findViewById(R.id.ml_img_avatar);
+                (MLImageView) mNavigationView.getHeaderView(0).findViewById(R.id.img_avatar);
         mAvatarView.setOnClickListener(viewListener);
 
         // 网络连接提示按钮
-        mConnectionFabBtn = (FloatingActionButton) findViewById(R.id.ml_fab_connection);
+        mConnectionFabBtn = (FloatingActionButton) findViewById(R.id.fab_connection);
         mConnectionFabBtn.setOnClickListener(viewListener);
         if (EMClient.getInstance().isConnected()) {
             mConnectionFabBtn.setImageResource(R.mipmap.ic_signal_wifi_on_white_24dp);
@@ -149,7 +149,7 @@ public class MLMainActivity extends MLBaseActivity
                         mFragmentTransaction = getSupportFragmentManager().beginTransaction();
                         mFragmentTransaction.setCustomAnimations(R.anim.ml_anim_fade_enter,
                                 R.anim.ml_anim_fade_exit);
-                        mFragmentTransaction.replace(R.id.ml_layout_container,
+                        mFragmentTransaction.replace(R.id.layout_container,
                                 mCurrentFragment);
                         mFragmentTransaction.commit();
                         break;
@@ -178,7 +178,7 @@ public class MLMainActivity extends MLBaseActivity
         mCurrentFragment = MLMainFragment.newInstance();
         getToolbar().setTitle(R.string.ml_chat);
         mFragmentTransaction = getSupportFragmentManager().beginTransaction();
-        mFragmentTransaction.replace(R.id.ml_layout_container, mCurrentFragment);
+        mFragmentTransaction.replace(R.id.layout_container, mCurrentFragment);
         mFragmentTransaction.setCustomAnimations(R.anim.ml_anim_fade_enter,
                 R.anim.ml_anim_fade_exit);
         mFragmentTransaction.commit();
@@ -190,10 +190,10 @@ public class MLMainActivity extends MLBaseActivity
     private View.OnClickListener viewListener = new View.OnClickListener() {
         @Override public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.ml_img_avatar:
+                case R.id.img_avatar:
 
                     break;
-                case R.id.ml_fab_connection:
+                case R.id.fab_connection:
                     Intent intent = null;
                     /**
                      * 判断手机系统的版本！如果API大于10 就是3.0+
@@ -220,31 +220,31 @@ public class MLMainActivity extends MLBaseActivity
     @Override public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
-            case R.id.ml_nav_home:
+            case R.id.nav_home:
                 mMenuType = 0;
                 mCurrentFragment = MLMainFragment.newInstance();
                 getToolbar().setTitle(R.string.ml_chat);
                 break;
-            case R.id.ml_nav_group:
+            case R.id.nav_group:
                 mMenuType = 0;
                 mCurrentFragment = MLOtherFragment.newInstance();
                 getToolbar().setTitle(R.string.ml_group);
                 break;
-            case R.id.ml_nav_room:
+            case R.id.nav_room:
                 mMenuType = 1;
                 getToolbar().setTitle(R.string.ml_room);
                 break;
-            case R.id.ml_nav_notification:
+            case R.id.nav_notification:
                 mMenuType = 1;
                 Intent intent = new Intent();
                 intent.setClass(mActivity, MLApplyForActivity.class);
                 mActivity.startActivity(intent);
                 break;
-            case R.id.ml_nav_help:
+            case R.id.nav_help:
                 mMenuType = 1;
 
                 break;
-            case R.id.ml_nav_setting:
+            case R.id.nav_setting:
                 mMenuType = 1;
                 mActivity.startActivity(new Intent(mActivity, MLSettingsActivity.class));
                 break;
@@ -264,9 +264,9 @@ public class MLMainActivity extends MLBaseActivity
         alertDialogBuilder.setTitle(
                 mActivity.getResources().getString(R.string.ml_dialog_title_conversation));
         View view = mActivity.getLayoutInflater().inflate(R.layout.dialog_communal, null);
-        TextView textView = (TextView) view.findViewById(R.id.ml_dialog_text_message);
+        TextView textView = (TextView) view.findViewById(R.id.dialog_text_message);
         textView.setText(R.string.ml_dialog_content_create_conversation);
-        final EditText editText = (EditText) view.findViewById(R.id.ml_dialog_edit_input);
+        final EditText editText = (EditText) view.findViewById(R.id.dialog_edit_input);
         editText.setHint(R.string.ml_hint_input_not_null);
         alertDialogBuilder.setView(view);
         alertDialogBuilder.setPositiveButton(R.string.ml_btn_ok,
@@ -390,17 +390,17 @@ public class MLMainActivity extends MLBaseActivity
      */
     @Override public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.ml_action_search:
+            case R.id.action_search:
 
                 break;
-            case R.id.ml_action_add_conversation:
+            case R.id.action_add_conversation:
                 // 创建新绘会话
                 createNewConversation();
                 break;
-            case R.id.ml_action_add_friend:
+            case R.id.action_add_friend:
                 startSearch();
                 break;
-            case R.id.ml_action_add_group:
+            case R.id.action_add_group:
                 break;
         }
         return super.onOptionsItemSelected(item);

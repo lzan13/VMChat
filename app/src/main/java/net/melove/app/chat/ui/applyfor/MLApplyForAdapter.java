@@ -15,6 +15,7 @@ import com.hyphenate.chat.EMMessage;
 
 import net.melove.app.chat.R;
 import net.melove.app.chat.MLConstants;
+import net.melove.app.chat.module.listener.MLItemCallBack;
 import net.melove.app.chat.util.MLLog;
 import net.melove.app.chat.ui.widget.MLImageView;
 
@@ -25,19 +26,17 @@ import java.util.List;
  * Created by lzan13 on 2016/3/17.
  * 申请信息适配器类
  */
-public class MLApplyForAdapter extends RecyclerView.Adapter<MLApplyForAdapter.InvitedViewHolder> {
+public class MLApplyForAdapter extends RecyclerView.Adapter<MLApplyForAdapter.ApplyViewHolder> {
 
     // 上下文对象
     private Context mContext;
+    private MLItemCallBack mCallBack;
 
     private LayoutInflater mInflater;
 
     // 当前会话对象
     private EMConversation mConversation;
     private List<EMMessage> mMessages;
-
-    // 自定义的回调接口
-    private MLOnItemClickListener mOnItemClickListener;
 
     public MLApplyForAdapter(Context context) {
         mContext = context;
@@ -56,15 +55,14 @@ public class MLApplyForAdapter extends RecyclerView.Adapter<MLApplyForAdapter.In
         Collections.reverse(mMessages);
     }
 
-    @Override public InvitedViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @Override public ApplyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.item_apply, parent, false);
-        InvitedViewHolder holder = new InvitedViewHolder(view);
-        return holder;
+        return new ApplyViewHolder(view);
     }
 
-    @Override public void onBindViewHolder(InvitedViewHolder holder, final int position) {
+    @Override public void onBindViewHolder(ApplyViewHolder holder, final int position) {
         MLLog.i("MLApplyForAdapter - onBindViewHolder - %d", position);
-        EMMessage message = mMessages.get(position);
+        final EMMessage message = mMessages.get(position);
 
         holder.imageViewAvatar.setImageResource(R.mipmap.ic_character_blackcat);
 
@@ -72,32 +70,36 @@ public class MLApplyForAdapter extends RecyclerView.Adapter<MLApplyForAdapter.In
         // 设置申请的人
         holder.textViewUsername.setText(username);
         // 设置申请理由
-        String reason = message.getStringAttribute(MLConstants.ML_ATTR_REASON, "reason");
+        String reason = message.getStringAttribute(MLConstants.ML_ATTR_REASON, "");
         holder.textViewReason.setText(reason);
-        
+
         String status = message.getStringAttribute(MLConstants.ML_ATTR_STATUS, "");
-        if (TextUtils.isEmpty(status)) {
+        if (!TextUtils.isEmpty(status)) {
             holder.btnAgree.setVisibility(View.VISIBLE);
             holder.textViewStatus.setVisibility(View.GONE);
         } else {
             holder.btnAgree.setVisibility(View.GONE);
-            holder.textViewStatus.setVisibility(View.GONE);
+            holder.textViewStatus.setVisibility(View.VISIBLE);
             holder.textViewStatus.setText(status);
         }
 
-        holder.btnAgree.setTag(position);
-        holder.btnAgree.setOnClickListener(viewListener);
+        holder.btnAgree.setTag(message.getMsgId());
+        holder.btnAgree.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+                mCallBack.onAction(MLConstants.ML_ACTION_APPLY_FOR_AGREE, message.getMsgId());
+            }
+        });
         // 给当前 ItemView 设置点击和长按监听
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 // 设置点击动作
-                mOnItemClickListener.onItemAction(position, MLConstants.ML_ACTION_APPLY_FOR_CLICK);
+                mCallBack.onAction(MLConstants.ML_ACTION_APPLY_FOR_CLICK, message.getMsgId());
             }
         });
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override public boolean onLongClick(View v) {
                 // 这里直接给长按设置删除操作
-                mOnItemClickListener.onItemAction(position, MLConstants.ML_ACTION_APPLY_FOR_DELETE);
+                mCallBack.onAction(MLConstants.ML_ACTION_APPLY_FOR_DELETE, message.getMsgId());
                 return true;
             }
         });
@@ -108,47 +110,18 @@ public class MLApplyForAdapter extends RecyclerView.Adapter<MLApplyForAdapter.In
     }
 
     /**
-     * 申请与通知列表内Button点击事件
-     */
-    private View.OnClickListener viewListener = new View.OnClickListener() {
-        @Override public void onClick(View v) {
-            int position = (int) v.getTag();
-            switch (v.getId()) {
-                case R.id.ml_btn_agree:
-                    mOnItemClickListener.onItemAction(position,
-                            MLConstants.ML_ACTION_APPLY_FOR_AGREE);
-                    break;
-            }
-        }
-    };
-
-    /**
-     * 自定义回调接口，用来实现 RecyclerView 中 Item 长按和点击事件监听
-     */
-    protected interface MLOnItemClickListener {
-        /**
-         * Item 点击及长按事件的处理
-         * 这里Item的点击及长按监听都在当前的 MLApplyForAdapter 实现
-         *
-         * @param position 需要操作的Item的位置
-         * @param action 长按菜单需要处理的动作，
-         */
-        public void onItemAction(int position, int action);
-    }
-
-    /**
-     * 设置回调监听
+     * 设置 Item 回调
      *
-     * @param listener 自定义回调接口
+     * @param callback 自定义实现的回调接口
      */
-    public void setOnItemClickListener(MLOnItemClickListener listener) {
-        mOnItemClickListener = listener;
+    public void setItemCallBack(MLItemCallBack callback) {
+        mCallBack = callback;
     }
 
     /**
      * 自定义ViewHolder
      */
-    protected static class InvitedViewHolder extends RecyclerView.ViewHolder {
+    protected static class ApplyViewHolder extends RecyclerView.ViewHolder {
         MLImageView imageViewAvatar;
         TextView textViewUsername;
         TextView textViewReason;
@@ -160,13 +133,13 @@ public class MLApplyForAdapter extends RecyclerView.Adapter<MLApplyForAdapter.In
          *
          * @param itemView item项的父控件
          */
-        public InvitedViewHolder(View itemView) {
+        public ApplyViewHolder(View itemView) {
             super(itemView);
-            imageViewAvatar = (MLImageView) itemView.findViewById(R.id.ml_img_avatar);
-            textViewUsername = (TextView) itemView.findViewById(R.id.ml_text_username);
-            textViewReason = (TextView) itemView.findViewById(R.id.ml_text_reason);
-            textViewStatus = (TextView) itemView.findViewById(R.id.ml_text_status);
-            btnAgree = (Button) itemView.findViewById(R.id.ml_btn_agree);
+            imageViewAvatar = (MLImageView) itemView.findViewById(R.id.img_avatar);
+            textViewUsername = (TextView) itemView.findViewById(R.id.text_username);
+            textViewReason = (TextView) itemView.findViewById(R.id.text_reason);
+            textViewStatus = (TextView) itemView.findViewById(R.id.text_status);
+            btnAgree = (Button) itemView.findViewById(R.id.btn_agree);
         }
     }
 }

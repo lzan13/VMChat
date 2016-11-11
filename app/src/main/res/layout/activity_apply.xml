@@ -19,13 +19,13 @@
 
         <!--官方下拉刷新控件-->
         <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/ml_refresh_layout"
+            android:id="@+id/refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             >
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/ml_recycler_view"
+                android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fadeScrollbars="true"
@@ -36,7 +36,7 @@
         </android.support.v4.widget.SwipeRefreshLayout>
         <!--空数据时显示的布局-->
         <!--<RelativeLayout-->
-        <!--android:id="@+id/ml_layout_empty"-->
+        <!--android:id="@+id/layout_empty"-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="match_parent"-->
         <!--android:background="@color/ml_red_87"-->

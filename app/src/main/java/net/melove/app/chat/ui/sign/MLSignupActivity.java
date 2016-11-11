@@ -31,8 +31,8 @@ public class MLSignUpActivity extends MLBaseActivity {
     private ProgressDialog mDialog;
 
     // 输入框
-    @BindView(R.id.ml_edit_username) EditText mUsernameView;
-    @BindView(R.id.ml_edit_password) EditText mPasswordView;
+    @BindView(R.id.edit_username) EditText mUsernameView;
+    @BindView(R.id.edit_password) EditText mPasswordView;
     // 用户名和密码
     private String mUsername;
     private String mPassword;
@@ -62,12 +62,12 @@ public class MLSignUpActivity extends MLBaseActivity {
         });
     }
 
-    @OnClick(R.id.ml_btn_sign_up) void onClick(View v) {
+    @OnClick(R.id.btn_sign_up) void onClick(View v) {
         switch (v.getId()) {
-            case R.id.ml_btn_sign_in:
+            case R.id.btn_sign_in:
                 onFinish();
                 break;
-            case R.id.ml_btn_sign_up:
+            case R.id.btn_sign_up:
                 attemptSignUp();
                 break;
         }

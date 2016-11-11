@@ -11,7 +11,7 @@
     >
 
     <com.bm.library.PhotoView
-        android:id="@+id/ml_img_image"
+        android:id="@+id/img_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerInside"
@@ -26,7 +26,7 @@
         >
 
         <android.support.design.widget.AppBarLayout
-            android:id="@+id/ml_widget_appbar"
+            android:id="@+id/widget_appbar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/ml_dimen_56"
             android:background="@null"
@@ -35,7 +35,7 @@
             >
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/ml_widget_toolbar"
+                android:id="@+id/widget_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/ml_black_38"

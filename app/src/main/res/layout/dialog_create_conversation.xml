@@ -16,7 +16,7 @@
         />
 
     <EditText
-        android:id="@+id/ml_edit_chat_id"
+        android:id="@+id/edit_chat_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/ml_hint_username"

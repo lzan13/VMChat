@@ -72,10 +72,12 @@ public class MLContactsListener implements EMContactListener {
         // 创建一条接收消息，用来保存申请信息
         EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
         // 将理由保存为消息内容，用于直接显示
-        EMTextMessageBody body = new EMTextMessageBody(reason);
+        EMTextMessageBody body = new EMTextMessageBody(mContext.getString(R.string.ml_have_apply));
         message.addBody(body);
         // 申请者username
         message.setAttribute(MLConstants.ML_ATTR_USERNAME, username);
+        // 设置理由
+        message.setAttribute(MLConstants.ML_ATTR_REASON, reason);
         // 申请与通知类型
         message.setAttribute(MLConstants.ML_ATTR_TYPE, MLConstants.ML_APPLY_TYPE_USER);
         // 设置当前申请信息状态
@@ -109,16 +111,18 @@ public class MLContactsListener implements EMContactListener {
 
         // 创建一条接收消息，用来保存申请信息
         EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
-        // 将理由保存为消息内容，用于直接显示
-        EMTextMessageBody body =
-                new EMTextMessageBody(mContext.getString(R.string.ml_be_agreed_user));
+        // 保存为消息内容，用于提示用户有新的申请与通知信息
+        EMTextMessageBody body = new EMTextMessageBody(mContext.getString(R.string.ml_have_apply));
         message.addBody(body);
         // 申请者username
         message.setAttribute(MLConstants.ML_ATTR_USERNAME, username);
+        // 设置理由
+        message.setAttribute(MLConstants.ML_ATTR_REASON,
+                mContext.getString(R.string.ml_be_agreed_user));
         // 申请与通知类型
         message.setAttribute(MLConstants.ML_ATTR_TYPE, MLConstants.ML_APPLY_TYPE_USER);
         // 设置当前申请信息状态
-        message.setAttribute(MLConstants.ML_ATTR_STATUS, "");
+        message.setAttribute(MLConstants.ML_ATTR_STATUS, mContext.getString(R.string.ml_agreed));
         // 设置消息发送方
         message.setFrom(MLConstants.ML_CONVERSATION_APPLY);
         // 设置msgId
@@ -149,15 +153,17 @@ public class MLContactsListener implements EMContactListener {
         // 创建一条接收消息，用来保存申请信息
         EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
         // 将理由保存为消息内容，用于直接显示
-        EMTextMessageBody body =
-                new EMTextMessageBody(mContext.getString(R.string.ml_be_reject_user));
+        EMTextMessageBody body = new EMTextMessageBody(mContext.getString(R.string.ml_have_apply));
         message.addBody(body);
         // 申请者username
         message.setAttribute(MLConstants.ML_ATTR_USERNAME, username);
+        // 设置理由
+        message.setAttribute(MLConstants.ML_ATTR_REASON,
+                mContext.getString(R.string.ml_be_agreed_user));
         // 申请与通知类型
         message.setAttribute(MLConstants.ML_ATTR_TYPE, MLConstants.ML_APPLY_TYPE_USER);
         // 设置当前申请信息状态
-        message.setAttribute(MLConstants.ML_ATTR_STATUS, "");
+        message.setAttribute(MLConstants.ML_ATTR_STATUS, mContext.getString(R.string.ml_rejected));
         // 设置消息发送方
         message.setFrom(MLConstants.ML_CONVERSATION_APPLY);
         // 设置msgId

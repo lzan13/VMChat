@@ -37,7 +37,7 @@ public class MLSettingsActivity extends MLBaseActivity {
         });
         // Display the fragment as the main content.
         getFragmentManager().beginTransaction()
-                .replace(R.id.ml_layout_container, new MLSettingsPreference())
+                .replace(R.id.layout_container, new MLSettingsPreference())
                 .commit();
     }
 }

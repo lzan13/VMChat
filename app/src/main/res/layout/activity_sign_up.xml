@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/ml_layout_coordinator"
+    android:id="@+id/layout_coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/ml_theme_background"
@@ -53,7 +53,7 @@
                     >
 
                     <EditText
-                        android:id="@+id/ml_edit_username"
+                        android:id="@+id/edit_username"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/ml_hint_username"
@@ -72,7 +72,7 @@
                     >
 
                     <EditText
-                        android:id="@+id/ml_edit_password"
+                        android:id="@+id/edit_password"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/ml_hint_password"
@@ -85,7 +85,7 @@
 
 
                 <Button
-                    android:id="@+id/ml_btn_sign_up"
+                    android:id="@+id/btn_sign_up"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/ml_dimen_36"
                     android:layout_marginBottom="@dimen/ml_dimen_24"
@@ -99,7 +99,7 @@
                     />
 
                 <CheckBox
-                    android:id="@+id/ml_checkbox"
+                    android:id="@+id/checkbox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"

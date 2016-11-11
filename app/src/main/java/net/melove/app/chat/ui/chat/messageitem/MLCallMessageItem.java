@@ -119,12 +119,12 @@ public class MLCallMessageItem extends MLMessageItem {
             mInflater.inflate(R.layout.item_msg_call_received, this);
         }
 
-        bubbleLayout = findViewById(R.id.ml_layout_bubble);
-        avatarView = (MLImageView) findViewById(R.id.ml_img_avatar);
-        contentView = (TextView) findViewById(R.id.ml_text_content);
-        usernameView = (TextView) findViewById(R.id.ml_text_username);
-        msgTimeView = (TextView) findViewById(R.id.ml_text_time);
-        mCallIcon = (ImageView) findViewById(R.id.ml_img_call_icon);
+        bubbleLayout = findViewById(R.id.layout_bubble);
+        avatarView = (MLImageView) findViewById(R.id.img_avatar);
+        contentView = (TextView) findViewById(R.id.text_content);
+        usernameView = (TextView) findViewById(R.id.text_username);
+        msgTimeView = (TextView) findViewById(R.id.text_time);
+        mCallIcon = (ImageView) findViewById(R.id.img_call_icon);
     }
 
 }

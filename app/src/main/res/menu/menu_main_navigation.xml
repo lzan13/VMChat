@@ -2,19 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/ml_nav_home"
+            android:id="@+id/nav_home"
             android:icon="@mipmap/ic_home_white_24dp"
             android:title="@string/ml_home" />
         <item
-            android:id="@+id/ml_nav_group"
+            android:id="@+id/nav_group"
             android:icon="@mipmap/ic_group_white_24dp"
             android:title="@string/ml_group" />
         <item
-            android:id="@+id/ml_nav_room"
+            android:id="@+id/nav_room"
             android:icon="@mipmap/ic_group_white_24dp"
             android:title="@string/ml_room" />
         <item
-            android:id="@+id/ml_nav_notification"
+            android:id="@+id/nav_notification"
             android:icon="@mipmap/ic_notifications_white_24dp"
             android:title="@string/ml_apply" />
 
@@ -22,11 +22,11 @@
     <item android:title="@string/ml_settings">
         <menu>
             <item
-                android:id="@+id/ml_nav_help"
+                android:id="@+id/nav_help"
                 android:icon="@mipmap/ic_help_white_24dp"
                 android:title="@string/ml_help" />
             <item
-                android:id="@+id/ml_nav_setting"
+                android:id="@+id/nav_setting"
                 android:icon="@mipmap/ic_settings_white_24dp"
                 android:title="@string/ml_settings" />
 

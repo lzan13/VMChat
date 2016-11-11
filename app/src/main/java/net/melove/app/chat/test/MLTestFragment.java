@@ -81,7 +81,7 @@ public class MLTestFragment extends MLBaseFragment {
                 "Send Group", "Get Group", "Create Group", "Send CMD", "Get ChatRoom",
                 "Get User", "Customer"
         };
-        viewGroup = (MLViewGroup) getView().findViewById(R.id.ml_view_custom_viewgroup);
+        viewGroup = (MLViewGroup) getView().findViewById(R.id.view_custom_viewgroup);
         for (int i = 0; i < btns.length; i++) {
             Button btn = new Button(mActivity);
             btn.setText(btns[i]);

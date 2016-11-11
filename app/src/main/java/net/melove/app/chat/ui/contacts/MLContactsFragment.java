@@ -1,16 +1,20 @@
 package net.melove.app.chat.ui.contacts;
 
-import android.content.BroadcastReceiver;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import net.melove.app.chat.MLConstants;
 import net.melove.app.chat.MLHyphenate;
 import net.melove.app.chat.R;
 import net.melove.app.chat.module.event.MLUserEvent;
+import net.melove.app.chat.module.listener.MLItemCallBack;
 import net.melove.app.chat.ui.MLBaseFragment;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -26,17 +30,11 @@ import java.util.List;
 public class MLContactsFragment extends MLBaseFragment {
 
     // 代替 ListView 用来显示联系人列表
-    private RecyclerView mRecyclerView;
+    @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
     // 联系人界面适配器
-    private MLContactsAdapter mContactsAdapter;
-    private View mHeadView;
+    private MLContactsAdapter mAdapter;
 
-    private List<MLUserEntity> mContactsList = new ArrayList<MLUserEntity>();
-
-    // 应用内广播管理器，为了完全这里使用局域广播
-    private LocalBroadcastManager mLocalBroadcastManager;
-    // 会话界面监听会话变化的广播接收器
-    private BroadcastReceiver mBroadcastReceiver;
+    private List<MLUserEntity> mContactsList = new ArrayList<>();
 
     /**
      * 工厂方法，用来创建一个Fragment的实例
@@ -54,14 +52,14 @@ public class MLContactsFragment extends MLBaseFragment {
         // Required empty public constructor
     }
 
-    @Override public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_contacts, container, false);
+        View view = inflater.inflate(R.layout.fragment_contacts, container, false);
+
+        ButterKnife.bind(this, view);
+
+        return view;
     }
 
     @Override public void onActivityCreated(Bundle savedInstanceState) {
@@ -75,12 +73,8 @@ public class MLContactsFragment extends MLBaseFragment {
      */
     private void initView() {
         mActivity = getParentFragment().getActivity();
-        // 加载会话到list集合
-        //        loadConversationList();
-        //        // 实例化会话列表的 Adapter 对象
-        //        mConversationAdapter = new MLConversationAdapter(mActivity, mConversations);
-        //        // 初始化会话列表的 ListView 控件
-        //        mRecyclerView = (RecyclerView) getView().findViewById(R.id.ml_recyclerview_conversation);
+        loadContactsList();
+        mAdapter = new MLContactsAdapter(mActivity, mContactsList);
         /**
          * 为RecyclerView 设置布局管理器，这里使用线性布局
          * RececlerView 默认的布局管理器：
@@ -93,64 +87,65 @@ public class MLContactsFragment extends MLBaseFragment {
          * 自定义这些动画需要继承{@link android.support.v7.widget.RecyclerView.ItemAnimator}，
          * 并实现{@link RecyclerView#setItemAnimator(RecyclerView.ItemAnimator)}
          */
-        //        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
-        //        mRecyclerView.setAdapter(mConversationAdapter);
-        //
-        //        // 通过自定义接口来实现RecyclerView item的点击和长按事件
-        //        setItemClickListener();
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+        mRecyclerView.setAdapter(mAdapter);
+
+        setItemCallBack();
     }
 
     /**
-     * 初始化联系人界面ListView
+     * 设置列表项的点击监听，因为这里使用的是RecyclerView控件，所以长按和点击监听都要自己去做，然后通过回调接口实现
      */
-    private void initListView() {
-        //        mListView = (ListView) getView().findViewById(R.id.ml_recyclerview_contacts);
-        //MLInvitedDao.getInstance()
-        //        // 加载所有联系人
-        //        loadUserList();
-        //
-        //        // 实例化联系人列表的适配器
-        //        mAdapter = new MLContactsAdapter(mActivity, mContactsList);
-        //
-        //        mListView.setAdapter(mAdapter);
+    private void setItemCallBack() {
+        mAdapter.setItemCallBack(new MLItemCallBack() {
+            @Override public void onAction(int action, Object tag) {
+                int position = (int) tag;
+                switch (action) {
+                    case MLConstants.ML_ACTION_APPLY_FOR_CLICK:
+                        jumpUserInfo(position);
+                        break;
+                    case MLConstants.ML_ACTION_APPLY_FOR_AGREE:
 
+                        break;
+                }
+            }
+        });
+    }
+
+    private void jumpUserInfo(int position) {
+        MLUserEntity userEntity = mContactsList.get(position);
+        Intent intent = new Intent();
+        intent.setClass(mActivity, MLUserActivity.class);
+        intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, userEntity.getUserName());
+        mActivity.startActivity(intent);
+    }
+
+    /**
+     * 加载联系人列表
+     */
+    private void loadContactsList() {
+        if (mContactsList == null) {
+            mContactsList = new ArrayList<>();
+        }
+        mContactsList.clear();
+        mContactsList.addAll(MLHyphenate.getInstance().getUserList().values());
     }
 
     /**
      * 刷新邀请信息界面
      */
-    private void refreshContacts() {
-        mContactsList.clear();
-        mContactsList.addAll(loadUserList());
-        if (mContactsAdapter != null) {
-            mContactsAdapter.notifyDataSetChanged();
+    private void refresh() {
+        loadContactsList();
+        if (mAdapter == null) {
+            mAdapter = new MLContactsAdapter(mActivity, mContactsList);
+            mRecyclerView.setAdapter(mAdapter);
+        } else {
+            mAdapter.notifyDataSetChanged();
         }
     }
-
-    /**
-     * 获取用户列表，TODO 后期需要实现排序
-     *
-     * @return 返回加载的用户集合
-     */
-    private List<MLUserEntity> loadUserList() {
-        // TODO 这里暂时只进行了简单的获取用户列表，后期需要实现排序
-        List<MLUserEntity> userList = new ArrayList<>();
-        userList.addAll(MLHyphenate.getInstance().getUserList().values());
-        return userList;
-    }
-
-    /**
-     *
-     */
-    private View.OnClickListener viewListener = new View.OnClickListener() {
-        @Override public void onClick(View v) {
-            switch (v.getId()) {
-            }
-        }
-    };
 
     @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(MLUserEvent event) {
-        refreshContacts();
+        refresh();
     }
 
     /**
@@ -159,7 +154,7 @@ public class MLContactsFragment extends MLBaseFragment {
     @Override public void onResume() {
         super.onResume();
         // 刷新联系人界面
-        refreshContacts();
+        refresh();
     }
 
     /**

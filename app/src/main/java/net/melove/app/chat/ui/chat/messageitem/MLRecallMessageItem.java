@@ -60,8 +60,8 @@ public class MLRecallMessageItem extends MLMessageItem {
     @Override
     protected void onInflateView() {
         mInflater.inflate(R.layout.item_msg_sys_recall, this);
-        bubbleLayout = findViewById(R.id.ml_layout_bubble);
-        msgTimeView = (TextView) findViewById(R.id.ml_text_time);
-        contentView = (TextView) findViewById(R.id.ml_text_content);
+        bubbleLayout = findViewById(R.id.layout_bubble);
+        msgTimeView = (TextView) findViewById(R.id.text_time);
+        contentView = (TextView) findViewById(R.id.text_content);
     }
 }

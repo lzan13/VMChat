@@ -14,7 +14,7 @@
 
     <!--界面背景-->
     <ImageView
-        android:id="@+id/ml_img_background"
+        android:id="@+id/img_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
@@ -22,20 +22,20 @@
         />
 
     <RelativeLayout
-        android:id="@+id/ml_layout_surface_container"
+        android:id="@+id/layout_surface_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
         <!--显示对方画面控件-->
         <com.hyphenate.media.EMOppositeSurfaceView
-            android:id="@+id/ml_surface_view_opposite"
+            android:id="@+id/surface_view_opposite"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone"
             />
         <!--显示本地画面控件-->
         <com.hyphenate.media.EMLocalSurfaceView
-            android:id="@+id/ml_surface_view_local"
+            android:id="@+id/surface_view_local"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
@@ -44,7 +44,7 @@
 
     <!--控制按钮层布局-->
     <RelativeLayout
-        android:id="@+id/ml_layout_control"
+        android:id="@+id/layout_control"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
@@ -58,7 +58,7 @@
             >
             <!--切换摄像头-->
             <ImageButton
-                android:id="@+id/ml_btn_change_camera_switch"
+                android:id="@+id/btn_change_camera_switch"
                 android:layout_width="@dimen/ml_dimen_48"
                 android:layout_height="@dimen/ml_dimen_48"
                 android:layout_alignParentLeft="true"
@@ -75,7 +75,7 @@
                 >
                 <!--通话状态-->
                 <TextView
-                    android:id="@+id/ml_text_call_status"
+                    android:id="@+id/text_call_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/ml_app_name"
@@ -83,7 +83,7 @@
                     />
                 <!--通话计时控件-->
                 <Chronometer
-                    android:id="@+id/ml_chronometer_call_time"
+                    android:id="@+id/chronometer_call_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/ml_white_87"
@@ -92,7 +92,7 @@
 
             <!--界面最小化按钮-->
             <ImageButton
-                android:id="@+id/ml_btn_exit_full_screen"
+                android:id="@+id/btn_exit_full_screen"
                 android:layout_width="@dimen/ml_dimen_48"
                 android:layout_height="@dimen/ml_dimen_48"
                 android:layout_alignParentRight="true"
@@ -104,7 +104,7 @@
 
 
         <LinearLayout
-            android:id="@+id/ml_layout_calling"
+            android:id="@+id/layout_calling"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -122,7 +122,7 @@
 
                 <!--麦克风开关-->
                 <ImageButton
-                    android:id="@+id/ml_btn_mic_switch"
+                    android:id="@+id/btn_mic_switch"
                     android:layout_width="@dimen/ml_dimen_48"
                     android:layout_height="@dimen/ml_dimen_48"
                     android:layout_margin="@dimen/ml_dimen_8"
@@ -132,7 +132,7 @@
 
                 <!--摄像头开关-->
                 <ImageButton
-                    android:id="@+id/ml_btn_camera_switch"
+                    android:id="@+id/btn_camera_switch"
                     android:layout_width="@dimen/ml_dimen_48"
                     android:layout_height="@dimen/ml_dimen_48"
                     android:layout_margin="@dimen/ml_dimen_8"
@@ -142,7 +142,7 @@
 
                 <!--扬声器开关-->
                 <ImageButton
-                    android:id="@+id/ml_btn_speaker_switch"
+                    android:id="@+id/btn_speaker_switch"
                     android:layout_width="@dimen/ml_dimen_48"
                     android:layout_height="@dimen/ml_dimen_48"
                     android:layout_margin="@dimen/ml_dimen_8"
@@ -152,7 +152,7 @@
 
                 <!--录制开关-->
                 <ImageButton
-                    android:id="@+id/ml_btn_record_switch"
+                    android:id="@+id/btn_record_switch"
                     android:layout_width="@dimen/ml_dimen_48"
                     android:layout_height="@dimen/ml_dimen_48"
                     android:layout_margin="@dimen/ml_dimen_8"
@@ -162,7 +162,7 @@
 
                 <!--通话信息-->
                 <ImageButton
-                    android:id="@+id/ml_btn_call_info"
+                    android:id="@+id/btn_call_info"
                     android:layout_width="@dimen/ml_dimen_48"
                     android:layout_height="@dimen/ml_dimen_48"
                     android:layout_margin="@dimen/ml_dimen_8"
@@ -178,7 +178,7 @@
                 >
                 <!--拒绝接听-->
                 <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/ml_fab_reject_call"
+                    android:id="@+id/fab_reject_call"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
@@ -189,7 +189,7 @@
 
                 <!--结束通话-->
                 <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/ml_fab_end_call"
+                    android:id="@+id/fab_end_call"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
@@ -201,7 +201,7 @@
 
                 <!--接听通话-->
                 <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/ml_fab_answer_call"
+                    android:id="@+id/fab_answer_call"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
@@ -215,7 +215,7 @@
         </LinearLayout>
     </RelativeLayout>
     <TableLayout
-        android:id="@+id/ml_layout_call_info"
+        android:id="@+id/layout_call_info"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/ml_white_87"
@@ -234,7 +234,7 @@
                 android:textSize="@dimen/ml_size_14"
                 />
             <TextView
-                android:id="@+id/ml_text_resolution"
+                android:id="@+id/text_resolution"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/ml_app_name"
@@ -259,7 +259,7 @@
                 android:textSize="@dimen/ml_size_14"
                 />
             <TextView
-                android:id="@+id/ml_text_time_latency"
+                android:id="@+id/text_time_latency"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -285,7 +285,7 @@
                 android:textSize="@dimen/ml_size_14"
                 />
             <TextView
-                android:id="@+id/ml_text_frame_rate"
+                android:id="@+id/text_frame_rate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -311,7 +311,7 @@
                 android:textSize="@dimen/ml_size_14"
                 />
             <TextView
-                android:id="@+id/ml_text_lost_rate"
+                android:id="@+id/text_lost_rate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/ml_app_name"
@@ -335,7 +335,7 @@
                 android:textSize="@dimen/ml_size_14"
                 />
             <TextView
-                android:id="@+id/ml_text_local_bitrate"
+                android:id="@+id/text_local_bitrate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/ml_app_name"
@@ -360,7 +360,7 @@
                 android:textSize="@dimen/ml_size_14"
                 />
             <TextView
-                android:id="@+id/ml_text_remote_bitrate"
+                android:id="@+id/text_remote_bitrate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/ml_app_name"

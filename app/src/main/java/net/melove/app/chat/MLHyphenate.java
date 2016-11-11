@@ -146,7 +146,7 @@ public class MLHyphenate {
         // 是否启动 DNS 信息配置
         options.enableDNSConfig(true);
         // 设置Appkey，如果配置文件已经配置，这里可以不用设置
-        //options.setAppKey("ysx#jingdiandaodu");
+        //options.setAppKey("meyki#elife");
         // 设置自动登录
         options.setAutoLogin(true);
         // 设置是否按照服务器时间排序，false按照本地时间排序

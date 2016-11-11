@@ -13,9 +13,11 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 
+import com.hyphenate.exceptions.HyphenateException;
 import net.melove.app.chat.R;
 import net.melove.app.chat.MLConstants;
 import net.melove.app.chat.module.event.MLApplyForEvent;
+import net.melove.app.chat.module.listener.MLItemCallBack;
 import net.melove.app.chat.ui.MLBaseActivity;
 import net.melove.app.chat.ui.contacts.MLUserActivity;
 import net.melove.app.chat.ui.chat.MLConversationExtUtils;
@@ -34,14 +36,13 @@ public class MLApplyForActivity extends MLBaseActivity {
     private int mPageSize = 20;
 
     private RecyclerView mRecyclerView;
-    private MLApplyForAdapter mApplyForAdapter;
+    private MLApplyForAdapter mAdapter;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_apply);
 
         initView();
-        initListView();
     }
 
     /**
@@ -58,12 +59,7 @@ public class MLApplyForActivity extends MLBaseActivity {
                 onFinish();
             }
         });
-    }
 
-    /**
-     * 初始化邀请信息列表
-     */
-    private void initListView() {
         /**
          * 初始化会话对象，这里有三个参数，
          * 第一个表示会话的当前聊天的 useranme 或者 groupid
@@ -86,8 +82,8 @@ public class MLApplyForActivity extends MLBaseActivity {
         }
 
         // 实例化适配器
-        mApplyForAdapter = new MLApplyForAdapter(mActivity);
-        mRecyclerView = (RecyclerView) findViewById(R.id.ml_recycler_view);
+        mAdapter = new MLApplyForAdapter(mActivity);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
         /**
          * 为RecyclerView 设置布局管理器，这里使用线性布局
@@ -104,7 +100,7 @@ public class MLApplyForActivity extends MLBaseActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
 
         // 设置适配器
-        mRecyclerView.setAdapter(mApplyForAdapter);
+        mRecyclerView.setAdapter(mAdapter);
 
         // 通过自定义接口来实现RecyclerView item的点击和长按事件
         setItemClickListener();
@@ -113,9 +109,9 @@ public class MLApplyForActivity extends MLBaseActivity {
     /**
      * 刷新邀请信息列表
      */
-    private void refreshInvited() {
-        if (mApplyForAdapter != null) {
-            mApplyForAdapter.notifyDataSetChanged();
+    private void refresh() {
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
         }
     }
 
@@ -123,28 +119,18 @@ public class MLApplyForActivity extends MLBaseActivity {
      * 设置列表项的点击监听，因为这里使用的是RecyclerView控件，所以长按和点击监听都要自己去做，然后通过回调接口实现
      */
     private void setItemClickListener() {
-        mApplyForAdapter.setOnItemClickListener(new MLApplyForAdapter.MLOnItemClickListener() {
-            /**
-             * Item 点击及长按事件的处理
-             * 这里Item的点击及长按监听都在 {@link MLApplyForAdapter} 实现，然后通过回调的方式，
-             * 把操作的 Action 传递过来
-             *
-             * @param position 需要操作的Item的位置
-             * @param action   长按菜单需要处理的动作，
-             */
-            @Override public void onItemAction(int position, int action) {
+        mAdapter.setItemCallBack(new MLItemCallBack() {
+            @Override public void onAction(int action, Object tag) {
+                String msgId = (String) tag;
                 switch (action) {
                     case MLConstants.ML_ACTION_APPLY_FOR_CLICK:
-                        jumpUserInfo(position);
+                        jumpUserInfo(msgId);
                         break;
                     case MLConstants.ML_ACTION_APPLY_FOR_AGREE:
-                        agreeInvited(position);
-                        break;
-                    case MLConstants.ML_ACTION_APPLY_FOR_REFUSE:
-                        refuseInvited(position);
+                        agreeApply(msgId);
                         break;
                     case MLConstants.ML_ACTION_APPLY_FOR_DELETE:
-                        deleteInvited(position);
+                        deleteApply(msgId);
                         break;
                 }
             }
@@ -152,82 +138,63 @@ public class MLApplyForActivity extends MLBaseActivity {
     }
 
     /**
-     * 查看当前申请信息的详情，并在详情界面做一些处理
+     * 查看当前申请用户的详细信息
      *
-     * @param position 当前选中的 Invited 位置
+     * @param msgId 当前操作 Item 项申请信息 id
      */
-    private void jumpUserInfo(int position) {
-        EMMessage message = mConversation.getAllMessages().get(position);
+    private void jumpUserInfo(String msgId) {
+        EMMessage message = mConversation.getMessage(msgId, false);
         Intent intent = new Intent();
         intent.setClass(mActivity, MLUserActivity.class);
         intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID,
                 message.getStringAttribute(MLConstants.ML_ATTR_USERNAME, "null"));
+        intent.putExtra(MLConstants.ML_EXTRA_MSG_ID, msgId);
         mActivity.startActivity(intent);
     }
 
     /**
      * 同意好友请求，环信的同意和拒绝好友请求 都需要异步处理，这里新建线程去调用
+     *
+     * @param msgId 当前操作项的消息 id
      */
-    private void agreeInvited(int position) {
+    private void agreeApply(final String msgId) {
         final ProgressDialog dialog = new ProgressDialog(mActivity);
         dialog.setMessage(mActivity.getResources().getString(R.string.ml_dialog_message_waiting));
         dialog.show();
 
-        //        final MLInvitedEntity invitedEntity = mInvitedList.get(position);
-        //        new Thread(new Runnable() {
-        //            @Override
-        //            public void run() {
-        //                try {
-        //                    EMClient.getInstance().contactManager().acceptInvitation(invitedEntity.getUserName());
-        //                    invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.AGREED);
-        //                    invitedEntity.setTime(MLDateUtil.getCurrentMillisecond());
-        //                    // 更新当前的申请信息
-        //                    MLInvitedDao.getInstance().updateInvited(invitedEntity);
-        //                    dialog.dismiss();
-        //                } catch (HyphenateException e) {
-        //                    e.printStackTrace();
-        //                }
-        //            }
-        //        }).start();
+        new Thread(new Runnable() {
+            @Override public void run() {
+                try {
+                    // 同意申请
+                    EMMessage message = mConversation.getMessage(msgId, false);
+                    String username = message.getStringAttribute(MLConstants.ML_ATTR_USERNAME, "");
+                    EMClient.getInstance().contactManager().acceptInvitation(username);
 
+                    // 更新当前的申请信息
+                    message.setAttribute(MLConstants.ML_ATTR_STATUS,
+                            mActivity.getString(R.string.ml_agreed));
+                    EMClient.getInstance().chatManager().updateMessage(message);
+                    dialog.dismiss();
+                } catch (HyphenateException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     /**
-     * 拒绝好友请求，环信的同意和拒绝好友请求 都需要异步处理，这里新建线程去调用
+     * 删除申请通知
+     *
+     * @param msgId 当前操作的 item 消息 id
      */
-    private void refuseInvited(int positon) {
-        //        final ProgressDialog dialog = new ProgressDialog(mActivity);
-        //        dialog.setMessage(mActivity.getResources().getString(R.string.ml_dialog_message_waiting));
-        //        dialog.show();
-        //        final MLInvitedEntity invitedEntity = mInvitedList.get(positon);
-        //        new Thread(new Runnable() {
-        //            @Override
-        //            public void run() {
-        //                try {
-        //                    EMClient.getInstance().contactManager().declineInvitation(invitedEntity.getUserName());
-        //                    // 修改当前申请消息的状态
-        //                    invitedEntity.setStatus(MLInvitedEntity.InvitedStatus.REFUSED);
-        //                    invitedEntity.setTime(MLDateUtil.getCurrentMillisecond());
-        //                    // 更新当前的申请信息
-        //                    MLInvitedDao.getInstance().updateInvited(invitedEntity);
-        //                    dialog.dismiss();
-        //                } catch (HyphenateException e) {
-        //                    e.printStackTrace();
-        //                }
-        //            }
-        //        }).start();
-    }
-
-    private void deleteInvited(final int position) {
-        final int index = position;
+    private void deleteApply(final String msgId) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(mActivity);
         dialog.setTitle(mActivity.getResources().getString(R.string.ml_dialog_title_apply));
         dialog.setMessage(
                 mActivity.getResources().getString(R.string.ml_dialog_content_delete_invited));
         dialog.setPositiveButton(R.string.ml_btn_ok, new DialogInterface.OnClickListener() {
             @Override public void onClick(DialogInterface dialog, int which) {
-                mConversation.removeMessage(
-                        mConversation.getAllMessages().get(position).getMsgId());
+                mConversation.removeMessage(msgId);
             }
         });
         dialog.setNegativeButton(R.string.ml_btn_cancel, new DialogInterface.OnClickListener() {
@@ -242,7 +209,7 @@ public class MLApplyForActivity extends MLBaseActivity {
      * 使用 EventBus 的订阅方式监听事件的变化，这里 EventBus 3.x 使用注解的方式确定方法调用的线程
      */
     @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(MLApplyForEvent event) {
-        refreshInvited();
+        refresh();
     }
 
     /**
@@ -250,7 +217,7 @@ public class MLApplyForActivity extends MLBaseActivity {
      */
     @Override public void onResume() {
         super.onResume();
-        refreshInvited();
+        refresh();
     }
 
     /**

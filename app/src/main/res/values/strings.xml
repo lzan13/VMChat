@@ -33,14 +33,16 @@
     <string name="ml_btn_reply">先聊聊</string>
     <string name="ml_btn_start_chat">开始聊天</string>
 
+    <!--申请与通知相关-->
+    <string name="ml_have_apply">你有新的申请与通知信息</string>
     <string name="ml_agreed">已同意</string>
     <string name="ml_be_agreed_user">对方已同意你的好友申请</string>
     <string name="ml_be_agreed_group">对方已同意你的入群申请</string>
     <string name="ml_be_agreed_group_invite">对方已同意你的入群邀请</string>
-    <string name="ml_reject_user">已拒绝</string>
-    <string name="ml_be_reject_user">对方已拒绝你的好友申请</string>
-    <string name="ml_be_reject_group">对方已拒绝你的入群申请</string>
-    <string name="ml_be_reject_group_invite">对方已拒绝你的入群邀请</string>
+    <string name="ml_rejected">已拒绝</string>
+    <string name="ml_be_rejected_user">对方已拒绝你的好友申请</string>
+    <string name="ml_be_rejected_group">对方已拒绝你的入群申请</string>
+    <string name="ml_be_rejected_group_invite">对方已拒绝你的入群邀请</string>
 
     <string name="ml_add_friend">添加好友</string>
     <string name="ml_add_group">添加群组</string>
@@ -242,6 +244,20 @@
     <string name="ml_toast_chat_cant_yourself">不能和自己聊天</string>
 
     <string name="ml_toast_unrealized">功能暂未实现，尽请期待(๑^ں^๑)</string>
+
+
+    <!--设置相关-->
+    <string name="ml_settings_about">关于</string>
+    <string name="ml_settings_notification">通知</string>
+    <string name="ml_settings_update">检查更新</string>
+    <string name="ml_settings_version">当前版本</string>
+
+    <string name="ml_pref_key_about">pref_key_about</string>
+    <string name="ml_pref_key_notification">pref_key_notification</string>
+    <string name="ml_pref_key_update">pref_key_update</string>
+    <string name="ml_pref_key_version">pref_key_version</string>
+    <string name="ml_pref_key_">pref_key_</string>
+
 
     <!--界面跳转共享元素名称-->
     <string name="ml_shared_element_toolbar">Toolbar</string>

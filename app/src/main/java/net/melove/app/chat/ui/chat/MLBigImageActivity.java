@@ -48,7 +48,7 @@ public class MLBigImageActivity extends MLBaseActivity {
      * 初始化 Toolbar 控件
      */
     private void initToolbar() {
-        mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.widget_toolbar);
         mToolbar.setTitle(((EMImageMessageBody) mMessage.getBody()).getFileName());
         setSupportActionBar(mToolbar);
         // 设置toolbar图标
@@ -63,12 +63,12 @@ public class MLBigImageActivity extends MLBaseActivity {
     private void initView() {
         mActivity = this;
 
-        mPhotoView = (PhotoView) findViewById(R.id.ml_img_image);
+        mPhotoView = (PhotoView) findViewById(R.id.img_image);
         // 启动图片缩放功能
         mPhotoView.enable();
 
 
-        String msgId = getIntent().getStringExtra(MLConstants.ML_EXTRA_CHAT_MSG_ID);
+        String msgId = getIntent().getStringExtra(MLConstants.ML_EXTRA_MSG_ID);
         mMessage = EMClient.getInstance().chatManager().getMessage(msgId);
 
         // 图片本地路径

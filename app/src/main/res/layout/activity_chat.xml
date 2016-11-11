@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/ml_layout_coordinator"
+    android:id="@+id/layout_coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/ml_theme_background"
@@ -22,7 +22,7 @@
         >
 
         <ImageView
-            android:id="@+id/ml_img_background"
+            android:id="@+id/img_background"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
@@ -30,7 +30,7 @@
             />
 
         <LinearLayout
-            android:id="@+id/ml_layout_input"
+            android:id="@+id/layout_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -42,7 +42,7 @@
 
             <!--输入条布局-->
             <RelativeLayout
-                android:id="@+id/ml_layout_input_bar"
+                android:id="@+id/layout_input_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:animateLayoutChanges="true"
@@ -58,7 +58,7 @@
                     >
 
                     <RelativeLayout
-                        android:id="@+id/ml_layout_input_right"
+                        android:id="@+id/layout_input_right"
                         android:layout_width="@dimen/ml_dimen_48"
                         android:layout_height="@dimen/ml_dimen_48"
                         android:layout_alignParentRight="true"
@@ -67,7 +67,7 @@
 
                         <!--语音按钮-->
                         <ImageButton
-                            android:id="@+id/ml_img_voice"
+                            android:id="@+id/img_voice"
                             android:layout_width="@dimen/ml_dimen_48"
                             android:layout_height="@dimen/ml_dimen_48"
                             android:layout_centerInParent="true"
@@ -78,7 +78,7 @@
                             />
                         <!--发送按钮-->
                         <ImageButton
-                            android:id="@+id/ml_img_send"
+                            android:id="@+id/img_send"
                             android:layout_width="@dimen/ml_dimen_48"
                             android:layout_height="@dimen/ml_dimen_48"
                             android:layout_centerInParent="true"
@@ -90,7 +90,7 @@
 
                     </RelativeLayout>
                     <RelativeLayout
-                        android:id="@+id/ml_layout_input_left"
+                        android:id="@+id/layout_input_left"
                         android:layout_width="@dimen/ml_dimen_48"
                         android:layout_height="@dimen/ml_dimen_48"
                         android:layout_alignParentLeft="true"
@@ -99,7 +99,7 @@
                         >
 
                         <ImageButton
-                            android:id="@+id/ml_img_emotion"
+                            android:id="@+id/img_emotion"
                             android:layout_width="@dimen/ml_dimen_48"
                             android:layout_height="@dimen/ml_dimen_48"
                             android:layout_centerInParent="true"
@@ -109,7 +109,7 @@
                             />
 
                         <ImageButton
-                            android:id="@+id/ml_img_keyboard"
+                            android:id="@+id/img_keyboard"
                             android:layout_width="@dimen/ml_dimen_48"
                             android:layout_height="@dimen/ml_dimen_48"
                             android:layout_centerInParent="true"
@@ -121,12 +121,12 @@
                     </RelativeLayout>
                     <!--输入框-->
                     <EditText
-                        android:id="@+id/ml_edit_input"
+                        android:id="@+id/edit_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_toLeftOf="@id/ml_layout_input_right"
-                        android:layout_toRightOf="@id/ml_layout_input_left"
+                        android:layout_toLeftOf="@id/layout_input_right"
+                        android:layout_toRightOf="@id/layout_input_left"
                         android:background="@null"
                         android:hint="@string/ml_hint_chat"
                         android:maxLines="3"
@@ -140,7 +140,7 @@
 
                 <!--录音控件-->
                 <net.melove.app.chat.ui.widget.MLRecordView
-                    android:id="@+id/ml_view_record_voice"
+                    android:id="@+id/view_record_voice"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/ml_dimen_48"
                     android:layout_alignParentRight="true"
@@ -162,14 +162,14 @@
 
             <!--聊天表情框-->
             <RelativeLayout
-                android:id="@+id/ml_layout_emotion"
+                android:id="@+id/layout_emotion"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/ml_dimen_224"
                 android:visibility="gone"
                 >
 
                 <GridView
-                    android:id="@+id/ml_grid_view_emotion"
+                    android:id="@+id/grid_view_emotion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     >
@@ -181,19 +181,19 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/ml_layout_input"
+            android:layout_above="@id/layout_input"
             android:layout_alignParentTop="true"
             android:clipChildren="true"
             >
             <!--官方下拉刷新控件-->
             <android.support.v4.widget.SwipeRefreshLayout
-                android:id="@+id/ml_refresh_layout"
+                android:id="@+id/refresh_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 >
 
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/ml_recycler_view"
+                    android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:fadeScrollbars="true"
@@ -207,7 +207,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@id/ml_layout_input"
+            android:layout_above="@id/layout_input"
             android:layout_alignParentRight="true"
             >
 
@@ -221,7 +221,7 @@
         </LinearLayout>
         <!--扩展菜单布局-->
         <LinearLayout
-            android:id="@+id/ml_layout_attach_menu"
+            android:id="@+id/layout_attach_menu"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/ml_black_54"
@@ -230,7 +230,7 @@
             >
 
             <GridView
-                android:id="@+id/ml_grid_view_attach_menu"
+                android:id="@+id/grid_view_attach_menu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/ml_white_100"

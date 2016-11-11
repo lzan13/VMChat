@@ -58,31 +58,31 @@ public class MLVideoCallActivity extends MLCallActivity {
     private int surfaceViewState = 0;
 
     // 使用 ButterKnife 注解的方式获取控件
-    @BindView(R.id.ml_layout_control) View mControlLayout;
-    @BindView(R.id.ml_layout_surface_container) RelativeLayout mSurfaceViewContainer;
-    @BindView(R.id.ml_surface_view_local) EMLocalSurfaceView mLocalSurfaceView;
-    @BindView(R.id.ml_surface_view_opposite) EMOppositeSurfaceView mOppositeSurfaceView;
+    @BindView(R.id.layout_control) View mControlLayout;
+    @BindView(R.id.layout_surface_container) RelativeLayout mSurfaceViewContainer;
+    @BindView(R.id.surface_view_local) EMLocalSurfaceView mLocalSurfaceView;
+    @BindView(R.id.surface_view_opposite) EMOppositeSurfaceView mOppositeSurfaceView;
 
-    @BindView(R.id.ml_img_background) ImageView mCallBackgroundView;
-    @BindView(R.id.ml_text_call_status) TextView mCallStatusView;
-    @BindView(R.id.ml_btn_change_camera_switch) ImageButton mChangeCameraSwitch;
-    @BindView(R.id.ml_btn_exit_full_screen) ImageButton mExitFullScreenBtn;
-    @BindView(R.id.ml_btn_camera_switch) ImageButton mCameraSwitch;
-    @BindView(R.id.ml_btn_mic_switch) ImageButton mMicSwitch;
-    @BindView(R.id.ml_btn_speaker_switch) ImageButton mSpeakerSwitch;
-    @BindView(R.id.ml_btn_record_switch) ImageButton mRecordSwitch;
-    @BindView(R.id.ml_fab_reject_call) FloatingActionButton mRejectCallFab;
-    @BindView(R.id.ml_fab_end_call) FloatingActionButton mEndCallFab;
-    @BindView(R.id.ml_fab_answer_call) FloatingActionButton mAnswerCallFab;
+    @BindView(R.id.img_background) ImageView mCallBackgroundView;
+    @BindView(R.id.text_call_status) TextView mCallStatusView;
+    @BindView(R.id.btn_change_camera_switch) ImageButton mChangeCameraSwitch;
+    @BindView(R.id.btn_exit_full_screen) ImageButton mExitFullScreenBtn;
+    @BindView(R.id.btn_camera_switch) ImageButton mCameraSwitch;
+    @BindView(R.id.btn_mic_switch) ImageButton mMicSwitch;
+    @BindView(R.id.btn_speaker_switch) ImageButton mSpeakerSwitch;
+    @BindView(R.id.btn_record_switch) ImageButton mRecordSwitch;
+    @BindView(R.id.fab_reject_call) FloatingActionButton mRejectCallFab;
+    @BindView(R.id.fab_end_call) FloatingActionButton mEndCallFab;
+    @BindView(R.id.fab_answer_call) FloatingActionButton mAnswerCallFab;
 
     // 显示通话信息部分
-    @BindView(R.id.ml_layout_call_info) View mCallInfoLayout;
-    @BindView(R.id.ml_text_resolution) TextView mResolutionView;
-    @BindView(R.id.ml_text_time_latency) TextView mTimeLatencyView;
-    @BindView(R.id.ml_text_frame_rate) TextView mFrameRateView;
-    @BindView(R.id.ml_text_lost_rate) TextView mLostRateView;
-    @BindView(R.id.ml_text_local_bitrate) TextView mLocalBitrateView;
-    @BindView(R.id.ml_text_remote_bitrate) TextView mRemoteBitrateView;
+    @BindView(R.id.layout_call_info) View mCallInfoLayout;
+    @BindView(R.id.text_resolution) TextView mResolutionView;
+    @BindView(R.id.text_time_latency) TextView mTimeLatencyView;
+    @BindView(R.id.text_frame_rate) TextView mFrameRateView;
+    @BindView(R.id.text_lost_rate) TextView mLostRateView;
+    @BindView(R.id.text_local_bitrate) TextView mLocalBitrateView;
+    @BindView(R.id.text_remote_bitrate) TextView mRemoteBitrateView;
 
     private boolean mMonitor = true;
 
@@ -104,7 +104,7 @@ public class MLVideoCallActivity extends MLCallActivity {
         // 设置通话类型为视频
         mCallType = 0;
 
-        mChronometer = (Chronometer) findViewById(R.id.ml_chronometer_call_time);
+        mChronometer = (Chronometer) findViewById(R.id.chronometer_call_time);
 
         mCallBackgroundView.setImageResource(R.mipmap.ic_character_blackcat);
 
@@ -208,71 +208,71 @@ public class MLVideoCallActivity extends MLCallActivity {
      * 界面控件点击监听器
      */
     @OnClick({
-            R.id.ml_img_background, R.id.ml_layout_control, R.id.ml_surface_view_local,
-            R.id.ml_surface_view_opposite, R.id.ml_btn_exit_full_screen,
-            R.id.ml_btn_change_camera_switch, R.id.ml_btn_mic_switch, R.id.ml_btn_camera_switch,
-            R.id.ml_btn_speaker_switch, R.id.ml_btn_record_switch, R.id.ml_btn_call_info,
-            R.id.ml_layout_call_info, R.id.ml_fab_reject_call, R.id.ml_fab_end_call,
-            R.id.ml_fab_answer_call
+            R.id.img_background, R.id.layout_control, R.id.surface_view_local,
+            R.id.surface_view_opposite, R.id.btn_exit_full_screen,
+            R.id.btn_change_camera_switch, R.id.btn_mic_switch, R.id.btn_camera_switch,
+            R.id.btn_speaker_switch, R.id.btn_record_switch, R.id.btn_call_info,
+            R.id.layout_call_info, R.id.fab_reject_call, R.id.fab_end_call,
+            R.id.fab_answer_call
     }) void onClick(View v) {
         switch (v.getId()) {
-            case R.id.ml_layout_control:
-            case R.id.ml_img_background:
+            case R.id.layout_control:
+            case R.id.img_background:
                 onControlLayout();
                 break;
-            case R.id.ml_surface_view_local:
+            case R.id.surface_view_local:
                 if (surfaceViewState == 0) {
                     changeSurfaceViewSize();
                 } else {
                     onControlLayout();
                 }
                 break;
-            case R.id.ml_surface_view_opposite:
+            case R.id.surface_view_opposite:
                 if (surfaceViewState == 1) {
                     changeSurfaceViewSize();
                 } else {
                     onControlLayout();
                 }
                 break;
-            case R.id.ml_btn_exit_full_screen:
+            case R.id.btn_exit_full_screen:
                 // 最小化通话界面
                 exitFullScreen();
                 break;
-            case R.id.ml_btn_change_camera_switch:
+            case R.id.btn_change_camera_switch:
                 // 切换摄像头
                 changeCamera();
                 break;
-            case R.id.ml_btn_mic_switch:
+            case R.id.btn_mic_switch:
                 // 麦克风开关
                 onMicrophone();
                 break;
-            case R.id.ml_btn_camera_switch:
+            case R.id.btn_camera_switch:
                 // 摄像头开关
                 onCamera();
                 break;
-            case R.id.ml_btn_speaker_switch:
+            case R.id.btn_speaker_switch:
                 // 扬声器开关
                 onSpeaker();
                 break;
-            case R.id.ml_btn_record_switch:
+            case R.id.btn_record_switch:
                 // 录制开关
                 recordCall();
                 break;
-            case R.id.ml_btn_call_info:
+            case R.id.btn_call_info:
                 mCallInfoLayout.setVisibility(View.VISIBLE);
                 break;
-            case R.id.ml_layout_call_info:
+            case R.id.layout_call_info:
                 mCallInfoLayout.setVisibility(View.GONE);
                 break;
-            case R.id.ml_fab_reject_call:
+            case R.id.fab_reject_call:
                 // 拒绝接听通话
                 rejectCall();
                 break;
-            case R.id.ml_fab_end_call:
+            case R.id.fab_end_call:
                 // 结束通话
                 endCall();
                 break;
-            case R.id.ml_fab_answer_call:
+            case R.id.fab_answer_call:
                 // 接听通话
                 answerCall();
                 break;

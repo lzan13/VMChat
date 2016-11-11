@@ -176,17 +176,17 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 .get(MLConstants.ML_EXTRA_TYPE);
 
         // 初始化输入框控件，并添加输入框监听
-        mInputView = (EditText) findViewById(R.id.ml_edit_input);
+        mInputView = (EditText) findViewById(R.id.edit_input);
         mOldTime = 0;
         // 设置输入框的内容变化简体呢
         setEditTextWatcher();
 
         // 获取输入按钮控件对象
-        mEmotionView = findViewById(R.id.ml_img_emotion);
-        mKeyboardView = findViewById(R.id.ml_img_keyboard);
-        mEmotionLayout = (RelativeLayout) findViewById(R.id.ml_layout_emotion);
-        mSendView = findViewById(R.id.ml_img_send);
-        mRecordView = (MLRecordView) findViewById(R.id.ml_view_record_voice);
+        mEmotionView = findViewById(R.id.img_emotion);
+        mKeyboardView = findViewById(R.id.img_keyboard);
+        mEmotionLayout = (RelativeLayout) findViewById(R.id.layout_emotion);
+        mSendView = findViewById(R.id.img_send);
+        mRecordView = (MLRecordView) findViewById(R.id.view_record_voice);
         mRecordView.setRecordCallback(recordCallback);
 
         // 设置输入按钮控件的点击监听
@@ -195,7 +195,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         mSendView.setOnClickListener(viewListener);
 
         // 设置扩展菜单点击监听
-        mAttachMenuLayout = (LinearLayout) findViewById(R.id.ml_layout_attach_menu);
+        mAttachMenuLayout = (LinearLayout) findViewById(R.id.layout_attach_menu);
         // 菜单布局点击事件，主要是实现点击空白处关闭附件扩展菜单
         mAttachMenuLayout.setOnClickListener(viewListener);
     }
@@ -204,7 +204,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      * 初始化 Toolbar 控件
      */
     private void initToolbar() {
-        mToolbar = (Toolbar) findViewById(R.id.ml_widget_toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.widget_toolbar);
         mToolbar.setTitle(mChatId);
         setSupportActionBar(mToolbar);
         // 设置toolbar图标
@@ -258,7 +258,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         // 设置 RecyclerView 显示状态固定到底部
         mLayoutManger.setStackFromEnd(true);
         // 初始化ListView控件对象
-        mRecyclerView = (RecyclerView) findViewById(R.id.ml_recycler_view);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         // 实例化消息适配器
         mMessageAdapter = new MLMessageAdapter(mActivity, mChatId);
         mRecyclerView.setLayoutManager(mLayoutManger);
@@ -272,7 +272,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
 
     private void initSwipeRefreshLayout() {
         // 初始化下拉刷新控件对象
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.ml_refresh_layout);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
         // 设置下拉刷新控件颜色
         mSwipeRefreshLayout.setColorSchemeResources(R.color.ml_red_100, R.color.ml_blue_100,
                 R.color.ml_orange_100);
@@ -306,7 +306,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      * 初始化附件菜单网格列表，并设置网格点击监听
      */
     private void initAttachMenuGridView() {
-        mAttachMenuGridView = (GridView) findViewById(R.id.ml_grid_view_attach_menu);
+        mAttachMenuGridView = (GridView) findViewById(R.id.grid_view_attach_menu);
         int[] menuPhotos = {
                 R.mipmap.ic_attach_photo, R.mipmap.ic_attach_video, R.mipmap.ic_attach_file,
                 R.mipmap.ic_attach_location, R.mipmap.ic_attach_gift, R.mipmap.ic_attach_contacts
@@ -317,7 +317,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 mActivity.getString(R.string.ml_gift), mActivity.getString(R.string.ml_contacts)
         };
         String[] from = { "photo", "title" };
-        int[] to = { R.id.ml_img_menu_photo, R.id.ml_text_menu_title };
+        int[] to = { R.id.img_menu_photo, R.id.text_menu_title };
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         Map<String, Object> map = null;
         for (int i = 0; i < menuPhotos.length; i++) {
@@ -482,7 +482,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             Intent intent = new Intent();
             intent.setClass(mActivity, MLBigImageActivity.class);
             // 将被点击的消息ID传递过去
-            intent.putExtra(MLConstants.ML_EXTRA_CHAT_MSG_ID, message.getMsgId());
+            intent.putExtra(MLConstants.ML_EXTRA_MSG_ID, message.getMsgId());
             mActivity.startActivity(intent);
         } else if (message.getBooleanAttribute(MLConstants.ML_ATTR_CALL_VIDEO, false)) {
             // 如果进行语音通话中，就不能进行视频通话
@@ -853,20 +853,20 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                     // 结束当前Activity
                     onFinish();
                     break;
-                case R.id.ml_img_emotion:
-                case R.id.ml_img_keyboard:
+                case R.id.img_emotion:
+                case R.id.img_keyboard:
                     // 表情按钮
                     onEmotion();
                     break;
-                case R.id.ml_img_send:
+                case R.id.img_send:
                     // 发送按钮
                     sendTextMessage();
                     break;
-                case R.id.ml_img_voice:
+                case R.id.img_voice:
                     // 语音按钮
                     mInputView.setText(mActivity.getString(R.string.test_unicode_smiling));
                     break;
-                case R.id.ml_layout_attach_menu:
+                case R.id.layout_attach_menu:
                     // 附件菜单背景，点击空白处用来关闭菜单
                     onAttachMenu();
                     break;
@@ -1136,17 +1136,35 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
 
     /**
      * ---------------------------- RecyclerView 刷新方法 ----------------------------------- 使用
-     * EventBus 的订阅模式实现消息变化的监听，这里 EventBus 3.x 使用注解的方式确定方法调用的线程 <p> 这里调用下 {@link
-     * MLMessageAdapter}里封装的方法 最终还是去调用{@link android.support.v7.widget.RecyclerView.Adapter}已有的
-     * notify 方法 消息的状态改变需要调用 item changed方法 {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemChanged(int)}
-     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemChanged(int, Object)} TODO
-     * 重发消息的时候需要调用 item move {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemMoved(int,
-     * int)} 新插入消息需要调用 item inserted {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemInserted(int)}
-     * 条目改变刷新方法，改变多条需要 item range changed {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRangeChanged(int,
-     * int)} {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRangeChanged(int, int,
-     * Object)} 插入多条消息需要调用 item range inserted（加载更多消息时需要此刷新） {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRangeInserted(int,
-     * int)} 删除多条内容需要 item range removed（清空或者删除多条消息需要此方法） {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRangeRemoved(int,
-     * int)} 删除消息需要 item removed {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRemoved(int)}
+     * EventBus 的订阅模式实现消息变化的监听，这里 EventBus 3.x 使用注解的方式确定方法调用的线程
+     *
+     * 这里调用下 {@link MLMessageAdapter}里封装的方法
+     * 最终还是去调用{@link android.support.v7.widget.RecyclerView.Adapter}已有的 notify 方法
+     *
+     * 消息的状态改变需要调用 item changed方法
+     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemChanged(int)}
+     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemChanged(int, Object)}
+     *
+     * TODO 重发消息的时候需要调用 item move
+     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemMoved(int, int)}
+     *
+     * 新插入消息需要调用 item inserted
+     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemInserted(int)}
+     *
+     * 条目改变刷新方法，
+     * 改变多条需要 item range changed
+     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRangeChanged(int, int)}
+     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRangeChanged(int, int,
+     * Object)}
+     *
+     * 插入多条消息需要调用 item range inserted（加载更多消息时需要此刷新）
+     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRangeInserted(int, int)}
+     *
+     * 删除多条内容需要 item range removed（清空或者删除多条消息需要此方法）
+     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRangeRemoved(int, int)}
+     *
+     * 删除消息需要 item removed
+     * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemRemoved(int)}
      *
      * @param event 订阅的消息类型
      */
@@ -1369,21 +1387,21 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         int count = mConversation.getAllMessages().size();
 
         switch (item.getItemId()) {
-            case R.id.ml_action_call:
+            case R.id.action_call:
                 selectCallMode();
                 break;
-            case R.id.ml_action_attachment:
+            case R.id.action_attachment:
                 // 打开或关闭附件菜单
                 onAttachMenu();
                 break;
-            case R.id.ml_action_delete:
+            case R.id.action_delete:
                 // 清空会话信息，此方法只清除内存中加载的消息，并没有清除数据库中保存的消息
                 // mConversation.clear();
                 // 清除全部信息，包括数据库中的
                 mConversation.clearAllMessages();
                 postRefreshEvent(0, count, MLConstants.ML_NOTIFY_REFRESH_RANGE_REMOVED);
                 break;
-            case R.id.ml_action_settings:
+            case R.id.action_settings:
 
                 break;
         }
@@ -1393,7 +1411,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     @Override public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_chat, menu);
         if (mConversationType == EMConversation.EMConversationType.GroupChat) {
-            menu.findItem(R.id.ml_action_call).setVisible(false);
+            menu.findItem(R.id.action_call).setVisible(false);
         }
         return super.onCreateOptionsMenu(menu);
     }
