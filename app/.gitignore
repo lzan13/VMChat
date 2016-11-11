@@ -5,3 +5,5 @@
 /debug.keystore
 /app-config.properties
 /keystore.jks
+
+*.apk
