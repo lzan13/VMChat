@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -17,7 +18,6 @@ import com.hyphenate.chat.EMClient;
 
 import net.melove.app.chat.R;
 import net.melove.app.chat.ui.MLBaseActivity;
-import net.melove.app.chat.ui.widget.MLToast;
 import net.melove.app.chat.ui.main.MLMainActivity;
 import net.melove.app.chat.MLConstants;
 import net.melove.app.chat.util.MLLog;
@@ -68,8 +68,8 @@ public class MLSignInActivity extends MLBaseActivity {
     /**
      * 界面内控件的点击事件监听器
      */
-    @OnClick({ R.id.btn_sign_in, R.id.btn_sign_up, R.id.btn_forget_password })
-    void onClick(View v) {
+    @OnClick({ R.id.btn_sign_in, R.id.btn_sign_up, R.id.btn_forget_password }) void onClick(
+            View v) {
         switch (v.getId()) {
             case R.id.btn_sign_in:
                 attemptLogin();
@@ -217,7 +217,8 @@ public class MLSignInActivity extends MLBaseActivity {
                                 error = res.getString(R.string.ml_sign_in_failed);
                                 break;
                         }
-                        MLToast.errorToast(error + "-" + i + "-" + s).show();
+                        Snackbar.make(getRootView(), error + "-" + i + "-" + s,
+                                Snackbar.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -232,7 +233,7 @@ public class MLSignInActivity extends MLBaseActivity {
      * 找回密码触发方法
      */
     private void forgetPassword() {
-        MLToast.makeToast("暂不支持找回密码").show();
+        Snackbar.make(getRootView(), "暂不支持找回密码", Snackbar.LENGTH_SHORT).show();
     }
 
     @Override protected void onResume() {

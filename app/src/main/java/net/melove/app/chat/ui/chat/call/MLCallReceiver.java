@@ -31,6 +31,9 @@ public class MLCallReceiver extends BroadcastReceiver {
         // 呼叫接收方
         String callTo = intent.getStringExtra(MLConstants.ML_EXTRA_TO);
 
+        // 获取通话的扩展信息
+        String callExt = EMClient.getInstance().callManager().getCurrentCallSession().getExt();
+
         // 判断下当前被呼叫的为自己的时候才启动通话界面 TODO 这个当不同appkey下相同的username时就无效了
         if (callTo.equals(EMClient.getInstance().getCurrentUser())) {
             Intent callIntent = new Intent();
@@ -44,12 +47,12 @@ public class MLCallReceiver extends BroadcastReceiver {
                 // 设置当前通话类型为语音通话
                 MLCallStatus.getInstance().setCallType(MLCallStatus.CALL_TYPE_VOICE);
             }
-            // 设置 activity 启动方式
-            callIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             // 设置呼叫方 username 参数
             callIntent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, callFrom);
             // 设置通话为对方打来
             callIntent.putExtra(MLConstants.ML_EXTRA_IS_INCOMING_CALL, true);
+            // 设置 activity 启动方式
+            callIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(callIntent);
         }
     }

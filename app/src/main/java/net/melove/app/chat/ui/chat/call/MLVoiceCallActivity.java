@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Chronometer;
@@ -28,7 +29,6 @@ import net.melove.app.chat.util.MLBitmapUtil;
 import net.melove.app.chat.util.MLDateUtil;
 import net.melove.app.chat.util.MLLog;
 import net.melove.app.chat.ui.widget.MLImageView;
-import net.melove.app.chat.ui.widget.MLToast;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -155,8 +155,7 @@ public class MLVoiceCallActivity extends MLCallActivity {
      */
     @OnClick({
             R.id.btn_exit_full_screen, R.id.btn_mic_switch, R.id.btn_speaker_switch,
-            R.id.btn_record_switch, R.id.fab_reject_call, R.id.fab_end_call,
-            R.id.fab_answer_call
+            R.id.btn_record_switch, R.id.fab_reject_call, R.id.fab_end_call, R.id.fab_answer_call
     }) void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_exit_full_screen:
@@ -248,7 +247,7 @@ public class MLVoiceCallActivity extends MLCallActivity {
     private void recordCall() {
         // 振动反馈
         vibrate();
-        MLToast.makeToast(R.string.ml_toast_unrealized).show();
+        Snackbar.make(getRootView(), R.string.ml_toast_unrealized, Snackbar.LENGTH_SHORT).show();
         // 根据开关状态决定是否开启录制
         if (mRecordSwitch.isActivated()) {
             // 设置按钮状态
@@ -276,7 +275,8 @@ public class MLVoiceCallActivity extends MLCallActivity {
             EMClient.getInstance().callManager().rejectCall();
         } catch (EMNoActiveCallException e) {
             e.printStackTrace();
-            MLToast.errorToast("拒绝通话失败：error-" + e.getErrorCode() + "-" + e.getMessage()).show();
+            Snackbar.make(getRootView(), "error-" + e.getMessage() + "-" + e.getErrorCode(),
+                    Snackbar.LENGTH_SHORT).show();
         }
         // 通话结束，重置通话状态
         MLCallStatus.getInstance().reset();
@@ -303,7 +303,8 @@ public class MLVoiceCallActivity extends MLCallActivity {
             EMClient.getInstance().callManager().endCall();
         } catch (EMNoActiveCallException e) {
             e.printStackTrace();
-            MLToast.errorToast("结束通话失败：error-" + e.getErrorCode() + "-" + e.getMessage()).show();
+            Snackbar.make(getRootView(), "error-" + e.getMessage() + "-" + e.getErrorCode(),
+                    Snackbar.LENGTH_SHORT).show();
         }
         // 通话结束，重置通话状态
         MLCallStatus.getInstance().reset();
@@ -336,7 +337,8 @@ public class MLVoiceCallActivity extends MLCallActivity {
             MLCallStatus.getInstance().setCallState(MLCallStatus.CALL_STATUS_ACCEPTED);
         } catch (EMNoActiveCallException e) {
             e.printStackTrace();
-            MLToast.errorToast("接听通话失败：error-" + e.getErrorCode() + "-" + e.getMessage()).show();
+            Snackbar.make(getRootView(), "接听通话失败：error-" + e.getErrorCode() + "-" + e.getMessage(),
+                    Snackbar.LENGTH_SHORT).show();
         }
     }
 

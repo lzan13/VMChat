@@ -11,11 +11,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -47,7 +47,6 @@ import net.melove.app.chat.util.MLDateUtil;
 import net.melove.app.chat.util.MLFileUtil;
 import net.melove.app.chat.ui.widget.MLRecordView;
 import net.melove.app.chat.ui.widget.MLRecorder;
-import net.melove.app.chat.ui.widget.MLToast;
 import net.melove.app.chat.ui.chat.call.MLCallStatus;
 import net.melove.app.chat.ui.chat.call.MLVideoCallActivity;
 import net.melove.app.chat.ui.chat.call.MLVoiceCallActivity;
@@ -70,9 +69,6 @@ import java.util.TimerTask;
  * Created by lzan13 on 2015/10/12 15:00. 聊天界面，处理并显示聊天双方信息
  */
 public class MLChatActivity extends MLBaseActivity implements EMMessageListener {
-
-    // 界面控件
-    private Toolbar mToolbar;
 
     // 对话框
     private AlertDialog.Builder alertDialogBuilder;
@@ -146,7 +142,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         setContentView(R.layout.activity_chat);
 
         initView();
-        initToolbar();
+
         // 初始化下拉刷新
         initSwipeRefreshLayout();
         // 初始化扩展菜单
@@ -198,19 +194,13 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         mAttachMenuLayout = (LinearLayout) findViewById(R.id.layout_attach_menu);
         // 菜单布局点击事件，主要是实现点击空白处关闭附件扩展菜单
         mAttachMenuLayout.setOnClickListener(viewListener);
-    }
 
-    /**
-     * 初始化 Toolbar 控件
-     */
-    private void initToolbar() {
-        mToolbar = (Toolbar) findViewById(R.id.widget_toolbar);
-        mToolbar.setTitle(mChatId);
-        setSupportActionBar(mToolbar);
+        getToolbar().setTitle(mChatId);
+        setSupportActionBar(getToolbar());
         // 设置toolbar图标
-        mToolbar.setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
+        getToolbar().setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
         // 设置Toolbar图标点击事件，Toolbar上图标的id是 -1
-        mToolbar.setNavigationOnClickListener(viewListener);
+        getToolbar().setNavigationOnClickListener(viewListener);
     }
 
     /**
@@ -354,7 +344,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                         // 联系人 名片
                         break;
                     default:
-                        MLToast.makeToast(R.string.ml_hint_chat).show();
+                        Snackbar.make(getRootView(), R.string.ml_toast_unrealized,
+                                Snackbar.LENGTH_SHORT).show();
                         break;
                 }
                 onAttachMenu();
@@ -487,7 +478,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         } else if (message.getBooleanAttribute(MLConstants.ML_ATTR_CALL_VIDEO, false)) {
             // 如果进行语音通话中，就不能进行视频通话
             if (MLCallStatus.getInstance().getCallType() == MLCallStatus.CALL_TYPE_VOICE) {
-                MLToast.makeToast(R.string.ml_call_voice_calling).show();
+                Snackbar.make(getRootView(), R.string.ml_call_voice_calling, Snackbar.LENGTH_SHORT)
+                        .show();
             } else {
                 // 视频通话
                 Intent intent = new Intent();
@@ -503,7 +495,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         } else if (message.getBooleanAttribute(MLConstants.ML_ATTR_CALL_VOICE, false)) {
             // 同理，如果进行视频通话中，就不能进行语音通话
             if (MLCallStatus.getInstance().getCallType() == MLCallStatus.CALL_TYPE_VIDEO) {
-                MLToast.makeToast(R.string.ml_call_video_calling).show();
+                Snackbar.make(getRootView(), R.string.ml_call_video_calling, Snackbar.LENGTH_SHORT)
+                        .show();
             } else {
                 // 语音通话
                 Intent intent = new Intent();
@@ -527,6 +520,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         EMMessage message = mConversation.getMessage(msgId, true);
         // 将失败的消息从 conversation对象中删除
         mConversation.removeMessage(message.getMsgId());
+
         postRefreshEvent(position, 1, MLConstants.ML_NOTIFY_REFRESH_REMOVED);
         // 更新消息时间
         message.setMsgTime(MLDateUtil.getCurrentMillisecond());
@@ -549,7 +543,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         // 将刚创建的数据对象添加到剪切板
         clipboardManager.setPrimaryClip(clipData);
         // 弹出提醒
-        MLToast.rightToast(R.string.ml_toast_content_copy_success).show();
+        Snackbar.make(getRootView(), R.string.ml_toast_copy_success, Snackbar.LENGTH_SHORT).show();
     }
 
     /**
@@ -572,7 +566,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         // 刷新界面
         postRefreshEvent(position, 1, MLConstants.ML_NOTIFY_REFRESH_REMOVED);
         // 弹出操作提示
-        MLToast.rightToast(R.string.ml_toast_msg_delete_success).show();
+        Snackbar.make(getRootView(), R.string.ml_toast_delete_success, Snackbar.LENGTH_SHORT)
+                .show();
     }
 
     /**
@@ -608,11 +603,12 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                     @Override public void run() {
                         // 弹出错误提示
                         if (s.equals(MLConstants.ML_ERROR_S_RECALL_TIME)) {
-                            MLToast.rightToast(R.string.ml_toast_msg_recall_faild_max_time).show();
+                            Snackbar.make(getRootView(), R.string.ml_toast_recall_failed_max_time,
+                                    Snackbar.LENGTH_SHORT).show();
                         } else {
-                            MLToast.rightToast(mActivity.getResources()
-                                    .getString(R.string.ml_toast_msg_recall_faild) + i + "-" + s)
-                                    .show();
+                            Snackbar.make(getRootView(), mActivity.getResources()
+                                            .getString(R.string.ml_toast_recall_failed) + i + "-" + s,
+                                    Snackbar.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -768,15 +764,18 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             switch (error) {
                 case MLRecorder.ERROR_FAILED:
                     // 录音失败，一般是权限问题
-                    MLToast.errorToast(R.string.ml_error_voice_failed).show();
+                    Snackbar.make(getRootView(), R.string.ml_error_voice_failed,
+                            Snackbar.LENGTH_SHORT).show();
                     break;
                 case MLRecorder.ERROR_SHORT:
                     // 录音时间过短
-                    MLToast.errorToast(R.string.ml_error_voice_short).show();
+                    Snackbar.make(getRootView(), R.string.ml_error_voice_short,
+                            Snackbar.LENGTH_SHORT).show();
                     break;
                 case MLRecorder.ERROR_SYSTEM:
                     // 系统问题
-                    MLToast.errorToast(R.string.ml_error_voice_system).show();
+                    Snackbar.make(getRootView(), R.string.ml_error_voice_system,
+                            Snackbar.LENGTH_SHORT).show();
                     break;
             }
         }
@@ -813,7 +812,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 if (data != null) {
                     String imagePath = MLFileUtil.getPath(mActivity, data.getData());
                     if (TextUtils.isEmpty(imagePath) || !new File(imagePath).exists()) {
-                        MLToast.errorToast("image is not exist").show();
+                        Snackbar.make(getRootView(), "图片不存在", Snackbar.LENGTH_SHORT).show();
                         return;
                     }
                     sendImageMessage(imagePath);
@@ -1051,7 +1050,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      */
     private void setInputStatus() {
         // 设置title为正在输入状态
-        mToolbar.setTitle(R.string.ml_title_input_status);
+        getToolbar().setTitle(R.string.ml_title_input_status);
         if (mTimer == null) {
             mTimer = new Timer();
         } else {
@@ -1064,7 +1063,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 isInput = false;
                 runOnUiThread(new Runnable() {
                     @Override public void run() {
-                        mToolbar.setTitle(mChatId);
+                        getToolbar().setTitle(mChatId);
                     }
                 });
             }
@@ -1094,18 +1093,19 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             int errorCode = event.getErrorCode();
             if (errorCode == EMError.MESSAGE_INCLUDE_ILLEGAL_CONTENT) {
                 // 消息包含敏感词
-                errorMessage = mActivity.getString(R.string.ml_toast_msg_have_illegal);
+                errorMessage = mActivity.getString(R.string.ml_toast_have_illegal);
             } else if (errorCode == EMError.GROUP_PERMISSION_DENIED) {
                 // 不在群里内
-                errorMessage = mActivity.getString(R.string.ml_toast_msg_not_join_group);
+                errorMessage = mActivity.getString(R.string.ml_toast_not_join_group);
             } else if (errorCode == EMError.FILE_INVALID) {
                 // 文件过大
-                errorMessage = mActivity.getString(R.string.ml_toast_msg_file_too_big);
+                errorMessage = mActivity.getString(R.string.ml_toast_file_too_big);
             } else {
                 // 发送失败
-                errorMessage = mActivity.getString(R.string.ml_toast_msg_send_faild);
+                errorMessage = mActivity.getString(R.string.ml_toast_send_failed);
             }
-            MLToast.errorToast(errorMessage + event.getErrorMessage() + "-" + errorCode).show();
+            Snackbar.make(getRootView(), errorMessage + event.getErrorMessage() + "-" + errorCode,
+                    Snackbar.LENGTH_SHORT).show();
             // 消息状态回调完毕，刷新当前消息显示，这里不论成功失败都要刷新
             postRefreshEvent(mConversation.getMessagePosition(message), 1,
                     MLConstants.ML_NOTIFY_REFRESH_CHANGED);
@@ -1170,7 +1170,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      */
     @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(MLRefreshEvent event) {
         if (!isInput) {
-            mToolbar.setTitle(mChatId);
+            getToolbar().setTitle(mChatId);
         }
         /**
          * TODO 因为发送消息时是通过线程池处理，导致发送时可能没加到内存，下个版本会移出线程操作

@@ -62,12 +62,6 @@
         <item name="color">@color/ml_white_87</item>
     </style>
 
-    <!--自定义控件MLToast 动画-->
-    <style name="ml_toast_anim">
-        <item name="android:windowEnterAnimation">@anim/ml_anim_toast_enter</item>
-        <item name="android:windowExitAnimation">@anim/ml_anim_toast_exit</item>
-    </style>
-
     <!--Activity切换的 Fade 动画-->
     <style name="AnimFade" parent="@android:style/Animation.Activity">
         <item name="android:activityOpenEnterAnimation">@anim/ml_anim_fade_enter</item>

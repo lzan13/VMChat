@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import android.view.View;
 import com.squareup.leakcanary.RefWatcher;
 
 import net.melove.app.chat.R;
@@ -35,11 +36,14 @@ public class MLBaseActivity extends AppCompatActivity {
 
     protected String mClassName = this.getClass().getSimpleName();
 
-    // Toolbar
-    private Toolbar mToolbar;
-
     // 当前界面的上下文菜单对象
     protected MLBaseActivity mActivity;
+
+    // 根布局
+    private View mRootView;
+
+    // Toolbar
+    private Toolbar mToolbar;
 
     protected AlertDialog.Builder dialog;
 
@@ -67,6 +71,13 @@ public class MLBaseActivity extends AppCompatActivity {
             mToolbar = (Toolbar) findViewById(R.id.widget_toolbar);
         }
         return mToolbar;
+    }
+
+    public View getRootView() {
+        if (mRootView == null) {
+            mRootView = findViewById(R.id.layout_coordinator);
+        }
+        return mRootView;
     }
 
     /**
@@ -231,6 +242,7 @@ public class MLBaseActivity extends AppCompatActivity {
         super.onDestroy();
         mActivity = null;
         mToolbar = null;
+        mRootView = null;
 
         MLLog.i("%s onDestroy", mClassName);
         // 用来检测内存泄漏

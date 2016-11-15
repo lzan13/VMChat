@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.View;
@@ -24,7 +25,6 @@ import net.melove.app.chat.MLHyphenate;
 import net.melove.app.chat.R;
 import net.melove.app.chat.ui.MLBaseActivity;
 import net.melove.app.chat.MLConstants;
-import net.melove.app.chat.ui.widget.MLToast;
 import net.melove.app.chat.ui.chat.MLChatActivity;
 import net.melove.app.chat.util.MLLog;
 
@@ -156,6 +156,13 @@ public class MLUserActivity extends MLBaseActivity {
                                     EMClient.getInstance()
                                             .contactManager()
                                             .addContact(mChatId, reason);
+                                    runOnUiThread(new Runnable() {
+                                        @Override public void run() {
+                                            Snackbar.make(getRootView(),
+                                                    R.string.ml_toast_add_friend_success,
+                                                    Snackbar.LENGTH_LONG).show();
+                                        }
+                                    });
                                 } catch (HyphenateException e) {
                                     e.printStackTrace();
                                     int errorCode = e.getErrorCode();
@@ -164,8 +171,9 @@ public class MLUserActivity extends MLBaseActivity {
                                             errorMsg);
                                     runOnUiThread(new Runnable() {
                                         @Override public void run() {
-                                            MLToast.errorToast(R.string.ml_toast_add_friend_failed)
-                                                    .show();
+                                            Snackbar.make(getRootView(),
+                                                    R.string.ml_toast_add_friend_failed,
+                                                    Snackbar.LENGTH_LONG).show();
                                         }
                                     });
                                 }

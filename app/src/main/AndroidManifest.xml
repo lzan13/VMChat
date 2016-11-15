@@ -87,7 +87,6 @@
         <!-- 主界面 -->
         <activity
             android:name=".ui.main.MLMainActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Launcher">
             <intent-filter>
@@ -99,12 +98,14 @@
         <!-- 登录界面 -->
         <activity
             android:name=".ui.sign.MLSignInActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Default"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
         <!-- 注册界面 -->
         <activity
             android:name=".ui.sign.MLSignUpActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Default"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
@@ -122,6 +123,7 @@
         <!-- 聊天界面 -->
         <activity
             android:name=".ui.chat.MLChatActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Default"
             android:windowSoftInputMode="adjustResize|stateHidden"/>

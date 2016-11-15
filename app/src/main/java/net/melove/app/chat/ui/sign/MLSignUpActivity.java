@@ -3,6 +3,7 @@ package net.melove.app.chat.ui.sign;
 import android.app.ProgressDialog;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -19,7 +20,6 @@ import net.melove.app.chat.ui.MLBaseActivity;
 import net.melove.app.chat.MLConstants;
 import net.melove.app.chat.util.MLLog;
 import net.melove.app.chat.util.MLSPUtil;
-import net.melove.app.chat.ui.widget.MLToast;
 
 /**
  * Created by lzan13 on 2015/7/4.
@@ -129,7 +129,8 @@ public class MLSignUpActivity extends MLBaseActivity {
                             }
                             // 注册成功保存用户名到本地
                             MLSPUtil.put(mActivity, MLConstants.ML_SHARED_USERNAME, mUsername);
-                            MLToast.rightToast(R.string.ml_sign_up_success).show();
+                            Snackbar.make(getRootView(), R.string.ml_sign_up_success,
+                                    Snackbar.LENGTH_SHORT).show();
                             // 注册成功，返回登录界面
                             onFinish();
                         }
@@ -169,8 +170,9 @@ public class MLSignUpActivity extends MLBaseActivity {
                                     error = res.getString(R.string.ml_sign_up_failed);
                                     break;
                             }
-                            MLToast.errorToast(error + "-" + errorCode + "-" + e.getMessage())
-                                    .show();
+                            Snackbar.make(getRootView(),
+                                    error + "-" + errorCode + "-" + e.getMessage(),
+                                    Snackbar.LENGTH_SHORT).show();
                         }
                     });
                 } catch (Exception e) {

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -34,7 +35,6 @@ import net.melove.app.chat.ui.chat.MLChatActivity;
 import net.melove.app.chat.ui.applyfor.MLApplyForActivity;
 import net.melove.app.chat.ui.MLBaseFragment;
 import net.melove.app.chat.ui.widget.MLImageView;
-import net.melove.app.chat.ui.widget.MLToast;
 
 /**
  * Created by lzan13 on 2015/7/2.
@@ -103,8 +103,7 @@ public class MLMainActivity extends MLBaseActivity
         mDrawerLayout = (DrawerLayout) findViewById(R.id.layout_drawer);
         mNavigationView = (NavigationView) findViewById(R.id.widget_navigation);
         // 侧滑用户头像
-        mAvatarView =
-                (MLImageView) mNavigationView.getHeaderView(0).findViewById(R.id.img_avatar);
+        mAvatarView = (MLImageView) mNavigationView.getHeaderView(0).findViewById(R.id.img_avatar);
         mAvatarView.setOnClickListener(viewListener);
 
         // 网络连接提示按钮
@@ -149,8 +148,7 @@ public class MLMainActivity extends MLBaseActivity
                         mFragmentTransaction = getSupportFragmentManager().beginTransaction();
                         mFragmentTransaction.setCustomAnimations(R.anim.ml_anim_fade_enter,
                                 R.anim.ml_anim_fade_exit);
-                        mFragmentTransaction.replace(R.id.layout_container,
-                                mCurrentFragment);
+                        mFragmentTransaction.replace(R.id.layout_container, mCurrentFragment);
                         mFragmentTransaction.commit();
                         break;
                     case 1:
@@ -273,14 +271,16 @@ public class MLMainActivity extends MLBaseActivity
                 new DialogInterface.OnClickListener() {
                     @Override public void onClick(DialogInterface dialog, int which) {
                         if (TextUtils.isEmpty(editText.getText().toString().trim())) {
-                            MLToast.errorToast(R.string.ml_hint_input_not_null).show();
+                            Snackbar.make(getRootView(), R.string.ml_hint_input_not_null,
+                                    Snackbar.LENGTH_SHORT).show();
                             return;
                         }
                         String currUsername =
                                 (String) MLSPUtil.get(mActivity, MLConstants.ML_SHARED_USERNAME,
                                         "");
                         if (currUsername.equals(editText.getText().toString().trim())) {
-                            MLToast.errorToast(R.string.ml_toast_chat_cant_yourself).show();
+                            Snackbar.make(getRootView(), R.string.ml_toast_cant_chat_with_yourself,
+                                    Snackbar.LENGTH_SHORT).show();
                             return;
                         }
                         Intent intent = new Intent(mActivity, MLChatActivity.class);
@@ -345,7 +345,8 @@ public class MLMainActivity extends MLBaseActivity
 
                 break;
             default:
-                MLToast.makeToast(mActivity.getResources().getString(R.string.ml_test)).show();
+                Snackbar.make(getRootView(), mActivity.getResources().getString(R.string.ml_test),
+                        Snackbar.LENGTH_SHORT).show();
                 break;
         }
         //        mDrawerLayout.closeDrawer(GravityCompat.START);
