@@ -12,26 +12,34 @@ android {
         versionName '1.0.0'
     }
 
-    // 配置签名信息
+    // 签名信息
     signingConfigs {
-        // Debug 使用默认签名
-        debug {}
-        // 发布时用自己的签名，这里因为是敏感信息，等下读取配置文件来设置
+        // debug 打包签名信息
+        debug {
+            keyAlias 'debugKey'
+            keyPassword '123123'
+            storeFile file('debug-keystore.jks')
+            storePassword '123123'
+        }
+        //  release 打包签名信息，因为签名文件是保密信息，放在一个配置文件中进行读取，这个文件不会再版本库里存在
         release {
-            storeFile
-            storePassword
             keyAlias
             keyPassword
+            storeFile
+            storePassword
         }
     }
     // 获取签名配置信息
-    optConfigs()
+    releaseConfigs()
 
+    // 编译配置
     buildTypes {
         debug {
             // 给debug包的包名加上后缀
-            //            applicationIdSuffix '.debug'
-            signingConfig signingConfigs.debug
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-debug'
+            minifyEnabled false
+            zipAlignEnabled false
         }
         release {
             // 是否开启压缩
@@ -45,14 +53,14 @@ android {
             // 混淆文件
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
-            //修改生成的apk名字，格式为 app名_版本号_打包时间_渠道名_release.apk
+            //修改生成的apk名字，格式为 app-版本号-打包时间-渠道名-release.apk
             applicationVariants.all { variant ->
                 variant.outputs.each { output ->
                     def oldFile = output.outputFile
                     if (variant.buildType.name.equals('release')) {
-                        def releaseApkName = "MLChat_v${defaultConfig.versionName}_${releaseTime()}_" +
+                        def releaseApkName = "app-v${defaultConfig.versionName}-${releaseTime()}-" +
                                 variant.productFlavors[0].name +
-                                '_release.apk'
+                                '-release.apk'
                         output.outputFile = new File(oldFile.parent, releaseApkName)
                     }
                 }
@@ -67,13 +75,23 @@ android {
     //        }
     //    }
 
-    // 多渠道打包配置
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+
     productFlavors {
-        wandoujia {}
-        xiaomi {}
+        XiaoMi {
+            signingConfig signingConfigs.release
+            manifestPlaceholders = [ML_CHANNEL_ID: "XiaoMi"]
+        }
+        WanDouJia {
+            signingConfig signingConfigs.release
+            manifestPlaceholders = [ML_CHANNEL_ID: "WanDouJia"]
+        }
     }
-    productFlavors.all { flavor -> flavor.manifestPlaceholders = [ML_CHANNEL_ID: name]
-    }
+    // 多渠道打包简介写法
+    // productFlavors.all { flavor -> flavor.manifestPlaceholders = [ML_CHANNEL_ID: name]}
 }
 
 /**
@@ -101,8 +119,6 @@ dependencies {
     compile 'org.greenrobot:eventbus:3.0.0'
     // 支持手势缩放的ImageView
     compile 'com.bm.photoview:library:1.4.1'
-    // 环信这边提供的 aar 方式引入的sdk
-    //    compile 'com.hyphenate:hyphenate-sdk:3.1.5'
     // 引入各种第三方 SDK jar包，在上边 fileTree 里已经包含了libs，这里可以不用再单独添加
     compile files('libs/xiaomi_push_v303.jar')
     compile files('libs/huawei_push_v2705.jar')
@@ -110,8 +126,9 @@ dependencies {
     compile files('libs/hyphenatechat_3.2.1.jar')
 }
 
+
 //读取配置文件
-def optConfigs() {
+def releaseConfigs() {
     // 设置要读取的配置文件
     def propFile = file('app-config.properties')
     if (propFile.canRead()) {
@@ -119,14 +136,14 @@ def optConfigs() {
         props.load(new FileInputStream(propFile))
         // 判断签名配置信息是否存在
         if (props != null &&
-                props.containsKey('ML_STORE_FILE') &&
-                props.containsKey('ML_STORE_PASSWORD') &&
                 props.containsKey('ML_KEY_ALIAS') &&
-                props.containsKey('ML_KEY_PASSWORD')) {
-            android.signingConfigs.release.storeFile = file(props['ML_STORE_FILE'])
-            android.signingConfigs.release.storePassword = props['ML_STORE_PASSWORD']
+                props.containsKey('ML_KEY_PASSWORD') &&
+                props.containsKey('ML_STORE_FILE') &&
+                props.containsKey('ML_STORE_PASSWORD')) {
             android.signingConfigs.release.keyAlias = props['ML_KEY_ALIAS']
             android.signingConfigs.release.keyPassword = props['ML_KEY_PASSWORD']
+            android.signingConfigs.release.storeFile = file(props['ML_STORE_FILE'])
+            android.signingConfigs.release.storePassword = props['ML_STORE_PASSWORD']
         } else {
             // 当配置文件签名项为空时，将 release 时的签名设置为null
             println 'app-config.properties 找不到签名项，检查配置文件'

@@ -3,10 +3,6 @@
 buildscript {
     repositories {
         jcenter()
-        // 为当前项目添加自己的仓库地址,这里添加的是环信 sdk 仓库地址
-        maven {
-            url "https://raw.githubusercontent.com/HyphenateInc/Hyphenate-SDK-Android/master/repository"
-        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.1'
@@ -22,9 +18,5 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-        // 为所有项目添加自己的仓库地址,这里添加的是环信 sdk 仓库地址
-        maven {
-            url "https://raw.githubusercontent.com/HyphenateInc/Hyphenate-SDK-Android/master/repository"
-        }
     }
 }

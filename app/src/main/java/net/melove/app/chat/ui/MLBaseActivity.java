@@ -165,9 +165,9 @@ public class MLBaseActivity extends AppCompatActivity {
         // 弹出框图标
         dialog.setIcon(R.mipmap.ic_warning_amber_18dp);
         // 弹出框标题
-        dialog.setTitle(R.string.ml_dialog_title_conflict);
+        dialog.setTitle(R.string.ml_dialog_title_remove);
         // 弹出框提示信息
-        dialog.setMessage(R.string.ml_dialog_message_conflict);
+        dialog.setMessage(R.string.ml_dialog_message_remove);
         // 弹出框自定义操作按钮
         dialog.setNeutralButton(R.string.ml_sign_in_restart, new DialogInterface.OnClickListener() {
             @Override public void onClick(DialogInterface dialog, int which) {
