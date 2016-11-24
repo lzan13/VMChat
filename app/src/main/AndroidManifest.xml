@@ -63,12 +63,17 @@
 
     <!-- 配置 Google 推送需要的权限 -->
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+    <permission
+        android:name="net.melove.app.chat.permission.C2D_MESSAGE"
+        android:protectionLevel="signature"
+        />
+    <uses-permission android:name="net.melove.app.chat.permission.C2D_MESSAGE"/>
+    <!--gcm end-->
     <!--小米推送自定义权限-->
     <permission
         android:name="net.melove.app.chat.permission.MIPUSH_RECEIVE"
         android:protectionLevel="signature"/>
     <uses-permission android:name="net.melove.app.chat.permission.MIPUSH_RECEIVE"/>
-    <!-- GCM permission end -->
 
     <!-- 程序的入口 -->
     <application
@@ -129,14 +134,14 @@
             android:windowSoftInputMode="adjustResize|stateHidden"/>
         <!--视频通话界面-->
         <activity
-            android:name=".ui.chat.call.MLVideoCallActivity"
+            android:name=".ui.call.MLVideoCallActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"
             android:theme="@style/MLTheme.Transparent"
             android:windowSoftInputMode="adjustNothing|stateAlwaysHidden"/>
         <!--语音通话界面-->
         <activity
-            android:name=".ui.chat.call.MLVoiceCallActivity"
+            android:name=".ui.call.MLVoiceCallActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Transparent"
@@ -169,7 +174,7 @@
 
         <!--通话广播监听-->
         <receiver
-            android:name=".ui.chat.call.MLCallReceiver"
+            android:name=".ui.call.MLCallReceiver"
             android:enabled="true"
             android:exported="true">
         </receiver>
@@ -181,17 +186,18 @@
             android:value="lzan13#hxsdkdemo"/>
         <!--配置私有化聊天地址-->
         <!--<meta-data-->
-        <!--android:name="EASEMOB_CHAT_ADDRESS"-->
-        <!--android:value="im.easemob.com"/>-->
+            <!--android:name="EASEMOB_CHAT_ADDRESS"-->
+            <!--android:value="im.easemob.com"/>-->
         <!--&lt;!&ndash;配置私有化聊天端口&ndash;&gt;-->
         <!--<meta-data-->
-        <!--android:name="EASEMOB_CHAT_PORT"-->
-        <!--android:value="443"/>-->
+            <!--android:name="EASEMOB_CHAT_PORT"-->
+            <!--android:value="443"/>-->
         <!--&lt;!&ndash;配置私有化rest接口地址&ndash;&gt;-->
         <!--<meta-data-->
-        <!--android:name="EASEMOB_API_URL"-->
-        <!--android:value="a1.easemob.com:80"/>-->
-        <!-- 声明sdk所需的 Service SDK核心功能 -->
+            <!--android:name="EASEMOB_API_URL"-->
+            <!--android:value="a1.easemob.com:80"/>-->
+
+        <!--声明sdk所需的 Service SDK核心功能-->
         <service
             android:name="com.hyphenate.chat.EMChatService"
             android:exported="true"
@@ -218,6 +224,7 @@
             android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+
                 <category android:name="net.melove.app.chat"/>
             </intent-filter>
         </receiver>

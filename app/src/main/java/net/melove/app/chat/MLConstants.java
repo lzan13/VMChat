@@ -63,7 +63,7 @@ public class MLConstants {
     public static final int ML_ERROR_I_RECALL_TIME = 5001;
     // 撤回消息错误文字描述
     public static final String ML_ERROR_S_RECALL_TIME = "ml_max_time";
-    // 消息允许撤回时间
+    // 消息允许撤回时间 3 分钟
     public static final int ML_TIME_RECALL = 300000;
     // 输入状态检测时间
     public static final int ML_TIME_INPUT_STATUS = 5000;

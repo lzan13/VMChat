@@ -47,9 +47,9 @@ import net.melove.app.chat.util.MLDateUtil;
 import net.melove.app.chat.util.MLFileUtil;
 import net.melove.app.chat.ui.widget.MLRecordView;
 import net.melove.app.chat.ui.widget.MLRecorder;
-import net.melove.app.chat.ui.chat.call.MLCallStatus;
-import net.melove.app.chat.ui.chat.call.MLVideoCallActivity;
-import net.melove.app.chat.ui.chat.call.MLVoiceCallActivity;
+import net.melove.app.chat.ui.call.MLCallStatus;
+import net.melove.app.chat.ui.call.MLVideoCallActivity;
+import net.melove.app.chat.ui.call.MLVoiceCallActivity;
 import net.melove.app.chat.module.notification.MLNotifier;
 import net.melove.app.chat.util.MLLog;
 
@@ -1591,7 +1591,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         MLLog.i("onMessageReadAckReceived list.size:%d", list.size());
         for (EMMessage message : list) {
             // 判断消息是否是当前会话的消息
-            if (mChatId.equals(message.getTo())) {
+            if (mChatId.equals(message.getFrom())) {
                 // 调用刷新方法，因为到来的消息可能不是当前会话的，所以要循环判断
                 int position = mConversation.getMessagePosition(message);
                 postRefreshEvent(position, 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);
@@ -1608,7 +1608,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         MLLog.i("onMessageDeliveryAckReceived list.size:%d", list.size());
         for (EMMessage message : list) {
             // 判断消息是否是当前会话的消息
-            if (mChatId.equals(message.getTo())) {
+            if (mChatId.equals(message.getFrom())) {
                 // 调用刷新方法，因为到来的消息可能不是当前会话的，所以要循环判断
                 int position = mConversation.getMessagePosition(message);
                 postRefreshEvent(position, 1, MLConstants.ML_NOTIFY_REFRESH_CHANGED);

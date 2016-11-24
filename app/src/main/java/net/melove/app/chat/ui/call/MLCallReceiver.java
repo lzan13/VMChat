@@ -1,4 +1,4 @@
-package net.melove.app.chat.ui.chat.call;
+package net.melove.app.chat.ui.call;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

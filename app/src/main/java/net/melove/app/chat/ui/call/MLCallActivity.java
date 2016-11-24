@@ -1,4 +1,4 @@
-package net.melove.app.chat.ui.chat.call;
+package net.melove.app.chat.ui.call;
 
 import android.annotation.TargetApi;
 import android.content.Context;

@@ -19,7 +19,7 @@ import net.melove.app.chat.module.listener.MLContactsListener;
 import net.melove.app.chat.module.listener.MLGroupListener;
 import net.melove.app.chat.ui.contacts.MLUserEntity;
 import net.melove.app.chat.util.MLLog;
-import net.melove.app.chat.ui.chat.call.MLCallReceiver;
+import net.melove.app.chat.ui.call.MLCallReceiver;
 import net.melove.app.chat.module.database.MLDBHelper;
 
 import java.util.ArrayList;
@@ -134,6 +134,8 @@ public class MLHyphenate {
         EMClient.getInstance().callManager().getCallOptions().setVideoResolution(640, 480);
         // 设置通话过程中对方如果离线是否发送离线推送通知
         EMClient.getInstance().callManager().getCallOptions().setIsSendPushIfOffline(false);
+        // 设置音视频通话采样率
+        //EMClient.getInstance().callManager().getCallOptions().
     }
 
     private EMOptions initOptions() {
@@ -146,7 +148,7 @@ public class MLHyphenate {
         // 是否启动 DNS 信息配置
         options.enableDNSConfig(true);
         // 设置Appkey，如果配置文件已经配置，这里可以不用设置
-        //options.setAppKey("meyki#elife");
+        options.setAppKey("nixiwangluo#boostaging");
         // 设置自动登录
         options.setAutoLogin(true);
         // 设置是否按照服务器时间排序，false按照本地时间排序
@@ -166,16 +168,12 @@ public class MLHyphenate {
         // 设置是否允许聊天室的Owner 离开并删除聊天室的会话
         options.allowChatroomOwnerLeave(true);
 
-        // 设置google GCM推送id，国内可以不用设置
+        // Google GCM 推送 number
         options.setGCMNumber(MLConstants.ML_GCM_NUMBER);
-
-        // 设置集成小米推送的appid和appkey
-        options.setMipushConfig(MLConstants.ML_MI_APP_ID, MLConstants.ML_MI_APP_KEY);
-
-        // 设置华为推送appid
+        // 华为推送 AppId
         options.setHuaweiPushAppId(MLConstants.ML_HUAWEI_APP_ID);
-        // TODO 主动调用华为官方的注册华为推送 测试用，SDK内部已经调用
-        // PushManager.requestToken(mContext);
+        // 小米推送 AppId
+        options.setMipushConfig(MLConstants.ML_MI_APP_ID, MLConstants.ML_MI_APP_KEY);
 
         return options;
     }

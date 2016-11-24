@@ -1,4 +1,4 @@
-package net.melove.app.chat.ui.chat.call;
+package net.melove.app.chat.ui.call;
 
 
 import com.hyphenate.chat.EMCallStateChangeListener;

@@ -26,7 +26,6 @@ public class MLNotifier {
     private Context mContext;
 
     // 通知栏提醒ID
-    private int mInvitedNotifyId = 5120;
     private int mMsgNotifyId = 5121;
 
     private static MLNotifier instance;

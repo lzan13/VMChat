@@ -3,14 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:id="@+id/layout_container"
     android:background="@color/ml_theme_background"
     android:clipToPadding="false"
     android:fitsSystemWindows="false"
-    tools:context=".ui.chat.call.MLVideoCallActivity"
+    tools:context=".ui.call.MLVideoCallActivity"
     >
 
     <!--界面背景-->
@@ -169,6 +169,14 @@
                     android:layout_margin="@dimen/ml_dimen_8"
                     android:background="@drawable/ml_click_rectangle_white"
                     android:src="@mipmap/ic_info_outline_white_24dp"
+                    />
+                <ImageButton
+                    android:id="@+id/btn_call_screenshot"
+                    android:layout_width="@dimen/ml_dimen_48"
+                    android:layout_height="@dimen/ml_dimen_48"
+                    android:layout_margin="@dimen/ml_dimen_8"
+                    android:background="@drawable/ml_click_rectangle_white"
+                    android:src="@mipmap/ic_camera_white_24dp"
                     />
             </LinearLayout>
 

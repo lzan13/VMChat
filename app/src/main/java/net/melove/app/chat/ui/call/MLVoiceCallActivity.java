@@ -1,4 +1,4 @@
-package net.melove.app.chat.ui.chat.call;
+package net.melove.app.chat.ui.call;
 
 import android.graphics.Bitmap;
 import android.media.AudioManager;
@@ -489,6 +489,11 @@ public class MLVoiceCallActivity extends MLCallActivity {
         }
     }
 
+    @Override protected void onFinish() {
+        mAudioManager.setMode(AudioManager.MODE_NORMAL);
+        super.onFinish();
+    }
+
     @Override protected void onResume() {
         super.onResume();
 
@@ -531,5 +536,6 @@ public class MLVoiceCallActivity extends MLCallActivity {
 
     @Override protected void onDestroy() {
         super.onDestroy();
+        mAudioManager.setMode(AudioManager.MODE_NORMAL);
     }
 }

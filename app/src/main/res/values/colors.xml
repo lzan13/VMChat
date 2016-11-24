@@ -77,4 +77,6 @@
     <color name="ml_tab_normal">#79e62f17</color>
     <color name="ml_tab_selected">#dde62f17</color>
 
+    <color name="ml_test">#ED5485</color>
+
 </resources>

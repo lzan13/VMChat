@@ -1,6 +1,5 @@
 package net.melove.app.chat.util;
 
-
 import android.annotation.TargetApi;
 import android.content.ContentUris;
 import android.content.Context;
@@ -34,7 +33,6 @@ public class MLFileUtil {
      * 判断目录是否存在
      *
      * @param path 目录路径
-     * @return
      */
     public static boolean isDirExists(String path) {
         File dir = new File(path);
@@ -45,7 +43,6 @@ public class MLFileUtil {
      * 判断文件是否存在
      *
      * @param path 文件路径
-     * @return
      */
     public static boolean isFileExists(String path) {
         File file = new File(path);
@@ -54,8 +51,6 @@ public class MLFileUtil {
 
     /**
      * 创建目录，多层目录会递归创建
-     *
-     * @param path
      */
     public static boolean createDirectory(String path) {
         File dir = new File(path);
@@ -68,8 +63,6 @@ public class MLFileUtil {
     /**
      * 创建新文件
      *
-     * @param filepath
-     * @return
      * @throws IOException
      */
     public static boolean createFile(String filepath) {
@@ -92,7 +85,7 @@ public class MLFileUtil {
     /**
      * 复制文件
      *
-     * @param srcPath   源文件地址
+     * @param srcPath 源文件地址
      * @param filepath2 目标文件地址
      * @return 返回复制结果
      */
@@ -128,9 +121,6 @@ public class MLFileUtil {
 
     /**
      * 读取文件到 Bitmap
-     *
-     * @param filepath
-     * @return
      */
     public static Bitmap fileToBitmap(String filepath) {
         File file = new File(filepath);
@@ -158,9 +148,6 @@ public class MLFileUtil {
 
     /**
      * 保存Bitmap到SD卡
-     *
-     * @param bitmap
-     * @param path
      */
     public static void saveBitmapToSDCard(Bitmap bitmap, String path) {
         OutputStream outputStream = null;
@@ -195,12 +182,8 @@ public class MLFileUtil {
         return actualWidth + "." + actualHeight;
     }
 
-
     /**
      * 删除文件
-     *
-     * @param filepath
-     * @return
      */
     public static boolean deleteFile(String filepath) {
         MLLog.i("删除文件：" + filepath);
@@ -276,7 +259,6 @@ public class MLFileUtil {
      }
      */
 
-
     /**
      * 获取 /mnt/sdcard (/storage/emulated/0) 目录
      *
@@ -337,7 +319,8 @@ public class MLFileUtil {
      * @return 返回得到的路径
      */
     public static String getDCIM() {
-        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/";
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
+                .getAbsolutePath() + "/";
     }
 
     /**
@@ -346,7 +329,8 @@ public class MLFileUtil {
      * @return 返回得到的路径
      */
     public static String getDownload() {
-        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + "/";
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                .getAbsolutePath() + "/";
     }
 
     /**
@@ -355,7 +339,8 @@ public class MLFileUtil {
      * @return 返回得到的路径
      */
     public static String getMusic() {
-        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath() + "/";
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
+                .getAbsolutePath() + "/";
     }
 
     /**
@@ -364,7 +349,16 @@ public class MLFileUtil {
      * @return 返回得到的路径
      */
     public static String getMovies() {
-        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getAbsolutePath() + "/";
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)
+                .getAbsolutePath() + "/";
+    }
+
+    /**
+     * 获取设备默认的图片目录
+     */
+    public static String getPictures() {
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                .getAbsolutePath() + "/";
     }
 
     /**
@@ -394,17 +388,16 @@ public class MLFileUtil {
         return MLApplication.getContext().getPackageResourcePath();
     }
 
-
     /**
      * 根据 Uri 获取文件的真实路径，这个是网上的方法，用的还是比较多的，可以参考，
      * 不过在选择google相册的图片的时候，如果本地不存在图片会出现问题
      *
      * @param context 上下文对象
-     * @param uri     包含文件信息的 Uri
+     * @param uri 包含文件信息的 Uri
      * @return 返回文件真实路径
      */
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public static String getPath(final Context context, final Uri uri) {
+    @TargetApi(Build.VERSION_CODES.KITKAT) public static String getPath(final Context context,
+            final Uri uri) {
 
         // 判断当前系统 API 4.4（19）及以上
         boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
@@ -445,7 +438,7 @@ public class MLFileUtil {
                 }
 
                 final String selection = "_id=?";
-                final String[] selectionArgs = new String[]{
+                final String[] selectionArgs = new String[] {
                         split[1]
                 };
 
@@ -472,13 +465,14 @@ public class MLFileUtil {
      * Get the value of the data column for this Uri. This is useful for
      * MediaStore Uris, and other file-based ContentProviders.
      *
-     * @param context       The context.
-     * @param uri           The Uri to query.
-     * @param selection     (Optional) Filter used in the query.
+     * @param context The context.
+     * @param uri The Uri to query.
+     * @param selection (Optional) Filter used in the query.
      * @param selectionArgs (Optional) Selection arguments used in the query.
      * @return The value of the _data column, which is typically a file path.
      */
-    public static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
+    public static String getDataColumn(Context context, Uri uri, String selection,
+            String[] selectionArgs) {
 
         Cursor cursor = null;
         final String column = "_data";
@@ -487,18 +481,17 @@ public class MLFileUtil {
         };
 
         try {
-            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
+            cursor = context.getContentResolver()
+                    .query(uri, projection, selection, selectionArgs, null);
             if (cursor != null && cursor.moveToFirst()) {
                 final int index = cursor.getColumnIndexOrThrow(column);
                 return cursor.getString(index);
             }
         } finally {
-            if (cursor != null)
-                cursor.close();
+            if (cursor != null) cursor.close();
         }
         return null;
     }
-
 
     /**
      * @param uri The Uri to check.
@@ -534,7 +527,6 @@ public class MLFileUtil {
     public static boolean isGooglePhotosUri(Uri uri) {
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
     }
-
 }
 
 

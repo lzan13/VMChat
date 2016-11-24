@@ -1,4 +1,4 @@
-package net.melove.app.chat.ui.chat.call;
+package net.melove.app.chat.ui.call;
 
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -34,6 +34,7 @@ import net.melove.app.chat.MLConstants;
 import net.melove.app.chat.MLHyphenate;
 import net.melove.app.chat.util.MLBitmapUtil;
 import net.melove.app.chat.util.MLDateUtil;
+import net.melove.app.chat.util.MLFileUtil;
 import net.melove.app.chat.util.MLLog;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -211,8 +212,8 @@ public class MLVideoCallActivity extends MLCallActivity {
             R.id.img_background, R.id.layout_control, R.id.surface_view_local,
             R.id.surface_view_opposite, R.id.btn_exit_full_screen, R.id.btn_change_camera_switch,
             R.id.btn_mic_switch, R.id.btn_camera_switch, R.id.btn_speaker_switch,
-            R.id.btn_record_switch, R.id.btn_call_info, R.id.layout_call_info, R.id.fab_reject_call,
-            R.id.fab_end_call, R.id.fab_answer_call
+            R.id.btn_record_switch, R.id.btn_call_info, R.id.layout_call_info,
+            R.id.btn_call_screenshot, R.id.fab_reject_call, R.id.fab_end_call, R.id.fab_answer_call
     }) void onClick(View v) {
         switch (v.getId()) {
             case R.id.layout_control:
@@ -262,6 +263,9 @@ public class MLVideoCallActivity extends MLCallActivity {
                 break;
             case R.id.layout_call_info:
                 mCallInfoLayout.setVisibility(View.GONE);
+                break;
+            case R.id.btn_call_screenshot:
+                screenShot();
                 break;
             case R.id.fab_reject_call:
                 // 拒绝接听通话
@@ -457,6 +461,14 @@ public class MLVideoCallActivity extends MLCallActivity {
     }
 
     /**
+     * 保存屏幕图像
+     */
+    private void screenShot() {
+        mVideoCallHelper.takePicture(
+                MLFileUtil.getPictures() + "video_" + System.currentTimeMillis() + ".jpg");
+    }
+
+    /**
      * 拒绝通话
      */
     private void rejectCall() {
@@ -501,8 +513,7 @@ public class MLVideoCallActivity extends MLCallActivity {
             EMClient.getInstance().callManager().endCall();
         } catch (EMNoActiveCallException e) {
             e.printStackTrace();
-            Snackbar.make(getRootView(), "结束通话失败：error-" + e.getErrorCode() + "-" + e.getMessage(),
-                    Snackbar.LENGTH_SHORT).show();
+            MLLog.e("结束通话失败：error %d - %s", e.getErrorCode(), e.getMessage());
         }
         // 挂断电话调用保存消息方法
         saveCallMessage();
@@ -758,6 +769,7 @@ public class MLVideoCallActivity extends MLCallActivity {
         // 结束通话要把 SurfaceView 释放 重置为 null
         mLocalSurfaceView = null;
         mOppositeSurfaceView = null;
+        mAudioManager.setMode(AudioManager.MODE_NORMAL);
         super.onFinish();
     }
 
@@ -830,5 +842,6 @@ public class MLVideoCallActivity extends MLCallActivity {
 
     @Override protected void onDestroy() {
         super.onDestroy();
+        mAudioManager.setMode(AudioManager.MODE_NORMAL);
     }
 }

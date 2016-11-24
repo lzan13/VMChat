@@ -10,7 +10,7 @@
     android:background="@color/ml_theme_background"
     android:clipToPadding="false"
     android:fitsSystemWindows="false"
-    tools:context=".ui.chat.call.MLVoiceCallActivity"
+    tools:context=".ui.call.MLVoiceCallActivity"
     >
 
     <!--通话界面背景-->
