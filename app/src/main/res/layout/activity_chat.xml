@@ -65,17 +65,6 @@
                         android:layout_centerVertical="true"
                         >
 
-                        <!--语音按钮-->
-                        <ImageButton
-                            android:id="@+id/img_voice"
-                            android:layout_width="@dimen/ml_dimen_48"
-                            android:layout_height="@dimen/ml_dimen_48"
-                            android:layout_centerInParent="true"
-                            android:background="@drawable/ml_click_rectangle_white"
-                            android:src="@mipmap/ic_keyboard_voice_white_24dp"
-                            android:tint="@color/ml_red_87"
-                            android:visibility="gone"
-                            />
                         <!--发送按钮-->
                         <ImageButton
                             android:id="@+id/img_send"
@@ -97,7 +86,7 @@
                         android:layout_centerVertical="true"
                         android:animateLayoutChanges="true"
                         >
-
+                        <!--表情按钮-->
                         <ImageButton
                             android:id="@+id/img_emotion"
                             android:layout_width="@dimen/ml_dimen_48"
@@ -121,7 +110,7 @@
                     </RelativeLayout>
                     <!--输入框-->
                     <EditText
-                        android:id="@+id/edit_input"
+                        android:id="@+id/edit_input_message"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
@@ -178,7 +167,7 @@
             </RelativeLayout>
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/layout_input"
@@ -187,7 +176,7 @@
             >
             <!--官方下拉刷新控件-->
             <android.support.v4.widget.SwipeRefreshLayout
-                android:id="@+id/refresh_layout"
+                android:id="@+id/swipe_refresh_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 >
@@ -201,24 +190,22 @@
                     android:scrollbars="vertical"
                     />
             </android.support.v4.widget.SwipeRefreshLayout>
-        </LinearLayout>
 
-        <!--显示有多少条新消息-->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/layout_input"
-            android:layout_alignParentRight="true"
-            >
-
+            <!--显示有多少条新消息-->
             <Button
+                android:id="@+id/btn_new_message"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/ml_dimen_36"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_margin="@dimen/ml_dimen_8"
+                android:background="@drawable/ml_shape_circle"
+                android:padding="@dimen/ml_dimen_8"
                 android:text="@string/ml_hint_msg_new"
-                android:visibility="gone"
+                android:visibility="visible"
                 />
+        </RelativeLayout>
 
-        </LinearLayout>
         <!--扩展菜单布局-->
         <LinearLayout
             android:id="@+id/layout_attach_menu"

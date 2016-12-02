@@ -1,4 +1,4 @@
-package net.melove.app.chat.ui.main;
+package net.melove.app.chat.ui;
 
 import android.app.ProgressDialog;
 import android.content.Intent;

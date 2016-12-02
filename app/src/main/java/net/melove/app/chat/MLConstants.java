@@ -7,7 +7,7 @@ package net.melove.app.chat;
 public class MLConstants {
 
     // GCM number
-    public static final String ML_GCM_NUMBER = "163141467698";
+    public static final String ML_FCM_PROJECT_NUMBER = "666356109043";
 
     // 集成小米推送需要的 appid 和 appkey
     public static final String ML_MI_APP_ID = "2882303761517493144";
@@ -166,17 +166,6 @@ public class MLConstants {
     public static final int ML_APPLY_TYPE_USER = 0x00;      // 联系人申请
     public static final int ML_APPLY_TYPE_GROUP = 0x01;     // 群组申请
 
-    /**
-     * RecyclerView Adapter 列表刷新类型
-     */
-    public static final int ML_NOTIFY_REFRESH_ALL = 0x00;
-    public static final int ML_NOTIFY_REFRESH_CHANGED = 0x01;
-    public static final int ML_NOTIFY_REFRESH_RANGE_CHANGED = 0x02;
-    public static final int ML_NOTIFY_REFRESH_INSERTED = 0x03;
-    public static final int ML_NOTIFY_REFRESH_RANGE_INSERTED = 0x04;
-    public static final int ML_NOTIFY_REFRESH_MOVED = 0x05;
-    public static final int ML_NOTIFY_REFRESH_REMOVED = 0x06;
-    public static final int ML_NOTIFY_REFRESH_RANGE_REMOVED = 0x07;
 
     /**
      * 聊天消息类型

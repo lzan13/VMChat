@@ -148,7 +148,7 @@ public class MLHyphenate {
         // 是否启动 DNS 信息配置
         options.enableDNSConfig(true);
         // 设置Appkey，如果配置文件已经配置，这里可以不用设置
-        options.setAppKey("nixiwangluo#boostaging");
+        //options.setAppKey("1116161115115040#ejiazi");
         // 设置自动登录
         options.setAutoLogin(true);
         // 设置是否按照服务器时间排序，false按照本地时间排序
@@ -168,8 +168,8 @@ public class MLHyphenate {
         // 设置是否允许聊天室的Owner 离开并删除聊天室的会话
         options.allowChatroomOwnerLeave(true);
 
-        // Google GCM 推送 number
-        options.setGCMNumber(MLConstants.ML_GCM_NUMBER);
+        // Google 推送 Project Number
+        options.setGCMNumber(MLConstants.ML_FCM_PROJECT_NUMBER);
         // 华为推送 AppId
         options.setHuaweiPushAppId(MLConstants.ML_HUAWEI_APP_ID);
         // 小米推送 AppId

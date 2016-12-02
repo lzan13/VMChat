@@ -1,4 +1,4 @@
-package net.melove.app.chat.ui.main;
+package net.melove.app.chat.ui;
 
 
 import android.os.Bundle;
@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import net.melove.app.chat.R;
-import net.melove.app.chat.ui.MLBaseFragment;
 
 /**
  * A simple {@link Fragment} subclass.

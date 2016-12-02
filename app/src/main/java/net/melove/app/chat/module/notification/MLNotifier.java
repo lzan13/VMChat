@@ -14,7 +14,7 @@ import net.melove.app.chat.R;
 import net.melove.app.chat.MLApplication;
 import net.melove.app.chat.MLConstants;
 import net.melove.app.chat.ui.chat.MLChatActivity;
-import net.melove.app.chat.ui.main.MLMainActivity;
+import net.melove.app.chat.ui.MLMainActivity;
 
 import java.util.List;
 

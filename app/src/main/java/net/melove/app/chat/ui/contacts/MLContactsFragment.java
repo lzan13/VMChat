@@ -72,7 +72,7 @@ public class MLContactsFragment extends MLBaseFragment {
      * 初始化联系人列表界面
      */
     private void initView() {
-        mActivity = getParentFragment().getActivity();
+        mActivity = getActivity();
         loadContactsList();
         mAdapter = new MLContactsAdapter(mActivity, mContactsList);
         /**

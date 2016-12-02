@@ -91,7 +91,7 @@
         <!-- 被踢弹出类 -->
         <!-- 主界面 -->
         <activity
-            android:name=".ui.main.MLMainActivity"
+            android:name=".ui.MLMainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Launcher">
             <intent-filter>
@@ -153,7 +153,7 @@
             android:windowSoftInputMode="adjustNothing|stateAlwaysHidden"/>
         <!-- 搜索界面 -->
         <activity
-            android:name=".ui.main.MLSearchActivity"
+            android:name=".ui.MLSearchActivity"
             android:theme="@style/MLTheme.Default"
             android:windowSoftInputMode="adjustResize|stateVisible"/>
         <activity
@@ -164,7 +164,6 @@
         <!-- 测试 Activity -->
         <activity
             android:name=".test.MLTestActivity"
-            android:parentActivityName=".ui.MLBaseActivity"
             android:theme="@style/MLTheme.Default">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -186,16 +185,16 @@
             android:value="lzan13#hxsdkdemo"/>
         <!--配置私有化聊天地址-->
         <!--<meta-data-->
-            <!--android:name="EASEMOB_CHAT_ADDRESS"-->
-            <!--android:value="im.easemob.com"/>-->
+        <!--android:name="EASEMOB_CHAT_ADDRESS"-->
+        <!--android:value="im.easemob.com"/>-->
         <!--&lt;!&ndash;配置私有化聊天端口&ndash;&gt;-->
         <!--<meta-data-->
-            <!--android:name="EASEMOB_CHAT_PORT"-->
-            <!--android:value="443"/>-->
+        <!--android:name="EASEMOB_CHAT_PORT"-->
+        <!--android:value="443"/>-->
         <!--&lt;!&ndash;配置私有化rest接口地址&ndash;&gt;-->
         <!--<meta-data-->
-            <!--android:name="EASEMOB_API_URL"-->
-            <!--android:value="a1.easemob.com:80"/>-->
+        <!--android:name="EASEMOB_API_URL"-->
+        <!--android:value="a1.easemob.com:80"/>-->
 
         <!--声明sdk所需的 Service SDK核心功能-->
         <service

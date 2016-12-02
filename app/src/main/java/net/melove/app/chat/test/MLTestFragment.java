@@ -71,7 +71,7 @@ public class MLTestFragment extends MLBaseFragment {
 
     @Override public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mActivity = getParentFragment().getActivity();
+        mActivity = getActivity();
         init();
     }
 

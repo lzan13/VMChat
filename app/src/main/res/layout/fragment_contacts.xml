@@ -7,7 +7,7 @@
 
     <!--官方下拉刷新控件-->
     <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/refresh_layout"
+        android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >

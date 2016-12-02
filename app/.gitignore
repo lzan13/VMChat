@@ -2,7 +2,9 @@
 /libs
 /src/main/jniLibs
 /app.iml
+
 /app-config.properties
+/google-services.json
 
 *.apk
 *.jks

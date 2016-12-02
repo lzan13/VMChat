@@ -1,9 +1,8 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.neenbedankt.android-apt'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '25.0.0'
+    buildToolsVersion '25.0.1'
     defaultConfig {
         applicationId 'net.melove.app.chat'
         minSdkVersion 15
@@ -98,13 +97,11 @@ android {
  * 项目依赖，包含引入的第三方 SDK以及Android官方 Support 库*/
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    // 引入 ButterKnife 库
-    apt 'com.jakewharton:butterknife-compiler:8.4.0'
-    compile 'com.jakewharton:butterknife:8.4.0'
     /**
      *  新的遵循 Android  Material design 设计风格库，此扩展库已经包含了support-v4,appcomat-v7,recyclerView扩展库，
      *  如果引入了design，就不需要再单独引入其他库*/
-    compile 'com.android.support:design:25.0.0'
+    compile 'com.android.support:design:25.0.1'
+
     // 解决方法数超过65536问题扩展库
     compile 'com.android.support:multidex:1.0.1'
     // Google Play Service 库，使用GCM推送需要
@@ -113,12 +110,20 @@ dependencies {
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
     // LeakCanary 发版的库
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
+
     // 第三方图片加载库
     compile 'com.github.bumptech.glide:glide:3.7.0'
+
     // 观察者模式解耦库
     compile 'org.greenrobot:eventbus:3.0.0'
+
     // 支持手势缩放的ImageView
     compile 'com.bm.photoview:library:1.4.1'
+
+    // 引入 ButterKnife 库
+    compile 'com.jakewharton:butterknife:8.4.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+
     // 引入各种第三方 SDK jar包，在上边 fileTree 里已经包含了libs，这里可以不用再单独添加
     compile files('libs/xiaomi_push_v303.jar')
     compile files('libs/huawei_push_v2705.jar')

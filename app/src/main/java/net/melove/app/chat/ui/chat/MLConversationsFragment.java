@@ -78,8 +78,7 @@ public class MLConversationsFragment extends MLBaseFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        // 因为当前 Fragment 的父容器也是 Fragment，因此获取当前的 Activity 需要通过父容器来获得
-        mActivity = getParentFragment().getActivity();
+        mActivity = getActivity();
 
         initView();
     }

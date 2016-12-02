@@ -3,7 +3,7 @@ package net.melove.app.chat.module.listener;
 /**
  * Created by lzan13 on 2016/11/10.
  *
- * 自定义回调接口，用来实现 RecyclerView 事件监听
+ * 自定义回调接口，因为 RecyclerView 控件没有实现 Item 的点击以及长按监听，所以需要自己定义回调实现
  */
 public interface MLItemCallBack {
     /**

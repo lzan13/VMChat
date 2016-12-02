@@ -1,4 +1,4 @@
-package net.melove.app.chat.ui.main;
+package net.melove.app.chat.ui;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

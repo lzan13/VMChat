@@ -9,6 +9,7 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 
+import java.util.ArrayList;
 import net.melove.app.chat.MLConstants;
 import net.melove.app.chat.ui.chat.messageitem.MLCallMessageItem;
 import net.melove.app.chat.ui.chat.messageitem.MLFileMessageItem;
@@ -19,7 +20,7 @@ import net.melove.app.chat.ui.chat.messageitem.MLTextMessageItem;
 import net.melove.app.chat.ui.chat.messageitem.MLVoiceMessageItem;
 
 import java.util.List;
-
+import net.melove.app.chat.util.MLLog;
 
 /**
  * Class ${FILE_NAME}
@@ -28,25 +29,11 @@ import java.util.List;
  */
 public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.MessageViewHolder> {
 
-    // 刷新类型
-    public static final int NOTIFY_ALL = 0x00;
-    public static final int NOTIFY_CHANGED = 0x01;
-    public static final int NOTIFY_MOVED = 0x02;
-    public static final int NOTIFY_INSERTED = 0x03;
-    public static final int NOTIFY_RANGE_CHANGED = 0x04;
-    public static final int NOTIFY_RANGE_INSERTED = 0x05;
-    public static final int NOTIFY_RANGE_REMOVED = 0x06;
-    public static final int NOTIFY_REMOVED = 0x07;
-
-
     private Context mContext;
-    // 当前 Item position
-    private int mCurrPosition;
 
-    // 聊天对象的 useranme/groupid
-    private String mChatId;
     // 当前会话对象
     private EMConversation mConversation;
+    // 数据集合
     private List<EMMessage> mMessages;
 
     // 自定义的回调接口
@@ -56,32 +43,24 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
      * 构造方法
      *
      * @param context 上下文对象，在解析布局的时候需要用到
-     * @param chatId  当前会话者的id，为username/groupId
+     * @param conversationId 当前会话 id
      */
-    public MLMessageAdapter(Context context, String chatId) {
+    public MLMessageAdapter(Context context, String conversationId) {
         mContext = context;
-        mChatId = chatId;
-
-        /**
-         * 初始化会话对象，这里有三个参数么，
-         * mChatid 第一个表示会话的当前聊天的 useranme 或者 groupid
-         * null 第二个是会话类型可以为空
-         * true 第三个表示如果会话不存在是否创建
-         */
-        mConversation = EMClient.getInstance().chatManager().getConversation(mChatId, null, true);
-        mMessages = mConversation.getAllMessages();
-        // 将list集合倒序排列
-        // Collections.reverse(mMessages);
+        // 获取会话对象，这里有可能为空
+        mConversation = EMClient.getInstance().chatManager().getConversation(conversationId);
+        if (mConversation != null) {
+            mMessages = mConversation.getAllMessages();
+        } else {
+            mMessages = new ArrayList<>();
+        }
     }
 
-
-    @Override
-    public long getItemId(int position) {
+    @Override public long getItemId(int position) {
         return position;
     }
 
-    @Override
-    public int getItemCount() {
+    @Override public int getItemCount() {
         return mMessages.size();
     }
 
@@ -91,8 +70,7 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
      * @param position 当前 Item 位置
      * @return 当前 Item 的类型
      */
-    @Override
-    public int getItemViewType(int position) {
+    @Override public int getItemViewType(int position) {
         EMMessage message = mMessages.get(position);
         int itemType = -1;
         // 判断消息类型
@@ -102,29 +80,35 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
         } else if (message.getBooleanAttribute(MLConstants.ML_ATTR_CALL_VIDEO, false)
                 || message.getBooleanAttribute(MLConstants.ML_ATTR_CALL_VOICE, false)) {
             // 音视频消息
-            itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_CALL_SEND : MLConstants.MSG_TYPE_CALL_RECEIVED;
+            itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_CALL_SEND
+                    : MLConstants.MSG_TYPE_CALL_RECEIVED;
         } else {
             switch (message.getType()) {
-            case TXT:
-                // 文本消息
-                itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_TEXT_SEND : MLConstants.MSG_TYPE_TEXT_RECEIVED;
-                break;
-            case IMAGE:
-                // 语音消息
-                itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_IMAGE_SEND : MLConstants.MSG_TYPE_IMAGE_RECEIVED;
-                break;
-            case FILE:
-                // 文件消息
-                itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_FILE_SEND : MLConstants.MSG_TYPE_FILE_RECEIVED;
-                break;
-            case VOICE:
-                // 语音消息
-                itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_VOICE_SEND : MLConstants.MSG_TYPE_VOICE_RECEIVED;
-                break;
-            default:
-                // 默认返回txt类型
-                itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_TEXT_SEND : MLConstants.MSG_TYPE_TEXT_RECEIVED;
-                break;
+                case TXT:
+                    // 文本消息
+                    itemType = message.direct() == EMMessage.Direct.SEND
+                            ? MLConstants.MSG_TYPE_TEXT_SEND : MLConstants.MSG_TYPE_TEXT_RECEIVED;
+                    break;
+                case IMAGE:
+                    // 语音消息
+                    itemType = message.direct() == EMMessage.Direct.SEND
+                            ? MLConstants.MSG_TYPE_IMAGE_SEND : MLConstants.MSG_TYPE_IMAGE_RECEIVED;
+                    break;
+                case FILE:
+                    // 文件消息
+                    itemType = message.direct() == EMMessage.Direct.SEND
+                            ? MLConstants.MSG_TYPE_FILE_SEND : MLConstants.MSG_TYPE_FILE_RECEIVED;
+                    break;
+                case VOICE:
+                    // 语音消息
+                    itemType = message.direct() == EMMessage.Direct.SEND
+                            ? MLConstants.MSG_TYPE_VOICE_SEND : MLConstants.MSG_TYPE_VOICE_RECEIVED;
+                    break;
+                default:
+                    // 默认返回txt类型
+                    itemType = message.direct() == EMMessage.Direct.SEND
+                            ? MLConstants.MSG_TYPE_TEXT_SEND : MLConstants.MSG_TYPE_TEXT_RECEIVED;
+                    break;
             }
         }
         return itemType;
@@ -133,63 +117,121 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
     /**
      * 重写RecyclerView.Adapter 创建ViewHolder方法，这里根据消息类型不同创建不同的 itemView 类
      *
-     * @param parent   itemView的父控件
+     * @param parent itemView的父控件
      * @param viewType itemView要显示的消息类型
      * @return 返回 自定义的 MessageViewHolder
      */
-    @Override
-    public MessageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @Override public MessageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         MessageViewHolder holder = null;
         switch (viewType) {
-        /**
-         *  SDK默认类型的消息
-         */
-        // 文字类消息
-        case MLConstants.MSG_TYPE_TEXT_SEND:
-        case MLConstants.MSG_TYPE_TEXT_RECEIVED:
-            holder = new MessageViewHolder(new MLTextMessageItem(mContext, this, viewType));
-            break;
-        // 图片类消息
-        case MLConstants.MSG_TYPE_IMAGE_SEND:
-        case MLConstants.MSG_TYPE_IMAGE_RECEIVED:
-            holder = new MessageViewHolder(new MLImageMessageItem(mContext, this, viewType));
-            break;
-        // 正常的文件类消息
-        case MLConstants.MSG_TYPE_FILE_SEND:
-        case MLConstants.MSG_TYPE_FILE_RECEIVED:
-            holder = new MessageViewHolder(new MLFileMessageItem(mContext, this, viewType));
-            break;
-        // 正常的语音消息
-        case MLConstants.MSG_TYPE_VOICE_SEND:
-        case MLConstants.MSG_TYPE_VOICE_RECEIVED:
-            holder = new MessageViewHolder(new MLVoiceMessageItem(mContext, this, viewType));
-            break;
+            /**
+             *  SDK默认类型的消息
+             */
+            // 文字类消息
+            case MLConstants.MSG_TYPE_TEXT_SEND:
+            case MLConstants.MSG_TYPE_TEXT_RECEIVED:
+                holder = new MessageViewHolder(new MLTextMessageItem(mContext, this, viewType));
+                break;
+            // 图片类消息
+            case MLConstants.MSG_TYPE_IMAGE_SEND:
+            case MLConstants.MSG_TYPE_IMAGE_RECEIVED:
+                holder = new MessageViewHolder(new MLImageMessageItem(mContext, this, viewType));
+                break;
+            // 正常的文件类消息
+            case MLConstants.MSG_TYPE_FILE_SEND:
+            case MLConstants.MSG_TYPE_FILE_RECEIVED:
+                holder = new MessageViewHolder(new MLFileMessageItem(mContext, this, viewType));
+                break;
+            // 正常的语音消息
+            case MLConstants.MSG_TYPE_VOICE_SEND:
+            case MLConstants.MSG_TYPE_VOICE_RECEIVED:
+                holder = new MessageViewHolder(new MLVoiceMessageItem(mContext, this, viewType));
+                break;
 
-        /**
-         * 自定义类型的消息
-         */
-        // 回撤类消息
-        case MLConstants.MSG_TYPE_SYS_RECALL:
-            holder = new MessageViewHolder(new MLRecallMessageItem(mContext, this, viewType));
-            break;
-        // 通话类型消息
-        case MLConstants.MSG_TYPE_CALL_SEND:
-        case MLConstants.MSG_TYPE_CALL_RECEIVED:
-            holder = new MessageViewHolder(new MLCallMessageItem(mContext, this, viewType));
-            break;
+            /**
+             * 自定义类型的消息
+             */
+            // 回撤类消息
+            case MLConstants.MSG_TYPE_SYS_RECALL:
+                holder = new MessageViewHolder(new MLRecallMessageItem(mContext, this, viewType));
+                break;
+            // 通话类型消息
+            case MLConstants.MSG_TYPE_CALL_SEND:
+            case MLConstants.MSG_TYPE_CALL_RECEIVED:
+                holder = new MessageViewHolder(new MLCallMessageItem(mContext, this, viewType));
+                break;
         }
         return holder;
     }
 
-    @Override
-    public void onBindViewHolder(MessageViewHolder holder, int position) {
+    @Override public void onBindViewHolder(MessageViewHolder holder, int position) {
         // 获取当前要显示的 message 对象
         EMMessage message = mMessages.get(position);
         /**
          *  调用自定义{@link MLMessageItem#onSetupView(EMMessage)}来填充数据
          */
         ((MLMessageItem) holder.itemView).onSetupView(message);
+    }
 
+    /**
+     * 更新聊天数据
+     */
+    private void updateData() {
+        MLLog.d("messages -1- %d, adapter - %d", mMessages.size(), getItemCount());
+        if (mMessages != null) {
+            mMessages.clear();
+            mMessages.addAll(mConversation.getAllMessages());
+        } else {
+            mMessages = mConversation.getAllMessages();
+        }
+        MLLog.d("messages -2- %d, adapter - %d", mMessages.size(), getItemCount());
+    }
+
+    /**
+     * 刷新全部
+     */
+    public void refreshAll() {
+        updateData();
+        notifyDataSetChanged();
+    }
+
+    /**
+     * 有新消息来时的刷新方法
+     */
+    public void refreshInserted(int position) {
+        updateData();
+        notifyItemInserted(position);
+    }
+
+    /**
+     * 加载更多消息时的刷新方法
+     *
+     * @param position 数据添加位置
+     * @param count 数据添加数量
+     */
+    public void refreshInsertedMore(int position, int count) {
+        updateData();
+        notifyItemRangeInserted(position, count);
+    }
+
+    /**
+     * 删除消息时的刷新方法
+     *
+     * @param position 需要刷新的位置
+     */
+    public void refreshRemoved(int position) {
+        updateData();
+        notifyItemRemoved(position);
+    }
+
+    /**
+     * 消息改变时刷新方法
+     *
+     * @param position 数据改变的位置
+     */
+    public void refreshChanged(int position) {
+        updateData();
+        notifyItemChanged(position);
     }
 
     /**
@@ -218,28 +260,19 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
          * 的方式传递过过来，因为聊天列表的 Item 有多种多样的，每一个 Item 弹出菜单不同，
          *
          * @param message 需要操作的 Item 的 EMMessage 对象
-         * @param action  Item 触发的动作，比如 点击、复制、转发、删除、撤回等
+         * @param action Item 触发的动作，比如 点击、复制、转发、删除、撤回等
          */
         public void onItemAction(EMMessage message, int action);
     }
-
 
     /**
      * Item 项的点击和长按 Action 事件回调
      *
      * @param message 操作的 Item 的 EMMessage 对象
-     * @param action  需要处理的动作，比如 复制、转发、删除、撤回等
+     * @param action 需要处理的动作，比如 复制、转发、删除、撤回等
      */
     public void onItemAction(EMMessage message, int action) {
         mOnItemClickListener.onItemAction(message, action);
-    }
-
-    /**
-     * 更新数据源
-     */
-    public void refreshMessageData() {
-        mMessages.clear();
-        mMessages.addAll(mConversation.getAllMessages());
     }
 
     /**
@@ -254,7 +287,6 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
      * 你就不能直接引用外部类，迫使你关注如何避免相互引用。 所以将 ViewHolder 定义为静态的
      */
     static class MessageViewHolder extends RecyclerView.ViewHolder {
-
 
         public MessageViewHolder(View itemView) {
             super(itemView);

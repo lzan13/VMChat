@@ -1,9 +1,7 @@
 package net.melove.app.chat.ui;
 
-import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -20,7 +18,6 @@ import net.melove.app.chat.MLConstants;
 import net.melove.app.chat.MLHyphenate;
 import net.melove.app.chat.module.event.MLConnectionEvent;
 import net.melove.app.chat.util.MLLog;
-import net.melove.app.chat.ui.main.MLMainActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

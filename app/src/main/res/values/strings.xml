@@ -131,6 +131,7 @@
     <string name="ml_hint_msg_new">{$1}条新消息</string>
     <string name="ml_hint_msg_recall_by_self">此条消息已撤回</string>
     <string name="ml_hint_msg_recall_by_user">此条消息已被 %1$s 撤回</string>
+    <string name="ml_hint_msg_no_more">没有更多消息了</string>
 
     <!--通话方面的提示信息-->
     <string name="ml_call_accepted">通话已接通</string>
