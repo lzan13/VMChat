@@ -95,10 +95,10 @@ public class MLUserDao {
     /**
      * 保存用户到本地，一次保存多个
      *
-     * @param userList 需要保存的用户集合
+     * @param userMap 需要保存的用户集合
      */
-    public synchronized void saveUserList(List<MLUserEntity> userList) {
-        for (MLUserEntity contactEntity : userList) {
+    public synchronized void saveUserMap(Map<String, MLUserEntity> userMap) {
+        for (MLUserEntity contactEntity : userMap.values()) {
             saveUser(contactEntity);
         }
     }
@@ -114,8 +114,7 @@ public class MLUserDao {
         String selection = MLDBConstants.COL_USERNAME + "=?";
         String args[] = new String[] { username };
         Cursor cursor = MLDBManager.getInstance()
-                .queryData(MLDBConstants.TB_USER, null, selection, args, null, null, null,
-                        null);
+                .queryData(MLDBConstants.TB_USER, null, selection, args, null, null, null, null);
         if (cursor.moveToNext()) {
             contactEntity = cursorToEntity(cursor);
         }
@@ -127,7 +126,7 @@ public class MLUserDao {
      *
      * @return 获取所有用户
      */
-    public synchronized Map<String, MLUserEntity> getUserList() {
+    public synchronized Map<String, MLUserEntity> getUserMap() {
         Map<String, MLUserEntity> userMap = new HashMap<>();
         // 查询 User 表
         Cursor cursor = MLDBManager.getInstance()
@@ -147,7 +146,7 @@ public class MLUserDao {
      * @return 返回得到的实体类
      */
     private MLUserEntity cursorToEntity(Cursor cursor) {
-        MLUserEntity userEntity = new MLUserEntity();
+        MLUserEntity userEntity = null;
         String username = cursor.getString(cursor.getColumnIndex(MLDBConstants.COL_USERNAME));
         String nickname = cursor.getString(cursor.getColumnIndex(MLDBConstants.COL_NICKNAME));
         String email = cursor.getString(cursor.getColumnIndex(MLDBConstants.COL_EMAIL));
@@ -162,7 +161,7 @@ public class MLUserDao {
         if (TextUtils.isEmpty(nickname)) {
             nickname = username;
         }
-        userEntity.setUserName(username);
+        userEntity = new MLUserEntity(username);
         userEntity.setNickName(nickname);
         userEntity.setEmail(email);
         userEntity.setAvatar(avatar);

@@ -35,8 +35,8 @@ android {
     buildTypes {
         debug {
             // 给debug包的包名加上后缀
-            //            applicationIdSuffix '.debug'
-            versionNameSuffix '-debug'
+            // applicationIdSuffix '.debug'
+            // versionNameSuffix '-debug'
             minifyEnabled false
             zipAlignEnabled false
         }
@@ -120,6 +120,9 @@ dependencies {
     // 支持手势缩放的ImageView
     compile 'com.bm.photoview:library:1.4.1'
 
+    // square 家族的网络加载库 retrofit
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+
     // 引入 ButterKnife 库
     compile 'com.jakewharton:butterknife:8.4.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
@@ -128,7 +131,7 @@ dependencies {
     compile files('libs/xiaomi_push_v303.jar')
     compile files('libs/huawei_push_v2705.jar')
     compile files('libs/talkingdata_analytics_v2230.jar')
-    compile files('libs/hyphenatechat_3.2.1.jar')
+    compile files('libs/hyphenatechat_3.2.2.jar')
 }
 
 

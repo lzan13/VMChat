@@ -25,36 +25,33 @@ import net.melove.app.chat.util.MLLog;
  */
 public class MLBigImageActivity extends MLBaseActivity {
 
-    // 界面控件
-    private Toolbar mToolbar;
-
     // 显示原图控件
     private PhotoView mPhotoView;
 
     private EMMessage mMessage;
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_big_image);
 
         initView();
         initToolbar();
-
     }
 
     /**
      * 初始化 Toolbar 控件
      */
     private void initToolbar() {
-        mToolbar = (Toolbar) findViewById(R.id.widget_toolbar);
-        mToolbar.setTitle(((EMImageMessageBody) mMessage.getBody()).getFileName());
-        setSupportActionBar(mToolbar);
+        getToolbar().setTitle(((EMImageMessageBody) mMessage.getBody()).getFileName());
+        setSupportActionBar(getToolbar());
         // 设置toolbar图标
-        mToolbar.setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
+        getToolbar().setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
         // 设置Toolbar图标点击事件，Toolbar上图标的id是 -1
-        mToolbar.setNavigationOnClickListener(viewListener);
+        getToolbar().setNavigationOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+                onFinish();
+            }
+        });
     }
 
     /**
@@ -66,7 +63,6 @@ public class MLBigImageActivity extends MLBaseActivity {
         mPhotoView = (PhotoView) findViewById(R.id.img_image);
         // 启动图片缩放功能
         mPhotoView.enable();
-
 
         String msgId = getIntent().getStringExtra(MLConstants.ML_EXTRA_MSG_ID);
         mMessage = EMClient.getInstance().chatManager().getMessage(msgId);
@@ -95,29 +91,15 @@ public class MLBigImageActivity extends MLBaseActivity {
         }
     }
 
-    private View.OnClickListener viewListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            switch (view.getId()) {
-            case -1:
-                onFinish();
-                break;
-            }
-        }
-    };
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    @Override public boolean onCreateOptionsMenu(Menu menu) {
         return super.onCreateOptionsMenu(menu);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onDestroy() {
+    @Override protected void onDestroy() {
         super.onDestroy();
     }
 }

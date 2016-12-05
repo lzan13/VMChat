@@ -1,89 +1,143 @@
 package net.melove.app.chat.ui;
 
-
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+
 import android.support.v4.app.FragmentActivity;
-
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import com.squareup.leakcanary.RefWatcher;
-
 import net.melove.app.chat.MLApplication;
 import net.melove.app.chat.util.MLLog;
 
 /**
  * Created by lzan13 on 2015/7/6.
- * Fragment的基类，定义Fragment公共接口回调
+ * Fragment的基类，进行简单的封装，实现 ViewPager 结合 Fragment 懒加载
  */
-public class MLBaseFragment extends Fragment {
+public abstract class MLBaseFragment extends Fragment {
 
-    private String className = this.getClass().getSimpleName();
+    protected String className = this.getClass().getSimpleName();
 
     protected FragmentActivity mActivity;
 
-    /**
-     * 这个接口必须由包含此Fragment的Activity来实现，用来实现Activity和Fragment的交互，
-     * 以及当前Fragment与其它Fragment的交互
-     * 具体的可参考官方文档：
-     * 与其它Fragment进行沟通：http://developer.android.com/training/basics/fragments/communicating.html
-     */
-    public static interface OnMLFragmentListener {
-        public void onFragmentClick(int a, int b, String s);
+    // 是否第一次加载
+    protected boolean isFirstLoad = true;
+    // 是否已经初始化 View
+    protected boolean isInitView = false;
+    // 是否显示
+    protected boolean isVisible = false;
+
+    @Override public void onAttach(Context context) {
+        super.onAttach(context);
+        MLLog.i("onAttach: %s", className);
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        MLLog.i("%s onActivityCreated", className);
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    @Override public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MLLog.i("%s onCreate", className);
+        MLLog.i("onCreate: %s", className);
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        MLLog.i("%s onPause ", className);
+    @Override public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        // 当前 Fragment 显示时加载数据
+        if (isVisibleToUser) {
+            isVisible = true;
+            loadData();
+        } else {
+            isVisible = false;
+        }
+        MLLog.i("setUserVisibleHint: %s, %b", className, isVisibleToUser);
     }
 
-    @Override
-    public void onStart() {
+    @Nullable @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(initLayoutId(), container, false);
+        MLLog.i("onCreateView: %s", className);
+        return view;
+    }
+
+    @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        initView();
+        isInitView = true;
+        loadData();
+        MLLog.i("onActivityCreated: %s", className);
+    }
+
+    @Override public void onStart() {
         super.onStart();
-        MLLog.i("%s onStart ", className);
+        MLLog.i("onStart: %s", className);
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        MLLog.i("%s onStop ", className);
-    }
-
-    @Override
-    public void onResume() {
+    @Override public void onResume() {
         super.onResume();
-        MLLog.i("%s onResume ", className);
+        MLLog.i("onResume: %s", className);
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        MLLog.i("%s onDetach ", className);
+    @Override public void onPause() {
+        super.onPause();
+        MLLog.i("onPause: %s", className);
     }
 
-    @Override
-    public void onDestroyView() {
+    @Override public void onStop() {
+        super.onStop();
+        MLLog.i("onStop: %s", className);
+    }
+
+    @Override public void onDestroyView() {
         super.onDestroyView();
-        MLLog.i("%s onDestroyView ", className);
+        MLLog.i("onDestroyView: %s", className);
     }
 
-    @Override
-    public void onDestroy() {
+    @Override public void onDetach() {
+        super.onDetach();
+        MLLog.i("onDetach: %s", className);
+    }
+
+    @Override public void onDestroy() {
         super.onDestroy();
-        MLLog.i("%s onDestroy ", className);
+        MLLog.i("onDestroy: %s", className);
         RefWatcher refWatcher = MLApplication.getRefWatcher();
         refWatcher.watch(this);
     }
+
+    /**
+     * 加载数据方法，是否真正加载由内部判断
+     */
+    private void loadData() {
+        // 只是打印输出当前状态
+        if (isFirstLoad) {
+            MLLog.i("第一次加载数据 isVisible: %b, %s", isVisible, className);
+        } else {
+            MLLog.i("不是第一次加载数据 isVisible: %b, %s", isVisible, className);
+        }
+        // 这里确定要不要执行数据加载
+        if (!isFirstLoad || !isVisible || !isInitView) {
+            return;
+        }
+        // 满足条件，调用数据加载
+        initData();
+        isFirstLoad = false;
+    }
+
+    /**
+     * 初始化 Fragment 界面 layout_id
+     *
+     * @return 返回布局 id
+     */
+    protected abstract int initLayoutId();
+
+    /**
+     * 初始化界面控件，将 Fragment 变量和 View 建立起映射关系
+     */
+    protected abstract void initView();
+
+    /**
+     * 加载数据
+     */
+    protected abstract void initData();
 }

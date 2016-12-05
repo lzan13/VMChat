@@ -2,11 +2,13 @@ package net.melove.app.chat.ui.contacts;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import net.melove.app.chat.MLConstants;
 import net.melove.app.chat.R;
 import net.melove.app.chat.module.listener.MLItemCallBack;
 import net.melove.app.chat.ui.widget.MLImageView;
@@ -49,12 +51,22 @@ public class MLContactsAdapter extends RecyclerView.Adapter<MLContactsAdapter.Co
      * @param holder
      * @param position
      */
-    @Override public void onBindViewHolder(ContactsViewHolder holder, int position) {
-        MLUserEntity userEntity = mContactsList.get(position);
+    @Override public void onBindViewHolder(ContactsViewHolder holder, final int position) {
+        MLUserEntity user = mContactsList.get(position);
+
+        // 设置用户昵称
+        holder.nickNameView.setText(
+                TextUtils.isEmpty(user.getNickName()) ? user.getNickName() : user.getUserName());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-
+                mCallBack.onAction(MLConstants.ML_ACTION_CLICK, position);
+            }
+        });
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override public boolean onLongClick(View view) {
+                mCallBack.onAction(MLConstants.ML_ACTION_LONG_CLICK, position);
+                return false;
             }
         });
     }
@@ -67,8 +79,8 @@ public class MLContactsAdapter extends RecyclerView.Adapter<MLContactsAdapter.Co
      * 自定义联系人 ViewHolder 用来展示联系人数据
      */
     public static class ContactsViewHolder extends RecyclerView.ViewHolder {
-        MLImageView imageViewAvatar;
-        TextView textViewUsername;
+        MLImageView avatarView;
+        TextView nickNameView;
 
         /**
          * 构造方法
@@ -77,8 +89,8 @@ public class MLContactsAdapter extends RecyclerView.Adapter<MLContactsAdapter.Co
          */
         public ContactsViewHolder(View itemView) {
             super(itemView);
-            imageViewAvatar = (MLImageView) itemView.findViewById(R.id.img_avatar);
-            textViewUsername = (TextView) itemView.findViewById(R.id.text_username);
+            avatarView = (MLImageView) itemView.findViewById(R.id.img_avatar);
+            nickNameView = (TextView) itemView.findViewById(R.id.text_nickname);
         }
     }
 }

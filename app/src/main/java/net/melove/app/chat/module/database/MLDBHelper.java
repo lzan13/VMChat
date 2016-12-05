@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import net.melove.app.chat.MLConstants;
 import net.melove.app.chat.util.MLSPUtil;
 
-
 /**
  * Created by Administrator on 2014/12/18.
  * 自定义数据库帮助类，用户操作数据库
@@ -18,7 +17,6 @@ public class MLDBHelper extends SQLiteOpenHelper {
     private static int db_version = 1;
 
     private static MLDBHelper instance;
-
 
     /**
      * 单例模式获取 获取数据库操作类实例
@@ -34,29 +32,24 @@ public class MLDBHelper extends SQLiteOpenHelper {
 
     /**
      * 私有化的构造函数
-     *
-     * @param context
      */
     private MLDBHelper(Context context) {
         super(context, getDBName(context), null, db_version);
     }
 
-    @Override
-    public void onCreate(SQLiteDatabase db) {
+    @Override public void onCreate(SQLiteDatabase db) {
         db.execSQL(MLDBConstants.SQL_CONTACTS);
         db.execSQL(MLDBConstants.SQL_GROUP);
     }
 
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    @Override public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
 
     private static String getDBName(Context context) {
-        String username = (String) MLSPUtil.get(context, MLConstants.ML_SHARED_USERNAME, "");
+        String username = (String) MLSPUtil.get(MLConstants.ML_SHARED_USERNAME, "");
         return username + db_name;
     }
-
 
     /**
      * 关闭数据库
@@ -72,5 +65,4 @@ public class MLDBHelper extends SQLiteOpenHelper {
     public void resetDBHelper() {
         instance = null;
     }
-
 }

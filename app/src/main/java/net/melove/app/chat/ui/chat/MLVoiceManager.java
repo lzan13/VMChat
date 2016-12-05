@@ -176,7 +176,7 @@ public class MLVoiceManager {
              *
              * 当使用 new() 或者调用 reset() 方法时 MediaPlayer 会进入 Idle 状态
              * 这两种方法的一个重要差别就是：如果在这个状态下调用了getDuration()等方法（相当于调用时机不正确），
-             * 通过reset()方法进入idle状态的话会触发OnErrorListener.onError()，并且MediaPlayer会进入Error状态；
+             * 通过reset()方法进入idle状态的话会触发OnErrorListener.onFailed()，并且MediaPlayer会进入Error状态；
              * 如果是新创建的MediaPlayer对象，则并不会触发onError(),也不会进入Error状态；
              */
             mMediaPlayer = new MediaPlayer();

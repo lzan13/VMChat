@@ -169,10 +169,10 @@ public class MLVoiceMessageItem extends MLMessageItem {
             @Override public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case 0:
-                        mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_MSG_DELETE);
+                        mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_DELETE);
                         break;
                     case 1:
-                        mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_MSG_RECALL);
+                        mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_RECALL);
                         break;
                 }
             }
@@ -217,7 +217,7 @@ public class MLVoiceMessageItem extends MLMessageItem {
                 resendView.setVisibility(View.VISIBLE);
                 resendView.setOnClickListener(new OnClickListener() {
                     @Override public void onClick(View v) {
-                        mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_MSG_RESEND);
+                        mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_RESEND);
                     }
                 });
                 break;

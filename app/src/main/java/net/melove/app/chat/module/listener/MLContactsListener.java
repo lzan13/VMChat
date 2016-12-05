@@ -6,11 +6,11 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import net.melove.app.chat.MLConstants;
-import net.melove.app.chat.MLHyphenate;
 import net.melove.app.chat.R;
 import net.melove.app.chat.module.event.MLApplyForEvent;
 import net.melove.app.chat.module.event.MLUserEvent;
 import net.melove.app.chat.module.notification.MLNotifier;
+import net.melove.app.chat.ui.contacts.MLContactsManager;
 import net.melove.app.chat.ui.contacts.MLUserEntity;
 import net.melove.app.chat.util.MLLog;
 import org.greenrobot.eventbus.EventBus;
@@ -34,10 +34,8 @@ public class MLContactsListener implements EMContactListener {
      * @param username 被添加的用户 username
      */
     @Override public void onContactAdded(String username) {
-        MLUserEntity userEntity = new MLUserEntity();
-        userEntity.setUserName(username);
-
-        MLHyphenate.getInstance().saveUser(userEntity);
+        MLUserEntity userEntity = new MLUserEntity(username);
+        MLContactsManager.getInstance().saveUser(userEntity);
 
         // 发送可被订阅的消息，通知订阅者联系人有变化
         EventBus.getDefault().post(new MLUserEvent());
@@ -49,8 +47,7 @@ public class MLContactsListener implements EMContactListener {
      * @param username 被删除的用户 username
      */
     @Override public void onContactDeleted(String username) {
-        MLUserEntity userEntity = MLHyphenate.getInstance().getUser(username);
-        MLHyphenate.getInstance().deleteUser(userEntity);
+        MLContactsManager.getInstance().deleteUser(username);
 
         // 发送可被订阅的消息，通知订阅者联系人有变化
         EventBus.getDefault().post(new MLUserEvent());
@@ -83,7 +80,7 @@ public class MLContactsListener implements EMContactListener {
         // 设置当前申请信息状态
         message.setAttribute(MLConstants.ML_ATTR_STATUS, "");
         // 设置消息发送方
-        message.setFrom(MLConstants.ML_CONVERSATION_APPLY);
+        message.setFrom(MLConstants.ML_CONVERSATION_ID_APPLY);
         // 设置msgId
         message.setMsgId(msgId);
         // 将消息保存到本地和内存
@@ -124,7 +121,7 @@ public class MLContactsListener implements EMContactListener {
         // 设置当前申请信息状态
         message.setAttribute(MLConstants.ML_ATTR_STATUS, mContext.getString(R.string.ml_agreed));
         // 设置消息发送方
-        message.setFrom(MLConstants.ML_CONVERSATION_APPLY);
+        message.setFrom(MLConstants.ML_CONVERSATION_ID_APPLY);
         // 设置msgId
         message.setMsgId(msgId);
         // 将消息保存到本地和内存
@@ -165,7 +162,7 @@ public class MLContactsListener implements EMContactListener {
         // 设置当前申请信息状态
         message.setAttribute(MLConstants.ML_ATTR_STATUS, mContext.getString(R.string.ml_rejected));
         // 设置消息发送方
-        message.setFrom(MLConstants.ML_CONVERSATION_APPLY);
+        message.setFrom(MLConstants.ML_CONVERSATION_ID_APPLY);
         // 设置msgId
         message.setMsgId(msgId);
         // 将消息保存到本地和内存

@@ -16,10 +16,16 @@ import com.hyphenate.EMCallBack;
 import com.hyphenate.EMError;
 import com.hyphenate.chat.EMClient;
 
+import com.hyphenate.exceptions.HyphenateException;
+import java.util.ArrayList;
+import java.util.List;
 import net.melove.app.chat.R;
+import net.melove.app.chat.module.database.MLUserDao;
 import net.melove.app.chat.ui.MLBaseActivity;
 import net.melove.app.chat.ui.MLMainActivity;
 import net.melove.app.chat.MLConstants;
+import net.melove.app.chat.ui.contacts.MLContactsManager;
+import net.melove.app.chat.ui.contacts.MLUserEntity;
 import net.melove.app.chat.util.MLLog;
 import net.melove.app.chat.util.MLSPUtil;
 
@@ -136,10 +142,11 @@ public class MLSignInActivity extends MLBaseActivity {
              * 登陆成功的回调
              */
             @Override public void onSuccess() {
+                // 登录成功同步联系人到本地
+                MLContactsManager.getInstance().syncContactsFromServer();
 
                 // 登录成功，把用户名保存在本地（可以不保存，根据自己的需求）
-                MLSPUtil.put(mActivity, MLConstants.ML_SHARED_USERNAME, mUsername);
-
+                MLSPUtil.put(MLConstants.ML_SHARED_USERNAME, mUsername);
                 // 加载所有会话到内存
                 EMClient.getInstance().chatManager().loadAllConversations();
                 // 加载所有群组到内存
@@ -239,7 +246,7 @@ public class MLSignInActivity extends MLBaseActivity {
     @Override protected void onResume() {
         super.onResume();
         // 读取最后一次登录的账户 Username
-        mUsername = (String) MLSPUtil.get(mActivity, MLConstants.ML_SHARED_USERNAME, "");
+        mUsername = (String) MLSPUtil.get(MLConstants.ML_SHARED_USERNAME, "");
         mUsernameView.setText(mUsername);
     }
 

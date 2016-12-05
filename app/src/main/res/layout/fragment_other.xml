@@ -1,12 +1,26 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.MLOtherFragment">
+    android:padding="@dimen/ml_dimen_16"
+    >
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/ml_app_name" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        >
 
-</FrameLayout>
+        <!--自定义ViewGroup，可以自动排列放在其中的子View-->
+        <net.melove.app.chat.ui.widget.MLViewGroup
+            android:id="@+id/view_custom_viewgroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+        </net.melove.app.chat.ui.widget.MLViewGroup>
+    </LinearLayout>
+
+</RelativeLayout>

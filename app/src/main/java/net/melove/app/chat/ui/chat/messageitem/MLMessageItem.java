@@ -76,12 +76,11 @@ public abstract class MLMessageItem extends LinearLayout {
     // 文件消息显示文件大小
     protected TextView fileSizeView;
 
-
     /**
      * 构造方法，创建item的view，需要传递对应的参数
      *
-     * @param context  上下文对象
-     * @param adapter  适配器
+     * @param context 上下文对象
+     * @param adapter 适配器
      * @param viewType item类型
      */
     public MLMessageItem(Context context, MLMessageAdapter adapter, int viewType) {
@@ -95,7 +94,6 @@ public abstract class MLMessageItem extends LinearLayout {
         onInflateView();
         onBubbleListener();
     }
-
 
     /**
      * 填充当前 Item，子类必须实现
@@ -117,15 +115,13 @@ public abstract class MLMessageItem extends LinearLayout {
         if (bubbleLayout != null) {
             // 设置Item 气泡的点击监听
             bubbleLayout.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
+                @Override public void onClick(View v) {
                     onItemClick();
                 }
             });
             // 设置Item 气泡的长按监听
             bubbleLayout.setOnLongClickListener(new OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
+                @Override public boolean onLongClick(View v) {
                     onItemLongClick();
                     return false;
                 }
@@ -138,7 +134,7 @@ public abstract class MLMessageItem extends LinearLayout {
      */
     protected void onItemClick() {
         // 设置 Item 项点击的 Action
-        mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_MSG_CLICK);
+        mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_CLICK);
     }
 
     /**
@@ -159,13 +155,17 @@ public abstract class MLMessageItem extends LinearLayout {
             return;
         }
         // 判断是否需要消息已读ACK，以及消息发送状态
-        if (!EMClient.getInstance().getOptions().getRequireAck() || !EMClient.getInstance().getOptions().getRequireDeliveryAck()) {
+        if (!EMClient.getInstance().getOptions().getRequireAck() || !EMClient.getInstance()
+                .getOptions()
+                .getRequireDeliveryAck()) {
             return;
         }
         // 判断是否是接收方的消息，是则发送ACK给消息发送者
         if (mViewType == MLConstants.MSG_TYPE_TEXT_RECEIVED) {
             try {
-                EMClient.getInstance().chatManager().ackMessageRead(mMessage.getFrom(), mMessage.getMsgId());
+                EMClient.getInstance()
+                        .chatManager()
+                        .ackMessageRead(mMessage.getFrom(), mMessage.getMsgId());
             } catch (HyphenateException e) {
                 e.printStackTrace();
             }
@@ -186,14 +186,12 @@ public abstract class MLMessageItem extends LinearLayout {
         }
     }
 
-    @Override
-    protected void onAttachedToWindow() {
+    @Override protected void onAttachedToWindow() {
         //        MLLog.i("onAttachedToWindow %s", mMessage.getMsgId());
         super.onAttachedToWindow();
     }
 
-    @Override
-    protected void onDetachedFromWindow() {
+    @Override protected void onDetachedFromWindow() {
         //        MLLog.i("onDetachedFromWindow %s", mMessage.getMsgId());
         // 检查是否有弹出框，如果有则销毁，防止界面销毁时出现异常
         if (alertDialog != null && alertDialog.isShowing()) {

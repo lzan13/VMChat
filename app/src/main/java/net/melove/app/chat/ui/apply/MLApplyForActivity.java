@@ -1,4 +1,4 @@
-package net.melove.app.chat.ui.applyfor;
+package net.melove.app.chat.ui.apply;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import butterknife.BindView;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
@@ -30,12 +31,13 @@ import org.greenrobot.eventbus.ThreadMode;
  */
 public class MLApplyForActivity extends MLBaseActivity {
 
+    @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
+
     // 当前会话对象，这里主要是记录申请与记录信息
     private EMConversation mConversation;
     // 每次加载申请与通知消息的条数
     private int mPageSize = 20;
 
-    private RecyclerView mRecyclerView;
     private MLApplyForAdapter mAdapter;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +53,8 @@ public class MLApplyForActivity extends MLBaseActivity {
     private void initView() {
         mActivity = this;
 
-        setSupportActionBar(getToolbar());
         getToolbar().setTitle(R.string.ml_apply);
+        setSupportActionBar(getToolbar());
         getToolbar().setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
         getToolbar().setNavigationOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
@@ -69,10 +71,11 @@ public class MLApplyForActivity extends MLBaseActivity {
          */
         mConversation = EMClient.getInstance()
                 .chatManager()
-                .getConversation(MLConstants.ML_CONVERSATION_APPLY, null, true);
+                .getConversation(MLConstants.ML_CONVERSATION_ID_APPLY, null, true);
         // 设置当前会话未读数为 0
         mConversation.markAllMessagesAsRead();
         MLConversationExtUtils.setConversationUnread(mConversation, false);
+
         int count = mConversation.getAllMessages().size();
         if (count < mConversation.getAllMsgCount() && count < mPageSize) {
             // 获取已经在列表中的最上边的一条消息id
@@ -123,14 +126,17 @@ public class MLApplyForActivity extends MLBaseActivity {
             @Override public void onAction(int action, Object tag) {
                 String msgId = (String) tag;
                 switch (action) {
-                    case MLConstants.ML_ACTION_APPLY_FOR_CLICK:
+                    case MLConstants.ML_ACTION_CLICK:
                         jumpUserInfo(msgId);
                         break;
-                    case MLConstants.ML_ACTION_APPLY_FOR_AGREE:
+                    case MLConstants.ML_ACTION_LONG_CLICK:
+                        deleteApply(msgId);
+                        break;
+                    case MLConstants.ML_ACTION_AGREED:
                         agreeApply(msgId);
                         break;
-                    case MLConstants.ML_ACTION_APPLY_FOR_DELETE:
-                        deleteApply(msgId);
+                    case MLConstants.ML_ACTION_REJECT:
+                        rejectApply(msgId);
                         break;
                 }
             }
@@ -175,6 +181,42 @@ public class MLApplyForActivity extends MLBaseActivity {
                             mActivity.getString(R.string.ml_agreed));
                     EMClient.getInstance().chatManager().updateMessage(message);
                     dialog.dismiss();
+                    runOnUiThread(new Runnable() {
+                        @Override public void run() {
+                        }
+                    });
+                } catch (HyphenateException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    /**
+     * 拒绝好友请求，环信的同意和拒绝好友请求 都需要异步处理，这里新建线程去调用
+     */
+    private void rejectApply(final String msgId) {
+        final ProgressDialog dialog = new ProgressDialog(mActivity);
+        dialog.setMessage(mActivity.getResources().getString(R.string.ml_dialog_message_waiting));
+        dialog.show();
+
+        new Thread(new Runnable() {
+            @Override public void run() {
+                try {
+                    // 拒绝好友申请
+                    EMMessage message = mConversation.getMessage(msgId, false);
+                    String username = message.getStringAttribute(MLConstants.ML_ATTR_USERNAME, "");
+                    EMClient.getInstance().contactManager().declineInvitation(username);
+
+                    // 更新当前的申请信息
+                    message.setAttribute(MLConstants.ML_ATTR_STATUS,
+                            mActivity.getString(R.string.ml_rejected));
+                    EMClient.getInstance().chatManager().updateMessage(message);
+                    dialog.dismiss();
+                    runOnUiThread(new Runnable() {
+                        @Override public void run() {
+                        }
+                    });
                 } catch (HyphenateException e) {
                     e.printStackTrace();
                 }

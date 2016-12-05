@@ -4,18 +4,19 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -26,7 +27,6 @@ import com.hyphenate.chat.EMClient;
 import net.melove.app.chat.R;
 import net.melove.app.chat.MLConstants;
 import net.melove.app.chat.module.event.MLConnectionEvent;
-import net.melove.app.chat.test.MLTestFragment;
 import net.melove.app.chat.ui.chat.MLConversationsFragment;
 import net.melove.app.chat.ui.contacts.MLContactsFragment;
 import net.melove.app.chat.ui.sign.MLSignInActivity;
@@ -39,9 +39,10 @@ import net.melove.app.chat.ui.chat.MLChatActivity;
  */
 public class MLMainActivity extends MLBaseActivity {
 
-    @BindView(R.id.fab_connection) FloatingActionButton mConnectionFabBtn;
     @BindView(R.id.view_pager) ViewPager mViewPager;
     @BindView(R.id.widget_tab_layout) TabLayout mTabLayout;
+    @BindView(R.id.layout_connection_error) LinearLayout mConnectionStatusLayout;
+    @BindView(R.id.text_connection_error) TextView mConnectionStatusView;
 
     // TabLayout 装填的内容
     private String mTabTitles[] = null;
@@ -49,7 +50,7 @@ public class MLMainActivity extends MLBaseActivity {
     private int mCurrentTabIndex;
     private MLContactsFragment mContactsFragment;
     private MLConversationsFragment mConversationFragment;
-    private MLTestFragment mTestFragment;
+    private MLOtherFragment mOtherFragment;
 
     // 创建新会话对话框
     private AlertDialog createConversationDialog;
@@ -68,6 +69,7 @@ public class MLMainActivity extends MLBaseActivity {
             superJump(intent);
             this.finish();
         }
+
         // 将主题设置为正常主题
         setTheme(R.style.MLTheme_Default);
         super.onCreate(savedInstanceState);
@@ -83,21 +85,14 @@ public class MLMainActivity extends MLBaseActivity {
      * 界面初始化操作
      */
     private void init() {
-        mActivity = this;
-
-        if (EMClient.getInstance().isConnected()) {
-            mConnectionFabBtn.setImageResource(R.mipmap.ic_signal_wifi_on_white_24dp);
-            mConnectionFabBtn.setVisibility(View.GONE);
-        } else {
-            mConnectionFabBtn.setImageResource(R.mipmap.ic_signal_wifi_off_white_24dp);
-            mConnectionFabBtn.setVisibility(View.VISIBLE);
-        }
-
-        setSupportActionBar(getToolbar());
-        getSupportActionBar().setTitle(R.string.ml_chat);
     }
 
     private void initView() {
+        mActivity = this;
+
+        getToolbar().setTitle(R.string.ml_chat);
+        setSupportActionBar(getToolbar());
+
         mCurrentTabIndex = 0;
         mTabTitles = new String[] {
                 mActivity.getResources().getString(R.string.ml_chat),
@@ -107,13 +102,16 @@ public class MLMainActivity extends MLBaseActivity {
 
         mContactsFragment = MLContactsFragment.newInstance();
         mConversationFragment = MLConversationsFragment.newInstance();
-        mTestFragment = MLTestFragment.newInstance();
+        mOtherFragment = MLOtherFragment.newInstance();
 
-        mFragments = new Fragment[] { mConversationFragment, mContactsFragment, mTestFragment };
+        mFragments = new Fragment[] { mConversationFragment, mContactsFragment, mOtherFragment };
         MLViewPagerAdapter adapter =
                 new MLViewPagerAdapter(getSupportFragmentManager(), mFragments, mTabTitles);
         mViewPager.setAdapter(adapter);
+        // 设置 ViewPager 缓存个数
+        mViewPager.setOffscreenPageLimit(3);
         mViewPager.setCurrentItem(mCurrentTabIndex);
+        // 添加 ViewPager 页面改变监听
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override public void onPageScrolled(int position, float positionOffset,
                     int positionOffsetPixels) {
@@ -130,14 +128,20 @@ public class MLMainActivity extends MLBaseActivity {
         });
 
         mTabLayout.setupWithViewPager(mViewPager);
+
+        if (EMClient.getInstance().isConnected()) {
+            mConnectionStatusLayout.setVisibility(View.GONE);
+        } else {
+            mConnectionStatusLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     /**
      * Fab 按钮控件点击监听
      */
-    @OnClick({ R.id.fab_connection }) void onClick(View view) {
+    @OnClick({ R.id.layout_connection_error }) void onClick(View view) {
         switch (view.getId()) {
-            case R.id.fab_connection:
+            case R.id.layout_connection_error:
                 Intent intent = null;
                 /**
                  * 判断手机系统的版本！如果API大于10 就是3.0+
@@ -178,9 +182,7 @@ public class MLMainActivity extends MLBaseActivity {
                                     Snackbar.LENGTH_SHORT).show();
                             return;
                         }
-                        String currUsername =
-                                (String) MLSPUtil.get(mActivity, MLConstants.ML_SHARED_USERNAME,
-                                        "");
+                        String currUsername = EMClient.getInstance().getCurrentUser();
                         if (currUsername.equals(editText.getText().toString().trim())) {
                             Snackbar.make(getRootView(), R.string.ml_toast_cant_chat_with_yourself,
                                     Snackbar.LENGTH_SHORT).show();
@@ -221,11 +223,9 @@ public class MLMainActivity extends MLBaseActivity {
          * 这里取消弹出 Toast 方式，只是显示图标
          */
         if (event.getType() == MLConstants.ML_CONNECTION_CONNECTED) {
-            mConnectionFabBtn.setImageResource(R.mipmap.ic_signal_wifi_on_white_24dp);
-            mConnectionFabBtn.setVisibility(View.GONE);
+            mConnectionStatusLayout.setVisibility(View.GONE);
         } else {
-            mConnectionFabBtn.setImageResource(R.mipmap.ic_signal_wifi_off_white_24dp);
-            mConnectionFabBtn.setVisibility(View.VISIBLE);
+            mConnectionStatusLayout.setVisibility(View.VISIBLE);
         }
         super.onEventBus(event);
     }
@@ -264,23 +264,6 @@ public class MLMainActivity extends MLBaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * 按键监听
-     *
-     * @param keyCode 按键Code
-     * @param event 按键事件
-     * @return 返回值表示是否向下继续传递按键事件
-     */
-    @Override public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-            // 检测当前是否打开侧滑抽屉菜单，如果打开状态，返回键就关闭，否则结束退出app
-            // 结束Activity
-            //onFinish();
-            //return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
     @Override protected void onResume() {
         super.onResume();
         if (!EMClient.getInstance().isLoggedInBefore()) {
@@ -291,19 +274,38 @@ public class MLMainActivity extends MLBaseActivity {
         }
     }
 
-    @Override protected void onPause() {
-        super.onPause();
-    }
-
-    @Override protected void onStop() {
-        super.onStop();
-    }
-
     @Override protected void onDestroy() {
         // 判断对话框是否显示状态，显示中则销毁，避免 activity 的销毁导致错误
         if (createConversationDialog != null && createConversationDialog.isShowing()) {
             createConversationDialog.dismiss();
         }
         super.onDestroy();
+    }
+
+    /**
+     * 自定义 ViewPager 适配器子类
+     */
+    class MLViewPagerAdapter extends FragmentPagerAdapter {
+
+        private String mTabsTitle[];
+        private Fragment mFragments[];
+
+        public MLViewPagerAdapter(FragmentManager fm, Fragment fragments[], String args[]) {
+            super(fm);
+            mFragments = fragments;
+            mTabsTitle = args;
+        }
+
+        @Override public CharSequence getPageTitle(int position) {
+            return mTabsTitle[position];
+        }
+
+        @Override public Fragment getItem(int position) {
+            return mFragments[position];
+        }
+
+        @Override public int getCount() {
+            return mTabsTitle.length;
+        }
     }
 }

@@ -128,14 +128,17 @@ public class MLHyphenate {
      * SDK 3.2.0 版本通话相关设置
      */
     private void initCallOptions() {
-        // 设置视频通话比特率 默认是(150)
-        EMClient.getInstance().callManager().getCallOptions().setVideoKbps(800);
+        // 设置视频通话最大和最小比特率 默认是(150)
+        EMClient.getInstance().callManager().getCallOptions().setMaxVideoKbps(800);
+        EMClient.getInstance().callManager().getCallOptions().setMinVideoKbps(150);
         // 设置视频通话分辨率 默认是(320, 240)
         EMClient.getInstance().callManager().getCallOptions().setVideoResolution(640, 480);
+        // 设置通话最大帧率
+        EMClient.getInstance().callManager().getCallOptions().setMaxVideoFrameRate(60);
         // 设置通话过程中对方如果离线是否发送离线推送通知
         EMClient.getInstance().callManager().getCallOptions().setIsSendPushIfOffline(false);
-        // 设置音视频通话采样率
-        //EMClient.getInstance().callManager().getCallOptions().
+        // 设置音视频通话采样率，一般不需要设置，
+        EMClient.getInstance().callManager().getCallOptions().setAudioSampleRate(48000);
     }
 
     private EMOptions initOptions() {
@@ -389,65 +392,5 @@ public class MLHyphenate {
         if (mActivityList.contains(activity)) {
             mActivityList.remove(activity);
         }
-    }
-
-    /**
-     * 保存联系人列表
-     */
-    public void saveUserList(List<MLUserEntity> list) {
-        MLUserDao.getInstance().saveUserList(list);
-    }
-
-    /**
-     * 获取用户列表，这里为了省去每次都去数据库读取，将联系人保存在内存的一个集合中
-     *
-     * @return 返回用户列表
-     */
-    public Map<String, MLUserEntity> getUserList() {
-        if (userMap.isEmpty()) {
-            userMap = MLUserDao.getInstance().getUserList();
-        }
-        return userMap;
-    }
-
-    /**
-     * 根据用户名获取用户对象
-     *
-     * @param username 需要获取的用户名
-     * @return 返回获取到的用户对象
-     */
-    public MLUserEntity getUser(String username) {
-        MLUserEntity userEntity = null;
-        if (!userMap.isEmpty()) {
-            userEntity = userMap.get(username);
-        }
-        if (userEntity == null) {
-            userEntity = MLUserDao.getInstance().getUser(username);
-        }
-        return userEntity;
-    }
-
-    /**
-     * 保存用户
-     *
-     * @param userEntity 需要保存的用户对象
-     */
-    public void saveUser(MLUserEntity userEntity) {
-        if (userMap != null) {
-            userMap.put(userEntity.getUserName(), userEntity);
-        }
-        MLUserDao.getInstance().saveUser(userEntity);
-    }
-
-    /**
-     * 删除用户
-     *
-     * @param userEntity 要删除的用户对象
-     */
-    public void deleteUser(MLUserEntity userEntity) {
-        if (userMap != null) {
-            userMap.remove(userEntity);
-        }
-        MLUserDao.getInstance().deleteUser(userEntity.getUserName());
     }
 }

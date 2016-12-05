@@ -116,7 +116,7 @@
             android:windowSoftInputMode="adjustResize|stateHidden"/>
         <!--申请与通知界面-->
         <activity
-            android:name=".ui.applyfor.MLApplyForActivity"
+            android:name=".ui.apply.MLApplyForActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Default"
             android:windowSoftInputMode="adjustResize|stateHidden"/>

@@ -29,6 +29,10 @@ public class MLUserEntity {
     // 联系人更新时间
     public String updateAt;
 
+    public MLUserEntity(String username) {
+        setUserName(username);
+    }
+
     public String getHeader() {
         return header;
     }
@@ -117,21 +121,18 @@ public class MLUserEntity {
         this.updateAt = updateAt;
     }
 
-    @Override
-    public String toString() {
+    @Override public String toString() {
         return nickName == null ? userName : nickName;
     }
 
-    @Override
-    public boolean equals(Object o) {
+    @Override public boolean equals(Object o) {
         if (o == null || o instanceof MLUserEntity) {
             return false;
         }
         return userName.equals(((MLUserEntity) o).getUserName());
     }
 
-    @Override
-    public int hashCode() {
+    @Override public int hashCode() {
         return 17 * userName.hashCode();
     }
 }

@@ -6,6 +6,9 @@ package net.melove.app.chat;
  */
 public class MLConstants {
 
+    // MobAPI 后端数据存储 key
+    public static final String ML_MOB_KEY = "199439878d8e7";
+
     // GCM number
     public static final String ML_FCM_PROJECT_NUMBER = "666356109043";
 
@@ -72,18 +75,20 @@ public class MLConstants {
     public static final String ML_EXTRA_IS_INCOMING_CALL = "ml_is_incoming_call";
     public static final String ML_EXTRA_MSG_ID = "ml_chat_msg_id";
     public static final String ML_EXTRA_CHAT_ID = "ml_chat_id";
+    // 这三个是环信通话广播定义的
     public static final String ML_EXTRA_FROM = "from";
     public static final String ML_EXTRA_TO = "to";
     public static final String ML_EXTRA_TYPE = "type";
 
     // 定义好友申请与通知的 Conversation Id
-    public static final String ML_CONVERSATION_APPLY = "ml_conversation_apply";
+    public static final String ML_CONVERSATION_ID_APPLY = "ml_conversation_id_apply";
 
     /**
-     * 保存数据到 {@link android.content.SharedPreferences}的 key
+     * 定义保存数据到 SharedPreferences 的 key
      */
     public static final String ML_SHARED_USERNAME = "ml_username";
     public static final String ML_SHARED_PASSWORD = "ml_password";
+    public static final String ML_SHARED_ALREADY_SYNC_CONTACTS = "ml_already_sync_contacts";
 
     /**
      * 通话结束状态码
@@ -129,43 +134,23 @@ public class MLConstants {
     public static final int ML_REQUEST_CODE_USER = 0x07;
 
     /**
-     * 自定义聊天界面消息列表项的点击与长按 Action
-     */
-    public static final int ML_ACTION_MSG_CLICK = 0X00;
-    public static final int ML_ACTION_MSG_RESEND = 0X01;
-    public static final int ML_ACTION_MSG_COPY = 0X10;
-    public static final int ML_ACTION_MSG_FORWARD = 0X11;
-    public static final int ML_ACTION_MSG_DELETE = 0X12;
-    public static final int ML_ACTION_MSG_RECALL = 0X13;
-
-    /**
-     * 自定义申请与通知列表项点击与长按的 Action
-     */
-    public static final int ML_ACTION_APPLY_FOR_CLICK = 0X00;
-    public static final int ML_ACTION_APPLY_FOR_AGREE = 0X10;
-    public static final int ML_ACTION_APPLY_FOR_REFUSE = 0X11;
-    public static final int ML_ACTION_APPLY_FOR_DELETE = 0X12;
-
-    /**
      * 回调的 action
      */
-    public static final int ML_ACTION_CLICK = 0x00;
-    public static final int ML_ACTION_LONG_CLICK = 0x01;
-    public static final int ML_ACTION_DELETE = 0x02;
-
+    public static final int ML_ACTION_CLICK = 0x00;     // 点击
+    public static final int ML_ACTION_LONG_CLICK = 0x01;// 长按
+    public static final int ML_ACTION_DELETE = 0x02;    // 删除
     public static final int ML_ACTION_RESEND = 0x10;    // 重发
     public static final int ML_ACTION_COPY = 0x11;      // 复制
     public static final int ML_ACTION_SAVE = 0x12;      // 保存
     public static final int ML_ACTION_FORWARD = 0x13;   // 转发
     public static final int ML_ACTION_RECALL = 0x14;    // 撤回
     public static final int ML_ACTION_TRANSLATE = 0x15; // 翻译
-    public static final int ML_ACTION_ = 0x1;
-    public static final int ML_ACTION = 0x1;
+    public static final int ML_ACTION_AGREED = 0x20;
+    public static final int ML_ACTION_REJECT = 0x21;
 
     // 申请与通知类型
     public static final int ML_APPLY_TYPE_USER = 0x00;      // 联系人申请
     public static final int ML_APPLY_TYPE_GROUP = 0x01;     // 群组申请
-
 
     /**
      * 聊天消息类型

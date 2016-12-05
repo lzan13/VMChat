@@ -17,6 +17,7 @@ import net.melove.app.chat.module.event.MLUserEvent;
 import net.melove.app.chat.module.listener.MLItemCallBack;
 import net.melove.app.chat.ui.MLBaseFragment;
 
+import net.melove.app.chat.ui.widget.recycler.MLLinearLayoutManager;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -52,44 +53,32 @@ public class MLContactsFragment extends MLBaseFragment {
         // Required empty public constructor
     }
 
-    @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_contacts, container, false);
-
-        ButterKnife.bind(this, view);
-
-        return view;
-    }
-
-    @Override public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        initView();
+    /**
+     * 初始化 Fragment 界面 layout_id
+     *
+     * @return 返回布局 id
+     */
+    @Override protected int initLayoutId() {
+        return R.layout.fragment_contacts;
     }
 
     /**
      * 初始化联系人列表界面
      */
-    private void initView() {
+    @Override protected void initView() {
+        ButterKnife.bind(this, getView());
+
         mActivity = getActivity();
+    }
+
+    /**
+     * 加载数据
+     */
+    @Override protected void initData() {
         loadContactsList();
         mAdapter = new MLContactsAdapter(mActivity, mContactsList);
-        /**
-         * 为RecyclerView 设置布局管理器，这里使用线性布局
-         * RececlerView 默认的布局管理器：
-         * LinearLayoutManager          显示垂直滚动列表或水平的项目
-         * GridLayoutManager            显示在一个网格项目
-         * StaggeredGridLayoutManager   显示在交错网格项目
-         * 自定义的布局管理器，需要继承 {@link android.support.v7.widget.RecyclerView.LayoutManager}
-         *
-         * add/remove items时的动画是默认启用的。
-         * 自定义这些动画需要继承{@link android.support.v7.widget.RecyclerView.ItemAnimator}，
-         * 并实现{@link RecyclerView#setItemAnimator(RecyclerView.ItemAnimator)}
-         */
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+        mRecyclerView.setLayoutManager(new MLLinearLayoutManager(mActivity));
         mRecyclerView.setAdapter(mAdapter);
-
         setItemCallBack();
     }
 
@@ -101,15 +90,29 @@ public class MLContactsFragment extends MLBaseFragment {
             @Override public void onAction(int action, Object tag) {
                 int position = (int) tag;
                 switch (action) {
-                    case MLConstants.ML_ACTION_APPLY_FOR_CLICK:
-                        jumpUserInfo(position);
+                    case MLConstants.ML_ACTION_CLICK:
+                        itemClick();
                         break;
-                    case MLConstants.ML_ACTION_APPLY_FOR_AGREE:
+                    case MLConstants.ML_ACTION_LONG_CLICK:
 
                         break;
                 }
             }
         });
+    }
+
+    /**
+     * 列表项点击事件
+     */
+    private void itemClick() {
+
+    }
+
+    /**
+     * 列表项长按事件
+     */
+    private void itemLongClick() {
+
     }
 
     private void jumpUserInfo(int position) {
@@ -126,9 +129,11 @@ public class MLContactsFragment extends MLBaseFragment {
     private void loadContactsList() {
         if (mContactsList == null) {
             mContactsList = new ArrayList<>();
+            mContactsList.addAll(MLContactsManager.getInstance().getUserMap().values());
+        } else {
+            mContactsList.clear();
+            mContactsList.addAll(MLContactsManager.getInstance().getUserMap().values());
         }
-        mContactsList.clear();
-        mContactsList.addAll(MLHyphenate.getInstance().getUserList().values());
     }
 
     /**

@@ -21,7 +21,6 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.exceptions.HyphenateException;
 
-import net.melove.app.chat.MLHyphenate;
 import net.melove.app.chat.R;
 import net.melove.app.chat.ui.MLBaseActivity;
 import net.melove.app.chat.MLConstants;
@@ -38,10 +37,6 @@ public class MLUserActivity extends MLBaseActivity {
     @BindView(R.id.fab_add_or_chat) FloatingActionButton mAddOrChatFab;
     //@BindView(R.id.img_avatar) MLImageView mAvatarView;
     //@BindView(R.id.text_username) TextView mUsernameView;
-    @BindView(R.id.layout_apply_control) View mApplyLayout;
-    @BindView(R.id.text_reason) TextView mReasonView;
-    @BindView(R.id.btn_agree) Button mAgreeBtn;
-    @BindView(R.id.btn_reject) Button mRejectBtn;
 
     // 当前登录用户username
     private String mCurrUsername;
@@ -76,7 +71,7 @@ public class MLUserActivity extends MLBaseActivity {
         mApplyMsgId = getIntent().getStringExtra(MLConstants.ML_EXTRA_MSG_ID);
 
         // 根据 Username 获取User对象
-        mUserEntity = MLHyphenate.getInstance().getUser(mChatId);
+        mUserEntity = MLContactsManager.getInstance().getUser(mChatId);
 
         if (mChatId.equals(mCurrUsername)) {
             mAddOrChatFab.setVisibility(View.INVISIBLE);
@@ -98,14 +93,12 @@ public class MLUserActivity extends MLBaseActivity {
         } else {
             mAddOrChatFab.setImageResource(R.mipmap.ic_add_white_24dp);
         }
-        // 检查申请与通知部分是否需要显示
-        checkApplyLayout();
     }
 
     /**
      * 界面控件点击监听
      */
-    @OnClick({ R.id.btn_agree, R.id.btn_reject, R.id.fab_add_or_chat }) void onClick(View v) {
+    @OnClick({ R.id.fab_add_or_chat }) void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab_add_or_chat:
                 if (mUserEntity != null && mUserEntity.getUserName() != null) {
@@ -113,12 +106,6 @@ public class MLUserActivity extends MLBaseActivity {
                 } else {
                     addContact();
                 }
-                break;
-            case R.id.btn_agree:
-                agreeApply();
-                break;
-            case R.id.btn_reject:
-                rejectApply();
                 break;
             default:
                 break;
@@ -200,100 +187,6 @@ public class MLUserActivity extends MLBaseActivity {
         intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mChatId);
         mActivity.startActivity(intent);
         mActivity.finish();
-    }
-
-    /**
-     * 同意好友请求，环信的同意和拒绝好友请求 都需要异步处理，这里新建线程去调用
-     */
-    private void agreeApply() {
-        final ProgressDialog dialog = new ProgressDialog(mActivity);
-        dialog.setMessage(mActivity.getResources().getString(R.string.ml_dialog_message_waiting));
-        dialog.show();
-
-        new Thread(new Runnable() {
-            @Override public void run() {
-                try {
-                    // 同意好友申请
-                    EMMessage message = EMClient.getInstance()
-                            .chatManager()
-                            .getConversation(MLConstants.ML_CONVERSATION_APPLY)
-                            .getMessage(mApplyMsgId, false);
-                    String username = message.getStringAttribute(MLConstants.ML_ATTR_USERNAME, "");
-                    EMClient.getInstance().contactManager().acceptInvitation(username);
-
-                    // 更新当前的申请信息
-                    message.setAttribute(MLConstants.ML_ATTR_STATUS,
-                            mActivity.getString(R.string.ml_agreed));
-                    EMClient.getInstance().chatManager().updateMessage(message);
-                    runOnUiThread(new Runnable() {
-                        @Override public void run() {
-                            dialog.dismiss();
-                            checkApplyLayout();
-                        }
-                    });
-                } catch (HyphenateException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-    }
-
-    /**
-     * 拒绝好友请求，环信的同意和拒绝好友请求 都需要异步处理，这里新建线程去调用
-     */
-    private void rejectApply() {
-        final ProgressDialog dialog = new ProgressDialog(mActivity);
-        dialog.setMessage(mActivity.getResources().getString(R.string.ml_dialog_message_waiting));
-        dialog.show();
-
-        new Thread(new Runnable() {
-            @Override public void run() {
-                try {
-                    // 拒绝好友申请
-                    EMMessage message = EMClient.getInstance()
-                            .chatManager()
-                            .getConversation(MLConstants.ML_CONVERSATION_APPLY)
-                            .getMessage(mApplyMsgId, false);
-                    String username = message.getStringAttribute(MLConstants.ML_ATTR_USERNAME, "");
-                    EMClient.getInstance().contactManager().declineInvitation(username);
-
-                    // 更新当前的申请信息
-                    message.setAttribute(MLConstants.ML_ATTR_STATUS,
-                            mActivity.getString(R.string.ml_rejected));
-                    EMClient.getInstance().chatManager().updateMessage(message);
-                    runOnUiThread(new Runnable() {
-                        @Override public void run() {
-                            dialog.dismiss();
-                            checkApplyLayout();
-                        }
-                    });
-                } catch (HyphenateException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-    }
-
-    /**
-     * 检查是否需要显示申请与通知部分
-     */
-    private void checkApplyLayout() {
-        if (mApplyMsgId == null) {
-            mApplyLayout.setVisibility(View.GONE);
-            return;
-        }
-        // 获取申请与通知的信息
-        EMMessage applyMessage = EMClient.getInstance()
-                .chatManager()
-                .getConversation(MLConstants.ML_CONVERSATION_APPLY)
-                .getMessage(mApplyMsgId, false);
-        if (TextUtils.isEmpty(applyMessage.getStringAttribute(MLConstants.ML_ATTR_STATUS, ""))) {
-            mApplyLayout.setVisibility(View.GONE);
-            return;
-        }
-        mApplyLayout.setVisibility(View.VISIBLE);
-        // 设置理由
-        mReasonView.setText(applyMessage.getStringAttribute(MLConstants.ML_ATTR_REASON, ""));
     }
 
     @Override protected void onDestroy() {

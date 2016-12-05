@@ -158,13 +158,13 @@ public class MLImageMessageItem extends MLMessageItem {
             @Override public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case 0:
-                        mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_MSG_FORWARD);
+                        mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_FORWARD);
                         break;
                     case 1:
-                        mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_MSG_DELETE);
+                        mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_DELETE);
                         break;
                     case 2:
-                        mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_MSG_RECALL);
+                        mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_RECALL);
                         break;
                 }
             }
@@ -301,7 +301,7 @@ public class MLImageMessageItem extends MLMessageItem {
                 resendView.setVisibility(View.VISIBLE);
                 resendView.setOnClickListener(new View.OnClickListener() {
                     @Override public void onClick(View v) {
-                        mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_MSG_RESEND);
+                        mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_RESEND);
                     }
                 });
                 break;

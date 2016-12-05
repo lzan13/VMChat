@@ -189,6 +189,9 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         // 设置输入框的内容变化简体呢
         setEditTextWatcher();
 
+        // 设置录音控件回调
+        mRecordView.setRecordCallback(recordCallback);
+
         getToolbar().setTitle(mChatId);
         setSupportActionBar(getToolbar());
         // 设置toolbar图标
@@ -433,27 +436,27 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             @Override public void onItemAction(EMMessage message, int action) {
                 int position = mConversation.getAllMessages().indexOf(message);
                 switch (action) {
-                    case MLConstants.ML_ACTION_MSG_CLICK:
+                    case MLConstants.ML_ACTION_CLICK:
                         // 消息点击事件，不同的消息有不同的触发
                         itemClick(message);
                         break;
-                    case MLConstants.ML_ACTION_MSG_RESEND:
+                    case MLConstants.ML_ACTION_RESEND:
                         // 重发消息
                         resendMessage(position, message);
                         break;
-                    case MLConstants.ML_ACTION_MSG_COPY:
+                    case MLConstants.ML_ACTION_COPY:
                         // 复制消息，只有文本类消息才可以复制
                         copyMessage(message);
                         break;
-                    case MLConstants.ML_ACTION_MSG_FORWARD:
+                    case MLConstants.ML_ACTION_FORWARD:
                         // 转发消息
                         forwardMessage(message);
                         break;
-                    case MLConstants.ML_ACTION_MSG_DELETE:
+                    case MLConstants.ML_ACTION_DELETE:
                         // 删除消息
                         deleteMessage(position, message);
                         break;
-                    case MLConstants.ML_ACTION_MSG_RECALL:
+                    case MLConstants.ML_ACTION_RECALL:
                         // 撤回消息
                         recallMessage(message);
                         break;
@@ -1186,7 +1189,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         /**
          * 减少内存用量，这里设置为当前会话内存中多于3条时清除内存中的消息，只保留一条
          */
-        if (mConversation.getAllMessages().size() > 1) {
+        if (mConversation.getAllMessages().size() > mPageSize) {
             // 将会话内的消息从内存中清除，节省内存，但是还要在重新加载一条
             List<String> list = new ArrayList<String>();
             list.add(mConversation.getLastMessage().getMsgId());

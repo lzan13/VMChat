@@ -47,6 +47,7 @@ public class MLHWPushReceiver extends EMHuaweiPushReceiver {
                 manager.cancel(notifyId);
             }
             String content = "收到通知附加消息： " + extras.getString(BOUND_KEY.pushMsgKey);
+            MLLog.d("HWPush %d, %s", notifyId, content);
             showPushMessage(content);
         } else if (Event.PLUGINRSP.equals(event)) {
             final int TYPE_LBS = 1;
@@ -59,6 +60,7 @@ public class MLHWPushReceiver extends EMHuaweiPushReceiver {
             } else if (TYPE_TAG == reportType) {
                 message = "TAG report result :";
             }
+            MLLog.d("HWPush %d, %s", reportType, message);
             showPushMessage(message + isSuccess);
         }
         super.onEvent(context, event, extras);

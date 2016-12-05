@@ -128,7 +128,7 @@ public class MLSignUpActivity extends MLBaseActivity {
                                 mDialog.dismiss();
                             }
                             // 注册成功保存用户名到本地
-                            MLSPUtil.put(mActivity, MLConstants.ML_SHARED_USERNAME, mUsername);
+                            MLSPUtil.put(MLConstants.ML_SHARED_USERNAME, mUsername);
                             Snackbar.make(getRootView(), R.string.ml_sign_up_success,
                                     Snackbar.LENGTH_SHORT).show();
                             // 注册成功，返回登录界面

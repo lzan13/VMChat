@@ -1,4 +1,4 @@
-package net.melove.app.chat.ui.applyfor;
+package net.melove.app.chat.ui.apply;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -30,8 +30,7 @@ public class MLApplyForAdapter extends RecyclerView.Adapter<MLApplyForAdapter.Ap
 
     // 上下文对象
     private Context mContext;
-    private MLItemCallBack mCallBack;
-
+    private MLItemCallBack mCallback;
     private LayoutInflater mInflater;
 
     // 当前会话对象
@@ -49,7 +48,7 @@ public class MLApplyForAdapter extends RecyclerView.Adapter<MLApplyForAdapter.Ap
          */
         mConversation = EMClient.getInstance()
                 .chatManager()
-                .getConversation(MLConstants.ML_CONVERSATION_APPLY, null, true);
+                .getConversation(MLConstants.ML_CONVERSATION_ID_APPLY, null, true);
         mMessages = mConversation.getAllMessages();
         // 将list集合倒序排列
         Collections.reverse(mMessages);
@@ -76,30 +75,35 @@ public class MLApplyForAdapter extends RecyclerView.Adapter<MLApplyForAdapter.Ap
         String status = message.getStringAttribute(MLConstants.ML_ATTR_STATUS, "");
         if (!TextUtils.isEmpty(status)) {
             holder.btnAgree.setVisibility(View.VISIBLE);
+            holder.btnReject.setVisibility(View.VISIBLE);
             holder.textViewStatus.setVisibility(View.GONE);
         } else {
             holder.btnAgree.setVisibility(View.GONE);
+            holder.btnReject.setVisibility(View.GONE);
             holder.textViewStatus.setVisibility(View.VISIBLE);
             holder.textViewStatus.setText(status);
         }
 
-        holder.btnAgree.setTag(message.getMsgId());
+        // 设置 Item 项中 Button 的点击监听
         holder.btnAgree.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
-                mCallBack.onAction(MLConstants.ML_ACTION_APPLY_FOR_AGREE, message.getMsgId());
+                mCallback.onAction(MLConstants.ML_ACTION_AGREED, message.getMsgId());
+            }
+        });
+        holder.btnReject.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+                mCallback.onAction(MLConstants.ML_ACTION_REJECT, message.getMsgId());
             }
         });
         // 给当前 ItemView 设置点击和长按监听
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                // 设置点击动作
-                mCallBack.onAction(MLConstants.ML_ACTION_APPLY_FOR_CLICK, message.getMsgId());
+                mCallback.onAction(MLConstants.ML_ACTION_CLICK, message.getMsgId());
             }
         });
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override public boolean onLongClick(View v) {
-                // 这里直接给长按设置删除操作
-                mCallBack.onAction(MLConstants.ML_ACTION_APPLY_FOR_DELETE, message.getMsgId());
+                mCallback.onAction(MLConstants.ML_ACTION_LONG_CLICK, message.getMsgId());
                 return true;
             }
         });
@@ -115,7 +119,7 @@ public class MLApplyForAdapter extends RecyclerView.Adapter<MLApplyForAdapter.Ap
      * @param callback 自定义实现的回调接口
      */
     public void setItemCallBack(MLItemCallBack callback) {
-        mCallBack = callback;
+        mCallback = callback;
     }
 
     /**
@@ -127,6 +131,7 @@ public class MLApplyForAdapter extends RecyclerView.Adapter<MLApplyForAdapter.Ap
         TextView textViewReason;
         TextView textViewStatus;
         Button btnAgree;
+        Button btnReject;
 
         /**
          * 构造方法，初始化列表项的各个控件
@@ -140,6 +145,7 @@ public class MLApplyForAdapter extends RecyclerView.Adapter<MLApplyForAdapter.Ap
             textViewReason = (TextView) itemView.findViewById(R.id.text_reason);
             textViewStatus = (TextView) itemView.findViewById(R.id.text_status);
             btnAgree = (Button) itemView.findViewById(R.id.btn_agree);
+            btnReject = (Button) itemView.findViewById(R.id.btn_reject);
         }
     }
 }
