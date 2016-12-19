@@ -90,7 +90,7 @@ public class MLCallMessageItem extends MLMessageItem {
             @Override public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case 0:
-                        mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_DELETE);
+                        mAdapter.onItemAction(MLConstants.ML_ACTION_DELETE, mMessage);
                         break;
                 }
             }

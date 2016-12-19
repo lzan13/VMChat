@@ -13,6 +13,43 @@ import net.melove.app.chat.util.MLSPUtil;
  */
 public class MLDBHelper extends SQLiteOpenHelper {
 
+    // 项目需要创建的表名
+    public static final String TB_CONTACTS = "contacts";
+
+    // 表中需要保存的列名称
+    public static final String COL_USERNAME = "username";
+    public static final String COL_NICKNAME = "nickname";
+    public static final String COL_EMAIL = "email";
+    public static final String COL_AVATAR = "avatar";
+    public static final String COL_COVER = "cover";
+    public static final String COL_GENDER = "gender";
+    public static final String COL_LOCATION = "location";
+    public static final String COL_SIGNATURE = "signature";
+    public static final String COL_CREATE_AT = "create_at";
+    public static final String COL_UPDATE_AT = "update_at";
+    // 用户状态，0 正常，1 黑名单，2 陌生人
+    public static final String COL_STATUS = "status";
+    public static final int STATUS_NORMAL = 0;
+    public static final int STATUS_BLOCKLIST = 1;
+    public static final int STATUS_STRANGER = 2;
+
+
+    // 创建联系人数据表语句
+    public static final String SQL_CONTACTS = "create table if not exists "
+            + TB_CONTACTS + " ("
+            + COL_USERNAME + " varchar(128) primary key, "
+            + COL_NICKNAME + " varchar(128), "
+            + COL_EMAIL + " varchar(128), "
+            + COL_AVATAR + " text, "
+            + COL_COVER + " text, "
+            + COL_GENDER + " integer, "
+            + COL_LOCATION + " text, "
+            + COL_SIGNATURE + " text, "
+            + COL_CREATE_AT + " integer, "
+            + COL_UPDATE_AT + " integer, "
+            + COL_STATUS + " integer"
+            + ")";
+
     private static String db_name = "_ml_chat.db";
     private static int db_version = 1;
 
@@ -34,19 +71,18 @@ public class MLDBHelper extends SQLiteOpenHelper {
      * 私有化的构造函数
      */
     private MLDBHelper(Context context) {
-        super(context, getDBName(context), null, db_version);
+        super(context, getDBName(), null, db_version);
     }
 
     @Override public void onCreate(SQLiteDatabase db) {
-        db.execSQL(MLDBConstants.SQL_CONTACTS);
-        db.execSQL(MLDBConstants.SQL_GROUP);
+        db.execSQL(SQL_CONTACTS);
     }
 
     @Override public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
 
-    private static String getDBName(Context context) {
+    private static String getDBName() {
         String username = (String) MLSPUtil.get(MLConstants.ML_SHARED_USERNAME, "");
         return username + db_name;
     }

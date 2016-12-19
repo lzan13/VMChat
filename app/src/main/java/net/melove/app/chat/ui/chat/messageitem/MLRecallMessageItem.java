@@ -16,8 +16,6 @@ import net.melove.app.chat.ui.chat.MLMessageAdapter;
  */
 public class MLRecallMessageItem extends MLMessageItem {
 
-
-
     /**
      * 构造方法，创建item的view，需要传递对应的参数
      *

@@ -25,7 +25,7 @@
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
             app:elevation="@dimen/ml_dimen_0"
-            app:expandedTitleMarginStart="@dimen/ml_dimen_72"
+            app:expandedTitleMarginStart="@dimen/ml_dimen_36"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             >
 
@@ -101,6 +101,7 @@
                     android:text="@string/ml_app_name"
                     />
             </LinearLayout>
+
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

@@ -1,4 +1,4 @@
-package net.melove.app.chat.ui.chat;
+package net.melove.app.chat.ui.conversation;
 
 
 import android.text.TextUtils;
@@ -15,10 +15,12 @@ import org.json.JSONObject;
  * Created by lzan13 on 2015/12/14 15:27.
  * 会话扩展处理类，用来处理会话对象的扩展信息，
  * 包括：
- * TODO 群组@，
  * 会话置顶，
  * 会话最后操作时间，
  * 会话草稿，
+ * TODO 群组@，
+ * TODO 会话名称
+ * TODO
  */
 public class MLConversationExtUtils {
 

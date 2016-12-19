@@ -34,6 +34,10 @@ android {
     // 编译配置
     buildTypes {
         debug {
+            // 简单粗暴解决多个库引用 jni 库出现 UnsatisfiedLinkError 文件错误问题
+            ndk {
+                abiFilters = ["armeabi"]
+            }
             // 给debug包的包名加上后缀
             // applicationIdSuffix '.debug'
             // versionNameSuffix '-debug'
@@ -41,6 +45,10 @@ android {
             zipAlignEnabled false
         }
         release {
+            // 简单粗暴解决多个库引用 jni 库出现 UnsatisfiedLinkError 文件错误问题
+            ndk {
+                abiFilters = ["armeabi"]
+            }
             // 是否开启压缩
             zipAlignEnabled true
             // 是否开启混淆
@@ -135,7 +143,7 @@ dependencies {
 }
 
 
-//读取配置文件
+//读取配置文件，配置文件里记录的都是一些敏感信息，需要换成自己的
 def releaseConfigs() {
     // 设置要读取的配置文件
     def propFile = file('app-config.properties')

@@ -1,6 +1,5 @@
 package net.melove.app.chat.ui.contacts;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -18,7 +16,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.hyphenate.chat.EMClient;
-import com.hyphenate.chat.EMMessage;
 import com.hyphenate.exceptions.HyphenateException;
 
 import net.melove.app.chat.R;
@@ -54,7 +51,7 @@ public class MLUserActivity extends MLBaseActivity {
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user);
+        setContentView(R.layout.activity_user_info);
         mActivity = this;
 
         ButterKnife.bind(mActivity);
@@ -71,7 +68,7 @@ public class MLUserActivity extends MLBaseActivity {
         mApplyMsgId = getIntent().getStringExtra(MLConstants.ML_EXTRA_MSG_ID);
 
         // 根据 Username 获取User对象
-        mUserEntity = MLContactsManager.getInstance().getUser(mChatId);
+        mUserEntity = MLUserManager.getInstance().getUser(mChatId);
 
         if (mChatId.equals(mCurrUsername)) {
             mAddOrChatFab.setVisibility(View.INVISIBLE);

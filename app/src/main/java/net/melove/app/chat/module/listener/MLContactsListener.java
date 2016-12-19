@@ -10,7 +10,7 @@ import net.melove.app.chat.R;
 import net.melove.app.chat.module.event.MLApplyForEvent;
 import net.melove.app.chat.module.event.MLUserEvent;
 import net.melove.app.chat.module.notification.MLNotifier;
-import net.melove.app.chat.ui.contacts.MLContactsManager;
+import net.melove.app.chat.ui.contacts.MLUserManager;
 import net.melove.app.chat.ui.contacts.MLUserEntity;
 import net.melove.app.chat.util.MLLog;
 import org.greenrobot.eventbus.EventBus;
@@ -35,7 +35,7 @@ public class MLContactsListener implements EMContactListener {
      */
     @Override public void onContactAdded(String username) {
         MLUserEntity userEntity = new MLUserEntity(username);
-        MLContactsManager.getInstance().saveUser(userEntity);
+        MLUserManager.getInstance().saveUser(userEntity);
 
         // 发送可被订阅的消息，通知订阅者联系人有变化
         EventBus.getDefault().post(new MLUserEvent());
@@ -47,7 +47,7 @@ public class MLContactsListener implements EMContactListener {
      * @param username 被删除的用户 username
      */
     @Override public void onContactDeleted(String username) {
-        MLContactsManager.getInstance().deleteUser(username);
+        MLUserManager.getInstance().deleteUser(username);
 
         // 发送可被订阅的消息，通知订阅者联系人有变化
         EventBus.getDefault().post(new MLUserEvent());

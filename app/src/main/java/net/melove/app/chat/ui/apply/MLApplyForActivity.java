@@ -21,7 +21,7 @@ import net.melove.app.chat.module.event.MLApplyForEvent;
 import net.melove.app.chat.module.listener.MLItemCallBack;
 import net.melove.app.chat.ui.MLBaseActivity;
 import net.melove.app.chat.ui.contacts.MLUserActivity;
-import net.melove.app.chat.ui.chat.MLConversationExtUtils;
+import net.melove.app.chat.ui.conversation.MLConversationExtUtils;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;

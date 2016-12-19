@@ -16,16 +16,11 @@ import com.hyphenate.EMCallBack;
 import com.hyphenate.EMError;
 import com.hyphenate.chat.EMClient;
 
-import com.hyphenate.exceptions.HyphenateException;
-import java.util.ArrayList;
-import java.util.List;
 import net.melove.app.chat.R;
-import net.melove.app.chat.module.database.MLUserDao;
 import net.melove.app.chat.ui.MLBaseActivity;
 import net.melove.app.chat.ui.MLMainActivity;
 import net.melove.app.chat.MLConstants;
-import net.melove.app.chat.ui.contacts.MLContactsManager;
-import net.melove.app.chat.ui.contacts.MLUserEntity;
+import net.melove.app.chat.ui.contacts.MLUserManager;
 import net.melove.app.chat.util.MLLog;
 import net.melove.app.chat.util.MLSPUtil;
 
@@ -143,7 +138,7 @@ public class MLSignInActivity extends MLBaseActivity {
              */
             @Override public void onSuccess() {
                 // 登录成功同步联系人到本地
-                MLContactsManager.getInstance().syncContactsFromServer();
+                MLUserManager.getInstance().syncContactsFromServer();
 
                 // 登录成功，把用户名保存在本地（可以不保存，根据自己的需求）
                 MLSPUtil.put(MLConstants.ML_SHARED_USERNAME, mUsername);

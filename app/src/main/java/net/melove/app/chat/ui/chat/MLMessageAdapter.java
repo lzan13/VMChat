@@ -11,6 +11,7 @@ import com.hyphenate.chat.EMMessage;
 
 import java.util.ArrayList;
 import net.melove.app.chat.MLConstants;
+import net.melove.app.chat.module.listener.MLItemCallBack;
 import net.melove.app.chat.ui.chat.messageitem.MLCallMessageItem;
 import net.melove.app.chat.ui.chat.messageitem.MLFileMessageItem;
 import net.melove.app.chat.ui.chat.messageitem.MLImageMessageItem;
@@ -37,7 +38,7 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
     private List<EMMessage> mMessages;
 
     // 自定义的回调接口
-    private MLOnItemClickListener mOnItemClickListener;
+    private MLItemCallBack mCallback;
 
     /**
      * 构造方法
@@ -241,38 +242,20 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
     /**
      * 设置回调监听
      *
-     * @param listener 自定义回调接口
+     * @param callback 自定义回调接口
      */
-    public void setOnItemClickListener(MLOnItemClickListener listener) {
-        mOnItemClickListener = listener;
-    }
-
-    /**
-     * 自定义回调接口，用来实现 RecyclerView 中 Item 长按和点击事件监听
-     */
-    protected interface MLOnItemClickListener {
-        /**
-         * Item 点击及长按事件的处理
-         * 这里Item的点击及长按监听都在自定义的
-         * {@link net.melove.app.chat.ui.chat.messageitem.MLMessageItem}里实现，
-         * 然后通过回调将
-         * {@link net.melove.app.chat.ui.chat.messageitem.MLMessageItem}的操作以自定义 Action
-         * 的方式传递过过来，因为聊天列表的 Item 有多种多样的，每一个 Item 弹出菜单不同，
-         *
-         * @param message 需要操作的 Item 的 EMMessage 对象
-         * @param action Item 触发的动作，比如 点击、复制、转发、删除、撤回等
-         */
-        public void onItemAction(EMMessage message, int action);
+    public void setOnItemClickListener(MLItemCallBack callback) {
+        mCallback = callback;
     }
 
     /**
      * Item 项的点击和长按 Action 事件回调
      *
-     * @param message 操作的 Item 的 EMMessage 对象
      * @param action 需要处理的动作，比如 复制、转发、删除、撤回等
+     * @param message 操作的 Item 的 EMMessage 对象
      */
-    public void onItemAction(EMMessage message, int action) {
-        mOnItemClickListener.onItemAction(message, action);
+    public void onItemAction(int action, EMMessage message) {
+        mCallback.onAction(action, message);
     }
 
     /**

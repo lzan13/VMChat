@@ -122,6 +122,7 @@ public class MLVideoCallActivity extends MLCallActivity {
         //mLocalSurfaceView.setZOrderMediaOverlay(true);
         //mLocalSurfaceView.setZOrderOnTop(true);
 
+        // 设置通话界面图像缩放模式，
         mLocalSurfaceView.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
         mOppositeSurfaceView.setScaleMode(
                 VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFit);

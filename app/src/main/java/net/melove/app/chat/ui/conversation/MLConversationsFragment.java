@@ -1,4 +1,4 @@
-package net.melove.app.chat.ui.chat;
+package net.melove.app.chat.ui.conversation;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,9 +14,11 @@ import com.hyphenate.chat.EMConversation;
 import net.melove.app.chat.R;
 import net.melove.app.chat.MLConstants;
 import net.melove.app.chat.module.event.MLMessageEvent;
+import net.melove.app.chat.module.listener.MLItemCallBack;
 import net.melove.app.chat.ui.apply.MLApplyForActivity;
 import net.melove.app.chat.ui.MLBaseFragment;
 
+import net.melove.app.chat.ui.chat.MLChatActivity;
 import net.melove.app.chat.ui.widget.recycler.MLLinearLayoutManager;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -154,108 +156,120 @@ public class MLConversationsFragment extends MLBaseFragment {
      */
     private void setItemClickListener() {
 
-        mAdapter.setOnItemClickListener(new MLConversationAdapter.MLOnItemClickListener() {
+        mAdapter.setItemCallback(new MLItemCallBack() {
             /**
-             * 会话列表想的点击监听
-             * @param position 点击的项
+             * Item 点击及长按事件的处理
+             *
+             * @param action 长按菜单需要处理的动作，
+             * @param tag 需要操作的 Item 的 tag，这里定义为一个 Object，可以根据需要进行类型转换
              */
-            @Override public void onItemClick(int position) {
-                EMConversation conversation = mConversations.get(position);
-                Intent intent = new Intent();
-                if (conversation.getUserName().equals(MLConstants.ML_CONVERSATION_ID_APPLY)) {
-                    intent.setClass(mActivity, MLApplyForActivity.class);
-                } else {
-                    intent.setClass(mActivity, MLChatActivity.class);
-                    intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID,
-                            mConversations.get(position).getUserName());
-                    intent.putExtra(MLConstants.ML_EXTRA_TYPE,
-                            mConversations.get(position).getType());
-                }
-                mActivity.startActivity(intent);
-            }
+            @Override public void onAction(int action, Object tag) {
+                int position = (int) tag;
+                switch (action) {
+                    case R.id.img_avatar:
 
-            /**
-             * 实现 RecyclerView item 长按事件
-             * @param position 触发长按事件的 position
-             */
-            @Override public void onItemLongClick(final int position) {
-                final EMConversation conversation = mConversations.get(position);
-                final boolean isTop = MLConversationExtUtils.getConversationPushpin(conversation);
-                // 根据当前会话不同的状态来显示不同的长按菜单
-                List<String> menuList = new ArrayList<String>();
-                if (isTop) {
-                    menuList.add(mActivity.getResources()
-                            .getString(R.string.ml_menu_conversation_cancel_top));
-                } else {
-                    menuList.add(
-                            mActivity.getResources().getString(R.string.ml_menu_conversation_top));
+                        break;
+                    case MLConstants.ML_ACTION_CLICK:
+                        itemClick(position);
+                        break;
+                    case MLConstants.ML_ACTION_LONG_CLICK:
+                        itemLongClick(position);
+                        break;
                 }
-                if (conversation.getUnreadMsgCount() > 0
-                        || MLConversationExtUtils.getConversationUnread(conversation)) {
-                    menuList.add(
-                            mActivity.getResources().getString(R.string.ml_menu_conversation_read));
-                } else {
-                    menuList.add(mActivity.getResources()
-                            .getString(R.string.ml_menu_conversation_unread));
-                }
-                menuList.add(
-                        mActivity.getResources().getString(R.string.ml_menu_conversation_clear));
-                menuList.add(
-                        mActivity.getResources().getString(R.string.ml_menu_conversation_delete));
-
-                mMenus = new String[menuList.size()];
-                menuList.toArray(mMenus);
-
-                // 创建并显示 ListView 的长按弹出菜单，并设置弹出菜单 Item的点击监听
-                alertDialogBuilder = new AlertDialog.Builder(mActivity);
-                // 弹出框标题
-                // alertDialogBuilder.setTitle(R.string.ml_dialog_title_conversation);
-                alertDialogBuilder.setItems(mMenus, new DialogInterface.OnClickListener() {
-                    @Override public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case 0:
-                                // 根据当前状态设置会话是否置顶
-                                if (isTop) {
-                                    MLConversationExtUtils.setConversationPushpin(conversation,
-                                            false);
-                                } else {
-                                    MLConversationExtUtils.setConversationPushpin(conversation,
-                                            true);
-                                }
-                                refreshConversation();
-                                break;
-                            case 1:
-                                if (conversation.getUnreadMsgCount() > 0
-                                        || MLConversationExtUtils.getConversationUnread(
-                                        conversation)) {
-                                    conversation.markAllMessagesAsRead();
-                                    MLConversationExtUtils.setConversationUnread(conversation,
-                                            false);
-                                } else {
-                                    MLConversationExtUtils.setConversationUnread(conversation,
-                                            true);
-                                }
-                                refreshConversation();
-                                break;
-                            case 2:
-                                // 清空当前会话的消息，同时删除了内存中和数据库中的数据
-                                mConversations.get(position).clearAllMessages();
-                                refreshConversation();
-                                break;
-                            case 3:
-                                // 删除当前会话，第二个参数表示是否删除此会话的消息
-                                EMClient.getInstance()
-                                        .chatManager()
-                                        .deleteConversation(conversation.getUserName(), false);
-                                refreshConversation();
-                                break;
-                        }
-                    }
-                });
-                conversationMenuDialog = alertDialogBuilder.create();
-                conversationMenuDialog.show();
             }
         });
+    }
+
+    /**
+     * Item的点击事件
+     *
+     * @param position 当前点击的项位置
+     */
+    public void itemClick(int position) {
+        EMConversation conversation = mConversations.get(position);
+        Intent intent = new Intent();
+        if (conversation.getUserName().equals(MLConstants.ML_CONVERSATION_ID_APPLY)) {
+            intent.setClass(mActivity, MLApplyForActivity.class);
+        } else {
+            intent.setClass(mActivity, MLChatActivity.class);
+            intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID,
+                    mConversations.get(position).getUserName());
+            intent.putExtra(MLConstants.ML_EXTRA_TYPE, mConversations.get(position).getType());
+        }
+        mActivity.startActivity(intent);
+    }
+
+    /**
+     * Item项长按事件
+     *
+     * @param position 触发长按事件的位置
+     */
+    public void itemLongClick(final int position) {
+        final EMConversation conversation = mConversations.get(position);
+        final boolean isTop = MLConversationExtUtils.getConversationPushpin(conversation);
+        // 根据当前会话不同的状态来显示不同的长按菜单
+        List<String> menuList = new ArrayList<String>();
+        if (isTop) {
+            menuList.add(
+                    mActivity.getResources().getString(R.string.ml_menu_conversation_cancel_top));
+        } else {
+            menuList.add(mActivity.getResources().getString(R.string.ml_menu_conversation_top));
+        }
+        if (conversation.getUnreadMsgCount() > 0 || MLConversationExtUtils.getConversationUnread(
+                conversation)) {
+            menuList.add(mActivity.getResources().getString(R.string.ml_menu_conversation_read));
+        } else {
+            menuList.add(mActivity.getResources().getString(R.string.ml_menu_conversation_unread));
+        }
+        menuList.add(mActivity.getResources().getString(R.string.ml_menu_conversation_clear));
+        menuList.add(mActivity.getResources().getString(R.string.ml_menu_conversation_delete));
+
+        mMenus = new String[menuList.size()];
+        menuList.toArray(mMenus);
+
+        // 创建并显示 ListView 的长按弹出菜单，并设置弹出菜单 Item的点击监听
+        alertDialogBuilder = new AlertDialog.Builder(mActivity);
+        // 弹出框标题
+        // alertDialogBuilder.setTitle(R.string.ml_dialog_title_conversation);
+        alertDialogBuilder.setItems(mMenus, new DialogInterface.OnClickListener() {
+            @Override public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0:
+                        // 根据当前状态设置会话是否置顶
+                        if (isTop) {
+                            MLConversationExtUtils.setConversationPushpin(conversation, false);
+                        } else {
+                            MLConversationExtUtils.setConversationPushpin(conversation, true);
+                        }
+                        refreshConversation();
+                        break;
+                    case 1:
+                        if (conversation.getUnreadMsgCount() > 0
+                                || MLConversationExtUtils.getConversationUnread(conversation)) {
+                            conversation.markAllMessagesAsRead();
+                            MLConversationExtUtils.setConversationUnread(conversation, false);
+                        } else {
+                            MLConversationExtUtils.setConversationUnread(conversation, true);
+                        }
+                        refreshConversation();
+                        break;
+                    case 2:
+                        // 清空当前会话的消息，同时删除了内存中和数据库中的数据
+                        mConversations.get(position).clearAllMessages();
+                        refreshConversation();
+                        break;
+                    case 3:
+                        // 删除当前会话，第二个参数表示是否删除此会话的消息
+                        EMClient.getInstance()
+                                .chatManager()
+                                .deleteConversation(conversation.getUserName(), false);
+                        refreshConversation();
+                        break;
+                }
+            }
+        });
+        conversationMenuDialog = alertDialogBuilder.create();
+        conversationMenuDialog.show();
     }
 
     /**

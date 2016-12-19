@@ -176,6 +176,7 @@
     <string name="ml_error_em_no_error">无错误</string>
     <string name="ml_error_general_error">一般错误，未细分的错误一般通过此errorcode抛出来</string>
     <string name="ml_error_network_error">网络异常，请检查网络设置</string>
+    <string name="ml_error_disconnected">连接不到服务器</string>
 
     <!--登录错误 1xx-->
     <string name="ml_error_invalid_app_key">Appkey错误</string>

@@ -1,4 +1,4 @@
-package net.melove.app.chat.ui.chat;
+package net.melove.app.chat.ui.conversation;
 
 import android.content.Context;
 import android.os.Handler;
@@ -23,6 +23,7 @@ import com.hyphenate.chat.EMTextMessageBody;
 
 import net.melove.app.chat.R;
 import net.melove.app.chat.MLConstants;
+import net.melove.app.chat.module.listener.MLItemCallBack;
 import net.melove.app.chat.util.MLDateUtil;
 import net.melove.app.chat.util.MLLog;
 import net.melove.app.chat.ui.widget.MLImageView;
@@ -33,7 +34,8 @@ import java.util.List;
  * Created by lz on 2015/12/13.
  * 会话列表的适配器，供{@link MLConversationsFragment}使用
  */
-public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAdapter.ConversationViewHolder> {
+public class MLConversationAdapter
+        extends RecyclerView.Adapter<MLConversationAdapter.ConversationViewHolder> {
 
     // 当前 Adapter 的上下文对象
     private Context mContext;
@@ -42,7 +44,7 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
     private List<EMConversation> mConversations;
 
     // 自定义的回调接口
-    private MLOnItemClickListener mOnItemClickListener;
+    private MLItemCallBack mCallback;
 
     // 刷新会话列表
     private final int HANDLER_CONVERSATION_REFRESH = 0;
@@ -51,7 +53,7 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
     /**
      * 构造方法，需传递过来上下文对象和数据源
      *
-     * @param context       上下文对象
+     * @param context 上下文对象
      * @param conversations 需要展示的会话列表集合
      */
     public MLConversationAdapter(Context context, List<EMConversation> conversations) {
@@ -61,15 +63,14 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
         mHandler = new MLHandler();
     }
 
-    @Override
-    public ConversationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @Override public ConversationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.item_conversation, parent, false);
         ConversationViewHolder viewHolder = new ConversationViewHolder(view);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(ConversationViewHolder holder, final int position) {
+    public void onBindViewHolder(final ConversationViewHolder holder, final int position) {
         MLLog.d("MLConversationAdapter onBindViewHolder - %d", position);
         EMConversation conversation = mConversations.get(position);
         /**
@@ -109,26 +110,27 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
                 ;
             } else {
                 switch (lastMessage.getType()) {
-                case TXT:
-                    content = ((EMTextMessageBody) conversation.getLastMessage().getBody()).getMessage();
-                    break;
-                case FILE:
-                    content = "[" + mContext.getString(R.string.ml_file) + "]";
-                    break;
-                case IMAGE:
-                    content = "[" + mContext.getString(R.string.ml_photo) + "]";
-                    break;
-                case LOCATION:
-                    content = "[" + mContext.getString(R.string.ml_location) + "]";
-                    break;
-                case VIDEO:
-                    content = "[" + mContext.getString(R.string.ml_video) + "]";
-                    break;
-                case VOICE:
-                    content = "[" + mContext.getString(R.string.ml_voice) + "]";
-                    break;
-                default:
-                    break;
+                    case TXT:
+                        content = ((EMTextMessageBody) conversation.getLastMessage()
+                                .getBody()).getMessage();
+                        break;
+                    case FILE:
+                        content = "[" + mContext.getString(R.string.ml_file) + "]";
+                        break;
+                    case IMAGE:
+                        content = "[" + mContext.getString(R.string.ml_photo) + "]";
+                        break;
+                    case LOCATION:
+                        content = "[" + mContext.getString(R.string.ml_location) + "]";
+                        break;
+                    case VIDEO:
+                        content = "[" + mContext.getString(R.string.ml_video) + "]";
+                        break;
+                    case VOICE:
+                        content = "[" + mContext.getString(R.string.ml_voice) + "]";
+                        break;
+                    default:
+                        break;
                 }
                 // 判断这条消息状态，如果失败加上失败前缀提示
                 if (conversation.getLastMessage().status() == EMMessage.Status.FAIL) {
@@ -143,13 +145,16 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
         // 根据不同的类型展示不同样式的消息
         if (!TextUtils.isEmpty(draft)) {
             Spannable spannable = new SpannableString(content);
-            spannable.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.ml_red_87)),
-                    0, msgPrefix.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannable.setSpan(
+                    new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.ml_red_87)), 0,
+                    msgPrefix.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             holder.contentView.setText(spannable);
-        } else if (conversation.getAllMsgCount() > 0 && conversation.getLastMessage().status() == EMMessage.Status.FAIL) {
+        } else if (conversation.getAllMsgCount() > 0
+                && conversation.getLastMessage().status() == EMMessage.Status.FAIL) {
             Spannable spannable = new SpannableString(content);
-            spannable.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.ml_red_87)),
-                    0, msgPrefix.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannable.setSpan(
+                    new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.ml_red_87)), 0,
+                    msgPrefix.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             holder.contentView.setText(spannable);
         } else {
             holder.contentView.setText(content);
@@ -164,7 +169,8 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
             }
         } else if (conversation.getType() == EMConversation.EMConversationType.GroupChat) {
             // 如果是群聊设置群组名称
-            EMGroup group = EMClient.getInstance().groupManager().getGroup(conversation.getUserName());
+            EMGroup group =
+                    EMClient.getInstance().groupManager().getGroup(conversation.getUserName());
             if (group != null) {
                 holder.titleView.setText(group.getGroupName());
             } else {
@@ -199,24 +205,26 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
             holder.pushpinView.setVisibility(View.GONE);
         }
 
+        holder.avatarView.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+                mCallback.onAction(holder.avatarView.getId(), position);
+            }
+        });
         // 为每个Item设置点击与长按监听
         holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mOnItemClickListener.onItemClick(position);
+            @Override public void onClick(View v) {
+                mCallback.onAction(MLConstants.ML_ACTION_CLICK, position);
             }
         });
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                mOnItemClickListener.onItemLongClick(position);
+            @Override public boolean onLongClick(View v) {
+                mCallback.onAction(MLConstants.ML_ACTION_LONG_CLICK, position);
                 return true;
             }
         });
     }
 
-    @Override
-    public int getItemCount() {
+    @Override public int getItemCount() {
         return mConversations.size();
     }
 
@@ -230,21 +238,12 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
     }
 
     /**
-     * 自定义回调接口，用来实现 RecyclerView 中 Item 长按和点击事件监听
-     */
-    protected interface MLOnItemClickListener {
-        public void onItemClick(int position);
-
-        public void onItemLongClick(int position);
-    }
-
-    /**
      * 设置回调监听
      *
-     * @param listener 自定义回调接口
+     * @param callback 自定义回调接口
      */
-    public void setOnItemClickListener(MLOnItemClickListener listener) {
-        mOnItemClickListener = listener;
+    public void setItemCallback(MLItemCallBack callback) {
+        mCallback = callback;
     }
 
     /**
@@ -255,13 +254,12 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
             notifyDataSetChanged();
         }
 
-        @Override
-        public void handleMessage(Message msg) {
-            //            super.handleMessage(msg);
+        @Override public void handleMessage(Message msg) {
+            //super.handleMessage(msg);
             switch (msg.what) {
-            case HANDLER_CONVERSATION_REFRESH:
-                refresh();
-                break;
+                case HANDLER_CONVERSATION_REFRESH:
+                    refresh();
+                    break;
             }
         }
     }
@@ -292,6 +290,4 @@ public class MLConversationAdapter extends RecyclerView.Adapter<MLConversationAd
             countView = (TextView) itemView.findViewById(R.id.text_unread_count);
         }
     }
-
-
 }

@@ -84,7 +84,7 @@ public class MLApplyForAdapter extends RecyclerView.Adapter<MLApplyForAdapter.Ap
             holder.textViewStatus.setText(status);
         }
 
-        // 设置 Item 项中 Button 的点击监听
+        // 设置 itemView Button 的点击监听
         holder.btnAgree.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
                 mCallback.onAction(MLConstants.ML_ACTION_AGREED, message.getMsgId());
@@ -95,7 +95,7 @@ public class MLApplyForAdapter extends RecyclerView.Adapter<MLApplyForAdapter.Ap
                 mCallback.onAction(MLConstants.ML_ACTION_REJECT, message.getMsgId());
             }
         });
-        // 给当前 ItemView 设置点击和长按监听
+        // 给当前 itemView 设置点击和长按监听
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 mCallback.onAction(MLConstants.ML_ACTION_CLICK, message.getMsgId());

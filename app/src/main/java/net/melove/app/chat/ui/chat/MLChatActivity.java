@@ -49,8 +49,11 @@ import com.hyphenate.chat.EMVideoMessageBody;
 import com.hyphenate.chat.EMVoiceMessageBody;
 import net.melove.app.chat.R;
 import net.melove.app.chat.module.event.MLMessageEvent;
+import net.melove.app.chat.module.listener.MLItemCallBack;
 import net.melove.app.chat.ui.MLBaseActivity;
 import net.melove.app.chat.MLConstants;
+import net.melove.app.chat.ui.contacts.MLUserActivity;
+import net.melove.app.chat.ui.conversation.MLConversationExtUtils;
 import net.melove.app.chat.ui.widget.recycler.MLLinearLayoutManager;
 import net.melove.app.chat.util.MLDateUtil;
 import net.melove.app.chat.util.MLFileUtil;
@@ -73,9 +76,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
- * Created by lzan13 on 2015/10/12 15:00. 聊天界面，处理并显示聊天双方信息
+ * Created by lzan13 on 2015/10/12 15:00.
+ * 聊天界面，处理并显示聊天双方信息
  */
 public class MLChatActivity extends MLBaseActivity implements EMMessageListener {
 
@@ -228,6 +234,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             mConversation.loadMoreMsgFromDB(msgId, mPageSize - count);
         }
 
+        // 检查是否有草稿没有发出
         String draft = MLConversationExtUtils.getConversationDraft(mConversation);
         if (!TextUtils.isEmpty(draft)) {
             mInputView.setText(draft);
@@ -420,25 +427,27 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
          * 这里实现在{@link MLMessageAdapter MLOnItemClickListener}定义的接口，
          * 实现聊天信息ItemView需要操作的一些方法
          */
-        mAdapter.setOnItemClickListener(new MLMessageAdapter.MLOnItemClickListener() {
+        mAdapter.setOnItemClickListener(new MLItemCallBack() {
 
             /**
              * Item 点击及长按事件的处理
-             * 这里Item的点击及长按监听都在自定义的
-             * {@link net.melove.app.chat.ui.chat.messageitem.MLMessageItem}里实现，
-             * 然后通过回调将
-             * {@link net.melove.app.chat.ui.chat.messageitem.MLMessageItem}的操作以自定义 Action
-             * 的方式传递过过来，因为聊天列表的 Item 有多种多样的，每一个 Item 弹出菜单不同，
              *
-             * @param message 需要操作的 Item 的 EMMessage 对象
-             * @param action  要处理的动作，比如 复制、转发、删除、撤回等
+             * @param action 长按菜单需要处理的动作，
+             * @param tag 需要操作的 Item 的 tag，这里定义为一个 Object，可以根据需要进行类型转换
              */
-            @Override public void onItemAction(EMMessage message, int action) {
-                int position = mConversation.getAllMessages().indexOf(message);
+            @Override public void onAction(int action, Object tag) {
+                EMMessage message = (EMMessage) tag;
+                int position = mConversation.getMessagePosition(message);
                 switch (action) {
+                    case R.id.img_avatar:
+                        avatarClick(message);
+                        break;
                     case MLConstants.ML_ACTION_CLICK:
                         // 消息点击事件，不同的消息有不同的触发
                         itemClick(message);
+                        break;
+                    case MLConstants.ML_ACTION_LONG_CLICK:
+                        itemLongClick(message);
                         break;
                     case MLConstants.ML_ACTION_RESEND:
                         // 重发消息
@@ -463,6 +472,18 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 }
             }
         });
+    }
+
+    /**
+     * 头像点击触发
+     *
+     * @param message 当前点击的消息项
+     */
+    private void avatarClick(EMMessage message) {
+        Intent intent = new Intent();
+        intent.setClass(mActivity, MLUserActivity.class);
+        intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, message.getFrom());
+        mActivity.startActivity(intent);
     }
 
     /**
@@ -513,6 +534,15 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 mActivity.startActivity(intent);
             }
         }
+    }
+
+    /**
+     * 当前列表项长按事件
+     *
+     * @param message 点击长按的消息
+     */
+    private void itemLongClick(EMMessage message) {
+
     }
 
     /**
@@ -657,6 +687,16 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         if (isBurn) {
             // 设置消息扩展类型为阅后即焚
             message.setAttribute(MLConstants.ML_ATTR_BURN, true);
+        }
+
+        message.setAttribute("em_force_notification", true);
+        JSONObject extJson = new JSONObject();
+        try {
+            extJson.put("em_push_title", "这是推送标题");
+            extJson.put("extern", "这是扩展内容");
+            message.setAttribute("em_apns_ext", extJson);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 

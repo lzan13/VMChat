@@ -85,12 +85,14 @@ public class MLImageView extends ImageView {
             blurRadius = array.getInteger(R.styleable.MLImageView_ml_blur_radius, blurRadius);
             blurScale = array.getInteger(R.styleable.MLImageView_ml_blur_scale, blurScale);
             borderColor = array.getColor(R.styleable.MLImageView_ml_border_color, borderColor);
-            borderWidth = array.getDimensionPixelOffset(R.styleable.MLImageView_ml_border_width, borderWidth);
+            borderWidth = array.getDimensionPixelOffset(R.styleable.MLImageView_ml_border_width,
+                    borderWidth);
             pressAlpha = array.getInteger(R.styleable.MLImageView_ml_press_alpha, pressAlpha);
             pressColor = array.getColor(R.styleable.MLImageView_ml_press_color, pressColor);
             radius = array.getDimensionPixelOffset(R.styleable.MLImageView_ml_radius, radius);
             shapeType = array.getInteger(R.styleable.MLImageView_ml_shape_type, shapeType);
-            isDispatchTouchEvent = array.getBoolean(R.styleable.MLImageView_ml_dispatch_touch_event, isDispatchTouchEvent);
+            isDispatchTouchEvent = array.getBoolean(R.styleable.MLImageView_ml_dispatch_touch_event,
+                    isDispatchTouchEvent);
             array.recycle();
         }
 
@@ -107,8 +109,7 @@ public class MLImageView extends ImageView {
         setWillNotDraw(false);
     }
 
-    @Override
-    protected void onDraw(Canvas canvas) {
+    @Override protected void onDraw(Canvas canvas) {
 
         if (shapeType == 0) {
             super.onDraw(canvas);
@@ -144,9 +145,6 @@ public class MLImageView extends ImageView {
 
     /**
      * 实现圆角的绘制
-     *
-     * @param canvas
-     * @param bitmap
      */
     private void drawDrawable(Canvas canvas, Bitmap bitmap) {
         // 画笔
@@ -158,7 +156,11 @@ public class MLImageView extends ImageView {
         //Paint 的 Xfermode，PorterDuff.Mode.SRC_IN 取两层图像的交集部门, 只显示上层图像。
         PorterDuffXfermode xfermode = new PorterDuffXfermode(PorterDuff.Mode.SRC_IN);
         // 标志
-        int saveFlags = Canvas.MATRIX_SAVE_FLAG | Canvas.CLIP_SAVE_FLAG | Canvas.HAS_ALPHA_LAYER_SAVE_FLAG | Canvas.FULL_COLOR_LAYER_SAVE_FLAG | Canvas.CLIP_TO_LAYER_SAVE_FLAG;
+        int saveFlags = Canvas.MATRIX_SAVE_FLAG
+                | Canvas.CLIP_SAVE_FLAG
+                | Canvas.HAS_ALPHA_LAYER_SAVE_FLAG
+                | Canvas.FULL_COLOR_LAYER_SAVE_FLAG
+                | Canvas.CLIP_TO_LAYER_SAVE_FLAG;
         canvas.saveLayer(0, 0, width, height, null, saveFlags);
 
         if (shapeType == 1) {
@@ -180,7 +182,8 @@ public class MLImageView extends ImageView {
         matrix.postScale(scaleWidth, scaleHeight);
 
         //bitmap 缩放
-        bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix,
+                true);
 
         //draw 上去
         canvas.drawBitmap(bitmap, 0, 0, paint);
@@ -189,8 +192,6 @@ public class MLImageView extends ImageView {
 
     /**
      * 绘制控件的按下效果
-     *
-     * @param canvas
      */
     private void drawPress(Canvas canvas) {
         // 这里根据类型判断绘制的效果是圆形还是矩形
@@ -206,8 +207,6 @@ public class MLImageView extends ImageView {
 
     /**
      * 绘制自定义控件边框
-     *
-     * @param canvas
      */
     private void drawBorder(Canvas canvas) {
         if (borderWidth > 0) {
@@ -221,7 +220,9 @@ public class MLImageView extends ImageView {
                 canvas.drawCircle(width / 2, height / 2, (width - borderWidth) / 2, paint);
             } else if (shapeType == 2) {
                 // 当ShapeType = 1 时 图片为圆角矩形
-                RectF rectf = new RectF(borderWidth / 2, borderWidth / 2, getWidth() - borderWidth / 2, getHeight() - borderWidth / 2);
+                RectF rectf =
+                        new RectF(borderWidth / 2, borderWidth / 2, getWidth() - borderWidth / 2,
+                                getHeight() - borderWidth / 2);
                 canvas.drawRoundRect(rectf, radius, radius, paint);
             }
         }
@@ -230,13 +231,12 @@ public class MLImageView extends ImageView {
     /**
      * 重写父类的 onSizeChanged 方法，检测控件宽高的变化
      *
-     * @param w    控件当前宽
-     * @param h    控件当前高
+     * @param w 控件当前宽
+     * @param h 控件当前高
      * @param oldw 控件原来的宽
      * @param oldh 控件原来的高
      */
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+    @Override protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         width = w;
         height = h;
@@ -244,13 +244,8 @@ public class MLImageView extends ImageView {
 
     /**
      * View 的事件分发
-     *
-     * @param event
-     *
-     * @return
      */
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
+    @Override public boolean dispatchTouchEvent(MotionEvent event) {
         if (isDispatchTouchEvent) {
             return false;
         }
@@ -259,13 +254,8 @@ public class MLImageView extends ImageView {
 
     /**
      * 重写 onTouchEvent 监听方法，用来响应控件触摸
-     *
-     * @param event
-     *
-     * @return
      */
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    @Override public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 pressPaint.setAlpha(pressAlpha);
@@ -290,10 +280,6 @@ public class MLImageView extends ImageView {
      * 这里是参考其他开发者获取Bitmap内容的方法， 之前是因为没有考虑到 Glide 加载的图片
      * 导致drawable 类型是属于 SquaringDrawable 类型，导致强转失败
      * 这里是通过drawable不同的类型来进行获取Bitmap
-     *
-     * @param drawable
-     *
-     * @return
      */
     private Bitmap getBitmapFromDrawable(Drawable drawable) {
         try {
@@ -301,9 +287,11 @@ public class MLImageView extends ImageView {
             if (drawable instanceof BitmapDrawable) {
                 return ((BitmapDrawable) drawable).getBitmap();
             } else if (drawable instanceof ColorDrawable) {
-                bitmap = Bitmap.createBitmap(COLORDRAWABLE_DIMENSION, COLORDRAWABLE_DIMENSION, BITMAP_CONFIG);
+                bitmap = Bitmap.createBitmap(COLORDRAWABLE_DIMENSION, COLORDRAWABLE_DIMENSION,
+                        BITMAP_CONFIG);
             } else {
-                bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), BITMAP_CONFIG);
+                bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
+                        drawable.getIntrinsicHeight(), BITMAP_CONFIG);
             }
             Canvas canvas = new Canvas(bitmap);
             drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -317,8 +305,6 @@ public class MLImageView extends ImageView {
 
     /**
      * 设置边框颜色
-     *
-     * @param borderColor
      */
     public void setBorderColor(int borderColor) {
         this.borderColor = borderColor;
@@ -327,8 +313,6 @@ public class MLImageView extends ImageView {
 
     /**
      * 设置边框宽度
-     *
-     * @param borderWidth
      */
     public void setBorderWidth(int borderWidth) {
         this.borderWidth = borderWidth;
@@ -336,8 +320,6 @@ public class MLImageView extends ImageView {
 
     /**
      * 设置图片按下颜色透明度
-     *
-     * @param pressAlpha
      */
     public void setPressAlpha(int pressAlpha) {
         this.pressAlpha = pressAlpha;
@@ -345,8 +327,6 @@ public class MLImageView extends ImageView {
 
     /**
      * 设置图片按下的颜色
-     *
-     * @param pressColor
      */
     public void setPressColor(int pressColor) {
         this.pressColor = pressColor;
@@ -354,8 +334,6 @@ public class MLImageView extends ImageView {
 
     /**
      * 设置倒角半径
-     *
-     * @param radius
      */
     public void setRadius(int radius) {
         this.radius = radius;
@@ -364,8 +342,6 @@ public class MLImageView extends ImageView {
 
     /**
      * 设置形状类型
-     *
-     * @param shapeType
      */
     public void setShapeType(int shapeType) {
         this.shapeType = shapeType;

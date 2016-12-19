@@ -39,47 +39,42 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         >
 
-        <RelativeLayout
+        <android.support.design.widget.TabLayout
+            android:id="@+id/widget_tab_layout"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/ml_dimen_40"
+            android:layout_height="@dimen/ml_dimen_36"
+            app:tabBackground="@color/ml_theme_primary"
+            app:tabIndicatorColor="@color/ml_white_87"
+            app:tabIndicatorHeight="@dimen/ml_dimen_2"
+            app:tabMode="fixed"
+            app:tabSelectedTextColor="@color/ml_white_87"
+            app:tabTextColor="@color/ml_white_54"
+            />
+
+        <LinearLayout
+            android:id="@+id/layout_connection_error"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/ml_dimen_32"
+            android:background="@color/ml_red_12"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="visible"
             >
-
-            <android.support.design.widget.TabLayout
-                android:id="@+id/widget_tab_layout"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/ml_dimen_40"
-                app:tabBackground="@color/ml_theme_primary"
-                app:tabIndicatorColor="@color/ml_white_87"
-                app:tabIndicatorHeight="@dimen/ml_dimen_2"
-                app:tabMode="fixed"
-                app:tabSelectedTextColor="@color/ml_white_87"
-                app:tabTextColor="@color/ml_white_54"
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/ml_dimen_8"
+                android:src="@mipmap/ic_warning_amber_24dp"
                 />
-            <LinearLayout
-                android:id="@+id/layout_connection_error"
+            <TextView
+                android:id="@+id/text_connection_error"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/ml_click_rectangle_red"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                >
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/ml_dimen_8"
-                    android:src="@mipmap/ic_warning_amber_24dp"
-                    />
-                <TextView
-                    android:id="@+id/text_connection_error"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/ml_dimen_8"
-                    android:text="@string/ml_error_network_error"
-                    android:textColor="@color/ml_white_87"
-                    />
-            </LinearLayout>
-        </RelativeLayout>
-
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/ml_dimen_8"
+                android:text="@string/ml_error_network_error"
+                android:textColor="@color/ml_black_87"
+                />
+        </LinearLayout>
         <!--盛放 Fragment 的容器-->
         <android.support.v4.view.ViewPager
             android:id="@+id/view_pager"

@@ -2,16 +2,11 @@ package net.melove.app.chat.ui.contacts;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import net.melove.app.chat.MLConstants;
-import net.melove.app.chat.MLHyphenate;
 import net.melove.app.chat.R;
 import net.melove.app.chat.module.event.MLUserEvent;
 import net.melove.app.chat.module.listener.MLItemCallBack;
@@ -90,11 +85,14 @@ public class MLContactsFragment extends MLBaseFragment {
             @Override public void onAction(int action, Object tag) {
                 int position = (int) tag;
                 switch (action) {
+                    case R.id.img_avatar:
+                        itemClick(position);
+                        break;
                     case MLConstants.ML_ACTION_CLICK:
-                        itemClick();
+                        itemClick(position);
                         break;
                     case MLConstants.ML_ACTION_LONG_CLICK:
-
+                        itemLongClick(position);
                         break;
                 }
             }
@@ -104,18 +102,7 @@ public class MLContactsFragment extends MLBaseFragment {
     /**
      * 列表项点击事件
      */
-    private void itemClick() {
-
-    }
-
-    /**
-     * 列表项长按事件
-     */
-    private void itemLongClick() {
-
-    }
-
-    private void jumpUserInfo(int position) {
+    private void itemClick(int position) {
         MLUserEntity userEntity = mContactsList.get(position);
         Intent intent = new Intent();
         intent.setClass(mActivity, MLUserActivity.class);
@@ -124,15 +111,22 @@ public class MLContactsFragment extends MLBaseFragment {
     }
 
     /**
+     * 列表项长按事件
+     */
+    private void itemLongClick(int position) {
+
+    }
+
+    /**
      * 加载联系人列表
      */
     private void loadContactsList() {
         if (mContactsList == null) {
             mContactsList = new ArrayList<>();
-            mContactsList.addAll(MLContactsManager.getInstance().getUserMap().values());
+            mContactsList.addAll(MLUserManager.getInstance().getContactsMap().values());
         } else {
             mContactsList.clear();
-            mContactsList.addAll(MLContactsManager.getInstance().getUserMap().values());
+            mContactsList.addAll(MLUserManager.getInstance().getContactsMap().values());
         }
     }
 

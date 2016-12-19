@@ -10,7 +10,7 @@ import net.melove.app.chat.MLConstants;
 import net.melove.app.chat.MLHyphenate;
 import net.melove.app.chat.module.event.MLMessageEvent;
 import net.melove.app.chat.module.notification.MLNotifier;
-import net.melove.app.chat.ui.chat.MLConversationExtUtils;
+import net.melove.app.chat.ui.conversation.MLConversationExtUtils;
 import net.melove.app.chat.ui.chat.MLMessageUtils;
 import org.greenrobot.eventbus.EventBus;
 

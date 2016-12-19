@@ -27,10 +27,10 @@ import com.hyphenate.chat.EMClient;
 import net.melove.app.chat.R;
 import net.melove.app.chat.MLConstants;
 import net.melove.app.chat.module.event.MLConnectionEvent;
-import net.melove.app.chat.ui.chat.MLConversationsFragment;
+import net.melove.app.chat.ui.conversation.MLConversationsFragment;
 import net.melove.app.chat.ui.contacts.MLContactsFragment;
 import net.melove.app.chat.ui.sign.MLSignInActivity;
-import net.melove.app.chat.util.MLSPUtil;
+import net.melove.app.chat.util.MLNetUtil;
 import net.melove.app.chat.ui.chat.MLChatActivity;
 
 /**
@@ -128,12 +128,6 @@ public class MLMainActivity extends MLBaseActivity {
         });
 
         mTabLayout.setupWithViewPager(mViewPager);
-
-        if (EMClient.getInstance().isConnected()) {
-            mConnectionStatusLayout.setVisibility(View.GONE);
-        } else {
-            mConnectionStatusLayout.setVisibility(View.VISIBLE);
-        }
     }
 
     /**
@@ -218,16 +212,26 @@ public class MLMainActivity extends MLBaseActivity {
      * @param event 订阅的消息类型
      */
     @Override public void onEventBus(MLConnectionEvent event) {
-        /**
-         * 因为3.x的sdk断开服务器连接后会一直重试并发出回调，所以为了防止一直Toast提示用户，
-         * 这里取消弹出 Toast 方式，只是显示图标
-         */
-        if (event.getType() == MLConstants.ML_CONNECTION_CONNECTED) {
+        checkConnectionStatus();
+        super.onEventBus(event);
+    }
+
+    /**
+     * 检查连接状态
+     */
+    private void checkConnectionStatus() {
+        // 判断当前是否拦截到服务器
+        if (EMClient.getInstance().isConnected()) {
             mConnectionStatusLayout.setVisibility(View.GONE);
         } else {
             mConnectionStatusLayout.setVisibility(View.VISIBLE);
+            // 判断连接不到服务器的原因是不是因为网络不可用
+            if (MLNetUtil.hasNetwork()) {
+                mConnectionStatusView.setText(R.string.ml_error_disconnected);
+            } else {
+                mConnectionStatusView.setText(R.string.ml_error_network_error);
+            }
         }
-        super.onEventBus(event);
     }
 
     /**
@@ -266,6 +270,7 @@ public class MLMainActivity extends MLBaseActivity {
 
     @Override protected void onResume() {
         super.onResume();
+        checkConnectionStatus();
         if (!EMClient.getInstance().isLoggedInBefore()) {
             // 跳转到登录界面
             Intent intent = new Intent(this, MLSignInActivity.class);

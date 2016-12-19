@@ -43,7 +43,7 @@ public class MLContactsAdapter extends RecyclerView.Adapter<MLContactsAdapter.Co
     }
 
     @Override public ContactsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = mInflater.inflate(R.layout.item_user, parent, false);
+        View itemView = mInflater.inflate(R.layout.item_contacts, parent, false);
         return new ContactsViewHolder(itemView);
     }
 
@@ -51,18 +51,26 @@ public class MLContactsAdapter extends RecyclerView.Adapter<MLContactsAdapter.Co
      * @param holder
      * @param position
      */
-    @Override public void onBindViewHolder(ContactsViewHolder holder, final int position) {
+    @Override public void onBindViewHolder(final ContactsViewHolder holder, final int position) {
         MLUserEntity user = mContactsList.get(position);
 
         // 设置用户昵称
         holder.nickNameView.setText(
-                TextUtils.isEmpty(user.getNickName()) ? user.getNickName() : user.getUserName());
+                TextUtils.isEmpty(user.getNickName()) ? user.getUserName() : user.getNickName());
 
+        // 设置联系人头像点击监听
+        holder.avatarView.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+                mCallBack.onAction(holder.avatarView.getId(), position);
+            }
+        });
+        // 设置 itemView 点击监听事件
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 mCallBack.onAction(MLConstants.ML_ACTION_CLICK, position);
             }
         });
+        // 设置 itemView 长按监听事件
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override public boolean onLongClick(View view) {
                 mCallBack.onAction(MLConstants.ML_ACTION_LONG_CLICK, position);
@@ -71,6 +79,9 @@ public class MLContactsAdapter extends RecyclerView.Adapter<MLContactsAdapter.Co
         });
     }
 
+    /**
+     * 设置 Item 项回调接口
+     */
     public void setItemCallBack(MLItemCallBack callback) {
         mCallBack = callback;
     }

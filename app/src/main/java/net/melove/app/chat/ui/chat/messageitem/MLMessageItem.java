@@ -112,11 +112,20 @@ public abstract class MLMessageItem extends LinearLayout {
      * 设置Item 气泡点击以及长按监听
      */
     protected void onBubbleListener() {
+        if (avatarView != null) {
+            // 设置消息头像点击监听
+            avatarView.setOnClickListener(new OnClickListener() {
+                @Override public void onClick(View view) {
+                    mAdapter.onItemAction(avatarView.getId(), mMessage);
+                }
+            });
+        }
         if (bubbleLayout != null) {
             // 设置Item 气泡的点击监听
             bubbleLayout.setOnClickListener(new OnClickListener() {
                 @Override public void onClick(View v) {
-                    onItemClick();
+                    // 设置 Item 项点击的 Action
+                    mAdapter.onItemAction(MLConstants.ML_ACTION_CLICK, mMessage);
                 }
             });
             // 设置Item 气泡的长按监听
@@ -133,8 +142,7 @@ public abstract class MLMessageItem extends LinearLayout {
      * 当前 Item 的点击监听
      */
     protected void onItemClick() {
-        // 设置 Item 项点击的 Action
-        mAdapter.onItemAction(mMessage, MLConstants.ML_ACTION_CLICK);
+
     }
 
     /**
@@ -152,6 +160,7 @@ public abstract class MLMessageItem extends LinearLayout {
     protected void setAckStatusView() {
         // 需要先判断下是不是单聊的消息，如果不是单聊会话就不发送和展示ACK状态
         if (mMessage.getChatType() != EMMessage.ChatType.Chat) {
+            ackStatusView.setVisibility(View.GONE);
             return;
         }
         // 判断是否需要消息已读ACK，以及消息发送状态

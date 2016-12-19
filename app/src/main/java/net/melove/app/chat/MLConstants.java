@@ -6,6 +6,9 @@ package net.melove.app.chat;
  */
 public class MLConstants {
 
+    public static final String ML_TTK_TOKEN =
+            "e7e2a7477acd2c588622106fd81ad730e4658405:HJrxxHj1c5k3EYBcHY4Dhx-SyQ4=:eyJkZWFkbGluZSI6MTQ4MTAzNTQ4OCwiYWN0aW9uIjoiZ2V0IiwidWlkIjoiNTgwNzA3IiwiYWlkIjoiMTI2NDAzNCIsImZyb20iOiJ3ZWIifQ==";
+
     // MobAPI 后端数据存储 key
     public static final String ML_MOB_KEY = "199439878d8e7";
 

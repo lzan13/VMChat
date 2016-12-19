@@ -125,20 +125,20 @@ public class MLHyphenate {
     }
 
     /**
-     * SDK 3.2.0 版本通话相关设置
+     * SDK 3.2.x 版本后通话相关设置
      */
     private void initCallOptions() {
-        // 设置视频通话最大和最小比特率 默认是(150)
-        EMClient.getInstance().callManager().getCallOptions().setMaxVideoKbps(800);
+        // 设置视频通话最大和最小比特率，最大需要根据网络情况设置， 默认最小(80)
+        EMClient.getInstance().callManager().getCallOptions().setMaxVideoKbps(2048);
         EMClient.getInstance().callManager().getCallOptions().setMinVideoKbps(150);
-        // 设置视频通话分辨率 默认是(320, 240)
-        EMClient.getInstance().callManager().getCallOptions().setVideoResolution(640, 480);
-        // 设置通话最大帧率
-        EMClient.getInstance().callManager().getCallOptions().setMaxVideoFrameRate(60);
+        // 设置视频通话分辨率 默认是(640, 480)
+        EMClient.getInstance().callManager().getCallOptions().setVideoResolution(1280, 720);
+        // 设置通话最大帧率，SDK 最大支持(30)，默认(20)
+        EMClient.getInstance().callManager().getCallOptions().setMaxVideoFrameRate(30);
         // 设置通话过程中对方如果离线是否发送离线推送通知
         EMClient.getInstance().callManager().getCallOptions().setIsSendPushIfOffline(false);
-        // 设置音视频通话采样率，一般不需要设置，
-        EMClient.getInstance().callManager().getCallOptions().setAudioSampleRate(48000);
+        // 设置音视频通话采样率，一般不需要设置，除非采集声音有问题才需要手动设置
+        //EMClient.getInstance().callManager().getCallOptions().setAudioSampleRate(48000);
     }
 
     private EMOptions initOptions() {
@@ -148,10 +148,18 @@ public class MLHyphenate {
          * http://www.easemob.com/apidoc/android/chat3.0/classcom_1_1hyphenate_1_1chat_1_1_e_m_options.html
          */
         EMOptions options = new EMOptions();
-        // 是否启动 DNS 信息配置
+
+        // 是否启动 DNS 信息配置，如果是私有化部署，这里要设置为 false
         options.enableDNSConfig(true);
+        // 设置私有化 IM 地址
+        //options.setIMServer("im1.easemob.com");
+        // 设置私有化 IM 端口号
+        //options.setImPort(443);
+        // 设置私有化 Rest 地址+端口号
+        //options.setRestServer("a1.easemob.com:80");
         // 设置Appkey，如果配置文件已经配置，这里可以不用设置
         //options.setAppKey("1116161115115040#ejiazi");
+
         // 设置自动登录
         options.setAutoLogin(true);
         // 设置是否按照服务器时间排序，false按照本地时间排序

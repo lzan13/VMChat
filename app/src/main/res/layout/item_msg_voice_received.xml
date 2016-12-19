@@ -34,6 +34,7 @@
                     android:src="@mipmap/ic_character_blackcat"
                     melove:ml_border_color="@color/ml_white_87"
                     melove:ml_border_width="@dimen/ml_dimen_2"
+                    melove:ml_dispatch_touch_event="false"
                     melove:ml_shape_type="round"
                     />
 
