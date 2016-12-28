@@ -23,12 +23,12 @@ import com.hyphenate.exceptions.EMServiceNotReadyException;
 import com.hyphenate.exceptions.HyphenateException;
 
 import net.melove.app.chat.R;
-import net.melove.app.chat.MLConstants;
-import net.melove.app.chat.MLHyphenate;
+import net.melove.app.chat.app.MLConstants;
+import net.melove.app.chat.app.MLHyphenate;
 import net.melove.app.chat.util.MLBitmapUtil;
 import net.melove.app.chat.util.MLDateUtil;
 import net.melove.app.chat.util.MLLog;
-import net.melove.app.chat.ui.widget.MLImageView;
+import net.melove.app.chat.widget.MLImageView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;

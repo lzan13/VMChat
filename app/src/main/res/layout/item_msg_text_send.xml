@@ -10,6 +10,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
         android:gravity="right|bottom"
         android:orientation="horizontal"
         >
@@ -78,9 +81,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:autoLink="web|phone"
                         android:maxWidth="@dimen/ml_dimen_256"
                         android:text="@string/ml_app_name"
                         android:textColor="@color/ml_white_87"
+                        android:textColorLink="@color/ml_white_54"
                         android:textSize="@dimen/ml_size_14"
                         />
 
@@ -114,7 +119,7 @@
                     </LinearLayout>
                 </LinearLayout>
                 <!--消息发送者头像-->
-                <net.melove.app.chat.ui.widget.MLImageView
+                <net.melove.app.chat.widget.MLImageView
                     android:id="@+id/img_avatar"
                     android:layout_width="@dimen/ml_dimen_40"
                     android:layout_height="@dimen/ml_dimen_40"

@@ -16,12 +16,11 @@ import com.hyphenate.chat.EMMessage;
 
 import com.hyphenate.exceptions.HyphenateException;
 import net.melove.app.chat.R;
-import net.melove.app.chat.MLConstants;
-import net.melove.app.chat.module.event.MLApplyForEvent;
-import net.melove.app.chat.module.listener.MLItemCallBack;
-import net.melove.app.chat.ui.MLBaseActivity;
-import net.melove.app.chat.ui.contacts.MLUserActivity;
-import net.melove.app.chat.ui.conversation.MLConversationExtUtils;
+import net.melove.app.chat.app.MLConstants;
+import net.melove.app.chat.app.MLItemCallBack;
+import net.melove.app.chat.app.MLBaseActivity;
+import net.melove.app.chat.contacts.MLUserActivity;
+import net.melove.app.chat.conversation.MLConversationExtUtils;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -250,7 +249,7 @@ public class MLApplyForActivity extends MLBaseActivity {
     /**
      * 使用 EventBus 的订阅方式监听事件的变化，这里 EventBus 3.x 使用注解的方式确定方法调用的线程
      */
-    @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(MLApplyForEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(MLApplyEvent event) {
         refresh();
     }
 

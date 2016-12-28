@@ -14,13 +14,13 @@
         >
 
         <!--自定义ViewGroup，可以自动排列放在其中的子View-->
-        <net.melove.app.chat.ui.widget.MLViewGroup
+        <net.melove.app.chat.widget.MLViewGroup
             android:id="@+id/view_custom_viewgroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             >
 
-        </net.melove.app.chat.ui.widget.MLViewGroup>
+        </net.melove.app.chat.widget.MLViewGroup>
     </LinearLayout>
 
 </RelativeLayout>

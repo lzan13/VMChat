@@ -19,8 +19,8 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.exceptions.HyphenateException;
 
 import net.melove.app.chat.R;
-import net.melove.app.chat.ui.MLBaseActivity;
-import net.melove.app.chat.MLConstants;
+import net.melove.app.chat.app.MLBaseActivity;
+import net.melove.app.chat.app.MLConstants;
 import net.melove.app.chat.chat.MLChatActivity;
 import net.melove.app.chat.util.MLLog;
 

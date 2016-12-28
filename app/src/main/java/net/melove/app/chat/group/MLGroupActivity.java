@@ -1,7 +1,7 @@
 package net.melove.app.chat.group;
 
 import android.os.Bundle;
-import net.melove.app.chat.ui.MLBaseActivity;
+import net.melove.app.chat.app.MLBaseActivity;
 
 /**
  * Created by lzan13 on 2016/10/27.

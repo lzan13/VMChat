@@ -6,7 +6,7 @@ import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.util.PathUtil;
 
-import net.melove.app.chat.MLConstants;
+import net.melove.app.chat.app.MLConstants;
 import net.melove.app.chat.util.MLCryptoUtil;
 import net.melove.app.chat.util.MLDateUtil;
 import net.melove.app.chat.util.MLLog;

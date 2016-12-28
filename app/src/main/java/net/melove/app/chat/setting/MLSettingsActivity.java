@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import butterknife.ButterKnife;
 import net.melove.app.chat.R;
-import net.melove.app.chat.ui.MLBaseActivity;
+import net.melove.app.chat.app.MLBaseActivity;
 
 /**
  * Created by lzan13 on 2016/10/31.

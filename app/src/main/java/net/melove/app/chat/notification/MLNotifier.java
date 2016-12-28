@@ -11,10 +11,10 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 
 import net.melove.app.chat.R;
-import net.melove.app.chat.MLApplication;
-import net.melove.app.chat.MLConstants;
+import net.melove.app.chat.app.MLApplication;
+import net.melove.app.chat.app.MLConstants;
 import net.melove.app.chat.chat.MLChatActivity;
-import net.melove.app.chat.MLMainActivity;
+import net.melove.app.chat.app.MLMainActivity;
 
 import java.util.List;
 

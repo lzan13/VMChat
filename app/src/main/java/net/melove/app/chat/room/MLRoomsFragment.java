@@ -1,7 +1,7 @@
 package net.melove.app.chat.room;
 
 import net.melove.app.chat.R;
-import net.melove.app.chat.ui.MLBaseFragment;
+import net.melove.app.chat.app.MLBaseFragment;
 
 /**
  * Created by lzan13 on 2016/12/7.

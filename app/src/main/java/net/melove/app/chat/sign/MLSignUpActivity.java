@@ -16,9 +16,9 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.exceptions.HyphenateException;
 
 import net.melove.app.chat.R;
-import net.melove.app.chat.module.network.MLNetworkManager;
-import net.melove.app.chat.ui.MLBaseActivity;
-import net.melove.app.chat.MLConstants;
+import net.melove.app.chat.network.MLNetworkManager;
+import net.melove.app.chat.app.MLBaseActivity;
+import net.melove.app.chat.app.MLConstants;
 import net.melove.app.chat.util.MLLog;
 import net.melove.app.chat.util.MLSPUtil;
 import org.json.JSONException;

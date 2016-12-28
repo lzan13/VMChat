@@ -13,10 +13,10 @@ import com.hyphenate.chat.EMNormalFileMessageBody;
 import com.hyphenate.util.TextFormater;
 
 import net.melove.app.chat.R;
-import net.melove.app.chat.MLConstants;
-import net.melove.app.chat.module.event.MLMessageEvent;
+import net.melove.app.chat.app.MLConstants;
+import net.melove.app.chat.chat.MLMessageEvent;
 import net.melove.app.chat.util.MLDateUtil;
-import net.melove.app.chat.ui.widget.MLImageView;
+import net.melove.app.chat.widget.MLImageView;
 import net.melove.app.chat.chat.MLChatActivity;
 import net.melove.app.chat.chat.MLMessageAdapter;
 

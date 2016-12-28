@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import net.melove.app.chat.MLConstants;
+import net.melove.app.chat.app.MLConstants;
 import net.melove.app.chat.util.MLSPUtil;
 
 /**

@@ -9,7 +9,7 @@ import com.hyphenate.chat.EMVoiceMessageBody;
 import com.hyphenate.exceptions.HyphenateException;
 
 
-import net.melove.app.chat.ui.widget.MLWaveformView;
+import net.melove.app.chat.widget.MLWaveformView;
 
 import java.io.IOException;
 

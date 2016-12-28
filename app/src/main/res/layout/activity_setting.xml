@@ -7,7 +7,7 @@
     android:background="@color/ml_gray_38"
     android:clipChildren="false"
     android:fitsSystemWindows="true"
-    tools:context="net.melove.app.chat.ui.setting.MLSettingsActivity"
+    tools:context=".setting.MLSettingsActivity"
     >
     <include layout="@layout/widget_toolbar_communal"/>
     <FrameLayout

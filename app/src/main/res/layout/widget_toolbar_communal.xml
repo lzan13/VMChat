@@ -24,7 +24,7 @@
         >
 
         <!--头像-->
-        <!--<net.melove.app.chat.ui.widget.MLImageView-->
+        <!--<net.melove.app.chat.widget.MLImageView-->
         <!--android:id="@+id/img_avatar"-->
         <!--android:layout_width="@dimen/ml_dimen_36"-->
         <!--android:layout_height="@dimen/ml_dimen_36"-->

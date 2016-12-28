@@ -17,9 +17,9 @@ import com.hyphenate.EMError;
 import com.hyphenate.chat.EMClient;
 
 import net.melove.app.chat.R;
-import net.melove.app.chat.ui.MLBaseActivity;
-import net.melove.app.chat.ui.MLMainActivity;
-import net.melove.app.chat.MLConstants;
+import net.melove.app.chat.app.MLBaseActivity;
+import net.melove.app.chat.app.MLMainActivity;
+import net.melove.app.chat.app.MLConstants;
 import net.melove.app.chat.contacts.MLUserManager;
 import net.melove.app.chat.util.MLLog;
 import net.melove.app.chat.util.MLSPUtil;

@@ -13,12 +13,12 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMVoiceMessageBody;
 
 import net.melove.app.chat.R;
-import net.melove.app.chat.MLConstants;
-import net.melove.app.chat.module.event.MLMessageEvent;
+import net.melove.app.chat.app.MLConstants;
+import net.melove.app.chat.chat.MLMessageEvent;
 import net.melove.app.chat.util.MLDateUtil;
 import net.melove.app.chat.util.MLDimenUtil;
-import net.melove.app.chat.ui.widget.MLImageView;
-import net.melove.app.chat.ui.widget.MLWaveformView;
+import net.melove.app.chat.widget.MLImageView;
+import net.melove.app.chat.widget.MLWaveformView;
 import net.melove.app.chat.chat.MLChatActivity;
 import net.melove.app.chat.chat.MLMessageAdapter;
 import net.melove.app.chat.chat.MLVoiceManager;

@@ -4,8 +4,8 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.exceptions.HyphenateException;
 import java.util.List;
 import java.util.Map;
-import net.melove.app.chat.MLConstants;
-import net.melove.app.chat.module.database.MLUserDao;
+import net.melove.app.chat.app.MLConstants;
+import net.melove.app.chat.database.MLUserDao;
 import net.melove.app.chat.util.MLLog;
 import net.melove.app.chat.util.MLSPUtil;
 

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import java.util.Map;
-import net.melove.app.chat.MLApplication;
+import net.melove.app.chat.app.MLApplication;
 
 /**
  * Created by Administrator on 2015/5/12.

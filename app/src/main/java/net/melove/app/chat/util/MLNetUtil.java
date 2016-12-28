@@ -3,7 +3,7 @@ package net.melove.app.chat.util;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo.State;
-import net.melove.app.chat.MLApplication;
+import net.melove.app.chat.app.MLApplication;
 
 /**
  * Created by lzan13 on 2016/12/7.

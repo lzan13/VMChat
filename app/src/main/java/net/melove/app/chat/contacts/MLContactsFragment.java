@@ -6,13 +6,12 @@ import android.support.v7.widget.RecyclerView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import net.melove.app.chat.MLConstants;
+import net.melove.app.chat.app.MLConstants;
 import net.melove.app.chat.R;
-import net.melove.app.chat.module.event.MLUserEvent;
-import net.melove.app.chat.module.listener.MLItemCallBack;
-import net.melove.app.chat.ui.MLBaseFragment;
+import net.melove.app.chat.app.MLItemCallBack;
+import net.melove.app.chat.app.MLBaseFragment;
 
-import net.melove.app.chat.ui.widget.recycler.MLLinearLayoutManager;
+import net.melove.app.chat.widget.recycler.MLLinearLayoutManager;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -143,7 +142,7 @@ public class MLContactsFragment extends MLBaseFragment {
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(MLUserEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(MLContactsEvent event) {
         refresh();
     }
 

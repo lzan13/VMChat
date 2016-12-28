@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:background="@color/ml_theme_background"
     android:fitsSystemWindows="true"
-    tools:context="net.melove.app.chat.ui.chat.MLChatActivity"
+    tools:context=".chat.MLChatActivity"
     >
 
     <include layout="@layout/widget_toolbar_communal"/>
@@ -128,7 +128,7 @@
                 </RelativeLayout>
 
                 <!--录音控件-->
-                <net.melove.app.chat.ui.widget.MLRecordView
+                <net.melove.app.chat.widget.MLRecordView
                     android:id="@+id/view_record_voice"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/ml_dimen_48"

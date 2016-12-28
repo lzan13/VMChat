@@ -10,8 +10,8 @@ import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 
 import java.util.ArrayList;
-import net.melove.app.chat.MLConstants;
-import net.melove.app.chat.module.listener.MLItemCallBack;
+import net.melove.app.chat.app.MLConstants;
+import net.melove.app.chat.app.MLItemCallBack;
 import net.melove.app.chat.chat.messageitem.MLCallMessageItem;
 import net.melove.app.chat.chat.messageitem.MLFileMessageItem;
 import net.melove.app.chat.chat.messageitem.MLImageMessageItem;

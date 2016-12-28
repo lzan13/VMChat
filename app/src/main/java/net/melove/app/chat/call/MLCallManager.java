@@ -6,7 +6,7 @@ import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Build;
-import net.melove.app.chat.MLApplication;
+import net.melove.app.chat.app.MLApplication;
 import net.melove.app.chat.R;
 
 /**

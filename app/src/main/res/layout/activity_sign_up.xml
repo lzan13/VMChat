@@ -9,7 +9,7 @@
     android:background="@color/ml_theme_background"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
-    tools:context=".ui.sign.MLSignUpActivity"
+    tools:context=".sign.MLSignUpActivity"
     >
 
     <!--公共的 Toolbar 控件-->

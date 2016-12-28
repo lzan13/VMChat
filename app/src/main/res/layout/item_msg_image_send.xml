@@ -67,7 +67,7 @@
                         android:layout_margin="@dimen/ml_dimen_2"
                         >
                         <!--图片消息显示控件-->
-                        <net.melove.app.chat.ui.widget.MLImageView
+                        <net.melove.app.chat.widget.MLImageView
                             android:id="@+id/img_image"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -143,7 +143,7 @@
                     </RelativeLayout>
                 </LinearLayout>
                 <!--消息发送者头像-->
-                <net.melove.app.chat.ui.widget.MLImageView
+                <net.melove.app.chat.widget.MLImageView
                     android:id="@+id/img_avatar"
                     android:layout_width="@dimen/ml_dimen_40"
                     android:layout_height="@dimen/ml_dimen_40"

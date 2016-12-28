@@ -6,7 +6,7 @@ import android.content.Intent;
 
 import com.hyphenate.chat.EMClient;
 
-import net.melove.app.chat.MLConstants;
+import net.melove.app.chat.app.MLConstants;
 
 /**
  * 通话呼叫监听广播实现，用来监听其他账户对自己的呼叫

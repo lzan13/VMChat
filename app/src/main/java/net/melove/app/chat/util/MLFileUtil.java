@@ -13,7 +13,7 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 
-import net.melove.app.chat.MLApplication;
+import net.melove.app.chat.app.MLApplication;
 
 import java.io.File;
 import java.io.FileInputStream;

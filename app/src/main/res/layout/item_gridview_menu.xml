@@ -10,7 +10,7 @@
     android:paddingTop="@dimen/ml_dimen_12"
     >
 
-    <net.melove.app.chat.ui.widget.MLImageView
+    <net.melove.app.chat.widget.MLImageView
         android:id="@+id/img_menu_photo"
         android:layout_width="@dimen/ml_dimen_52"
         android:layout_height="@dimen/ml_dimen_52"

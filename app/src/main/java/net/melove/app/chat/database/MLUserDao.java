@@ -9,7 +9,7 @@ import com.hyphenate.util.HanziToPinyin;
 
 import java.util.HashMap;
 import java.util.Map;
-import net.melove.app.chat.MLApplication;
+import net.melove.app.chat.app.MLApplication;
 import net.melove.app.chat.contacts.MLUserEntity;
 
 /**

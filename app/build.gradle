@@ -2,13 +2,15 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '25.0.1'
+    buildToolsVersion '25.0.2'
     defaultConfig {
         applicationId 'net.melove.app.chat'
         minSdkVersion 15
         targetSdkVersion 22
         versionCode 1
         versionName '1.0.0'
+        // 开启分包
+        multiDexEnabled true
     }
 
     // 签名信息
@@ -35,9 +37,9 @@ android {
     buildTypes {
         debug {
             // 简单粗暴解决多个库引用 jni 库出现 UnsatisfiedLinkError 文件错误问题
-            ndk {
-                abiFilters = ["armeabi"]
-            }
+//            ndk {
+//                abiFilters = ["armeabi"]
+//            }
             // 给debug包的包名加上后缀
             // applicationIdSuffix '.debug'
             // versionNameSuffix '-debug'
@@ -46,9 +48,9 @@ android {
         }
         release {
             // 简单粗暴解决多个库引用 jni 库出现 UnsatisfiedLinkError 文件错误问题
-            ndk {
-                abiFilters = ["armeabi"]
-            }
+//            ndk {
+//                abiFilters = ["armeabi"]
+//            }
             // 是否开启压缩
             zipAlignEnabled true
             // 是否开启混淆
@@ -74,6 +76,7 @@ android {
             }
         }
     }
+
     // 文件路径映射配置
     //    sourceSets {
     //        main {
@@ -96,11 +99,21 @@ android {
             signingConfig signingConfigs.release
             manifestPlaceholders = [ML_CHANNEL_ID: "WanDouJia"]
         }
+        Develop {
+            signingConfig signingConfigs.debug
+            minSdkVersion 21
+            manifestPlaceholders = [ML_CHANNEL_ID: "Dev"]
+        }
     }
     // 多渠道打包简介写法
     // productFlavors.all { flavor -> flavor.manifestPlaceholders = [ML_CHANNEL_ID: name]}
 }
-
+//allprojects {
+//    configurations {
+//        all*.exclude group: 'com.android.support', module: 'support-v4'
+//        all*.exclude group: 'com.android.support', module: 'support-annotations'
+//    }
+//}
 /**
  * 项目依赖，包含引入的第三方 SDK以及Android官方 Support 库*/
 dependencies {
@@ -108,12 +121,14 @@ dependencies {
     /**
      *  新的遵循 Android  Material design 设计风格库，此扩展库已经包含了support-v4,appcomat-v7,recyclerView扩展库，
      *  如果引入了design，就不需要再单独引入其他库*/
-    compile 'com.android.support:design:25.0.1'
+    compile 'com.android.support:design:25.1.0'
 
     // 解决方法数超过65536问题扩展库
     compile 'com.android.support:multidex:1.0.1'
+
     // Google Play Service 库，使用GCM推送需要
-    compile 'com.google.android.gms:play-services-gcm:9.4.0'
+    //    compile 'com.google.android.gms:play-services-gcm:10.0.1'
+
     // LeakCanary Debug库，开源捕获内存溢出的库
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
     // LeakCanary 发版的库
@@ -136,12 +151,14 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
 
     // 引入各种第三方 SDK jar包，在上边 fileTree 里已经包含了libs，这里可以不用再单独添加
-    compile files('libs/xiaomi_push_v303.jar')
-    compile files('libs/huawei_push_v2705.jar')
+    //    compile files('libs/xiaomi_push_v303.jar')
+    //    compile files('libs/huawei_push_v2705.jar')
     compile files('libs/talkingdata_analytics_v2230.jar')
-    compile files('libs/hyphenatechat_3.2.2.jar')
-}
 
+    // 引入环信 sdk
+    //    compile files('libs/hyphenatechat_3.2.2.jar')
+    compile project(':hyphenatechatsdk')
+}
 
 //读取配置文件，配置文件里记录的都是一些敏感信息，需要换成自己的
 def releaseConfigs() {

@@ -2,9 +2,8 @@ package net.melove.app.chat.connection;
 
 import com.hyphenate.EMConnectionListener;
 import com.hyphenate.EMError;
-import net.melove.app.chat.MLConstants;
-import net.melove.app.chat.MLHyphenate;
-import net.melove.app.chat.connection.MLConnectionEvent;
+import net.melove.app.chat.app.MLConstants;
+import net.melove.app.chat.app.MLHyphenate;
 import net.melove.app.chat.util.MLLog;
 import org.greenrobot.eventbus.EventBus;
 

@@ -5,13 +5,10 @@ import com.hyphenate.EMContactListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
-import net.melove.app.chat.MLConstants;
+import net.melove.app.chat.app.MLConstants;
 import net.melove.app.chat.R;
-import net.melove.app.chat.module.event.MLApplyForEvent;
-import net.melove.app.chat.module.event.MLUserEvent;
+import net.melove.app.chat.apply.MLApplyEvent;
 import net.melove.app.chat.notification.MLNotifier;
-import net.melove.app.chat.contacts.MLUserManager;
-import net.melove.app.chat.contacts.MLUserEntity;
 import net.melove.app.chat.util.MLLog;
 import org.greenrobot.eventbus.EventBus;
 
@@ -38,7 +35,7 @@ public class MLContactsListener implements EMContactListener {
         MLUserManager.getInstance().saveUser(userEntity);
 
         // 发送可被订阅的消息，通知订阅者联系人有变化
-        EventBus.getDefault().post(new MLUserEvent());
+        EventBus.getDefault().post(new MLContactsEvent());
     }
 
     /**
@@ -50,7 +47,7 @@ public class MLContactsListener implements EMContactListener {
         MLUserManager.getInstance().deleteUser(username);
 
         // 发送可被订阅的消息，通知订阅者联系人有变化
-        EventBus.getDefault().post(new MLUserEvent());
+        EventBus.getDefault().post(new MLContactsEvent());
     }
 
     /**
@@ -90,7 +87,7 @@ public class MLContactsListener implements EMContactListener {
         MLNotifier.getInstance().sendNotificationMessage(message);
 
         // 使用 EventBus 发布消息，通知订阅者申请与通知信息有变化
-        MLApplyForEvent event = new MLApplyForEvent();
+        MLApplyEvent event = new MLApplyEvent();
         event.setMessage(message);
         EventBus.getDefault().post(event);
     }
@@ -131,7 +128,7 @@ public class MLContactsListener implements EMContactListener {
         MLNotifier.getInstance().sendNotificationMessage(message);
 
         // 使用 EventBus 发布消息，通知订阅者申请与通知信息有变化
-        MLApplyForEvent event = new MLApplyForEvent();
+        MLApplyEvent event = new MLApplyEvent();
         event.setMessage(message);
         EventBus.getDefault().post(event);
     }
@@ -172,7 +169,7 @@ public class MLContactsListener implements EMContactListener {
         MLNotifier.getInstance().sendNotificationMessage(message);
 
         // 使用 EventBus 发布消息，通知订阅者申请与通知信息有变化
-        MLApplyForEvent event = new MLApplyForEvent();
+        MLApplyEvent event = new MLApplyEvent();
         event.setMessage(message);
         EventBus.getDefault().post(event);
     }

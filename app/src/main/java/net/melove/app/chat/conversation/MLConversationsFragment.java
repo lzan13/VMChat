@@ -12,14 +12,14 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 
 import net.melove.app.chat.R;
-import net.melove.app.chat.MLConstants;
-import net.melove.app.chat.module.event.MLMessageEvent;
-import net.melove.app.chat.module.listener.MLItemCallBack;
+import net.melove.app.chat.app.MLConstants;
+import net.melove.app.chat.chat.MLMessageEvent;
+import net.melove.app.chat.app.MLItemCallBack;
 import net.melove.app.chat.apply.MLApplyForActivity;
-import net.melove.app.chat.ui.MLBaseFragment;
+import net.melove.app.chat.app.MLBaseFragment;
 
 import net.melove.app.chat.chat.MLChatActivity;
-import net.melove.app.chat.ui.widget.recycler.MLLinearLayoutManager;
+import net.melove.app.chat.widget.recycler.MLLinearLayoutManager;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;

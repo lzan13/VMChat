@@ -17,7 +17,7 @@
         android:layout_marginTop="@dimen/ml_dimen_4"
         >
 
-        <net.melove.app.chat.ui.widget.MLImageView
+        <net.melove.app.chat.widget.MLImageView
             android:id="@+id/img_avatar"
             android:layout_width="@dimen/ml_dimen_40"
             android:layout_height="@dimen/ml_dimen_40"
