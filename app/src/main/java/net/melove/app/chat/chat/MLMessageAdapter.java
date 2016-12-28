@@ -11,7 +11,7 @@ import com.hyphenate.chat.EMMessage;
 
 import java.util.ArrayList;
 import net.melove.app.chat.app.MLConstants;
-import net.melove.app.chat.app.MLItemCallBack;
+import net.melove.app.chat.interfaces.MLItemCallBack;
 import net.melove.app.chat.chat.messageitem.MLCallMessageItem;
 import net.melove.app.chat.chat.messageitem.MLFileMessageItem;
 import net.melove.app.chat.chat.messageitem.MLImageMessageItem;

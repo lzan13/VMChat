@@ -8,7 +8,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import net.melove.app.chat.app.MLConstants;
 import net.melove.app.chat.R;
-import net.melove.app.chat.app.MLItemCallBack;
+import net.melove.app.chat.interfaces.MLItemCallBack;
 import net.melove.app.chat.app.MLBaseFragment;
 
 import net.melove.app.chat.widget.recycler.MLLinearLayoutManager;

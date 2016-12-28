@@ -11,6 +11,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by lzan13 on 2016/12/9.
@@ -114,5 +115,14 @@ public interface MLNetworkAPI {
      * @param accessToken 请求认证 token
      * @return 请求结果
      */
-    @GET("friends/list") Call<ResponseBody> getFriends(@Part("access_token") String accessToken);
+    @GET("friends/list") Call<ResponseBody> getFriends(@Query("access_token") String accessToken);
+
+    /**
+     * 获取好友信息列表
+     *
+     * @param names 好友名称集合
+     * @return 请求结果
+     */
+    @GET("friends/{names}") Call<ResponseBody> getFriendsByNames(@Path("names") String names,
+            @Query("access_token") String accessToken);
 }

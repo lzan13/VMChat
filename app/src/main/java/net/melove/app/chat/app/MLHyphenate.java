@@ -156,7 +156,7 @@ public class MLHyphenate {
         // 设置私有化 Rest 地址+端口号
         //options.setRestServer("a1.easemob.com:80");
         // 设置Appkey，如果配置文件已经配置，这里可以不用设置
-        //options.setAppKey("qingtuanshe#qts");
+        //options.setAppKey("soyoung#syapp");
 
         // 设置自动登录
         options.setAutoLogin(true);

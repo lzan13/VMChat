@@ -182,7 +182,7 @@
         <!-- 设置环信应用的appkey -->
         <meta-data
             android:name="EASEMOB_APPKEY"
-            android:value="lzan13#hxsdkdemo"/>
+            android:value="${em_appkey}"/>
         <!--配置私有化聊天地址-->
         <!--<meta-data-->
         <!--android:name="EASEMOB_CHAT_ADDRESS"-->
@@ -324,11 +324,11 @@
         <!--这里使用TalkingData进行数据统计-->
         <meta-data
             android:name="TD_APP_ID"
-            android:value="6227388DE1332BBBF47E55EB85290B58"/>
-        <!-- 设置多渠道打包的渠道名，ML_CHANNEL_ID 是渠道名占位符-->
+            android:value="${td_app_id}"/>
+        <!-- 设置多渠道打包的渠道名，TD_CHANNEL_ID 是渠道名占位符-->
         <meta-data
             android:name="TD_CHANNEL_ID"
-            android:value="${ML_CHANNEL_ID}"/>
+            android:value="${td_channel_id}"/>
 
     </application>
 

@@ -6,8 +6,11 @@ import java.util.List;
 import java.util.Map;
 import net.melove.app.chat.app.MLConstants;
 import net.melove.app.chat.database.MLUserDao;
+import net.melove.app.chat.network.MLNetworkManager;
 import net.melove.app.chat.util.MLLog;
 import net.melove.app.chat.util.MLSPUtil;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by lzan13 on 2016/12/3.
@@ -21,14 +24,11 @@ public class MLUserManager {
     private Map<String, MLUserEntity> contactsMap = null;
     // 内存中的陌生人集合，作用同上
     private Map<String, MLUserEntity> strangerMap = null;
-    // 是否已经同步过联系人列表
-    private boolean isAlreadySync = false;
 
     /**
      * 私有构造方法
      */
     private MLUserManager() {
-        isAlreadySync = (boolean) MLSPUtil.get(MLConstants.ML_SHARED_ALREADY_SYNC_CONTACTS, false);
     }
 
     /**
@@ -111,19 +111,18 @@ public class MLUserManager {
      * 同步用户联系人到本地
      */
     public void syncContactsFromServer() {
-        // 判断是否已经同步过联系人列表
-        if (isAlreadySync) {
-            return;
-        }
-
+        String accessToken = (String) MLSPUtil.get("access_token", "");
         try {
             List<String> list = EMClient.getInstance().contactManager().getAllContactsFromServer();
+            String[] usernames = (String[]) list.toArray();
+            String names = usernames.toString();
+            JSONObject result = MLNetworkManager.getInstance().syncFriendsByNames(names, accessToken);
 
 
-            isAlreadySync = true;
-            MLSPUtil.put(MLConstants.ML_SHARED_ALREADY_SYNC_CONTACTS, isAlreadySync);
-            MLLog.d("同步联系人信息完成 %b", isAlreadySync);
+            MLLog.d("同步联系人信息完成");
         } catch (HyphenateException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
             e.printStackTrace();
         }
     }

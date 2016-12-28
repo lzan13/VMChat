@@ -14,7 +14,7 @@ import com.hyphenate.chat.EMConversation;
 import net.melove.app.chat.R;
 import net.melove.app.chat.app.MLConstants;
 import net.melove.app.chat.chat.MLMessageEvent;
-import net.melove.app.chat.app.MLItemCallBack;
+import net.melove.app.chat.interfaces.MLItemCallBack;
 import net.melove.app.chat.apply.MLApplyForActivity;
 import net.melove.app.chat.app.MLBaseFragment;
 

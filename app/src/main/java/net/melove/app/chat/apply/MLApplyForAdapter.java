@@ -15,7 +15,7 @@ import com.hyphenate.chat.EMMessage;
 
 import net.melove.app.chat.R;
 import net.melove.app.chat.app.MLConstants;
-import net.melove.app.chat.app.MLItemCallBack;
+import net.melove.app.chat.interfaces.MLItemCallBack;
 import net.melove.app.chat.util.MLLog;
 import net.melove.app.chat.widget.MLImageView;
 

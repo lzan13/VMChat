@@ -21,8 +21,11 @@ import net.melove.app.chat.app.MLBaseActivity;
 import net.melove.app.chat.app.MLMainActivity;
 import net.melove.app.chat.app.MLConstants;
 import net.melove.app.chat.contacts.MLUserManager;
+import net.melove.app.chat.network.MLNetworkManager;
 import net.melove.app.chat.util.MLLog;
 import net.melove.app.chat.util.MLSPUtil;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by lzan13 on 2015/7/4.
@@ -137,25 +140,7 @@ public class MLSignInActivity extends MLBaseActivity {
              * 登陆成功的回调
              */
             @Override public void onSuccess() {
-                // 登录成功同步联系人到本地
-                MLUserManager.getInstance().syncContactsFromServer();
-
-                // 登录成功，把用户名保存在本地（可以不保存，根据自己的需求）
-                MLSPUtil.put(MLConstants.ML_SHARED_USERNAME, mUsername);
-                // 加载所有会话到内存
-                EMClient.getInstance().chatManager().loadAllConversations();
-                // 加载所有群组到内存
-                EMClient.getInstance().groupManager().loadAllGroups();
-
-                // 关闭登录进度弹出框
-                mDialog.dismiss();
-
-                // 登录成功跳转到主界面
-                Intent intent = new Intent(mActivity, MLMainActivity.class);
-                superJump(intent);
-
-                // 根据不同的系统版本选择不同的 finish 方法
-                onFinish();
+                syncData();
             }
 
             /**
@@ -224,6 +209,48 @@ public class MLSignInActivity extends MLBaseActivity {
                 MLLog.d("progress: " + i + " " + res.getString(R.string.ml_sign_in_begin) + s);
             }
         });
+    }
+
+    /**
+     * 登录成功，开始同步数据
+     */
+    private void syncData() {
+        try {
+            JSONObject object = MLNetworkManager.getInstance().authToken(mUsername, mPassword);
+            int errorCode = object.optInt("code");
+            String errorMsg = object.optString("msg");
+            if (errorCode != 0) {
+                // 关闭登录进度弹出框
+                mDialog.dismiss();
+                Snackbar.make(getRootView(), getString(R.string.ml_sign_in_failed)
+                        + " - "
+                        + errorCode
+                        + " - "
+                        + errorMsg, Snackbar.LENGTH_LONG).show();
+                return;
+            }
+            // 登录成功同步联系人到本地
+            MLUserManager.getInstance().syncContactsFromServer();
+
+            // 登录成功，把用户名保存在本地（可以不保存，根据自己的需求）
+            MLSPUtil.put(MLConstants.ML_SHARED_USERNAME, mUsername);
+            // 加载所有会话到内存
+            EMClient.getInstance().chatManager().loadAllConversations();
+            // 加载所有群组到内存
+            EMClient.getInstance().groupManager().loadAllGroups();
+
+            // 关闭登录进度弹出框
+            mDialog.dismiss();
+
+            // 登录成功跳转到主界面
+            Intent intent = new Intent(mActivity, MLMainActivity.class);
+            superJump(intent);
+
+            // 根据不同的系统版本选择不同的 finish 方法
+            onFinish();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

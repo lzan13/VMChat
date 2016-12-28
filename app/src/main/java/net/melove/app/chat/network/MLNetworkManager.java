@@ -70,9 +70,34 @@ public class MLNetworkManager {
     }
 
     /**
+     * 账户登录认证，获取 access token
+     *
+     * @param username 账户名
+     * @param password 账户密码
+     * @return 返回请求结果
+     */
+    public JSONObject authToken(String username, String password) throws JSONException {
+        JSONObject result = new JSONObject();
+        Call<ResponseBody> call = mNetworkAPI.authToken(username, password);
+        try {
+            Response<ResponseBody> response = call.execute();
+            JSONObject object = new JSONObject(response.body().string());
+            result.put("code", object.optJSONObject("status").optInt("code"));
+            result.put("msg", object.optJSONObject("status").optString("msg"));
+            result.put("data", object.optJSONObject("data"));
+            return result;
+        } catch (IOException e) {
+            e.printStackTrace();
+            result.put("code", -1);
+            result.put("msg", "Request failed");
+            return result;
+        }
+    }
+
+    /**
      * 创建新账户
      *
-     * @param username 账户 useranme
+     * @param username 账户名
      * @param password 账户密码
      * @return 是否成功
      */
@@ -86,16 +111,44 @@ public class MLNetworkManager {
             JSONObject object = new JSONObject(response.body().string());
             result.put("code", object.optJSONObject("status").optInt("code"));
             result.put("msg", object.optJSONObject("status").optString("msg"));
+            result.put("data", object.optJSONObject("data"));
             return result;
         } catch (IOException e) {
             e.printStackTrace();
             result.put("code", -1);
             result.put("msg", "Request failed");
+            return result;
         }
-        return null;
     }
 
     public String getUsers() {
         return null;
+    }
+
+    /**
+     * 获取好友信息列表
+     *
+     * @param names 账户好友名集合
+     * @param accessToken 账户 token
+     * @return 请求结果
+     */
+    public JSONObject syncFriendsByNames(String names, String accessToken) throws JSONException {
+        JSONObject result = new JSONObject();
+        // 创建请求
+        Call<ResponseBody> call = mNetworkAPI.getFriendsByNames(names, accessToken);
+        try {
+            // 进行同步请求，并接受返回值
+            Response<ResponseBody> response = call.execute();
+            JSONObject object = new JSONObject(response.body().string());
+            result.put("code", object.optJSONObject("status").optInt("code"));
+            result.put("msg", object.optJSONObject("status").optString("msg"));
+            result.put("data", object.optJSONObject("data"));
+            return result;
+        } catch (IOException e) {
+            e.printStackTrace();
+            result.put("code", -1);
+            result.put("msg", "Request failed");
+            return result;
+        }
     }
 }

@@ -17,7 +17,7 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.exceptions.HyphenateException;
 import net.melove.app.chat.R;
 import net.melove.app.chat.app.MLConstants;
-import net.melove.app.chat.app.MLItemCallBack;
+import net.melove.app.chat.interfaces.MLItemCallBack;
 import net.melove.app.chat.app.MLBaseActivity;
 import net.melove.app.chat.contacts.MLUserActivity;
 import net.melove.app.chat.conversation.MLConversationExtUtils;

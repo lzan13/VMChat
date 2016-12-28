@@ -3,7 +3,7 @@
 /src/main/jniLibs
 /app.iml
 
-/app-config.properties
+/config.properties
 /google-services.json
 
 *.apk

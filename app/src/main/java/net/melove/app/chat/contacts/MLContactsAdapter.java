@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import net.melove.app.chat.app.MLConstants;
 import net.melove.app.chat.R;
-import net.melove.app.chat.app.MLItemCallBack;
+import net.melove.app.chat.interfaces.MLItemCallBack;
 import net.melove.app.chat.widget.MLImageView;
 
 import java.util.List;

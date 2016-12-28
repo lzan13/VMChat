@@ -1,5 +1,10 @@
 apply plugin: 'com.android.application'
 
+ext {
+    mEMAppkey = ''
+    mTDAppId = ''
+}
+
 android {
     compileSdkVersion 25
     buildToolsVersion '25.0.2'
@@ -31,26 +36,27 @@ android {
         }
     }
     // 获取签名配置信息
-    releaseConfigs()
+    getConfigs()
 
     // 编译配置
     buildTypes {
         debug {
             // 简单粗暴解决多个库引用 jni 库出现 UnsatisfiedLinkError 文件错误问题
-//            ndk {
-//                abiFilters = ["armeabi"]
-//            }
-            // 给debug包的包名加上后缀
-            // applicationIdSuffix '.debug'
-            // versionNameSuffix '-debug'
-            minifyEnabled false
+            ndk {
+                abiFilters = ["armeabi"]
+            }
+            // 是否开启压缩
             zipAlignEnabled false
+            // 是否开启混淆
+            minifyEnabled false
+            // 设置debug的签名
+            signingConfig signingConfigs.debug
         }
         release {
             // 简单粗暴解决多个库引用 jni 库出现 UnsatisfiedLinkError 文件错误问题
-//            ndk {
-//                abiFilters = ["armeabi"]
-//            }
+            ndk {
+                abiFilters = ["armeabi"]
+            }
             // 是否开启压缩
             zipAlignEnabled true
             // 是否开启混淆
@@ -67,7 +73,7 @@ android {
                 variant.outputs.each { output ->
                     def oldFile = output.outputFile
                     if (variant.buildType.name.equals('release')) {
-                        def releaseApkName = "app-v${defaultConfig.versionName}-${releaseTime()}-" +
+                        def releaseApkName = "app-v${defaultConfig.versionName}-${getTime()}-" +
                                 variant.productFlavors[0].name +
                                 '-release.apk'
                         output.outputFile = new File(oldFile.parent, releaseApkName)
@@ -89,24 +95,30 @@ android {
         checkReleaseBuilds false
         abortOnError false
     }
-
+    // 多渠道打包配置
     productFlavors {
+        Develop {
+            manifestPlaceholders =
+                    [em_appkey: mEMAppkey, td_app_id: mTDAppId, td_channel_id: "Develop"]
+        }
+        "360" {
+            manifestPlaceholders = [em_appkey: mEMAppkey, td_app_id: mTDAppId, td_channel_id: "360"]
+        }
+        GooglePlay {
+            manifestPlaceholders =
+                    [em_appkey: mEMAppkey, td_app_id: mTDAppId, td_channel_id: "GooglePlay"]
+        }
         XiaoMi {
-            signingConfig signingConfigs.release
-            manifestPlaceholders = [ML_CHANNEL_ID: "XiaoMi"]
+            manifestPlaceholders =
+                    [em_appkey: mEMAppkey, td_app_id: mTDAppId, td_channel_id: "XiaoMi"]
         }
         WanDouJia {
-            signingConfig signingConfigs.release
-            manifestPlaceholders = [ML_CHANNEL_ID: "WanDouJia"]
-        }
-        Develop {
-            signingConfig signingConfigs.debug
-            minSdkVersion 21
-            manifestPlaceholders = [ML_CHANNEL_ID: "Dev"]
+            manifestPlaceholders =
+                    [em_appkey: mEMAppkey, td_app_id: mTDAppId, td_channel_id: "WanDouJia"]
         }
     }
     // 多渠道打包简介写法
-    // productFlavors.all { flavor -> flavor.manifestPlaceholders = [ML_CHANNEL_ID: name]}
+    // productFlavors.all { flavor -> flavor.manifestPlaceholders = [td_channel_id: name]}
 }
 //allprojects {
 //    configurations {
@@ -114,8 +126,8 @@ android {
 //        all*.exclude group: 'com.android.support', module: 'support-annotations'
 //    }
 //}
-/**
- * 项目依赖，包含引入的第三方 SDK以及Android官方 Support 库*/
+
+// 项目依赖，包含引入的第三方 SDK以及Android官方 Support 库
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     /**
@@ -161,9 +173,9 @@ dependencies {
 }
 
 //读取配置文件，配置文件里记录的都是一些敏感信息，需要换成自己的
-def releaseConfigs() {
+def getConfigs() {
     // 设置要读取的配置文件
-    def propFile = file('app-config.properties')
+    def propFile = file('config.properties')
     if (propFile.canRead()) {
         def Properties props = new Properties()
         props.load(new FileInputStream(propFile))
@@ -172,11 +184,15 @@ def releaseConfigs() {
                 props.containsKey('ML_KEY_ALIAS') &&
                 props.containsKey('ML_KEY_PASSWORD') &&
                 props.containsKey('ML_STORE_FILE') &&
-                props.containsKey('ML_STORE_PASSWORD')) {
+                props.containsKey('ML_STORE_PASSWORD') &&
+                props.containsKey('EM_APPKEY') &&
+                props.containsKey("TD_APP_ID")) {
             android.signingConfigs.release.keyAlias = props['ML_KEY_ALIAS']
             android.signingConfigs.release.keyPassword = props['ML_KEY_PASSWORD']
             android.signingConfigs.release.storeFile = file(props['ML_STORE_FILE'])
             android.signingConfigs.release.storePassword = props['ML_STORE_PASSWORD']
+            mEMAppkey = props['EM_APPKEY']
+            mTDAppId = props['TD_APP_ID']
         } else {
             // 当配置文件签名项为空时，将 release 时的签名设置为null
             println 'app-config.properties 找不到签名项，检查配置文件'
@@ -190,6 +206,6 @@ def releaseConfigs() {
 }
 
 // 获取当前系统时间
-def releaseTime() {
+def getTime() {
     return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
 }

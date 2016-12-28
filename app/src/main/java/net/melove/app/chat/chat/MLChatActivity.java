@@ -48,7 +48,7 @@ import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chat.EMVideoMessageBody;
 import com.hyphenate.chat.EMVoiceMessageBody;
 import net.melove.app.chat.R;
-import net.melove.app.chat.app.MLItemCallBack;
+import net.melove.app.chat.interfaces.MLItemCallBack;
 import net.melove.app.chat.app.MLBaseActivity;
 import net.melove.app.chat.app.MLConstants;
 import net.melove.app.chat.contacts.MLUserActivity;
