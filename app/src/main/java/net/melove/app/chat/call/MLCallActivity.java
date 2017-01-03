@@ -111,7 +111,7 @@ public class MLCallActivity extends MLBaseActivity {
             message.setFrom(mChatId);
         } else {
             message = EMMessage.createSendMessage(EMMessage.Type.TXT);
-            message.setReceipt(mChatId);
+            message.setTo(mChatId);
         }
 
         switch (mCallStatus) {

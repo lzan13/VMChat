@@ -118,6 +118,8 @@ public class MLVideoCallActivity extends MLCallActivity {
 
         // 初始化视频通话帮助类
         mVideoCallHelper = EMClient.getInstance().callManager().getVideoCallHelper();
+        // 设置录制视频采用 mov 编码
+        mVideoCallHelper.setPreferMovFormatEnable(true);
         // 设置本地预览图像显示在最上层，一定要提前设置，否则无效
         //mLocalSurfaceView.setZOrderMediaOverlay(true);
         //mLocalSurfaceView.setZOrderOnTop(true);
@@ -448,16 +450,19 @@ public class MLVideoCallActivity extends MLCallActivity {
     private void recordCall() {
         // 振动反馈
         vibrate();
-        Snackbar.make(getRootView(), R.string.ml_toast_unrealized, Snackbar.LENGTH_SHORT).show();
         // 根据开关状态决定是否开启录制
         if (mRecordSwitch.isActivated()) {
-            // 设置按钮状态
             mRecordSwitch.setActivated(false);
             MLCallStatus.getInstance().setRecord(false);
+            String path = mVideoCallHelper.stopVideoRecord();
+            Snackbar.make(getRootView(), "录制视频完成 " + path, Snackbar.LENGTH_LONG).show();
         } else {
-            // 设置按钮状态
             mRecordSwitch.setActivated(true);
             MLCallStatus.getInstance().setRecord(true);
+            // 先创建文件夹
+            MLFileUtil.createDirectory(MLFileUtil.getFilesFromSDCard() + "videos");
+            mVideoCallHelper.startVideoRecord(MLFileUtil.getFilesFromSDCard());
+            Snackbar.make(getRootView(), "开始录制视频", Snackbar.LENGTH_LONG).show();
         }
     }
 

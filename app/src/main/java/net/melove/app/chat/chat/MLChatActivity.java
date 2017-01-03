@@ -436,7 +436,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
              */
             @Override public void onAction(int action, Object tag) {
                 EMMessage message = (EMMessage) tag;
-                int position = mConversation.getMessagePosition(message);
+                int position = mConversation.getAllMessages().indexOf(message);
                 switch (action) {
                     case R.id.img_avatar:
                         avatarClick(message);
@@ -645,8 +645,9 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 message.setAttribute(MLConstants.ML_ATTR_RECALL, true);
                 // 更新消息
                 EMClient.getInstance().chatManager().updateMessage(message);
+                int position = mConversation.getAllMessages().indexOf(message);
                 // 撤回成功，刷新 UI
-                refreshChanged(mConversation.getMessagePosition(message));
+                refreshChanged(position);
             }
 
             /**
@@ -688,15 +689,15 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             message.setAttribute(MLConstants.ML_ATTR_BURN, true);
         }
 
-        message.setAttribute("em_force_notification", true);
-        JSONObject extJson = new JSONObject();
-        try {
-            extJson.put("em_push_title", "这是推送标题");
-            extJson.put("extern", "这是扩展内容");
-            message.setAttribute("em_apns_ext", extJson);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        //message.setAttribute("em_force_notification", true);
+        //JSONObject extJson = new JSONObject();
+        //try {
+        //    extJson.put("em_push_title", "这是推送标题");
+        //    extJson.put("extern", "这是扩展内容");
+        //    message.setAttribute("em_apns_ext", extJson);
+        //} catch (JSONException e) {
+        //    e.printStackTrace();
+        //}
     }
 
     /**
@@ -716,8 +717,6 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         // 调用设置消息扩展方法
         setMessageAttribute(message);
 
-        // 发送一条新消息时插入新消息的位置，这里直接用插入新消息前的消息总数来作为新消息的位置
-        int position = mConversation.getAllMessages().size();
         /**
          *  调用sdk的消息发送方法发送消息，发送消息时要尽早的设置消息监听，防止消息状态已经回调，
          *  但是自己没有注册监听，导致检测不到消息状态的变化
@@ -760,8 +759,10 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         });
         // 发送消息
         EMClient.getInstance().chatManager().sendMessage(message);
+        // 发送一条新消息时插入新消息的位置，这里直接用插入新消息前的消息总数来作为新消息的位置
+        int position = mConversation.getAllMessages().indexOf(message);
         // 刷新 UI 界面
-        refreshInserted(mConversation.getMessagePosition(message));
+        refreshInserted(position);
     }
 
     /**
@@ -1147,6 +1148,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             setInputStatus();
             return;
         }
+        int position = mConversation.getAllMessages().indexOf(message);
         // 获取消息状态
         EMMessage.Status status = event.getStatus();
         if (status == EMMessage.Status.FAIL) {
@@ -1168,10 +1170,10 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             Snackbar.make(getRootView(), errorMessage + event.getErrorMessage() + "-" + errorCode,
                     Snackbar.LENGTH_SHORT).show();
             // 消息状态回调完毕，刷新当前消息显示，这里不论成功失败都要刷新
-            mAdapter.notifyItemChanged(mConversation.getMessagePosition(message));
+            mAdapter.notifyItemChanged(position);
         } else if (status == EMMessage.Status.SUCCESS) {
             // 消息状态回调完毕，刷新当前消息显示，这里不论成功失败都要刷新
-            mAdapter.notifyItemChanged(mConversation.getMessagePosition(message));
+            mAdapter.notifyItemChanged(position);
         } else {
             // 如果是进度变化就不做刷新，留给Item自己刷新
         }
@@ -1456,10 +1458,11 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 // 收到新消息就把对方正在输入状态设置为false
                 isInput = false;
 
-                MLLog.d("messages -1- position - %d, adapter - %d",
-                        mConversation.getMessagePosition(message), mAdapter.getItemCount());
+                int position = mConversation.getAllMessages().indexOf(message);
+                MLLog.d("messages -1- position - %d, adapter - %d", position,
+                        mAdapter.getItemCount());
                 // 刷新界面
-                refreshInserted(mConversation.getMessagePosition(message));
+                refreshInserted(position);
             } else {
                 // 不发送通知
                 isNotify = true;
@@ -1486,8 +1489,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 // 撤回消息之后，判断是否当前聊天界面，用来刷新界面
                 if (mChatId.equals(cmdMessage.getFrom()) && result) {
                     String msgId = cmdMessage.getStringAttribute(MLConstants.ML_ATTR_MSG_ID, null);
-                    int position =
-                            mConversation.getMessagePosition(mConversation.getMessage(msgId, true));
+                    int position = mConversation.getAllMessages()
+                            .indexOf(mConversation.getMessage(msgId, true));
                     refreshChanged(position);
                 }
             }
@@ -1512,13 +1515,13 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      *
      * @param list 收到消息已读回执
      */
-    @Override public void onMessageReadAckReceived(List<EMMessage> list) {
+    @Override public void onMessageRead(List<EMMessage> list) {
         MLLog.i("onMessageReadAckReceived list.size:%d", list.size());
         for (EMMessage message : list) {
             // 判断消息是否是当前会话的消息，并且是自己发送的消息，只有是发送的消息才需要判断 ACK
             if (mChatId.equals(message.getTo())) {
                 // 调用刷新方法，因为到来的消息可能不是当前会话的，所以要循环判断
-                int position = mConversation.getMessagePosition(message);
+                int position = mConversation.getAllMessages().indexOf(message);
                 refreshChanged(position);
             }
         }
@@ -1529,13 +1532,13 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      *
      * @param list 收到发送回执的消息集合
      */
-    @Override public void onMessageDeliveryAckReceived(List<EMMessage> list) {
+    @Override public void onMessageDelivered(List<EMMessage> list) {
         MLLog.i("onMessageDeliveryAckReceived list.size:%d", list.size());
         for (EMMessage message : list) {
             // 判断消息是否是当前会话的消息，并且是自己发送的消息，只有是发送的消息才需要判断 ACK
             if (mChatId.equals(message.getTo())) {
                 // 调用刷新方法，因为到来的消息可能不是当前会话的，所以要循环判断
-                int position = mConversation.getMessagePosition(message);
+                int position = mConversation.getAllMessages().indexOf(message);
                 refreshChanged(position);
             }
         }

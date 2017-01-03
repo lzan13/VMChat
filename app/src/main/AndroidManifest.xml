@@ -15,12 +15,14 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <!-- 访问WIFI状态 -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <!-- 访问精确定位 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <!-- 读取手机状态 -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <!-- 写入外部存储 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <!-- 访问精确定位 -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <!--读取外部存储-->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <!-- 修改音频设置 -->
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
     <!-- 允许读写系统设置项 使用设置时需要 -->
@@ -161,14 +163,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/MLTheme.Default"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
-        <!-- 测试 Activity -->
-        <activity
-            android:name=".test.MLTestActivity"
-            android:theme="@style/MLTheme.Default">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="net.melove.app.chat.app.MLBaseActivity"/>
-        </activity>
         <!-- Activity 注册 end -->
 
         <!--通话广播监听-->
@@ -297,6 +291,7 @@
             android:process=":pushservice">
         </service>
         <!--华为推送 end-->
+
         <!-- 小米推送 -->
         <service
             android:name="com.xiaomi.mipush.sdk.PushMessageHandler"

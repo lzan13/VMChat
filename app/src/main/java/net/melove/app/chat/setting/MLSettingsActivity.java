@@ -3,6 +3,7 @@ package net.melove.app.chat.setting;
 import android.os.Bundle;
 import android.view.View;
 import butterknife.ButterKnife;
+import com.hyphenate.chat.EMClient;
 import net.melove.app.chat.R;
 import net.melove.app.chat.app.MLBaseActivity;
 
@@ -39,5 +40,8 @@ public class MLSettingsActivity extends MLBaseActivity {
         getFragmentManager().beginTransaction()
                 .replace(R.id.layout_container, new MLSettingsPreference())
                 .commit();
+
+        // 更新推送昵称
+        EMClient.getInstance().pushManager().updatePushNickname("");
     }
 }

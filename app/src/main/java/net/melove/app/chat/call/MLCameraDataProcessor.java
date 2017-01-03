@@ -32,7 +32,7 @@ public class MLCameraDataProcessor implements EMCallManager.EMCameraDataProcesso
      */
     @Override public void onProcessData(byte[] bytes, Camera camera, int width, int height,
             int rotateAngle) {
-        MLLog.i("width: %d, height: %d, rotateAngle: %d", width, height, rotateAngle);
+        //MLLog.i("width: %d, height: %d, rotateAngle: %d", width, height, rotateAngle);
         
         int wh = width * height;
         for (int i = 0; i < wh; i++) {

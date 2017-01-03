@@ -1,14 +1,18 @@
 package net.melove.app.chat.contacts;
 
+import android.text.TextUtils;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.exceptions.HyphenateException;
 import java.util.List;
 import java.util.Map;
 import net.melove.app.chat.app.MLConstants;
+import net.melove.app.chat.database.MLDBHelper;
 import net.melove.app.chat.database.MLUserDao;
 import net.melove.app.chat.network.MLNetworkManager;
 import net.melove.app.chat.util.MLLog;
 import net.melove.app.chat.util.MLSPUtil;
+import net.melove.app.chat.util.MLStringUtil;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -74,7 +78,7 @@ public class MLUserManager {
         if (contactsMap != null) {
             contactsMap.put(userEntity.getUserName(), userEntity);
         }
-        MLUserDao.getInstance().updateContacter(userEntity);
+        MLUserDao.getInstance().updateUser(userEntity);
     }
 
     /***
@@ -111,14 +115,42 @@ public class MLUserManager {
      * 同步用户联系人到本地
      */
     public void syncContactsFromServer() {
-        String accessToken = (String) MLSPUtil.get("access_token", "");
+        // 同步联系人时先将数据清空
+        MLUserDao.getInstance().clearTable();
+        String accessToken = (String) MLSPUtil.get(MLConstants.ML_USER_ACCESS_TOKEN, "");
         try {
+            // 从环信服务器同步好友列表
             List<String> list = EMClient.getInstance().contactManager().getAllContactsFromServer();
-            String[] usernames = (String[]) list.toArray();
-            String names = usernames.toString();
-            JSONObject result = MLNetworkManager.getInstance().syncFriendsByNames(names, accessToken);
-
-
+            String[] usernames = list.toArray(new String[list.size()]);
+            String names = MLStringUtil.arrayToStr(usernames, ",");
+            if (TextUtils.isEmpty(names)) {
+                return;
+            }
+            MLUserDao.getInstance().saveUserList(list);
+            // 从自己的服务器获取好友详细信息
+            JSONObject result =
+                    MLNetworkManager.getInstance().syncFriendsByNames(names, accessToken);
+            if (result.optInt("code") != 0) {
+                return;
+            }
+            JSONArray jsonArray = result.optJSONArray("data");
+            MLUserEntity userEntity = null;
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject object = jsonArray.optJSONObject(i);
+                userEntity = new MLUserEntity();
+                userEntity.setUserName(object.optString(MLDBHelper.COL_USERNAME));
+                userEntity.setNickName(object.optString(MLDBHelper.COL_NICKNAME));
+                userEntity.setEmail(object.optString(MLDBHelper.COL_EMAIL));
+                userEntity.setAvatar(object.optString(MLDBHelper.COL_AVATAR));
+                userEntity.setCover(object.optString(MLDBHelper.COL_COVER));
+                userEntity.setGender(object.optInt(MLDBHelper.COL_GENDER));
+                userEntity.setLocation(object.optString(MLDBHelper.COL_LOCATION));
+                userEntity.setSignature(object.optString(MLDBHelper.COL_SIGNATURE));
+                userEntity.setCreateAt(object.optString(MLDBHelper.COL_CREATE_AT));
+                userEntity.setUpdateAt(object.optString(MLDBHelper.COL_UPDATE_AT));
+                userEntity.setStatus(0);
+                MLUserDao.getInstance().updateUser(userEntity);
+            }
             MLLog.d("同步联系人信息完成");
         } catch (HyphenateException e) {
             e.printStackTrace();

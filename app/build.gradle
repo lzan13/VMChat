@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 
+// 定义全局变量，放置一些敏感信息保存在配置文件
 ext {
     mEMAppkey = ''
     mTDAppId = ''
@@ -8,6 +9,9 @@ ext {
 android {
     compileSdkVersion 25
     buildToolsVersion '25.0.2'
+
+    //use legacy for for android 6.0
+    //    useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId 'net.melove.app.chat'
         minSdkVersion 15
@@ -36,14 +40,14 @@ android {
         }
     }
     // 获取签名配置信息
-    getConfigs()
+    initProjectConfigs()
 
     // 编译配置
     buildTypes {
         debug {
             // 简单粗暴解决多个库引用 jni 库出现 UnsatisfiedLinkError 文件错误问题
             ndk {
-                abiFilters = ["armeabi"]
+                abiFilters = ["armeabi-v7a", "arm64-v8a"]
             }
             // 是否开启压缩
             zipAlignEnabled false
@@ -55,7 +59,7 @@ android {
         release {
             // 简单粗暴解决多个库引用 jni 库出现 UnsatisfiedLinkError 文件错误问题
             ndk {
-                abiFilters = ["armeabi"]
+                abiFilters = ["armeabi-v7a", "arm64-v8a"]
             }
             // 是否开启压缩
             zipAlignEnabled true
@@ -120,12 +124,6 @@ android {
     // 多渠道打包简介写法
     // productFlavors.all { flavor -> flavor.manifestPlaceholders = [td_channel_id: name]}
 }
-//allprojects {
-//    configurations {
-//        all*.exclude group: 'com.android.support', module: 'support-v4'
-//        all*.exclude group: 'com.android.support', module: 'support-annotations'
-//    }
-//}
 
 // 项目依赖，包含引入的第三方 SDK以及Android官方 Support 库
 dependencies {
@@ -170,10 +168,11 @@ dependencies {
     // 引入环信 sdk
     //    compile files('libs/hyphenatechat_3.2.2.jar')
     compile project(':hyphenatechatsdk')
+    //    compile 'com.hyphenate:hyphenate-sdk:3.2.3'
 }
 
 //读取配置文件，配置文件里记录的都是一些敏感信息，需要换成自己的
-def getConfigs() {
+def initProjectConfigs() {
     // 设置要读取的配置文件
     def propFile = file('config.properties')
     if (propFile.canRead()) {

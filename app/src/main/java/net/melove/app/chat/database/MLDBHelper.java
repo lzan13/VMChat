@@ -14,7 +14,7 @@ import net.melove.app.chat.util.MLSPUtil;
 public class MLDBHelper extends SQLiteOpenHelper {
 
     // 项目需要创建的表名
-    public static final String TB_CONTACTS = "contacts";
+    public static final String TB_USERS = "users";
 
     // 表中需要保存的列名称
     public static final String COL_USERNAME = "username";
@@ -28,7 +28,7 @@ public class MLDBHelper extends SQLiteOpenHelper {
     public static final String COL_CREATE_AT = "create_at";
     public static final String COL_UPDATE_AT = "update_at";
     public static final String COL_ACCESS_TOKEN = "access_token";
-    // 用户状态，0 正常，1 黑名单，2 陌生人
+    // 用户状态，0 正常好友，1 黑名单，2 陌生人
     public static final String COL_STATUS = "status";
     public static final int STATUS_NORMAL = 0;
     public static final int STATUS_BLOCKLIST = 1;
@@ -37,7 +37,7 @@ public class MLDBHelper extends SQLiteOpenHelper {
 
     // 创建联系人数据表语句
     public static final String SQL_CONTACTS = "create table if not exists "
-            + TB_CONTACTS + " ("
+            + TB_USERS + " ("
             + COL_USERNAME + " varchar(128) primary key, "
             + COL_NICKNAME + " varchar(128), "
             + COL_EMAIL + " varchar(128), "

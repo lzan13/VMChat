@@ -18,6 +18,7 @@ import com.hyphenate.chat.EMClient;
 
 import net.melove.app.chat.R;
 import net.melove.app.chat.app.MLBaseActivity;
+import net.melove.app.chat.app.MLHyphenate;
 import net.melove.app.chat.app.MLMainActivity;
 import net.melove.app.chat.app.MLConstants;
 import net.melove.app.chat.contacts.MLUserManager;
@@ -97,8 +98,9 @@ public class MLSignInActivity extends MLBaseActivity {
         mUsernameView.setError(null);
         mPasswordView.setError(null);
 
+        // 将用户名转为消息并修剪
         mUsername = mUsernameView.getText().toString().toLowerCase().trim();
-        mPassword = mPasswordView.getText().toString().toLowerCase().trim();
+        mPassword = mPasswordView.getText().toString().trim();
 
         boolean cancel = false;
         View focusView = null;
@@ -121,26 +123,79 @@ public class MLSignInActivity extends MLBaseActivity {
             // 输入框获取焦点
             focusView.requestFocus();
         } else {
-            signIn();
+            restAuth();
         }
     }
 
     /**
-     * 登录到环信服务器处理
+     * rest 认证
      */
-    private void signIn() {
-        final Resources res = mActivity.getResources();
-
+    private void restAuth() {
         mDialog = new ProgressDialog(mActivity);
-        mDialog.setMessage(res.getString(R.string.ml_sign_in_begin));
+        mDialog.setMessage(getString(R.string.ml_sign_in_begin));
         mDialog.show();
 
+        new Thread(new Runnable() {
+            @Override public void run() {
+                try {
+                    JSONObject object =
+                            MLNetworkManager.getInstance().authToken(mUsername, mPassword);
+                    final int errorCode = object.optInt("code");
+                    final String errorMsg = object.optString("msg");
+                    if (errorCode != 0) {
+                        runOnUiThread(new Runnable() {
+                            @Override public void run() {
+                                // 关闭登录进度弹出框
+                                mDialog.dismiss();
+                                Snackbar.make(getRootView(), getString(R.string.ml_sign_in_failed)
+                                        + " - "
+                                        + errorCode
+                                        + " - "
+                                        + errorMsg, Snackbar.LENGTH_LONG).show();
+                            }
+                        });
+                        return;
+                    }
+                    // 解析账户 token 保存
+                    String token = object.optJSONObject("data").optString("access_token");
+                    MLSPUtil.put(MLConstants.ML_USER_ACCESS_TOKEN, token);
+                    // rest 认证成功后调用 sdk 登录方法
+                    signIn();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    /**
+     * 调用 sdk 登录
+     */
+    private void signIn() {
         EMClient.getInstance().login(mUsername, mPassword, new EMCallBack() {
             /**
              * 登陆成功的回调
              */
             @Override public void onSuccess() {
-                syncData();
+                // 登录成功，把用户名保存在本地（可以不保存，根据自己的需求）
+                MLSPUtil.put(MLConstants.ML_SHARED_USERNAME, mUsername);
+                // 登录成功同步联系人到本地
+                MLUserManager.getInstance().syncContactsFromServer();
+                // 加载所有会话到内存
+                EMClient.getInstance().chatManager().loadAllConversations();
+                // 加载所有群组到内存
+                EMClient.getInstance().groupManager().loadAllGroups();
+                runOnUiThread(new Runnable() {
+                    @Override public void run() {
+                        // 关闭登录进度弹出框
+                        mDialog.dismiss();
+                        // 登录成功跳转到主界面
+                        Intent intent = new Intent(mActivity, MLMainActivity.class);
+                        superJump(intent);
+                        // 根据不同的系统版本选择不同的 finish 方法
+                        onFinish();
+                    }
+                });
             }
 
             /**
@@ -161,42 +216,42 @@ public class MLSignInActivity extends MLBaseActivity {
                         switch (i) {
                             // 网络异常 2
                             case EMError.NETWORK_ERROR:
-                                error = res.getString(R.string.ml_error_network_error);
+                                error = getString(R.string.ml_error_network_error);
                                 break;
                             // 无效的用户名 101
                             case EMError.INVALID_USER_NAME:
-                                error = res.getString(R.string.ml_error_invalid_user_name);
+                                error = getString(R.string.ml_error_invalid_user_name);
                                 break;
                             // 无效的密码 102
                             case EMError.INVALID_PASSWORD:
-                                error = res.getString(R.string.ml_error_invalid_password);
+                                error = getString(R.string.ml_error_invalid_password);
                                 break;
                             // 用户认证失败，用户名或密码错误 202
                             case EMError.USER_AUTHENTICATION_FAILED:
-                                error = res.getString(R.string.ml_error_user_authentication_failed);
+                                error = getString(R.string.ml_error_user_authentication_failed);
                                 break;
                             // 用户不存在 204
                             case EMError.USER_NOT_FOUND:
-                                error = res.getString(R.string.ml_error_user_not_found);
+                                error = getString(R.string.ml_error_user_not_found);
                                 break;
                             // 无法访问到服务器 300
                             case EMError.SERVER_NOT_REACHABLE:
-                                error = res.getString(R.string.ml_error_server_not_reachable);
+                                error = getString(R.string.ml_error_server_not_reachable);
                                 break;
                             // 等待服务器响应超时 301
                             case EMError.SERVER_TIMEOUT:
-                                error = res.getString(R.string.ml_error_server_timeout);
+                                error = getString(R.string.ml_error_server_timeout);
                                 break;
                             // 服务器繁忙 302
                             case EMError.SERVER_BUSY:
-                                error = res.getString(R.string.ml_error_server_busy);
+                                error = getString(R.string.ml_error_server_busy);
                                 break;
                             // 未知 Server 异常 303
                             case EMError.SERVER_UNKNOWN_ERROR:
-                                error = res.getString(R.string.ml_error_server_unknown_error);
+                                error = getString(R.string.ml_error_server_unknown_error);
                                 break;
                             default:
-                                error = res.getString(R.string.ml_sign_in_failed);
+                                error = getString(R.string.ml_sign_in_failed);
                                 break;
                         }
                         Snackbar.make(getRootView(), error + " - " + i + " - " + s,
@@ -206,51 +261,9 @@ public class MLSignInActivity extends MLBaseActivity {
             }
 
             @Override public void onProgress(int i, String s) {
-                MLLog.d("progress: " + i + " " + res.getString(R.string.ml_sign_in_begin) + s);
+                MLLog.d("progress: " + i + " " + getString(R.string.ml_sign_in_begin) + s);
             }
         });
-    }
-
-    /**
-     * 登录成功，开始同步数据
-     */
-    private void syncData() {
-        try {
-            JSONObject object = MLNetworkManager.getInstance().authToken(mUsername, mPassword);
-            int errorCode = object.optInt("code");
-            String errorMsg = object.optString("msg");
-            if (errorCode != 0) {
-                // 关闭登录进度弹出框
-                mDialog.dismiss();
-                Snackbar.make(getRootView(), getString(R.string.ml_sign_in_failed)
-                        + " - "
-                        + errorCode
-                        + " - "
-                        + errorMsg, Snackbar.LENGTH_LONG).show();
-                return;
-            }
-            // 登录成功同步联系人到本地
-            MLUserManager.getInstance().syncContactsFromServer();
-
-            // 登录成功，把用户名保存在本地（可以不保存，根据自己的需求）
-            MLSPUtil.put(MLConstants.ML_SHARED_USERNAME, mUsername);
-            // 加载所有会话到内存
-            EMClient.getInstance().chatManager().loadAllConversations();
-            // 加载所有群组到内存
-            EMClient.getInstance().groupManager().loadAllGroups();
-
-            // 关闭登录进度弹出框
-            mDialog.dismiss();
-
-            // 登录成功跳转到主界面
-            Intent intent = new Intent(mActivity, MLMainActivity.class);
-            superJump(intent);
-
-            // 根据不同的系统版本选择不同的 finish 方法
-            onFinish();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -268,6 +281,9 @@ public class MLSignInActivity extends MLBaseActivity {
     }
 
     @Override protected void onDestroy() {
+        if (mDialog != null && mDialog.isShowing()) {
+            mDialog.dismiss();
+        }
         super.onDestroy();
     }
 }

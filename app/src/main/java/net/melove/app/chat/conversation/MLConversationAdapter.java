@@ -162,19 +162,19 @@ public class MLConversationAdapter
         // 设置当前会话联系人名称
         if (conversation.getType() == EMConversation.EMConversationType.Chat) {
             // 这里有一些特殊的会话，因为是使用会话保存的申请与通知，处理下会话的标题
-            if (conversation.getUserName().equals(MLConstants.ML_CONVERSATION_ID_APPLY)) {
+            if (conversation.conversationId().equals(MLConstants.ML_CONVERSATION_ID_APPLY)) {
                 holder.titleView.setText(R.string.ml_apply);
             } else {
-                holder.titleView.setText(conversation.getUserName());
+                holder.titleView.setText(conversation.conversationId());
             }
         } else if (conversation.getType() == EMConversation.EMConversationType.GroupChat) {
             // 如果是群聊设置群组名称
             EMGroup group =
-                    EMClient.getInstance().groupManager().getGroup(conversation.getUserName());
+                    EMClient.getInstance().groupManager().getGroup(conversation.conversationId());
             if (group != null) {
                 holder.titleView.setText(group.getGroupName());
             } else {
-                holder.titleView.setText(conversation.getUserName());
+                holder.titleView.setText(conversation.conversationId());
             }
         }
 

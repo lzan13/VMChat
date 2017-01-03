@@ -188,12 +188,12 @@ public class MLConversationsFragment extends MLBaseFragment {
     public void itemClick(int position) {
         EMConversation conversation = mConversations.get(position);
         Intent intent = new Intent();
-        if (conversation.getUserName().equals(MLConstants.ML_CONVERSATION_ID_APPLY)) {
+        if (conversation.conversationId().equals(MLConstants.ML_CONVERSATION_ID_APPLY)) {
             intent.setClass(mActivity, MLApplyForActivity.class);
         } else {
             intent.setClass(mActivity, MLChatActivity.class);
             intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID,
-                    mConversations.get(position).getUserName());
+                    mConversations.get(position).conversationId());
             intent.putExtra(MLConstants.ML_EXTRA_TYPE, mConversations.get(position).getType());
         }
         mActivity.startActivity(intent);
@@ -262,7 +262,7 @@ public class MLConversationsFragment extends MLBaseFragment {
                         // 删除当前会话，第二个参数表示是否删除此会话的消息
                         EMClient.getInstance()
                                 .chatManager()
-                                .deleteConversation(conversation.getUserName(), false);
+                                .deleteConversation(conversation.conversationId(), false);
                         refreshConversation();
                         break;
                 }

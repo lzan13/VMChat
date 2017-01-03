@@ -126,11 +126,13 @@ public class MLHyphenate {
      * SDK 3.2.x 版本后通话相关设置
      */
     private void initCallOptions() {
+        // 设置自动调节分辨率，默认为 true
+        EMClient.getInstance().callManager().getCallOptions().enableFixedVideoResolution(true);
         // 设置视频通话最大和最小比特率，可以不用设置，比特率会根据分辨率进行计算，默认最大(800可以设置到10000)， 默认最小(80)
-        EMClient.getInstance().callManager().getCallOptions().setMaxVideoKbps(1500);
+        EMClient.getInstance().callManager().getCallOptions().setMaxVideoKbps(800);
         EMClient.getInstance().callManager().getCallOptions().setMinVideoKbps(150);
         // 设置视频通话分辨率 默认是(640, 480)
-        EMClient.getInstance().callManager().getCallOptions().setVideoResolution(1280, 720);
+        EMClient.getInstance().callManager().getCallOptions().setVideoResolution(640, 480);
         // 设置通话最大帧率，SDK 最大支持(30)，默认(20)
         EMClient.getInstance().callManager().getCallOptions().setMaxVideoFrameRate(30);
         // 设置通话过程中对方如果离线是否发送离线推送通知
@@ -166,8 +168,6 @@ public class MLHyphenate {
         options.setRequireAck(true);
         // 设置是否需要发送回执
         options.setRequireDeliveryAck(true);
-        // 设置是否需要服务器收到消息确认
-        options.setRequireAck(true);
         // 收到好友申请是否自动同意，如果是自动同意就不会收到好友请求的回调，因为sdk会自动处理，默认为true
         options.setAcceptInvitationAlways(false);
         // 设置是否自动接收加群邀请，如果设置了当收到群邀请会自动同意加入

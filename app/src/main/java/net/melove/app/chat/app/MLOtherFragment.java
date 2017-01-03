@@ -219,7 +219,7 @@ public class MLOtherFragment extends MLBaseFragment {
                 String.format(mActivity.getString(R.string.ml_hint_msg_recall_by_user),
                         message.getUserName()));
         recallMessage.addBody(body);
-        recallMessage.setReceipt(message.getFrom());
+        recallMessage.setTo(message.getFrom());
         // 设置新消息的 msgId为撤销消息的 msgId
         recallMessage.setMsgId(message.getMsgId());
         // 设置新消息的 msgTime 为撤销消息的 mstTime
@@ -236,7 +236,7 @@ public class MLOtherFragment extends MLBaseFragment {
     private void saveMessage() {
         EMMessage textMessage = EMMessage.createSendMessage(EMMessage.Type.TXT);
         textMessage.setFrom("lz0");
-        textMessage.setReceipt("lz1");
+        textMessage.setTo("lz1");
         textMessage.setStatus(EMMessage.Status.SUCCESS);
         EMTextMessageBody body = new EMTextMessageBody("test save message");
         textMessage.addBody(body);
@@ -253,7 +253,7 @@ public class MLOtherFragment extends MLBaseFragment {
                 .getConversation("lz1", EMConversation.EMConversationType.Chat, true);
         EMMessage textMessage = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
         textMessage.setFrom("lz1");
-        textMessage.setReceipt("lz0");
+        textMessage.setTo("lz0");
         textMessage.setStatus(EMMessage.Status.SUCCESS);
         EMTextMessageBody body = new EMTextMessageBody("test insert message");
         textMessage.addBody(body);

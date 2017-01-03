@@ -97,7 +97,7 @@ public class MLContactsListener implements EMContactListener {
      *
      * @param username 对方的 username
      */
-    @Override public void onContactAgreed(String username) {
+    @Override public void onFriendRequestAccepted(String username) {
         MLLog.d("onContactAgreed - username:%s", username);
 
         // 根据申请者的 username 和当前时间组成 msgId
@@ -138,7 +138,7 @@ public class MLContactsListener implements EMContactListener {
      *
      * @param username 对方的 username
      */
-    @Override public void onContactRefused(String username) {
+    @Override public void onFriendRequestDeclined(String username) {
         MLLog.d("onContactRefused - username:%s", username);
 
         // 根据申请者的 username 和当前时间组成 msgId

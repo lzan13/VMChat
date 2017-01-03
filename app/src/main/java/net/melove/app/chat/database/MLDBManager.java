@@ -61,12 +61,12 @@ public class MLDBManager {
      * @param values 需要插入的值
      */
     public long insterData(String table, ContentValues values) {
+        long result = -1;
         SQLiteDatabase db = mDBHelper.getReadableDatabase();
         if (db.isOpen()) {
-            long result = db.insert(table, null, values);
-            return result;
+            result = db.insert(table, null, values);
         }
-        return -1;
+        return result;
     }
 
     /**
@@ -97,12 +97,21 @@ public class MLDBManager {
      * return result      返回影响的行数
      */
     public long delete(String table, String whereClause, String[] args) {
+        long result = -1;
         SQLiteDatabase db = mDBHelper.getReadableDatabase();
         if (db.isOpen()) {
-            long result = db.delete(table, whereClause + "=?", args);
-            return result;
+            result = db.delete(table, whereClause + "=?", args);
         }
-        return -1;
+        return result;
+    }
+
+    public long clearTable(String table) {
+        long result = -1;
+        SQLiteDatabase db = mDBHelper.getReadableDatabase();
+        if (db.isOpen()) {
+            result = db.delete(table, null, null);
+        }
+        return result;
     }
 
     /**
@@ -134,12 +143,12 @@ public class MLDBManager {
      * @return 返回影响的行
      */
     public long updateData(String table, ContentValues values, String whereClause, String[] args) {
+        long result = -1;
         SQLiteDatabase db = mDBHelper.getReadableDatabase();
         if (db.isOpen()) {
-            long result = db.update(table, values, whereClause, args);
-            return result;
+            result = db.update(table, values, whereClause, args);
         }
-        return -1;
+        return result;
     }
 
     /**

@@ -260,7 +260,7 @@ public class MLFileUtil {
      */
 
     /**
-     * 获取 /mnt/sdcard (/storage/emulated/0) 目录
+     * 获取 /sdcard (/storage/emulated/0) 目录
      *
      * @return 返回得到的路径
      */
@@ -278,7 +278,7 @@ public class MLFileUtil {
     }
 
     /**
-     * 获取 /mnt/sdcard/Android/data/packagename/cache 目录
+     * 获取 /sdcard/Android/data/packagename/cache 目录
      *
      * @return 返回得到的路径
      */
@@ -296,16 +296,16 @@ public class MLFileUtil {
     }
 
     /**
-     * 获取 /mnt/sdcard/Android/data/packagename/files 目录
+     * 获取 /sdcard/Android/data/packagename/files 目录
      *
      * @return 返回得到的路径
      */
     public static String getFilesFromSDCard() {
-        return MLApplication.getContext().getExternalFilesDir("").getAbsolutePath() + "/";
+        return MLApplication.getContext().getExternalFilesDir("").getAbsolutePath();
     }
 
     /**
-     * 获取 /mnt/sdcard/Android/obb/packagename 目录
+     * 获取 /sdcard/Android/obb/packagename 目录
      *
      * @return 返回得到的路径
      */

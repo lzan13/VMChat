@@ -99,7 +99,7 @@ public class MLMessageListener implements EMMessageListener {
      *
      * @param list 收到消息已读回执
      */
-    @Override public void onMessageReadAckReceived(List<EMMessage> list) {
+    @Override public void onMessageRead(List<EMMessage> list) {
 
     }
 
@@ -108,7 +108,7 @@ public class MLMessageListener implements EMMessageListener {
      *
      * @param list 收到发送回执的消息集合
      */
-    @Override public void onMessageDeliveryAckReceived(List<EMMessage> list) {
+    @Override public void onMessageDelivered(List<EMMessage> list) {
 
     }
 

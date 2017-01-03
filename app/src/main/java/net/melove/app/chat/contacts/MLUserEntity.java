@@ -28,6 +28,11 @@ public class MLUserEntity {
     public String createAt;
     // 联系人更新时间
     public String updateAt;
+    // 用户状态
+    public int status;
+
+    public MLUserEntity() {
+    }
 
     public MLUserEntity(String username) {
         setUserName(username);
@@ -119,6 +124,14 @@ public class MLUserEntity {
 
     public void setUpdateAt(String updateAt) {
         this.updateAt = updateAt;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     @Override public String toString() {

@@ -8,13 +8,14 @@ import android.text.TextUtils;
 import com.hyphenate.util.HanziToPinyin;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import net.melove.app.chat.app.MLApplication;
 import net.melove.app.chat.contacts.MLUserEntity;
 
 /**
  * Created by lzan13 on 2015/7/21.
- * 联系人信息数据库操作类
+ * 用户信息数据库操作类
  */
 public class MLUserDao {
 
@@ -54,27 +55,51 @@ public class MLUserDao {
         values.put(MLDBHelper.COL_SIGNATURE, userEntity.getSignature());
         values.put(MLDBHelper.COL_CREATE_AT, userEntity.getCreateAt());
         values.put(MLDBHelper.COL_UPDATE_AT, userEntity.getUpdateAt());
-        MLDBManager.getInstance().insterData(MLDBHelper.TB_CONTACTS, values);
+        values.put(MLDBHelper.COL_STATUS, userEntity.getStatus());
+        MLDBManager.getInstance().insterData(MLDBHelper.TB_USERS, values);
     }
 
     /**
-     * 从数据看删除一个联系人
+     * 保存用户集合
      *
-     * @param username 根据联系人的 username 确定唯一的一个值
+     * @param userMap 用户集合
+     */
+    public synchronized void saveUserMap(Map<String, MLUserEntity> userMap) {
+        for (MLUserEntity contactEntity : userMap.values()) {
+            saveUser(contactEntity);
+        }
+    }
+
+    /**
+     * 保存用户集合
+     *
+     * @param userList 用户集合
+     */
+    public synchronized void saveUserList(List<String> userList) {
+        for (String username : userList) {
+            ContentValues values = new ContentValues();
+            values.put(MLDBHelper.COL_USERNAME, username);
+            MLDBManager.getInstance().insterData(MLDBHelper.TB_USERS, values);
+        }
+    }
+
+    /**
+     * 删除一个用户
+     *
+     * @param username 用户 username
      */
     public synchronized void deleteUser(String username) {
         MLDBManager.getInstance()
-                .delete(MLDBHelper.TB_CONTACTS, MLDBHelper.COL_USERNAME, new String[] { username });
+                .delete(MLDBHelper.TB_USERS, MLDBHelper.COL_USERNAME, new String[] { username });
     }
 
     /**
-     * 更新联系人信息
+     * 更新用户信息
      *
-     * @param userEntity 需要修改的用户信息
+     * @param userEntity 用户对象
      */
-    public synchronized void updateContacter(MLUserEntity userEntity) {
+    public synchronized void updateUser(MLUserEntity userEntity) {
         ContentValues values = new ContentValues();
-        values.put(MLDBHelper.COL_USERNAME, userEntity.getUserName());
         values.put(MLDBHelper.COL_NICKNAME, userEntity.getNickName());
         values.put(MLDBHelper.COL_EMAIL, userEntity.getEmail());
         values.put(MLDBHelper.COL_AVATAR, userEntity.getAvatar());
@@ -84,24 +109,16 @@ public class MLUserDao {
         values.put(MLDBHelper.COL_SIGNATURE, userEntity.getSignature());
         values.put(MLDBHelper.COL_CREATE_AT, userEntity.getCreateAt());
         values.put(MLDBHelper.COL_UPDATE_AT, userEntity.getUpdateAt());
+        values.put(MLDBHelper.COL_STATUS, userEntity.getStatus());
+
+        String selection = MLDBHelper.COL_USERNAME + "=?";
         MLDBManager.getInstance()
-                .updateData(MLDBHelper.TB_CONTACTS, values, MLDBHelper.COL_USERNAME,
+                .updateData(MLDBHelper.TB_USERS, values, selection,
                         new String[] { userEntity.getUserName() });
     }
 
     /**
-     * 保存联系人列表，一次保存多个联系人
-     *
-     * @param userMap 需要保存的联系人集合
-     */
-    public synchronized void saveContactsMap(Map<String, MLUserEntity> userMap) {
-        for (MLUserEntity contactEntity : userMap.values()) {
-            saveUser(contactEntity);
-        }
-    }
-
-    /**
-     * 根据 username 获取指定的联系人信息
+     * 根据 username 获取指定的用户信息
      *
      * @param username 需要查询的 username，根据此 username 确定唯一用户信息
      * @return 返回查询结果，有可能为 null
@@ -111,7 +128,7 @@ public class MLUserDao {
         String selection = MLDBHelper.COL_USERNAME + "=?";
         String args[] = new String[] { username };
         Cursor cursor = MLDBManager.getInstance()
-                .queryData(MLDBHelper.TB_CONTACTS, null, selection, args, null, null, null, null);
+                .queryData(MLDBHelper.TB_USERS, null, selection, args, null, null, null, null);
         if (cursor.moveToNext()) {
             contacter = cursorToEntity(cursor);
         }
@@ -129,7 +146,7 @@ public class MLUserDao {
         int args[] = new int[] { MLDBHelper.STATUS_NORMAL };
         // 查询联系人表
         Cursor cursor = MLDBManager.getInstance()
-                .queryData(MLDBHelper.TB_CONTACTS, null, null, null, null, null, null, null);
+                .queryData(MLDBHelper.TB_USERS, null, null, null, null, null, null, null);
         while (cursor.moveToNext()) {
             int status = cursor.getInt(cursor.getColumnIndex(MLDBHelper.COL_STATUS));
             if (status == MLDBHelper.STATUS_NORMAL) {
@@ -143,12 +160,14 @@ public class MLUserDao {
 
     /**
      * 获取陌生人集合
+     *
+     * @return 获取除了好友以外的用户信息列表
      */
     public synchronized Map<String, MLUserEntity> getStrangerMap() {
         Map<String, MLUserEntity> strangerMap = new HashMap<>();
         // 查询 User 表
         Cursor cursor = MLDBManager.getInstance()
-                .queryData(MLDBHelper.TB_CONTACTS, null, null, null, null, null, null, null);
+                .queryData(MLDBHelper.TB_USERS, null, null, null, null, null, null, null);
         while (cursor.moveToNext()) {
             int status = cursor.getInt(cursor.getColumnIndex(MLDBHelper.COL_STATUS));
             if (status == MLDBHelper.STATUS_STRANGER) {
@@ -206,5 +225,12 @@ public class MLUserDao {
             }
         }
         return user;
+    }
+
+    /**
+     * 清空表数据
+     */
+    public void clearTable() {
+        MLDBManager.getInstance().clearTable(MLDBHelper.TB_USERS);
     }
 }

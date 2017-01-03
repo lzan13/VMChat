@@ -89,7 +89,7 @@ public class MLNetworkManager {
         } catch (IOException e) {
             e.printStackTrace();
             result.put("code", -1);
-            result.put("msg", "Request failed");
+            result.put("msg", "Request server failed");
             return result;
         }
     }
@@ -116,7 +116,7 @@ public class MLNetworkManager {
         } catch (IOException e) {
             e.printStackTrace();
             result.put("code", -1);
-            result.put("msg", "Request failed");
+            result.put("msg", "Request server failed");
             return result;
         }
     }
@@ -142,12 +142,12 @@ public class MLNetworkManager {
             JSONObject object = new JSONObject(response.body().string());
             result.put("code", object.optJSONObject("status").optInt("code"));
             result.put("msg", object.optJSONObject("status").optString("msg"));
-            result.put("data", object.optJSONObject("data"));
+            result.put("data", object.opt("data"));
             return result;
         } catch (IOException e) {
             e.printStackTrace();
             result.put("code", -1);
-            result.put("msg", "Request failed");
+            result.put("msg", "Request server failed");
             return result;
         }
     }
