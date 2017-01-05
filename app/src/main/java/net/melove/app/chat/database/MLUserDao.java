@@ -22,8 +22,7 @@ public class MLUserDao {
     private static MLUserDao instance;
 
     private MLUserDao() {
-        Context context = MLApplication.getContext();
-        MLDBManager.getInstance().init(context);
+        MLDBManager.getInstance().init();
     }
 
     /**
@@ -232,5 +231,14 @@ public class MLUserDao {
      */
     public void clearTable() {
         MLDBManager.getInstance().clearTable(MLDBHelper.TB_USERS);
+    }
+
+    /**
+     * 重置
+     */
+    public void resetUserDao() {
+        if (instance != null) {
+            instance = null;
+        }
     }
 }

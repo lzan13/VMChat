@@ -27,7 +27,16 @@
             android:transitionName="@string/ml_shared_element_toolbar"
             app:popupTheme="@style/MLTheme.PopupOverlay"
             app:theme="@style/MLTheme.ToolbarOverlay"
-            />
+            >
+            <net.melove.app.chat.widget.MLImageView
+                android:id="@+id/img_avatar"
+                android:layout_width="@dimen/ml_dimen_36"
+                android:layout_height="@dimen/ml_dimen_36"
+                android:src="@mipmap/ic_character_blackcat"
+                app:ml_border_width="@dimen/ml_dimen_2"
+                app:ml_shape_type="round"
+                />
+        </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
     <!--中间内容布局-->

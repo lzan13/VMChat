@@ -3,13 +3,16 @@ package net.melove.app.chat.contacts;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -23,6 +26,7 @@ import net.melove.app.chat.app.MLBaseActivity;
 import net.melove.app.chat.app.MLConstants;
 import net.melove.app.chat.chat.MLChatActivity;
 import net.melove.app.chat.util.MLLog;
+import net.melove.app.chat.widget.MLImageView;
 
 /**
  * Created by lzan13 on 2015/8/29.
@@ -32,8 +36,17 @@ public class MLUserActivity extends MLBaseActivity {
 
     @BindView(R.id.widget_collapsing) CollapsingToolbarLayout mCollapsingToolbarLayout;
     @BindView(R.id.fab_add_or_chat) FloatingActionButton mAddOrChatFab;
-    //@BindView(R.id.img_avatar) MLImageView mAvatarView;
-    //@BindView(R.id.text_username) TextView mUsernameView;
+    @BindView(R.id.widget_appbar) AppBarLayout mAppbarLayout;
+    @BindView(R.id.img_avatar) MLImageView mAvatarView;
+    @BindView(R.id.img_cover) ImageView mCoverView;
+    @BindView(R.id.text_show_title) TextView mShowTitleView;
+    @BindView(R.id.text_show_name) TextView mShowNameView;
+    @BindView(R.id.layout_info_container) View mInfoContainer;
+
+    // 动画持续时间
+    private final int ALPHA_ANIMATIONS_DURATION = 200;
+    private boolean isShowTitle = false;
+    private boolean isShowInfoContainer = true;
 
     // 当前登录用户username
     private String mCurrUsername;
@@ -74,8 +87,17 @@ public class MLUserActivity extends MLBaseActivity {
             mAddOrChatFab.setVisibility(View.INVISIBLE);
         }
 
-        // 设置Toolbar标题为用户名称
-        mCollapsingToolbarLayout.setTitle(mChatId);
+        mAppbarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                int maxScroll = mAppbarLayout.getTotalScrollRange();
+                float percentage = (float) Math.abs(verticalOffset) / (float) maxScroll;
+
+                handleToolbarTitleVisibility(percentage);
+                handleAlphaOnTitle(percentage);
+            }
+        });
+
+        getToolbar().setTitle("");
         setSupportActionBar(getToolbar());
         getToolbar().setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
         getToolbar().setNavigationOnClickListener(new View.OnClickListener() {
@@ -184,6 +206,48 @@ public class MLUserActivity extends MLBaseActivity {
         intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mChatId);
         mActivity.startActivity(intent);
         mActivity.finish();
+    }
+
+    /**
+     * 处理 ToolBar 上内容的显示与隐藏
+     */
+    private void handleToolbarTitleVisibility(float percentage) {
+        if (percentage >= 0.5) {
+            if (!isShowTitle) {
+                startAlphaAnimation(mShowTitleView, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
+                isShowTitle = true;
+            }
+        } else {
+            if (isShowTitle) {
+                startAlphaAnimation(mShowTitleView, ALPHA_ANIMATIONS_DURATION, View.INVISIBLE);
+                isShowTitle = false;
+            }
+        }
+    }
+
+    // 控制Title的显示
+    private void handleAlphaOnTitle(float percentage) {
+        if (percentage >= 0.5) {
+            if (isShowInfoContainer) {
+                startAlphaAnimation(mInfoContainer, ALPHA_ANIMATIONS_DURATION, View.INVISIBLE);
+                isShowInfoContainer = false;
+            }
+        } else {
+            if (!isShowInfoContainer) {
+                startAlphaAnimation(mInfoContainer, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
+                isShowInfoContainer = true;
+            }
+        }
+    }
+
+    // 设置渐变的动画
+    public static void startAlphaAnimation(View v, long duration, int visibility) {
+        AlphaAnimation alphaAnimation = (visibility == View.VISIBLE) ? new AlphaAnimation(0f, 1f)
+                : new AlphaAnimation(1f, 0f);
+
+        alphaAnimation.setDuration(duration);
+        alphaAnimation.setFillAfter(true);
+        v.startAnimation(alphaAnimation);
     }
 
     @Override protected void onDestroy() {

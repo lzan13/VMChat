@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import net.melove.app.chat.app.MLApplication;
 import net.melove.app.chat.app.MLConstants;
 import net.melove.app.chat.util.MLSPUtil;
 
@@ -61,9 +62,9 @@ public class MLDBHelper extends SQLiteOpenHelper {
      *
      * @return 返回当前类的单例对象
      */
-    public static MLDBHelper getInstance(Context context) {
+    public static MLDBHelper getInstance() {
         if (instance == null) {
-            instance = new MLDBHelper(context.getApplicationContext());
+            instance = new MLDBHelper(MLApplication.getContext());
         }
         return instance;
     }

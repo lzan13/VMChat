@@ -301,7 +301,7 @@ public class MLFileUtil {
      * @return 返回得到的路径
      */
     public static String getFilesFromSDCard() {
-        return MLApplication.getContext().getExternalFilesDir("").getAbsolutePath();
+        return MLApplication.getContext().getExternalFilesDir("").getAbsolutePath() + "/";
     }
 
     /**

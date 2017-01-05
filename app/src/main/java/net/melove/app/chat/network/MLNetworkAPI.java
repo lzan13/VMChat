@@ -92,6 +92,15 @@ public interface MLNetworkAPI {
     @GET("users/{username}") Call<ResponseBody> getUser(@Path("username") String username);
 
     /**
+     * 获取一组用户详细信息
+     *
+     * @param names 好友名称集合
+     * @return 请求结果
+     */
+    @GET("friends/{names}") Call<ResponseBody> getUsersInfo(@Path("names") String names,
+            @Query("access_token") String accessToken);
+
+    /**
      * 添加好友
      *
      * @param accessToken 请求认证
@@ -117,12 +126,4 @@ public interface MLNetworkAPI {
      */
     @GET("friends/list") Call<ResponseBody> getFriends(@Query("access_token") String accessToken);
 
-    /**
-     * 获取好友信息列表
-     *
-     * @param names 好友名称集合
-     * @return 请求结果
-     */
-    @GET("friends/{names}") Call<ResponseBody> getFriendsByNames(@Path("names") String names,
-            @Query("access_token") String accessToken);
 }

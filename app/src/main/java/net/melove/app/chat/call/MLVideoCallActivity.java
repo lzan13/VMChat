@@ -118,8 +118,6 @@ public class MLVideoCallActivity extends MLCallActivity {
 
         // 初始化视频通话帮助类
         mVideoCallHelper = EMClient.getInstance().callManager().getVideoCallHelper();
-        // 设置录制视频采用 mov 编码
-        mVideoCallHelper.setPreferMovFormatEnable(true);
         // 设置本地预览图像显示在最上层，一定要提前设置，否则无效
         //mLocalSurfaceView.setZOrderMediaOverlay(true);
         //mLocalSurfaceView.setZOrderOnTop(true);

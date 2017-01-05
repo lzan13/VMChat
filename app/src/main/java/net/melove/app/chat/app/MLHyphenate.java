@@ -14,6 +14,7 @@ import net.melove.app.chat.chat.MLMessageListener;
 import net.melove.app.chat.call.MLCallStateListener;
 import net.melove.app.chat.connection.MLConnectionListener;
 import net.melove.app.chat.contacts.MLContactsListener;
+import net.melove.app.chat.database.MLUserDao;
 import net.melove.app.chat.group.MLGroupListener;
 import net.melove.app.chat.contacts.MLUserEntity;
 import net.melove.app.chat.util.MLLog;
@@ -123,22 +124,24 @@ public class MLHyphenate {
     }
 
     /**
-     * SDK 3.2.x 版本后通话相关设置
+     * SDK 3.2.x 版本后通话相关设置，一定要尽量在初始化后，开始使用音视频功能前设置，不然会无效
      */
     private void initCallOptions() {
         // 设置自动调节分辨率，默认为 true
         EMClient.getInstance().callManager().getCallOptions().enableFixedVideoResolution(true);
         // 设置视频通话最大和最小比特率，可以不用设置，比特率会根据分辨率进行计算，默认最大(800可以设置到10000)， 默认最小(80)
-        EMClient.getInstance().callManager().getCallOptions().setMaxVideoKbps(800);
+        EMClient.getInstance().callManager().getCallOptions().setMaxVideoKbps(1500);
         EMClient.getInstance().callManager().getCallOptions().setMinVideoKbps(150);
         // 设置视频通话分辨率 默认是(640, 480)
-        EMClient.getInstance().callManager().getCallOptions().setVideoResolution(640, 480);
+        EMClient.getInstance().callManager().getCallOptions().setVideoResolution(1280, 720);
         // 设置通话最大帧率，SDK 最大支持(30)，默认(20)
         EMClient.getInstance().callManager().getCallOptions().setMaxVideoFrameRate(30);
         // 设置通话过程中对方如果离线是否发送离线推送通知
         EMClient.getInstance().callManager().getCallOptions().setIsSendPushIfOffline(false);
         // 设置音视频通话采样率，一般不需要设置，除非采集声音有问题才需要手动设置
         EMClient.getInstance().callManager().getCallOptions().setAudioSampleRate(48000);
+        // 设置录制视频采用 mov 编码 TODO 后期这个而接口需要移动到 EMCallOptions 中
+        EMClient.getInstance().callManager().getVideoCallHelper().setPreferMovFormatEnable(true);
     }
 
     private EMOptions initOptions() {
@@ -324,7 +327,8 @@ public class MLHyphenate {
      * 重置app操作，主要是在退出登录时清除内存
      */
     private void resetApp() {
-        MLDBHelper.getInstance(mContext).resetDBHelper();
+        MLUserDao.getInstance().resetUserDao();
+        MLDBHelper.getInstance().resetDBHelper();
     }
 
     /**

@@ -70,7 +70,7 @@ public class MLOtherFragment extends MLBaseFragment {
 
         String[] btns = {
                 "Sign out", "Import Message", "Insert Message", "Save Message", "Update Message",
-                "Send Group", "Sync Group", "Get Group", "Remove Group Member"
+                "Send Group", "Sync Group", "Get Group", "Remove Group Member", "Push Message"
         };
         viewGroup = (MLViewGroup) getView().findViewById(R.id.view_custom_viewgroup);
         for (int i = 0; i < btns.length; i++) {
@@ -122,16 +122,37 @@ public class MLOtherFragment extends MLBaseFragment {
                 case 108:
                     testRemoveGroupMember();
                     break;
+                case 109:
+                    testPushGroupMessage();
+                    break;
             }
         }
     };
+
+    private void testPushGroupMessage() {
+        new Thread(new Runnable() {
+            @Override public void run() {
+                //EMClient.getInstance().pushManager().enableOfflinePush();
+                List<String> list = new ArrayList<>();
+                list.add("283660121626640920");
+                try {
+                    EMClient.getInstance().pushManager().updatePushServiceForGroup(list, true);
+                    List<String> noPustGroups = EMClient.getInstance().pushManager().getNoPushGroups();
+                    MLLog.d("No push group: %d", noPustGroups.size());
+                } catch (HyphenateException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+    }
 
     private void testRemoveGroupMember() {
         new Thread(new Runnable() {
             @Override public void run() {
                 try {
                     EMGroup group =
-                            EMClient.getInstance().groupManager().getGroup("277326560065749524");
+                            EMClient.getInstance().groupManager().getGroup("283660121626640920");
                     MLLog.i("group: name %s, owner %s, member count %d", group.getGroupName(),
                             group.getOwner(), group.getMemberCount(),
                             group.getMembers().toArray().toString());
@@ -156,7 +177,7 @@ public class MLOtherFragment extends MLBaseFragment {
                     // 这个操作会导致 so 请求群详情崩溃
                     EMGroup group = EMClient.getInstance()
                             .groupManager()
-                            .getGroupFromServer("277326560065749524");
+                            .getGroupFromServer("283660121626640920");
                     MLLog.i("group: name %s, owner %s, member count %d", group.getGroupName(),
                             group.getOwner(), group.getMemberCount(),
                             group.getMembers().toArray().toString());

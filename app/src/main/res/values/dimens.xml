@@ -39,6 +39,8 @@
     <dimen name="ml_dimen_192">192dp</dimen>
     <dimen name="ml_dimen_224">224dp</dimen>
     <dimen name="ml_dimen_256">256dp</dimen>
+    <dimen name="ml_dimen_320">320dp</dimen>
+    <dimen name="ml_dimen_360">360dp</dimen>
     <dimen name="ml_dimen_384">384dp</dimen>
     <dimen name="ml_dimen_512">512dp</dimen>
 

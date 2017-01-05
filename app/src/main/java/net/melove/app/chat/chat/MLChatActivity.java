@@ -43,6 +43,7 @@ import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMFileMessageBody;
 import com.hyphenate.chat.EMImageMessageBody;
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.EMPushManager;
 import com.hyphenate.chat.EMTextMessageBody;
 
 import com.hyphenate.chat.EMVideoMessageBody;

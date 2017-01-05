@@ -48,11 +48,13 @@ public class MLUserManager {
     /**
      * 保存一个用户，保存在内存和本地
      *
-     * @param user 需要添加的用户实体对象
+     * @param user 用户实体对象
      */
     public void saveUser(MLUserEntity user) {
-        if (contactsMap != null) {
+        if (contactsMap != null && user.getStatus() == MLDBHelper.STATUS_NORMAL) {
             contactsMap.put(user.getUserName(), user);
+        } else if (strangerMap != null && user.getStatus() == MLDBHelper.STATUS_STRANGER) {
+            strangerMap.put(user.getUserName(), user);
         }
         MLUserDao.getInstance().saveUser(user);
     }
@@ -66,19 +68,24 @@ public class MLUserManager {
         if (contactsMap != null) {
             contactsMap.remove(username);
         }
+        if (strangerMap != null) {
+            strangerMap.remove(username);
+        }
         MLUserDao.getInstance().deleteUser(username);
     }
 
     /**
      * 修改一个用户信息
      *
-     * @param userEntity 需要修改的用户实体对象
+     * @param user 用户实体类对象
      */
-    public void updateUser(MLUserEntity userEntity) {
-        if (contactsMap != null) {
-            contactsMap.put(userEntity.getUserName(), userEntity);
+    public void updateUser(MLUserEntity user) {
+        if (contactsMap != null && user.getStatus() == MLDBHelper.STATUS_NORMAL) {
+            contactsMap.put(user.getUserName(), user);
+        } else if (strangerMap != null && user.getStatus() == MLDBHelper.STATUS_STRANGER) {
+            strangerMap.put(user.getUserName(), user);
         }
-        MLUserDao.getInstance().updateUser(userEntity);
+        MLUserDao.getInstance().updateUser(user);
     }
 
     /***
@@ -127,9 +134,11 @@ public class MLUserManager {
                 return;
             }
             MLUserDao.getInstance().saveUserList(list);
+            MLLog.d("同步好友列表完成，好友总数：%d", list.size());
+
             // 从自己的服务器获取好友详细信息
             JSONObject result =
-                    MLNetworkManager.getInstance().syncFriendsByNames(names, accessToken);
+                    MLNetworkManager.getInstance().getUsersInfo(names, accessToken);
             if (result.optInt("code") != 0) {
                 return;
             }
@@ -151,7 +160,7 @@ public class MLUserManager {
                 userEntity.setStatus(0);
                 MLUserDao.getInstance().updateUser(userEntity);
             }
-            MLLog.d("同步联系人信息完成");
+            MLLog.d("获取好友详细信息完成，获取到详情数：%d", jsonArray.length());
         } catch (HyphenateException e) {
             e.printStackTrace();
         } catch (JSONException e) {
