@@ -31,7 +31,7 @@ MLChat
 | 消息监听与聊天界面刷新 |  | 
 | 消息的下拉平滑加载    |  |
 | 好友申请监听与处理    |  | 
-| 音视频通话           | [Video and Voice](/wiki/VideoAndVoice) | [实时通话](http://docs.easemob.com/start/200androidcleintintegration/90realtimeaudio)
+| 音视频通话           | [Video and Voice](https://github.com/lzan13/MLChat/wiki/VideoAndVoice) | [实时通话](http://docs.easemob.com/start/200androidcleintintegration/90realtimeaudio)
 
 
 #### #扩展模块
