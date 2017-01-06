@@ -88,12 +88,12 @@ android {
     }
 
     // 文件路径映射配置
-    //    sourceSets {
-    //        main {
-    //            // 设置Jni so文件路径 如果有jniLibs目录就不需要设置
-    //            jniLibs.srcDirs = ['libs']
-    //        }
-    //    }
+    sourceSets {
+        main {
+            // 设置Jni so文件路径 如果有jniLibs目录就不需要设置
+            jniLibs.srcDirs = ['libs']
+        }
+    }
 
     lintOptions {
         checkReleaseBuilds false
