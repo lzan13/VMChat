@@ -225,7 +225,11 @@ public class MLUserActivity extends MLBaseActivity {
         }
     }
 
-    // 控制Title的显示
+    /**
+     * 控制Title的显示
+     *
+     * @param percentage 百分比
+     */
     private void handleAlphaOnTitle(float percentage) {
         if (percentage >= 0.5) {
             if (isShowInfoContainer) {
@@ -240,11 +244,16 @@ public class MLUserActivity extends MLBaseActivity {
         }
     }
 
-    // 设置渐变的动画
+    /**
+     * 设置渐变的动画
+     *
+     * @param v 控件
+     * @param duration 持续时间
+     * @param visibility 显示隐藏
+     */
     public static void startAlphaAnimation(View v, long duration, int visibility) {
         AlphaAnimation alphaAnimation = (visibility == View.VISIBLE) ? new AlphaAnimation(0f, 1f)
                 : new AlphaAnimation(1f, 0f);
-
         alphaAnimation.setDuration(duration);
         alphaAnimation.setFillAfter(true);
         v.startAnimation(alphaAnimation);
