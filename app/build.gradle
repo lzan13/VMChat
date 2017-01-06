@@ -152,8 +152,9 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     // Talking 统计平台库
     compile files('libs/talkingdata_analytics_v2230.jar')
-    // 引入 sdk 模块儿
-    compile project(':hyphenatechatsdk')
+    compile files('libs/HwPush_SDK_V2705.jar')
+    compile files('libs/hyphenatechat_3.2.3.jar')
+    compile files('libs/MiPush_SDK_Client_3_0_3.jar')
 }
 
 //读取配置文件，配置文件里记录的都是一些敏感信息，需要换成自己的
