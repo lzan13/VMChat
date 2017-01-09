@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!--颜色改变持续时间-->
-    <integer name="ml_time_color_change">200</integer>
+    <!--透明度改变持续时间-->
+    <integer name="ml_time_alpha_change">300</integer>
 
     <integer name="ml_time_transition">360</integer>
     <integer name="ml_time_share_transition">360</integer>

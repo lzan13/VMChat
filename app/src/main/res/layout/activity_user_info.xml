@@ -25,6 +25,7 @@
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
             app:elevation="@dimen/ml_dimen_0"
+            app:expandedTitleGravity="center_horizontal|bottom"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             >
 
@@ -42,7 +43,7 @@
                 />
 
             <LinearLayout
-                android:id="@+id/layout_info_container"
+                android:id="@+id/layout_head_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center_horizontal"
@@ -58,16 +59,9 @@
                     android:layout_width="@dimen/ml_dimen_72"
                     android:layout_height="@dimen/ml_dimen_72"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="@dimen/ml_dimen_56"
                     android:src="@mipmap/ic_character_blackcat"
                     app:ml_shape_type="round"
-                    />
-                <!--完全展开时显示的 title-->
-                <TextView
-                    android:id="@+id/text_show_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/ml_dimen_8"
-                    android:text="@string/ml_app_name"
                     />
             </LinearLayout>
             <!--主界面 Toolbar-->
@@ -82,19 +76,7 @@
                 app:elevation="@dimen/ml_dimen_0"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/MLTheme.PopupOverlay"
-                >
-                <!--toolbar 固定到上部时显示的 title-->
-                <TextView
-                    android:id="@+id/text_show_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/ml_app_name"
-                    android:textSize="@dimen/ml_size_20"
-                    android:textStyle="normal"
-                    android:visibility="visible"
-                    />
-            </android.support.v7.widget.Toolbar>
-
+                />
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
@@ -120,28 +102,53 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/ml_dimen_16"
             android:orientation="vertical"
             >
 
-            <LinearLayout
+            <!--账户ID-->
+            <TextView
+                android:id="@+id/text_account"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/ml_dimen_48"
+                android:layout_marginTop="@dimen/ml_dimen_4"
                 android:background="@color/ml_white_87"
                 android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="@dimen/ml_dimen_8"
-                >
-
-                <!-- 用户签名 -->
-                <TextView
-                    android:id="@+id/text_signature"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/ml_dimen_8"
-                    android:text="@string/ml_app_name"
-                    />
-            </LinearLayout>
+                android:paddingLeft="@dimen/ml_dimen_16"
+                android:text="@string/ml_app_name"
+                />
+            <!--签名-->
+            <TextView
+                android:id="@+id/text_signature"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ml_dimen_48"
+                android:layout_marginTop="@dimen/ml_dimen_4"
+                android:background="@color/ml_white_87"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/ml_dimen_16"
+                android:text="@string/ml_app_name"
+                />
+            <!--邮箱-->
+            <TextView
+                android:id="@+id/text_email"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ml_dimen_48"
+                android:layout_marginTop="@dimen/ml_dimen_4"
+                android:background="@color/ml_white_87"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/ml_dimen_16"
+                android:text="@string/ml_app_name"
+                />
+            <!--位置-->
+            <TextView
+                android:id="@+id/text_location"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ml_dimen_48"
+                android:layout_marginTop="@dimen/ml_dimen_4"
+                android:background="@color/ml_white_87"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/ml_dimen_16"
+                android:text="@string/ml_app_name"
+                />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>
