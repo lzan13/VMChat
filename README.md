@@ -4,107 +4,69 @@ MLChat
 并且项目遵循`Android Medital Design`设计模式，方便开发者参考做出更符合`Android`自身风格的应用；
 最主要的是此项目注释详细，每个类、方法都有进行说明 ^_^
 
-### 首先说下此项目开发环境
-如果大家的开发环境版本过低建议及时进行更新，因为最新的`SDK-Tools`已经不需要翻墙就可以更新了，开发工具就像我们的武器，
+目录
+-------
+- [开发环境](#开发环境)
+- [功能模块](#功能模块)
+    - [基础模块](#基础模块)
+    - [扩展模块](#扩展模块)
+- [版权信息](#版权信息)
+
+开发环境
+----
+如果大家的开发环境版本过低建议及时进行更新，因为最新的`Android SDK`已经不需要翻墙就可以更新了，开发工具就像我们的武器，
 可以免费更换好武器，你还一直抱着你的老三八大盖不放，这样干不过别人啊
-```gradle
-AndroidStudio 2.2.1
-Android SDK Tools 25.2.2
-Android SDK Build-tools 24.0.2
-Android SDK compileSdkVersion 24
-Android SDK targetSdkVersion 22
-Android SDK minSdkVersion 15
-Gradle 2.14.1
-```
 
-### 所使用库的版本
-```gradle
-     compile fileTree(include: ['*.jar'], dir: 'libs')
- 
-     // 引入 ButterKnife 库
-     apt 'com.jakewharton:butterknife-compiler:8.4.0'
-     compile 'com.jakewharton:butterknife:8.4.0'
- 
-     /**
-      * 新的遵循 Android  Material design 设计风格库，此扩展库已经包含了support-v4,appcomat-v7,recyclerView扩展库，
-      * 如果引入了design，就不需要再单独引入其他库
-      */
-     compile 'com.android.support:design:24.2.1'
-     // 解决方法数超过65536问题扩展库
-     compile 'com.android.support:multidex:1.0.1'
-     // Google Play Service 库，使用GCM推送需要
-     compile 'com.google.android.gms:play-services-gcm:9.4.0'
-     // LeakCanary Debug库，开源捕获内存溢出的库
-     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
-     // LeakCanary 发版的库
-     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
-     // 第三方图片加载库
-     compile 'com.github.bumptech.glide:glide:3.7.0'
-     // 观察者模式解耦库
-     compile 'org.greenrobot:eventbus:3.0.0'
-     // 支持手势缩放的ImageView
-     compile 'com.bm.photoview:library:1.4.1'
-     // 环信这边提供的 aar 方式引入的sdk
-     compile 'com.hyphenate:hyphenate-sdk:3.1.5'
- 
-     // 引入各种第三方 SDK jar包，在上边 fileTree 里已经包含了libs，这里可以不用再单独添加
-     compile files('libs/xiaomi_push_v303.jar')
-     compile files('libs/huawei_push_v2705.jar')
-     compile files('libs/talkingdata_analytics_v2230.jar')
-```
-
-已实现模块儿
------------------
-#### 基础模块
-
-这些都是作为一个聊天`APP`做必须的一些功能，都已经实现，如果你发现什么`bug`，可以`fork`本项目自己修改并提交`pull request`，感谢你的贡献
-
-- 文本消息的收发与显示
-- 图片消息的收发
-- 查看大图
-- 文件消息收发
-- 语音消息的收发，以及录制语音控件的自定义实现
-- 消息的重发
-- 消息回执状态的展示
-- 消息监听与聊天界面刷新
-- 消息的下拉平滑加载
-- 好友申请监听与处理
-- 语音通话以及通话界面的最小化与恢复
-- 视频通话以及通话界面最小化，恢复后有bug，看不了对方图像，待解决
+>这边使用最新版 studio 进行开发，sdk 环境也基本都更新到最新
+    AndroidStudio 2.2.2
+    Build-Tools 25.0.2
+    Gradle 2.14.1
 
 
-
-#### 扩展模块
-
-关于扩展模块，这些都是通过环信SDK原有的一些功能扩展而来，比如会话置顶是给`Conversation.setExtFiled()`的方式实现
-
-- 会话置顶
-- 会话扩展保存时间
-- 消息回撤
-- 消息草稿
-- 输入状态提示
+>注意：因为国内从 github 有时 clone 项目比较慢，为了减小项目体积，因此没有将 libs 目录相关内容提交到仓库，
+需开发者 clone 项目之后自己添加相关库
 
 
-待实现模块儿
-------
-这些功能都是暂时还没有实现的一些功能，不过后期会慢慢加上，尽请期待
+功能模块
+----
+一些聊天App所必须的功能模块已在第一实现实现，如发现什么bug，可以`fork`本项目自己修改并提交`pull request`，感谢你的贡献
 
-#### 基本模块
-- 联系人获取与展示
-- 位置消息收发
-- 视频消息收发
-- 群组创建与加入
-- 群变化的监听
-- 群组的展示
-- 聊天室的加入
+### 基础模块
+| Base Module        | Project Wiki            | Easemob API           |    Remarks    |
+|--------------------|:-----------------------:|:---------------------:|:-------------:|
+| Text Message       | Null                    | [Message Doc][]       |               |
+| Image Message      | Null                    | [Message Doc][]       |               |
+| View Larger Image  | Null                    | Null                  |               |
+| File Message       | Null                    | [Message Doc][]       |               |
+| Voice Message      | Null                    | [Message Doc][]       |               |
+| Resend Message     | Null                    | [Message Doc][]       |               |
+| Message Ack        | Null                    | [Message API][]       |               |
+| Message Listener   | Null                    | [Message Doc][]       |               |
+| Load More Message  | Null                    | [Message Doc][]       |               |
+| Contacts Apply For | Null                    | Null                  |               |
+| Video And Voice    | [Video & Voice Wiki]    | [Video & Voice API][] |               |
+| Contacts Manager   | Null                    | [Contacts Manager][]  |               |
+| Location Message   | Null                    | [Message Doc][]       | Unimplemented |
+| Video Message      | Null                    | [Message Doc][]       | Unimplemented |
+| Group Manger       | Null                    | [Group Manager][]     | Unimplemented |
+| Group Listener     | Null                    | [Group Manager][]     | Unimplemented |
+| Chat Room Manager  | Null                    | [ChatRoom Manager][]  | Unimplemented |
 
-#### 扩展模块
-- 群组@功能
-- 阅后即焚
-- 发送名片
+### 扩展模块
+| Expansion Module          | Project Wiki         | Easemob API         |        Remarks         |
+|:--------------------------|:--------------------:|:-------------------:|:----------------------:|
+| Conversation Top          | null                 | [Conversation Top]  | Use Conversation Ext   |
+| Conversation Last Time    | null                 | [Conversation Top]  | Use Conversation Ext   |
+| Conversation Draft        | null                 | [Conversation Top]  | Use Conversation Ext   |
+| Recall Message            | null                 | [Message Doc]       | Use CMD & Message Ext  |
+| Input Status              | null                 | [Message Doc]       | Use CMD Message        |
+| Group At                  | null                 | null                | Unimplemented          |
+| Read after the burning    | null                 | null                | Unimplemented          |
+| Share Contacts Card       | null                 | null                | Unimplemented          |
 
-License
----------
+
+版权信息
+----
 
 Copyright (c) 2015 lzan13
 
@@ -113,3 +75,14 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+[Message API]: http://www.easemob.com/apidoc/android/chat3.0/classcom_1_1hyphenate_1_1chat_1_1_e_m_message.html 'Message API'
+[Message Doc]: http://docs.easemob.com/start/200androidcleintintegration/50singlechat 'Message '
+[Call Wiki]: https://github.com/lzan13/MLChat/wiki/VideoAndVoice 'Call Wiki'
+[Call API]: http://docs.easemob.com/start/200androidcleintintegration/90realtimeaudio 'Call API'
+[Contacts Manager]: http://docs.easemob.com/im/200androidclientintegration/60buddymgmt 'Contacts Manager'
+[Group Manager]: http://docs.easemob.com/im/200androidclientintegration/70groupchat 'Group Manager'
+[ChatRoom Manager]: http://docs.easemob.com/im/200androidclientintegration/75chatroom 'ChatRoom Manager'
+
+[Conversation Top]: http://www.easemob.com/apidoc/android/chat3.0/classcom_1_1hyphenate_1_1chat_1_1_e_m_conversation.html 'Conversation Top'

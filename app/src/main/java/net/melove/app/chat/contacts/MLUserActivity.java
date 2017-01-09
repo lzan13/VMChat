@@ -39,14 +39,9 @@ public class MLUserActivity extends MLBaseActivity {
     @BindView(R.id.widget_appbar) AppBarLayout mAppbarLayout;
     @BindView(R.id.img_avatar) MLImageView mAvatarView;
     @BindView(R.id.img_cover) ImageView mCoverView;
-    @BindView(R.id.text_show_title) TextView mShowTitleView;
-    @BindView(R.id.text_show_name) TextView mShowNameView;
-    @BindView(R.id.layout_info_container) View mInfoContainer;
+    @BindView(R.id.layout_head_container) View mHeadContainer;
 
-    // 动画持续时间
-    private final int ALPHA_ANIMATIONS_DURATION = 200;
-    private boolean isShowTitle = false;
-    private boolean isShowInfoContainer = true;
+    private boolean isShowHeadContainer = true;
 
     // 当前登录用户username
     private String mCurrUsername;
@@ -91,13 +86,13 @@ public class MLUserActivity extends MLBaseActivity {
             @Override public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 int maxScroll = mAppbarLayout.getTotalScrollRange();
                 float percentage = (float) Math.abs(verticalOffset) / (float) maxScroll;
-
-                handleToolbarTitleVisibility(percentage);
-                handleAlphaOnTitle(percentage);
+                MLLog.i("maxScroll: %d, verticalOffset: %d, percentage: %f", maxScroll,
+                        verticalOffset, percentage);
+                handleHeader(percentage);
             }
         });
 
-        getToolbar().setTitle("");
+        mCollapsingToolbarLayout.setTitle(mChatId);
         setSupportActionBar(getToolbar());
         getToolbar().setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
         getToolbar().setNavigationOnClickListener(new View.OnClickListener() {
@@ -209,37 +204,20 @@ public class MLUserActivity extends MLBaseActivity {
     }
 
     /**
-     * 处理 ToolBar 上内容的显示与隐藏
-     */
-    private void handleToolbarTitleVisibility(float percentage) {
-        if (percentage >= 0.5) {
-            if (!isShowTitle) {
-                startAlphaAnimation(mShowTitleView, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
-                isShowTitle = true;
-            }
-        } else {
-            if (isShowTitle) {
-                startAlphaAnimation(mShowTitleView, ALPHA_ANIMATIONS_DURATION, View.INVISIBLE);
-                isShowTitle = false;
-            }
-        }
-    }
-
-    /**
-     * 控制Title的显示
+     * 控制 Header
      *
      * @param percentage 百分比
      */
-    private void handleAlphaOnTitle(float percentage) {
+    private void handleHeader(float percentage) {
         if (percentage >= 0.5) {
-            if (isShowInfoContainer) {
-                startAlphaAnimation(mInfoContainer, ALPHA_ANIMATIONS_DURATION, View.INVISIBLE);
-                isShowInfoContainer = false;
+            if (isShowHeadContainer) {
+                startAlphaAnimation(mHeadContainer, View.INVISIBLE);
+                isShowHeadContainer = false;
             }
         } else {
-            if (!isShowInfoContainer) {
-                startAlphaAnimation(mInfoContainer, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
-                isShowInfoContainer = true;
+            if (!isShowHeadContainer) {
+                startAlphaAnimation(mHeadContainer, View.VISIBLE);
+                isShowHeadContainer = true;
             }
         }
     }
@@ -248,10 +226,11 @@ public class MLUserActivity extends MLBaseActivity {
      * 设置渐变的动画
      *
      * @param v 控件
-     * @param duration 持续时间
      * @param visibility 显示隐藏
      */
-    public static void startAlphaAnimation(View v, long duration, int visibility) {
+    public void startAlphaAnimation(View v, int visibility) {
+        // 动画持续时间
+        int duration = getResources().getInteger(R.integer.ml_time_alpha_change);
         AlphaAnimation alphaAnimation = (visibility == View.VISIBLE) ? new AlphaAnimation(0f, 1f)
                 : new AlphaAnimation(1f, 0f);
         alphaAnimation.setDuration(duration);
