@@ -458,8 +458,9 @@ public class MLVideoCallActivity extends MLCallActivity {
             mRecordSwitch.setActivated(true);
             MLCallStatus.getInstance().setRecord(true);
             // 先创建文件夹
-            MLFileUtil.createDirectory(MLFileUtil.getFilesFromSDCard() + "videos");
-            mVideoCallHelper.startVideoRecord(MLFileUtil.getFilesFromSDCard());
+            String dirPath = MLFileUtil.getFilesFromSDCard() + "videos";
+            MLFileUtil.createDirectory(dirPath);
+            mVideoCallHelper.startVideoRecord(dirPath);
             Snackbar.make(getRootView(), "开始录制视频", Snackbar.LENGTH_LONG).show();
         }
     }

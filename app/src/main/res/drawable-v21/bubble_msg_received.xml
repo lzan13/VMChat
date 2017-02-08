@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="@color/ml_gray_54">
-    <item android:drawable="@mipmap/bg_bubble_msg_received_normal" android:state_pressed="false" />
+    android:color="@color/ml_black_12">
+    <item
+        android:drawable="@mipmap/bg_bubble_msg_received_normal"
+        android:state_pressed="false"/>
 </ripple>

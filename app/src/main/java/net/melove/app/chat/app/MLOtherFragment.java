@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.app.Fragment;
 import android.view.View;
 
+import android.view.ViewGroup;
 import android.widget.Button;
 import butterknife.BindView;
 import com.hyphenate.EMCallBack;
@@ -13,6 +14,7 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.EMPushConfigs;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.exceptions.HyphenateException;
 import java.util.ArrayList;
@@ -70,7 +72,7 @@ public class MLOtherFragment extends MLBaseFragment {
 
         String[] btns = {
                 "Sign out", "Import Message", "Insert Message", "Save Message", "Update Message",
-                "Send Group", "Sync Group", "Get Group", "Remove Group Member", "Push Message"
+                "Send Group", "Invitation Join Group"
         };
         viewGroup = (MLViewGroup) getView().findViewById(R.id.view_custom_viewgroup);
         for (int i = 0; i < btns.length; i++) {
@@ -114,87 +116,21 @@ public class MLOtherFragment extends MLBaseFragment {
                     sendGroupMessage();
                     break;
                 case 106:
-                    testSyncGroups();
-                    break;
-                case 107:
-                    testGetGroup();
-                    break;
-                case 108:
-                    testRemoveGroupMember();
-                    break;
-                case 109:
-                    testPushGroupMessage();
+                    invitationJoinGroup();
                     break;
             }
         }
     };
 
-    private void testPushGroupMessage() {
+    private void invitationJoinGroup() {
         new Thread(new Runnable() {
             @Override public void run() {
-                //EMClient.getInstance().pushManager().enableOfflinePush();
-                List<String> list = new ArrayList<>();
-                list.add("283660121626640920");
+                String groupId = "5658110918657";
+                String[] usernames = { "lz2" };
+                String reason = "邀请加入群组理由";
                 try {
-                    EMClient.getInstance().pushManager().updatePushServiceForGroup(list, true);
-                    List<String> noPustGroups = EMClient.getInstance().pushManager().getNoPushGroups();
-                    MLLog.d("No push group: %d", noPustGroups.size());
-                } catch (HyphenateException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-
-    }
-
-    private void testRemoveGroupMember() {
-        new Thread(new Runnable() {
-            @Override public void run() {
-                try {
-                    EMGroup group =
-                            EMClient.getInstance().groupManager().getGroup("283660121626640920");
-                    MLLog.i("group: name %s, owner %s, member count %d", group.getGroupName(),
-                            group.getOwner(), group.getMemberCount(),
-                            group.getMembers().toArray().toString());
-                    EMClient.getInstance()
-                            .groupManager()
-                            .removeUserFromGroup("277326560065749524",
-                                    "6eba068614024e258ee8ffd284298aae");
-                } catch (HyphenateException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-    }
-
-    /**
-     * 测试从服务器获取群详情
-     */
-    private void testGetGroup() {
-        new Thread(new Runnable() {
-            @Override public void run() {
-                try {
-                    // 这个操作会导致 so 请求群详情崩溃
-                    EMGroup group = EMClient.getInstance()
-                            .groupManager()
-                            .getGroupFromServer("283660121626640920");
-                    MLLog.i("group: name %s, owner %s, member count %d", group.getGroupName(),
-                            group.getOwner(), group.getMemberCount(),
-                            group.getMembers().toArray().toString());
-                } catch (HyphenateException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-    }
-
-    private void testSyncGroups() {
-        new Thread(new Runnable() {
-            @Override public void run() {
-                try {
-                    List<EMGroup> groups =
-                            EMClient.getInstance().groupManager().getJoinedGroupsFromServer();
-                    MLLog.i("groups count: %d", groups.size());
+                    EMClient.getInstance().groupManager().inviteUser(groupId, usernames, reason);
+                    MLLog.i("invitation join group success");
                 } catch (HyphenateException e) {
                     e.printStackTrace();
                 }

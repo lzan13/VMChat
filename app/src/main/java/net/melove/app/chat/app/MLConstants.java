@@ -6,23 +6,20 @@ package net.melove.app.chat.app;
  */
 public class MLConstants {
 
-    public static final String ML_TTK_TOKEN =
-            "e7e2a7477acd2c588622106fd81ad730e4658405:HJrxxHj1c5k3EYBcHY4Dhx-SyQ4=:eyJkZWFkbGluZSI6MTQ4MTAzNTQ4OCwiYWN0aW9uIjoiZ2V0IiwidWlkIjoiNTgwNzA3IiwiYWlkIjoiMTI2NDAzNCIsImZyb20iOiJ3ZWIifQ==";
-
     // MobAPI 后端数据存储 key
     public static final String ML_MOB_KEY = "199439878d8e7";
 
     // GCM number
-    public static final String ML_FCM_PROJECT_NUMBER = "666356109043";
+    public static final String ML_GCM_NUMBER = "666356109043";
 
-    // 集成小米推送需要的 appid 和 appkey
+    // 集成小米推送需要的 appId 和 appKey
     public static final String ML_MI_APP_ID = "2882303761517493144";
     public static final String ML_MI_APP_KEY = "5601749395144";
 
-    // 华为推送 APPID
-    public static final String ML_HUAWEI_APP_ID = "10598250";
+    // 华为推送 APP ID
+    public static final String ML_HW_APP_ID = "10598250";
 
-    // TalkingData统计平台 APPID
+    // TalkingData统计平台 appId
     public static final String TD_APP_ID = "6227388DE1332BBBF47E55EB85290B58";
 
     public static final String  ML_USER_ACCESS_TOKEN = "ml_user_access_token";

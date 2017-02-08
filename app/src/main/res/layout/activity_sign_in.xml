@@ -87,14 +87,10 @@
 
                 <Button
                     android:id="@+id/btn_sign_in"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/ml_dimen_36"
                     android:layout_marginBottom="@dimen/ml_dimen_24"
                     android:layout_marginTop="@dimen/ml_dimen_24"
-                    android:background="@drawable/ml_click_rectangle_red"
                     android:text="@string/ml_sign_in"
-                    android:textColor="@color/ml_white_87"
-                    android:textSize="@dimen/ml_size_14"
+                    style="@style/MLBtn.Red"
                     />
 
                 <LinearLayout
@@ -114,23 +110,17 @@
 
                     <Button
                         android:id="@+id/btn_sign_up"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/ml_dimen_36"
-                        android:background="@drawable/ml_click_rectangle_white"
                         android:text="@string/ml_sign_up_now"
                         android:textColor="@color/ml_blue_87"
-                        android:textSize="@dimen/ml_size_14"
+                        style="@style/MLBtn.Transparent"
                         />
                 </LinearLayout>
 
                 <Button
                     android:id="@+id/btn_forget_password"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/ml_dimen_36"
-                    android:background="@drawable/ml_click_rectangle_white"
                     android:text="@string/ml_forget_password"
                     android:textColor="@color/ml_blue_87"
-                    android:textSize="@dimen/ml_size_14"
+                    style="@style/MLBtn.Transparent"
                     />
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>

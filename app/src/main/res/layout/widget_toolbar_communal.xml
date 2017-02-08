@@ -2,7 +2,6 @@
 <android.support.design.widget.AppBarLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:melove="http://schemas.android.com/apk/res-auto"
     android:id="@+id/widget_appbar"
     android:layout_width="match_parent"
     android:layout_height="@dimen/ml_dimen_56"
@@ -23,12 +22,5 @@
         app:theme="@style/MLTheme.ToolbarOverlay"
         >
 
-        <!--头像-->
-        <!--<net.melove.app.chat.widget.MLImageView-->
-        <!--android:id="@+id/img_avatar"-->
-        <!--android:layout_width="@dimen/ml_dimen_36"-->
-        <!--android:layout_height="@dimen/ml_dimen_36"-->
-        <!--android:src="@mipmap/ic_character_blackcat"-->
-        <!--melove:ml_shape_type="round"/>-->
     </android.support.v7.widget.Toolbar>
 </android.support.design.widget.AppBarLayout>

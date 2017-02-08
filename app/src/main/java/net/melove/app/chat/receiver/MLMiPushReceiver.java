@@ -25,45 +25,46 @@ public class MLMiPushReceiver extends EMMipushReceiver {
     private String mUserAccount;
     private String mStartTime;
     private String mEndTime;
-    @Override
-    public void onReceivePassThroughMessage(Context context, MiPushMessage message) {
+
+    @Override public void onReceivePassThroughMessage(Context context, MiPushMessage message) {
         Log.d("lzan13", "mi push onReceivePassThroughMessage");
         mMessage = message.getContent();
-        if(!TextUtils.isEmpty(message.getTopic())) {
-            mTopic=message.getTopic();
-        } else if(!TextUtils.isEmpty(message.getAlias())) {
-            mAlias=message.getAlias();
-        } else if(!TextUtils.isEmpty(message.getUserAccount())) {
-            mUserAccount=message.getUserAccount();
+        if (!TextUtils.isEmpty(message.getTopic())) {
+            mTopic = message.getTopic();
+        } else if (!TextUtils.isEmpty(message.getAlias())) {
+            mAlias = message.getAlias();
+        } else if (!TextUtils.isEmpty(message.getUserAccount())) {
+            mUserAccount = message.getUserAccount();
         }
     }
-    @Override
-    public void onNotificationMessageClicked(Context context, MiPushMessage message) {
-        Log.d("lzan13", "mi push onReceivePassThroughMessage");
+
+    @Override public void onNotificationMessageClicked(Context context, MiPushMessage message) {
+        super.onNotificationMessageClicked(context, message);
+        Log.d("lzan13", "mi push onNotificationMessageClicked");
         mMessage = message.getContent();
-        if(!TextUtils.isEmpty(message.getTopic())) {
-            mTopic=message.getTopic();
-        } else if(!TextUtils.isEmpty(message.getAlias())) {
-            mAlias=message.getAlias();
-        } else if(!TextUtils.isEmpty(message.getUserAccount())) {
-            mUserAccount=message.getUserAccount();
+        if (!TextUtils.isEmpty(message.getTopic())) {
+            mTopic = message.getTopic();
+        } else if (!TextUtils.isEmpty(message.getAlias())) {
+            mAlias = message.getAlias();
+        } else if (!TextUtils.isEmpty(message.getUserAccount())) {
+            mUserAccount = message.getUserAccount();
         }
     }
-    @Override
-    public void onNotificationMessageArrived(Context context, MiPushMessage message) {
-        Log.d("lzan13", "mi push onReceivePassThroughMessage");
+
+    @Override public void onNotificationMessageArrived(Context context, MiPushMessage message) {
+        Log.d("lzan13", "mi push onNotificationMessageArrived");
         mMessage = message.getContent();
-        if(!TextUtils.isEmpty(message.getTopic())) {
-            mTopic=message.getTopic();
-        } else if(!TextUtils.isEmpty(message.getAlias())) {
-            mAlias=message.getAlias();
-        } else if(!TextUtils.isEmpty(message.getUserAccount())) {
-            mUserAccount=message.getUserAccount();
+        if (!TextUtils.isEmpty(message.getTopic())) {
+            mTopic = message.getTopic();
+        } else if (!TextUtils.isEmpty(message.getAlias())) {
+            mAlias = message.getAlias();
+        } else if (!TextUtils.isEmpty(message.getUserAccount())) {
+            mUserAccount = message.getUserAccount();
         }
     }
-    @Override
-    public void onCommandResult(Context context, MiPushCommandMessage message) {
-        Log.d("lzan13", "mi push onReceivePassThroughMessage");
+
+    @Override public void onCommandResult(Context context, MiPushCommandMessage message) {
+        Log.d("lzan13", "mi push onCommandResult");
         String command = message.getCommand();
         List<String> arguments = message.getCommandArguments();
         String cmdArg1 = ((arguments != null && arguments.size() > 0) ? arguments.get(0) : null);
@@ -95,10 +96,10 @@ public class MLMiPushReceiver extends EMMipushReceiver {
             }
         }
     }
-    @Override
-    public void onReceiveRegisterResult(Context context, MiPushCommandMessage message) {
+
+    @Override public void onReceiveRegisterResult(Context context, MiPushCommandMessage message) {
         super.onReceiveRegisterResult(context, message);
-        Log.d("lzan13", "mi push onReceivePassThroughMessage");
+        Log.d("lzan13", "mi push onReceiveRegisterResult");
         String command = message.getCommand();
         List<String> arguments = message.getCommandArguments();
         String cmdArg1 = ((arguments != null && arguments.size() > 0) ? arguments.get(0) : null);

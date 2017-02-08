@@ -13,6 +13,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.SharedElementCallback;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,6 +22,8 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +35,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 
+import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -43,7 +48,6 @@ import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMFileMessageBody;
 import com.hyphenate.chat.EMImageMessageBody;
 import com.hyphenate.chat.EMMessage;
-import com.hyphenate.chat.EMPushManager;
 import com.hyphenate.chat.EMTextMessageBody;
 
 import com.hyphenate.chat.EMVideoMessageBody;
@@ -54,6 +58,7 @@ import net.melove.app.chat.app.MLBaseActivity;
 import net.melove.app.chat.app.MLConstants;
 import net.melove.app.chat.contacts.MLUserActivity;
 import net.melove.app.chat.conversation.MLConversationExtUtils;
+import net.melove.app.chat.widget.MLImageView;
 import net.melove.app.chat.widget.recycler.MLLinearLayoutManager;
 import net.melove.app.chat.util.MLDateUtil;
 import net.melove.app.chat.util.MLFileUtil;
@@ -76,8 +81,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * Created by lzan13 on 2015/10/12 15:00.
@@ -85,6 +88,8 @@ import org.json.JSONObject;
  */
 public class MLChatActivity extends MLBaseActivity implements EMMessageListener {
 
+    @BindView(R.id.img_avatar) MLImageView mAvatarView;
+    @BindView(R.id.text_username) TextView mUsernameView;
     // RecyclerView 用来显示消息
     @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
     // 下拉刷新控件
@@ -135,7 +140,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     // 当前列表适配器
     private MLMessageAdapter mAdapter;
     // RecyclerView 的布局管理器
-    private LinearLayoutManager mLayoutManger;
+    private LinearLayoutManager mLayoutManager;
 
     // 当前是否在最底部
     private boolean isBottom = true;
@@ -198,7 +203,8 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         // 设置录音控件回调
         mRecordView.setRecordCallback(recordCallback);
 
-        getToolbar().setTitle(mChatId);
+        mUsernameView.setText(mChatId);
+        getToolbar().setTitle("");
         setSupportActionBar(getToolbar());
         // 设置toolbar图标
         getToolbar().setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
@@ -206,6 +212,21 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
         getToolbar().setNavigationOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
                 onFinish();
+            }
+        });
+
+        setEnterSharedElementCallback(new SharedElementCallback() {
+            /**
+             * 调整共享元素集合回调方法
+             *
+             * @param names 共享元素名称集合
+             * @param sharedElements 共享元素名称和 view 映射集合
+             */
+            @Override public void onMapSharedElements(List<String> names,
+                    Map<String, View> sharedElements) {
+                //super.onMapSharedElements(names, sharedElements);
+                sharedElements.clear();
+                sharedElements.put(mAvatarView.getTransitionName(), mAvatarView);
             }
         });
     }
@@ -248,18 +269,18 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
          * StaggeredGridLayoutManager   显示在交错网格项目()
          * 自定义的布局管理器，需要继承 {@link android.support.v7.widget.RecyclerView.LayoutManager}
          */
-        mLayoutManger = new MLLinearLayoutManager(mActivity);
+        mLayoutManager = new MLLinearLayoutManager(mActivity);
         // 设置 RecyclerView 的布局方向
-        mLayoutManger.setOrientation(LinearLayoutManager.VERTICAL);
+        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         // 设置 RecyclerView 显示状态固定到底部
-        //mLayoutManger.setStackFromEnd(true);
+        //mLayoutManager.setStackFromEnd(true);
         // 初始化ListView控件对象
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         // 实例化消息适配器
         mAdapter = new MLMessageAdapter(mActivity, mChatId);
 
         // 设置 RecyclerView 布局管理器
-        mRecyclerView.setLayoutManager(mLayoutManger);
+        mRecyclerView.setLayoutManager(mLayoutManager);
         /**
          *  设置 RecyclerView Item 动画
          * add/remove items时的动画是默认启用的。
@@ -440,7 +461,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
                 int position = mConversation.getAllMessages().indexOf(message);
                 switch (action) {
                     case R.id.img_avatar:
-                        avatarClick(message);
+                        avatarClick(position, message);
                         break;
                     case MLConstants.ML_ACTION_CLICK:
                         // 消息点击事件，不同的消息有不同的触发
@@ -477,13 +498,20 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
     /**
      * 头像点击触发
      *
+     * @param position 当前消息位置
      * @param message 当前点击的消息项
      */
-    private void avatarClick(EMMessage message) {
-        Intent intent = new Intent();
-        intent.setClass(mActivity, MLUserActivity.class);
+    private void avatarClick(int position, EMMessage message) {
+        Intent intent = new Intent(mActivity, MLUserActivity.class);
         intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, message.getFrom());
-        mActivity.startActivity(intent);
+        String transitionName = getString(R.string.ml_shared_element_avatar);
+
+        int firstItemPosition = mLayoutManager.findFirstVisibleItemPosition();
+        if (position - firstItemPosition >= 0) {
+            View sharedElement = mRecyclerView.getChildAt(position - firstItemPosition)
+                    .findViewById(R.id.img_avatar);
+            onStartActivity(mActivity, intent, sharedElement);
+        }
     }
 
     /**
@@ -491,6 +519,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      *
      * @param message 点击的消息
      */
+
     private void itemClick(EMMessage message) {
         if (message.getType() == EMMessage.Type.IMAGE) {
             // 图片
@@ -690,7 +719,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             message.setAttribute(MLConstants.ML_ATTR_BURN, true);
         }
 
-        //message.setAttribute("em_force_notification", true);
+        message.setAttribute("em_ignore_notification", true);
         //JSONObject extJson = new JSONObject();
         //try {
         //    extJson.put("em_push_title", "这是推送标题");
@@ -1322,7 +1351,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
             super.onScrollStateChanged(recyclerView, newState);
             // 当 RecyclerView 停止滚动后判断当前是否在底部
             if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                int lastItem = mLayoutManger.findLastVisibleItemPosition();
+                int lastItem = mLayoutManager.findLastVisibleItemPosition();
                 if (lastItem == (mAdapter.getItemCount() - 1)) {
                     isBottom = true;
                 } else {
@@ -1479,6 +1508,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      * 收到新的 CMD 消息nani
      */
     @Override public void onCmdMessageReceived(List<EMMessage> list) {
+        MLLog.i("onCmdMessageReceived list.size:%d", list.size());
         for (int i = 0; i < list.size(); i++) {
             // 透传消息
             EMMessage cmdMessage = list.get(i);
@@ -1517,7 +1547,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      * @param list 收到消息已读回执
      */
     @Override public void onMessageRead(List<EMMessage> list) {
-        MLLog.i("onMessageReadAckReceived list.size:%d", list.size());
+        MLLog.i("onMessageRead list.size:%d", list.size());
         for (EMMessage message : list) {
             // 判断消息是否是当前会话的消息，并且是自己发送的消息，只有是发送的消息才需要判断 ACK
             if (mChatId.equals(message.getTo())) {
@@ -1534,7 +1564,7 @@ public class MLChatActivity extends MLBaseActivity implements EMMessageListener 
      * @param list 收到发送回执的消息集合
      */
     @Override public void onMessageDelivered(List<EMMessage> list) {
-        MLLog.i("onMessageDeliveryAckReceived list.size:%d", list.size());
+        MLLog.i("onMessageDelivery list.size:%d", list.size());
         for (EMMessage message : list) {
             // 判断消息是否是当前会话的消息，并且是自己发送的消息，只有是发送的消息才需要判断 ACK
             if (mChatId.equals(message.getTo())) {

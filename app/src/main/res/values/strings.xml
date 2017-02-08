@@ -20,9 +20,12 @@
     <string name="ml_forget_password">忘记密码</string>
 
     <!--用户信息相关-->
+    <string name="ml_me">我</string>
     <string name="ml_nickname">昵称</string>
+    <string name="ml_qr_code">二维码</string>
     <string name="ml_signature">签名</string>
     <string name="ml_signature_null">无个性不签名</string>
+    <string name="ml_edit_user_info">编辑账户信息</string>
 
     <!--Button 按钮相关-->
     <string name="ml_btn_ok">确定</string>
@@ -76,6 +79,7 @@
     <string name="ml_apply">申请与通知</string>
     <string name="ml_edit">编辑</string>
     <string name="ml_help">帮助</string>
+    <string name="ml_save">保存</string>
     <string name="ml_search">搜索</string>
     <string name="ml_settings">设置</string>
     <string name="ml_attachment">附件</string>
@@ -267,6 +271,9 @@
 
     <!--界面跳转共享元素名称-->
     <string name="ml_shared_element_toolbar">Toolbar</string>
+    <string name="ml_shared_element_avatar">Avatar</string>
+    <string name="ml_shared_element_username">Username</string>
+
 
     <!--输入框限制输入内容-->
     <string name="ml_input_limit">0123456789abcdefghijklmnopqrstuvwxyz-_.</string>

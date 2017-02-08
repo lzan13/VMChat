@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!--为了看出效果测试时间调大一些-->
+    <integer name="ml_time_test">2500</integer>
+    <integer name="ml_time_test_delay">2200</integer>
+
+
     <!--透明度改变持续时间-->
     <integer name="ml_time_alpha_change">300</integer>
 
-    <integer name="ml_time_transition">360</integer>
-    <integer name="ml_time_share_transition">360</integer>
+    <!--过渡动画持续时间-->
+    <integer name="ml_time_transition">320</integer>
+    <integer name="ml_time_transition_delay">280</integer>
+    <integer name="ml_time_share_transition">320</integer>
 
     <!--自定义 Activity 动画持续时间-->
     <integer name="ml_time_activity_enter">320</integer>

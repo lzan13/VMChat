@@ -16,7 +16,6 @@
         android:theme="@style/MLTheme.AppBarOverlay"
         app:elevation="@dimen/ml_dimen_0"
         >
-
         <!--主界面 Toolbar-->
         <android.support.v7.widget.Toolbar
             android:id="@+id/widget_toolbar"
@@ -28,14 +27,33 @@
             app:popupTheme="@style/MLTheme.PopupOverlay"
             app:theme="@style/MLTheme.ToolbarOverlay"
             >
-            <net.melove.app.chat.widget.MLImageView
-                android:id="@+id/img_avatar"
-                android:layout_width="@dimen/ml_dimen_36"
-                android:layout_height="@dimen/ml_dimen_36"
-                android:src="@mipmap/ic_character_blackcat"
-                app:ml_border_width="@dimen/ml_dimen_2"
-                app:ml_shape_type="round"
-                />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                >
+
+                <net.melove.app.chat.widget.MLImageView
+                    android:id="@+id/img_avatar"
+                    android:layout_width="@dimen/ml_dimen_36"
+                    android:layout_height="@dimen/ml_dimen_36"
+                    android:src="@mipmap/ic_character_blackcat"
+                    android:transitionName="@string/ml_shared_element_avatar"
+                    app:ml_border_width="@dimen/ml_dimen_2"
+                    app:ml_dispatch_touch_event="false"
+                    app:ml_shape_type="round"
+                    />
+                <TextView
+                    android:id="@+id/text_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/ml_size_16"
+                    android:text="@string/ml_app_name"
+                    android:textSize="@dimen/ml_size_18"
+                    android:textStyle="bold"
+                    />
+            </LinearLayout>
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
@@ -92,4 +110,83 @@
             />
     </LinearLayout>
 
+    <!--悬浮菜单-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/ml_white_54"
+        android:clickable="true"
+        android:gravity="bottom|right"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/ml_dimen_72"
+        android:visibility="invisible"
+        >
+        <!--创建新会话-->
+        <LinearLayout
+            android:id="@+id/layout_new_conversation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:duplicateParentState="true"
+            android:gravity="right"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="@dimen/ml_dimen_8"
+                android:layout_marginLeft="@dimen/ml_dimen_4"
+                android:layout_marginRight="@dimen/ml_dimen_16"
+                android:elevation="@dimen/ml_dimen_2"
+                android:text="@string/ml_contacts"
+                style="@style/MLText.FABHint"
+                />
+            <android.support.design.widget.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/ml_dimen_16"
+                android:layout_marginRight="@dimen/ml_dimen_24"
+                app:fabSize="mini"
+                app:srcCompat="@mipmap/ic_add_contacts_white_24dp"
+                />
+        </LinearLayout>
+        <!--二维码-->
+        <LinearLayout
+            android:id="@+id/layout_qr_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:duplicateParentState="true"
+            android:gravity="right"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="@dimen/ml_dimen_8"
+                android:layout_marginLeft="@dimen/ml_dimen_4"
+                android:layout_marginRight="@dimen/ml_dimen_16"
+                android:elevation="@dimen/ml_dimen_2"
+                android:text="@string/ml_qr_code"
+                style="@style/MLText.FABHint"
+                />
+            <android.support.design.widget.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/ml_dimen_16"
+                android:layout_marginRight="@dimen/ml_dimen_24"
+                app:fabSize="mini"
+                app:srcCompat="@mipmap/ic_qr_code"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:visibility="visible"
+        app:fabSize="normal"
+        app:srcCompat="@mipmap/ic_add_white_24dp"
+        />
 </android.support.design.widget.CoordinatorLayout>

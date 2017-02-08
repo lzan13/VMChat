@@ -78,9 +78,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 
 [Message API]: http://www.easemob.com/apidoc/android/chat3.0/classcom_1_1hyphenate_1_1chat_1_1_e_m_message.html 'Message API'
-[Message Doc]: http://docs.easemob.com/start/200androidcleintintegration/50singlechat 'Message '
+[Message Doc]: http://docs.easemob.com/im/200androidclientintegration/50singlechat 'Message '
 [Call Wiki]: https://github.com/lzan13/MLChat/wiki/VideoAndVoice 'Call Wiki'
-[Call API]: http://docs.easemob.com/start/200androidcleintintegration/90realtimeaudio 'Call API'
+[Call API]: http://docs.easemob.com/im/200androidclientintegration/80audiovideo 'Call API'
 [Contacts Manager]: http://docs.easemob.com/im/200androidclientintegration/60buddymgmt 'Contacts Manager'
 [Group Manager]: http://docs.easemob.com/im/200androidclientintegration/70groupchat 'Group Manager'
 [ChatRoom Manager]: http://docs.easemob.com/im/200androidclientintegration/75chatroom 'ChatRoom Manager'

@@ -21,6 +21,8 @@ public class MLGroupListener implements EMGroupChangeListener {
      */
     @Override public void onInvitationReceived(String groupId, String groupName, String username,
             String reason) {
+        MLLog.i("onInvitationReceived groupId: %s, groupName: %s, username: %s, reason: %s",
+                groupId, groupName, username, reason);
     }
 
     /**
@@ -44,7 +46,8 @@ public class MLGroupListener implements EMGroupChangeListener {
      * @param groupName 申请加入的群组名称
      * @param username 同意申请的用户名（一般就是群主）
      */
-    @Override public void onRequestToJoinAccepted(String groupId, String groupName, String username) {
+    @Override public void onRequestToJoinAccepted(String groupId, String groupName,
+            String username) {
         MLLog.i("onApplicationAccept groupId:%s, groupName:%, accepter:%s", groupId, groupName,
                 username);
     }

@@ -65,7 +65,7 @@
                 android:layout_height="@dimen/ml_dimen_48"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="@dimen/ml_dimen_16"
-                android:background="@drawable/ml_click_rectangle_white"
+                android:background="@drawable/ml_click_rectangle_transparent"
                 android:src="@mipmap/ic_fullscreen_exit_white_24dp"
                 />
         </RelativeLayout>
@@ -121,7 +121,7 @@
                     android:layout_width="@dimen/ml_dimen_48"
                     android:layout_height="@dimen/ml_dimen_48"
                     android:layout_margin="@dimen/ml_dimen_8"
-                    android:background="@drawable/ml_click_rectangle_white"
+                    android:background="@drawable/ml_click_rectangle_transparent"
                     android:src="@drawable/ml_checkbox_mic"
                     />
 
@@ -131,7 +131,7 @@
                     android:layout_width="@dimen/ml_dimen_48"
                     android:layout_height="@dimen/ml_dimen_48"
                     android:layout_margin="@dimen/ml_dimen_8"
-                    android:background="@drawable/ml_click_rectangle_white"
+                    android:background="@drawable/ml_click_rectangle_transparent"
                     android:src="@drawable/ml_checkbox_speaker"
                     />
 
@@ -141,7 +141,7 @@
                     android:layout_width="@dimen/ml_dimen_48"
                     android:layout_height="@dimen/ml_dimen_48"
                     android:layout_margin="@dimen/ml_dimen_8"
-                    android:background="@drawable/ml_click_rectangle_white"
+                    android:background="@drawable/ml_click_rectangle_transparent"
                     android:src="@drawable/ml_checkbox_record"
                     />
 
@@ -186,7 +186,6 @@
                     app:backgroundTint="@color/ml_green_87"
                     app:fabSize="normal"
                     />
-
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
