@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/ml_dimen_8"
     android:layout_marginBottom="@dimen/ml_dimen_1"
-    android:background="@drawable/ml_item_click_white"
+    android:background="@drawable/ml_click_rectangle_white"
     android:gravity="center_vertical"
     android:orientation="vertical"
     >

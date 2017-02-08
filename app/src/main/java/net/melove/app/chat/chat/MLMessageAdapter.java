@@ -192,6 +192,7 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
      * 刷新全部
      */
     public void refreshAll() {
+        MLLog.d("refreshAll");
         updateData();
         notifyDataSetChanged();
     }
@@ -200,6 +201,7 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
      * 有新消息来时的刷新方法
      */
     public void refreshInserted(int position) {
+        MLLog.d("refreshInsterted");
         updateData();
         notifyItemInserted(position);
     }
@@ -211,6 +213,7 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
      * @param count 数据添加数量
      */
     public void refreshInsertedMore(int position, int count) {
+        MLLog.d("refreshInsertedMore");
         updateData();
         notifyItemRangeInserted(position, count);
     }
@@ -221,6 +224,7 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
      * @param position 需要刷新的位置
      */
     public void refreshRemoved(int position) {
+        MLLog.d("refreshRemoved");
         updateData();
         notifyItemRemoved(position);
     }
@@ -231,6 +235,7 @@ public class MLMessageAdapter extends RecyclerView.Adapter<MLMessageAdapter.Mess
      * @param position 数据改变的位置
      */
     public void refreshChanged(int position) {
+        MLLog.d("refreshChanged");
         updateData();
         notifyItemChanged(position);
     }

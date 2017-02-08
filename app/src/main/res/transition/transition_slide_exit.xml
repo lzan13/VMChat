@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <transitionSet xmlns:android="http://schemas.android.com/apk/res/android">
-    <explode>
+    <slide
+        android:duration="@integer/ml_time_test"
+        android:slideEdge="top">
         <targets>
             <target android:excludeId="@android:id/statusBarBackground"/>
             <target android:excludeId="@android:id/navigationBarBackground"/>
         </targets>
-    </explode>
+    </slide>
+
 </transitionSet>

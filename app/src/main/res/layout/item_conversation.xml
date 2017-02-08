@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/ml_dimen_1"
-    android:background="@drawable/ml_item_click_white"
+    android:background="@drawable/ml_click_rectangle_white"
     android:gravity="center_vertical"
     android:orientation="vertical"
     android:paddingLeft="@dimen/ml_dimen_16"
@@ -23,6 +23,7 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:src="@mipmap/ic_character_blackcat"
+            android:transitionName="@string/ml_shared_element_avatar"
             melove:ml_border_color="@color/ml_white_87"
             melove:ml_border_width="@dimen/ml_dimen_2"
             melove:ml_dispatch_touch_event="false"
@@ -86,19 +87,6 @@
                 android:minHeight="@dimen/ml_dimen_24"
                 android:orientation="horizontal"
                 >
-                <!--未读数-->
-                <TextView
-                    android:id="@+id/text_unread_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@mipmap/ic_unread_count"
-                    android:gravity="center"
-                    android:padding="@dimen/ml_dimen_2"
-                    android:text="1"
-                    android:textColor="@color/ml_white_87"
-                    android:textSize="@dimen/ml_size_10"
-                    />
-
                 <!--置顶标记-->
                 <ImageView
                     android:id="@+id/img_pushpin"

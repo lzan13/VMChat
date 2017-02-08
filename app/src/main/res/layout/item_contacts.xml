@@ -3,7 +3,7 @@
     xmlns:melove="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/ml_item_click_white"
+    android:background="@drawable/ml_click_rectangle_white"
     android:gravity="center_vertical"
     android:orientation="vertical"
     android:paddingLeft="@dimen/ml_dimen_16"

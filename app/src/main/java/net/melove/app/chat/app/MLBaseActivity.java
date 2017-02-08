@@ -1,26 +1,27 @@
 package net.melove.app.chat.app;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-
 import android.view.View;
 import com.squareup.leakcanary.RefWatcher;
-
+import java.util.List;
 import net.melove.app.chat.R;
 import net.melove.app.chat.connection.MLConnectionEvent;
 import net.melove.app.chat.util.MLLog;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.List;
 
 /**
  * Created by lzan13 on 2015/7/4.
@@ -64,6 +65,7 @@ public class MLBaseActivity extends AppCompatActivity {
         if (mToolbar == null) {
             mToolbar = (Toolbar) findViewById(R.id.widget_toolbar);
         }
+        mToolbar.setTitle("");
         return mToolbar;
     }
 
@@ -72,21 +74,6 @@ public class MLBaseActivity extends AppCompatActivity {
             mRootView = findViewById(R.id.layout_coordinator);
         }
         return mRootView;
-    }
-
-    /**
-     * 公用的 Activity 跳转方法
-     * 基类定义并实现的方法，为了以后方便扩展
-     *
-     * @param intent 跳转的意图
-     */
-    public void superJump(Intent intent) {
-        startActivity(intent);
-        /**
-         * 5.0以上的跳转方法
-         * ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this);
-         * ActivityCompat.startActivity(this, intent, optionsCompat.toBundle());
-         */
     }
 
     /**
@@ -185,18 +172,55 @@ public class MLBaseActivity extends AppCompatActivity {
     }
 
     /**
+     * 封装公共的 Activity 跳转方法
+     * 基类定义并实现的方法，为了以后方便扩展
+     *
+     * @param activity 当前 Activity 对象
+     * @param intent 界面跳转 Intent 实例对象
+     */
+    public void onStartActivity(Activity activity, Intent intent) {
+        ActivityOptionsCompat optionsCompat =
+                ActivityOptionsCompat.makeSceneTransitionAnimation(activity);
+        ActivityCompat.startActivity(activity, intent, optionsCompat.toBundle());
+    }
+
+    /**
+     * 带有共享元素的 Activity 跳转方法
+     *
+     * @param activity 当前活动 Activity
+     * @param intent 跳转意图
+     * @param sharedElement 共享元素
+     */
+    public void onStartActivity(Activity activity, Intent intent, View sharedElement) {
+        ActivityOptionsCompat optionsCompat =
+                ActivityOptionsCompat.makeSceneTransitionAnimation(activity, sharedElement,
+                        sharedElement.getTransitionName());
+        ActivityCompat.startActivity(activity, intent, optionsCompat.toBundle());
+    }
+
+    /**
+     * 带有多个共享元素的 Activity 跳转方法
+     *
+     * @param activity 当前活动 Activity
+     * @param intent 跳转意图
+     * @param pairs 共享元素集合
+     */
+    public void onStartActivity(Activity activity, Intent intent, Pair<View, String>... pairs) {
+        ActivityOptionsCompat optionsCompat =
+                ActivityOptionsCompat.makeSceneTransitionAnimation(activity, pairs);
+        ActivityCompat.startActivity(activity, intent, optionsCompat.toBundle());
+    }
+
+    /**
      * 自定义返回方法
      */
     protected void onFinish() {
-
-        mActivity.finish();
-
         // 根据不同的系统版本选择不同的 finish 方法
-        //if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-        //    mActivity.finish();
-        //} else {
-        //    mActivity.finishAfterTransition();
-        //}
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
+            mActivity.finish();
+        } else {
+            ActivityCompat.finishAfterTransition(mActivity);
+        }
     }
 
     @Override protected void onRestart() {

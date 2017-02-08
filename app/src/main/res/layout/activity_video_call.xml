@@ -64,7 +64,7 @@
                 android:layout_height="@dimen/ml_dimen_48"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="@dimen/ml_dimen_16"
-                android:background="@drawable/ml_click_rectangle_white"
+                android:background="@drawable/ml_click_rectangle_transparent"
                 android:src="@drawable/ml_checkbox_change_camera"
                 />
             <LinearLayout
@@ -98,11 +98,10 @@
                 android:layout_height="@dimen/ml_dimen_48"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="@dimen/ml_dimen_16"
-                android:background="@drawable/ml_click_rectangle_white"
+                android:background="@drawable/ml_click_rectangle_transparent"
                 android:src="@mipmap/ic_fullscreen_exit_white_24dp"
                 />
         </RelativeLayout>
-
 
         <LinearLayout
             android:id="@+id/layout_calling"
@@ -127,7 +126,7 @@
                     android:layout_width="@dimen/ml_dimen_48"
                     android:layout_height="@dimen/ml_dimen_48"
                     android:layout_margin="@dimen/ml_dimen_8"
-                    android:background="@drawable/ml_click_rectangle_white"
+                    android:background="@drawable/ml_click_rectangle_transparent"
                     android:src="@drawable/ml_checkbox_mic"
                     />
 
@@ -137,7 +136,7 @@
                     android:layout_width="@dimen/ml_dimen_48"
                     android:layout_height="@dimen/ml_dimen_48"
                     android:layout_margin="@dimen/ml_dimen_8"
-                    android:background="@drawable/ml_click_rectangle_white"
+                    android:background="@drawable/ml_click_rectangle_transparent"
                     android:src="@drawable/ml_checkbox_camera"
                     />
 
@@ -147,7 +146,7 @@
                     android:layout_width="@dimen/ml_dimen_48"
                     android:layout_height="@dimen/ml_dimen_48"
                     android:layout_margin="@dimen/ml_dimen_8"
-                    android:background="@drawable/ml_click_rectangle_white"
+                    android:background="@drawable/ml_click_rectangle_transparent"
                     android:src="@drawable/ml_checkbox_speaker"
                     />
 
@@ -157,7 +156,7 @@
                     android:layout_width="@dimen/ml_dimen_48"
                     android:layout_height="@dimen/ml_dimen_48"
                     android:layout_margin="@dimen/ml_dimen_8"
-                    android:background="@drawable/ml_click_rectangle_white"
+                    android:background="@drawable/ml_click_rectangle_transparent"
                     android:src="@drawable/ml_checkbox_record"
                     />
 
@@ -167,7 +166,7 @@
                     android:layout_width="@dimen/ml_dimen_48"
                     android:layout_height="@dimen/ml_dimen_48"
                     android:layout_margin="@dimen/ml_dimen_8"
-                    android:background="@drawable/ml_click_rectangle_white"
+                    android:background="@drawable/ml_click_rectangle_transparent"
                     android:src="@mipmap/ic_info_outline_white_24dp"
                     />
                 <ImageButton
@@ -175,7 +174,7 @@
                     android:layout_width="@dimen/ml_dimen_48"
                     android:layout_height="@dimen/ml_dimen_48"
                     android:layout_margin="@dimen/ml_dimen_8"
-                    android:background="@drawable/ml_click_rectangle_white"
+                    android:background="@drawable/ml_click_rectangle_transparent"
                     android:src="@mipmap/ic_camera_white_24dp"
                     />
             </LinearLayout>

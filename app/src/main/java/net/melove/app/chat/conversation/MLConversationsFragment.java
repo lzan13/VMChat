@@ -3,15 +3,19 @@ package net.melove.app.chat.conversation;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import android.view.View;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 
 import net.melove.app.chat.R;
+import net.melove.app.chat.app.MLBaseActivity;
 import net.melove.app.chat.app.MLConstants;
 import net.melove.app.chat.chat.MLMessageEvent;
 import net.melove.app.chat.interfaces.MLItemCallBack;
@@ -37,6 +41,7 @@ public class MLConversationsFragment extends MLBaseFragment {
 
     // 代替 ListView 用来显示会话列表的控件
     @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
+    private LinearLayoutManager mLayoutManager;
 
     // 保存会话对象的集合
     private List<EMConversation> mConversations = new ArrayList<EMConversation>();
@@ -91,7 +96,8 @@ public class MLConversationsFragment extends MLBaseFragment {
         loadConversationList();
         // 实例化会话列表的 Adapter 对象
         mAdapter = new MLConversationAdapter(mActivity, mConversations);
-        mRecyclerView.setLayoutManager(new MLLinearLayoutManager(mActivity));
+        mLayoutManager = new MLLinearLayoutManager(mActivity);
+        mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
         // 通过自定义接口来实现RecyclerView item的点击和长按事件
@@ -190,13 +196,20 @@ public class MLConversationsFragment extends MLBaseFragment {
         Intent intent = new Intent();
         if (conversation.conversationId().equals(MLConstants.ML_CONVERSATION_ID_APPLY)) {
             intent.setClass(mActivity, MLApplyForActivity.class);
+            ((MLBaseActivity) mActivity).onStartActivity(mActivity, intent);
         } else {
             intent.setClass(mActivity, MLChatActivity.class);
             intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID,
                     mConversations.get(position).conversationId());
             intent.putExtra(MLConstants.ML_EXTRA_TYPE, mConversations.get(position).getType());
+
+            int firstItemPosition = mLayoutManager.findFirstVisibleItemPosition();
+            if (position - firstItemPosition >= 0) {
+                View avatarView = mRecyclerView.getChildAt(position - firstItemPosition)
+                        .findViewById(R.id.img_avatar);
+                ((MLBaseActivity) mActivity).onStartActivity(mActivity, intent, avatarView);
+            }
         }
-        mActivity.startActivity(intent);
     }
 
     /**

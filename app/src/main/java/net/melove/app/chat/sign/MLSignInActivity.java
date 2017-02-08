@@ -81,7 +81,7 @@ public class MLSignInActivity extends MLBaseActivity {
                 break;
             case R.id.btn_sign_up:
                 Intent intent = new Intent(mActivity, MLSignUpActivity.class);
-                superJump(intent);
+                onStartActivity(mActivity, intent);
                 break;
             case R.id.btn_forget_password:
                 forgetPassword();
@@ -191,7 +191,7 @@ public class MLSignInActivity extends MLBaseActivity {
                         mDialog.dismiss();
                         // 登录成功跳转到主界面
                         Intent intent = new Intent(mActivity, MLMainActivity.class);
-                        superJump(intent);
+                        onStartActivity(mActivity, intent);
                         // 根据不同的系统版本选择不同的 finish 方法
                         onFinish();
                     }

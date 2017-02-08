@@ -50,7 +50,7 @@ public class MLImageView extends ImageView {
     protected int radius;
     // 图片类型（0正常, 1圆形, 2圆角）
     protected int shapeType;
-    // 当前控件是否继续分发触摸事件，默认继续分发，即不拦截触摸事件
+    // 当前控件是否继续分发触摸事件，默认 true 即继续向下分发，不拦截触摸事件
     protected boolean isDispatchTouchEvent = true;
 
     public MLImageView(Context context) {
@@ -72,7 +72,7 @@ public class MLImageView extends ImageView {
         //初始化默认值
         blurRadius = 0;
         blurScale = 2;
-        borderWidth = 8;
+        borderWidth = 4;
         borderColor = 0xddffffff;
         pressAlpha = 0x42;
         pressColor = 0x42000000;

@@ -10,9 +10,61 @@
     android:fitsSystemWindows="true"
     tools:context=".chat.MLChatActivity"
     >
+    <!--Toolbar-->
+    <android.support.design.widget.AppBarLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/widget_appbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/ml_dimen_56"
+        android:theme="@style/MLTheme.AppBarOverlay"
+        app:elevation="@dimen/ml_dimen_0"
+        >
 
-    <include layout="@layout/widget_toolbar_communal"/>
+        <!--公共的 Toolbar 控件-->
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/widget_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:transitionName="@string/ml_shared_element_toolbar"
+            app:elevation="@dimen/ml_dimen_0"
+            app:popupTheme="@style/MLTheme.PopupOverlay"
+            app:theme="@style/MLTheme.ToolbarOverlay"
+            >
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                >
+
+                <net.melove.app.chat.widget.MLImageView
+                    android:id="@+id/img_avatar"
+                    android:layout_width="@dimen/ml_dimen_36"
+                    android:layout_height="@dimen/ml_dimen_36"
+                    android:src="@mipmap/ic_character_blackcat"
+                    android:transitionName="@string/ml_shared_element_avatar"
+                    app:ml_border_width="@dimen/ml_dimen_2"
+                    app:ml_dispatch_touch_event="false"
+                    app:ml_shape_type="round"
+                    />
+                <TextView
+                    android:id="@+id/text_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/ml_size_16"
+                    android:text="@string/ml_app_name"
+                    android:textSize="@dimen/ml_size_18"
+                    android:textStyle="bold"
+                    />
+            </LinearLayout>
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+
+    <!--中间内容部分-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -71,7 +123,7 @@
                             android:layout_width="@dimen/ml_dimen_48"
                             android:layout_height="@dimen/ml_dimen_48"
                             android:layout_centerInParent="true"
-                            android:background="@drawable/ml_click_rectangle_white"
+                            android:background="@drawable/ml_click_rectangle_transparent"
                             android:src="@mipmap/ic_send_white_24dp"
                             android:tint="@color/ml_red_87"
                             android:visibility="gone"
@@ -92,7 +144,7 @@
                             android:layout_width="@dimen/ml_dimen_48"
                             android:layout_height="@dimen/ml_dimen_48"
                             android:layout_centerInParent="true"
-                            android:background="@drawable/ml_click_rectangle_white"
+                            android:background="@drawable/ml_click_rectangle_transparent"
                             android:src="@mipmap/ic_keyboard_face_white_24dp"
                             android:tint="@color/ml_red_87"
                             />
@@ -102,7 +154,7 @@
                             android:layout_width="@dimen/ml_dimen_48"
                             android:layout_height="@dimen/ml_dimen_48"
                             android:layout_centerInParent="true"
-                            android:background="@drawable/ml_click_rectangle_white"
+                            android:background="@drawable/ml_click_rectangle_transparent"
                             android:src="@mipmap/ic_keyboard_white_24dp"
                             android:tint="@color/ml_red_87"
                             android:visibility="gone"

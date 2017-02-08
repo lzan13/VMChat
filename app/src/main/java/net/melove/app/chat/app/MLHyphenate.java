@@ -161,7 +161,7 @@ public class MLHyphenate {
         // 设置私有化 Rest 地址+端口号
         //options.setRestServer("a1.easemob.com:80");
         // 设置Appkey，如果配置文件已经配置，这里可以不用设置
-        //options.setAppKey("soyoung#syapp");
+        //options.setAppKey("fandou#knightepal");
 
         // 设置自动登录
         options.setAutoLogin(true);
@@ -181,9 +181,9 @@ public class MLHyphenate {
         options.allowChatroomOwnerLeave(true);
 
         // Google 推送 Project Number
-        options.setGCMNumber(MLConstants.ML_FCM_PROJECT_NUMBER);
+        options.setGCMNumber(MLConstants.ML_GCM_NUMBER);
         // 华为推送 AppId
-        options.setHuaweiPushAppId(MLConstants.ML_HUAWEI_APP_ID);
+        options.setHuaweiPushAppId(MLConstants.ML_HW_APP_ID);
         // 小米推送 AppId
         options.setMipushConfig(MLConstants.ML_MI_APP_ID, MLConstants.ML_MI_APP_KEY);
 

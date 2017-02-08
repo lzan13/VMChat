@@ -61,8 +61,6 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="@dimen/ml_dimen_56"
                     android:src="@mipmap/ic_character_blackcat"
-                    android:transitionName="@string/ml_shared_element_avatar"
-                    app:ml_border_width="@dimen/ml_dimen_2"
                     app:ml_shape_type="round"
                     />
             </LinearLayout>
@@ -81,7 +79,6 @@
                 />
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
-
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -92,13 +89,12 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/ml_dimen_8"
             android:orientation="vertical"
             >
 
-            <!--账户ID-->
+            <!--昵称-->
             <TextView
-                android:id="@+id/text_account"
+                android:id="@+id/text_nickname"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/ml_dimen_48"
                 android:layout_marginTop="@dimen/ml_dimen_4"
@@ -142,17 +138,4 @@
                 />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
-
-    <!--悬浮按钮 设置在锚点在appbar上，可以滚动隐藏-->
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_add_or_chat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/ml_dimen_16"
-        android:src="@mipmap/ic_add_white_24dp"
-        android:visibility="visible"
-        app:fabSize="normal"
-        app:layout_anchor="@id/widget_appbar"
-        app:layout_anchorGravity="bottom|end"
-        />
 </android.support.design.widget.CoordinatorLayout>

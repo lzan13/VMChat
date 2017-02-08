@@ -1,6 +1,6 @@
 <resources>
     <!-- 应用基础主题 -->
-    <style name="MLTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="MLTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- 在这里自定义自己的主题 -->
         <!-- 默认主要颜色，一般是 Toolbar 等颜色 -->
         <item name="colorPrimary">@color/ml_theme_primary</item>
@@ -30,30 +30,32 @@
     </style>
 
     <!--启动时的主题样式-->
-    <style name="MLTheme.Launcher" parent="MLTheme.Base">
+    <style name="MLTheme.Launcher">
         <!--防止启动瞬间黑屏或白屏，程序启动时的背景图，可以设置为一张代表性的logo，或者设置app框架类图-->
         <item name="android:windowBackground">@mipmap/bg_launcher_statusbar_toolbar_tab</item>
         <item name="android:colorBackground">@color/ml_theme_background</item>
     </style>
 
     <!--设置 Activity 透明主题-->
-    <style name="MLTheme.Transparent" parent="MLTheme.Base">
+    <style name="MLTheme.Transparent">
         <item name="android:windowAnimationStyle">@style/AnimFade</item>
         <item name="android:windowBackground">@color/ml_theme_background</item>
         <item name="android:windowIsTranslucent">true</item>
     </style>
     <!--设置 Activity 半透明主题-->
-    <style name="MLTheme.Translucent" parent="MLTheme.Base">
+    <style name="MLTheme.Translucent">
         <item name="android:windowAnimationStyle">@style/AnimFade</item>
         <item name="android:windowBackground">@color/ml_theme_background</item>
         <item name="android:windowIsTranslucent">true</item>
     </style>
 
     <!--默认主题-->
-    <style name="MLTheme.Default" parent="MLTheme.Base">
+    <style name="MLTheme.Default">
         <!--按钮颜色-->
         <!--<item name="colorButtonNormal">@color/ml_orange_54</item>-->
         <!--<item name="android:colorButtonNormal">@color/ml_gray_87</item>-->
+
+        <item name="android:windowAnimationStyle">@style/AnimSlide</item>
     </style>
 
 
@@ -123,6 +125,51 @@
         <item name="android:textSize">@dimen/ml_size_16</item>
     </style>
 
+    <!--红色按钮-->
+    <style name="MLBtn.Red" parent="TextAppearance.AppCompat.Button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/ml_dimen_40</item>
+        <item name="android:background">@drawable/ml_click_rectangle_red</item>
+        <item name="android:textColor">@color/ml_white_87</item>
+        <item name="android:textSize">@dimen/ml_size_14</item>
+    </style>
+    <!--蓝色按钮-->
+    <style name="MLBtn.Blue" parent="TextAppearance.AppCompat.Button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/ml_dimen_40</item>
+        <item name="android:background">@drawable/ml_click_rectangle_blue</item>
+        <item name="android:textColor">@color/ml_white_87</item>
+        <item name="android:textSize">@dimen/ml_size_14</item>
+    </style>
+    <!--白色按钮-->
+    <style name="MLBtn.White" parent="TextAppearance.AppCompat.Button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/ml_dimen_40</item>
+        <item name="android:background">@drawable/ml_click_rectangle_white</item>
+        <item name="android:textColor">@color/ml_black_87</item>
+        <item name="android:textSize">@dimen/ml_size_14</item>
+    </style>
+    <!--透明按钮-->
+    <style name="MLBtn.Transparent" parent="TextAppearance.AppCompat.Button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/ml_dimen_36</item>
+        <item name="android:background">@drawable/ml_click_rectangle_transparent</item>
+        <item name="android:textColor">@color/ml_black_54</item>
+        <item name="android:textSize">@dimen/ml_size_14</item>
+    </style>
+
+    <!--定义文本样式-->
+    <style name="MLText.FABHint" parent="TextAppearance.Design.Hint">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/ml_shape_fab_text</item>
+        <item name="android:textColor">@color/ml_black_54</item>
+        <item name="android:textSize">@dimen/ml_size_14</item>
+        <item name="android:paddingBottom">@dimen/ml_dimen_2</item>
+        <item name="android:paddingLeft">@dimen/ml_dimen_4</item>
+        <item name="android:paddingRight">@dimen/ml_dimen_4</item>
+        <item name="android:paddingTop">@dimen/ml_dimen_2</item>
+    </style>
 
     <!--自定义弹出框样式-->
     <style name="MLTheme.Light.Dialog" parent="Theme.AppCompat.Dialog">

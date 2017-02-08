@@ -12,6 +12,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,11 +28,15 @@ import com.hyphenate.chat.EMClient;
 
 import net.melove.app.chat.R;
 import net.melove.app.chat.connection.MLConnectionEvent;
+import net.melove.app.chat.contacts.MLUserActivity;
 import net.melove.app.chat.conversation.MLConversationsFragment;
 import net.melove.app.chat.contacts.MLContactsFragment;
+import net.melove.app.chat.setting.MLMeFragment;
 import net.melove.app.chat.sign.MLSignInActivity;
 import net.melove.app.chat.util.MLNetUtil;
 import net.melove.app.chat.chat.MLChatActivity;
+import net.melove.app.chat.util.MLSPUtil;
+import net.melove.app.chat.widget.MLImageView;
 
 /**
  * Created by lzan13 on 2015/7/2.
@@ -42,13 +48,17 @@ public class MLMainActivity extends MLBaseActivity {
     @BindView(R.id.widget_tab_layout) TabLayout mTabLayout;
     @BindView(R.id.layout_connection_error) LinearLayout mConnectionStatusLayout;
     @BindView(R.id.text_connection_error) TextView mConnectionStatusView;
+    @BindView(R.id.img_avatar) MLImageView mAvatarView;
+    @BindView(R.id.text_username) TextView mUsernameView;
 
+    private String mCurrentUsername;
     // TabLayout 装填的内容
     private String mTabTitles[] = null;
     private Fragment mFragments[];
     private int mCurrentTabIndex;
-    private MLContactsFragment mContactsFragment;
     private MLConversationsFragment mConversationFragment;
+    private MLContactsFragment mContactsFragment;
+    private MLMeFragment mMeFragment;
     private MLOtherFragment mOtherFragment;
 
     // 创建新会话对话框
@@ -65,7 +75,7 @@ public class MLMainActivity extends MLBaseActivity {
         } else {
             // 跳转到登录界面
             Intent intent = new Intent(this, MLSignInActivity.class);
-            superJump(intent);
+            onStartActivity(this, intent);
             this.finish();
         }
 
@@ -77,33 +87,32 @@ public class MLMainActivity extends MLBaseActivity {
         ButterKnife.bind(this);
 
         init();
-        initView();
     }
 
     /**
      * 界面初始化操作
      */
     private void init() {
-    }
-
-    private void initView() {
         mActivity = this;
 
-        getToolbar().setTitle(R.string.ml_chat);
-        setSupportActionBar(getToolbar());
+        mCurrentUsername = (String) MLSPUtil.get(MLConstants.ML_SHARED_USERNAME, "");
+        mUsernameView.setText(mCurrentUsername);
 
+        setSupportActionBar(getToolbar());
         mCurrentTabIndex = 0;
         mTabTitles = new String[] {
-                mActivity.getResources().getString(R.string.ml_chat),
-                mActivity.getResources().getString(R.string.ml_contacts),
-                mActivity.getResources().getString(R.string.ml_test)
+                getString(R.string.ml_chat), getString(R.string.ml_contacts),
+                getString(R.string.ml_me), getString(R.string.ml_test)
         };
 
-        mContactsFragment = MLContactsFragment.newInstance();
         mConversationFragment = MLConversationsFragment.newInstance();
+        mContactsFragment = MLContactsFragment.newInstance();
+        mMeFragment = MLMeFragment.newInstance();
         mOtherFragment = MLOtherFragment.newInstance();
 
-        mFragments = new Fragment[] { mConversationFragment, mContactsFragment, mOtherFragment };
+        mFragments = new Fragment[] {
+                mConversationFragment, mContactsFragment, mMeFragment, mOtherFragment
+        };
         MLViewPagerAdapter adapter =
                 new MLViewPagerAdapter(getSupportFragmentManager(), mFragments, mTabTitles);
         mViewPager.setAdapter(adapter);
@@ -118,7 +127,6 @@ public class MLMainActivity extends MLBaseActivity {
             }
 
             @Override public void onPageSelected(int position) {
-                getToolbar().setTitle(mTabTitles[position]);
             }
 
             @Override public void onPageScrollStateChanged(int state) {
@@ -132,10 +140,16 @@ public class MLMainActivity extends MLBaseActivity {
     /**
      * Fab 按钮控件点击监听
      */
-    @OnClick({ R.id.layout_connection_error }) void onClick(View view) {
+    @OnClick({ R.id.img_avatar, R.id.layout_connection_error }) void onClick(View view) {
+        Intent intent = null;
         switch (view.getId()) {
+            case R.id.img_avatar:
+                intent = new Intent(mActivity, MLUserActivity.class);
+                intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID, mCurrentUsername);
+                onStartActivity(mActivity, intent, mAvatarView);
+                break;
             case R.id.layout_connection_error:
-                Intent intent = null;
+                // 网络有错误，进行网络诊断
                 /**
                  * 判断手机系统的版本！如果API大于10 就是3.0+
                  * 因为3.0以上的版本的设置和3.0以下的设置不一样，调用的方法不同
@@ -184,7 +198,7 @@ public class MLMainActivity extends MLBaseActivity {
                         Intent intent = new Intent(mActivity, MLChatActivity.class);
                         intent.putExtra(MLConstants.ML_EXTRA_CHAT_ID,
                                 editText.getText().toString().trim());
-                        superJump(intent);
+                        onStartActivity(mActivity, intent);
                     }
                 });
         alertDialogBuilder.setNegativeButton(R.string.ml_btn_cancel,
@@ -202,7 +216,7 @@ public class MLMainActivity extends MLBaseActivity {
      */
     private void startSearch() {
         Intent intent = new Intent(mActivity, MLSearchActivity.class);
-        superJump(intent);
+        onStartActivity(mActivity, intent);
     }
 
     /**
@@ -267,13 +281,22 @@ public class MLMainActivity extends MLBaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Take care of popping the fragment back stack or finishing the activity
+     * as appropriate.
+     */
+    @Override public void onBackPressed() {
+        //super.onBackPressed();
+        onFinish();
+    }
+
     @Override protected void onResume() {
         super.onResume();
         checkConnectionStatus();
         if (!EMClient.getInstance().isLoggedInBefore()) {
             // 跳转到登录界面
             Intent intent = new Intent(this, MLSignInActivity.class);
-            superJump(intent);
+            onStartActivity(mActivity, intent);
             this.finish();
         }
     }

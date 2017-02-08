@@ -85,16 +85,10 @@
 
                 <Button
                     android:id="@+id/btn_sign_up"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/ml_dimen_36"
                     android:layout_marginBottom="@dimen/ml_dimen_24"
                     android:layout_marginTop="@dimen/ml_dimen_24"
-                    android:background="@drawable/ml_click_rectangle_red"
-                    android:paddingLeft="@dimen/ml_dimen_16"
-                    android:paddingRight="@dimen/ml_dimen_16"
                     android:text="@string/ml_sign_up_now"
-                    android:textColor="@color/ml_white_87"
-                    android:textSize="@dimen/ml_size_14"
+                    style="@style/MLBtn.Red"
                     />
 
                 <CheckBox

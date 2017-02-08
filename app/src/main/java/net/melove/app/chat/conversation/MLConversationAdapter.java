@@ -1,6 +1,7 @@
 package net.melove.app.chat.conversation;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
@@ -183,17 +184,20 @@ public class MLConversationAdapter
         MLLog.i("conversation unread count %d", unreadCount);
         if (unreadCount == 0) {
             if (MLConversationExtUtils.getConversationUnread(conversation)) {
-                holder.countView.setVisibility(View.VISIBLE);
-                holder.countView.setText("1");
+                holder.titleView.setTypeface(Typeface.DEFAULT_BOLD);
+                holder.contentView.setTypeface(Typeface.DEFAULT_BOLD);
+                holder.contentView.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.ml_black_87));
             } else {
-                holder.countView.setVisibility(View.GONE);
+                holder.titleView.setTypeface(Typeface.DEFAULT);
+                holder.contentView.setTypeface(Typeface.DEFAULT);
+                holder.contentView.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.ml_black_54));
             }
-        } else if (unreadCount >= 100) {
-            holder.countView.setVisibility(View.VISIBLE);
-            holder.countView.setText("99+");
         } else {
-            holder.countView.setVisibility(View.VISIBLE);
-            holder.countView.setText(String.valueOf(unreadCount));
+            holder.titleView.setTypeface(Typeface.DEFAULT_BOLD);
+            holder.contentView.setTypeface(Typeface.DEFAULT_BOLD);
+            holder.contentView.setTextColor(ContextCompat.getColor(mContext, R.color.ml_black_87));
         }
         /**
          * 判断当前会话是否置顶
@@ -273,7 +277,6 @@ public class MLConversationAdapter
         public TextView contentView;
         public TextView timeView;
         public ImageView pushpinView;
-        public TextView countView;
 
         /**
          * 构造方法，初始化列表项的控件
@@ -287,7 +290,6 @@ public class MLConversationAdapter
             contentView = (TextView) itemView.findViewById(R.id.text_content);
             timeView = (TextView) itemView.findViewById(R.id.text_time);
             pushpinView = (ImageView) itemView.findViewById(R.id.img_pushpin);
-            countView = (TextView) itemView.findViewById(R.id.text_unread_count);
         }
     }
 }
