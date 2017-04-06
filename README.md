@@ -1,4 +1,4 @@
-MLChat
+VMChat
 ======
 此项目是使用`AndroidStudio`通过集成环信`SDK3.x`集成的一个聊天项目，此项目旨在帮助开发者更好的集成聊天，
 并且项目遵循`Android Medital Design`设计模式，方便开发者参考做出更符合`Android`自身风格的应用；
