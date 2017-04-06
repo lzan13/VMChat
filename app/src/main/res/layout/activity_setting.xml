@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/ml_gray_38"
+    android:background="@color/vm_gray_38"
     android:clipChildren="false"
     android:fitsSystemWindows="true"
-    tools:context=".setting.MLSettingsActivity"
+    tools:context="com.vmloft.develop.app.chat.setting.SettingsActivity"
     >
     <include layout="@layout/widget_toolbar_communal"/>
     <FrameLayout

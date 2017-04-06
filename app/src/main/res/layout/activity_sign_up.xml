@@ -6,10 +6,10 @@
     android:id="@+id/layout_coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/ml_theme_background"
+    android:background="@color/vm_theme_background_light"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
-    tools:context=".sign.MLSignUpActivity"
+    tools:context="com.vmloft.develop.app.chat.sign.SignUpActivity"
     >
 
     <!--公共的 Toolbar 控件-->
@@ -30,65 +30,65 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/ml_dimen_16"
+                android:layout_margin="@dimen/vm_dimen_16"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:padding="@dimen/ml_dimen_16"
+                android:padding="@dimen/vm_dimen_16"
                 >
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/ml_hint_sign_up"
-                    android:textColor="@color/ml_red_54"
-                    android:textSize="@dimen/ml_size_14"
+                    android:text="@string/hint_sign_up"
+                    android:textColor="@color/vm_red_54"
+                    android:textSize="@dimen/vm_size_14"
                     />
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/ml_dimen_16"
-                    android:textColor="@color/ml_black_87"
-                    android:textColorHint="@color/ml_black_38"
+                    android:layout_marginTop="@dimen/vm_dimen_16"
+                    android:textColor="@color/vm_black_87"
+                    android:textColorHint="@color/vm_black_38"
                     >
 
                     <EditText
                         android:id="@+id/edit_username"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/ml_hint_username"
+                        android:hint="@string/hint_username"
                         android:inputType="textImeMultiLine"
-                        android:textColor="@color/ml_black_87"
-                        android:textColorHint="@color/ml_black_38"
-                        android:textSize="@dimen/ml_size_16"
+                        android:textColor="@color/vm_black_87"
+                        android:textColorHint="@color/vm_black_38"
+                        android:textSize="@dimen/vm_size_16"
                         />
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/ml_black_87"
-                    android:textColorHint="@color/ml_black_38"
+                    android:textColor="@color/vm_black_87"
+                    android:textColorHint="@color/vm_black_38"
                     >
 
                     <EditText
                         android:id="@+id/edit_password"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/ml_hint_password"
+                        android:hint="@string/hint_password"
                         android:inputType="textCapCharacters"
-                        android:textColor="@color/ml_black_87"
-                        android:textColorHint="@color/ml_black_38"
-                        android:textSize="@dimen/ml_size_16"
+                        android:textColor="@color/vm_black_87"
+                        android:textColorHint="@color/vm_black_38"
+                        android:textSize="@dimen/vm_size_16"
                         />
                 </android.support.design.widget.TextInputLayout>
 
                 <Button
                     android:id="@+id/btn_sign_up"
-                    android:layout_marginBottom="@dimen/ml_dimen_24"
-                    android:layout_marginTop="@dimen/ml_dimen_24"
-                    android:text="@string/ml_sign_up_now"
-                    style="@style/MLBtn.Red"
+                    android:layout_marginBottom="@dimen/vm_dimen_24"
+                    android:layout_marginTop="@dimen/vm_dimen_24"
+                    android:text="@string/sign_up_now"
+                    style="@style/AppBtn.Red"
                     />
 
                 <CheckBox
@@ -97,8 +97,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:text="我同意《集成聊天Demo开源协议》"
-                    android:textColor="@color/ml_red_87"
-                    android:textSize="@dimen/ml_size_14"
+                    android:textColor="@color/vm_red_87"
+                    android:textSize="@dimen/vm_size_14"
                     />
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>

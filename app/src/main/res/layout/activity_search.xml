@@ -5,9 +5,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/ml_theme_background"
+    android:background="@color/vm_theme_background_light"
     android:fitsSystemWindows="true"
-    app:elevation="@dimen/ml_dimen_0">
+    app:elevation="@dimen/vm_dimen_0">
 
     <include layout="@layout/widget_toolbar_communal"/>
 
@@ -19,7 +19,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="@dimen/ml_dimen_16"
+            android:layout_margin="@dimen/vm_dimen_16"
             android:orientation="vertical">
 
             <RelativeLayout
@@ -31,7 +31,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:text="@string/ml_search"/>
+                    android:text="@string/search"/>
 
                 <EditText
                     android:id="@+id/edit_search"
@@ -40,7 +40,7 @@
                     android:layout_alignParentLeft="true"
                     android:inputType="textImeMultiLine"
                     android:layout_toLeftOf="@id/btn_search"
-                    android:hint="@string/ml_search"/>
+                    android:hint="@string/search"/>
 
             </RelativeLayout>
 
@@ -52,8 +52,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/ml_dimen_8"
-                    android:text="@string/ml_test"/>
+                    android:layout_margin="@dimen/vm_dimen_8"
+                    android:text="@string/test"/>
             </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

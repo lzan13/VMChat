@@ -6,9 +6,9 @@
     android:id="@+id/layout_coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/ml_theme_background"
+    android:background="@color/vm_theme_background_light"
     android:fitsSystemWindows="true"
-    tools:context=".chat.MLChatActivity"
+    tools:context="com.vmloft.develop.app.chat.chat.ChatActivity"
     >
     <!--Toolbar-->
     <android.support.design.widget.AppBarLayout
@@ -16,9 +16,9 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/widget_appbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/ml_dimen_56"
-        android:theme="@style/MLTheme.AppBarOverlay"
-        app:elevation="@dimen/ml_dimen_0"
+        android:layout_height="@dimen/vm_dimen_56"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:elevation="@dimen/vm_dimen_0"
         >
 
         <!--公共的 Toolbar 控件-->
@@ -28,10 +28,10 @@
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
             android:minHeight="?attr/actionBarSize"
-            android:transitionName="@string/ml_shared_element_toolbar"
-            app:elevation="@dimen/ml_dimen_0"
-            app:popupTheme="@style/MLTheme.PopupOverlay"
-            app:theme="@style/MLTheme.ToolbarOverlay"
+            android:transitionName="@string/shared_element_toolbar"
+            app:elevation="@dimen/vm_dimen_0"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:theme="@style/AppTheme.ToolbarOverlay"
             >
 
             <LinearLayout
@@ -41,23 +41,23 @@
                 android:orientation="horizontal"
                 >
 
-                <net.melove.app.chat.widget.MLImageView
+                <com.vmloft.develop.library.tools.widget.VMImageView
                     android:id="@+id/img_avatar"
-                    android:layout_width="@dimen/ml_dimen_36"
-                    android:layout_height="@dimen/ml_dimen_36"
-                    android:src="@mipmap/ic_character_blackcat"
-                    android:transitionName="@string/ml_shared_element_avatar"
-                    app:ml_border_width="@dimen/ml_dimen_2"
-                    app:ml_dispatch_touch_event="false"
-                    app:ml_shape_type="round"
+                    android:layout_width="@dimen/vm_dimen_36"
+                    android:layout_height="@dimen/vm_dimen_36"
+                    android:src="@drawable/ic_character_blackcat"
+                    android:transitionName="@string/shared_element_avatar"
+                    app:vm_border_width="@dimen/vm_dimen_2"
+                    app:vm_dispatch_touch_event="false"
+                    app:vm_shape_type="round"
                     />
                 <TextView
                     android:id="@+id/text_username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/ml_size_16"
-                    android:text="@string/ml_app_name"
-                    android:textSize="@dimen/ml_size_18"
+                    android:layout_marginLeft="@dimen/vm_size_16"
+                    android:text="@string/app_name"
+                    android:textSize="@dimen/vm_size_title"
                     android:textStyle="bold"
                     />
             </LinearLayout>
@@ -78,7 +78,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@mipmap/bg_chat"
+            android:src="@drawable/bg_chat"
             />
 
         <LinearLayout
@@ -87,7 +87,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:animateLayoutChanges="true"
-            android:background="@color/ml_white_87"
+            android:background="@color/vm_white_87"
             android:clipChildren="false"
             android:orientation="vertical"
             >
@@ -106,13 +106,13 @@
                     android:layout_height="wrap_content"
                     android:animateLayoutChanges="true"
                     android:clipChildren="false"
-                    android:minHeight="@dimen/ml_dimen_48"
+                    android:minHeight="@dimen/vm_dimen_48"
                     >
 
                     <RelativeLayout
                         android:id="@+id/layout_input_right"
-                        android:layout_width="@dimen/ml_dimen_48"
-                        android:layout_height="@dimen/ml_dimen_48"
+                        android:layout_width="@dimen/vm_dimen_48"
+                        android:layout_height="@dimen/vm_dimen_48"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         >
@@ -120,20 +120,20 @@
                         <!--发送按钮-->
                         <ImageButton
                             android:id="@+id/img_send"
-                            android:layout_width="@dimen/ml_dimen_48"
-                            android:layout_height="@dimen/ml_dimen_48"
+                            android:layout_width="@dimen/vm_dimen_48"
+                            android:layout_height="@dimen/vm_dimen_48"
                             android:layout_centerInParent="true"
-                            android:background="@drawable/ml_click_rectangle_transparent"
-                            android:src="@mipmap/ic_send_white_24dp"
-                            android:tint="@color/ml_red_87"
+                            android:background="@drawable/click_rectangle_transparent"
+                            android:src="@drawable/ic_send_white_24dp"
+                            android:tint="@color/vm_red_87"
                             android:visibility="gone"
                             />
 
                     </RelativeLayout>
                     <RelativeLayout
                         android:id="@+id/layout_input_left"
-                        android:layout_width="@dimen/ml_dimen_48"
-                        android:layout_height="@dimen/ml_dimen_48"
+                        android:layout_width="@dimen/vm_dimen_48"
+                        android:layout_height="@dimen/vm_dimen_48"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         android:animateLayoutChanges="true"
@@ -141,22 +141,22 @@
                         <!--表情按钮-->
                         <ImageButton
                             android:id="@+id/img_emotion"
-                            android:layout_width="@dimen/ml_dimen_48"
-                            android:layout_height="@dimen/ml_dimen_48"
+                            android:layout_width="@dimen/vm_dimen_48"
+                            android:layout_height="@dimen/vm_dimen_48"
                             android:layout_centerInParent="true"
-                            android:background="@drawable/ml_click_rectangle_transparent"
-                            android:src="@mipmap/ic_keyboard_face_white_24dp"
-                            android:tint="@color/ml_red_87"
+                            android:background="@drawable/click_rectangle_transparent"
+                            android:src="@drawable/ic_keyboard_face_white_24dp"
+                            android:tint="@color/vm_red_87"
                             />
 
                         <ImageButton
                             android:id="@+id/img_keyboard"
-                            android:layout_width="@dimen/ml_dimen_48"
-                            android:layout_height="@dimen/ml_dimen_48"
+                            android:layout_width="@dimen/vm_dimen_48"
+                            android:layout_height="@dimen/vm_dimen_48"
                             android:layout_centerInParent="true"
-                            android:background="@drawable/ml_click_rectangle_transparent"
-                            android:src="@mipmap/ic_keyboard_white_24dp"
-                            android:tint="@color/ml_red_87"
+                            android:background="@drawable/click_rectangle_transparent"
+                            android:src="@drawable/ic_keyboard_white_24dp"
+                            android:tint="@color/vm_red_87"
                             android:visibility="gone"
                             />
                     </RelativeLayout>
@@ -169,35 +169,33 @@
                         android:layout_toLeftOf="@id/layout_input_right"
                         android:layout_toRightOf="@id/layout_input_left"
                         android:background="@null"
-                        android:hint="@string/ml_hint_chat"
+                        android:hint="@string/hint_chat"
                         android:maxLines="3"
-                        android:paddingBottom="@dimen/ml_dimen_8"
-                        android:paddingTop="@dimen/ml_dimen_8"
-                        android:textColor="@color/ml_black_87"
-                        android:textColorHint="@color/ml_black_38"
-                        android:textSize="@dimen/ml_size_16"
+                        android:paddingBottom="@dimen/vm_dimen_8"
+                        android:paddingTop="@dimen/vm_dimen_8"
+                        android:textColor="@color/vm_black_87"
+                        android:textColorHint="@color/vm_black_38"
+                        android:textSize="@dimen/vm_size_16"
                         />
                 </RelativeLayout>
 
                 <!--录音控件-->
-                <net.melove.app.chat.widget.MLRecordView
+                <com.vmloft.develop.library.tools.widget.VMRecordView
                     android:id="@+id/view_record_voice"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/ml_dimen_48"
+                    android:layout_height="@dimen/vm_dimen_48"
                     android:layout_alignParentRight="true"
                     android:clipChildren="false"
                     android:visibility="visible"
-                    app:ml_record_indicator_color="@color/ml_theme_primary_light"
-                    app:ml_record_indicator_size="@dimen/ml_dimen_16"
-                    app:ml_record_text_color="@color/ml_black_54"
-                    app:ml_record_text_size="@dimen/ml_size_16"
-                    app:ml_record_touch_color="@color/ml_red_100"
-                    app:ml_record_touch_icon="@mipmap/ic_mic_white_24dp"
-                    app:ml_record_touch_size="@dimen/ml_dimen_48"
-                    app:ml_record_touch_text="滑动取消"
-                    app:ml_record_waveform_color="@color/ml_orange_87"
-                    app:ml_record_waveform_interval="@dimen/ml_dimen_1"
-                    app:ml_record_waveform_width="@dimen/ml_dimen_2"
+                    app:vm_indicator_color="@color/vm_red_87"
+                    app:vm_indicator_size="@dimen/vm_dimen_16"
+                    app:vm_text_color="@color/vm_black_54"
+                    app:vm_text_size="@dimen/vm_size_16"
+                    app:vm_touch_color="@color/vm_red_100"
+                    app:vm_touch_text="滑动取消"
+                    app:vm_waveform_color="@color/vm_orange_87"
+                    app:vm_waveform_interval="@dimen/vm_dimen_1"
+                    app:vm_waveform_width="@dimen/vm_dimen_2"
                     />
             </RelativeLayout>
 
@@ -205,7 +203,7 @@
             <RelativeLayout
                 android:id="@+id/layout_emotion"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/ml_dimen_224"
+                android:layout_height="@dimen/vm_dimen_192"
                 android:visibility="gone"
                 >
 
@@ -247,13 +245,13 @@
             <Button
                 android:id="@+id/btn_new_message"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/ml_dimen_36"
+                android:layout_height="@dimen/vm_dimen_36"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
-                android:layout_margin="@dimen/ml_dimen_8"
-                android:background="@drawable/ml_shape_circle"
-                android:padding="@dimen/ml_dimen_8"
-                android:text="@string/ml_hint_msg_new"
+                android:layout_margin="@dimen/vm_dimen_8"
+                android:background="@drawable/shape_circle"
+                android:padding="@dimen/vm_dimen_8"
+                android:text="@string/hint_msg_new"
                 android:visibility="visible"
                 />
         </RelativeLayout>
@@ -263,7 +261,7 @@
             android:id="@+id/layout_attach_menu"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/ml_black_54"
+            android:background="@color/vm_black_54"
             android:orientation="vertical"
             android:visibility="gone"
             >
@@ -272,10 +270,10 @@
                 android:id="@+id/grid_view_attach_menu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/ml_white_100"
+                android:background="@color/vm_white_100"
                 android:numColumns="4"
-                android:paddingLeft="@dimen/ml_dimen_12"
-                android:paddingRight="@dimen/ml_dimen_12"
+                android:paddingLeft="@dimen/vm_dimen_16"
+                android:paddingRight="@dimen/vm_dimen_16"
                 />
 
         </LinearLayout>

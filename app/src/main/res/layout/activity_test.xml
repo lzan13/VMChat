@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/ml_gray_38"
+    android:background="@color/vm_gray_38"
     android:clipChildren="false"
     android:fitsSystemWindows="true"
     tools:context="net.melove.app.chat.test.MLTestActivity"
@@ -15,8 +15,8 @@
         android:id="@+id/widget_appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:elevation="@dimen/ml_dimen_0"
-        app:theme="@style/MLTheme.AppBarOverlay"
+        app:elevation="@dimen/vm_dimen_0"
+        app:theme="@style/AppTheme.AppBarOverlay"
         >
 
         <android.support.v7.widget.Toolbar
@@ -24,8 +24,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:elevation="@dimen/ml_dimen_0"
-            app:popupTheme="@style/MLTheme.PopupOverlay"
+            app:elevation="@dimen/vm_dimen_0"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
             />
 
     </android.support.design.widget.AppBarLayout>
@@ -39,15 +39,15 @@
         <RelativeLayout
             android:id="@+id/layout_top"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/ml_dimen_192"
-            android:background="@color/ml_red_38"
+            android:layout_height="@dimen/vm_dimen_192"
+            android:background="@color/vm_red_38"
             >
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/bg_top"
+                android:src="@drawable/bg_top"
                 />
 
         </RelativeLayout>
@@ -56,7 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/layout_top"
-            android:background="@color/ml_red_dark_54"
+            android:background="@color/vm_red_dark_54"
             android:orientation="vertical"
             >
 
@@ -66,12 +66,12 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/ml_dimen_16"
-        android:background="@color/ml_white"
+        android:layout_margin="@dimen/vm_dimen_16"
+        android:background="@color/vm_white"
         android:gravity="center_vertical"
-        android:minHeight="@dimen/ml_dimen_48"
+        android:minHeight="@dimen/vm_dimen_48"
         android:orientation="horizontal"
-        android:padding="@dimen/ml_dimen_8"
+        android:padding="@dimen/vm_dimen_8"
         app:layout_anchor="@id/layout_top"
         app:layout_anchorGravity="bottom"
         >
@@ -79,7 +79,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/ml_app_name"
+            android:text="@string/app_name"
             />
 
     </LinearLayout>

@@ -13,7 +13,7 @@ android {
     //use legacy for for android 6.0
     //    useLibrary 'org.apache.http.legacy'
     defaultConfig {
-        applicationId 'net.melove.app.chat'
+        applicationId 'com.vmloft.develop.app.chat'
         minSdkVersion 21
         targetSdkVersion 22
         versionCode 1
@@ -47,7 +47,7 @@ android {
         debug {
             // 简单粗暴解决多个库引用 jni 库出现 UnsatisfiedLinkError 文件错误问题
             ndk {
-                abiFilters = ["armeabi-v7a", "arm64-v8a"]
+                abiFilters = ["armeabi-v7a", "x86"]
             }
             // 是否开启压缩
             zipAlignEnabled false
@@ -59,7 +59,7 @@ android {
         release {
             // 简单粗暴解决多个库引用 jni 库出现 UnsatisfiedLinkError 文件错误问题
             ndk {
-                abiFilters = ["armeabi-v7a", "arm64-v8a"]
+                abiFilters = ["armeabi-v7a", "x86"]
             }
             // 是否开启压缩
             zipAlignEnabled true
@@ -77,8 +77,7 @@ android {
                 variant.outputs.each { output ->
                     def oldFile = output.outputFile
                     if (variant.buildType.name.equals('release')) {
-                        def releaseApkName = "app-v${defaultConfig.versionName}-${getTime()}-" +
-                                variant.productFlavors[0].name +
+                        def releaseApkName = "app-v${defaultConfig.versionName}-${getTime()}-" + variant.productFlavors[0].name +
                                 '-release.apk'
                         output.outputFile = new File(oldFile.parent, releaseApkName)
                     }
@@ -102,23 +101,19 @@ android {
     // 多渠道打包配置
     productFlavors {
         Develop {
-            manifestPlaceholders =
-                    [em_appkey: mEMAppkey, td_app_id: mTDAppId, td_channel_id: "Develop"]
+            manifestPlaceholders = [em_appkey: mEMAppkey, td_app_id: mTDAppId, td_channel_id: "Develop"]
         }
         "360" {
             manifestPlaceholders = [em_appkey: mEMAppkey, td_app_id: mTDAppId, td_channel_id: "360"]
         }
         GooglePlay {
-            manifestPlaceholders =
-                    [em_appkey: mEMAppkey, td_app_id: mTDAppId, td_channel_id: "GooglePlay"]
+            manifestPlaceholders = [em_appkey: mEMAppkey, td_app_id: mTDAppId, td_channel_id: "GooglePlay"]
         }
         XiaoMi {
-            manifestPlaceholders =
-                    [em_appkey: mEMAppkey, td_app_id: mTDAppId, td_channel_id: "XiaoMi"]
+            manifestPlaceholders = [em_appkey: mEMAppkey, td_app_id: mTDAppId, td_channel_id: "XiaoMi"]
         }
         WanDouJia {
-            manifestPlaceholders =
-                    [em_appkey: mEMAppkey, td_app_id: mTDAppId, td_channel_id: "WanDouJia"]
+            manifestPlaceholders = [em_appkey: mEMAppkey, td_app_id: mTDAppId, td_channel_id: "WanDouJia"]
         }
     }
     // 多渠道打包简介写法
@@ -130,31 +125,38 @@ dependencies {
     // 引入项目 libs 目录下的各种第三方库，后边可以不用再单独添加
     //    compile fileTree(include: ['*.jar'], dir: 'libs')
     // Android Material design 设计风格库，包含了support-v4, appcomat-v7, recyclerView扩展库
-    compile 'com.android.support:design:25.1.0'
+    compile 'com.android.support:design:25.3.0'
     // 解决方法数超过65536问题扩展库
     compile 'com.android.support:multidex:1.0.1'
+
     // Google Play Service 库，使用GCM推送需要
-    compile 'com.google.android.gms:play-services-gcm:10.0.1'
+    compile 'com.google.android.gms:play-services-gcm:10.2.0'
+
     // LeakCanary Debug库，开源捕获内存溢出的库
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
+    compile 'com.squareup.leakcanary:leakcanary-android:1.5'
     // LeakCanary 发版的库
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
+    //    compile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+
     // 第三方图片加载库
     compile 'com.github.bumptech.glide:glide:3.7.0'
-    // 观察者模式解耦库
-    compile 'org.greenrobot:eventbus:3.0.0'
     // 支持手势缩放的ImageView
     compile 'com.bm.photoview:library:1.4.1'
     // square 家族的网络加载库 retrofit
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     // ButterKnife 库
-    compile 'com.jakewharton:butterknife:8.4.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+    compile 'com.jakewharton:butterknife:8.5.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
     // Talking 统计平台库
     compile files('libs/talkingdata_analytics_v2230.jar')
+    // 华为推送
     compile files('libs/HwPush_SDK_V2705.jar')
-    compile files('libs/hyphenatechat_3.2.3.jar')
+    // 环信 IM
+    compile files('libs/hyphenatechat_3.3.0.jar')
+    // 小米推送
     compile files('libs/MiPush_SDK_Client_3_0_3.jar')
+
+    // 引入自己封装的工具库 GitHub: https://github.com/lzan13/VMLibraryManager
+    compile project(':vmtools')
 }
 
 //读取配置文件，配置文件里记录的都是一些敏感信息，需要换成自己的
@@ -166,16 +168,16 @@ def initProjectConfigs() {
         props.load(new FileInputStream(propFile))
         // 判断签名配置信息是否存在
         if (props != null &&
-                props.containsKey('ML_KEY_ALIAS') &&
-                props.containsKey('ML_KEY_PASSWORD') &&
-                props.containsKey('ML_STORE_FILE') &&
-                props.containsKey('ML_STORE_PASSWORD') &&
+                props.containsKey('KEY_ALIAS') &&
+                props.containsKey('KEY_PASSWORD') &&
+                props.containsKey('STORE_FILE') &&
+                props.containsKey('STORE_PASSWORD') &&
                 props.containsKey('EM_APPKEY') &&
                 props.containsKey("TD_APP_ID")) {
-            android.signingConfigs.release.keyAlias = props['ML_KEY_ALIAS']
-            android.signingConfigs.release.keyPassword = props['ML_KEY_PASSWORD']
-            android.signingConfigs.release.storeFile = file(props['ML_STORE_FILE'])
-            android.signingConfigs.release.storePassword = props['ML_STORE_PASSWORD']
+            android.signingConfigs.release.keyAlias = props['KEY_ALIAS']
+            android.signingConfigs.release.keyPassword = props['KEY_PASSWORD']
+            android.signingConfigs.release.storeFile = file(props['STORE_FILE'])
+            android.signingConfigs.release.storePassword = props['STORE_PASSWORD']
             mEMAppkey = props['EM_APPKEY']
             mTDAppId = props['TD_APP_ID']
         } else {

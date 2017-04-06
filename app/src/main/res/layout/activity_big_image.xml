@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="@color/ml_black_100"
+    android:background="@color/vm_black_100"
     android:clipToPadding="false"
     android:fitsSystemWindows="false"
     >
@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerInside"
-        android:src="@mipmap/bg_chat"
+        android:src="@drawable/bg_chat"
         />
 
     <RelativeLayout
@@ -29,21 +29,21 @@
         <android.support.design.widget.AppBarLayout
             android:id="@+id/widget_appbar"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/ml_dimen_56"
+            android:layout_height="@dimen/vm_dimen_56"
             android:background="@null"
-            app:elevation="@dimen/ml_dimen_0"
-            app:theme="@style/MLTheme.AppBarOverlay"
+            app:elevation="@dimen/vm_dimen_0"
+            app:theme="@style/AppTheme.AppBarOverlay"
             >
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/widget_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/ml_black_38"
+                android:background="@color/vm_black_38"
                 android:minHeight="?attr/actionBarSize"
-                android:transitionName="@string/ml_shared_element_toolbar"
-                app:elevation="@dimen/ml_dimen_0"
-                app:theme="@style/MLTheme.ToolbarOverlay"
+                android:transitionName="@string/shared_element_toolbar"
+                app:elevation="@dimen/vm_dimen_0"
+                app:theme="@style/AppTheme.ToolbarOverlay"
                 >
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>

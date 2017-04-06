@@ -2,14 +2,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".conversation.MLConversationsFragment"
+    tools:context="com.vmloft.develop.app.chat.conversation.ConversationsFragment"
     >
     <!--使用RecyclerView-->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbarSize="@dimen/ml_dimen_1"
+        android:scrollbarSize="@dimen/vm_dimen_1"
         android:scrollbarStyle="outsideInset"
         android:scrollbars="vertical"
         />

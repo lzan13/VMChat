@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="net.melove.app.chat">
+    package="com.vmloft.develop.app.chat">
 
     <!-- 项目权限配置 -->
     <!-- 相机 -->
@@ -39,26 +39,28 @@
     TODO 已被弃用后期可能会添加另一个权限 REAL_GET_TASKS
     TODO https://android.googlesource.com/platform/frameworks/base/+/2d7576b%5E!/-->
     <uses-permission android:name="android.permission.GET_TASKS"/>
+    <!--悬浮窗权限-->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
     <!-- 程序的入口 -->
     <application
-        android:name=".app.MLApplication"
+        android:name=".app.AppApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/ml_app_name"
-        android:theme="@style/MLTheme.Default">
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme.Default">
 
         <!-- Activity的基类 -->
         <activity
-            android:name=".app.MLBaseActivity"
+            android:name=".app.AppActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/MLTheme.Default"/>
+            android:theme="@style/AppTheme.Default"/>
         <!-- 被踢弹出类 -->
         <!-- 主界面 -->
         <activity
-            android:name=".app.MLMainActivity"
+            android:name=".app.MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/MLTheme.Launcher">
+            android:theme="@style/AppTheme.Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -67,70 +69,70 @@
         </activity>
         <!-- 登录界面 -->
         <activity
-            android:name=".sign.MLSignInActivity"
+            android:name=".sign.SignInActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/MLTheme.Default"
+            android:theme="@style/AppTheme.Default"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
         <!-- 注册界面 -->
         <activity
-            android:name=".sign.MLSignUpActivity"
+            android:name=".sign.SignUpActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/MLTheme.Default"
+            android:theme="@style/AppTheme.Default"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
         <!--申请与通知界面-->
         <activity
-            android:name=".apply.MLApplyForActivity"
+            android:name=".apply.ApplyForActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/MLTheme.Default"
+            android:theme="@style/AppTheme.Default"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
         <!-- 账户信息界面 -->
         <activity
-            android:name=".contacts.MLUserActivity"
+            android:name=".contacts.UserActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/MLTheme.Default"/>
+            android:theme="@style/AppTheme.Default"/>
         <!-- 聊天界面 -->
         <activity
-            android:name=".chat.MLChatActivity"
+            android:name=".chat.ChatActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/MLTheme.Default"
+            android:theme="@style/AppTheme.Default"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
         <!--视频通话界面-->
         <activity
-            android:name=".call.MLVideoCallActivity"
+            android:name=".call.VideoCallActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"
-            android:theme="@style/MLTheme.Transparent"
+            android:theme="@style/AppTheme.Transparent"
             android:windowSoftInputMode="adjustNothing|stateAlwaysHidden"/>
         <!--语音通话界面-->
         <activity
-            android:name=".call.MLVoiceCallActivity"
+            android:name=".call.VoiceCallActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/MLTheme.Transparent"
+            android:theme="@style/AppTheme.Transparent"
             android:windowSoftInputMode="adjustNothing|stateAlwaysHidden"/>
         <!--显示大图界面 使用半透明主题-->
         <activity
-            android:name=".chat.MLBigImageActivity"
-            android:theme="@style/MLTheme.Translucent"
+            android:name=".chat.BigImageActivity"
+            android:theme="@style/AppTheme.Translucent"
             android:windowSoftInputMode="adjustNothing|stateAlwaysHidden"/>
         <!-- 搜索界面 -->
         <activity
-            android:name=".app.MLSearchActivity"
-            android:theme="@style/MLTheme.Default"
+            android:name=".app.SearchActivity"
+            android:theme="@style/AppTheme.Default"
             android:windowSoftInputMode="adjustResize|stateVisible"/>
         <activity
-            android:name=".setting.MLSettingsActivity"
+            android:name=".setting.SettingsActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/MLTheme.Default"
+            android:theme="@style/AppTheme.Default"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
         <!-- Activity 注册 end -->
 
         <!--通话广播监听-->
         <receiver
-            android:name=".call.MLCallReceiver"
+            android:name=".call.CallReceiver"
             android:enabled="true"
             android:exported="true">
         </receiver>
@@ -157,7 +159,7 @@
         <service
             android:name="com.hyphenate.chat.EMChatService"
             android:exported="true"
-            android:process=":MLChat"/>
+            android:process=":chat"/>
         <!-- 声明 SDK 所需的receiver -->
         <receiver android:name="com.hyphenate.chat.EMMonitorReceiver">
             <intent-filter>
@@ -199,7 +201,7 @@
         </service>
         <!--自定义实现 GCM 推送信息接收处理类-->
         <receiver
-            android:name=".receiver.MLGCMBroadcastReceiver"
+            android:name=".receiver.GCMBroadcastReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.hyphenate.sdk.push"/>
@@ -210,7 +212,7 @@
 
         <!--华为推送推送配置-->
         <!-- 第三方相关, 接收Push消息（注册、Push消息、Push连接状态、标签，LBS上报结果）广播 -->
-        <receiver android:name=".receiver.MLHWPushReceiver">
+        <receiver android:name=".receiver.HWPushReceiver">
             <intent-filter>
                 <!-- 必须,用于接收token-->
                 <action android:name="com.huawei.android.push.intent.REGISTRATION"/>
@@ -291,7 +293,7 @@
             android:enabled="true"/>
         <!--小米推送广播接收器-->
         <receiver
-            android:name=".receiver.MLMiPushReceiver"
+            android:name=".receiver.MiPushReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE"/>

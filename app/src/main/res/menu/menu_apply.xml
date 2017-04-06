@@ -1,11 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".apply.MLApplyForActivity">
+    tools:context="com.vmloft.develop.app.chat.apply.ApplyForActivity">
     <item
         android:id="@+id/action_settings"
-        android:icon="@mipmap/ic_settings_white_24dp"
+        android:icon="@drawable/ic_settings_white_24dp"
         android:orderInCategory="100"
-        android:title="@string/ml_settings"
+        android:title="@string/settings"
         app:showAsAction="always"/>
 </menu>

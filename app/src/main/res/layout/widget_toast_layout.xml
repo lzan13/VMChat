@@ -9,36 +9,36 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/ml_dimen_16"
-        android:layout_marginLeft="@dimen/ml_dimen_8"
-        android:layout_marginRight="@dimen/ml_dimen_8"
-        android:layout_marginTop="@dimen/ml_dimen_8"
-        android:background="@drawable/ml_shape_circle"
+        android:layout_marginBottom="@dimen/vm_dimen_16"
+        android:layout_marginLeft="@dimen/vm_dimen_8"
+        android:layout_marginRight="@dimen/vm_dimen_8"
+        android:layout_marginTop="@dimen/vm_dimen_8"
+        android:background="@drawable/shape_circle"
         android:clipChildren="false"
-        android:elevation="@dimen/ml_dimen_8"
+        android:elevation="@dimen/vm_dimen_8"
         android:gravity="center_vertical"
-        android:minHeight="@dimen/ml_dimen_40"
+        android:minHeight="@dimen/vm_dimen_40"
         android:orientation="horizontal"
-        android:padding="@dimen/ml_dimen_8"
+        android:padding="@dimen/vm_dimen_8"
         >
 
         <ImageView
             android:id="@+id/img_toast_icon"
-            android:layout_width="@dimen/ml_dimen_24"
-            android:layout_height="@dimen/ml_dimen_24"
-            android:tint="@color/ml_theme_primary"
+            android:layout_width="@dimen/vm_dimen_24"
+            android:layout_height="@dimen/vm_dimen_24"
+            android:tint="@color/vm_theme_primary_light"
             />
 
         <TextView
             android:id="@+id/text_toast_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/ml_dimen_4"
-            android:layout_marginRight="@dimen/ml_dimen_8"
+            android:layout_marginLeft="@dimen/vm_dimen_4"
+            android:layout_marginRight="@dimen/vm_dimen_8"
             android:gravity="center_vertical"
-            android:text="@string/ml_app_name"
-            android:textColor="@color/ml_black_87"
-            android:textSize="@dimen/ml_size_14"
+            android:text="@string/app_name"
+            android:textColor="@color/vm_black_87"
+            android:textSize="@dimen/vm_size_14"
             />
     </LinearLayout>
 

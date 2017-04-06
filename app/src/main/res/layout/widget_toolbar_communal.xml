@@ -4,9 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/widget_appbar"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/ml_dimen_56"
-    android:theme="@style/MLTheme.AppBarOverlay"
-    app:elevation="@dimen/ml_dimen_0"
+    android:layout_height="@dimen/vm_dimen_56"
+    android:theme="@style/AppTheme.AppBarOverlay"
+    app:elevation="@dimen/vm_dimen_0"
     >
 
     <!--公共的 Toolbar 控件-->
@@ -16,10 +16,10 @@
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
-        android:transitionName="@string/ml_shared_element_toolbar"
-        app:elevation="@dimen/ml_dimen_0"
-        app:popupTheme="@style/MLTheme.PopupOverlay"
-        app:theme="@style/MLTheme.ToolbarOverlay"
+        android:transitionName="@string/shared_element_toolbar"
+        app:elevation="@dimen/vm_dimen_0"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+        app:theme="@style/AppTheme.ToolbarOverlay"
         >
 
     </android.support.v7.widget.Toolbar>

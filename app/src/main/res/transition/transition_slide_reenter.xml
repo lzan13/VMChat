@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <transitionSet xmlns:android="http://schemas.android.com/apk/res/android">
     <slide
-        android:duration="@integer/ml_time_test"
+        android:duration="@integer/vm_time_test"
         android:slideEdge="bottom">
     </slide>
     <fade
-        android:duration="@integer/ml_time_test"
+        android:duration="@integer/vm_time_test"
         android:fadingMode="fade_in"/>
 </transitionSet>

@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:melove="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/ml_dimen_1"
-    android:background="@drawable/ml_click_rectangle_white"
+    android:layout_marginBottom="@dimen/vm_dimen_1"
+    android:background="@drawable/click_rectangle_white"
     android:gravity="center_vertical"
     android:orientation="vertical"
-    android:paddingLeft="@dimen/ml_dimen_16"
-    android:paddingRight="@dimen/ml_dimen_16"
+    android:paddingLeft="@dimen/vm_dimen_16"
+    android:paddingRight="@dimen/vm_dimen_16"
     >
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/ml_dimen_56"
+        android:layout_height="@dimen/vm_dimen_56"
         >
         <!--头像-->
-        <net.melove.app.chat.widget.MLImageView
+        <com.vmloft.develop.library.tools.widget.VMImageView
             android:id="@+id/img_avatar"
-            android:layout_width="@dimen/ml_dimen_40"
-            android:layout_height="@dimen/ml_dimen_40"
+            android:layout_width="@dimen/vm_dimen_40"
+            android:layout_height="@dimen/vm_dimen_40"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:src="@mipmap/ic_character_blackcat"
-            android:transitionName="@string/ml_shared_element_avatar"
-            melove:ml_border_color="@color/ml_white_87"
-            melove:ml_border_width="@dimen/ml_dimen_2"
-            melove:ml_dispatch_touch_event="false"
-            melove:ml_shape_type="round"
+            android:src="@drawable/ic_character_blackcat"
+            android:transitionName="@string/shared_element_avatar"
+            app:vm_border_color="@color/vm_white_87"
+            app:vm_border_width="@dimen/vm_dimen_2"
+            app:vm_dispatch_touch_event="false"
+            app:vm_shape_type="round"
             />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/ml_dimen_56"
+            android:layout_marginLeft="@dimen/vm_dimen_56"
             android:gravity="center_vertical"
             android:orientation="vertical"
             >
@@ -43,21 +43,21 @@
                 android:id="@+id/text_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxWidth="@dimen/ml_dimen_224"
-                android:text="@string/ml_hint_username"
-                android:textColor="@color/ml_black_87"
-                android:textSize="@dimen/ml_size_16"
+                android:maxWidth="@dimen/vm_dimen_192"
+                android:text="@string/hint_username"
+                android:textColor="@color/vm_black_87"
+                android:textSize="@dimen/vm_size_16"
                 />
             <!--最后一条消息内容-->
             <TextView
                 android:id="@+id/text_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxWidth="@dimen/ml_dimen_224"
+                android:maxWidth="@dimen/vm_dimen_192"
                 android:singleLine="true"
-                android:text="@string/ml_hint_content"
-                android:textColor="@color/ml_black_54"
-                android:textSize="@dimen/ml_size_12"
+                android:text="@string/hint_content"
+                android:textColor="@color/vm_black_54"
+                android:textSize="@dimen/vm_size_12"
                 />
         </LinearLayout>
 
@@ -74,17 +74,17 @@
                 android:id="@+id/text_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/ml_dimen_4"
-                android:text="@string/ml_hint_time"
-                android:textColor="@color/ml_black_54"
-                android:textSize="@dimen/ml_size_10"
+                android:layout_marginBottom="@dimen/vm_dimen_4"
+                android:text="@string/hint_time"
+                android:textColor="@color/vm_black_54"
+                android:textSize="@dimen/vm_size_10"
                 />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:minHeight="@dimen/ml_dimen_24"
+                android:minHeight="@dimen/vm_dimen_24"
                 android:orientation="horizontal"
                 >
                 <!--置顶标记-->
@@ -92,17 +92,17 @@
                     android:id="@+id/img_pushpin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/ic_pushpin_white_24dp"
-                    android:tint="@color/ml_black_38"
+                    android:src="@drawable/ic_pushpin_white_24dp"
+                    android:tint="@color/vm_black_38"
                     android:visibility="gone"
                     />
 
                 <ImageView
                     android:id="@+id/img_dnd"
-                    android:layout_width="@dimen/ml_dimen_20"
-                    android:layout_height="@dimen/ml_dimen_20"
-                    android:src="@mipmap/ic_notifications_off_white_24dp"
-                    android:tint="@color/ml_black_38"
+                    android:layout_width="@dimen/vm_dimen_20"
+                    android:layout_height="@dimen/vm_dimen_20"
+                    android:src="@drawable/ic_notifications_off_white_24dp"
+                    android:tint="@color/vm_black_38"
                     android:visibility="gone"
                     />
             </LinearLayout>

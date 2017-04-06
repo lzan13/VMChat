@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <transitionSet xmlns:android="http://schemas.android.com/apk/res/android">
     <slide
-        android:duration="@integer/ml_time_test"
+        android:duration="@integer/vm_time_test"
         android:slideEdge="bottom">
         <targets>
             <target android:excludeId="@android:id/statusBarBackground"/>

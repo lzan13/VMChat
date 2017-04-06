@@ -1,285 +1,285 @@
 <resources>
-    <string name="ml_app_name">MLChat</string>
-    <string name="ml_test">Test</string>
-    <string name="ml_test_text">hell test text</string>
+    <string name="app_name">VMChat</string>
+    <string name="test">Test</string>
+    <string name="test_text">hell test text</string>
 
 
     <!--登录与注册-->
-    <string name="ml_sign_in">登录</string>
-    <string name="ml_sign_in_restart">重新登录</string>
-    <string name="ml_sign_out">退出登录</string>
-    <string name="ml_sign_up">注册</string>
-    <string name="ml_sign_up_now">马上注册</string>
-    <string name="ml_sign_up_no_account">还没有账户？</string>
-    <string name="ml_sign_up_failed">注册失败</string>
-    <string name="ml_sign_up_begin">正在注册……</string>
-    <string name="ml_sign_up_success">注册成功</string>
-    <string name="ml_sign_in_begin">正在登录……</string>
-    <string name="ml_sign_in_success">登录成功</string>
-    <string name="ml_sign_in_failed">登录失败</string>
-    <string name="ml_forget_password">忘记密码</string>
+    <string name="sign_in">登录</string>
+    <string name="sign_in_restart">重新登录</string>
+    <string name="sign_out">退出登录</string>
+    <string name="sign_up">注册</string>
+    <string name="sign_up_now">马上注册</string>
+    <string name="sign_up_no_account">还没有账户？</string>
+    <string name="sign_up_failed">注册失败</string>
+    <string name="sign_up_begin">正在注册……</string>
+    <string name="sign_up_success">注册成功</string>
+    <string name="sign_in_begin">正在登录……</string>
+    <string name="sign_in_success">登录成功</string>
+    <string name="sign_in_failed">登录失败</string>
+    <string name="forget_password">忘记密码</string>
 
     <!--用户信息相关-->
-    <string name="ml_me">我</string>
-    <string name="ml_nickname">昵称</string>
-    <string name="ml_qr_code">二维码</string>
-    <string name="ml_signature">签名</string>
-    <string name="ml_signature_null">无个性不签名</string>
-    <string name="ml_edit_user_info">编辑账户信息</string>
+    <string name="me">我</string>
+    <string name="nickname">昵称</string>
+    <string name="qr_code">二维码</string>
+    <string name="signature">签名</string>
+    <string name="signature_null">无个性不签名</string>
+    <string name="edit_user_info">编辑账户信息</string>
 
     <!--Button 按钮相关-->
-    <string name="ml_btn_ok">确定</string>
-    <string name="ml_btn_cancel">取消</string>
-    <string name="ml_btn_i_know">我知道了</string>
-    <string name="ml_btn_agree">同意</string>
-    <string name="ml_btn_reject">拒绝</string>
-    <string name="ml_btn_reply">先聊聊</string>
-    <string name="ml_btn_start_chat">开始聊天</string>
+    <string name="btn_ok">确定</string>
+    <string name="btn_cancel">取消</string>
+    <string name="btn_i_know">我知道了</string>
+    <string name="btn_agree">同意</string>
+    <string name="btn_reject">拒绝</string>
+    <string name="btn_reply">先聊聊</string>
+    <string name="btn_start_chat">开始聊天</string>
 
     <!--申请与通知相关-->
-    <string name="ml_have_apply">你有新的申请与通知信息</string>
-    <string name="ml_agreed">已同意</string>
-    <string name="ml_be_agreed_user">对方已同意你的好友申请</string>
-    <string name="ml_be_agreed_group">对方已同意你的入群申请</string>
-    <string name="ml_be_agreed_group_invite">对方已同意你的入群邀请</string>
-    <string name="ml_rejected">已拒绝</string>
-    <string name="ml_be_rejected_user">对方已拒绝你的好友申请</string>
-    <string name="ml_be_rejected_group">对方已拒绝你的入群申请</string>
-    <string name="ml_be_rejected_group_invite">对方已拒绝你的入群邀请</string>
+    <string name="have_apply">你有新的申请与通知信息</string>
+    <string name="agreed">已同意</string>
+    <string name="be_agreed_user">对方已同意你的好友申请</string>
+    <string name="be_agreed_group">对方已同意你的入群申请</string>
+    <string name="be_agreed_group_invite">对方已同意你的入群邀请</string>
+    <string name="rejected">已拒绝</string>
+    <string name="be_rejected_user">对方已拒绝你的好友申请</string>
+    <string name="be_rejected_group">对方已拒绝你的入群申请</string>
+    <string name="be_rejected_group_invite">对方已拒绝你的入群邀请</string>
 
-    <string name="ml_add_friend">添加好友</string>
-    <string name="ml_add_group">添加群组</string>
-    <string name="ml_create_group">新建群组</string>
-    <string name="ml_create_conversation">创建新会话</string>
-    <string name="ml_add_friend_reason">嗨！交个朋友吧 ^_^~</string>
+    <string name="add_friend">添加好友</string>
+    <string name="add_group">添加群组</string>
+    <string name="create_group">新建群组</string>
+    <string name="create_conversation">创建新会话</string>
+    <string name="add_friend_reason">嗨！交个朋友吧 ^_^~</string>
 
     <!--Dialog-->
-    <string name="ml_dialog_title_conversation">操作会话</string>
-    <string name="ml_dialog_title_apply">操作申请与通知</string>
-    <string name="ml_dialog_title_message">操作消息</string>
-    <string name="ml_dialog_title_conflict">账户登录冲突</string>
-    <string name="ml_dialog_title_remove">账户被删除</string>
-    <string name="ml_dialog_title_select_photo_mode">选择图片方式</string>
-    <string name="ml_dialog_title_select_call_mode">选择通话方式</string>
-    <string name="ml_dialog_content_add_friend_reason">输入你的申请理由，让对方容易通过你的请求，也可以输入你的姓名，让对方知道你是谁，更容易通过请求</string>
-    <string name="ml_dialog_content_create_conversation">演示环信不需要互为好友就能发起会话，只需要知道对方环信账户，即可跳转到聊天界面进行聊天，请输入对方的username</string>
-    <string name="ml_dialog_content_delete_invited">确定要删除申请与通知信息么？</string>
-    <string name="ml_dialog_message_waiting">正在处理，请稍候……</string>
-    <string name="ml_dialog_message_conflict">你的账户被其他设备登录，如果不是你自己的操作请尽快更改密码</string>
-    <string name="ml_dialog_message_remove">你的账户被管理员删除，如有疑问请联系管理员</string>
+    <string name="dialog_title_conversation">操作会话</string>
+    <string name="dialog_title_apply">操作申请与通知</string>
+    <string name="dialog_title_message">操作消息</string>
+    <string name="dialog_title_conflict">账户登录冲突</string>
+    <string name="dialog_title_remove">账户被删除</string>
+    <string name="dialog_title_select_photo_mode">选择图片方式</string>
+    <string name="dialog_title_select_call_mode">选择通话方式</string>
+    <string name="dialog_content_add_friend_reason">输入你的申请理由，让对方容易通过你的请求，也可以输入你的姓名，让对方知道你是谁，更容易通过请求</string>
+    <string name="dialog_content_create_conversation">演示环信不需要互为好友就能发起会话，只需要知道对方环信账户，即可跳转到聊天界面进行聊天，请输入对方的username</string>
+    <string name="dialog_content_delete_invited">确定要删除申请与通知信息么？</string>
+    <string name="dialog_message_waiting">正在处理，请稍候……</string>
+    <string name="dialog_message_conflict">你的账户被其他设备登录，如果不是你自己的操作请尽快更改密码</string>
+    <string name="dialog_message_remove">你的账户被管理员删除，如有疑问请联系管理员</string>
 
     <!--导航菜单 Title Action 等-->
-    <string name="ml_chat">聊天</string>
-    <string name="ml_home">主页</string>
-    <string name="ml_group">群组</string>
-    <string name="ml_room">聊天室</string>
-    <string name="ml_call">通话</string>
-    <string name="ml_voice_call">语音通话</string>
-    <string name="ml_video_call">视频通话</string>
-    <string name="ml_apply">申请与通知</string>
-    <string name="ml_edit">编辑</string>
-    <string name="ml_help">帮助</string>
-    <string name="ml_save">保存</string>
-    <string name="ml_search">搜索</string>
-    <string name="ml_settings">设置</string>
-    <string name="ml_attachment">附件</string>
-    <string name="ml_clear_message">清空消息</string>
-    <string name="ml_more">更多</string>
-    <string name="ml_drawer_open">打开</string>
-    <string name="ml_drawer_close">关闭</string>
-    <string name="ml_title_input_status">正在输入...</string>
+    <string name="chat">聊天</string>
+    <string name="home">主页</string>
+    <string name="group">群组</string>
+    <string name="room">聊天室</string>
+    <string name="call">通话</string>
+    <string name="voice_call">语音通话</string>
+    <string name="video_call">视频通话</string>
+    <string name="apply">申请与通知</string>
+    <string name="edit">编辑</string>
+    <string name="help">帮助</string>
+    <string name="save">保存</string>
+    <string name="search">搜索</string>
+    <string name="settings">设置</string>
+    <string name="attachment">附件</string>
+    <string name="clear_message">清空消息</string>
+    <string name="more">更多</string>
+    <string name="drawer_open">打开</string>
+    <string name="drawer_close">关闭</string>
+    <string name="title_input_status">正在输入...</string>
 
     <!--扩展菜单文字-->
-    <string name="ml_photo">图片</string>
-    <string name="ml_voice">声音</string>
-    <string name="ml_video">视频</string>
-    <string name="ml_file">文件</string>
-    <string name="ml_location">位置</string>
-    <string name="ml_gift">礼物</string>
-    <string name="ml_contacts">联系人</string>
+    <string name="photo">图片</string>
+    <string name="voice">声音</string>
+    <string name="video">视频</string>
+    <string name="file">文件</string>
+    <string name="location">位置</string>
+    <string name="gift">礼物</string>
+    <string name="contacts">联系人</string>
 
     <!--弹出菜单-->
-    <string name="ml_menu_chat_copy">复制</string>
-    <string name="ml_menu_chat_delete">删除消息</string>
-    <string name="ml_menu_chat_forward">转发消息</string>
-    <string name="ml_menu_chat_recall">撤回</string>
-    <string name="ml_menu_chat_gallery">图库</string>
-    <string name="ml_menu_chat_camera">相机</string>
-    <string name="ml_menu_conversation_cancel_top">取消置顶</string>
-    <string name="ml_menu_conversation_clear">清空会话内容</string>
-    <string name="ml_menu_conversation_delete">删除会话</string>
-    <string name="ml_menu_conversation_top">会话置顶</string>
-    <string name="ml_menu_conversation_read">设置已读</string>
-    <string name="ml_menu_conversation_unread">设置未读</string>
+    <string name="menu_chat_copy">复制</string>
+    <string name="menu_chat_delete">删除消息</string>
+    <string name="menu_chat_forward">转发消息</string>
+    <string name="menu_chat_recall">撤回</string>
+    <string name="menu_chat_gallery">图库</string>
+    <string name="menu_chat_camera">相机</string>
+    <string name="menu_conversation_cancel_top">取消置顶</string>
+    <string name="menu_conversation_clear">清空会话内容</string>
+    <string name="menu_conversation_delete">删除会话</string>
+    <string name="menu_conversation_top">会话置顶</string>
+    <string name="menu_conversation_read">设置已读</string>
+    <string name="menu_conversation_unread">设置未读</string>
 
     <!--Hint 提醒文字-->
-    <string name="ml_hint_chat">唠十块钱的(☆_☆)/~~</string>
-    <string name="ml_hint_content">内容</string>
-    <string name="ml_hint_count">数量</string>
-    <string name="ml_hint_empty">- 空 -</string>
-    <string name="ml_hint_input_not_null">输入内容不能为空</string>
-    <string name="ml_hint_loading">正在加载...</string>
-    <string name="ml_hint_password">密码</string>
-    <string name="ml_hint_time">时间</string>
-    <string name="ml_hint_reason">申请理由</string>
-    <string name="ml_hint_sign_in">输入你的账户进行登录，账号不能包含\'\@\'符号</string>
-    <string name="ml_hint_sign_up">输入你要注册的账号，账户可以使手机号，或者任意长度的字符串，
+    <string name="hint_chat">唠十块钱的(☆_☆)/~~</string>
+    <string name="hint_content">内容</string>
+    <string name="hint_count">数量</string>
+    <string name="hint_empty">- 空 -</string>
+    <string name="hint_input_not_null">输入内容不能为空</string>
+    <string name="hint_loading">正在加载...</string>
+    <string name="hint_password">密码</string>
+    <string name="hint_time">时间</string>
+    <string name="hint_reason">申请理由</string>
+    <string name="hint_sign_in">输入你的账户进行登录，账号不能包含\'\@\'符号</string>
+    <string name="hint_sign_up">输入你要注册的账号，账户可以使手机号，或者任意长度的字符串，
         应全部为消息字母或数字，除了(.)(_)(-)外不能包含其他特殊字符，不能是邮箱账户</string>
-    <string name="ml_hint_sign_out">正在退出登录...</string>
-    <string name="ml_hint_username">账户名</string>
+    <string name="hint_sign_out">正在退出登录...</string>
+    <string name="hint_username">账户名</string>
 
     <!--消息方面的提示信息-->
-    <string name="ml_hint_msg_at">\@我消息</string>
-    <string name="ml_hint_msg_burn">阅后即焚</string>
-    <string name="ml_hint_msg_draft">草稿</string>
-    <string name="ml_hint_msg_failed">失败</string>
-    <string name="ml_hint_msg_sending">发送中</string>
-    <string name="ml_hint_msg_new">{$1}条新消息</string>
-    <string name="ml_hint_msg_recall_by_self">此条消息已撤回</string>
-    <string name="ml_hint_msg_recall_by_user">此条消息已被 %1$s 撤回</string>
-    <string name="ml_hint_msg_no_more">没有更多消息了</string>
+    <string name="hint_msg_at">\@我消息</string>
+    <string name="hint_msg_burn">阅后即焚</string>
+    <string name="hint_msg_draft">草稿</string>
+    <string name="hint_msg_failed">失败</string>
+    <string name="hint_msg_sending">发送中</string>
+    <string name="hint_msg_new">{$s}条新消息</string>
+    <string name="hint_msg_recall_by_self">此条消息已撤回</string>
+    <string name="hint_msg_recall_by_user">此条消息已被 %1$s 撤回</string>
+    <string name="hint_msg_no_more">没有更多消息了</string>
 
     <!--通话方面的提示信息-->
-    <string name="ml_call_accepted">通话已接通</string>
-    <string name="ml_call_busy">对方正忙，先发个给他吧</string>
-    <string name="ml_call_cancel">已取消</string>
-    <string name="ml_call_cancel_is_incoming">对方已取消</string>
-    <string name="ml_call_connecting">正在呼叫对方</string>
-    <string name="ml_call_connected">正在等待对方接受呼叫申请</string>
-    <string name="ml_call_connected_is_incoming">对方申请与你进行通话</string>
-    <string name="ml_call_connection_fail">建立连接失败</string>
-    <string name="ml_call_disconnected">通话已结束</string>
-    <string name="ml_call_duration_time">通话时长</string>
-    <string name="ml_call_no_data">没有通话数据</string>
-    <string name="ml_call_not_answer">对方未接听</string>
-    <string name="ml_call_no_response">对方手机不在身边，稍后再试</string>
-    <string name="ml_call_not_online">对方不在线，发个留言给他吧</string>
-    <string name="ml_call_network_unstable">网络状态不佳</string>
-    <string name="ml_call_network_normal">网络状态良好</string>
-    <string name="ml_call_reject">对方已拒绝</string>
-    <string name="ml_call_reject_is_incoming">已拒绝</string>
-    <string name="ml_call_local_version_smaller">本地版本过低，无法通讯</string>
-    <string name="ml_call_opposite_version_smaller">对方版本过低，无法通讯</string>
-    <string name="ml_call_version_different">双方通讯协议不同，无法通讯</string>
-    <string name="ml_call_video_pause">视频传输已暂停</string>
-    <string name="ml_call_video_resume">视频传输已恢复</string>
-    <string name="ml_call_video_calling">视频通话进行中</string>
-    <string name="ml_call_voice_pause">语音传输已暂停</string>
-    <string name="ml_call_voice_resume">语音传输已恢复</string>
-    <string name="ml_call_voice_calling">语音通话进行中</string>
+    <string name="call_accepted">通话已接通</string>
+    <string name="call_busy">对方正忙</string>
+    <string name="call_cancel">已取消</string>
+    <string name="call_cancel_is_incoming">对方已取消</string>
+    <string name="call_connecting">正在呼叫对方</string>
+    <string name="call_connected">正在等待对方接受呼叫申请</string>
+    <string name="call_connected_is_incoming">对方申请与你进行通话</string>
+    <string name="call_connection_fail">建立连接失败</string>
+    <string name="call_disconnected">通话已结束</string>
+    <string name="call_duration_time">通话时长</string>
+    <string name="call_no_data">没有通话数据</string>
+    <string name="call_not_answer">对方未接听</string>
+    <string name="call_no_response">对方可能在忙，建议稍后拨打</string>
+    <string name="call_offline">对方不在线</string>
+    <string name="call_network_unstable">网络状态不佳</string>
+    <string name="call_network_normal">网络状态良好</string>
+    <string name="call_reject">对方已拒绝</string>
+    <string name="call_reject_is_incoming">已拒绝</string>
+    <string name="call_local_version_smaller">本地版本过低，无法通讯</string>
+    <string name="call_opposite_version_smaller">对方版本过低，无法通讯</string>
+    <string name="call_version_different">双方通讯协议不同，无法通讯</string>
+    <string name="call_video_pause">视频传输已暂停</string>
+    <string name="call_video_resume">视频传输已恢复</string>
+    <string name="call_video_calling">视频通话进行中</string>
+    <string name="call_voice_pause">语音传输已暂停</string>
+    <string name="call_voice_resume">语音传输已恢复</string>
+    <string name="call_voice_calling">语音通话进行中</string>
 
     <!--Error 文字内容-->
-    <string name="ml_error_field_required">此项是必须的</string>
-    <string name="ml_error_invalid_username_or_password">用户账户或密码错误</string>
+    <string name="error_field_required">此项是必须的</string>
+    <string name="error_invalid_username_or_password">用户账户或密码错误</string>
 
-    <string name="ml_error_voice_failed">录音失败，请检查权限</string>
-    <string name="ml_error_voice_short">录音时间过短</string>
-    <string name="ml_error_voice_system">录音机系统错误</string>
+    <string name="error_voice_failed">录音失败，请检查权限</string>
+    <string name="error_voice_short">录音时间过短</string>
+    <string name="error_voice_system">录音机系统错误</string>
 
     <!--其他错误 x-->
-    <string name="ml_error_em_no_error">无错误</string>
-    <string name="ml_error_general_error">一般错误，未细分的错误一般通过此errorcode抛出来</string>
-    <string name="ml_error_network_error">网络异常，请检查网络设置</string>
-    <string name="ml_error_disconnected">连接不到服务器</string>
+    <string name="error_em_no_error">无错误</string>
+    <string name="error_general_error">一般错误，未细分的错误一般通过此errorcode抛出来</string>
+    <string name="error_network_error">网络异常，请检查网络设置</string>
+    <string name="error_disconnected">连接不到服务器</string>
 
     <!--登录错误 1xx-->
-    <string name="ml_error_invalid_app_key">Appkey错误</string>
-    <string name="ml_error_invalid_password">密码错误</string>
-    <string name="ml_error_invalid_url">URL错误</string>
-    <string name="ml_error_invalid_user_name">用户名错误</string>
+    <string name="error_invalid_app_key">Appkey错误</string>
+    <string name="error_invalid_password">密码错误</string>
+    <string name="error_invalid_url">URL错误</string>
+    <string name="error_invalid_user_name">用户名错误</string>
 
     <!--关于账户的错误 2xx-->
-    <string name="ml_error_user_already_exits">用户已存在</string>
-    <string name="ml_error_user_already_login">用户已登录</string>
-    <string name="ml_error_user_authentication_failed">用户名或密码错误</string>
-    <string name="ml_error_user_bind_device_token_failed">绑定设备Token失败</string>
-    <string name="ml_error_user_illegal_argument">参数不合法</string>
-    <string name="ml_error_user_illegal_password">无效的密码</string>
-    <string name="ml_error_user_illegal_username">无效的用户名</string>
-    <string name="ml_error_user_login_another_device">账户在另外一台设备登录</string>
-    <string name="ml_error_user_not_found">不存在此用户</string>
-    <string name="ml_error_user_not_login">用户未登录</string>
-    <string name="ml_error_user_reg_failed">注册失败</string>
-    <string name="ml_error_user_removed">账户被删除</string>
-    <string name="ml_error_user_unbind_devicetoken_failed">解绑设备token失败</string>
-    <string name="ml_error_user_updateinfo_failed">更新用户信息失败</string>
+    <string name="error_user_already_exits">用户已存在</string>
+    <string name="error_user_already_login">用户已登录</string>
+    <string name="error_user_authentication_failed">用户名或密码错误</string>
+    <string name="error_user_bind_device_token_failed">绑定设备Token失败</string>
+    <string name="error_user_illegal_argument">参数不合法</string>
+    <string name="error_user_illegal_password">无效的密码</string>
+    <string name="error_user_illegal_username">无效的用户名</string>
+    <string name="error_user_login_another_device">账户在另外一台设备登录</string>
+    <string name="error_user_not_found">不存在此用户</string>
+    <string name="error_user_not_login">用户未登录</string>
+    <string name="error_user_reg_failed">注册失败</string>
+    <string name="error_user_removed">账户被删除</string>
+    <string name="error_user_unbind_devicetoken_failed">解绑设备token失败</string>
+    <string name="error_user_updateinfo_failed">更新用户信息失败</string>
 
     <!--关于服务器的错误 3xx-->
-    <string name="ml_error_server_busy">服务器繁忙，请稍候再试</string>
-    <string name="ml_error_server_not_reachable">无法链接到服务器</string>
-    <string name="ml_error_server_timeout">等待服务器响应超时</string>
+    <string name="error_server_busy">服务器繁忙，请稍候再试</string>
+    <string name="error_server_not_reachable">无法链接到服务器</string>
+    <string name="error_server_timeout">等待服务器响应超时</string>
     <!--303 一般连接不到服务器就会这样-->
-    <string name="ml_error_server_unknown_error">未知的 Server 异常</string>
+    <string name="error_server_unknown_error">未知的 Server 异常</string>
 
     <!--文件错误 4xx-->
-    <string name="ml_error_file_download_failed">文件下载失败</string>
-    <string name="ml_error_file_invalid">文件不合法</string>
-    <string name="ml_error_file_not_foun">文件不存在</string>
-    <string name="ml_error_file_upload_failed">文件上传失败</string>
+    <string name="error_file_download_failed">文件下载失败</string>
+    <string name="error_file_invalid">文件不合法</string>
+    <string name="error_file_not_foun">文件不存在</string>
+    <string name="error_file_upload_failed">文件上传失败</string>
 
     <!--消息错误 5xx-->
-    <string name="ml_error_message_encryption_error">消息加解密错误</string>
-    <string name="ml_error_message_include_illegal_content">消息内容包含非法或敏感词</string>
-    <string name="ml_error_message_invalid">消息不合法</string>
-    <string name="ml_error_message_send_traffic_limit">消息发送过快，触发限流</string>
+    <string name="error_message_encryption_error">消息加解密错误</string>
+    <string name="error_message_include_illegal_content">消息内容包含非法或敏感词</string>
+    <string name="error_message_invalid">消息不合法</string>
+    <string name="error_message_send_traffic_limit">消息发送过快，触发限流</string>
     <!--群组错误 6xx-->
-    <string name="ml_error_group_already_joined">已经加入的群组</string>
-    <string name="ml_error_group_invalid_id">群id不正确</string>
-    <string name="ml_error_group_members_full">群成员已满</string>
-    <string name="ml_error_group_not_exist">群组不存在</string>
-    <string name="ml_error_group_not_joined">尚未加入此群组</string>
-    <string name="ml_error_group_permission_denied">群组权限不够</string>
+    <string name="error_group_already_joined">已经加入的群组</string>
+    <string name="error_group_invalid_id">群id不正确</string>
+    <string name="error_group_members_full">群成员已满</string>
+    <string name="error_group_not_exist">群组不存在</string>
+    <string name="error_group_not_joined">尚未加入此群组</string>
+    <string name="error_group_permission_denied">群组权限不够</string>
 
     <!--聊天室错误 7xx-->
-    <string name="ml_error_chatroom_already_joined">已经在此聊天室里</string>
-    <string name="ml_error_chatroom_invalid_id">聊天室id不正确</string>
-    <string name="ml_error_chatroom_members_full">聊天室成员已满</string>
-    <string name="ml_error_chatroom_not_exist">聊天室不存在</string>
-    <string name="ml_error_chatroom_not_joined">尚未加入此聊天室</string>
-    <string name="ml_error_chatroom_permission_denied">聊天室权限不够</string>
+    <string name="error_chatroom_already_joined">已经在此聊天室里</string>
+    <string name="error_chatroom_invalid_id">聊天室id不正确</string>
+    <string name="error_chatroom_members_full">聊天室成员已满</string>
+    <string name="error_chatroom_not_exist">聊天室不存在</string>
+    <string name="error_chatroom_not_joined">尚未加入此聊天室</string>
+    <string name="error_chatroom_permission_denied">聊天室权限不够</string>
 
     <!--Toast 提示内容-->
-    <string name="ml_toast_add_friend_success">发送好友请求成功，等待对方同意^_^</string>
-    <string name="ml_toast_add_friend_failed">发送好友请求失败-_-||，稍后重试</string>
-    <string name="ml_toast_connected">已经连接到服务器</string>h
-    <string name="ml_toast_copy_success">复制成功</string>
-    <string name="ml_toast_send_failed">消息发送失败</string>
-    <string name="ml_toast_file_too_big">文件过大</string>
-    <string name="ml_toast_resend_failed">消息重新发送失败</string>
-    <string name="ml_toast_not_join_group">未加入当前群组</string>
-    <string name="ml_toast_have_illegal">内容包含非法字符</string>
-    <string name="ml_toast_recall_failed_max_time">消息已经超过五分钟，无法撤回</string>
-    <string name="ml_toast_recall_failed">撤回失败 失败错误码</string>
-    <string name="ml_toast_delete_success">消息删除成功</string>
-    <string name="ml_toast_cant_chat_with_yourself">不能和自己聊天</string>
+    <string name="toast_add_friend_success">发送好友请求成功，等待对方同意^_^</string>
+    <string name="toast_add_friend_failed">发送好友请求失败-_-||，稍后重试</string>
+    <string name="toast_connected">已经连接到服务器</string>
+    <string name="toast_copy_success">复制成功</string>
+    <string name="toast_send_failed">消息发送失败</string>
+    <string name="toast_file_too_big">文件过大</string>
+    <string name="toast_resend_failed">消息重新发送失败</string>
+    <string name="toast_not_join_group">未加入当前群组</string>
+    <string name="toast_have_illegal">内容包含非法字符</string>
+    <string name="toast_recall_failed_max_time">消息已经超过五分钟，无法撤回</string>
+    <string name="toast_recall_failed">撤回失败 失败错误码</string>
+    <string name="toast_delete_success">消息删除成功</string>
+    <string name="toast_cant_chat_with_yourself">不能和自己聊天</string>
 
-    <string name="ml_toast_unrealized">功能暂未实现，尽请期待(๑^ں^๑)</string>
+    <string name="toast_unrealized">功能暂未实现，尽请期待(๑^ں^๑)</string>
 
 
     <!--设置相关-->
-    <string name="ml_settings_about">关于</string>
-    <string name="ml_settings_notification">通知</string>
-    <string name="ml_settings_update">检查更新</string>
-    <string name="ml_settings_version">当前版本</string>
+    <string name="settings_about">关于</string>
+    <string name="settings_notification">通知</string>
+    <string name="settings_update">检查更新</string>
+    <string name="settings_version">当前版本</string>
 
-    <string name="ml_pref_key_about">pref_key_about</string>
-    <string name="ml_pref_key_notification">pref_key_notification</string>
-    <string name="ml_pref_key_update">pref_key_update</string>
-    <string name="ml_pref_key_version">pref_key_version</string>
-    <string name="ml_pref_key_">pref_key_</string>
+    <string name="pref_key_about">pref_key_about</string>
+    <string name="pref_key_notification">pref_key_notification</string>
+    <string name="pref_key_update">pref_key_update</string>
+    <string name="pref_key_version">pref_key_version</string>
+    <string name="pref_key_">pref_key_</string>
 
 
     <!--界面跳转共享元素名称-->
-    <string name="ml_shared_element_toolbar">Toolbar</string>
-    <string name="ml_shared_element_avatar">Avatar</string>
-    <string name="ml_shared_element_username">Username</string>
+    <string name="shared_element_toolbar">Toolbar</string>
+    <string name="shared_element_avatar">Avatar</string>
+    <string name="shared_element_username">Username</string>
 
 
     <!--输入框限制输入内容-->
-    <string name="ml_input_limit">0123456789abcdefghijklmnopqrstuvwxyz-_.</string>
-    <string name="ml_input_limit_full">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIGKLMNOPQRSTUVWXYZ-_.</string>
+    <string name="input_limit">0123456789abcdefghijklmnopqrstuvwxyz-_.</string>
+    <string name="input_limit_full">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIGKLMNOPQRSTUVWXYZ-_.</string>
     <!--Copyright-->
-    <string name="ml_copy_right">©2015 melove.net</string>
+    <string name="copy_right">©2015 melove.net</string>
 
 
     <string name="test_unicode_smiling">\uD83D\uDE01</string>

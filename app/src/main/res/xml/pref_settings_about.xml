@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    android:title="@string/ml_settings_about">
+    android:title="@string/settings_about">
     <!--当前版本-->
     <Preference
-        android:key="@string/ml_pref_key_version"
-        android:summary="@string/ml_settings_version"
-        android:title="@string/ml_settings_version"/>
+        android:key="@string/pref_key_version"
+        android:summary="@string/settings_version"
+        android:title="@string/settings_version"/>
     <!--检查更新-->
     <Preference
-        android:key="@string/ml_pref_key_update"
-        android:summary="@string/ml_settings_update"
-        android:title="@string/ml_settings_update"/>
+        android:key="@string/pref_key_update"
+        android:summary="@string/settings_update"
+        android:title="@string/settings_update"/>
 
 </PreferenceScreen>

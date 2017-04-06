@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/ml_dimen_16"
+    android:padding="@dimen/vm_dimen_16"
     >
 
     <LinearLayout
@@ -14,13 +14,13 @@
         >
 
         <!--自定义ViewGroup，可以自动排列放在其中的子View-->
-        <net.melove.app.chat.widget.MLViewGroup
+        <com.vmloft.develop.library.tools.widget.VMViewGroup
             android:id="@+id/view_custom_viewgroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             >
 
-        </net.melove.app.chat.widget.MLViewGroup>
+        </com.vmloft.develop.library.tools.widget.VMViewGroup>
     </LinearLayout>
 
 </RelativeLayout>

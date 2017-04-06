@@ -16,33 +16,33 @@
             android:id="@+id/layout_bubble"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/ml_dimen_8"
-            android:background="@drawable/ml_shape_system_message"
+            android:layout_margin="@dimen/vm_dimen_8"
+            android:background="@drawable/shape_system_message"
             android:gravity="center"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/ml_dimen_4"
-            android:paddingLeft="@dimen/ml_dimen_8"
-            android:paddingRight="@dimen/ml_dimen_8"
-            android:paddingTop="@dimen/ml_dimen_4"
+            android:paddingBottom="@dimen/vm_dimen_4"
+            android:paddingLeft="@dimen/vm_dimen_8"
+            android:paddingRight="@dimen/vm_dimen_8"
+            android:paddingTop="@dimen/vm_dimen_4"
             >
             <!--消息内容-->
             <TextView
                 android:id="@+id/text_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxWidth="@dimen/ml_dimen_256"
-                android:text="@string/ml_app_name"
-                android:textColor="@color/ml_white_87"
-                android:textSize="@dimen/ml_size_12"
+                android:maxWidth="@dimen/vm_dimen_256"
+                android:text="@string/app_name"
+                android:textColor="@color/vm_white_87"
+                android:textSize="@dimen/vm_size_12"
                 />
             <!--消息时间-->
             <TextView
                 android:id="@+id/text_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/ml_hint_time"
-                android:textColor="@color/ml_white_54"
-                android:textSize="@dimen/ml_size_8"
+                android:text="@string/hint_time"
+                android:textColor="@color/vm_white_54"
+                android:textSize="@dimen/vm_size_10"
                 />
         </LinearLayout>
     </LinearLayout>

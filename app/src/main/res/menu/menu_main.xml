@@ -2,26 +2,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_search"
-        android:icon="@mipmap/ic_search_white_24dp"
+        android:icon="@drawable/ic_search_white_24dp"
         android:orderInCategory="50"
-        android:title="@string/ml_search"
+        android:title="@string/search"
         app:showAsAction="always"/>
     <item
         android:id="@+id/action_add_conversation"
-        android:icon="@mipmap/ic_add_white_24dp"
+        android:icon="@drawable/ic_add_white_24dp"
         android:orderInCategory="101"
-        android:title="@string/ml_create_conversation"
+        android:title="@string/create_conversation"
         app:showAsAction="never"/>
     <item
         android:id="@+id/action_add_friend"
-        android:icon="@mipmap/ic_add_contacts_white_24dp"
+        android:icon="@drawable/ic_add_contacts_white_24dp"
         android:orderInCategory="101"
-        android:title="@string/ml_add_friend"
+        android:title="@string/add_friend"
         app:showAsAction="never"/>
     <item
         android:id="@+id/action_add_group"
-        android:icon="@mipmap/ic_add_group_white_24dp"
+        android:icon="@drawable/ic_add_group_white_24dp"
         android:orderInCategory="101"
-        android:title="@string/ml_add_group"
+        android:title="@string/add_group"
         app:showAsAction="never"/>
 </menu>

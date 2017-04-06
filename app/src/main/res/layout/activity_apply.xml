@@ -5,7 +5,7 @@
     android:id="@+id/layout_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/ml_theme_background"
+    android:background="@color/vm_theme_background_light"
     android:fitsSystemWindows="true"
     >
 
@@ -40,7 +40,7 @@
         <!--android:id="@+id/layout_empty"-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="match_parent"-->
-        <!--android:background="@color/ml_red_87"-->
+        <!--android:background="@color/vm_red_87"-->
         <!--android:gravity="center"-->
         <!--android:orientation="vertical">-->
 
@@ -48,7 +48,7 @@
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="match_parent"-->
         <!--android:scaleType="center"-->
-        <!--android:src="@mipmap/ic_empty"/>-->
+        <!--android:src="@drawable/ic_empty"/>-->
         <!--</RelativeLayout>-->
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

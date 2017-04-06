@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:melove="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/ml_dimen_8"
+    android:layout_margin="@dimen/vm_dimen_8"
     android:gravity="center_vertical"
     >
 
@@ -31,14 +31,14 @@
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/ml_dimen_4"
+                    android:layout_marginRight="@dimen/vm_dimen_4"
                     >
 
                     <!--消息发送进度圈-->
                     <ProgressBar
                         android:id="@+id/progress_bar"
-                        android:layout_width="@dimen/ml_dimen_24"
-                        android:layout_height="@dimen/ml_dimen_24"
+                        android:layout_width="@dimen/vm_dimen_24"
+                        android:layout_height="@dimen/vm_dimen_24"
                         android:layout_centerInParent="true"
                         android:visibility="gone"
                         />
@@ -47,7 +47,7 @@
                         android:id="@+id/img_resend"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@mipmap/ic_retry_normal"
+                        android:src="@drawable/ic_retry_normal"
                         android:visibility="gone"
                         />
                     <!--消息ACK状态图标-->
@@ -55,8 +55,8 @@
                         android:id="@+id/img_msg_ack"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@mipmap/ic_done_white_18dp"
-                        android:tint="@color/ml_orange_100"
+                        android:src="@drawable/ic_done_white_18dp"
+                        android:tint="@color/vm_orange_100"
                         android:visibility="gone"
                         />
                 </RelativeLayout>
@@ -68,9 +68,9 @@
                     android:background="@drawable/bubble_msg_send"
                     android:gravity="center_vertical"
                     android:orientation="vertical"
-                    android:paddingLeft="@dimen/ml_dimen_8"
-                    android:paddingRight="@dimen/ml_dimen_12"
-                    android:paddingTop="@dimen/ml_dimen_8"
+                    android:paddingLeft="@dimen/vm_dimen_8"
+                    android:paddingRight="@dimen/vm_dimen_16"
+                    android:paddingTop="@dimen/vm_dimen_8"
                     >
 
                     <LinearLayout
@@ -82,21 +82,21 @@
                         <!--语音消息播放按钮-->
                         <!--<ImageButton-->
                         <!--android:id="@+id/btn_chat_play_voice"-->
-                        <!--android:layout_width="@dimen/ml_dimen_36"-->
-                        <!--android:layout_height="@dimen/ml_dimen_36"-->
-                        <!--android:background="@drawable/ml_click_rectangle_white"-->
-                        <!--android:src="@drawable/ml_checkbox_play"/>-->
+                        <!--android:layout_width="@dimen/vm_dimen_36"-->
+                        <!--android:layout_height="@dimen/vm_dimen_36"-->
+                        <!--android:background="@drawable/vm_click_rectangle_white"-->
+                        <!--android:src="@drawable/vm_checkbox_play"/>-->
 
                         <!--语音播放并显示波形控件-->
-                        <net.melove.app.chat.widget.MLWaveformView
+                        <com.vmloft.develop.library.tools.widget.VMWaveformView
                             android:id="@+id/view_waveform"
                             android:layout_width="wrap_content"
-                            android:layout_height="@dimen/ml_dimen_36"
+                            android:layout_height="@dimen/vm_dimen_36"
                             android:layout_centerInParent="true"
-                            melove:ml_waveform_text_color="@color/ml_white_87"
-                            melove:ml_waveform_text_size="@dimen/ml_size_10"
-                            melove:ml_waveform_waveform_color="@color/ml_white_87"
-                            melove:ml_waveform_waveform_width="@dimen/ml_dimen_2"
+                            app:vm_waveform_text_color="@color/vm_white_87"
+                            app:vm_waveform_text_size="@dimen/vm_size_10"
+                            app:vm_waveform_waveform_color="@color/vm_white_87"
+                            app:vm_waveform_waveform_width="@dimen/vm_dimen_2"
                             />
                     </LinearLayout>
 
@@ -104,8 +104,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="right|bottom"
-                        android:layout_marginBottom="@dimen/ml_dimen_2"
-                        android:layout_marginTop="@dimen/ml_dimen_2"
+                        android:layout_marginBottom="@dimen/vm_dimen_2"
+                        android:layout_marginTop="@dimen/vm_dimen_2"
                         android:orientation="horizontal"
                         >
                         <!--消息发送者用户名-->
@@ -113,33 +113,33 @@
                             android:id="@+id/text_username"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginRight="@dimen/ml_dimen_8"
-                            android:text="@string/ml_hint_username"
-                            android:textColor="@color/ml_white_54"
-                            android:textSize="@dimen/ml_size_8"
+                            android:layout_marginRight="@dimen/vm_dimen_8"
+                            android:text="@string/hint_username"
+                            android:textColor="@color/vm_white_54"
+                            android:textSize="@dimen/vm_size_10"
                             />
                         <!--消息时间-->
                         <TextView
                             android:id="@+id/text_time"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/ml_hint_time"
-                            android:textColor="@color/ml_white_54"
-                            android:textSize="@dimen/ml_size_8"
+                            android:text="@string/hint_time"
+                            android:textColor="@color/vm_white_54"
+                            android:textSize="@dimen/vm_size_10"
                             />
                     </LinearLayout>
                 </LinearLayout>
                 <!--消息发送者头像-->
-                <net.melove.app.chat.widget.MLImageView
+                <com.vmloft.develop.library.tools.widget.VMImageView
                     android:id="@+id/img_avatar"
-                    android:layout_width="@dimen/ml_dimen_40"
-                    android:layout_height="@dimen/ml_dimen_40"
-                    android:src="@mipmap/ic_character_blackcat"
-                    android:transitionName="@string/ml_shared_element_avatar"
-                    melove:ml_border_color="@color/ml_white_87"
-                    melove:ml_border_width="@dimen/ml_dimen_2"
-                    melove:ml_dispatch_touch_event="false"
-                    melove:ml_shape_type="round"
+                    android:layout_width="@dimen/vm_dimen_40"
+                    android:layout_height="@dimen/vm_dimen_40"
+                    android:src="@drawable/ic_character_blackcat"
+                    android:transitionName="@string/shared_element_avatar"
+                    app:vm_border_color="@color/vm_white_87"
+                    app:vm_border_width="@dimen/vm_dimen_2"
+                    app:vm_dispatch_touch_event="false"
+                    app:vm_shape_type="round"
                     />
             </LinearLayout>
         </LinearLayout>

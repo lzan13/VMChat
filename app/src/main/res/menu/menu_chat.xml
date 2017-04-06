@@ -3,27 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_call"
-        android:icon="@mipmap/ic_call_white_24dp"
+        android:icon="@drawable/ic_call_white_24dp"
         android:orderInCategory="50"
-        android:title="@string/ml_call"
+        android:title="@string/call"
         app:showAsAction="always"/>
     <item
         android:id="@+id/action_attachment"
-        android:icon="@mipmap/ic_attachment_white_24dp"
+        android:icon="@drawable/ic_attachment_white_24dp"
         android:orderInCategory="100"
-        android:title="@string/ml_attachment"
+        android:title="@string/attachment"
         app:showAsAction="always"/>
     <item
         android:id="@+id/action_settings"
-        android:icon="@mipmap/ic_settings_white_24dp"
+        android:icon="@drawable/ic_settings_white_24dp"
         android:orderInCategory="150"
-        android:title="@string/ml_settings"
+        android:title="@string/settings"
         app:showAsAction="never"/>
     <item
         android:id="@+id/action_delete"
-        android:icon="@mipmap/ic_delete_white_24dp"
+        android:icon="@drawable/ic_delete_white_24dp"
         android:orderInCategory="150"
-        android:title="@string/ml_clear_message"
+        android:title="@string/clear_message"
         app:showAsAction="never"/>
 
 </menu>
