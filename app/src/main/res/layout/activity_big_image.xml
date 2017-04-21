@@ -10,19 +10,17 @@
     android:clipToPadding="false"
     android:fitsSystemWindows="false"
     >
-
     <com.bm.library.PhotoView
         android:id="@+id/img_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerInside"
-        android:src="@drawable/bg_chat"
+        android:src="@drawable/image_default"
+        android:transitionName="@string/shared_element_username"
         />
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clipToPadding="false"
         android:fitsSystemWindows="true"
         >
 

@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/vm_dimen_8"
     android:layout_marginBottom="@dimen/vm_dimen_1"
-    android:background="@drawable/click_rectangle_white"
+    android:background="@drawable/ripple_rectangle_white"
     android:gravity="center_vertical"
     android:orientation="vertical"
     >
@@ -38,13 +38,11 @@
             android:layout_width="@dimen/vm_dimen_48"
             android:layout_height="@dimen/vm_dimen_36"
             android:layout_marginRight="@dimen/vm_dimen_8"
-            android:background="@drawable/click_rectangle_blue"
             android:elevation="@dimen/vm_dimen_0"
             android:focusable="false"
-            android:gravity="center"
             android:text="@string/btn_agree"
             android:textColor="@color/vm_white_87"
-            android:textSize="@dimen/vm_size_14"
+            android:theme="@style/VMBtn.Blue"
             android:visibility="visible"
             />
         <!--拒绝按钮-->
@@ -52,13 +50,12 @@
             android:id="@+id/btn_reject"
             android:layout_width="@dimen/vm_dimen_48"
             android:layout_height="@dimen/vm_dimen_36"
-            android:background="@drawable/click_rectangle_red"
             android:elevation="@dimen/vm_dimen_0"
             android:focusable="false"
             android:gravity="center"
             android:text="@string/btn_reject"
             android:textColor="@color/vm_white_87"
-            android:textSize="@dimen/vm_size_14"
+            android:theme="@style/VMBtn.Red"
             android:visibility="visible"
             />
         <!--状态-->

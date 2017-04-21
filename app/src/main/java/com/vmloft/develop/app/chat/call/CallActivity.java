@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.WindowManager;
+import com.vmloft.develop.app.chat.app.AppActivity;
 import com.vmloft.develop.library.tools.VMBaseActivity;
 import org.greenrobot.eventbus.EventBus;
 
@@ -12,7 +13,7 @@ import org.greenrobot.eventbus.EventBus;
  *
  * 通话界面的父类，做一些音视频通话的通用操作
  */
-public class CallActivity extends VMBaseActivity {
+public class CallActivity extends AppActivity {
 
     // 呼叫方名字
     protected String chatId;
@@ -90,12 +91,10 @@ public class CallActivity extends VMBaseActivity {
 
     @Override protected void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
     }
 
     @Override protected void onStop() {
         super.onStop();
-        EventBus.getDefault().unregister(this);
     }
 
     /**

@@ -52,11 +52,11 @@ public class VoiceMessageItem extends MessageItem {
      * @param message 需要展示的 EMMessage 对象
      */
     @Override public void onSetupView(EMMessage message) {
-        mMessage = message;
+        this.message = message;
 
         // 判断如果是单聊或者消息是发送方，不显示username
-        if (mMessage.getChatType() == EMMessage.ChatType.Chat
-                || mMessage.direct() == EMMessage.Direct.SEND) {
+        if (this.message.getChatType() == EMMessage.ChatType.Chat
+                || this.message.direct() == EMMessage.Direct.SEND) {
             usernameView.setVisibility(GONE);
         } else {
             // 设置消息消息发送者的名称
@@ -64,10 +64,10 @@ public class VoiceMessageItem extends MessageItem {
             usernameView.setVisibility(VISIBLE);
         }
         // 设置消息时间
-        msgTimeView.setText(VMDateUtil.getRelativeTime(mMessage.getMsgTime()));
+        msgTimeView.setText(VMDateUtil.getRelativeTime(this.message.getMsgTime()));
 
         // 获取语音消息体
-        EMVoiceMessageBody body = (EMVoiceMessageBody) mMessage.getBody();
+        EMVoiceMessageBody body = (EMVoiceMessageBody) this.message.getBody();
         int time = body.getLength();
         // 设置持续时间
         waveformView.setTimeText(time);
@@ -94,7 +94,7 @@ public class VoiceMessageItem extends MessageItem {
         setPlayStatus();
 
         // 判断当前Item 是否正在播放，然后设置数据更新回调
-        if (VoiceManager.getInstance().isPlaying(mMessage)) {
+        if (VoiceManager.getInstance().isPlaying(this.message)) {
             VoiceManager.getInstance().setVoiceCallback(voiceCallback);
         }
 
@@ -128,11 +128,11 @@ public class VoiceMessageItem extends MessageItem {
     @Override protected void onItemClick() {
         //        super.onItemClick();
         // 判断当前Item 是否正在播放，然后设置数据更新回调，这里点击和上边的判断不同，这里要主动去设置
-        if (!VoiceManager.getInstance().isPlaying(mMessage)) {
+        if (!VoiceManager.getInstance().isPlaying(message)) {
             VoiceManager.getInstance().setVoiceCallback(voiceCallback);
         }
         // 调用音频管理类
-        VoiceManager.getInstance().onPlay(mMessage);
+        VoiceManager.getInstance().onPlay(message);
         // 设置播放状态
         setPlayStatus();
     }
@@ -150,7 +150,7 @@ public class VoiceMessageItem extends MessageItem {
          * 这里是语音消息，所以不能转发，只能删除和撤回
          * TODO 后期可以加上语音转文字
          */
-        if (mViewType == Constants.MSG_TYPE_VOICE_RECEIVED) {
+        if (viewType == Constants.MSG_TYPE_VOICE_RECEIVED) {
             menus = new String[] {
                     activity.getResources().getString(R.string.menu_chat_delete)
             };
@@ -169,10 +169,10 @@ public class VoiceMessageItem extends MessageItem {
             @Override public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case 0:
-                        mAdapter.onItemAction(Constants.ACTION_DELETE, mMessage);
+                        adapter.onItemAction(Constants.ACTION_DELETE, message);
                         break;
                     case 1:
-                        mAdapter.onItemAction(Constants.ACTION_RECALL, mMessage);
+                        adapter.onItemAction(Constants.ACTION_RECALL, message);
                         break;
                 }
             }
@@ -186,7 +186,7 @@ public class VoiceMessageItem extends MessageItem {
      */
     private void setPlayStatus() {
         // 判断当前语音是否在播放
-        if (VoiceManager.getInstance().isPlaying(mMessage)) {
+        if (VoiceManager.getInstance().isPlaying(message)) {
             //            playVoiceBtn.setActivated(true);
         } else {
             //            playVoiceBtn.setActivated(false);
@@ -199,11 +199,11 @@ public class VoiceMessageItem extends MessageItem {
 
     protected void refreshView() {
         // 判断是不是阅后即焚的消息
-        if (mMessage.getBooleanAttribute(Constants.ATTR_BURN, false)) {
+        if (message.getBooleanAttribute(Constants.ATTR_BURN, false)) {
         } else {
         }
         // 判断消息的状态，如果发送失败就显示重发按钮，并设置重发按钮的监听
-        switch (mMessage.status()) {
+        switch (message.status()) {
             case SUCCESS:
                 ackStatusView.setVisibility(VISIBLE);
                 msgProgressBar.setVisibility(GONE);
@@ -217,7 +217,7 @@ public class VoiceMessageItem extends MessageItem {
                 resendView.setVisibility(VISIBLE);
                 resendView.setOnClickListener(new OnClickListener() {
                     @Override public void onClick(View v) {
-                        mAdapter.onItemAction(Constants.ACTION_RESEND, mMessage);
+                        adapter.onItemAction(Constants.ACTION_RESEND, message);
                     }
                 });
                 break;
@@ -238,7 +238,7 @@ public class VoiceMessageItem extends MessageItem {
      */
     @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(MessageEvent event) {
         EMMessage message = event.getMessage();
-        if (!message.getMsgId().equals(mMessage.getMsgId())) {
+        if (!message.getMsgId().equals(this.message.getMsgId())) {
             return;
         }
     }
@@ -247,10 +247,10 @@ public class VoiceMessageItem extends MessageItem {
      * 解析对应的xml 布局，填充当前 ItemView，并初始化控件
      */
     @Override protected void onInflateView() {
-        if (mViewType == Constants.MSG_TYPE_VOICE_SEND) {
-            mInflater.inflate(R.layout.item_msg_voice_send, this);
+        if (viewType == Constants.MSG_TYPE_VOICE_SEND) {
+            inflater.inflate(R.layout.item_msg_voice_send, this);
         } else {
-            mInflater.inflate(R.layout.item_msg_voice_received, this);
+            inflater.inflate(R.layout.item_msg_voice_received, this);
         }
 
         bubbleLayout = findViewById(R.id.layout_bubble);

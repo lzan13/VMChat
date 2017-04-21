@@ -2,20 +2,19 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/vm_theme_background_light"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
-    tools:context="com.vmloft.develop.app.chat.sign.SignInActivity"
     >
 
     <!--公共的 Toolbar 控件-->
     <include layout="@layout/widget_toolbar_communal"/>
 
     <RelativeLayout
+        android:id="@+id/layout_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -41,11 +40,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/hint_sign_in"
-                    android:textColor="@color/vm_red_54"
+                    android:textColor="@color/vm_green_87"
                     android:textSize="@dimen/vm_size_14"
                     />
 
                 <android.support.design.widget.TextInputLayout
+                    android:id="@+id/text_input_username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/vm_dimen_16"
@@ -66,6 +66,7 @@
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
+                    android:id="@+id/text_input_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/vm_black_87"
@@ -77,8 +78,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/hint_password"
-                        android:inputType="textPassword"
-                        android:maxLines="1"
+                        android:inputType="textPassword|textImeMultiLine"
                         android:textColor="@color/vm_black_87"
                         android:textColorHint="@color/vm_black_38"
                         android:textSize="@dimen/vm_size_16"
@@ -87,10 +87,14 @@
 
                 <Button
                     android:id="@+id/btn_sign_in"
-                    android:layout_marginBottom="@dimen/vm_dimen_24"
-                    android:layout_marginTop="@dimen/vm_dimen_24"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/vm_dimen_48"
+                    android:layout_marginBottom="@dimen/vm_margin_normal"
+                    android:layout_marginTop="@dimen/vm_margin_large"
+                    android:alpha="0.5"
+                    android:enabled="false"
                     android:text="@string/sign_in"
-                    style="@style/AppBtn.Red"
+                    android:theme="@style/VMBtn.Red"
                     />
 
                 <LinearLayout
@@ -103,25 +107,49 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/sign_up_no_account"
+                        android:text="@string/sign_not_account"
                         android:textColor="@color/vm_black_54"
                         android:textSize="@dimen/vm_size_14"
                         />
 
                     <Button
                         android:id="@+id/btn_sign_up"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/vm_btn_height_normal"
+                        android:layout_margin="@dimen/vm_dimen_0"
+                        android:padding="@dimen/vm_dimen_0"
                         android:text="@string/sign_up_now"
                         android:textColor="@color/vm_blue_87"
-                        style="@style/AppBtn.Transparent"
+                        android:theme="@style/VMBtn.Transparent"
+                        style="@style/VMBtn.Transparent"
                         />
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/btn_forget_password"
-                    android:text="@string/forget_password"
-                    android:textColor="@color/vm_blue_87"
-                    style="@style/AppBtn.Transparent"
-                    />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/sign_password_forget"
+                        android:textColor="@color/vm_black_54"
+                        android:textSize="@dimen/vm_size_14"
+                        android:visibility="gone"
+                        />
+                    <Button
+                        android:id="@+id/btn_forget_password"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/vm_btn_height_normal"
+                        android:text="@string/sign_password_forget"
+                        android:textColor="@color/vm_blue_87"
+                        android:theme="@style/VMBtn.Transparent"
+                        style="@style/VMBtn.Transparent"
+                        />
+                </LinearLayout>
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
     </RelativeLayout>

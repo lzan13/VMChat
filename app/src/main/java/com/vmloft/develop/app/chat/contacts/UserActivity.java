@@ -34,24 +34,24 @@ import com.vmloft.develop.library.tools.widget.VMImageView;
  */
 public class UserActivity extends AppActivity {
 
-    @BindView(R.id.widget_collapsing) CollapsingToolbarLayout mCollapsingToolbarLayout;
-    @BindView(R.id.fab_add_or_chat) FloatingActionButton mAddOrChatFab;
-    @BindView(R.id.widget_appbar) AppBarLayout mAppbarLayout;
-    @BindView(R.id.img_avatar) VMImageView mAvatarView;
-    @BindView(R.id.img_cover) ImageView mCoverView;
-    @BindView(R.id.layout_head_container) View mHeadContainer;
+    @BindView(R.id.widget_collapsing) CollapsingToolbarLayout collapsingToolbarLayout;
+    @BindView(R.id.fab_add_or_chat) FloatingActionButton addOrChatFab;
+    @BindView(R.id.widget_appbar) AppBarLayout appbarLayout;
+    @BindView(R.id.img_avatar) VMImageView avatarView;
+    @BindView(R.id.img_cover) ImageView coverView;
+    @BindView(R.id.layout_head_container) View headContainer;
 
     private boolean isShowHeadContainer = true;
 
     // 当前登录用户username
-    private String mCurrUsername;
+    private String currentUsername;
     // 当前联系人的username
-    private String mChatId;
+    private String chatId;
     // 申请与通知消息 id
-    private String mApplyMsgId;
+    private String applyMsgId;
 
     // 用户信息实体类
-    private UserEntity mUserEntity;
+    private UserEntity userEntity;
 
     // 弹出对话框
     private AlertDialog.Builder alertDialogBuilder;
@@ -71,20 +71,20 @@ public class UserActivity extends AppActivity {
      * 界面的初始化
      */
     private void initView() {
-        mCurrUsername = EMClient.getInstance().getCurrentUser();
-        mChatId = getIntent().getStringExtra(Constants.EXTRA_CHAT_ID);
-        mApplyMsgId = getIntent().getStringExtra(Constants.EXTRA_MSG_ID);
+        currentUsername = EMClient.getInstance().getCurrentUser();
+        chatId = getIntent().getStringExtra(Constants.EXTRA_CHAT_ID);
+        applyMsgId = getIntent().getStringExtra(Constants.EXTRA_MSG_ID);
 
         // 根据 Username 获取User对象
-        mUserEntity = UserManager.getInstance().getUser(mChatId);
+        userEntity = UserManager.getInstance().getUser(chatId);
 
-        if (mChatId.equals(mCurrUsername)) {
-            mAddOrChatFab.setVisibility(View.INVISIBLE);
+        if (chatId.equals(currentUsername)) {
+            addOrChatFab.setVisibility(View.INVISIBLE);
         }
 
-        mAppbarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+        appbarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                int maxScroll = mAppbarLayout.getTotalScrollRange();
+                int maxScroll = appbarLayout.getTotalScrollRange();
                 float percentage = (float) Math.abs(verticalOffset) / (float) maxScroll;
                 VMLog.i("maxScroll: %d, verticalOffset: %d, percentage: %f", maxScroll,
                         verticalOffset, percentage);
@@ -92,7 +92,7 @@ public class UserActivity extends AppActivity {
             }
         });
 
-        mCollapsingToolbarLayout.setTitle(mChatId);
+        collapsingToolbarLayout.setTitle(chatId);
         setSupportActionBar(getToolbar());
         getToolbar().setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         getToolbar().setNavigationOnClickListener(new View.OnClickListener() {
@@ -102,10 +102,10 @@ public class UserActivity extends AppActivity {
         });
 
         // 根据本地查询到的用户情况来确定是显示 添加好友 还是显示 发送消息
-        if (mUserEntity != null && mUserEntity.getUserName() != null) {
-            mAddOrChatFab.setImageResource(R.drawable.ic_chat_white_24dp);
+        if (userEntity != null && userEntity.getUserName() != null) {
+            addOrChatFab.setImageResource(R.drawable.ic_chat_white_24dp);
         } else {
-            mAddOrChatFab.setImageResource(R.drawable.ic_add_white_24dp);
+            addOrChatFab.setImageResource(R.drawable.ic_add_white_24dp);
         }
     }
 
@@ -115,7 +115,7 @@ public class UserActivity extends AppActivity {
     @OnClick({ R.id.fab_add_or_chat }) void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab_add_or_chat:
-                if (mUserEntity != null && mUserEntity.getUserName() != null) {
+                if (userEntity != null && userEntity.getUserName() != null) {
                     startChat();
                 } else {
                     addContact();
@@ -150,13 +150,13 @@ public class UserActivity extends AppActivity {
                                     reason = activity.getResources()
                                             .getString(R.string.add_friend_reason);
                                 }
-                                if (mChatId.equals(mCurrUsername)) {
+                                if (chatId.equals(currentUsername)) {
                                     return;
                                 }
                                 try {
                                     EMClient.getInstance()
                                             .contactManager()
-                                            .addContact(mChatId, reason);
+                                            .addContact(chatId, reason);
                                     runOnUiThread(new Runnable() {
                                         @Override public void run() {
                                             Snackbar.make(getRootView(),
@@ -198,8 +198,8 @@ public class UserActivity extends AppActivity {
     private void startChat() {
         Intent intent = new Intent();
         intent.setClass(activity, ChatActivity.class);
-        intent.putExtra(Constants.EXTRA_CHAT_ID, mChatId);
-        activity.startActivity(intent);
+        intent.putExtra(Constants.EXTRA_CHAT_ID, chatId);
+        activity.onStartActivity(activity, intent);
         activity.finish();
     }
 
@@ -211,12 +211,12 @@ public class UserActivity extends AppActivity {
     private void handleHeader(float percentage) {
         if (percentage >= 0.5) {
             if (isShowHeadContainer) {
-                startAlphaAnimation(mHeadContainer, View.INVISIBLE);
+                startAlphaAnimation(headContainer, View.INVISIBLE);
                 isShowHeadContainer = false;
             }
         } else {
             if (!isShowHeadContainer) {
-                startAlphaAnimation(mHeadContainer, View.VISIBLE);
+                startAlphaAnimation(headContainer, View.VISIBLE);
                 isShowHeadContainer = true;
             }
         }

@@ -4,10 +4,16 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.view.View;
-import android.widget.EditText;
 
+import android.widget.Button;
+import android.widget.EditText;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -36,16 +42,16 @@ public class SignInActivity extends AppActivity {
     private ProgressDialog progressDialog;
 
     // 输入框
-    @BindView(R.id.edit_username) EditText mUsernameView;
-    @BindView(R.id.edit_password) EditText mPasswordView;
-    private String mUsername;
-    private String mPassword;
+    @BindView(R.id.edit_username) EditText usernameEditView;
+    @BindView(R.id.edit_password) EditText passwordEditView;
+    @BindView(R.id.btn_sign_in) Button signInBtn;
+
+    private String username;
+    private String password;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
-
-        activity = this;
 
         ButterKnife.bind(activity);
 
@@ -66,6 +72,33 @@ public class SignInActivity extends AppActivity {
                 onFinish();
             }
         });
+
+        // 读取最后一次登录的账户 Username
+        username = (String) VMSPUtil.get(activity, Constants.SHARED_USERNAME, "");
+        usernameEditView.setText(username);
+
+        usernameEditView.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                verifyInputBox();
+            }
+
+            @Override public void afterTextChanged(Editable s) {
+            }
+        });
+        passwordEditView.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                verifyInputBox();
+            }
+
+            @Override public void afterTextChanged(Editable s) {
+            }
+        });
     }
 
     /**
@@ -75,7 +108,7 @@ public class SignInActivity extends AppActivity {
             View v) {
         switch (v.getId()) {
             case R.id.btn_sign_in:
-                attemptLogin();
+                restAuth();
                 break;
             case R.id.btn_sign_up:
                 Intent intent = new Intent(activity, SignUpActivity.class);
@@ -88,40 +121,21 @@ public class SignInActivity extends AppActivity {
     }
 
     /**
-     * 检测登陆，主要先判断是否满足登陆条件
+     * 校验输入框
      */
-    private void attemptLogin() {
-
-        // 重置错误
-        mUsernameView.setError(null);
-        mPasswordView.setError(null);
+    private void verifyInputBox() {
 
         // 将用户名转为消息并修剪
-        mUsername = mUsernameView.getText().toString().toLowerCase().trim();
-        mPassword = mPasswordView.getText().toString().trim();
+        username = usernameEditView.getText().toString().toLowerCase().trim();
+        password = passwordEditView.getText().toString().trim();
 
-        boolean cancel = false;
-        View focusView = null;
-
-        // 检查密码是否为空
-        if (TextUtils.isEmpty(mPassword)) {
-            mPasswordView.setError(getString(R.string.error_field_required));
-            focusView = mPasswordView;
-            cancel = true;
-        }
-
-        // 检查username是否为空
-        if (TextUtils.isEmpty(mUsername)) {
-            mUsernameView.setError(getString(R.string.error_field_required));
-            focusView = mUsernameView;
-            cancel = true;
-        }
-
-        if (cancel) {
-            // 输入框获取焦点
-            focusView.requestFocus();
+        // 检查输入框是否为空是否为空
+        if (TextUtils.isEmpty(password) || TextUtils.isEmpty(username)) {
+            signInBtn.setEnabled(false);
+            signInBtn.setAlpha(0.5f);
         } else {
-            restAuth();
+            signInBtn.setEnabled(true);
+            signInBtn.setAlpha(1.0f);
         }
     }
 
@@ -136,8 +150,7 @@ public class SignInActivity extends AppActivity {
         new Thread(new Runnable() {
             @Override public void run() {
                 try {
-                    JSONObject object =
-                            NetworkManager.getInstance().authToken(mUsername, mPassword);
+                    JSONObject object = NetworkManager.getInstance().authToken(username, password);
                     final int errorCode = object.optInt("code");
                     final String errorMsg = object.optString("msg");
                     if (errorCode != 0) {
@@ -170,13 +183,13 @@ public class SignInActivity extends AppActivity {
      * 调用 sdk 登录
      */
     private void signIn() {
-        EMClient.getInstance().login(mUsername, mPassword, new EMCallBack() {
+        EMClient.getInstance().login(username, password, new EMCallBack() {
             /**
              * 登陆成功的回调
              */
             @Override public void onSuccess() {
                 // 登录成功，把用户名保存在本地（可以不保存，根据自己的需求）
-                VMSPUtil.put(activity, Constants.SHARED_USERNAME, mUsername);
+                VMSPUtil.put(activity, Constants.SHARED_USERNAME, username);
                 // 登录成功同步联系人到本地
                 UserManager.getInstance().syncContactsFromServer();
                 // 加载所有会话到内存
@@ -269,13 +282,6 @@ public class SignInActivity extends AppActivity {
      */
     private void forgetPassword() {
         Snackbar.make(getRootView(), "暂不支持找回密码", Snackbar.LENGTH_SHORT).show();
-    }
-
-    @Override protected void onResume() {
-        super.onResume();
-        // 读取最后一次登录的账户 Username
-        mUsername = (String) VMSPUtil.get(activity, Constants.SHARED_USERNAME, "");
-        mUsernameView.setText(mUsername);
     }
 
     @Override protected void onDestroy() {

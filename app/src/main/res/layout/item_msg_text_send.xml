@@ -2,9 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_margin="@dimen/vm_dimen_8"
-    android:gravity="center_vertical"
     >
 
     <LinearLayout
@@ -14,13 +13,12 @@
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:gravity="right|bottom"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         >
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="right"
             android:orientation="vertical"
             >
 
@@ -68,12 +66,8 @@
                     android:id="@+id/layout_bubble"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bubble_msg_send"
                     android:gravity="right"
                     android:orientation="vertical"
-                    android:paddingLeft="@dimen/vm_dimen_8"
-                    android:paddingRight="@dimen/vm_dimen_16"
-                    android:paddingTop="@dimen/vm_dimen_8"
                     >
                     <!--消息内容-->
                     <TextView
@@ -82,7 +76,12 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:autoLink="web|phone"
+                        android:background="@drawable/bubble_msg_send"
                         android:maxWidth="@dimen/vm_dimen_256"
+                        android:paddingBottom="@dimen/vm_dimen_8"
+                        android:paddingLeft="@dimen/vm_dimen_12"
+                        android:paddingRight="@dimen/vm_dimen_12"
+                        android:paddingTop="@dimen/vm_dimen_8"
                         android:text="@string/app_name"
                         android:textColor="@color/vm_white_87"
                         android:textColorLink="@color/vm_white_54"
@@ -103,6 +102,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="@dimen/vm_dimen_8"
+                            android:shadowColor="@color/vm_black_54"
+                            android:shadowDx="1"
+                            android:shadowDy="1"
+                            android:shadowRadius="10"
                             android:text="@string/hint_username"
                             android:textColor="@color/vm_white_54"
                             android:textSize="@dimen/vm_size_10"
@@ -112,21 +115,26 @@
                             android:id="@+id/text_time"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:shadowColor="@color/vm_black_54"
+                            android:shadowDx="1"
+                            android:shadowDy="1"
+                            android:shadowRadius="10"
                             android:text="@string/hint_time"
                             android:textColor="@color/vm_white_54"
                             android:textSize="@dimen/vm_size_10"
                             />
                     </LinearLayout>
                 </LinearLayout>
+
                 <!--消息发送者头像-->
                 <com.vmloft.develop.library.tools.widget.VMImageView
                     android:id="@+id/img_avatar"
-                    android:layout_width="@dimen/vm_dimen_40"
-                    android:layout_height="@dimen/vm_dimen_40"
+                    android:layout_width="@dimen/vm_avatar_very_small"
+                    android:layout_height="@dimen/vm_avatar_very_small"
                     android:src="@drawable/ic_character_blackcat"
                     android:transitionName="@string/shared_element_avatar"
                     app:vm_border_color="@color/vm_white_87"
-                    app:vm_border_width="@dimen/vm_dimen_2"
+                    app:vm_border_width="@dimen/vm_dimen_1"
                     app:vm_dispatch_touch_event="false"
                     app:vm_shape_type="round"
                     />

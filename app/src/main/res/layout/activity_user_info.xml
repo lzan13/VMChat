@@ -62,7 +62,7 @@
                     android:layout_marginBottom="@dimen/vm_dimen_56"
                     android:src="@drawable/ic_character_blackcat"
                     android:transitionName="@string/shared_element_avatar"
-                    app:vm_border_width="@dimen/vm_dimen_2"
+                    app:vm_border_width="@dimen/vm_dimen_4"
                     app:vm_shape_type="round"
                     />
             </LinearLayout>
@@ -83,6 +83,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/layout_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"

@@ -13,7 +13,7 @@ import com.vmloft.develop.app.chat.database.UserDao;
 import com.vmloft.develop.app.chat.network.NetworkManager;
 import com.vmloft.develop.library.tools.utils.VMLog;
 import com.vmloft.develop.library.tools.utils.VMSPUtil;
-import com.vmloft.develop.library.tools.utils.VMStringUtil;
+import com.vmloft.develop.library.tools.utils.VMStrUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -134,7 +134,7 @@ public class UserManager {
             // 从环信服务器同步好友列表
             List<String> list = EMClient.getInstance().contactManager().getAllContactsFromServer();
             String[] usernames = list.toArray(new String[list.size()]);
-            String names = VMStringUtil.arrayToStr(usernames, ",");
+            String names = VMStrUtil.arrayToStr(usernames, ",");
             if (TextUtils.isEmpty(names)) {
                 return;
             }

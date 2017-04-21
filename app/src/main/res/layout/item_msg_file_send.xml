@@ -2,10 +2,9 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:layout_margin="@dimen/vm_dimen_8"
-    android:gravity="center_vertical"
     >
 
     <LinearLayout
@@ -173,8 +172,8 @@
                 <!--消息发送者头像-->
                 <com.vmloft.develop.library.tools.widget.VMImageView
                     android:id="@+id/img_avatar"
-                    android:layout_width="@dimen/vm_dimen_40"
-                    android:layout_height="@dimen/vm_dimen_40"
+                    android:layout_width="@dimen/vm_dimen_24"
+                    android:layout_height="@dimen/vm_dimen_24"
                     android:src="@drawable/ic_character_blackcat"
                     android:transitionName="@string/shared_element_avatar"
                     app:vm_border_color="@color/vm_white_87"

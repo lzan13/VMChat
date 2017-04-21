@@ -1,10 +1,12 @@
 package com.vmloft.develop.app.chat.call;
 
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,6 +17,7 @@ import com.hyphenate.chat.EMCallStateChangeListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.exceptions.HyphenateException;
 import com.vmloft.develop.app.chat.R;
+import com.vmloft.develop.library.tools.utils.VMBitmapUtil;
 import com.vmloft.develop.library.tools.utils.VMLog;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -27,7 +30,7 @@ import org.greenrobot.eventbus.ThreadMode;
 public class VoiceCallActivity extends CallActivity {
 
     // 使用 ButterKnife 注解的方式获取控件
-    @BindView(R.id.layout_root) View rootView;
+    @BindView(R.id.img_call_background) ImageView backgroundView;
     @BindView(R.id.text_call_state) TextView callStateView;
     @BindView(R.id.text_call_time) TextView callTimeView;
     @BindView(R.id.img_call_avatar) ImageView avatarView;
@@ -44,7 +47,7 @@ public class VoiceCallActivity extends CallActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_voice_call);
 
-        ButterKnife.bind(this);
+        ButterKnife.bind(activity);
 
         initView();
     }
@@ -185,7 +188,7 @@ public class VoiceCallActivity extends CallActivity {
      * 录制通话内容 TODO 后期实现
      */
     private void recordCall() {
-        Snackbar.make(rootView, "暂未实现", Snackbar.LENGTH_LONG).show();
+        Snackbar.make(getRootView(), "暂未实现", Snackbar.LENGTH_LONG).show();
         // 根据开关状态决定是否开启录制
         if (recordSwitch.isActivated()) {
             // 设置按钮状态
@@ -305,5 +308,28 @@ public class VoiceCallActivity extends CallActivity {
      */
     @Override public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // 添加控件监听，监听背景图加载是否完成
+        backgroundView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+
+            public boolean onPreDraw() {
+                // 移除控件加载图片监听
+                backgroundView.getViewTreeObserver().removeOnPreDrawListener(this);
+                VMLog.i("blur image begin!");
+                backgroundView.setDrawingCacheEnabled(true);
+                Bitmap bitmap = backgroundView.getDrawingCache();
+                backgroundView.setImageBitmap(VMBitmapUtil.stackBlurBitmap(bitmap, 10, 10, false));
+                //backgroundView.setImageBitmap(VMBitmapUtil.rsBlurBitmp(activity, bitmap, 10, 10));
+                backgroundView.setDrawingCacheEnabled(false);
+                VMLog.i("blur image end!");
+                return false;
+            }
+        });
     }
 }

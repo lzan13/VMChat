@@ -62,6 +62,7 @@
                             android:layout_centerInParent="true"
                             android:minHeight="@dimen/vm_dimen_72"
                             android:minWidth="@dimen/vm_dimen_72"
+                            android:transitionName="@string/shared_element_username"
                             app:vm_border_width="@dimen/vm_dimen_0"
                             app:vm_radius="@dimen/vm_dimen_2"
                             />

@@ -63,7 +63,7 @@
                         <!--android:id="@+id/btn_chat_play_voice"-->
                         <!--android:layout_width="@dimen/vm_dimen_36"-->
                         <!--android:layout_height="@dimen/vm_dimen_36"-->
-                        <!--android:background="@drawable/vm_click_rectangle_white"-->
+                        <!--android:background="@drawable/ripple_rectangle_white"-->
                         <!--android:src="@drawable/vm_checkbox_play"/>-->
 
                         <!--语音播放并显示波形控件-->

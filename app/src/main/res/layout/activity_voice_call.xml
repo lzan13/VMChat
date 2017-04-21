@@ -2,7 +2,7 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/layout_root"
+    android:id="@+id/layout_coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
@@ -38,7 +38,7 @@
                 android:layout_height="48dp"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="16dp"
-                android:background="@drawable/click_rectangle_transparent"
+                android:background="@drawable/ripple_round_transparent"
                 android:src="@drawable/ic_fullscreen_exit_white_24dp"
                 />
             <LinearLayout
@@ -88,8 +88,9 @@
                 android:layout_width="96dp"
                 android:layout_height="96dp"
                 android:src="@drawable/ic_character_blackcat"
+                android:transitionName="@string/shared_element_avatar"
                 app:vm_border_color="@color/vm_white_87"
-                app:vm_border_width="@dimen/vm_dimen_2"
+                app:vm_border_width="@dimen/vm_dimen_4"
                 app:vm_shape_type="round"
                 />
             <!--当前通话的账户名-->
@@ -127,7 +128,7 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_margin="8dp"
-                    android:background="@drawable/click_rectangle_transparent"
+                    android:background="@drawable/ripple_round_transparent"
                     android:src="@drawable/ic_mic_off_white_24dp"
                     />
 
@@ -137,7 +138,7 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_margin="8dp"
-                    android:background="@drawable/click_rectangle_transparent"
+                    android:background="@drawable/ripple_round_transparent"
                     android:src="@drawable/ic_volume_up_white_24dp"
                     />
 
@@ -147,7 +148,7 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_margin="8dp"
-                    android:background="@drawable/click_rectangle_transparent"
+                    android:background="@drawable/ripple_round_transparent"
                     android:src="@drawable/ic_record_white_24dp"
                     />
 

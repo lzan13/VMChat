@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/vm_black_12">
+    <item>
+        <selector>
+            <item android:state_pressed="true">
+                <shape
+                    android:dither="true">
+                    <solid android:color="@color/vm_white_100"/>
+                </shape>
+            </item>
+            <item android:state_activated="true">
+                <shape
+                    android:dither="true">
+                    <solid android:color="@color/vm_green_87"/>
+                </shape>
+            </item>
+            <item>
+                <shape
+                    android:dither="true">
+                    <solid android:color="@color/vm_white_87"/>
+                </shape>
+            </item>
+        </selector>
+    </item>
+</ripple>

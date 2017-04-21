@@ -42,11 +42,11 @@ public class CallMessageItem extends MessageItem {
      * @param message 需要展示的 EMMessage 对象
      */
     @Override public void onSetupView(EMMessage message) {
-        mMessage = message;
+        this.message = message;
 
         // 判断如果是单聊或者消息是发送方，不显示username
-        if (mMessage.getChatType() == EMMessage.ChatType.Chat
-                || mMessage.direct() == EMMessage.Direct.SEND) {
+        if (this.message.getChatType() == EMMessage.ChatType.Chat
+                || this.message.direct() == EMMessage.Direct.SEND) {
             usernameView.setVisibility(View.GONE);
         } else {
             // 设置消息消息发送者的名称
@@ -57,11 +57,11 @@ public class CallMessageItem extends MessageItem {
         // 设置消息时间
         msgTimeView.setText(VMDateUtil.getRelativeTime(message.getMsgTime()));
 
-        EMTextMessageBody body = (EMTextMessageBody) mMessage.getBody();
+        EMTextMessageBody body = (EMTextMessageBody) this.message.getBody();
         String messageStr = body.getMessage().toString();
         contentView.setText(messageStr);
 
-        if (mMessage.getBooleanAttribute(Constants.ATTR_CALL_VIDEO, false)) {
+        if (this.message.getBooleanAttribute(Constants.ATTR_CALL_VIDEO, false)) {
             mCallIcon.setImageResource(R.drawable.ic_videocam_white_24dp);
         } else {
             mCallIcon.setImageResource(R.drawable.ic_call_white_24dp);
@@ -90,7 +90,7 @@ public class CallMessageItem extends MessageItem {
             @Override public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case 0:
-                        mAdapter.onItemAction(Constants.ACTION_DELETE, mMessage);
+                        adapter.onItemAction(Constants.ACTION_DELETE, message);
                         break;
                 }
             }
@@ -110,10 +110,10 @@ public class CallMessageItem extends MessageItem {
      * 解析对应的xml 布局，填充当前 ItemView，并初始化控件
      */
     @Override protected void onInflateView() {
-        if (mViewType == Constants.MSG_TYPE_CALL_SEND) {
-            mInflater.inflate(R.layout.item_msg_call_send, this);
+        if (viewType == Constants.MSG_TYPE_CALL_SEND) {
+            inflater.inflate(R.layout.item_msg_call_send, this);
         } else {
-            mInflater.inflate(R.layout.item_msg_call_received, this);
+            inflater.inflate(R.layout.item_msg_call_received, this);
         }
 
         bubbleLayout = findViewById(R.id.layout_bubble);

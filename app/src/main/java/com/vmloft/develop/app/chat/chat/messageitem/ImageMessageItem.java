@@ -61,10 +61,10 @@ public class ImageMessageItem extends MessageItem {
      * @param message 需要展示的 EMMessage 对象
      */
     @Override public void onSetupView(EMMessage message) {
-        mMessage = message;
+        this.message = message;
         // 判断如果是单聊或者消息是发送方，不显示username
-        if (mMessage.getChatType() == EMMessage.ChatType.Chat
-                || mMessage.direct() == EMMessage.Direct.SEND) {
+        if (this.message.getChatType() == EMMessage.ChatType.Chat
+                || this.message.direct() == EMMessage.Direct.SEND) {
             usernameView.setVisibility(View.GONE);
         } else {
             // 设置消息消息发送者的名称
@@ -72,10 +72,10 @@ public class ImageMessageItem extends MessageItem {
             usernameView.setVisibility(View.VISIBLE);
         }
         // 设置消息时间
-        msgTimeView.setText(VMDateUtil.getRelativeTime(mMessage.getMsgTime()));
+        msgTimeView.setText(VMDateUtil.getRelativeTime(this.message.getMsgTime()));
 
         // 获取图片消息体
-        EMImageMessageBody imgBody = (EMImageMessageBody) mMessage.getBody();
+        EMImageMessageBody imgBody = (EMImageMessageBody) this.message.getBody();
         // 取出图片原始宽高，这是在发送图片时发送方直接根据图片获得设置到body中的
         int width = imgBody.getWidth();
         int height = imgBody.getHeight();
@@ -100,7 +100,7 @@ public class ImageMessageItem extends MessageItem {
         imageView.setLayoutParams(lp);
 
         // 判断下是否是接收方的消息
-        if (mViewType == Constants.MSG_TYPE_IMAGE_RECEIVED) {
+        if (viewType == Constants.MSG_TYPE_IMAGE_RECEIVED) {
             // 判断消息是否处于下载状态，如果是下载状态设置一个默认的图片
             if (imgBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.DOWNLOADING
                     || imgBody.thumbnailDownloadStatus()
@@ -112,7 +112,7 @@ public class ImageMessageItem extends MessageItem {
         String thumbnailsPath = "";
         // 原图在本地路径
         String originalPath = "";
-        if (mViewType == Constants.MSG_TYPE_IMAGE_RECEIVED) {
+        if (viewType == Constants.MSG_TYPE_IMAGE_RECEIVED) {
             // 接收方获取缩略图的路径
             originalPath = imgBody.getLocalUrl();
             thumbnailsPath = imgBody.thumbnailLocalPath();
@@ -138,7 +138,7 @@ public class ImageMessageItem extends MessageItem {
     @Override protected void onItemLongClick() {
         String[] menus = null;
         // 这里要根据消息的类型去判断要弹出的菜单，是否是发送方，并且是发送成功才能撤回
-        if (mViewType == Constants.MSG_TYPE_IMAGE_RECEIVED) {
+        if (viewType == Constants.MSG_TYPE_IMAGE_RECEIVED) {
             menus = new String[] {
                     activity.getResources().getString(R.string.menu_chat_forward),
                     activity.getResources().getString(R.string.menu_chat_delete)
@@ -159,13 +159,13 @@ public class ImageMessageItem extends MessageItem {
             @Override public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case 0:
-                        mAdapter.onItemAction(Constants.ACTION_FORWARD, mMessage);
+                        adapter.onItemAction(Constants.ACTION_FORWARD, message);
                         break;
                     case 1:
-                        mAdapter.onItemAction(Constants.ACTION_DELETE, mMessage);
+                        adapter.onItemAction(Constants.ACTION_DELETE, message);
                         break;
                     case 2:
-                        mAdapter.onItemAction(Constants.ACTION_RECALL, mMessage);
+                        adapter.onItemAction(Constants.ACTION_RECALL, message);
                         break;
                 }
             }
@@ -262,12 +262,12 @@ public class ImageMessageItem extends MessageItem {
     //                        VMBitmapCache.getInstance().putBitmap(thumbnailsPath, bitmap);
     //                    } else {
     //                        // 判断当前消息的状态，如果是失败的消息，则去重新下载缩略图
-    //                        if (mMessage.status() == EMMessage.Status.FAIL) {
+    //                        if (message.status() == EMMessage.Status.FAIL) {
     //                            new Thread(new Runnable() {
     //                                @Override
     //                                public void run() {
     //                                    // 下载缩略图
-    //                                        EMClient.getInstance().chatManager().downloadThumbnail(mMessage);
+    //                                        EMClient.getInstance().chatManager().downloadThumbnail(message);
     //                                }
     //                            }).start();
     //                        } else {
@@ -284,11 +284,11 @@ public class ImageMessageItem extends MessageItem {
      */
     protected void refreshView() {
         // 判断是不是阅后即焚的消息
-        if (mMessage.getBooleanAttribute(Constants.ATTR_BURN, false)) {
+        if (message.getBooleanAttribute(Constants.ATTR_BURN, false)) {
         } else {
         }
         // 判断消息的状态，如果发送失败就显示重发按钮，并设置重发按钮的监听
-        switch (mMessage.status()) {
+        switch (message.status()) {
             case SUCCESS:
                 ackStatusView.setVisibility(View.VISIBLE);
                 progressLayout.setVisibility(View.GONE);
@@ -302,7 +302,7 @@ public class ImageMessageItem extends MessageItem {
                 resendView.setVisibility(View.VISIBLE);
                 resendView.setOnClickListener(new View.OnClickListener() {
                     @Override public void onClick(View v) {
-                        mAdapter.onItemAction(Constants.ACTION_RESEND, mMessage);
+                        adapter.onItemAction(Constants.ACTION_RESEND, message);
                     }
                 });
                 break;
@@ -323,7 +323,7 @@ public class ImageMessageItem extends MessageItem {
      */
     @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(MessageEvent event) {
         EMMessage message = event.getMessage();
-        if (!message.getMsgId().equals(mMessage.getMsgId())) {
+        if (!message.getMsgId().equals(this.message.getMsgId())) {
             return;
         }
         if (message.getType() == EMMessage.Type.IMAGE
@@ -337,10 +337,10 @@ public class ImageMessageItem extends MessageItem {
      * 解析对应的xml 布局，填充当前 ItemView，并初始化控件
      */
     @Override protected void onInflateView() {
-        if (mViewType == Constants.MSG_TYPE_IMAGE_SEND) {
-            mInflater.inflate(R.layout.item_msg_image_send, this);
+        if (viewType == Constants.MSG_TYPE_IMAGE_SEND) {
+            inflater.inflate(R.layout.item_msg_image_send, this);
         } else {
-            mInflater.inflate(R.layout.item_msg_image_received, this);
+            inflater.inflate(R.layout.item_msg_image_received, this);
         }
 
         // 通过 findViewById 实例化控件

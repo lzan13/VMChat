@@ -32,14 +32,14 @@ public abstract class MessageItem extends LinearLayout {
     protected Activity activity;
 
     // 布局内容填充者，将xml布局文件解析为view
-    protected LayoutInflater mInflater;
-    protected MessageAdapter mAdapter;
+    protected LayoutInflater inflater;
+    protected MessageAdapter adapter;
 
     // item 类型
-    protected int mViewType;
+    protected int viewType;
 
     // 当前 Item 需要处理的 EMMessage 对象
-    protected EMMessage mMessage;
+    protected EMMessage message;
 
     // 弹出框
     protected AlertDialog.Builder alertDialogBuilder;
@@ -87,9 +87,9 @@ public abstract class MessageItem extends LinearLayout {
         super(context);
         this.context = context;
         activity = (Activity) context;
-        mInflater = LayoutInflater.from(context);
-        mAdapter = adapter;
-        mViewType = viewType;
+        inflater = LayoutInflater.from(context);
+        this.adapter = adapter;
+        this.viewType = viewType;
 
         onInflateView();
         onBubbleListener();
@@ -116,7 +116,7 @@ public abstract class MessageItem extends LinearLayout {
             // 设置消息头像点击监听
             avatarView.setOnClickListener(new OnClickListener() {
                 @Override public void onClick(View view) {
-                    mAdapter.onItemAction(avatarView.getId(), mMessage);
+                    adapter.onItemAction(avatarView.getId(), message);
                 }
             });
         }
@@ -125,7 +125,7 @@ public abstract class MessageItem extends LinearLayout {
             bubbleLayout.setOnClickListener(new OnClickListener() {
                 @Override public void onClick(View v) {
                     // 设置 Item 项点击的 Action
-                    mAdapter.onItemAction(Constants.ACTION_CLICK, mMessage);
+                    adapter.onItemAction(Constants.ACTION_CLICK, message);
                 }
             });
             // 设置Item 气泡的长按监听
@@ -159,7 +159,7 @@ public abstract class MessageItem extends LinearLayout {
      */
     protected void setAckStatusView() {
         // 需要先判断下是不是单聊的消息，如果不是单聊会话就不发送和展示ACK状态
-        if (mMessage.getChatType() != EMMessage.ChatType.Chat) {
+        if (message.getChatType() != EMMessage.ChatType.Chat) {
             ackStatusView.setVisibility(View.GONE);
             return;
         }
@@ -170,21 +170,21 @@ public abstract class MessageItem extends LinearLayout {
             return;
         }
         // 判断是否是接收方的消息，是则发送ACK给消息发送者
-        if (mViewType == Constants.MSG_TYPE_TEXT_RECEIVED) {
+        if (viewType == Constants.MSG_TYPE_TEXT_RECEIVED) {
             try {
                 EMClient.getInstance()
                         .chatManager()
-                        .ackMessageRead(mMessage.getFrom(), mMessage.getMsgId());
+                        .ackMessageRead(message.getFrom(), message.getMsgId());
             } catch (HyphenateException e) {
                 e.printStackTrace();
             }
         }
         // 设置ACK 的状态显示
-        if (mViewType == Constants.MSG_TYPE_TEXT_SEND) {
-            if (mMessage.isAcked()) {
+        if (viewType == Constants.MSG_TYPE_TEXT_SEND) {
+            if (message.isAcked()) {
                 // 表示对方已读消息，用两个对号表示
                 ackStatusView.setImageResource(R.drawable.ic_done_all_white_18dp);
-            } else if (mMessage.isDelivered()) {
+            } else if (message.isDelivered()) {
                 // 表示消息已经送达，对方收到了，用一个对号表示
                 ackStatusView.setImageResource(R.drawable.ic_done_white_18dp);
             } else {
@@ -196,12 +196,12 @@ public abstract class MessageItem extends LinearLayout {
     }
 
     @Override protected void onAttachedToWindow() {
-        //        VMLog.i("onAttachedToWindow %s", mMessage.getMsgId());
+        //        VMLog.i("onAttachedToWindow %s", message.getMsgId());
         super.onAttachedToWindow();
     }
 
     @Override protected void onDetachedFromWindow() {
-        //        VMLog.i("onDetachedFromWindow %s", mMessage.getMsgId());
+        //        VMLog.i("onDetachedFromWindow %s", message.getMsgId());
         // 检查是否有弹出框，如果有则销毁，防止界面销毁时出现异常
         if (alertDialog != null && alertDialog.isShowing()) {
             alertDialog.dismiss();

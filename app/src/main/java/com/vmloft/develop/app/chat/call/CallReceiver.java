@@ -3,6 +3,8 @@ package com.vmloft.develop.app.chat.call;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import com.hyphenate.chat.EMClient;
 
 /**
@@ -20,7 +22,6 @@ public class CallReceiver extends BroadcastReceiver {
         if (!EMClient.getInstance().isLoggedInBefore()) {
             return;
         }
-
         // 呼叫方的usernmae
         String callFrom = intent.getStringExtra("from");
         // 呼叫类型，有语音和视频两种
@@ -47,7 +48,9 @@ public class CallReceiver extends BroadcastReceiver {
 
             // 设置 activity 启动方式
             callIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(callIntent);
+
+            ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeBasic();
+            ActivityCompat.startActivity(context, callIntent, optionsCompat.toBundle());
         }
     }
 }

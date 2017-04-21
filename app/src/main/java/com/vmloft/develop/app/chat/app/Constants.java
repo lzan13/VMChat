@@ -25,6 +25,14 @@ public class Constants {
     public static final String USER_ACCESS_TOKEN = "user_access_token";
 
     /**
+     * 定义保存数据到 SharedPreferences 的 key
+     */
+    public static final String SHARED_RUN_VERSION = "run_version";
+    public static final String SHARED_USERNAME = "username";
+    public static final String SHARED_PASSWORD = "password";
+    public static final String SHARED_ALREADY_SYNC_CONTACTS = "already_sync_contacts";
+
+    /**
      * 设置自己扩展的 key，包括会话对象{@link com.hyphenate.chat.EMConversation}扩展，
      * 以及消息{@link com.hyphenate.chat.EMMessage}扩展
      */
@@ -84,13 +92,6 @@ public class Constants {
 
     // 定义好友申请与通知的 Conversation Id
     public static final String CONVERSATION_ID_APPLY = "conversation_id_apply";
-
-    /**
-     * 定义保存数据到 SharedPreferences 的 key
-     */
-    public static final String SHARED_USERNAME = "username";
-    public static final String SHARED_PASSWORD = "password";
-    public static final String SHARED_ALREADY_SYNC_CONTACTS = "already_sync_contacts";
 
     /**
      * 链接状态码

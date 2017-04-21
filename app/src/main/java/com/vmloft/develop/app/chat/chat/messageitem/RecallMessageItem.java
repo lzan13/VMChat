@@ -34,12 +34,12 @@ public class RecallMessageItem extends MessageItem {
      */
     @Override
     public void onSetupView(EMMessage message) {
-        mMessage = message;
+        this.message = message;
         // 设置消息时间
         msgTimeView.setText(VMDateUtil.getRelativeTime(message.getMsgTime()));
         // 设置显示内容
         String messageStr = null;
-        if (mMessage.direct() == EMMessage.Direct.SEND) {
+        if (this.message.direct() == EMMessage.Direct.SEND) {
             messageStr = String.format(context.getString(R.string.hint_msg_recall_by_self));
         }else{
             messageStr = String.format(context.getString(R.string.hint_msg_recall_by_user), message.getUserName());
@@ -57,7 +57,7 @@ public class RecallMessageItem extends MessageItem {
      */
     @Override
     protected void onInflateView() {
-        mInflater.inflate(R.layout.item_msg_sys_recall, this);
+        inflater.inflate(R.layout.item_msg_sys_recall, this);
         bubbleLayout = findViewById(R.id.layout_bubble);
         msgTimeView = (TextView) findViewById(R.id.text_time);
         contentView = (TextView) findViewById(R.id.text_content);

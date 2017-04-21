@@ -30,15 +30,15 @@ import com.vmloft.develop.library.tools.utils.VMLog;
  */
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
 
-    private Context mContext;
+    private Context context;
 
     // 当前会话对象
-    private EMConversation mConversation;
+    private EMConversation conversation;
     // 数据集合
-    private List<EMMessage> mMessages;
+    private List<EMMessage> messages;
 
     // 自定义的回调接口
-    private ItemCallBack mCallback;
+    private ItemCallBack callback;
 
     /**
      * 构造方法
@@ -47,13 +47,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
      * @param conversationId 当前会话 id
      */
     public MessageAdapter(Context context, String conversationId) {
-        mContext = context;
+        this.context = context;
         // 获取会话对象，这里有可能为空
-        mConversation = EMClient.getInstance().chatManager().getConversation(conversationId);
-        if (mConversation != null) {
-            mMessages = mConversation.getAllMessages();
+        conversation = EMClient.getInstance().chatManager().getConversation(conversationId);
+        if (conversation != null) {
+            messages = conversation.getAllMessages();
         } else {
-            mMessages = new ArrayList<>();
+            messages = new ArrayList<>();
         }
     }
 
@@ -62,7 +62,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     }
 
     @Override public int getItemCount() {
-        return mMessages.size();
+        return messages.size();
     }
 
     /**
@@ -72,7 +72,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
      * @return 当前 Item 的类型
      */
     @Override public int getItemViewType(int position) {
-        EMMessage message = mMessages.get(position);
+        EMMessage message = messages.get(position);
         int itemType = -1;
         // 判断消息类型
         if (message.getBooleanAttribute(Constants.ATTR_RECALL, false)) {
@@ -131,22 +131,22 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             // 文字类消息
             case Constants.MSG_TYPE_TEXT_SEND:
             case Constants.MSG_TYPE_TEXT_RECEIVED:
-                holder = new MessageViewHolder(new TextMessageItem(mContext, this, viewType));
+                holder = new MessageViewHolder(new TextMessageItem(context, this, viewType));
                 break;
             // 图片类消息
             case Constants.MSG_TYPE_IMAGE_SEND:
             case Constants.MSG_TYPE_IMAGE_RECEIVED:
-                holder = new MessageViewHolder(new ImageMessageItem(mContext, this, viewType));
+                holder = new MessageViewHolder(new ImageMessageItem(context, this, viewType));
                 break;
             // 正常的文件类消息
             case Constants.MSG_TYPE_FILE_SEND:
             case Constants.MSG_TYPE_FILE_RECEIVED:
-                holder = new MessageViewHolder(new FileMessageItem(mContext, this, viewType));
+                holder = new MessageViewHolder(new FileMessageItem(context, this, viewType));
                 break;
             // 正常的语音消息
             case Constants.MSG_TYPE_VOICE_SEND:
             case Constants.MSG_TYPE_VOICE_RECEIVED:
-                holder = new MessageViewHolder(new VoiceMessageItem(mContext, this, viewType));
+                holder = new MessageViewHolder(new VoiceMessageItem(context, this, viewType));
                 break;
 
             /**
@@ -154,12 +154,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
              */
             // 回撤类消息
             case Constants.MSG_TYPE_SYS_RECALL:
-                holder = new MessageViewHolder(new RecallMessageItem(mContext, this, viewType));
+                holder = new MessageViewHolder(new RecallMessageItem(context, this, viewType));
                 break;
             // 通话类型消息
             case Constants.MSG_TYPE_CALL_SEND:
             case Constants.MSG_TYPE_CALL_RECEIVED:
-                holder = new MessageViewHolder(new CallMessageItem(mContext, this, viewType));
+                holder = new MessageViewHolder(new CallMessageItem(context, this, viewType));
                 break;
         }
         return holder;
@@ -167,7 +167,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     @Override public void onBindViewHolder(MessageViewHolder holder, int position) {
         // 获取当前要显示的 message 对象
-        EMMessage message = mMessages.get(position);
+        EMMessage message = messages.get(position);
         /**
          *  调用自定义{@link MessageItem#onSetupView(EMMessage)}来填充数据
          */
@@ -178,14 +178,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
      * 更新聊天数据
      */
     private void updateData() {
-        VMLog.d("messages -1- %d, adapter - %d", mMessages.size(), getItemCount());
-        if (mMessages != null) {
-            mMessages.clear();
-            mMessages.addAll(mConversation.getAllMessages());
+        VMLog.d("messages -1- %d, adapter - %d", messages.size(), getItemCount());
+        if (messages != null) {
+            messages.clear();
+            messages.addAll(conversation.getAllMessages());
         } else {
-            mMessages = mConversation.getAllMessages();
+            messages = conversation.getAllMessages();
         }
-        VMLog.d("messages -2- %d, adapter - %d", mMessages.size(), getItemCount());
+        VMLog.d("messages -2- %d, adapter - %d", messages.size(), getItemCount());
     }
 
     /**
@@ -250,7 +250,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
      * @param callback 自定义回调接口
      */
     public void setOnItemClickListener(ItemCallBack callback) {
-        mCallback = callback;
+        this.callback = callback;
     }
 
     /**
@@ -260,7 +260,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
      * @param message 操作的 Item 的 EMMessage 对象
      */
     public void onItemAction(int action, EMMessage message) {
-        mCallback.onAction(action, message);
+        callback.onAction(action, message);
     }
 
     /**

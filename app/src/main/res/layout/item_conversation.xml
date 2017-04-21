@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/vm_dimen_1"
-    android:background="@drawable/click_rectangle_white"
+    android:background="@drawable/ripple_rectangle_white"
     android:gravity="center_vertical"
     android:orientation="vertical"
     android:paddingLeft="@dimen/vm_dimen_16"
@@ -18,8 +18,8 @@
         <!--头像-->
         <com.vmloft.develop.library.tools.widget.VMImageView
             android:id="@+id/img_avatar"
-            android:layout_width="@dimen/vm_dimen_40"
-            android:layout_height="@dimen/vm_dimen_40"
+            android:layout_width="@dimen/vm_avatar_small"
+            android:layout_height="@dimen/vm_avatar_small"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:src="@drawable/ic_character_blackcat"

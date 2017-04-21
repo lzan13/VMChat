@@ -21,7 +21,7 @@ import com.vmloft.develop.library.tools.widget.VMImageView;
  */
 public class MeFragment extends AppFragment {
 
-    @BindView(R.id.img_avatar) VMImageView mAvatarView;
+    @BindView(R.id.img_avatar) VMImageView avatarView;
 
     private String currentUsername;
 
@@ -54,7 +54,7 @@ public class MeFragment extends AppFragment {
      */
     @Override protected void initView() {
         ButterKnife.bind(this, getView());
-        activity = getActivity();
+
         currentUsername = (String) VMSPUtil.get(activity, Constants.SHARED_USERNAME, "");
     }
 
@@ -70,8 +70,7 @@ public class MeFragment extends AppFragment {
             case R.id.img_avatar:
                 Intent intent = new Intent(activity, UserActivity.class);
                 intent.putExtra(Constants.EXTRA_CHAT_ID, currentUsername);
-
-                ((AppActivity) activity).onStartActivity(activity, intent, mAvatarView);
+                activity.onStartActivity(activity, intent);
                 break;
         }
     }

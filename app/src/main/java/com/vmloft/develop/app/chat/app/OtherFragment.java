@@ -4,13 +4,16 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 
 import android.widget.Button;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
+import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMGroupManager;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
@@ -36,7 +39,7 @@ public class OtherFragment extends AppFragment {
 
     @BindView(R.id.view_custom_viewgroup) VMViewGroup viewGroup;
 
-    private ProgressDialog mProgressDialog;
+    private ProgressDialog progressDialog;
 
     /**
      * 工厂方法，用来创建一个Fragment的实例
@@ -67,14 +70,15 @@ public class OtherFragment extends AppFragment {
      * 初始化界面控件，将 Fragment 变量和 View 建立起映射关系
      */
     @Override protected void initView() {
-        activity = getActivity();
+
+        ButterKnife.bind(this, getView());
 
         String[] btns = {
                 "Sign out", "Test 1", "Test 2", "Test 3"
         };
-        viewGroup = (VMViewGroup) getView().findViewById(R.id.view_custom_viewgroup);
         for (int i = 0; i < btns.length; i++) {
-            Button btn = new Button(activity);
+            Button btn =
+                    new Button(new ContextThemeWrapper(activity, R.style.VMBtn_Green), null, 0);
             btn.setText(btns[i]);
             btn.setId(100 + i);
             btn.setOnClickListener(viewListener);
@@ -138,7 +142,7 @@ public class OtherFragment extends AppFragment {
                 String[] members = hxids.toArray(new String[0]);
 
                 try {
-                    EMClient.getInstance()
+                    EMGroup group = EMClient.getInstance()
                             .groupManager()
                             .createGroup("测试加入500人", "群组简介", members, "邀请其他人的理由", options);
                     VMLog.d("text create group success");
@@ -253,46 +257,46 @@ public class OtherFragment extends AppFragment {
      * 导入多条消息
      */
     private void importMessages() {
-        String msgJson = "[{\n" +
-                "\"uuid\": \"5dd2241a-4ffa-11e6-9396-31c48b60c199\",\n" +
-                "\"type\": \"chatmessage\",\n" +
-                "\"created\": 1469184741585,\n" +
-                "\"modified\": 1469184741585,\n" +
-                "\"timestamp\": 1469184741193,\n" +
-                "\"from\": \"lz0\",\n" +
-                "\"msg_id\": \"221705959213369320\",\n" +
-                "\"to\": \"lz1\",\n" +
-                "\"chat_type\": \"chat\",\n" +
-                "\"payload\": {\n" +
-                "    \"bodies\": [\n" +
-                "      {\n" +
-                "        \"msg\": \"特殊\",\n" +
-                "        \"type\": \"txt\"\n" +
-                "      }\n" +
-                "    ],\n" +
-                "    \"ext\": {}\n" +
-                "  }\n" +
-                "},\n" +
-                "{\n" +
-                "\"uuid\": \"f8235b18-5240-11e6-9c2c-096df3a4c703\",\n" +
-                "\"type\": \"chatmessage\",\n" +
-                "\"created\": 1469434967583,\n" +
-                "\"modified\": 1469434967583,\n" +
-                "\"timestamp\": 1469434967362,\n" +
-                "\"from\": \"lz0\",\n" +
-                "\"msg_id\": \"222780672404621268\",\n" +
-                "\"to\": \"lz1\",\n" +
-                "\"chat_type\": \"chat\",\n" +
-                "\"payload\": {\n" +
-                "    \"bodies\": [\n" +
-                "      {\n" +
-                "        \"msg\": \"到三点\",\n" +
-                "        \"type\": \"txt\"\n" +
-                "      }\n" +
-                "    ],\n" +
-                "    \"ext\": {}\n" +
-                "  }\n" +
-                "}]";
+        String msgJson = "[{\n"
+                + "\"uuid\": \"5dd2241a-4ffa-11e6-9396-31c48b60c199\",\n"
+                + "\"type\": \"chatmessage\",\n"
+                + "\"created\": 1469184741585,\n"
+                + "\"modified\": 1469184741585,\n"
+                + "\"timestamp\": 1469184741193,\n"
+                + "\"from\": \"lz0\",\n"
+                + "\"msg_id\": \"221705959213369320\",\n"
+                + "\"to\": \"lz1\",\n"
+                + "\"chat_type\": \"chat\",\n"
+                + "\"payload\": {\n"
+                + "    \"bodies\": [\n"
+                + "      {\n"
+                + "        \"msg\": \"特殊\",\n"
+                + "        \"type\": \"txt\"\n"
+                + "      }\n"
+                + "    ],\n"
+                + "    \"ext\": {}\n"
+                + "  }\n"
+                + "},\n"
+                + "{\n"
+                + "\"uuid\": \"f8235b18-5240-11e6-9c2c-096df3a4c703\",\n"
+                + "\"type\": \"chatmessage\",\n"
+                + "\"created\": 1469434967583,\n"
+                + "\"modified\": 1469434967583,\n"
+                + "\"timestamp\": 1469434967362,\n"
+                + "\"from\": \"lz0\",\n"
+                + "\"msg_id\": \"222780672404621268\",\n"
+                + "\"to\": \"lz1\",\n"
+                + "\"chat_type\": \"chat\",\n"
+                + "\"payload\": {\n"
+                + "    \"bodies\": [\n"
+                + "      {\n"
+                + "        \"msg\": \"到三点\",\n"
+                + "        \"type\": \"txt\"\n"
+                + "      }\n"
+                + "    ],\n"
+                + "    \"ext\": {}\n"
+                + "  }\n"
+                + "}]";
         List<EMMessage> messageList = new ArrayList<EMMessage>();
         try {
             JSONArray jsonArray = new JSONArray(msgJson);
@@ -335,15 +339,20 @@ public class OtherFragment extends AppFragment {
      */
     private void signOut() {
 
-        mProgressDialog = new ProgressDialog(activity);
-        mProgressDialog.setMessage(activity.getString(R.string.hint_sign_out));
-        mProgressDialog.show();
+        progressDialog = new ProgressDialog(activity);
+        progressDialog.setMessage(activity.getString(R.string.hint_sign_out));
+        progressDialog.show();
 
         Hyphenate.getInstance().signOut(new EMCallBack() {
             @Override public void onSuccess() {
-                mProgressDialog.dismiss();
-                activity.startActivity(new Intent(activity, SignInActivity.class));
-                activity.finish();
+                progressDialog.dismiss();
+                activity.runOnUiThread(new Runnable() {
+                    @Override public void run() {
+                        activity.onStartActivity(activity,
+                                new Intent(activity, SignInActivity.class));
+                        activity.finishAfterTransition();
+                    }
+                });
             }
 
             @Override public void onError(int i, String s) {

@@ -1,5 +1,6 @@
 package com.vmloft.develop.app.chat.room;
 
+import butterknife.ButterKnife;
 import com.vmloft.develop.app.chat.app.AppFragment;
 import com.vmloft.develop.app.chat.R;
 
@@ -22,7 +23,7 @@ public class RoomsFragment extends AppFragment {
      * 初始化界面控件，将 Fragment 变量和 View 建立起映射关系
      */
     @Override protected void initView() {
-
+        ButterKnife.bind(this, getView());
     }
 
     /**

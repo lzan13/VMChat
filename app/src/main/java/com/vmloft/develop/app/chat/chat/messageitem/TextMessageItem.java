@@ -43,11 +43,11 @@ public class TextMessageItem extends MessageItem {
      * @param message 需要展示的 EMMessage 对象
      */
     @Override public void onSetupView(EMMessage message) {
-        mMessage = message;
+        this.message = message;
 
         // 判断如果是单聊或者消息是发送方，不显示username
-        if (mMessage.getChatType() == EMMessage.ChatType.Chat
-                || mMessage.direct() == EMMessage.Direct.SEND) {
+        if (this.message.getChatType() == EMMessage.ChatType.Chat
+                || this.message.direct() == EMMessage.Direct.SEND) {
             usernameView.setVisibility(View.GONE);
         } else {
             // 设置消息消息发送者的名称
@@ -58,7 +58,7 @@ public class TextMessageItem extends MessageItem {
         // 设置消息时间
         msgTimeView.setText(VMDateUtil.getRelativeTime(message.getMsgTime()));
 
-        EMTextMessageBody body = (EMTextMessageBody) mMessage.getBody();
+        EMTextMessageBody body = (EMTextMessageBody) this.message.getBody();
         Spannable spannable = new SpannableString(body.getMessage().toString());
         contentView.setText(spannable, TextView.BufferType.SPANNABLE);
 
@@ -74,7 +74,7 @@ public class TextMessageItem extends MessageItem {
     @Override protected void onItemLongClick() {
         String[] menus = null;
         // 这里要根据消息的类型去判断要弹出的菜单，是否是发送方，并且是发送成功才能撤回
-        if (mViewType == Constants.MSG_TYPE_TEXT_RECEIVED) {
+        if (viewType == Constants.MSG_TYPE_TEXT_RECEIVED) {
             menus = new String[] {
                     activity.getResources().getString(R.string.menu_chat_copy),
                     activity.getResources().getString(R.string.menu_chat_forward),
@@ -97,16 +97,16 @@ public class TextMessageItem extends MessageItem {
             @Override public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case 0:
-                        mAdapter.onItemAction(Constants.ACTION_COPY, mMessage);
+                        adapter.onItemAction(Constants.ACTION_COPY, message);
                         break;
                     case 1:
-                        mAdapter.onItemAction(Constants.ACTION_FORWARD, mMessage);
+                        adapter.onItemAction(Constants.ACTION_FORWARD, message);
                         break;
                     case 2:
-                        mAdapter.onItemAction(Constants.ACTION_DELETE, mMessage);
+                        adapter.onItemAction(Constants.ACTION_DELETE, message);
                         break;
                     case 3:
-                        mAdapter.onItemAction(Constants.ACTION_RECALL, mMessage);
+                        adapter.onItemAction(Constants.ACTION_RECALL, message);
                         break;
                 }
             }
@@ -120,7 +120,7 @@ public class TextMessageItem extends MessageItem {
      */
     protected void refreshView() {
         // 判断消息的状态，如果发送失败就显示重发按钮，并设置重发按钮的监听
-        switch (mMessage.status()) {
+        switch (message.status()) {
             case SUCCESS:
                 ackStatusView.setVisibility(View.VISIBLE);
                 msgProgressBar.setVisibility(View.GONE);
@@ -134,7 +134,7 @@ public class TextMessageItem extends MessageItem {
                 resendView.setVisibility(View.VISIBLE);
                 resendView.setOnClickListener(new View.OnClickListener() {
                     @Override public void onClick(View v) {
-                        mAdapter.onItemAction(Constants.ACTION_RESEND, mMessage);
+                        adapter.onItemAction(Constants.ACTION_RESEND, message);
                     }
                 });
                 break;
@@ -152,10 +152,10 @@ public class TextMessageItem extends MessageItem {
      * 解析对应的xml 布局，填充当前 ItemView，并初始化控件
      */
     @Override protected void onInflateView() {
-        if (mViewType == Constants.MSG_TYPE_TEXT_SEND) {
-            mInflater.inflate(R.layout.item_msg_text_send, this);
+        if (viewType == Constants.MSG_TYPE_TEXT_SEND) {
+            inflater.inflate(R.layout.item_msg_text_send, this);
         } else {
-            mInflater.inflate(R.layout.item_msg_text_received, this);
+            inflater.inflate(R.layout.item_msg_text_received, this);
         }
 
         bubbleLayout = findViewById(R.id.layout_bubble);

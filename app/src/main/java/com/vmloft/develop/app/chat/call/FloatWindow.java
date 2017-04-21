@@ -3,6 +3,8 @@ package com.vmloft.develop.app.chat.call;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -79,8 +81,7 @@ public class FloatWindow {
         layoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
 
         // 设置窗口标志类型，其中 FLAG_NOT_FOCUSABLE 是放置当前悬浮窗拦截点击事件，造成桌面控件不可操作
-        layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM;
+        layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM;
 
         // 获取要现实的布局
         floatView = LayoutInflater.from(context).inflate(R.layout.widget_float_window, null);
@@ -105,7 +106,9 @@ public class FloatWindow {
                     intent.setClass(context, VideoCallActivity.class);
                 }
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
+
+                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeBasic();
+                ActivityCompat.startActivity(context, intent, optionsCompat.toBundle());
             }
         });
 
@@ -131,8 +134,7 @@ public class FloatWindow {
                     case MotionEvent.ACTION_MOVE:
                         VMLog.d("move x: %f, y: %f", event.getRawX(), event.getRawY());
                         // 当移动距离大于特定值时，表示是多动悬浮窗，则不触发后边的点击监听
-                        if (Math.abs(event.getRawX() - startX) > 20
-                                || Math.abs(event.getRawY() - startY) > 20) {
+                        if (Math.abs(event.getRawX() - startX) > 20 || Math.abs(event.getRawY() - startY) > 20) {
                             result = true;
                         }
                         // getRawX 获取触摸点相对于屏幕的坐标，getX 相对于当前悬浮窗坐标
@@ -158,8 +160,7 @@ public class FloatWindow {
         floatView.findViewById(R.id.layout_call_voice).setVisibility(View.GONE);
         floatView.findViewById(R.id.layout_call_video).setVisibility(View.VISIBLE);
 
-        RelativeLayout surfaceLayout =
-                (RelativeLayout) floatView.findViewById(R.id.layout_call_video);
+        RelativeLayout surfaceLayout = (RelativeLayout) floatView.findViewById(R.id.layout_call_video);
 
         // 将 SurfaceView设置给 SDK
         surfaceLayout.removeAllViews();

@@ -47,7 +47,7 @@ android {
         debug {
             // 简单粗暴解决多个库引用 jni 库出现 UnsatisfiedLinkError 文件错误问题
             ndk {
-                abiFilters = ["armeabi-v7a", "x86"]
+                abiFilters = ["arm64-v8a", "armeabi-v7a"]
             }
             // 是否开启压缩
             zipAlignEnabled false
@@ -59,7 +59,7 @@ android {
         release {
             // 简单粗暴解决多个库引用 jni 库出现 UnsatisfiedLinkError 文件错误问题
             ndk {
-                abiFilters = ["armeabi-v7a", "x86"]
+                abiFilters = ["armeabi-v7a"]
             }
             // 是否开启压缩
             zipAlignEnabled true
@@ -123,19 +123,10 @@ android {
 // 项目依赖，包含引入的第三方 SDK以及Android官方 Support 库
 dependencies {
     // 引入项目 libs 目录下的各种第三方库，后边可以不用再单独添加
-    //    compile fileTree(include: ['*.jar'], dir: 'libs')
-    // Android Material design 设计风格库，包含了support-v4, appcomat-v7, recyclerView扩展库
-    compile 'com.android.support:design:25.3.0'
-    // 解决方法数超过65536问题扩展库
-    compile 'com.android.support:multidex:1.0.1'
+    compile fileTree(include: ['*.jar'], dir: 'libs')
 
     // Google Play Service 库，使用GCM推送需要
     compile 'com.google.android.gms:play-services-gcm:10.2.0'
-
-    // LeakCanary Debug库，开源捕获内存溢出的库
-    compile 'com.squareup.leakcanary:leakcanary-android:1.5'
-    // LeakCanary 发版的库
-    //    compile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
 
     // 第三方图片加载库
     compile 'com.github.bumptech.glide:glide:3.7.0'
@@ -146,20 +137,12 @@ dependencies {
     // ButterKnife 库
     compile 'com.jakewharton:butterknife:8.5.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
-    // Talking 统计平台库
-    compile files('libs/talkingdata_analytics_v2230.jar')
-    // 华为推送
-    compile files('libs/HwPush_SDK_V2705.jar')
-    // 环信 IM
-    compile files('libs/hyphenatechat_3.3.0.jar')
-    // 小米推送
-    compile files('libs/MiPush_SDK_Client_3_0_3.jar')
 
     // 引入自己封装的工具库 GitHub: https://github.com/lzan13/VMLibraryManager
     compile project(':vmtools')
 }
 
-//读取配置文件，配置文件里记录的都是一些敏感信息，需要换成自己的
+// 读取配置文件，配置文件里记录的都是一些敏感信息，需要换成自己的
 def initProjectConfigs() {
     // 设置要读取的配置文件
     def propFile = file('config.properties')

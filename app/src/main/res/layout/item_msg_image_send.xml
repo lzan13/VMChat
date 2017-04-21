@@ -71,6 +71,7 @@
                             android:id="@+id/img_image"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:transitionName="@string/shared_element_username"
                             android:layout_centerInParent="true"
                             android:minHeight="@dimen/vm_dimen_72"
                             android:minWidth="@dimen/vm_dimen_72"

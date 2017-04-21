@@ -12,6 +12,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,6 +44,7 @@ import com.vmloft.develop.library.tools.utils.VMSPUtil;
  */
 public class MainActivity extends AppActivity {
 
+    // 使用注解方式获取控件
     @BindView(R.id.view_pager) ViewPager viewPager;
     @BindView(R.id.widget_tab_layout) TabLayout tabLayout;
     @BindView(R.id.layout_connection_error) LinearLayout connectionStatusLayout;
@@ -49,38 +52,26 @@ public class MainActivity extends AppActivity {
     @BindView(R.id.img_avatar) VMImageView avatarView;
     @BindView(R.id.text_username) TextView usernameView;
 
-    private String mCurrentUsername;
+    // 当前登录账户 Username
+    private String currentUsername;
     // TabLayout 装填的内容
-    private String mTabTitles[] = null;
-    private Fragment mFragments[];
-    private int mCurrentTabIndex;
-    private ConversationsFragment mConversationFragment;
-    private ContactsFragment mContactsFragment;
-    private MeFragment mMeFragment;
-    private OtherFragment mOtherFragment;
+    private String tabTitles[] = null;
+    private Fragment fragments[];
+    private int currentTabIndex;
+    private ConversationsFragment conversationFragment;
+    private ContactsFragment contactsFragment;
+    private MeFragment meFragment;
+    private OtherFragment otherFragment;
 
     // 创建新会话对话框
     private AlertDialog createConversationDialog;
     private AlertDialog.Builder alertDialogBuilder;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
-        // 判断当前是否已经登录
-        if (EMClient.getInstance().isLoggedInBefore()) {
-            // 加载群组到内存
-            EMClient.getInstance().groupManager().loadAllGroups();
-            // 加载所有本地会话到内存
-            EMClient.getInstance().chatManager().loadAllConversations();
-        } else {
-            // 跳转到登录界面
-            Intent intent = new Intent(this, SignInActivity.class);
-            onStartActivity(this, intent);
-            this.finish();
-        }
-
-        // 将主题设置为正常主题
-        setTheme(R.style.AppTheme_Default);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        setWindowEnterTransition();
 
         ButterKnife.bind(this);
 
@@ -93,30 +84,30 @@ public class MainActivity extends AppActivity {
     private void init() {
         activity = this;
 
-        mCurrentUsername = (String) VMSPUtil.get(activity, Constants.SHARED_USERNAME, "");
-        usernameView.setText(mCurrentUsername);
+        currentUsername = (String) VMSPUtil.get(activity, Constants.SHARED_USERNAME, "");
+        usernameView.setText(currentUsername);
 
         setSupportActionBar(getToolbar());
-        mCurrentTabIndex = 0;
-        mTabTitles = new String[] {
-                getString(R.string.chat), getString(R.string.contacts),
-                getString(R.string.me), getString(R.string.test)
+        currentTabIndex = 0;
+        tabTitles = new String[] {
+                getString(R.string.chat), getString(R.string.contacts), getString(R.string.me),
+                getString(R.string.test)
         };
 
-        mConversationFragment = ConversationsFragment.newInstance();
-        mContactsFragment = ContactsFragment.newInstance();
-        mMeFragment = MeFragment.newInstance();
-        mOtherFragment = OtherFragment.newInstance();
+        conversationFragment = ConversationsFragment.newInstance();
+        contactsFragment = ContactsFragment.newInstance();
+        meFragment = MeFragment.newInstance();
+        otherFragment = OtherFragment.newInstance();
 
-        mFragments = new Fragment[] {
-                mConversationFragment, mContactsFragment, mMeFragment, mOtherFragment
+        fragments = new Fragment[] {
+                conversationFragment, contactsFragment, meFragment, otherFragment
         };
-        MLViewPagerAdapter adapter =
-                new MLViewPagerAdapter(getSupportFragmentManager(), mFragments, mTabTitles);
+        ViewPagerAdapter adapter =
+                new ViewPagerAdapter(getSupportFragmentManager(), fragments, tabTitles);
         viewPager.setAdapter(adapter);
         // 设置 ViewPager 缓存个数
         viewPager.setOffscreenPageLimit(3);
-        viewPager.setCurrentItem(mCurrentTabIndex);
+        viewPager.setCurrentItem(currentTabIndex);
         // 添加 ViewPager 页面改变监听
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override public void onPageScrolled(int position, float positionOffset,
@@ -143,8 +134,8 @@ public class MainActivity extends AppActivity {
         switch (view.getId()) {
             case R.id.img_avatar:
                 intent = new Intent(activity, UserActivity.class);
-                intent.putExtra(Constants.EXTRA_CHAT_ID, mCurrentUsername);
-                onStartActivity(activity, intent, avatarView);
+                intent.putExtra(Constants.EXTRA_CHAT_ID, currentUsername);
+                onStartActivity(activity, intent);
                 break;
             case R.id.layout_connection_error:
                 // 网络有错误，进行网络诊断
@@ -161,7 +152,7 @@ public class MainActivity extends AppActivity {
                     intent.setComponent(component);
                     intent.setAction("android.intent.action.VIEW");
                 }
-                startActivity(intent);
+                onStartActivity(activity, intent);
                 break;
         }
     }
@@ -308,14 +299,24 @@ public class MainActivity extends AppActivity {
     }
 
     /**
+     * 设置界面进入过度效果
+     */
+    private void setWindowEnterTransition() {
+        Transition transition = TransitionInflater.from(activity)
+                .inflateTransition(R.transition.transition_fade_enter);
+        // This view will not be affected by enter transition animation
+        getWindow().setEnterTransition(transition);
+    }
+
+    /**
      * 自定义 ViewPager 适配器子类
      */
-    class MLViewPagerAdapter extends FragmentPagerAdapter {
+    class ViewPagerAdapter extends FragmentPagerAdapter {
 
         private String mTabsTitle[];
         private Fragment mFragments[];
 
-        public MLViewPagerAdapter(FragmentManager fm, Fragment fragments[], String args[]) {
+        public ViewPagerAdapter(FragmentManager fm, Fragment fragments[], String args[]) {
             super(fm);
             mFragments = fragments;
             mTabsTitle = args;

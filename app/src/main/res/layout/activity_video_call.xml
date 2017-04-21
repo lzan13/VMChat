@@ -2,7 +2,7 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/layout_root"
+    android:id="@+id/layout_coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
@@ -32,7 +32,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="@dimen/vm_dimen_16"
             >
             <!--界面最小化按钮-->
             <ImageButton
@@ -41,7 +41,7 @@
                 android:layout_height="48dp"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="16dp"
-                android:background="@drawable/click_rectangle_transparent"
+                android:background="@drawable/ripple_round_transparent"
                 android:src="@drawable/ic_fullscreen_exit_white_24dp"
                 />
             <LinearLayout
@@ -83,7 +83,7 @@
                 android:layout_height="48dp"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="@dimen/vm_dimen_16"
-                android:background="@drawable/click_rectangle_transparent"
+                android:background="@drawable/ripple_round_transparent"
                 android:src="@drawable/ic_camera_front_white_24dp"
                 />
         </RelativeLayout>
@@ -112,7 +112,7 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_margin="8dp"
-                    android:background="@drawable/click_rectangle_transparent"
+                    android:background="@drawable/ripple_round_transparent"
                     android:src="@drawable/ic_mic_off_white_24dp"
                     />
 
@@ -122,7 +122,7 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_margin="8dp"
-                    android:background="@drawable/click_rectangle_transparent"
+                    android:background="@drawable/ripple_round_transparent"
                     android:src="@drawable/ic_volume_up_white_24dp"
                     />
 
@@ -132,7 +132,7 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_margin="8dp"
-                    android:background="@drawable/click_rectangle_transparent"
+                    android:background="@drawable/ripple_round_transparent"
                     android:src="@drawable/ic_videocam_off_white_24dp"
                     />
 
@@ -142,7 +142,7 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_margin="8dp"
-                    android:background="@drawable/click_rectangle_transparent"
+                    android:background="@drawable/ripple_round_transparent"
                     android:src="@drawable/ic_record_white_24dp"
                     />
 
@@ -152,7 +152,7 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_margin="8dp"
-                    android:background="@drawable/click_rectangle_transparent"
+                    android:background="@drawable/ripple_round_transparent"
                     android:src="@drawable/ic_camera_white_24dp"
                     />
             </LinearLayout>

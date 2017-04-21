@@ -1,6 +1,7 @@
 package com.vmloft.develop.app.chat.group;
 
 import android.os.Bundle;
+import com.hyphenate.chat.EMClient;
 import com.vmloft.develop.app.chat.app.AppActivity;
 
 /**
@@ -14,5 +15,6 @@ public class GroupActivity extends AppActivity {
 
         //EMGroup group = EMClient.getInstance().groupManager().createGroup();
         //group.getMemberCount()
+
     }
 }

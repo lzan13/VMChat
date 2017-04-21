@@ -4,10 +4,18 @@ import android.app.ProgressDialog;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.view.View;
-import android.widget.EditText;
 
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -35,8 +43,10 @@ public class SignUpActivity extends AppActivity {
     private ProgressDialog progressDialog;
 
     // 输入框
-    @BindView(R.id.edit_username) EditText usernameView;
-    @BindView(R.id.edit_password) EditText passwordView;
+    @BindView(R.id.edit_username) EditText usernameEditView;
+    @BindView(R.id.edit_password) EditText passwordEditView;
+    @BindView(R.id.btn_sign_up) Button signUpBtn;
+    @BindView(R.id.text_sign_agreement) TextView agreementView;
     // 用户名和密码
     private String username;
     private String password;
@@ -44,8 +54,6 @@ public class SignUpActivity extends AppActivity {
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
-
-        activity = this;
 
         ButterKnife.bind(activity);
 
@@ -64,6 +72,34 @@ public class SignUpActivity extends AppActivity {
                 onFinish();
             }
         });
+
+        usernameEditView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                verifyInputBox();
+            }
+
+            @Override public void afterTextChanged(Editable s) {
+            }
+        });
+        passwordEditView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                verifyInputBox();
+            }
+
+            @Override public void afterTextChanged(Editable s) {
+            }
+        });
+
+        // 设置文本框识别超链接
+        agreementView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     @OnClick(R.id.btn_sign_up) void onClick(View v) {
@@ -72,44 +108,27 @@ public class SignUpActivity extends AppActivity {
                 onFinish();
                 break;
             case R.id.btn_sign_up:
-                attemptSignUp();
+                restSignUp();
                 break;
         }
     }
 
     /**
-     * 检测登陆，主要先判断是否满足登陆条件
+     * 校验输入框
      */
-    private void attemptSignUp() {
+    private void verifyInputBox() {
 
-        // 重置错误
-        usernameView.setError(null);
-        passwordView.setError(null);
+        // 将用户名转为消息并修剪
+        username = usernameEditView.getText().toString().toLowerCase().trim();
+        password = passwordEditView.getText().toString().trim();
 
-        username = usernameView.getText().toString().toLowerCase().trim();
-        password = passwordView.getText().toString().toLowerCase().trim();
-
-        boolean cancel = false;
-        View focusView = null;
-
-        // 检查密码是否为空
-        if (TextUtils.isEmpty(password)) {
-            passwordView.setError(getString(R.string.error_field_required));
-            focusView = passwordView;
-            cancel = true;
-        }
-
-        // 检查username是否为空
-        if (TextUtils.isEmpty(username)) {
-            usernameView.setError(getString(R.string.error_field_required));
-            focusView = usernameView;
-            cancel = true;
-        }
-
-        if (cancel) {
-            focusView.requestFocus();
+        // 检查输入框是否为空是否为空
+        if (TextUtils.isEmpty(password) || TextUtils.isEmpty(username)) {
+            signUpBtn.setEnabled(false);
+            signUpBtn.setAlpha(0.5f);
         } else {
-            restSignUp();
+            signUpBtn.setEnabled(true);
+            signUpBtn.setAlpha(1.0f);
         }
     }
 
@@ -128,8 +147,7 @@ public class SignUpActivity extends AppActivity {
                     progressDialog.dismiss();
                 }
                 try {
-                    JSONObject object =
-                            NetworkManager.getInstance().createUser(username, password);
+                    JSONObject object = NetworkManager.getInstance().createUser(username, password);
                     int errorCode = object.optInt("code");
                     String errorMsg = object.optString("msg");
                     if (errorCode != 0) {
@@ -230,10 +248,9 @@ public class SignUpActivity extends AppActivity {
     }
 
     @Override protected void onDestroy() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
         super.onDestroy();
-    }
-
-    @Override protected void onResume() {
-        super.onResume();
     }
 }

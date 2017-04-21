@@ -15,9 +15,11 @@ import com.hyphenate.chat.EMConversation;
 import com.vmloft.develop.app.chat.app.AppActivity;
 import com.vmloft.develop.app.chat.app.AppFragment;
 import com.vmloft.develop.app.chat.app.Constants;
+import com.vmloft.develop.app.chat.app.MainActivity;
 import com.vmloft.develop.app.chat.apply.ApplyForActivity;
 import com.vmloft.develop.app.chat.chat.ChatActivity;
 import com.vmloft.develop.app.chat.chat.MessageEvent;
+import com.vmloft.develop.app.chat.contacts.UserActivity;
 import com.vmloft.develop.app.chat.widget.recycler.LinearLayoutManager;
 import com.vmloft.develop.app.chat.R;
 import com.vmloft.develop.app.chat.interfaces.ItemCallBack;
@@ -38,14 +40,14 @@ import java.util.Map;
 public class ConversationsFragment extends AppFragment {
 
     // 代替 ListView 用来显示会话列表的控件
-    @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
-    private android.support.v7.widget.LinearLayoutManager mLayoutManager;
+    @BindView(R.id.recycler_view) RecyclerView recyclerView;
+    private android.support.v7.widget.LinearLayoutManager layoutManager;
 
     // 保存会话对象的集合
-    private List<EMConversation> mConversations = new ArrayList<EMConversation>();
+    private List<EMConversation> conversations = new ArrayList<EMConversation>();
 
-    private String[] mMenus = null;
-    private ConversationAdapter mAdapter;
+    private String[] menus = null;
+    private ConversationAdapter adapter;
 
     private AlertDialog.Builder alertDialogBuilder;
     private AlertDialog conversationMenuDialog;
@@ -83,7 +85,6 @@ public class ConversationsFragment extends AppFragment {
      */
     @Override protected void initView() {
         ButterKnife.bind(this, getView());
-        activity = getActivity();
     }
 
     /**
@@ -93,10 +94,10 @@ public class ConversationsFragment extends AppFragment {
         // 加载会话到list集合
         loadConversationList();
         // 实例化会话列表的 Adapter 对象
-        mAdapter = new ConversationAdapter(activity, mConversations);
-        mLayoutManager = new LinearLayoutManager(activity);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
+        adapter = new ConversationAdapter(activity, conversations);
+        layoutManager = new LinearLayoutManager(activity);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
 
         // 通过自定义接口来实现RecyclerView item的点击和长按事件
         setItemClickListener();
@@ -106,10 +107,10 @@ public class ConversationsFragment extends AppFragment {
      * 刷新会话列表，重新加载会话列表到list集合，然后刷新adapter
      */
     public void refreshConversation() {
-        if (mAdapter != null) {
-            mConversations.clear();
+        if (adapter != null) {
+            conversations.clear();
             loadConversationList();
-            mAdapter.refreshList();
+            adapter.refreshList();
         }
     }
 
@@ -147,10 +148,10 @@ public class ConversationsFragment extends AppFragment {
         int count = 0;
         for (int i = 0; i < list.size(); i++) {
             if (ConversationExtUtils.getConversationPushpin(list.get(i))) {
-                mConversations.add(count, list.get(i));
+                this.conversations.add(count, list.get(i));
                 count++;
             } else {
-                mConversations.add(list.get(i));
+                this.conversations.add(list.get(i));
             }
         }
     }
@@ -160,7 +161,7 @@ public class ConversationsFragment extends AppFragment {
      */
     private void setItemClickListener() {
 
-        mAdapter.setItemCallback(new ItemCallBack() {
+        adapter.setItemCallback(new ItemCallBack() {
             /**
              * Item 点击及长按事件的处理
              *
@@ -171,7 +172,10 @@ public class ConversationsFragment extends AppFragment {
                 int position = (int) tag;
                 switch (action) {
                     case R.id.img_avatar:
-
+                        Intent intent = new Intent(activity, UserActivity.class);
+                        intent.putExtra(Constants.EXTRA_CHAT_ID,
+                                conversations.get(position).conversationId());
+                        activity.onStartActivity(activity, intent);
                         break;
                     case Constants.ACTION_CLICK:
                         itemClick(position);
@@ -190,23 +194,16 @@ public class ConversationsFragment extends AppFragment {
      * @param position 当前点击的项位置
      */
     public void itemClick(int position) {
-        EMConversation conversation = mConversations.get(position);
+        EMConversation conversation = conversations.get(position);
         Intent intent = new Intent();
         if (conversation.conversationId().equals(Constants.CONVERSATION_ID_APPLY)) {
             intent.setClass(activity, ApplyForActivity.class);
-            ((AppActivity) activity).onStartActivity(activity, intent);
+            activity.onStartActivity(activity, intent);
         } else {
             intent.setClass(activity, ChatActivity.class);
-            intent.putExtra(Constants.EXTRA_CHAT_ID,
-                    mConversations.get(position).conversationId());
-            intent.putExtra(Constants.EXTRA_TYPE, mConversations.get(position).getType());
-
-            int firstItemPosition = mLayoutManager.findFirstVisibleItemPosition();
-            if (position - firstItemPosition >= 0) {
-                View avatarView = mRecyclerView.getChildAt(position - firstItemPosition)
-                        .findViewById(R.id.img_avatar);
-                ((AppActivity) activity).onStartActivity(activity, intent, avatarView);
-            }
+            intent.putExtra(Constants.EXTRA_CHAT_ID, conversations.get(position).conversationId());
+            intent.putExtra(Constants.EXTRA_TYPE, conversations.get(position).getType());
+            activity.onStartActivity(activity, intent);
         }
     }
 
@@ -216,13 +213,12 @@ public class ConversationsFragment extends AppFragment {
      * @param position 触发长按事件的位置
      */
     public void itemLongClick(final int position) {
-        final EMConversation conversation = mConversations.get(position);
+        final EMConversation conversation = conversations.get(position);
         final boolean isTop = ConversationExtUtils.getConversationPushpin(conversation);
         // 根据当前会话不同的状态来显示不同的长按菜单
         List<String> menuList = new ArrayList<String>();
         if (isTop) {
-            menuList.add(
-                    activity.getResources().getString(R.string.menu_conversation_cancel_top));
+            menuList.add(activity.getResources().getString(R.string.menu_conversation_cancel_top));
         } else {
             menuList.add(activity.getResources().getString(R.string.menu_conversation_top));
         }
@@ -235,14 +231,14 @@ public class ConversationsFragment extends AppFragment {
         menuList.add(activity.getResources().getString(R.string.menu_conversation_clear));
         menuList.add(activity.getResources().getString(R.string.menu_conversation_delete));
 
-        mMenus = new String[menuList.size()];
-        menuList.toArray(mMenus);
+        menus = new String[menuList.size()];
+        menuList.toArray(menus);
 
         // 创建并显示 ListView 的长按弹出菜单，并设置弹出菜单 Item的点击监听
         alertDialogBuilder = new AlertDialog.Builder(activity);
         // 弹出框标题
         // alertDialogBuilder.setTitle(R.string.dialog_title_conversation);
-        alertDialogBuilder.setItems(mMenus, new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setItems(menus, new DialogInterface.OnClickListener() {
             @Override public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case 0:
@@ -266,7 +262,7 @@ public class ConversationsFragment extends AppFragment {
                         break;
                     case 2:
                         // 清空当前会话的消息，同时删除了内存中和数据库中的数据
-                        mConversations.get(position).clearAllMessages();
+                        conversations.get(position).clearAllMessages();
                         refreshConversation();
                         break;
                     case 3:

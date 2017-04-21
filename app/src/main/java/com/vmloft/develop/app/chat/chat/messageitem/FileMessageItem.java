@@ -47,11 +47,11 @@ public class FileMessageItem extends MessageItem {
      * @param message 需要展示的 EMMessage 对象
      */
     @Override public void onSetupView(EMMessage message) {
-        mMessage = message;
+        this.message = message;
 
         // 判断如果是单聊或者消息是发送方，不显示username
-        if (mMessage.getChatType() == EMMessage.ChatType.Chat
-                || mMessage.direct() == EMMessage.Direct.SEND) {
+        if (this.message.getChatType() == EMMessage.ChatType.Chat
+                || this.message.direct() == EMMessage.Direct.SEND) {
             usernameView.setVisibility(View.GONE);
         } else {
             // 设置消息消息发送者的名称
@@ -59,9 +59,9 @@ public class FileMessageItem extends MessageItem {
             usernameView.setVisibility(View.VISIBLE);
         }
         // 设置消息时间
-        msgTimeView.setText(VMDateUtil.getRelativeTime(mMessage.getMsgTime()));
+        msgTimeView.setText(VMDateUtil.getRelativeTime(this.message.getMsgTime()));
 
-        EMNormalFileMessageBody fileBody = (EMNormalFileMessageBody) mMessage.getBody();
+        EMNormalFileMessageBody fileBody = (EMNormalFileMessageBody) this.message.getBody();
         String filename = fileBody.getFileName();
         // 设置文件名
         contentView.setText(filename);
@@ -81,7 +81,7 @@ public class FileMessageItem extends MessageItem {
     @Override protected void onItemLongClick() {
         String[] menus = null;
         // 这里要根据消息的类型去判断要弹出的菜单，是否是发送方，并且是发送成功才能撤回
-        if (mViewType == Constants.MSG_TYPE_FILE_RECEIVED) {
+        if (viewType == Constants.MSG_TYPE_FILE_RECEIVED) {
             menus = new String[] {
                     activity.getResources().getString(R.string.menu_chat_forward),
                     activity.getResources().getString(R.string.menu_chat_delete)
@@ -102,13 +102,13 @@ public class FileMessageItem extends MessageItem {
             @Override public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case 0:
-                        mAdapter.onItemAction(Constants.ACTION_FORWARD, mMessage);
+                        adapter.onItemAction(Constants.ACTION_FORWARD, message);
                         break;
                     case 1:
-                        mAdapter.onItemAction(Constants.ACTION_DELETE, mMessage);
+                        adapter.onItemAction(Constants.ACTION_DELETE, message);
                         break;
                     case 2:
-                        mAdapter.onItemAction(Constants.ACTION_RECALL, mMessage);
+                        adapter.onItemAction(Constants.ACTION_RECALL, message);
                         break;
                 }
             }
@@ -122,11 +122,11 @@ public class FileMessageItem extends MessageItem {
      */
     protected void refreshView() {
         // 判断是不是阅后即焚的消息
-        if (mMessage.getBooleanAttribute(Constants.ATTR_BURN, false)) {
+        if (message.getBooleanAttribute(Constants.ATTR_BURN, false)) {
         } else {
         }
         // 判断消息的状态，如果发送失败就显示重发按钮，并设置重发按钮的监听
-        switch (mMessage.status()) {
+        switch (message.status()) {
             case SUCCESS:
                 ackStatusView.setVisibility(View.VISIBLE);
                 progressLayout.setVisibility(View.GONE);
@@ -140,7 +140,7 @@ public class FileMessageItem extends MessageItem {
                 resendView.setVisibility(View.VISIBLE);
                 resendView.setOnClickListener(new OnClickListener() {
                     @Override public void onClick(View v) {
-                        mAdapter.onItemAction(Constants.ACTION_RESEND, mMessage);
+                        adapter.onItemAction(Constants.ACTION_RESEND, message);
                     }
                 });
                 break;
@@ -161,7 +161,7 @@ public class FileMessageItem extends MessageItem {
      */
     @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(MessageEvent event) {
         EMMessage message = event.getMessage();
-        if (!message.getMsgId().equals(mMessage.getMsgId())) {
+        if (!message.getMsgId().equals(this.message.getMsgId())) {
             return;
         }
         if (message.getType() == EMMessage.Type.IMAGE
@@ -175,10 +175,10 @@ public class FileMessageItem extends MessageItem {
      * 解析对应的xml 布局，填充当前 ItemView，并初始化控件
      */
     @Override protected void onInflateView() {
-        if (mViewType == Constants.MSG_TYPE_FILE_SEND) {
-            mInflater.inflate(R.layout.item_msg_file_send, this);
+        if (viewType == Constants.MSG_TYPE_FILE_SEND) {
+            inflater.inflate(R.layout.item_msg_file_send, this);
         } else {
-            mInflater.inflate(R.layout.item_msg_file_received, this);
+            inflater.inflate(R.layout.item_msg_file_received, this);
         }
 
         bubbleLayout = findViewById(R.id.layout_bubble);

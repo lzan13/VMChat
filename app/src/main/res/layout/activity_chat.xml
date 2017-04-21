@@ -2,13 +2,11 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/vm_theme_background_light"
+    android:clipToPadding="true"
     android:fitsSystemWindows="true"
-    tools:context="com.vmloft.develop.app.chat.chat.ChatActivity"
     >
     <!--Toolbar-->
     <android.support.design.widget.AppBarLayout
@@ -66,6 +64,7 @@
 
     <!--中间内容部分-->
     <RelativeLayout
+        android:id="@+id/layout_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:animateLayoutChanges="true"
@@ -123,7 +122,7 @@
                             android:layout_width="@dimen/vm_dimen_48"
                             android:layout_height="@dimen/vm_dimen_48"
                             android:layout_centerInParent="true"
-                            android:background="@drawable/click_rectangle_transparent"
+                            android:background="@drawable/ripple_round_transparent"
                             android:src="@drawable/ic_send_white_24dp"
                             android:tint="@color/vm_red_87"
                             android:visibility="gone"
@@ -144,7 +143,7 @@
                             android:layout_width="@dimen/vm_dimen_48"
                             android:layout_height="@dimen/vm_dimen_48"
                             android:layout_centerInParent="true"
-                            android:background="@drawable/click_rectangle_transparent"
+                            android:background="@drawable/ripple_round_transparent"
                             android:src="@drawable/ic_keyboard_face_white_24dp"
                             android:tint="@color/vm_red_87"
                             />
@@ -154,7 +153,7 @@
                             android:layout_width="@dimen/vm_dimen_48"
                             android:layout_height="@dimen/vm_dimen_48"
                             android:layout_centerInParent="true"
-                            android:background="@drawable/click_rectangle_transparent"
+                            android:background="@drawable/ripple_round_transparent"
                             android:src="@drawable/ic_keyboard_white_24dp"
                             android:tint="@color/vm_red_87"
                             android:visibility="gone"
@@ -249,7 +248,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
                 android:layout_margin="@dimen/vm_dimen_8"
-                android:background="@drawable/shape_circle"
+                android:background="@drawable/ripple_fillet_white"
                 android:padding="@dimen/vm_dimen_8"
                 android:text="@string/hint_msg_new"
                 android:visibility="visible"

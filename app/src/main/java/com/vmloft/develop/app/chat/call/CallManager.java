@@ -69,7 +69,7 @@ public class CallManager {
     // 当前通话对象 id
     private String chatId;
     private CallState callState = CallState.DISCONNECTED;
-    private CallType callType = CallType.VIDEO;
+    private CallType callType = CallType.NONE;
     private EndType endType = EndType.CANCEL;
 
     /**
@@ -102,6 +102,9 @@ public class CallManager {
         /**
          * SDK 3.2.x 版本后通话相关设置，一定要在初始化后，开始音视频功能前设置，否则设置无效
          */
+        // 设置通话过程中对方如果离线是否发送离线推送通知
+        EMClient.getInstance().callManager().getCallOptions().setIsSendPushIfOffline(true);
+
         // 设置自动调节分辨率，默认为 true
         EMClient.getInstance().callManager().getCallOptions().enableFixedVideoResolution(true);
         // 设置视频通话最大和最小比特率，可以不用设置，比特率会根据分辨率进行计算，默认最大(800)， 默认最小(80)
@@ -111,8 +114,6 @@ public class CallManager {
         EMClient.getInstance().callManager().getCallOptions().setVideoResolution(640, 480);
         // 设置通话最大帧率，SDK 最大支持(30)，默认(20)
         EMClient.getInstance().callManager().getCallOptions().setMaxVideoFrameRate(30);
-        // 设置通话过程中对方如果离线是否发送离线推送通知
-        EMClient.getInstance().callManager().getCallOptions().setIsSendPushIfOffline(false);
         // 设置音视频通话采样率，一般不需要设置，除非采集声音有问题才需要手动设置
         EMClient.getInstance().callManager().getCallOptions().setAudioSampleRate(48000);
         // 设置录制视频采用 mov 编码 TODO 后期这个而接口需要移动到 EMCallOptions 中
@@ -503,6 +504,8 @@ public class CallManager {
         isOpenRecord = false;
         // 设置通话状态为已断开
         setCallState(CallState.DISCONNECTED);
+        // 重置通话类型为空
+        setCallType(CallType.NONE);
         // 停止计时
         stopCallTime();
         // 取消注册通话状态的监听
@@ -602,6 +605,7 @@ public class CallManager {
      * 通话类型
      */
     public enum CallType {
+        NONE,   // 空
         VIDEO,  // 视频通话
         VOICE   // 音频通话
     }

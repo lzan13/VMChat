@@ -3,21 +3,27 @@
     <string name="test">Test</string>
     <string name="test_text">hell test text</string>
 
+    <string name="welcome">欢迎使用 VMChat</string>
 
     <!--登录与注册-->
+    <string name="sign_go_on">继续</string>
     <string name="sign_in">登录</string>
+    <string name="sign_in_begin">正在登录……</string>
+    <string name="sign_in_failed">登录失败</string>
+    <string name="sign_in_now">马上登录</string>
     <string name="sign_in_restart">重新登录</string>
+    <string name="sign_in_success">登录成功</string>
     <string name="sign_out">退出登录</string>
+    <string name="sign_have_account">已注册账户</string>
+    <string name="sign_not_account">还没有账户？</string>
+    <string name="sign_password_forget">密码忘记了？</string>
+    <string name="sign_password_find">马上找回</string>
     <string name="sign_up">注册</string>
     <string name="sign_up_now">马上注册</string>
-    <string name="sign_up_no_account">还没有账户？</string>
     <string name="sign_up_failed">注册失败</string>
     <string name="sign_up_begin">正在注册……</string>
     <string name="sign_up_success">注册成功</string>
-    <string name="sign_in_begin">正在登录……</string>
-    <string name="sign_in_success">登录成功</string>
-    <string name="sign_in_failed">登录失败</string>
-    <string name="forget_password">忘记密码</string>
+    <string name="sign_privacy_and_agreement">继续操作即表示您同意遵守 <a href="http://www.vmloft.com/policies/privacy">隐私权政策</a> 及 <a href="http://www.vmloft.com/policies/terms">服务条款</a></string>
 
     <!--用户信息相关-->
     <string name="me">我</string>
@@ -169,7 +175,7 @@
     <string name="call_voice_calling">语音通话进行中</string>
 
     <!--Error 文字内容-->
-    <string name="error_field_required">此项是必须的</string>
+    <string name="error_input_box_cant_be_empty">输入框不能为空(／_＼)</string>
     <string name="error_invalid_username_or_password">用户账户或密码错误</string>
 
     <string name="error_voice_failed">录音失败，请检查权限</string>
@@ -178,7 +184,7 @@
 
     <!--其他错误 x-->
     <string name="error_em_no_error">无错误</string>
-    <string name="error_general_error">一般错误，未细分的错误一般通过此errorcode抛出来</string>
+    <string name="error_general_error">一般错误，未细分的错误一般通过此 Error Code 抛出来</string>
     <string name="error_network_error">网络异常，请检查网络设置</string>
     <string name="error_disconnected">连接不到服务器</string>
 
@@ -273,13 +279,14 @@
     <string name="shared_element_toolbar">Toolbar</string>
     <string name="shared_element_avatar">Avatar</string>
     <string name="shared_element_username">Username</string>
+    <string name="shared_element_image">Image</string>
 
 
     <!--输入框限制输入内容-->
     <string name="input_limit">0123456789abcdefghijklmnopqrstuvwxyz-_.</string>
     <string name="input_limit_full">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIGKLMNOPQRSTUVWXYZ-_.</string>
     <!--Copyright-->
-    <string name="copy_right">©2015 melove.net</string>
+    <string name="copy_right">©2017 vmloft.com</string>
 
 
     <string name="test_unicode_smiling">\uD83D\uDE01</string>

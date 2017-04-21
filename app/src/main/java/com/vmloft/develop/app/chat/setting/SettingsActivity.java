@@ -17,9 +17,7 @@ public class SettingsActivity extends AppActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
-        activity = this;
-
-        ButterKnife.bind(this);
+        ButterKnife.bind(activity);
 
         initView();
     }

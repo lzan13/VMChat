@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
@@ -30,18 +31,20 @@ import org.greenrobot.eventbus.ThreadMode;
  */
 public class ApplyForActivity extends AppActivity {
 
-    @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
+    @BindView(R.id.recycler_view) RecyclerView recyclerView;
 
     // 当前会话对象，这里主要是记录申请与记录信息
-    private EMConversation mConversation;
+    private EMConversation conversation;
     // 每次加载申请与通知消息的条数
-    private int mPageSize = 20;
+    private int pageSize = 20;
 
-    private ApplyForAdapter mAdapter;
+    private ApplyForAdapter adapter;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_apply);
+
+        ButterKnife.bind(activity);
 
         initView();
     }
@@ -50,7 +53,6 @@ public class ApplyForActivity extends AppActivity {
      * 初始化界面控件等
      */
     private void initView() {
-        activity = this;
 
         getToolbar().setTitle(R.string.apply);
         setSupportActionBar(getToolbar());
@@ -68,24 +70,24 @@ public class ApplyForActivity extends AppActivity {
          * 第三个表示如果会话不存在是否创建
          * 因为申请与通知信息都是通过 EMConversation 保存的，所以这里也是通过 EMConversation 来获取
          */
-        mConversation = EMClient.getInstance()
+        conversation = EMClient.getInstance()
                 .chatManager()
                 .getConversation(Constants.CONVERSATION_ID_APPLY, null, true);
         // 设置当前会话未读数为 0
-        mConversation.markAllMessagesAsRead();
-        ConversationExtUtils.setConversationUnread(mConversation, false);
+        conversation.markAllMessagesAsRead();
+        ConversationExtUtils.setConversationUnread(conversation, false);
 
-        int count = mConversation.getAllMessages().size();
-        if (count < mConversation.getAllMsgCount() && count < mPageSize) {
+        int count = conversation.getAllMessages().size();
+        if (count < conversation.getAllMsgCount() && count < pageSize) {
             // 获取已经在列表中的最上边的一条消息id
-            String msgId = mConversation.getAllMessages().get(0).getMsgId();
+            String msgId = conversation.getAllMessages().get(0).getMsgId();
             // 分页加载更多消息，需要传递已经加载的消息的最上边一条消息的id，以及需要加载的消息的条数
-            mConversation.loadMoreMsgFromDB(msgId, mPageSize - count);
+            conversation.loadMoreMsgFromDB(msgId, pageSize - count);
         }
 
         // 实例化适配器
-        mAdapter = new ApplyForAdapter(activity);
-        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        adapter = new ApplyForAdapter(activity);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
         /**
          * 为RecyclerView 设置布局管理器，这里使用线性布局
@@ -99,10 +101,10 @@ public class ApplyForActivity extends AppActivity {
          * 自定义这些动画需要继承{@link android.support.v7.widget.RecyclerView.ItemAnimator}，
          * 并实现{@link RecyclerView#setItemAnimator(RecyclerView.ItemAnimator)}
          */
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(activity));
+        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
 
         // 设置适配器
-        mRecyclerView.setAdapter(mAdapter);
+        recyclerView.setAdapter(adapter);
 
         // 通过自定义接口来实现RecyclerView item的点击和长按事件
         setItemClickListener();
@@ -112,8 +114,8 @@ public class ApplyForActivity extends AppActivity {
      * 刷新邀请信息列表
      */
     private void refresh() {
-        if (mAdapter != null) {
-            mAdapter.notifyDataSetChanged();
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
         }
     }
 
@@ -121,7 +123,7 @@ public class ApplyForActivity extends AppActivity {
      * 设置列表项的点击监听，因为这里使用的是RecyclerView控件，所以长按和点击监听都要自己去做，然后通过回调接口实现
      */
     private void setItemClickListener() {
-        mAdapter.setItemCallBack(new ItemCallBack() {
+        adapter.setItemCallBack(new ItemCallBack() {
             @Override public void onAction(int action, Object tag) {
                 String msgId = (String) tag;
                 switch (action) {
@@ -148,13 +150,13 @@ public class ApplyForActivity extends AppActivity {
      * @param msgId 当前操作 Item 项申请信息 id
      */
     private void jumpUserInfo(String msgId) {
-        EMMessage message = mConversation.getMessage(msgId, false);
+        EMMessage message = conversation.getMessage(msgId, false);
         Intent intent = new Intent();
         intent.setClass(activity, UserActivity.class);
         intent.putExtra(Constants.EXTRA_CHAT_ID,
                 message.getStringAttribute(Constants.ATTR_USERNAME, "null"));
         intent.putExtra(Constants.EXTRA_MSG_ID, msgId);
-        activity.startActivity(intent);
+        activity.onStartActivity(activity, intent);
     }
 
     /**
@@ -171,7 +173,7 @@ public class ApplyForActivity extends AppActivity {
             @Override public void run() {
                 try {
                     // 同意申请
-                    EMMessage message = mConversation.getMessage(msgId, false);
+                    EMMessage message = conversation.getMessage(msgId, false);
                     String username = message.getStringAttribute(Constants.ATTR_USERNAME, "");
                     EMClient.getInstance().contactManager().acceptInvitation(username);
 
@@ -203,7 +205,7 @@ public class ApplyForActivity extends AppActivity {
             @Override public void run() {
                 try {
                     // 拒绝好友申请
-                    EMMessage message = mConversation.getMessage(msgId, false);
+                    EMMessage message = conversation.getMessage(msgId, false);
                     String username = message.getStringAttribute(Constants.ATTR_USERNAME, "");
                     EMClient.getInstance().contactManager().declineInvitation(username);
 
@@ -235,7 +237,7 @@ public class ApplyForActivity extends AppActivity {
                 activity.getResources().getString(R.string.dialog_content_delete_invited));
         dialog.setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
             @Override public void onClick(DialogInterface dialog, int which) {
-                mConversation.removeMessage(msgId);
+                conversation.removeMessage(msgId);
             }
         });
         dialog.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {

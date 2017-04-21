@@ -25,11 +25,11 @@ import java.util.List;
 public class ContactsFragment extends AppFragment {
 
     // 代替 ListView 用来显示联系人列表
-    @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
+    @BindView(R.id.recycler_view) RecyclerView recyclerView;
     // 联系人界面适配器
-    private ContactsAdapter mAdapter;
+    private ContactsAdapter adapter;
 
-    private List<UserEntity> mContactsList = new ArrayList<>();
+    private List<UserEntity> contactsList = new ArrayList<>();
 
     /**
      * 工厂方法，用来创建一个Fragment的实例
@@ -61,8 +61,6 @@ public class ContactsFragment extends AppFragment {
      */
     @Override protected void initView() {
         ButterKnife.bind(this, getView());
-
-        activity = getActivity();
     }
 
     /**
@@ -70,9 +68,9 @@ public class ContactsFragment extends AppFragment {
      */
     @Override protected void initData() {
         loadContactsList();
-        mAdapter = new ContactsAdapter(activity, mContactsList);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(activity));
-        mRecyclerView.setAdapter(mAdapter);
+        adapter = new ContactsAdapter(activity, contactsList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
+        recyclerView.setAdapter(adapter);
         setItemCallBack();
     }
 
@@ -80,7 +78,7 @@ public class ContactsFragment extends AppFragment {
      * 设置列表项的点击监听，因为这里使用的是RecyclerView控件，所以长按和点击监听都要自己去做，然后通过回调接口实现
      */
     private void setItemCallBack() {
-        mAdapter.setItemCallBack(new ItemCallBack() {
+        adapter.setItemCallBack(new ItemCallBack() {
             @Override public void onAction(int action, Object tag) {
                 int position = (int) tag;
                 switch (action) {
@@ -102,11 +100,11 @@ public class ContactsFragment extends AppFragment {
      * 列表项点击事件
      */
     private void itemClick(int position) {
-        UserEntity userEntity = mContactsList.get(position);
+        UserEntity userEntity = contactsList.get(position);
         Intent intent = new Intent();
         intent.setClass(activity, UserActivity.class);
         intent.putExtra(Constants.EXTRA_CHAT_ID, userEntity.getUserName());
-        activity.startActivity(intent);
+        activity.onStartActivity(activity, intent);
     }
 
     /**
@@ -120,12 +118,12 @@ public class ContactsFragment extends AppFragment {
      * 加载联系人列表
      */
     private void loadContactsList() {
-        if (mContactsList == null) {
-            mContactsList = new ArrayList<>();
-            mContactsList.addAll(UserManager.getInstance().getContactsMap().values());
+        if (contactsList == null) {
+            contactsList = new ArrayList<>();
+            contactsList.addAll(UserManager.getInstance().getContactsMap().values());
         } else {
-            mContactsList.clear();
-            mContactsList.addAll(UserManager.getInstance().getContactsMap().values());
+            contactsList.clear();
+            contactsList.addAll(UserManager.getInstance().getContactsMap().values());
         }
     }
 
@@ -134,11 +132,11 @@ public class ContactsFragment extends AppFragment {
      */
     private void refresh() {
         loadContactsList();
-        if (mAdapter == null) {
-            mAdapter = new ContactsAdapter(activity, mContactsList);
-            mRecyclerView.setAdapter(mAdapter);
+        if (adapter == null) {
+            adapter = new ContactsAdapter(activity, contactsList);
+            recyclerView.setAdapter(adapter);
         } else {
-            mAdapter.notifyDataSetChanged();
+            adapter.notifyDataSetChanged();
         }
     }
 

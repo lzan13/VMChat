@@ -13,7 +13,7 @@
         android:layout_marginLeft="@dimen/vm_dimen_8"
         android:layout_marginRight="@dimen/vm_dimen_8"
         android:layout_marginTop="@dimen/vm_dimen_8"
-        android:background="@drawable/shape_circle"
+        android:background="@drawable/ripple_fillet_white"
         android:clipChildren="false"
         android:elevation="@dimen/vm_dimen_8"
         android:gravity="center_vertical"

@@ -4,11 +4,11 @@ import android.content.res.Configuration;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -41,7 +41,6 @@ public class VideoCallActivity extends CallActivity {
     private EMOppositeSurfaceView oppositeSurface = null;
 
     // 使用 ButterKnife 注解的方式获取控件
-    @BindView(R.id.layout_root) View rootView;
     @BindView(R.id.layout_call_control) View controlLayout;
     @BindView(R.id.layout_surface_container) RelativeLayout surfaceLayout;
 
@@ -62,7 +61,7 @@ public class VideoCallActivity extends CallActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_call);
 
-        ButterKnife.bind(this);
+        ButterKnife.bind(activity);
 
         initView();
     }
@@ -294,9 +293,9 @@ public class VideoCallActivity extends CallActivity {
             CallManager.getInstance().setOpenRecord(false);
             File file = new File(path);
             if (file.exists()) {
-                Toast.makeText(activity, "录制视频成功 " + path, Toast.LENGTH_LONG).show();
+                Snackbar.make(getRootView(), "录制视频成功 " + path, Snackbar.LENGTH_LONG).show();
             } else {
-                Toast.makeText(activity, "录制失败/(ㄒoㄒ)/~~", Toast.LENGTH_LONG).show();
+                Snackbar.make(getRootView(), "录制失败/(ㄒoㄒ)/~~", Snackbar.LENGTH_LONG).show();
             }
         } else {
             // 设置按钮状态
@@ -309,7 +308,7 @@ public class VideoCallActivity extends CallActivity {
             }
             videoCallHelper.startVideoRecord(dirPath);
             VMLog.d("开始录制视频");
-            Toast.makeText(activity, "开始录制", Toast.LENGTH_LONG).show();
+            Snackbar.make(getRootView(), "开始录制", Snackbar.LENGTH_LONG).show();
             CallManager.getInstance().setOpenRecord(true);
         }
     }
@@ -326,9 +325,9 @@ public class VideoCallActivity extends CallActivity {
         String path = dirPath + "video_" + System.currentTimeMillis() + ".jpg";
         boolean result = videoCallHelper.takePicture(path);
         if (result) {
-            Toast.makeText(activity, "截图保存成功 " + path, Toast.LENGTH_LONG).show();
+            Snackbar.make(getRootView(), "截图保存成功 " + path, Snackbar.LENGTH_LONG).show();
         } else {
-            Toast.makeText(activity, "截图保存失败/(ㄒoㄒ)/~~", Toast.LENGTH_LONG).show();
+            Snackbar.make(getRootView(), "截图保存失败/(ㄒoㄒ)/~~", Snackbar.LENGTH_LONG).show();
         }
     }
 

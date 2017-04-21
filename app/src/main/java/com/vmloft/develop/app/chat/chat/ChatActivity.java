@@ -82,35 +82,35 @@ import java.util.TimerTask;
  * 聊天界面，处理并显示聊天双方信息
  */
 public class ChatActivity extends AppActivity implements EMMessageListener {
-
-    @BindView(R.id.img_avatar) VMImageView avatarView;
-    @BindView(R.id.text_username) TextView mUsernameView;
-    // RecyclerView 用来显示消息
-    @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
-    // 下拉刷新控件
-    @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout mSwipeRefreshLayout;
-    // 聊天扩展菜单主要打开图片、视频、文件、位置等
-    @BindView(R.id.layout_attach_menu) LinearLayout mAttachMenuLayout;
-    @BindView(R.id.grid_view_attach_menu) GridView mAttachMenuGridView;
-    // 表情按钮
-    @BindView(R.id.img_emotion) View mEmotionView;
-    @BindView(R.id.img_keyboard) View mKeyboardView;
-    @BindView(R.id.layout_emotion) RelativeLayout mEmotionLayout;
-    // 发送按钮
-    @BindView(R.id.img_send) View mSendView;
-    // 录音控件
-    @BindView(R.id.view_record_voice) VMRecordView mRecordView;
-    // 聊天内容输入框
-    @BindView(R.id.edit_input_message) EditText mInputView;
-    // 新消息提醒按钮
-    @BindView(R.id.btn_new_message) Button mNewMessageBtn;
-
     // 聊天界面消息刷新类型
     private final int MSG_REFRESH_ALL = 0;
     private final int MSG_REFRESH_INSERTED = 1;
     private final int MSG_REFRESH_INSERTED_MORE = 2;
     private final int MSG_REFRESH_REMOVED = 3;
     private final int MSG_REFRESH_CHANGED = 4;
+
+    @BindView(R.id.img_avatar) VMImageView avatarView;
+    @BindView(R.id.text_username) TextView usernameView;
+    // RecyclerView 用来显示消息
+    @BindView(R.id.recycler_view) RecyclerView recyclerView;
+    // 下拉刷新控件
+    @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
+    // 聊天扩展菜单主要打开图片、视频、文件、位置等
+    @BindView(R.id.layout_attach_menu) LinearLayout attachMenuLayout;
+    @BindView(R.id.grid_view_attach_menu) GridView attachMenuGridView;
+    // 表情按钮
+    @BindView(R.id.img_emotion) View emotionView;
+    @BindView(R.id.img_keyboard) View keyboardView;
+    @BindView(R.id.layout_emotion) RelativeLayout emotionLayout;
+    // 发送按钮
+    @BindView(R.id.img_send) View sendView;
+    // 录音控件
+    @BindView(R.id.view_record_voice) VMRecordView recordView;
+    // 聊天内容输入框
+    @BindView(R.id.edit_input_message) EditText inputView;
+    // 新消息提醒按钮
+    @BindView(R.id.btn_new_message) Button newMessageBtn;
+
     // 对话框
     private AlertDialog.Builder alertDialogBuilder;
     private AlertDialog photoModeDialog;
@@ -119,23 +119,20 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
     private ProgressDialog progressDialog;
 
     // 消息监听器
-    private EMMessageListener mMessageListener;
-
+    private EMMessageListener messageListener;
     // 当前聊天的 ID
     private String chatId;
     // 当前会话对象
-    private EMConversation mConversation;
+    private EMConversation conversation;
     // 当前聊天类型
-    private EMConversation.EMConversationType mConversationType;
-    // 消息集合
-    //private List<EMMessage> mMessages;
+    private EMConversation.EMConversationType conversationType;
     // 设置每次下拉分页加载多少条
-    private int mPageSize = 22;
+    private int pageSize = 20;
 
     // 当前列表适配器
-    private MessageAdapter mAdapter;
+    private MessageAdapter adapter;
     // RecyclerView 的布局管理器
-    private android.support.v7.widget.LinearLayoutManager mLayoutManager;
+    private LinearLayoutManager layoutManager;
 
     // 当前是否在最底部
     private boolean isBottom = true;
@@ -146,19 +143,19 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
     // 是否为阅后即焚
     private boolean isBurn;
     // 检测输入状态的开始时间
-    private long mOldTime;
+    private long oldTime;
     // 定时器，主要用来更新对方输入状态
-    private Timer mTimer;
+    private Timer timer;
     // 记录对方输入状态
     private boolean isInput;
 
-    private Uri mCameraImageUri = null;
+    private Uri cameraImageUri = null;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        ButterKnife.bind(this);
+        ButterKnife.bind(activity);
 
         init();
 
@@ -179,26 +176,26 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
      */
     private void init() {
         activity = this;
-        mMessageListener = this;
+        messageListener = this;
 
         // 初始化阅后即焚模式为false
         isBurn = false;
 
         // 获取当前聊天对象的id
         chatId = getIntent().getStringExtra(Constants.EXTRA_CHAT_ID);
-        mConversationType = (EMConversation.EMConversationType) getIntent().getExtras()
+        conversationType = (EMConversation.EMConversationType) getIntent().getExtras()
                 .get(Constants.EXTRA_TYPE);
 
         // 初始化输入框控件，并添加输入框监听
-        mInputView = (EditText) findViewById(R.id.edit_input_message);
-        mOldTime = 0;
+        inputView = (EditText) findViewById(R.id.edit_input_message);
+        oldTime = 0;
         // 设置输入框的内容变化简体呢
         setEditTextWatcher();
 
         // 设置录音控件回调
-        mRecordView.setRecordCallback(recordCallback);
+        recordView.setRecordCallback(recordCallback);
 
-        mUsernameView.setText(chatId);
+        usernameView.setText(chatId);
         getToolbar().setTitle("");
         setSupportActionBar(getToolbar());
         // 设置toolbar图标
@@ -207,21 +204,6 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
         getToolbar().setNavigationOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
                 onFinish();
-            }
-        });
-
-        setEnterSharedElementCallback(new SharedElementCallback() {
-            /**
-             * 调整共享元素集合回调方法
-             *
-             * @param names 共享元素名称集合
-             * @param sharedElements 共享元素名称和 view 映射集合
-             */
-            @Override public void onMapSharedElements(List<String> names,
-                    Map<String, View> sharedElements) {
-                //super.onMapSharedElements(names, sharedElements);
-                sharedElements.clear();
-                sharedElements.put(avatarView.getTransitionName(), avatarView);
             }
         });
     }
@@ -236,24 +218,24 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
          * 第二个是绘画类型
          * 第三个表示如果会话不存在是否创建
          */
-        mConversation = EMClient.getInstance()
+        conversation = EMClient.getInstance()
                 .chatManager()
-                .getConversation(chatId, mConversationType, true);
+                .getConversation(chatId, conversationType, true);
         // 设置当前会话未读数为 0
-        mConversation.markAllMessagesAsRead();
-        ConversationExtUtils.setConversationUnread(mConversation, false);
-        int count = mConversation.getAllMessages().size();
-        if (count < mConversation.getAllMsgCount() && count < mPageSize) {
+        conversation.markAllMessagesAsRead();
+        ConversationExtUtils.setConversationUnread(conversation, false);
+        int count = conversation.getAllMessages().size();
+        if (count < conversation.getAllMsgCount() && count < pageSize) {
             // 获取已经在列表中的最上边的一条消息id
-            String msgId = mConversation.getAllMessages().get(0).getMsgId();
+            String msgId = conversation.getAllMessages().get(0).getMsgId();
             // 分页加载更多消息，需要传递已经加载的消息的最上边一条消息的id，以及需要加载的消息的条数
-            mConversation.loadMoreMsgFromDB(msgId, mPageSize - count);
+            conversation.loadMoreMsgFromDB(msgId, pageSize - count);
         }
 
         // 检查是否有草稿没有发出
-        String draft = ConversationExtUtils.getConversationDraft(mConversation);
+        String draft = ConversationExtUtils.getConversationDraft(conversation);
         if (!TextUtils.isEmpty(draft)) {
-            mInputView.setText(draft);
+            inputView.setText(draft);
         }
 
         /**
@@ -264,47 +246,47 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
          * StaggeredGridLayoutManager   显示在交错网格项目()
          * 自定义的布局管理器，需要继承 {@link android.support.v7.widget.RecyclerView.LayoutManager}
          */
-        mLayoutManager = new LinearLayoutManager(activity);
+        layoutManager = new LinearLayoutManager(activity);
         // 设置 RecyclerView 的布局方向
-        mLayoutManager.setOrientation(android.support.v7.widget.LinearLayoutManager.VERTICAL);
+        layoutManager.setOrientation(android.support.v7.widget.LinearLayoutManager.VERTICAL);
         // 设置 RecyclerView 显示状态固定到底部
-        //mLayoutManager.setStackFromEnd(true);
+        //layoutManager.setStackFromEnd(true);
         // 初始化ListView控件对象
-        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         // 实例化消息适配器
-        mAdapter = new MessageAdapter(activity, chatId);
+        adapter = new MessageAdapter(activity, chatId);
 
         // 设置 RecyclerView 布局管理器
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setLayoutManager(layoutManager);
         /**
          *  设置 RecyclerView Item 动画
          * add/remove items时的动画是默认启用的。
          * 自定义这些动画需要继承{@link android.support.v7.widget.RecyclerView.ItemAnimator}，
          * 并实现{@link RecyclerView#setItemAnimator(RecyclerView.ItemAnimator)}
          */
-        //mRecyclerView.setItemAnimator(null);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.addOnScrollListener(new MLRecyclerViewListener());
-        mRecyclerView.scrollToPosition(mConversation.getAllMessages().size() - 1);
+        //recyclerView.setItemAnimator(null);
+        recyclerView.setAdapter(adapter);
+        recyclerView.addOnScrollListener(new MLRecyclerViewListener());
+        recyclerView.scrollToPosition(conversation.getAllMessages().size() - 1);
     }
 
     private void initSwipeRefreshLayout() {
         // 初始化下拉刷新控件对象
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         // 设置下拉刷新控件颜色
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.vm_red_100, R.color.vm_blue_100,
+        swipeRefreshLayout.setColorSchemeResources(R.color.vm_red_100, R.color.vm_blue_100,
                 R.color.vm_green_100);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override public void onRefresh() {
                 // 防止在下拉刷新的时候，当前界面关闭导致错误
                 if (activity.isFinishing()) {
                     return;
                 }
                 // 只有当前会话不为空时才可以下拉加载更多，否则会出现错误
-                if (mConversation.getAllMessages().size() > 0) {
+                if (conversation.getAllMessages().size() > 0) {
                     // 加载更多消息到当前会话的内存中
-                    List<EMMessage> messages = mConversation.loadMoreMsgFromDB(
-                            mConversation.getAllMessages().get(0).getMsgId(), mPageSize);
+                    List<EMMessage> messages = conversation.loadMoreMsgFromDB(
+                            conversation.getAllMessages().get(0).getMsgId(), pageSize);
                     if (messages.size() > 0) {
                         refreshInsertedMore(0, messages.size());
                     } else {
@@ -313,7 +295,7 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
                     }
                 }
                 // 取消刷新布局
-                mSwipeRefreshLayout.setRefreshing(false);
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
     }
@@ -322,10 +304,11 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
      * 初始化附件菜单网格列表，并设置网格点击监听
      */
     private void initAttachMenuGridView() {
-        mAttachMenuGridView = (GridView) findViewById(R.id.grid_view_attach_menu);
+        attachMenuGridView = (GridView) findViewById(R.id.grid_view_attach_menu);
         int[] menuPhotos = {
                 R.drawable.ic_attach_photo, R.drawable.ic_attach_video, R.drawable.ic_attach_file,
-                R.drawable.ic_attach_location, R.drawable.ic_attach_gift, R.drawable.ic_attach_contacts
+                R.drawable.ic_attach_location, R.drawable.ic_attach_gift,
+                R.drawable.ic_attach_contacts
         };
         String[] menuTitles = {
                 activity.getString(R.string.photo), activity.getString(R.string.video),
@@ -344,8 +327,8 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
         }
         SimpleAdapter adapter =
                 new SimpleAdapter(activity, list, R.layout.item_gridview_menu, from, to);
-        mAttachMenuGridView.setAdapter(adapter);
-        mAttachMenuGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        attachMenuGridView.setAdapter(adapter);
+        attachMenuGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
@@ -383,7 +366,7 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
      * 设置输入框内容的监听 在调用此方法的地方要加一个判断，只有当聊天为群聊时才需要监视
      */
     private void setEditTextWatcher() {
-        mInputView.addTextChangedListener(new TextWatcher() {
+        inputView.addTextChangedListener(new TextWatcher() {
             /**
              * 输入框内容改变之前
              * params s         输入框内容改变前的内容
@@ -408,10 +391,10 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
                 VMLog.d("onTextChanged s-%s, start-%d, before-%d, count-%d", s, start, before,
                         count);
                 // 当新增内容长度为1时采取判断增加的字符是否为@符号
-                if (mConversation.getType() == EMConversation.EMConversationType.Chat) {
-                    if ((VMDateUtil.getCurrentMillisecond() - mOldTime)
+                if (conversation.getType() == EMConversation.EMConversationType.Chat) {
+                    if ((VMDateUtil.getCurrentMillisecond() - oldTime)
                             > Constants.TIME_INPUT_STATUS) {
-                        mOldTime = System.currentTimeMillis();
+                        oldTime = System.currentTimeMillis();
                         // 调用发送输入状态方法
                         MessageUtils.sendInputStatusMessage(chatId);
                     }
@@ -425,11 +408,11 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
             @Override public void afterTextChanged(Editable s) {
                 VMLog.d("afterTextChanged s-" + s);
                 if (s.toString().equals("")) {
-                    mSendView.setVisibility(View.GONE);
-                    mRecordView.setVisibility(View.VISIBLE);
+                    sendView.setVisibility(View.GONE);
+                    recordView.setVisibility(View.VISIBLE);
                 } else {
-                    mSendView.setVisibility(View.VISIBLE);
-                    mRecordView.setVisibility(View.GONE);
+                    sendView.setVisibility(View.VISIBLE);
+                    recordView.setVisibility(View.GONE);
                 }
             }
         });
@@ -443,7 +426,7 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
          * 这里实现在{@link MessageAdapter MLOnItemClickListener}定义的接口，
          * 实现聊天信息ItemView需要操作的一些方法
          */
-        mAdapter.setOnItemClickListener(new ItemCallBack() {
+        adapter.setOnItemClickListener(new ItemCallBack() {
 
             /**
              * Item 点击及长按事件的处理
@@ -453,14 +436,14 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
              */
             @Override public void onAction(int action, Object tag) {
                 EMMessage message = (EMMessage) tag;
-                int position = mConversation.getAllMessages().indexOf(message);
+                int position = conversation.getAllMessages().indexOf(message);
                 switch (action) {
                     case R.id.img_avatar:
                         avatarClick(position, message);
                         break;
                     case Constants.ACTION_CLICK:
                         // 消息点击事件，不同的消息有不同的触发
-                        itemClick(message);
+                        itemClick(position, message);
                         break;
                     case Constants.ACTION_LONG_CLICK:
                         itemLongClick(message);
@@ -499,13 +482,7 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
     private void avatarClick(int position, EMMessage message) {
         Intent intent = new Intent(activity, UserActivity.class);
         intent.putExtra(Constants.EXTRA_CHAT_ID, message.getFrom());
-        String transitionName = getString(R.string.shared_element_avatar);
-
-        int firstItemPosition = mLayoutManager.findFirstVisibleItemPosition();
-        if (position - firstItemPosition >= 0) {
-            View sharedElement = mRecyclerView.getChildAt(position - firstItemPosition).findViewById(R.id.img_avatar);
-            onStartActivity(activity, intent, sharedElement);
-        }
+        onStartActivity(activity, intent);
     }
 
     /**
@@ -514,18 +491,20 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
      * @param message 点击的消息
      */
 
-    private void itemClick(EMMessage message) {
+    private void itemClick(int position, EMMessage message) {
         if (message.getType() == EMMessage.Type.IMAGE) {
             // 图片
             Intent intent = new Intent();
             intent.setClass(activity, BigImageActivity.class);
             // 将被点击的消息ID传递过去
             intent.putExtra(Constants.EXTRA_MSG_ID, message.getMsgId());
-            activity.startActivity(intent);
+            onStartActivity(activity, intent);
+            activity.onStartActivity(activity, intent);
         } else if (message.getBooleanAttribute(Constants.ATTR_CALL_VIDEO, false)) {
             // 如果进行语音通话中，就不能进行视频通话
             if (CallManager.getInstance().getCallType() == CallManager.CallType.VOICE) {
-                Snackbar.make(getRootView(), R.string.call_voice_calling, Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(getRootView(), R.string.call_voice_calling, Snackbar.LENGTH_SHORT)
+                        .show();
             } else {
                 // 视频通话
                 Intent intent = new Intent(activity, VideoCallActivity.class);
@@ -535,12 +514,13 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
                 CallManager.getInstance().setInComingCall(false);
                 // 设置当前通话类型为视频通话
                 CallManager.getInstance().setCallType(CallManager.CallType.VIDEO);
-                startActivity(intent);
+                onStartActivity(activity, intent);
             }
         } else if (message.getBooleanAttribute(Constants.ATTR_CALL_VOICE, false)) {
             // 同理，如果进行视频通话中，就不能进行语音通话
             if (CallManager.getInstance().getCallType() == CallManager.CallType.VIDEO) {
-                Snackbar.make(getRootView(), R.string.call_video_calling, Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(getRootView(), R.string.call_video_calling, Snackbar.LENGTH_SHORT)
+                        .show();
             } else {
                 // 语音通话
                 Intent intent = new Intent(activity, VoiceCallActivity.class);
@@ -550,7 +530,8 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
                 CallManager.getInstance().setInComingCall(false);
                 // 设置当前通话类型为视频通话
                 CallManager.getInstance().setCallType(CallManager.CallType.VOICE);
-                startActivity(intent);
+
+                onStartActivity(activity, intent);
             }
         }
     }
@@ -597,7 +578,7 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
                 break;
         }
         // 将失败的消息从 conversation对象中删除
-        mConversation.removeMessage(message.getMsgId());
+        conversation.removeMessage(message.getMsgId());
         // 删除时先刷新下
         refreshRemoved(position);
         // 更新消息时间
@@ -640,7 +621,7 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
      */
     private void deleteMessage(int position, EMMessage message) {
         // 删除消息，此方法会同时删除内存和数据库中的数据
-        mConversation.removeMessage(message.getMsgId());
+        conversation.removeMessage(message.getMsgId());
         // 弹出操作提示
         Snackbar.make(getRootView(), R.string.toast_delete_success, Snackbar.LENGTH_SHORT).show();
         refreshRemoved(position);
@@ -664,7 +645,7 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
                 message.setAttribute(Constants.ATTR_RECALL, true);
                 // 更新消息
                 EMClient.getInstance().chatManager().updateMessage(message);
-                int position = mConversation.getAllMessages().indexOf(message);
+                int position = conversation.getAllMessages().indexOf(message);
                 // 撤回成功，刷新 UI
                 refreshChanged(position);
             }
@@ -683,9 +664,11 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
                             Snackbar.make(getRootView(), R.string.toast_recall_failed_max_time,
                                     Snackbar.LENGTH_SHORT).show();
                         } else {
-                            Snackbar.make(getRootView(), activity.getResources()
-                                            .getString(R.string.toast_recall_failed) + i + "-" + s,
-                                    Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(getRootView(),
+                                    activity.getResources().getString(R.string.toast_recall_failed)
+                                            + i
+                                            + "-"
+                                            + s, Snackbar.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -726,11 +709,11 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
      */
     private void sendMessage(final EMMessage message) {
         // 设置不同的会话类型，
-        if (mConversationType == EMConversation.EMConversationType.Chat) {
+        if (conversationType == EMConversation.EMConversationType.Chat) {
             message.setChatType(EMMessage.ChatType.Chat);
-        } else if (mConversationType == EMConversation.EMConversationType.GroupChat) {
+        } else if (conversationType == EMConversation.EMConversationType.GroupChat) {
             message.setChatType(EMMessage.ChatType.GroupChat);
-        } else if (mConversationType == EMConversation.EMConversationType.ChatRoom) {
+        } else if (conversationType == EMConversation.EMConversationType.ChatRoom) {
             message.setChatType(EMMessage.ChatType.ChatRoom);
         }
         // 调用设置消息扩展方法
@@ -779,7 +762,7 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
         // 发送消息
         EMClient.getInstance().chatManager().sendMessage(message);
         // 发送一条新消息时插入新消息的位置，这里直接用插入新消息前的消息总数来作为新消息的位置
-        int position = mConversation.getAllMessages().indexOf(message);
+        int position = conversation.getAllMessages().indexOf(message);
         // 刷新 UI 界面
         refreshInserted(position);
     }
@@ -788,11 +771,11 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
      * 发送文本消息
      */
     private void sendTextMessage() {
-        String content = mInputView.getText().toString();
-        mInputView.setText("");
+        String content = inputView.getText().toString();
+        inputView.setText("");
         // 设置界面按钮状态
-        mSendView.setVisibility(View.GONE);
-        mRecordView.setVisibility(View.VISIBLE);
+        sendView.setVisibility(View.GONE);
+        recordView.setVisibility(View.VISIBLE);
         // 创建一条文本消息
         EMMessage textMessage = EMMessage.createTxtSendMessage(content, chatId);
         // 调用刷新消息的方法，
@@ -846,18 +829,18 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
             switch (reason) {
                 case VMRecordView.REASON_FAILED:
                     // 录音失败，一般是权限问题
-                    Snackbar.make(getRootView(), R.string.error_voice_failed,
-                            Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(getRootView(), R.string.error_voice_failed, Snackbar.LENGTH_SHORT)
+                            .show();
                     break;
                 case VMRecordView.REASON_SHORT:
                     // 录音时间过短
-                    Snackbar.make(getRootView(), R.string.error_voice_short,
-                            Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(getRootView(), R.string.error_voice_short, Snackbar.LENGTH_SHORT)
+                            .show();
                     break;
                 case VMRecordView.REASON_SYSTEM:
                     // 系统问题
-                    Snackbar.make(getRootView(), R.string.error_voice_system,
-                            Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(getRootView(), R.string.error_voice_system, Snackbar.LENGTH_SHORT)
+                            .show();
                     break;
             }
         }
@@ -887,7 +870,7 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
         switch (requestCode) {
             case Constants.REQUEST_CODE_CAMERA:
                 // 相机拍摄的图片
-                sendImageMessage(mCameraImageUri.getPath());
+                sendImageMessage(cameraImageUri.getPath());
                 break;
             case Constants.REQUEST_CODE_GALLERY:
                 // 图库选择的图片，选择图片后返回获取返回的图片路径，然后发送图片
@@ -928,10 +911,15 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
      * 聊天界面按钮监听事件
      */
     @OnClick({
-            R.id.img_emotion, R.id.img_keyboard, R.id.img_send, R.id.layout_attach_menu,
-            R.id.btn_new_message
+            R.id.img_avatar, R.id.img_emotion, R.id.img_keyboard, R.id.img_send,
+            R.id.layout_attach_menu, R.id.btn_new_message
     }) void onClick(View view) {
         switch (view.getId()) {
+            case R.id.img_avatar:
+                Intent intent = new Intent(activity, UserActivity.class);
+                intent.putExtra(Constants.EXTRA_CHAT_ID, chatId);
+                onStartActivity(activity, intent);
+                break;
             case R.id.img_emotion:
             case R.id.img_keyboard:
                 // 表情按钮
@@ -990,15 +978,16 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
      */
     private void openCamera() {
         // 定义拍照后图片保存的路径以及文件名
-        String imagePath = VMFileUtil.getDCIM() + "IMG" + VMDateUtil.getDateTimeNoSpacing() + ".jpg";
+        String imagePath =
+                VMFileUtil.getDCIM() + "IMG" + VMDateUtil.getDateTimeNoSpacing() + ".jpg";
         // 激活相机
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // 判断存储卡是否可以用，可用进行存储
         if (VMFileUtil.hasSdcard()) {
             // 根据文件路径解析成Uri
-            mCameraImageUri = Uri.fromFile(new File(imagePath));
+            cameraImageUri = Uri.fromFile(new File(imagePath));
             // 将Uri设置为媒体输出的目标，目的就是为了等下拍照保存在自己设定的路径
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, mCameraImageUri);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);
         }
         // 根据 Intent 启动一个带有返回值的 Activity，这里启动的就是相机，返回选择图片的地址
         activity.startActivityForResult(intent, Constants.REQUEST_CODE_CAMERA);
@@ -1038,10 +1027,10 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
      */
     private void onAttachMenu() {
         // 判断当前附件菜单显示状态，显示就关闭，不显示就打开
-        if (mAttachMenuLayout.isShown()) {
-            mAttachMenuLayout.setVisibility(View.GONE);
+        if (attachMenuLayout.isShown()) {
+            attachMenuLayout.setVisibility(View.GONE);
         } else {
-            mAttachMenuLayout.setVisibility(View.VISIBLE);
+            attachMenuLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -1051,8 +1040,7 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
     private void selectCallMode() {
         if (CallManager.getInstance().getCallState() == CallManager.CallState.DISCONNECTED) {
             String[] menus = {
-                    activity.getString(R.string.video_call),
-                    activity.getString(R.string.voice_call)
+                    activity.getString(R.string.video_call), activity.getString(R.string.voice_call)
             };
             if (alertDialogBuilder == null) {
                 alertDialogBuilder = new AlertDialog.Builder(activity);
@@ -1074,14 +1062,12 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
                             // 设置当前通话类型为语音通话
                             CallManager.getInstance().setCallType(CallManager.CallType.VOICE);
                             break;
-                        default:
-                            break;
                     }
                     // 设置被呼叫方 username
                     CallManager.getInstance().setChatId(chatId);
                     // 设置通话为自己呼出的
                     CallManager.getInstance().setInComingCall(false);
-                    activity.startActivity(intent);
+                    onStartActivity(activity, intent);
                 }
             });
             callModeDialog = alertDialogBuilder.create();
@@ -1095,7 +1081,7 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
             CallManager.getInstance().setInComingCall(false);
             // 设置当前通话类型为视频通话
             CallManager.getInstance().setCallType(CallManager.CallType.VIDEO);
-            activity.startActivity(intent);
+            activity.onStartActivity(activity, intent);
         } else if (CallManager.getInstance().getCallType() == CallManager.CallType.VOICE) {
             // 语音通话
             Intent intent = new Intent(activity, VoiceCallActivity.class);
@@ -1105,7 +1091,7 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
             CallManager.getInstance().setInComingCall(false);
             // 设置当前通话类型为视频通话
             CallManager.getInstance().setCallType(CallManager.CallType.VOICE);
-            activity.startActivity(intent);
+            activity.onStartActivity(activity, intent);
         }
     }
 
@@ -1114,14 +1100,14 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
      */
     private void onEmotion() {
         // 判断表情界面是否显示状态，显示则关闭，隐藏则显示
-        if (mEmotionLayout.isShown()) {
-            mEmotionView.setVisibility(View.VISIBLE);
-            mKeyboardView.setVisibility(View.GONE);
-            mEmotionLayout.setVisibility(View.GONE);
+        if (emotionLayout.isShown()) {
+            emotionView.setVisibility(View.VISIBLE);
+            keyboardView.setVisibility(View.GONE);
+            emotionLayout.setVisibility(View.GONE);
         } else {
-            mEmotionView.setVisibility(View.GONE);
-            mKeyboardView.setVisibility(View.VISIBLE);
-            mEmotionLayout.setVisibility(View.VISIBLE);
+            emotionView.setVisibility(View.GONE);
+            keyboardView.setVisibility(View.VISIBLE);
+            emotionLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -1130,11 +1116,11 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
      */
     private void setInputStatus() {
         // 设置title为正在输入状态
-        getToolbar().setTitle(R.string.title_input_status);
-        if (mTimer == null) {
-            mTimer = new Timer();
+        usernameView.setText(R.string.title_input_status);
+        if (timer == null) {
+            timer = new Timer();
         } else {
-            mTimer.purge();
+            timer.purge();
         }
         // 创建定时器任务
         TimerTask task = new TimerTask() {
@@ -1143,13 +1129,13 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
                 isInput = false;
                 runOnUiThread(new Runnable() {
                     @Override public void run() {
-                        getToolbar().setTitle(chatId);
+                        usernameView.setText(chatId);
                     }
                 });
             }
         };
         // 设置定时任务
-        mTimer.schedule(task, Constants.TIME_INPUT_STATUS);
+        timer.schedule(task, Constants.TIME_INPUT_STATUS);
     }
 
     /**
@@ -1166,7 +1152,7 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
             setInputStatus();
             return;
         }
-        int position = mConversation.getAllMessages().indexOf(message);
+        int position = conversation.getAllMessages().indexOf(message);
         // 获取消息状态
         EMMessage.Status status = event.getStatus();
         if (status == EMMessage.Status.FAIL) {
@@ -1188,10 +1174,10 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
             Snackbar.make(getRootView(), errorMessage + event.getErrorMessage() + "-" + errorCode,
                     Snackbar.LENGTH_SHORT).show();
             // 消息状态回调完毕，刷新当前消息显示，这里不论成功失败都要刷新
-            mAdapter.notifyItemChanged(position);
+            adapter.notifyItemChanged(position);
         } else if (status == EMMessage.Status.SUCCESS) {
             // 消息状态回调完毕，刷新当前消息显示，这里不论成功失败都要刷新
-            mAdapter.notifyItemChanged(position);
+            adapter.notifyItemChanged(position);
         } else {
             // 如果是进度变化就不做刷新，留给Item自己刷新
         }
@@ -1204,7 +1190,7 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
      */
     @Override public boolean onOptionsItemSelected(MenuItem item) {
         // 获取当前会话内存中的消息数量
-        int count = mConversation.getAllMessages().size();
+        int count = conversation.getAllMessages().size();
 
         switch (item.getItemId()) {
             case R.id.action_call:
@@ -1216,9 +1202,9 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
                 break;
             case R.id.action_delete:
                 // 清空会话信息，此方法只清除内存中加载的消息，并没有清除数据库中保存的消息
-                // mConversation.clear();
+                // conversation.clear();
                 // 清除全部信息，包括数据库中的
-                mConversation.clearAllMessages();
+                conversation.clearAllMessages();
                 refreshAll();
                 break;
             case R.id.action_settings:
@@ -1230,7 +1216,7 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
 
     @Override public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_chat, menu);
-        if (mConversationType == EMConversation.EMConversationType.GroupChat) {
+        if (conversationType == EMConversation.EMConversationType.GroupChat) {
             menu.findItem(R.id.action_call).setVisible(false);
         }
         return super.onCreateOptionsMenu(menu);
@@ -1244,32 +1230,32 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
          * 当会话聊天界面销毁的时候，
          * 通过{@link ConversationExtUtils#setConversationLastTime(EMConversation)}设置会话的最后时间
          */
-        ConversationExtUtils.setConversationLastTime(mConversation);
+        ConversationExtUtils.setConversationLastTime(conversation);
         /**
          * 减少内存用量，这里设置为当前会话内存中多于3条时清除内存中的消息，只保留一条
          */
-        if (mConversation.getAllMessages().size() > mPageSize) {
+        if (conversation.getAllMessages().size() > pageSize) {
             // 将会话内的消息从内存中清除，节省内存，但是还要在重新加载一条
             List<String> list = new ArrayList<String>();
-            list.add(mConversation.getLastMessage().getMsgId());
+            list.add(conversation.getLastMessage().getMsgId());
             // 清除内存中的消息，此方法不清空DBadd
-            mConversation.clear();
-            // mConversation.clearAllMessages();
+            conversation.clear();
+            // conversation.clearAllMessages();
             // 加载消息到内存
-            mConversation.loadMessages(list);
+            conversation.loadMessages(list);
         }
 
         /**
          * 判断聊天输入框内容是否为空，不为空就保存输入框内容到{@link EMConversation}的扩展中
          * 调用{@link ConversationExtUtils#setConversationDraft(EMConversation, String)}方法
          */
-        String draft = mInputView.getText().toString().trim();
+        String draft = inputView.getText().toString().trim();
         if (!TextUtils.isEmpty(draft)) {
             // 将输入框的内容保存为草稿
-            ConversationExtUtils.setConversationDraft(mConversation, draft);
+            ConversationExtUtils.setConversationDraft(conversation, draft);
         } else {
             // 清空会话对象扩展中保存的草稿
-            ConversationExtUtils.setConversationDraft(mConversation, "");
+            ConversationExtUtils.setConversationDraft(conversation, "");
         }
 
         // 这里将父类的方法在后边调用
@@ -1288,7 +1274,7 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
             super.onNewIntent(intent);
         } else {
             onFinish();
-            startActivity(intent);
+            onStartActivity(activity, intent);
         }
     }
 
@@ -1300,13 +1286,13 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
     @Override protected void onResume() {
         super.onResume();
         // 注册环信的消息监听器
-        EMClient.getInstance().chatManager().addMessageListener(mMessageListener);
+        EMClient.getInstance().chatManager().addMessageListener(messageListener);
     }
 
     @Override protected void onStop() {
         super.onStop();
         // 再当前界面处于非活动状态时 移除消息监听
-        EMClient.getInstance().chatManager().removeMessageListener(mMessageListener);
+        EMClient.getInstance().chatManager().removeMessageListener(messageListener);
     }
 
     @Override protected void onDestroy() {
@@ -1339,8 +1325,8 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
             super.onScrollStateChanged(recyclerView, newState);
             // 当 RecyclerView 停止滚动后判断当前是否在底部
             if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                int lastItem = mLayoutManager.findLastVisibleItemPosition();
-                if (lastItem == (mAdapter.getItemCount() - 1)) {
+                int lastItem = layoutManager.findLastVisibleItemPosition();
+                if (lastItem == (adapter.getItemCount() - 1)) {
                     isBottom = true;
                 } else {
                     isBottom = false;
@@ -1377,21 +1363,21 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
             int count = msg.arg2;
             switch (what) {
                 case MSG_REFRESH_ALL:
-                    mAdapter.refreshAll();
+                    adapter.refreshAll();
                     break;
                 case MSG_REFRESH_INSERTED:
-                    mAdapter.refreshInserted(position);
-                    mRecyclerView.smoothScrollToPosition(position);
+                    adapter.refreshInserted(position);
+                    recyclerView.smoothScrollToPosition(position);
                     break;
                 case MSG_REFRESH_INSERTED_MORE:
-                    mAdapter.refreshInsertedMore(position, count);
-                    mRecyclerView.smoothScrollToPosition(position);
+                    adapter.refreshInsertedMore(position, count);
+                    recyclerView.smoothScrollToPosition(position);
                     break;
                 case MSG_REFRESH_REMOVED:
-                    mAdapter.refreshRemoved(position);
+                    adapter.refreshRemoved(position);
                     break;
                 case MSG_REFRESH_CHANGED:
-                    mAdapter.refreshChanged(position);
+                    adapter.refreshChanged(position);
                     break;
             }
         }
@@ -1464,7 +1450,7 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
         // 循环遍历当前收到的消息
         for (EMMessage message : list) {
             String conversationId = "";
-            if (mConversationType == EMConversation.EMConversationType.Chat) {
+            if (conversationType == EMConversation.EMConversationType.Chat) {
                 conversationId = message.getFrom();
             } else {
                 conversationId = message.getTo();
@@ -1472,13 +1458,13 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
             // 判断消息是否是当前会话的消息
             if (chatId.equals(conversationId)) {
                 // 设置消息为已读
-                mConversation.markMessageAsRead(message.getMsgId());
+                conversation.markMessageAsRead(message.getMsgId());
                 // 收到新消息就把对方正在输入状态设置为false
                 isInput = false;
 
-                int position = mConversation.getAllMessages().indexOf(message);
+                int position = conversation.getAllMessages().indexOf(message);
                 VMLog.d("messages -1- position - %d, adapter - %d", position,
-                        mAdapter.getItemCount());
+                        adapter.getItemCount());
                 // 刷新界面
                 refreshInserted(position);
             } else {
@@ -1508,8 +1494,8 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
                 // 撤回消息之后，判断是否当前聊天界面，用来刷新界面
                 if (chatId.equals(cmdMessage.getFrom()) && result) {
                     String msgId = cmdMessage.getStringAttribute(Constants.ATTR_MSG_ID, null);
-                    int position = mConversation.getAllMessages()
-                            .indexOf(mConversation.getMessage(msgId, true));
+                    int position = conversation.getAllMessages()
+                            .indexOf(conversation.getMessage(msgId, true));
                     refreshChanged(position);
                 }
             }
@@ -1540,7 +1526,7 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
             // 判断消息是否是当前会话的消息，并且是自己发送的消息，只有是发送的消息才需要判断 ACK
             if (chatId.equals(message.getTo())) {
                 // 调用刷新方法，因为到来的消息可能不是当前会话的，所以要循环判断
-                int position = mConversation.getAllMessages().indexOf(message);
+                int position = conversation.getAllMessages().indexOf(message);
                 refreshChanged(position);
             }
         }
@@ -1557,7 +1543,7 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
             // 判断消息是否是当前会话的消息，并且是自己发送的消息，只有是发送的消息才需要判断 ACK
             if (chatId.equals(message.getTo())) {
                 // 调用刷新方法，因为到来的消息可能不是当前会话的，所以要循环判断
-                int position = mConversation.getAllMessages().indexOf(message);
+                int position = conversation.getAllMessages().indexOf(message);
                 refreshChanged(position);
             }
         }
@@ -1571,7 +1557,7 @@ public class ChatActivity extends AppActivity implements EMMessageListener {
      */
     @Override public void onMessageChanged(EMMessage message, Object object) {
         VMLog.i("onMessageChanged message:%s, object:%s", message.getMsgId(), object);
-        //int position = mConversation.getMessagePosition(message);
+        //int position = conversation.getMessagePosition(message);
         //refreshChanged(position);
     }
 }
