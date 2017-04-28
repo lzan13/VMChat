@@ -55,9 +55,9 @@ VMChat
 ### 扩展模块
 | Expansion Module          | Project Wiki         | Easemob API         |        Remarks         |
 |:--------------------------|:--------------------:|:-------------------:|:----------------------:|
-| Conversation Top          | null                 | [Conversation Top]  | Use Conversation Ext   |
-| Conversation Last Time    | null                 | [Conversation Top]  | Use Conversation Ext   |
-| Conversation Draft        | null                 | [Conversation Top]  | Use Conversation Ext   |
+| Conversation Top          | null                 | [Conversation API]  | Use Conversation Ext   |
+| Conversation Last Time    | null                 | [Conversation API]  | Use Conversation Ext   |
+| Conversation Draft        | null                 | [Conversation API]  | Use Conversation Ext   |
 | Recall Message            | null                 | [Message Doc]       | Use CMD & Message Ext  |
 | Input Status              | null                 | [Message Doc]       | Use CMD Message        |
 | Group At                  | null                 | null                | Unimplemented          |
@@ -85,4 +85,4 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 [Group Manager]: http://docs.easemob.com/im/200androidclientintegration/70groupchat 'Group Manager'
 [ChatRoom Manager]: http://docs.easemob.com/im/200androidclientintegration/75chatroom 'ChatRoom Manager'
 
-[Conversation Top]: http://www.easemob.com/apidoc/android/chat3.0/classcom_1_1hyphenate_1_1chat_1_1_e_m_conversation.html 'Conversation Top'
+[Conversation API]: http://www.easemob.com/apidoc/android/chat3.0/classcom_1_1hyphenate_1_1chat_1_1_e_m_conversation.html 'Conversation Top'
