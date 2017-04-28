@@ -106,7 +106,7 @@ public class OtherFragment extends AppFragment {
                     testCreateGroup();
                     break;
                 case 102:
-
+                    saveMessage();
                     break;
                 case 103:
 
@@ -226,11 +226,12 @@ public class OtherFragment extends AppFragment {
      * 保存一条消息到本地
      */
     private void saveMessage() {
-        EMMessage textMessage = EMMessage.createSendMessage(EMMessage.Type.TXT);
+        EMMessage textMessage = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
+        textMessage.setChatType(EMMessage.ChatType.ChatRoom);
         textMessage.setFrom("lz0");
-        textMessage.setTo("lz1");
+        textMessage.setTo("14359007920129");
         textMessage.setStatus(EMMessage.Status.SUCCESS);
-        EMTextMessageBody body = new EMTextMessageBody("test save message");
+        EMTextMessageBody body = new EMTextMessageBody("test save chatroom message");
         textMessage.addBody(body);
         EMClient.getInstance().chatManager().saveMessage(textMessage);
     }

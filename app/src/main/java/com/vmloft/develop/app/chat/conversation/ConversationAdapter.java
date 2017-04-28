@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.hyphenate.chat.EMChatRoom;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMGroup;
@@ -174,6 +175,16 @@ public class ConversationAdapter
                     EMClient.getInstance().groupManager().getGroup(conversation.conversationId());
             if (group != null) {
                 holder.titleView.setText(group.getGroupName());
+            } else {
+                holder.titleView.setText(conversation.conversationId());
+            }
+        } else if (conversation.getType() == EMConversation.EMConversationType.ChatRoom) {
+            // 如果是聊天室设置聊天室名称
+            EMChatRoom chatRoom = EMClient.getInstance()
+                    .chatroomManager()
+                    .getChatRoom(conversation.conversationId());
+            if (chatRoom != null) {
+                holder.titleView.setText(chatRoom.getName());
             } else {
                 holder.titleView.setText(conversation.conversationId());
             }

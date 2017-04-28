@@ -30,6 +30,7 @@ import com.vmloft.develop.app.chat.R;
 import com.vmloft.develop.app.chat.chat.ChatActivity;
 import com.vmloft.develop.app.chat.contacts.ContactsFragment;
 import com.vmloft.develop.app.chat.conversation.ConversationsFragment;
+import com.vmloft.develop.app.chat.room.RoomsFragment;
 import com.vmloft.develop.app.chat.sign.SignInActivity;
 import com.vmloft.develop.library.tools.utils.VMNetUtil;
 import com.vmloft.develop.library.tools.widget.VMImageView;
@@ -60,6 +61,7 @@ public class MainActivity extends AppActivity {
     private int currentTabIndex;
     private ConversationsFragment conversationFragment;
     private ContactsFragment contactsFragment;
+    private RoomsFragment roomsFragment;
     private MeFragment meFragment;
     private OtherFragment otherFragment;
 
@@ -90,29 +92,29 @@ public class MainActivity extends AppActivity {
         setSupportActionBar(getToolbar());
         currentTabIndex = 0;
         tabTitles = new String[] {
-                getString(R.string.chat), getString(R.string.contacts), getString(R.string.me),
-                getString(R.string.test)
+                getString(R.string.chat), getString(R.string.contacts), getString(R.string.room),
+                getString(R.string.me), getString(R.string.test)
         };
 
         conversationFragment = ConversationsFragment.newInstance();
         contactsFragment = ContactsFragment.newInstance();
+        roomsFragment = RoomsFragment.newInstance();
         meFragment = MeFragment.newInstance();
         otherFragment = OtherFragment.newInstance();
 
         fragments = new Fragment[] {
-                conversationFragment, contactsFragment, meFragment, otherFragment
+                conversationFragment, contactsFragment, roomsFragment, meFragment, otherFragment
         };
         ViewPagerAdapter adapter =
                 new ViewPagerAdapter(getSupportFragmentManager(), fragments, tabTitles);
         viewPager.setAdapter(adapter);
         // 设置 ViewPager 缓存个数
-        viewPager.setOffscreenPageLimit(3);
+        viewPager.setOffscreenPageLimit(4);
         viewPager.setCurrentItem(currentTabIndex);
         // 添加 ViewPager 页面改变监听
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override public void onPageScrolled(int position, float positionOffset,
                     int positionOffsetPixels) {
-
             }
 
             @Override public void onPageSelected(int position) {

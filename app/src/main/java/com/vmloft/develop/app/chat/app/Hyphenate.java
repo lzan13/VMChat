@@ -146,6 +146,8 @@ public class Hyphenate {
         // 设置Appkey，如果配置文件已经配置，这里可以不用设置
         //options.setAppKey("fandou#knightepal");
 
+        // 设置是否使用 https
+        options.setUseHttps(false);
         // 设置自动登录
         options.setAutoLogin(true);
         // 设置是否按照服务器时间排序，false按照本地时间排序，默认 true

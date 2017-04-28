@@ -22,6 +22,7 @@ import com.superrtc.sdk.VideoView;
 import com.vmloft.develop.app.chat.R;
 import com.vmloft.develop.library.tools.utils.VMDimenUtil;
 import com.vmloft.develop.library.tools.utils.VMLog;
+import com.vmloft.develop.library.tools.widget.VMCamera2Preview;
 import java.io.File;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -34,7 +35,7 @@ public class VideoCallActivity extends CallActivity {
 
     // 视频通话帮助类
     private EMCallManager.EMVideoCallHelper videoCallHelper;
-    // SurfaceView 控件状态，-1 表示还未接通时，0 表示本小远大，1 表示远小本大
+    // SurfaceView 控件状态，-1 表示通话未接通，0 表示本小远大，1 表示远小本大
     private int surfaceViewState = -1;
 
     private EMLocalSurfaceView localSurface = null;
@@ -102,27 +103,25 @@ public class VideoCallActivity extends CallActivity {
             setupSurfaceView();
         } else {
             // 初始化显示通话画面
-            setupSurfaceView();
+            initLocalSurfaceView();
         }
 
         try {
             // 设置默认摄像头为前置
-            EMClient.getInstance()
-                    .callManager()
-                    .setCameraFacing(Camera.CameraInfo.CAMERA_FACING_FRONT);
+            EMClient.getInstance().callManager().setCameraFacing(Camera.CameraInfo.CAMERA_FACING_FRONT);
         } catch (HyphenateException e) {
             e.printStackTrace();
         }
+        CallManager.getInstance().setCallCameraDataProcessor();
     }
 
     /**
      * 界面控件点击监听器
      */
     @OnClick({
-            R.id.layout_call_control, R.id.btn_exit_full_screen, R.id.btn_change_camera_switch,
-            R.id.btn_mic_switch, R.id.btn_camera_switch, R.id.btn_speaker_switch,
-            R.id.btn_record_switch, R.id.btn_screenshot, R.id.fab_reject_call, R.id.fab_end_call,
-            R.id.fab_answer_call
+            R.id.layout_call_control, R.id.btn_exit_full_screen, R.id.btn_change_camera_switch, R.id.btn_mic_switch,
+            R.id.btn_camera_switch, R.id.btn_speaker_switch, R.id.btn_record_switch, R.id.btn_screenshot, R.id.fab_reject_call,
+            R.id.fab_end_call, R.id.fab_answer_call
     }) void onClick(View v) {
         switch (v.getId()) {
             case R.id.layout_call_control:
@@ -341,6 +340,21 @@ public class VideoCallActivity extends CallActivity {
         answerCallFab.setVisibility(View.GONE);
     }
 
+    private void initLocalSurfaceView() {
+        RelativeLayout.LayoutParams lParams = new RelativeLayout.LayoutParams(0, 0);
+        VMCamera2Preview preview = new VMCamera2Preview(activity);
+        preview.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                onControlLayout();
+            }
+        });
+        lParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+        lParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
+        lParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+        preview.setLayoutParams(lParams);
+        surfaceLayout.addView(preview);
+    }
+
     /**
      * 设置本地与远程画面显示控件
      */
@@ -354,25 +368,11 @@ public class VideoCallActivity extends CallActivity {
         int width = VMDimenUtil.dp2px(activity, 90);
         int height = VMDimenUtil.dp2px(activity, 120);
         int rightMargin = VMDimenUtil.dp2px(activity, 16);
-        int topMargin = VMDimenUtil.dp2px(activity, 72);
+        int topMargin = VMDimenUtil.dp2px(activity, 96);
 
         RelativeLayout.LayoutParams localParams = new RelativeLayout.LayoutParams(width, height);
         RelativeLayout.LayoutParams oppositeParams = new RelativeLayout.LayoutParams(width, height);
-        if (surfaceViewState == -1) {
-            localParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
-            localParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
-            oppositeParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
-            oppositeParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
-            // 设置点击事件
-            localSurface.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) {
-                    onControlLayout();
-                }
-            });
-            // 将 view 添加到界面
-            surfaceLayout.addView(localSurface, localParams);
-            surfaceLayout.addView(oppositeSurface, oppositeParams);
-        } else if (surfaceViewState == 0) {
+        if (surfaceViewState == 0) {
             localParams.width = width;
             localParams.height = height;
             localParams.rightMargin = rightMargin;
