@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.exceptions.HyphenateException;
@@ -18,6 +19,7 @@ import com.vmloft.develop.app.chat.R;
 import com.vmloft.develop.app.chat.app.Constants;
 import com.vmloft.develop.app.chat.chat.ChatActivity;
 import com.vmloft.develop.app.chat.chat.MessageAdapter;
+import com.vmloft.develop.library.tools.utils.VMLog;
 import com.vmloft.develop.library.tools.widget.VMImageView;
 
 /**
@@ -171,10 +173,21 @@ public abstract class MessageItem extends LinearLayout {
         }
         // 判断是否是接收方的消息，是则发送ACK给消息发送者
         if (viewType == Constants.MSG_TYPE_TEXT_RECEIVED) {
+            message.setMessageStatusCallback(new EMCallBack() {
+                @Override public void onSuccess() {
+                    VMLog.d("send message ack onSuccess");
+                }
+
+                @Override public void onError(int i, String s) {
+                    VMLog.d("send message ack onError");
+                }
+
+                @Override public void onProgress(int i, String s) {
+                    VMLog.d("send message ack onProgress %d, %s", i, s);
+                }
+            });
             try {
-                EMClient.getInstance()
-                        .chatManager()
-                        .ackMessageRead(message.getFrom(), message.getMsgId());
+                EMClient.getInstance().chatManager().ackMessageRead(message.getFrom(), message.getMsgId());
             } catch (HyphenateException e) {
                 e.printStackTrace();
             }

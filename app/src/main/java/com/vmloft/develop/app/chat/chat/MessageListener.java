@@ -69,15 +69,15 @@ public class MessageListener implements EMMessageListener {
      */
     @Override public void onCmdMessageReceived(List<EMMessage> list) {
         // 判断当前活动界面是不是聊天界面，如果是，全局不处理消息
-        if (Hyphenate.getInstance().getActivityList().size() > 0) {
-            if (Hyphenate.getInstance()
-                    .getTopActivity()
-                    .getClass()
-                    .getSimpleName()
-                    .equals("ChatActivity")) {
-                return;
-            }
-        }
+        //if (Hyphenate.getInstance().getActivityList().size() > 0) {
+        //    if (Hyphenate.getInstance()
+        //            .getTopActivity()
+        //            .getClass()
+        //            .getSimpleName()
+        //            .equals("ChatActivity")) {
+        //        return;
+        //    }
+        //}
         for (EMMessage cmdMessage : list) {
             EMCmdMessageBody body = (EMCmdMessageBody) cmdMessage.getBody();
 

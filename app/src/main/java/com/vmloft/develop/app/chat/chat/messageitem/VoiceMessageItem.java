@@ -81,7 +81,7 @@ public class VoiceMessageItem extends MessageItem {
             width = VMDimenUtil.getDimenPixel(context, R.dimen.vm_dimen_96);
         } else if (time < 10 * 1000) {
             // 音频持续时间小于8秒设置一个最小宽度
-            width = VMDimenUtil.getDimenPixel(context, R.dimen.vm_dimen_168);
+            width = VMDimenUtil.getDimenPixel(context, R.dimen.vm_dimen_128);
         } else {
             width = VMDimenUtil.getDimenPixel(context, R.dimen.vm_dimen_256) * time / (20 * 1000);
         }

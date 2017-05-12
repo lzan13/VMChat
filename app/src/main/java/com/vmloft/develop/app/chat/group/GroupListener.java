@@ -1,6 +1,7 @@
 package com.vmloft.develop.app.chat.group;
 
 import com.hyphenate.EMGroupChangeListener;
+import com.hyphenate.chat.EMMucSharedFile;
 import java.util.List;
 import com.vmloft.develop.library.tools.utils.VMLog;
 
@@ -147,6 +148,18 @@ public class GroupListener implements EMGroupChangeListener {
     }
 
     @Override public void onMemberExited(String s, String s1) {
+
+    }
+
+    @Override public void onAnnouncementChanged(String s, String s1) {
+
+    }
+
+    @Override public void onSharedFileAdded(String s, EMMucSharedFile emMucSharedFile) {
+
+    }
+
+    @Override public void onSharedFileDeleted(String s, String s1) {
 
     }
 }

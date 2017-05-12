@@ -77,8 +77,7 @@ public class OtherFragment extends AppFragment {
                 "Sign out", "Test 1", "Test 2", "Test 3"
         };
         for (int i = 0; i < btns.length; i++) {
-            Button btn =
-                    new Button(new ContextThemeWrapper(activity, R.style.VMBtn_Green), null, 0);
+            Button btn = new Button(new ContextThemeWrapper(activity, R.style.VMBtn_Green), null, 0);
             btn.setText(btns[i]);
             btn.setId(100 + i);
             btn.setOnClickListener(viewListener);
@@ -103,10 +102,10 @@ public class OtherFragment extends AppFragment {
                     signOut();
                     break;
                 case 101:
-                    testCreateGroup();
+                    testPushConfig();
                     break;
                 case 102:
-                    saveMessage();
+                    testGetGroupDetails();
                     break;
                 case 103:
 
@@ -115,10 +114,28 @@ public class OtherFragment extends AppFragment {
         }
     };
 
+    /**
+     * -------------------------------- 推送相关 ---------------------------
+     * 设置推送免打扰时间段
+     */
+    private void testPushConfig() {
+        new Thread(new Runnable() {
+            @Override public void run() {
+                try {
+                    EMClient.getInstance().pushManager().disableOfflinePush(0, 24);
+                } catch (HyphenateException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    /**
+     * ----------------------------- 消息相关 --------------------
+     */
     private void testGetMessage() {
-        EMConversation conversation = EMClient.getInstance()
-                .chatManager()
-                .getConversation("lz2", EMConversation.EMConversationType.Chat, true);
+        EMConversation conversation =
+                EMClient.getInstance().chatManager().getConversation("lz2", EMConversation.EMConversationType.Chat, true);
         EMMessage message = conversation.getMessage("123123", true);
 
         VMLog.d("message id is %s", message != null ? message.getMsgId() : null);
@@ -142,10 +159,25 @@ public class OtherFragment extends AppFragment {
                 String[] members = hxids.toArray(new String[0]);
 
                 try {
-                    EMGroup group = EMClient.getInstance()
-                            .groupManager()
-                            .createGroup("测试加入500人", "群组简介", members, "邀请其他人的理由", options);
+                    EMGroup group =
+                            EMClient.getInstance().groupManager().createGroup("测试加入500人", "群组简介", members, "邀请其他人的理由", options);
                     VMLog.d("text create group success");
+                } catch (HyphenateException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    /**
+     * 获取群组详情
+     */
+    private void testGetGroupDetails() {
+        new Thread(new Runnable() {
+            @Override public void run() {
+                try {
+                    EMGroup group = EMClient.getInstance().groupManager().getGroupFromServer("15900541517827");
+                    VMLog.d("group details: %s", group.getDescription());
                 } catch (HyphenateException e) {
                     e.printStackTrace();
                 }
@@ -177,9 +209,7 @@ public class OtherFragment extends AppFragment {
      */
     private void sendGroupMessage() {
         //创建一条文本消息,content为消息文字内容，toChatUsername为对方用户或者群聊的id，后文皆是如此
-        EMMessage message =
-                EMMessage.createTxtSendMessage("群消息" + VMDateUtil.getCurrentMillisecond(),
-                        "9946217381889");
+        EMMessage message = EMMessage.createTxtSendMessage("群消息" + VMDateUtil.getCurrentMillisecond(), "9946217381889");
         //如果是群聊，设置chattype,默认是单聊
         message.setChatType(EMMessage.ChatType.GroupChat);
         //发送消息
@@ -207,9 +237,8 @@ public class OtherFragment extends AppFragment {
         EMMessage message = EMMessage.createTxtSendMessage("", "");
         // 更改要撤销的消息的内容，替换为消息已经撤销的提示内容
         EMMessage recallMessage = EMMessage.createSendMessage(EMMessage.Type.TXT);
-        EMTextMessageBody body = new EMTextMessageBody(
-                String.format(activity.getString(R.string.hint_msg_recall_by_user),
-                        message.getUserName()));
+        EMTextMessageBody body =
+                new EMTextMessageBody(String.format(activity.getString(R.string.hint_msg_recall_by_user), message.getUserName()));
         recallMessage.addBody(body);
         recallMessage.setTo(message.getFrom());
         // 设置新消息的 msgId为撤销消息的 msgId
@@ -241,9 +270,8 @@ public class OtherFragment extends AppFragment {
      */
     private void insertMessage() {
         // 测试插入一条消息
-        EMConversation conversation = EMClient.getInstance()
-                .chatManager()
-                .getConversation("lz1", EMConversation.EMConversationType.Chat, true);
+        EMConversation conversation =
+                EMClient.getInstance().chatManager().getConversation("lz1", EMConversation.EMConversationType.Chat, true);
         EMMessage textMessage = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
         textMessage.setFrom("lz1");
         textMessage.setTo("lz0");
@@ -349,8 +377,7 @@ public class OtherFragment extends AppFragment {
                 progressDialog.dismiss();
                 activity.runOnUiThread(new Runnable() {
                     @Override public void run() {
-                        activity.onStartActivity(activity,
-                                new Intent(activity, SignInActivity.class));
+                        activity.onStartActivity(activity, new Intent(activity, SignInActivity.class));
                         activity.finishAfterTransition();
                     }
                 });

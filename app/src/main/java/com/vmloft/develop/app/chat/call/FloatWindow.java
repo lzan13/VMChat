@@ -3,8 +3,6 @@ package com.vmloft.develop.app.chat.call;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -15,8 +13,7 @@ import android.widget.TextView;
 
 import com.hyphenate.chat.EMCallStateChangeListener;
 import com.hyphenate.chat.EMClient;
-import com.hyphenate.media.EMLocalSurfaceView;
-import com.hyphenate.media.EMOppositeSurfaceView;
+import com.hyphenate.media.EMCallSurfaceView;
 import com.superrtc.sdk.VideoView;
 
 import com.vmloft.develop.app.chat.R;
@@ -46,6 +43,9 @@ public class FloatWindow {
     // 悬浮窗需要显示的布局
     private View floatView;
     private TextView callTimeView;
+
+    private EMCallSurfaceView localView;
+    private EMCallSurfaceView oppositeView;
 
     public FloatWindow(Context context) {
         this.context = context;
@@ -106,9 +106,7 @@ public class FloatWindow {
                     intent.setClass(context, VideoCallActivity.class);
                 }
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeBasic();
-                ActivityCompat.startActivity(context, intent, optionsCompat.toBundle());
+                context.startActivity(intent);
             }
         });
 
@@ -165,25 +163,25 @@ public class FloatWindow {
         // 将 SurfaceView设置给 SDK
         surfaceLayout.removeAllViews();
 
-        EMLocalSurfaceView localView = new EMLocalSurfaceView(context);
-        EMOppositeSurfaceView oppositeView = new EMOppositeSurfaceView(context);
+        localView = new EMCallSurfaceView(context);
+        oppositeView = new EMCallSurfaceView(context);
 
         int lw = VMDimenUtil.dp2px(context, 24);
         int lh = VMDimenUtil.dp2px(context, 32);
-        int ow = VMDimenUtil.dp2px(context, 90);
-        int oh = VMDimenUtil.dp2px(context, 120);
+        int ow = VMDimenUtil.dp2px(context, 96);
+        int oh = VMDimenUtil.dp2px(context, 128);
         RelativeLayout.LayoutParams localParams = new RelativeLayout.LayoutParams(lw, lh);
         RelativeLayout.LayoutParams oppositeParams = new RelativeLayout.LayoutParams(ow, oh);
         // 设置本地图像靠右
         localParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 
         // 设置本地预览图像显示在最上层
+        localView.setZOrderOnTop(false);
         localView.setZOrderMediaOverlay(true);
-        localView.setZOrderOnTop(true);
-
         // 将 view 添加到界面
-        surfaceLayout.addView(oppositeView, oppositeParams);
         surfaceLayout.addView(localView, localParams);
+        surfaceLayout.addView(oppositeView, oppositeParams);
+
         // 设置通话界面画面填充方式
         localView.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
         oppositeView.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);

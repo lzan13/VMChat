@@ -10,6 +10,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.hyphenate.EMCallBack;
+import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMFileMessageBody;
 import com.hyphenate.chat.EMImageMessageBody;
 import com.hyphenate.chat.EMMessage;
@@ -24,6 +26,7 @@ import com.vmloft.develop.app.chat.chat.MessageUtils;
 import com.vmloft.develop.library.tools.utils.VMBitmapUtil;
 import com.vmloft.develop.library.tools.utils.VMDateUtil;
 import com.vmloft.develop.library.tools.utils.VMDimenUtil;
+import com.vmloft.develop.library.tools.utils.VMLog;
 import com.vmloft.develop.library.tools.widget.VMImageView;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -62,9 +65,22 @@ public class ImageMessageItem extends MessageItem {
      */
     @Override public void onSetupView(EMMessage message) {
         this.message = message;
+        message.setMessageStatusCallback(new EMCallBack() {
+            @Override public void onSuccess() {
+                VMLog.d("message download thumbnail onSuccess");
+            }
+
+            @Override public void onError(int i, String s) {
+                VMLog.d("message download thumbnail onError");
+            }
+
+            @Override public void onProgress(int i, String s) {
+                VMLog.d("message download thumbnail onProgress %d, %s", i, s);
+            }
+        });
+        //EMClient.getInstance().chatManager().downloadThumbnail(message);
         // 判断如果是单聊或者消息是发送方，不显示username
-        if (this.message.getChatType() == EMMessage.ChatType.Chat
-                || this.message.direct() == EMMessage.Direct.SEND) {
+        if (this.message.getChatType() == EMMessage.ChatType.Chat || this.message.direct() == EMMessage.Direct.SEND) {
             usernameView.setVisibility(View.GONE);
         } else {
             // 设置消息消息发送者的名称
@@ -103,8 +119,7 @@ public class ImageMessageItem extends MessageItem {
         if (viewType == Constants.MSG_TYPE_IMAGE_RECEIVED) {
             // 判断消息是否处于下载状态，如果是下载状态设置一个默认的图片
             if (imgBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.DOWNLOADING
-                    || imgBody.thumbnailDownloadStatus()
-                    == EMFileMessageBody.EMDownloadStatus.PENDING) {
+                    || imgBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.PENDING) {
             }
         }
 
@@ -186,98 +201,15 @@ public class ImageMessageItem extends MessageItem {
         // 根据图片存在情况加载缩略图显示
         if (originalFile.exists()) {
             // 原图存在，直接通过原图加载缩略图
-            Glide.with(context)
-                    .load(originalFile)
-                    .crossFade()
-                    .override(mViewWidth, mViewHeight)
-                    .into(imageView);
+            Glide.with(context).load(originalFile).crossFade().override(mViewWidth, mViewHeight).into(imageView);
         } else if (!originalFile.exists() && thumbnailsFile.exists()) {
             // 原图不存在，只存在缩略图
-            Glide.with(context)
-                    .load(thumbnailsFile)
-                    .crossFade()
-                    .override(mViewWidth, mViewHeight)
-                    .into(imageView);
+            Glide.with(context).load(thumbnailsFile).crossFade().override(mViewWidth, mViewHeight).into(imageView);
         } else if (!originalFile.exists() && !thumbnailsFile.exists()) {
             // 原图和缩略图都不存在
-            Glide.with(context)
-                    .load(thumbnailsFile)
-                    .crossFade()
-                    .override(mViewWidth, mViewHeight)
-                    .into(imageView);
+            Glide.with(context).load(thumbnailsFile).crossFade().override(mViewWidth, mViewHeight).into(imageView);
         }
     }
-
-    /**
-     * 设置缩略图的显示，并将缩略图添加到缓存
-     *
-     * @param thumbnailsPath 缩略图的路径
-     * @param fullSizePath   原始图片的路径
-     */
-    //    private void showThumbnailsImage(final String thumbnailsPath, final String fullSizePath, final int width, final int height) {
-    //        Bitmap bitmap = VMBitmapCache.getInstance().optBitmap(thumbnailsPath);
-    //        if (bitmap != null) {
-    //            // 判断下当前tag是否是需要显示的图片路径
-    //            if (imageView.getTag().equals(thumbnailsPath)) {
-    //                imageView.setImageBitmap(bitmap);
-    //            }
-    //        } else {
-    //            // 暂时没有bitmap就设置一个默认的图片
-    //            imageView.setBackgroundResource(R.drawable.image_default);
-    //            // 开启一个异步任务加载缩略图
-    //            new AsyncTask<Object, Integer, Bitmap>() {
-    //                @Override
-    //                protected Bitmap doInBackground(Object... params) {
-    //                    File thumbnailsFile = new File(thumbnailsPath);
-    //                    File fullSizeFile = new File(fullSizePath);
-    //                    Bitmap tempBitmap = null;
-    //
-    //                    // 根据图片存在情况加载缩略图显示
-    //                    if ((width > thumbnailsMax || height > thumbnailsMax) && fullSizeFile.exists()) {
-    //                        // 原图较大且原图存在，直接通过原图加载缩略图
-    //                        tempBitmap = VMBitmapUtil.loadBitmapThumbnail(fullSizePath, thumbnailsMax);
-    //                    } else if ((width > thumbnailsMax || height > thumbnailsMax) && !fullSizeFile.exists() && thumbnailsFile.exists()) {
-    //                        // 原图较大，只存在缩略图
-    //                        tempBitmap = VMBitmapUtil.loadBitmapThumbnail(thumbnailsPath, thumbnailsMax);
-    //                    } else if ((width <= thumbnailsMax && height <= thumbnailsMax) && fullSizeFile.exists()) {
-    //                        // 原图较小，直接加在原图大小显示，不获取缩略图
-    //                        tempBitmap = VMBitmapUtil.loadBitmapByFile(fullSizePath);
-    //                    } else if ((width <= thumbnailsMax && height <= thumbnailsMax) && !fullSizeFile.exists() && thumbnailsFile.exists()) {
-    //                        // 原图较小，且只存在缩略图
-    //                        tempBitmap = VMBitmapUtil.loadBitmapByFile(thumbnailsPath);
-    //                    } else {
-    //                        // 原图和缩略图都不存在
-    //                    }
-    //                    return tempBitmap;
-    //                }
-    //
-    //                @Override
-    //                protected void onPostExecute(Bitmap bitmap) {
-    //                    if (bitmap != null) {
-    //                        // 设置图片控件为当前bitmap
-    //                        if (imageView.getTag().equals(thumbnailsPath)) {
-    //                            imageView.setImageBitmap(bitmap);
-    //                        }
-    //                        // 将Bitmap对象添加到缓存中去
-    //                        VMBitmapCache.getInstance().putBitmap(thumbnailsPath, bitmap);
-    //                    } else {
-    //                        // 判断当前消息的状态，如果是失败的消息，则去重新下载缩略图
-    //                        if (message.status() == EMMessage.Status.FAIL) {
-    //                            new Thread(new Runnable() {
-    //                                @Override
-    //                                public void run() {
-    //                                    // 下载缩略图
-    //                                        EMClient.getInstance().chatManager().downloadThumbnail(message);
-    //                                }
-    //                            }).start();
-    //                        } else {
-    //                            // 消息成功状态下，缩略图和原图都没有，可以判定为图片被删除
-    //                        }
-    //                    }
-    //                }
-    //            }.execute();
-    //        }
-    //    }
 
     /**
      * 刷新当前item
@@ -326,8 +258,7 @@ public class ImageMessageItem extends MessageItem {
         if (!message.getMsgId().equals(this.message.getMsgId())) {
             return;
         }
-        if (message.getType() == EMMessage.Type.IMAGE
-                && event.getStatus() == EMMessage.Status.INPROGRESS) {
+        if (message.getType() == EMMessage.Type.IMAGE && event.getStatus() == EMMessage.Status.INPROGRESS) {
             // 设置消息进度百分比
             percentView.setText(String.valueOf(event.getProgress()));
         }
