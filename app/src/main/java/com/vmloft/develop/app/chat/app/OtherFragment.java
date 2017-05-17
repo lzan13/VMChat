@@ -13,6 +13,7 @@ import butterknife.ButterKnife;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
+import com.hyphenate.chat.EMCursorResult;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMGroupManager;
 import com.hyphenate.chat.EMMessage;
@@ -102,10 +103,9 @@ public class OtherFragment extends AppFragment {
                     signOut();
                     break;
                 case 101:
-                    testPushConfig();
+                    importMessages();
                     break;
                 case 102:
-                    testGetGroupDetails();
                     break;
                 case 103:
 
@@ -176,7 +176,14 @@ public class OtherFragment extends AppFragment {
         new Thread(new Runnable() {
             @Override public void run() {
                 try {
-                    EMGroup group = EMClient.getInstance().groupManager().getGroupFromServer("15900541517827");
+                    EMGroup group = EMClient.getInstance().groupManager().getGroupFromServer("1462245877898");
+                    // 测试分页获取群成员列表
+                    EMCursorResult<String> result = null;
+                    do {
+                        result = EMClient.getInstance()
+                                .groupManager()
+                                .fetchGroupMembers("1462245877898", result != null ? result.getCursor() : "", 10);
+                    } while (result != null);
                     VMLog.d("group details: %s", group.getDescription());
                 } catch (HyphenateException e) {
                     e.printStackTrace();
@@ -314,7 +321,7 @@ public class OtherFragment extends AppFragment {
                 + "\"timestamp\": 1469434967362,\n"
                 + "\"from\": \"lz0\",\n"
                 + "\"msg_id\": \"222780672404621268\",\n"
-                + "\"to\": \"lz1\",\n"
+                + "\"to\": \"lz2\",\n"
                 + "\"chat_type\": \"chat\",\n"
                 + "\"payload\": {\n"
                 + "    \"bodies\": [\n"
@@ -355,9 +362,15 @@ public class OtherFragment extends AppFragment {
                 message.setChatType(EMMessage.ChatType.Chat);
                 message.setStatus(EMMessage.Status.SUCCESS);
 
+                EMClient.getInstance()
+                        .chatManager()
+                        .getConversation(message.getTo(), EMConversation.EMConversationType.Chat, true);
                 messageList.add(message);
             }
+            VMLog.d("conversation 1- count: %d", EMClient.getInstance().chatManager().getAllConversations().size());
             EMClient.getInstance().chatManager().importMessages(messageList);
+            EMClient.getInstance().chatManager().loadAllConversations();
+            VMLog.d("conversation 2- count: %d", EMClient.getInstance().chatManager().getAllConversations().size());
         } catch (JSONException e) {
             e.printStackTrace();
         }

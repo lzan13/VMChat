@@ -144,7 +144,7 @@ public class Hyphenate {
         // 设置私有化 Rest 地址+端口号
         //options.setRestServer("a1.easemob.com:80");
         // 设置Appkey，如果配置文件已经配置，这里可以不用设置
-        //options.setAppKey("fandou#knightepal");
+        //options.setAppKey("yunshangzhijia#yunyue");
 
         // 设置是否使用 https
         options.setUseHttps(false);
@@ -157,7 +157,7 @@ public class Hyphenate {
         // 设置是否需要发送回执
         options.setRequireDeliveryAck(true);
         // 收到好友申请是否自动同意，如果是自动同意就不会收到好友请求的回调，因为sdk会自动处理，默认为true
-        options.setAcceptInvitationAlways(false);
+        options.setAcceptInvitationAlways(true);
         // 设置是否自动接收加群邀请，如果设置了当收到群邀请会自动同意加入
         options.setAutoAcceptGroupInvitation(true);
         // 设置（主动或被动）退出群组时，是否删除群聊聊天记录
@@ -200,8 +200,7 @@ public class Hyphenate {
      */
     private void registerCallReceiverListener() {
         // 设置通话广播监听器过滤内容
-        IntentFilter callFilter = new IntentFilter(
-                EMClient.getInstance().callManager().getIncomingCallBroadcastAction());
+        IntentFilter callFilter = new IntentFilter(EMClient.getInstance().callManager().getIncomingCallBroadcastAction());
         if (callReceiver == null) {
             callReceiver = new CallReceiver();
         }
@@ -303,13 +302,11 @@ public class Hyphenate {
      */
     private String getAppName(int pid) {
         String processName = null;
-        ActivityManager activityManager =
-                (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         List list = activityManager.getRunningAppProcesses();
         Iterator i = list.iterator();
         while (i.hasNext()) {
-            ActivityManager.RunningAppProcessInfo info =
-                    (ActivityManager.RunningAppProcessInfo) (i.next());
+            ActivityManager.RunningAppProcessInfo info = (ActivityManager.RunningAppProcessInfo) (i.next());
             try {
                 if (info.pid == pid) {
                     // 根据进程的信息获取当前进程的名字
