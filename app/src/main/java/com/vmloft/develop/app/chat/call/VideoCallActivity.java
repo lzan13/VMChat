@@ -220,13 +220,13 @@ public class VideoCallActivity extends CallActivity {
             if (micSwitch.isActivated()) {
                 // 设置按钮状态
                 micSwitch.setActivated(false);
-                // 暂停语音数据的传输
+                // 恢复语音数据的传输
                 EMClient.getInstance().callManager().resumeVoiceTransfer();
                 CallManager.getInstance().setOpenMic(true);
             } else {
                 // 设置按钮状态
                 micSwitch.setActivated(true);
-                // 恢复语音数据的传输
+                // 暂停语音数据的传输
                 EMClient.getInstance().callManager().pauseVoiceTransfer();
                 CallManager.getInstance().setOpenMic(false);
             }
@@ -245,13 +245,13 @@ public class VideoCallActivity extends CallActivity {
             if (cameraSwitch.isActivated()) {
                 // 设置按钮状态
                 cameraSwitch.setActivated(false);
-                // 暂停视频数据的传输
+                // 恢复视频数据的传输
                 EMClient.getInstance().callManager().resumeVideoTransfer();
                 CallManager.getInstance().setOpenCamera(true);
             } else {
                 // 设置按钮状态
                 cameraSwitch.setActivated(true);
-                // 恢复视频数据的传输
+                // 暂停视频数据的传输
                 EMClient.getInstance().callManager().pauseVideoTransfer();
                 CallManager.getInstance().setOpenCamera(false);
             }

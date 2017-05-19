@@ -151,7 +151,7 @@ public class Hyphenate {
         // 设置自动登录
         options.setAutoLogin(true);
         // 设置是否按照服务器时间排序，false按照本地时间排序，默认 true
-        options.setSortMessageByServerTime(true);
+        options.setSortMessageByServerTime(false);
         // 设置是否需要发送已读回执
         options.setRequireAck(true);
         // 设置是否需要发送回执

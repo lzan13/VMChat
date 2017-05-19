@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.text.TextUtils;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 
@@ -103,7 +104,7 @@ public class OtherFragment extends AppFragment {
                     signOut();
                     break;
                 case 101:
-                    importMessages();
+                    testGetGroupDetails();
                     break;
                 case 102:
                     break;
@@ -176,16 +177,22 @@ public class OtherFragment extends AppFragment {
         new Thread(new Runnable() {
             @Override public void run() {
                 try {
-                    EMGroup group = EMClient.getInstance().groupManager().getGroupFromServer("1462245877898");
+                    EMGroup group = EMClient.getInstance().groupManager().getGroupFromServer("16364170444803");
+                    // 当前群里总人数
+                    int groupCount = group.getMemberCount();
+                    int count = 0;
                     // 测试分页获取群成员列表
                     EMCursorResult<String> result = null;
                     do {
                         result = EMClient.getInstance()
                                 .groupManager()
-                                .fetchGroupMembers("1462245877898", result != null ? result.getCursor() : "", 10);
-                    } while (result != null);
+                                .fetchGroupMembers("16364170444803", result != null ? result.getCursor() : "", 5);
+                        count += result.getData().size();
+                        VMLog.d("group members result: count: %d, %s", result.getData().size(), result.getData().toString());
+                    } while (count < groupCount - 1);
                     VMLog.d("group details: %s", group.getDescription());
                 } catch (HyphenateException e) {
+                    VMLog.e("group details error: code - %d, msg - %s", e.getErrorCode(), e.getMessage());
                     e.printStackTrace();
                 }
             }
