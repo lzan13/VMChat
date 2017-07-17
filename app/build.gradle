@@ -8,7 +8,7 @@ ext {
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '25.0.2'
+    buildToolsVersion '25.0.3'
 
     //use legacy for for android 6.0
     //    useLibrary 'org.apache.http.legacy'
@@ -45,9 +45,9 @@ android {
     // 编译配置
     buildTypes {
         debug {
-            // 简单粗暴解决多个库引用 jni 库出现 UnsatisfiedLinkError 文件错误问题
+            // 简单粗暴解决多个库出现 UnsatisfiedLinkError 文件错误问题
             ndk {
-                abiFilters = ["arm64-v8a", "armeabi-v7a", "x86"]
+                abiFilters "armeabi-v7a"
             }
             // 是否开启压缩
             zipAlignEnabled false
@@ -59,7 +59,7 @@ android {
         release {
             // 简单粗暴解决多个库引用 jni 库出现 UnsatisfiedLinkError 文件错误问题
             ndk {
-                abiFilters = ["armeabi-v7a"]
+                abiFilters "armeabi-v7a"
             }
             // 是否开启压缩
             zipAlignEnabled true
@@ -94,10 +94,6 @@ android {
         }
     }
 
-    lintOptions {
-        checkReleaseBuilds false
-        abortOnError false
-    }
     // 多渠道打包配置
     productFlavors {
         Develop {
@@ -126,7 +122,7 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
 
     // Google Play Service 库，使用GCM推送需要
-    compile 'com.google.android.gms:play-services-gcm:10.2.0'
+    compile 'com.google.android.gms:play-services-gcm:10.2.1'
 
     // 第三方图片加载库
     compile 'com.github.bumptech.glide:glide:3.7.0'
@@ -135,8 +131,8 @@ dependencies {
     // square 家族的网络加载库 retrofit
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     // ButterKnife 库
-    compile 'com.jakewharton:butterknife:8.5.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+    compile 'com.jakewharton:butterknife:8.6.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
 
     // 引入自己封装的工具库 GitHub: https://github.com/lzan13/VMLibraryManager
     compile project(':vmtools')

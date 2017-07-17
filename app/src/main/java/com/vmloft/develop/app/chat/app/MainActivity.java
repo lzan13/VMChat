@@ -30,7 +30,6 @@ import com.vmloft.develop.app.chat.R;
 import com.vmloft.develop.app.chat.chat.ChatActivity;
 import com.vmloft.develop.app.chat.contacts.ContactsFragment;
 import com.vmloft.develop.app.chat.conversation.ConversationsFragment;
-import com.vmloft.develop.app.chat.room.RoomsFragment;
 import com.vmloft.develop.app.chat.sign.SignInActivity;
 import com.vmloft.develop.library.tools.utils.VMNetUtil;
 import com.vmloft.develop.library.tools.widget.VMImageView;
@@ -61,7 +60,6 @@ public class MainActivity extends AppActivity {
     private int currentTabIndex;
     private ConversationsFragment conversationFragment;
     private ContactsFragment contactsFragment;
-    private RoomsFragment roomsFragment;
     private MeFragment meFragment;
     private OtherFragment otherFragment;
 
@@ -92,29 +90,25 @@ public class MainActivity extends AppActivity {
         setSupportActionBar(getToolbar());
         currentTabIndex = 0;
         tabTitles = new String[] {
-                getString(R.string.chat), getString(R.string.contacts), getString(R.string.room),
-                getString(R.string.me), getString(R.string.test)
+                getString(R.string.chat), getString(R.string.contacts), getString(R.string.me), getString(R.string.test)
         };
 
         conversationFragment = ConversationsFragment.newInstance();
         contactsFragment = ContactsFragment.newInstance();
-        roomsFragment = RoomsFragment.newInstance();
         meFragment = MeFragment.newInstance();
         otherFragment = OtherFragment.newInstance();
 
         fragments = new Fragment[] {
-                conversationFragment, contactsFragment, roomsFragment, meFragment, otherFragment
+                conversationFragment, contactsFragment, meFragment, otherFragment
         };
-        ViewPagerAdapter adapter =
-                new ViewPagerAdapter(getSupportFragmentManager(), fragments, tabTitles);
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager(), fragments, tabTitles);
         viewPager.setAdapter(adapter);
         // 设置 ViewPager 缓存个数
-        viewPager.setOffscreenPageLimit(4);
+        viewPager.setOffscreenPageLimit(3);
         viewPager.setCurrentItem(currentTabIndex);
         // 添加 ViewPager 页面改变监听
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override public void onPageScrolled(int position, float positionOffset,
-                    int positionOffsetPixels) {
+            @Override public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
 
             @Override public void onPageSelected(int position) {
@@ -149,8 +143,7 @@ public class MainActivity extends AppActivity {
                     intent = new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS);
                 } else {
                     intent = new Intent();
-                    ComponentName component = new ComponentName("com.android.settings",
-                            "com.android.settings.WirelessSettings");
+                    ComponentName component = new ComponentName("com.android.settings", "com.android.settings.WirelessSettings");
                     intent.setComponent(component);
                     intent.setAction("android.intent.action.VIEW");
                 }
@@ -164,40 +157,34 @@ public class MainActivity extends AppActivity {
      */
     private void createNewConversation() {
         alertDialogBuilder = new AlertDialog.Builder(activity);
-        alertDialogBuilder.setTitle(
-                activity.getResources().getString(R.string.dialog_title_conversation));
+        alertDialogBuilder.setTitle(activity.getResources().getString(R.string.dialog_title_conversation));
         View view = activity.getLayoutInflater().inflate(R.layout.dialog_communal, null);
         TextView textView = (TextView) view.findViewById(R.id.dialog_text_message);
         textView.setText(R.string.dialog_content_create_conversation);
         final EditText editText = (EditText) view.findViewById(R.id.dialog_edit_input);
         editText.setHint(R.string.hint_input_not_null);
         alertDialogBuilder.setView(view);
-        alertDialogBuilder.setPositiveButton(R.string.btn_ok,
-                new DialogInterface.OnClickListener() {
-                    @Override public void onClick(DialogInterface dialog, int which) {
-                        if (TextUtils.isEmpty(editText.getText().toString().trim())) {
-                            Snackbar.make(getRootView(), R.string.hint_input_not_null,
-                                    Snackbar.LENGTH_SHORT).show();
-                            return;
-                        }
-                        String currUsername = EMClient.getInstance().getCurrentUser();
-                        if (currUsername.equals(editText.getText().toString().trim())) {
-                            Snackbar.make(getRootView(), R.string.toast_cant_chat_with_yourself,
-                                    Snackbar.LENGTH_SHORT).show();
-                            return;
-                        }
-                        Intent intent = new Intent(activity, ChatActivity.class);
-                        intent.putExtra(Constants.EXTRA_CHAT_ID,
-                                editText.getText().toString().trim());
-                        onStartActivity(activity, intent);
-                    }
-                });
-        alertDialogBuilder.setNegativeButton(R.string.btn_cancel,
-                new DialogInterface.OnClickListener() {
-                    @Override public void onClick(DialogInterface dialog, int which) {
+        alertDialogBuilder.setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
+            @Override public void onClick(DialogInterface dialog, int which) {
+                if (TextUtils.isEmpty(editText.getText().toString().trim())) {
+                    Snackbar.make(getRootView(), R.string.hint_input_not_null, Snackbar.LENGTH_SHORT).show();
+                    return;
+                }
+                String currUsername = EMClient.getInstance().getCurrentUser();
+                if (currUsername.equals(editText.getText().toString().trim())) {
+                    Snackbar.make(getRootView(), R.string.toast_cant_chat_with_yourself, Snackbar.LENGTH_SHORT).show();
+                    return;
+                }
+                Intent intent = new Intent(activity, ChatActivity.class);
+                intent.putExtra(Constants.EXTRA_CHAT_ID, editText.getText().toString().trim());
+                onStartActivity(activity, intent);
+            }
+        });
+        alertDialogBuilder.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
+            @Override public void onClick(DialogInterface dialog, int which) {
 
-                    }
-                });
+            }
+        });
         createConversationDialog = alertDialogBuilder.create();
         createConversationDialog.show();
     }
@@ -304,8 +291,7 @@ public class MainActivity extends AppActivity {
      * 设置界面进入过度效果
      */
     private void setWindowEnterTransition() {
-        Transition transition = TransitionInflater.from(activity)
-                .inflateTransition(R.transition.transition_fade_enter);
+        Transition transition = TransitionInflater.from(activity).inflateTransition(R.transition.transition_fade_enter);
         // This view will not be affected by enter transition animation
         getWindow().setEnterTransition(transition);
     }

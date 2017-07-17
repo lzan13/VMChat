@@ -6,16 +6,13 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 
-import android.view.View;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 
-import com.vmloft.develop.app.chat.app.AppActivity;
 import com.vmloft.develop.app.chat.app.AppFragment;
 import com.vmloft.develop.app.chat.app.Constants;
-import com.vmloft.develop.app.chat.app.MainActivity;
 import com.vmloft.develop.app.chat.apply.ApplyForActivity;
 import com.vmloft.develop.app.chat.chat.ChatActivity;
 import com.vmloft.develop.app.chat.chat.MessageEvent;
@@ -41,7 +38,7 @@ public class ConversationsFragment extends AppFragment {
 
     // 代替 ListView 用来显示会话列表的控件
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
-    private android.support.v7.widget.LinearLayoutManager layoutManager;
+    private RecyclerView.LayoutManager layoutManager;
 
     // 保存会话对象的集合
     private List<EMConversation> conversations = new ArrayList<EMConversation>();
@@ -106,7 +103,7 @@ public class ConversationsFragment extends AppFragment {
     /**
      * 刷新会话列表，重新加载会话列表到list集合，然后刷新adapter
      */
-    public void refreshConversation() {
+    public void refreshConversationList() {
         if (adapter != null) {
             conversations.clear();
             loadConversationList();
@@ -248,7 +245,7 @@ public class ConversationsFragment extends AppFragment {
                         } else {
                             ConversationExtUtils.setConversationPushpin(conversation, true);
                         }
-                        refreshConversation();
+                        refreshConversationList();
                         break;
                     case 1:
                         if (conversation.getUnreadMsgCount() > 0
@@ -258,19 +255,19 @@ public class ConversationsFragment extends AppFragment {
                         } else {
                             ConversationExtUtils.setConversationUnread(conversation, true);
                         }
-                        refreshConversation();
+                        refreshConversationList();
                         break;
                     case 2:
                         // 清空当前会话的消息，同时删除了内存中和数据库中的数据
                         conversations.get(position).clearAllMessages();
-                        refreshConversation();
+                        refreshConversationList();
                         break;
                     case 3:
                         // 删除当前会话，第二个参数表示是否删除此会话的消息
                         EMClient.getInstance()
                                 .chatManager()
                                 .deleteConversation(conversation.conversationId(), false);
-                        refreshConversation();
+                        refreshConversationList();
                         break;
                 }
             }
@@ -286,7 +283,7 @@ public class ConversationsFragment extends AppFragment {
      */
     @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(MessageEvent event) {
         // 调用界面刷新方法
-        refreshConversation();
+        refreshConversationList();
     }
 
     @Override public void onStart() {
@@ -301,7 +298,7 @@ public class ConversationsFragment extends AppFragment {
     @Override public void onResume() {
         super.onResume();
         // 刷新会话界面
-        refreshConversation();
+        refreshConversationList();
     }
 
     /**

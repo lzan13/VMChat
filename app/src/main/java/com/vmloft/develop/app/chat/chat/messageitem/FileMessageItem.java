@@ -63,6 +63,7 @@ public class FileMessageItem extends MessageItem {
 
         EMNormalFileMessageBody fileBody = (EMNormalFileMessageBody) this.message.getBody();
         String filename = fileBody.getFileName();
+
         // 设置文件名
         contentView.setText(filename);
         // 设置文件大小

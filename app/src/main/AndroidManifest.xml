@@ -42,6 +42,12 @@
     <!--悬浮窗权限-->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
+    <!--直播需要的特殊权限-->
+    <uses-feature android:name="android.hardware.camera.autofocus"/>
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true"/>
+
     <!-- 程序的入口 -->
     <application
         android:name=".app.AppApplication"

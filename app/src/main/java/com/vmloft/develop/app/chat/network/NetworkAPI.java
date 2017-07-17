@@ -34,8 +34,8 @@ public interface NetworkAPI {
      * @param password 账户密码
      * @return 请求结果
      */
-    @FormUrlEncoded @POST("auth/token") Call<ResponseBody> authToken(
-            @Field("username") String username, @Field("password") String password);
+    @FormUrlEncoded @POST("auth/token") Call<ResponseBody> authToken(@Field("username") String username,
+            @Field("password") String password);
 
     /**
      * 创建新账户
@@ -44,8 +44,8 @@ public interface NetworkAPI {
      * @param password 账户密码
      * @return 请求结果
      */
-    @FormUrlEncoded @POST("users/create") Call<ResponseBody> createUser(
-            @Field("username") String username, @Field("password") String password);
+    @FormUrlEncoded @POST("users/create") Call<ResponseBody> createUser(@Field("username") String username,
+            @Field("password") String password);
 
     /**
      * 更新账户信息
@@ -58,9 +58,8 @@ public interface NetworkAPI {
      * @param accessToken 账户 token
      * @return 请求结果
      */
-    @Multipart @PUT("users/update") Call<ResponseBody> updateUser(@Part("email") String email,
-            @Part("nickname") String nickname, @Part("signature") String signature,
-            @Part("location") String location, @Part("gender") String gender,
+    @Multipart @PUT("users/update") Call<ResponseBody> updateUser(@Part("email") String email, @Part("nickname") String nickname,
+            @Part("signature") String signature, @Part("location") String location, @Part("gender") String gender,
             @Part("access_token") String accessToken);
 
     /**
@@ -106,8 +105,7 @@ public interface NetworkAPI {
      * @param accessToken 请求认证
      * @return 请求结果
      */
-    @PUT("friends/{username}") Call<ResponseBody> addFriend(
-            @Part("access_token") String accessToken);
+    @PUT("friends/{username}") Call<ResponseBody> addFriend(@Part("access_token") String accessToken);
 
     /**
      * 删除好友
@@ -115,8 +113,7 @@ public interface NetworkAPI {
      * @param accessToken 请求认证
      * @return 请求结果
      */
-    @DELETE("friends/{username}") Call<ResponseBody> removeFriend(
-            @Part("access_token") String accessToken);
+    @DELETE("friends/{username}") Call<ResponseBody> removeFriend(@Part("access_token") String accessToken);
 
     /**
      * 获取好友列表
@@ -125,5 +122,4 @@ public interface NetworkAPI {
      * @return 请求结果
      */
     @GET("friends/list") Call<ResponseBody> getFriends(@Query("access_token") String accessToken);
-
 }

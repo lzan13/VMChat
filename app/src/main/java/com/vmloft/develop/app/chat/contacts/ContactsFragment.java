@@ -130,7 +130,7 @@ public class ContactsFragment extends AppFragment {
     /**
      * 刷新邀请信息界面
      */
-    private void refresh() {
+    private void refreshContactsList() {
         loadContactsList();
         if (adapter == null) {
             adapter = new ContactsAdapter(activity, contactsList);
@@ -141,7 +141,7 @@ public class ContactsFragment extends AppFragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(ContactsEvent event) {
-        refresh();
+        refreshContactsList();
     }
 
     /**
@@ -150,7 +150,7 @@ public class ContactsFragment extends AppFragment {
     @Override public void onResume() {
         super.onResume();
         // 刷新联系人界面
-        refresh();
+        refreshContactsList();
     }
 
     /**

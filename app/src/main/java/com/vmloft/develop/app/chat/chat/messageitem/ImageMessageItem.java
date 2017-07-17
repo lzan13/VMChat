@@ -65,6 +65,7 @@ public class ImageMessageItem extends MessageItem {
      */
     @Override public void onSetupView(EMMessage message) {
         this.message = message;
+        EMClient.getInstance().chatManager().downloadAttachment(message);
         message.setMessageStatusCallback(new EMCallBack() {
             @Override public void onSuccess() {
                 VMLog.d("message download thumbnail onSuccess");

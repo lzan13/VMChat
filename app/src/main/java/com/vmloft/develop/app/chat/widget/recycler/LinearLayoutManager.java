@@ -58,9 +58,9 @@ public class LinearLayoutManager extends android.support.v7.widget.LinearLayoutM
     }
 
     /**
-     * 放置在 clear 重新加载数据时，出现更新数据不匹配问题
+     * 防止在 clear 重新加载数据时，出现更新数据不匹配问题
      */
-    //@Override public boolean supportsPredictiveItemAnimations() {
-    //    return false;
-    //}
+    @Override public boolean supportsPredictiveItemAnimations() {
+        return false;
+    }
 }

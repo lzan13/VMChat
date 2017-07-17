@@ -1,12 +1,8 @@
 package com.vmloft.develop.app.chat.app;
 
-import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.support.multidex.MultiDexApplication;
 
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
 import com.tendcloud.tenddata.TCAgent;
 
 import com.vmloft.develop.library.tools.VMApplication;
@@ -18,7 +14,6 @@ import com.vmloft.develop.library.tools.utils.VMLog;
  */
 public class AppApplication extends VMApplication {
 
-
     @Override public void onCreate() {
         super.onCreate();
 
@@ -27,7 +22,6 @@ public class AppApplication extends VMApplication {
 
         // 调用 TalkingData 初始化统计平台代码
         initTalkingData();
-
     }
 
     /**
@@ -37,8 +31,7 @@ public class AppApplication extends VMApplication {
         TCAgent.LOG_ON = true;
         String channel = "";
         try {
-            ApplicationInfo ai = this.getPackageManager()
-                    .getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
+            ApplicationInfo ai = this.getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
             channel = ai.metaData.getString("TD_CHANNEL_ID", "dev");
             VMLog.i("channel %s", channel);
         } catch (NullPointerException e) {

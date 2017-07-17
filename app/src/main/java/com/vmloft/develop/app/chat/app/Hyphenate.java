@@ -17,7 +17,6 @@ import com.vmloft.develop.app.chat.contacts.ContactsListener;
 import com.vmloft.develop.app.chat.contacts.UserEntity;
 import com.vmloft.develop.app.chat.database.DBHelper;
 import com.vmloft.develop.app.chat.database.UserDao;
-import com.vmloft.develop.app.chat.group.GroupListener;
 import com.vmloft.develop.library.tools.utils.VMLog;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,8 +55,6 @@ public class Hyphenate {
     private MessageListener messageListener;
     // 环信联系人监听
     private ContactsListener contactListener;
-    // 环信群组变化监听
-    private GroupListener groupChangeListener;
 
     // 表示是是否解绑Token，一般离线状态都要设置为false
     public boolean unBuildToken = true;
@@ -104,10 +101,9 @@ public class Hyphenate {
         if (isInit) {
             return isInit;
         }
-        this.context = context;
 
         // 调用初始化方法初始化sdk
-        EMClient.getInstance().init(this.context, initOptions());
+        EMClient.getInstance().init(context, initOptions());
 
         // 设置开启debug模式
         EMClient.getInstance().setDebugMode(true);
@@ -180,7 +176,6 @@ public class Hyphenate {
      * 连接监听     {@link #registerConnectionListener()}
      * 消息监听     {@link #registerMessageListener()}
      * 联系人监听   {@link #registerContactListener()}
-     * 群组监听     {@link #registerGroupListener()}
      */
     public void initGlobalListener() {
         // 注册通话广播监听
@@ -191,8 +186,6 @@ public class Hyphenate {
         registerMessageListener();
         // 注册全局的联系人监听
         registerContactListener();
-        // 注册全局的群组变化监听
-        registerGroupListener();
     }
 
     /**
@@ -237,18 +230,6 @@ public class Hyphenate {
         }
         // 设置联系人变化监听
         EMClient.getInstance().contactManager().setContactListener(contactListener);
-    }
-
-    /**
-     * 注册群组变化监听，用来监听群组相关变化回调
-     * 详细实现见{@link GroupListener}
-     */
-    private void registerGroupListener() {
-        if (groupChangeListener == null) {
-            groupChangeListener = new GroupListener();
-        }
-        // 添加群组改变监听
-        EMClient.getInstance().groupManager().addGroupChangeListener(groupChangeListener);
     }
 
     /**
