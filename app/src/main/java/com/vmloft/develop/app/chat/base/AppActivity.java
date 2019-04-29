@@ -1,22 +1,19 @@
-package com.vmloft.develop.app.chat.app;
+package com.vmloft.develop.app.chat.base;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.transition.Explode;
-import android.transition.Transition;
-import android.transition.TransitionInflater;
 import android.view.View;
-import com.squareup.leakcanary.RefWatcher;
-import com.vmloft.develop.library.tools.VMBaseActivity;
+
 import java.util.List;
 
 import com.vmloft.develop.app.chat.R;
+import com.vmloft.develop.app.chat.common.AConstants;
 import com.vmloft.develop.app.chat.connection.ConnectionEvent;
+import com.vmloft.develop.library.tools.base.VMActivity;
 import com.vmloft.develop.library.tools.utils.VMLog;
-import org.greenrobot.eventbus.EventBus;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -24,12 +21,7 @@ import org.greenrobot.eventbus.ThreadMode;
  * Created by lzan13 on 2015/7/4.
  * Activity 的基类，做一些子类公共的工作
  */
-public class AppActivity extends VMBaseActivity {
-
-    protected String className = this.getClass().getSimpleName();
-
-    // 当前界面的上下文菜单对象
-    protected AppActivity activity;
+public class AppActivity extends VMActivity {
 
     // 根布局
     private View rootView;
@@ -39,55 +31,14 @@ public class AppActivity extends VMBaseActivity {
 
     protected AlertDialog.Builder dialog;
 
-    @Override protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        VMLog.i("%s onCreate", className);
-        activity = this;
-    }
-
-    @Override protected void onRestart() {
-        super.onRestart();
-        VMLog.i("%s onRestart", className);
-    }
-
-    @Override protected void onStart() {
-        super.onStart();
-        VMLog.i("%s onStart", className);
-        // 将 activity 添加到集合中去
-        Hyphenate.getInstance().addActivity(activity);
-        // 注册订阅者
-        EventBus.getDefault().register(this);
-    }
-
-    @Override protected void onResume() {
-        super.onResume();
-        VMLog.i("%s onResume", className);
-    }
-
-    @Override protected void onPause() {
-        super.onPause();
-        VMLog.i("%s onPause", className);
-    }
-
-    @Override protected void onStop() {
-        super.onStop();
-        VMLog.i("%s onStop", className);
-        // 将 activity 从集合中移除
-        Hyphenate.getInstance().removeActivity(activity);
-        // 取消订阅者的注册
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Override protected void onDestroy() {
+    @Override
+    protected void onDestroy() {
         super.onDestroy();
         activity = null;
         toolbar = null;
         rootView = null;
 
         VMLog.i("%s onDestroy", className);
-        // 用来检测内存泄漏
-        RefWatcher refWatcher = AppApplication.getRefWatcher();
-        refWatcher.watch(this);
     }
 
     /**
@@ -97,7 +48,7 @@ public class AppActivity extends VMBaseActivity {
      */
     public Toolbar getToolbar() {
         if (toolbar == null) {
-            toolbar = (Toolbar) findViewById(R.id.widget_toolbar);
+            toolbar = findViewById(R.id.widget_toolbar);
         }
         toolbar.setTitle("");
         return toolbar;
@@ -115,21 +66,23 @@ public class AppActivity extends VMBaseActivity {
      *
      * @param event 订阅的消息类型
      */
-    @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(ConnectionEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventBus(ConnectionEvent event) {
         switch (event.getType()) {
-            case Constants.CONNECTION_USER_LOGIN_OTHER_DIVERS:
+            case AConstants.CONNECTION_USER_LOGIN_OTHER_DIVERS:
                 onConflictDialog();
                 break;
-            case Constants.CONNECTION_USER_REMOVED:
+            case AConstants.CONNECTION_USER_REMOVED:
                 onRemovedDialog();
                 break;
-            case Constants.CONNECTION_CONNECTED:
+            case AConstants.CONNECTION_CONNECTED:
                 break;
-            case Constants.CONNECTION_DISCONNECTED:
+            case AConstants.CONNECTION_DISCONNECTED:
 
                 break;
         }
     }
+
 
     /**
      * 弹出账户被其他设备登录的对话框
@@ -148,7 +101,8 @@ public class AppActivity extends VMBaseActivity {
         dialog.setMessage(R.string.dialog_message_conflict);
         // 弹出框自定义操作按钮
         dialog.setNeutralButton(R.string.sign_in_restart, new DialogInterface.OnClickListener() {
-            @Override public void onClick(DialogInterface dialog, int which) {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
                 // 自定义操作按钮
                 Intent intent = new Intent();
                 intent.setClass(activity, MainActivity.class);
@@ -157,9 +111,10 @@ public class AppActivity extends VMBaseActivity {
         });
         // 弹出框确认按钮
         dialog.setPositiveButton(R.string.btn_i_know, new DialogInterface.OnClickListener() {
-            @Override public void onClick(DialogInterface dialog, int which) {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
                 // 确认按钮，退出app
-                List<AppActivity> lists = Hyphenate.getInstance().getActivityList();
+                List<AppActivity> lists = IMHelper.getInstance().getActivityList();
                 for (AppActivity activity : lists) {
                     activity.onFinish();
                 }
@@ -185,7 +140,8 @@ public class AppActivity extends VMBaseActivity {
         dialog.setMessage(R.string.dialog_message_remove);
         // 弹出框自定义操作按钮
         dialog.setNeutralButton(R.string.sign_in_restart, new DialogInterface.OnClickListener() {
-            @Override public void onClick(DialogInterface dialog, int which) {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
                 // 自定义操作按钮
                 Intent intent = new Intent();
                 intent.setClass(activity, MainActivity.class);
@@ -194,9 +150,10 @@ public class AppActivity extends VMBaseActivity {
         });
         // 弹出框确认按钮
         dialog.setPositiveButton(R.string.btn_i_know, new DialogInterface.OnClickListener() {
-            @Override public void onClick(DialogInterface dialog, int which) {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
                 // 确认按钮，退出app
-                List<AppActivity> lists = Hyphenate.getInstance().getActivityList();
+                List<AppActivity> lists = IMHelper.getInstance().getActivityList();
                 for (AppActivity activity : lists) {
                     activity.onFinish();
                 }

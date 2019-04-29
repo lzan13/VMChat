@@ -5,7 +5,7 @@
     <item>
         <shape android:dither="true">
             <corners android:radius="@dimen/vm_dimen_20"/>
-            <solid android:color="@color/vm_gray_white_100"/>
+            <solid android:color="@color/vm_gray_white"/>
         </shape>
         <!--<selector xmlns:android="http://schemas.android.com/apk/res/android">-->
         <!--<item-->

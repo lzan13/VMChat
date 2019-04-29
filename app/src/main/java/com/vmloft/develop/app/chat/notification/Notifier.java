@@ -5,14 +5,14 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat;
 
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 
-import com.vmloft.develop.app.chat.app.AppApplication;
-import com.vmloft.develop.app.chat.app.Constants;
-import com.vmloft.develop.app.chat.app.MainActivity;
+import com.vmloft.develop.app.chat.common.AConstants;
+import com.vmloft.develop.app.chat.base.App;
+import com.vmloft.develop.app.chat.base.MainActivity;
 import com.vmloft.develop.app.chat.chat.ChatActivity;
 import com.vmloft.develop.app.chat.R;
 
@@ -36,7 +36,7 @@ public class Notifier {
      * 私有的构造方法
      */
     private Notifier() {
-        mContext = AppApplication.getContext();
+        mContext = App.getContext();
         mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         mBuilder = new NotificationCompat.Builder(mContext);
         init();
@@ -154,7 +154,7 @@ public class Notifier {
         mBuilder.setContentTitle(mContext.getString(R.string.app_name));
         // 设置通知栏点击意图（点击通知栏跳转到相应的页面）
         Intent intent = new Intent(mContext, ChatActivity.class);
-        intent.putExtra(Constants.EXTRA_CHAT_ID, message.getFrom());
+        intent.putExtra(AConstants.EXTRA_CHAT_ID, message.getFrom());
         PendingIntent pIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         mBuilder.setContentIntent(pIntent);
         // 紧急事件，比如通话，跳过发送通知栏提醒，直接响应对应的事件

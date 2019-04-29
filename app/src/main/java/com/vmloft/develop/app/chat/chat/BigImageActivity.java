@@ -11,9 +11,9 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMImageMessageBody;
 import com.hyphenate.chat.EMMessage;
 
-import com.vmloft.develop.app.chat.app.AppActivity;
-import com.vmloft.develop.app.chat.app.Constants;
-import com.vmloft.develop.library.tools.utils.VMFileUtil;
+import com.vmloft.develop.app.chat.common.AConstants;
+import com.vmloft.develop.app.chat.base.AppActivity;
+import com.vmloft.develop.library.tools.utils.VMFile;
 import com.vmloft.develop.app.chat.R;
 import com.vmloft.develop.library.tools.utils.VMLog;
 
@@ -63,14 +63,14 @@ public class BigImageActivity extends AppActivity {
         // 启动图片缩放功能
         mPhotoView.enable();
 
-        String msgId = getIntent().getStringExtra(Constants.EXTRA_MSG_ID);
+        String msgId = getIntent().getStringExtra(AConstants.EXTRA_MSG_ID);
         mMessage = EMClient.getInstance().chatManager().getMessage(msgId);
 
         // 图片本地路径
         String localPath = ((EMImageMessageBody) mMessage.getBody()).getLocalUrl();
         String remotePath = ((EMImageMessageBody) mMessage.getBody()).getRemoteUrl();
         // 根据图片存在情况加载缩略图显示
-        if (VMFileUtil.isFileExists(localPath)) {
+        if (VMFile.isFileExists(localPath)) {
             VMLog.i("show big image");
             // 原图存在，直接通过原图路径加载显示
             Glide.with(activity)

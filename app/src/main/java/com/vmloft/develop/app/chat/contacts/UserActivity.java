@@ -21,8 +21,8 @@ import butterknife.OnClick;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.exceptions.HyphenateException;
 
-import com.vmloft.develop.app.chat.app.AppActivity;
-import com.vmloft.develop.app.chat.app.Constants;
+import com.vmloft.develop.app.chat.common.AConstants;
+import com.vmloft.develop.app.chat.base.AppActivity;
 import com.vmloft.develop.app.chat.chat.ChatActivity;
 import com.vmloft.develop.app.chat.R;
 import com.vmloft.develop.library.tools.utils.VMLog;
@@ -72,8 +72,8 @@ public class UserActivity extends AppActivity {
      */
     private void initView() {
         currentUsername = EMClient.getInstance().getCurrentUser();
-        chatId = getIntent().getStringExtra(Constants.EXTRA_CHAT_ID);
-        applyMsgId = getIntent().getStringExtra(Constants.EXTRA_MSG_ID);
+        chatId = getIntent().getStringExtra(AConstants.EXTRA_CHAT_ID);
+        applyMsgId = getIntent().getStringExtra(AConstants.EXTRA_MSG_ID);
 
         // 根据 Username 获取User对象
         userEntity = UserManager.getInstance().getUser(chatId);
@@ -198,7 +198,7 @@ public class UserActivity extends AppActivity {
     private void startChat() {
         Intent intent = new Intent();
         intent.setClass(activity, ChatActivity.class);
-        intent.putExtra(Constants.EXTRA_CHAT_ID, chatId);
+        intent.putExtra(AConstants.EXTRA_CHAT_ID, chatId);
         activity.onStartActivity(activity, intent);
         activity.finish();
     }

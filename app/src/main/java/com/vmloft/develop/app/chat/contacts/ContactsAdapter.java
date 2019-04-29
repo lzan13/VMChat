@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.vmloft.develop.app.chat.app.Constants;
+import com.vmloft.develop.app.chat.common.AConstants;
 import com.vmloft.develop.app.chat.R;
 import com.vmloft.develop.app.chat.interfaces.ItemCallBack;
 
@@ -67,13 +67,13 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
         // 设置 itemView 点击监听事件
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                mCallBack.onAction(Constants.ACTION_CLICK, position);
+                mCallBack.onAction(AConstants.ACTION_CLICK, position);
             }
         });
         // 设置 itemView 长按监听事件
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override public boolean onLongClick(View view) {
-                mCallBack.onAction(Constants.ACTION_LONG_CLICK, position);
+                mCallBack.onAction(AConstants.ACTION_LONG_CLICK, position);
                 return false;
             }
         });

@@ -9,7 +9,7 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 
-import com.vmloft.develop.app.chat.app.Constants;
+import com.vmloft.develop.app.chat.common.AConstants;
 import com.vmloft.develop.app.chat.chat.messageitem.FileMessageItem;
 import com.vmloft.develop.app.chat.chat.messageitem.MessageItem;
 import com.vmloft.develop.app.chat.chat.messageitem.RecallMessageItem;
@@ -75,40 +75,40 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         EMMessage message = messages.get(position);
         int itemType = -1;
         // 判断消息类型
-        if (message.getBooleanAttribute(Constants.ATTR_RECALL, false)) {
+        if (message.getBooleanAttribute(AConstants.ATTR_RECALL, false)) {
             // 撤回消息
-            itemType = Constants.MSG_TYPE_SYS_RECALL;
-        } else if (message.getBooleanAttribute(Constants.ATTR_CALL_VIDEO, false)
-                || message.getBooleanAttribute(Constants.ATTR_CALL_VOICE, false)) {
+            itemType = AConstants.MSG_TYPE_SYS_RECALL;
+        } else if (message.getBooleanAttribute(AConstants.ATTR_CALL_VIDEO, false)
+                || message.getBooleanAttribute(AConstants.ATTR_CALL_VOICE, false)) {
             // 音视频消息
-            itemType = message.direct() == EMMessage.Direct.SEND ? Constants.MSG_TYPE_CALL_SEND
-                    : Constants.MSG_TYPE_CALL_RECEIVED;
+            itemType = message.direct() == EMMessage.Direct.SEND ? AConstants.MSG_TYPE_CALL_SEND
+                    : AConstants.MSG_TYPE_CALL_RECEIVED;
         } else {
             switch (message.getType()) {
                 case TXT:
                     // 文本消息
                     itemType = message.direct() == EMMessage.Direct.SEND
-                            ? Constants.MSG_TYPE_TEXT_SEND : Constants.MSG_TYPE_TEXT_RECEIVED;
+                            ? AConstants.MSG_TYPE_TEXT_SEND : AConstants.MSG_TYPE_TEXT_RECEIVED;
                     break;
                 case IMAGE:
                     // 语音消息
                     itemType = message.direct() == EMMessage.Direct.SEND
-                            ? Constants.MSG_TYPE_IMAGE_SEND : Constants.MSG_TYPE_IMAGE_RECEIVED;
+                            ? AConstants.MSG_TYPE_IMAGE_SEND : AConstants.MSG_TYPE_IMAGE_RECEIVED;
                     break;
                 case FILE:
                     // 文件消息
                     itemType = message.direct() == EMMessage.Direct.SEND
-                            ? Constants.MSG_TYPE_FILE_SEND : Constants.MSG_TYPE_FILE_RECEIVED;
+                            ? AConstants.MSG_TYPE_FILE_SEND : AConstants.MSG_TYPE_FILE_RECEIVED;
                     break;
                 case VOICE:
                     // 语音消息
                     itemType = message.direct() == EMMessage.Direct.SEND
-                            ? Constants.MSG_TYPE_VOICE_SEND : Constants.MSG_TYPE_VOICE_RECEIVED;
+                            ? AConstants.MSG_TYPE_VOICE_SEND : AConstants.MSG_TYPE_VOICE_RECEIVED;
                     break;
                 default:
                     // 默认返回txt类型
                     itemType = message.direct() == EMMessage.Direct.SEND
-                            ? Constants.MSG_TYPE_TEXT_SEND : Constants.MSG_TYPE_TEXT_RECEIVED;
+                            ? AConstants.MSG_TYPE_TEXT_SEND : AConstants.MSG_TYPE_TEXT_RECEIVED;
                     break;
             }
         }
@@ -129,23 +129,23 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
              *  SDK默认类型的消息
              */
             // 文字类消息
-            case Constants.MSG_TYPE_TEXT_SEND:
-            case Constants.MSG_TYPE_TEXT_RECEIVED:
+            case AConstants.MSG_TYPE_TEXT_SEND:
+            case AConstants.MSG_TYPE_TEXT_RECEIVED:
                 holder = new MessageViewHolder(new TextMessageItem(context, this, viewType));
                 break;
             // 图片类消息
-            case Constants.MSG_TYPE_IMAGE_SEND:
-            case Constants.MSG_TYPE_IMAGE_RECEIVED:
+            case AConstants.MSG_TYPE_IMAGE_SEND:
+            case AConstants.MSG_TYPE_IMAGE_RECEIVED:
                 holder = new MessageViewHolder(new ImageMessageItem(context, this, viewType));
                 break;
             // 正常的文件类消息
-            case Constants.MSG_TYPE_FILE_SEND:
-            case Constants.MSG_TYPE_FILE_RECEIVED:
+            case AConstants.MSG_TYPE_FILE_SEND:
+            case AConstants.MSG_TYPE_FILE_RECEIVED:
                 holder = new MessageViewHolder(new FileMessageItem(context, this, viewType));
                 break;
             // 正常的语音消息
-            case Constants.MSG_TYPE_VOICE_SEND:
-            case Constants.MSG_TYPE_VOICE_RECEIVED:
+            case AConstants.MSG_TYPE_VOICE_SEND:
+            case AConstants.MSG_TYPE_VOICE_RECEIVED:
                 holder = new MessageViewHolder(new VoiceMessageItem(context, this, viewType));
                 break;
 
@@ -153,12 +153,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
              * 自定义类型的消息
              */
             // 回撤类消息
-            case Constants.MSG_TYPE_SYS_RECALL:
+            case AConstants.MSG_TYPE_SYS_RECALL:
                 holder = new MessageViewHolder(new RecallMessageItem(context, this, viewType));
                 break;
             // 通话类型消息
-            case Constants.MSG_TYPE_CALL_SEND:
-            case Constants.MSG_TYPE_CALL_RECEIVED:
+            case AConstants.MSG_TYPE_CALL_SEND:
+            case AConstants.MSG_TYPE_CALL_RECEIVED:
                 holder = new MessageViewHolder(new CallMessageItem(context, this, viewType));
                 break;
         }

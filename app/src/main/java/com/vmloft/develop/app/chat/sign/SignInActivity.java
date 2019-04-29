@@ -4,12 +4,9 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.transition.Transition;
-import android.transition.TransitionInflater;
 import android.view.View;
 
 import android.widget.Button;
@@ -22,9 +19,9 @@ import com.hyphenate.EMError;
 import com.hyphenate.chat.EMClient;
 
 import com.vmloft.develop.app.chat.R;
-import com.vmloft.develop.app.chat.app.AppActivity;
-import com.vmloft.develop.app.chat.app.Constants;
-import com.vmloft.develop.app.chat.app.MainActivity;
+import com.vmloft.develop.app.chat.common.AConstants;
+import com.vmloft.develop.app.chat.base.AppActivity;
+import com.vmloft.develop.app.chat.base.MainActivity;
 import com.vmloft.develop.app.chat.contacts.UserManager;
 import com.vmloft.develop.app.chat.network.NetworkManager;
 import com.vmloft.develop.library.tools.utils.VMLog;
@@ -74,7 +71,7 @@ public class SignInActivity extends AppActivity {
         });
 
         // 读取最后一次登录的账户 Username
-        username = (String) VMSPUtil.get(activity, Constants.SHARED_USERNAME, "");
+        username = (String) VMSPUtil.get(activity, AConstants.SHARED_USERNAME, "");
         usernameEditView.setText(username);
 
         usernameEditView.addTextChangedListener(new TextWatcher() {
@@ -169,7 +166,7 @@ public class SignInActivity extends AppActivity {
                     }
                     // 解析账户 token 保存
                     String token = object.optJSONObject("data").optString("access_token");
-                    VMSPUtil.put(activity, Constants.USER_ACCESS_TOKEN, token);
+                    VMSPUtil.put(activity, AConstants.USER_ACCESS_TOKEN, token);
                     // rest 认证成功后调用 sdk 登录方法
                     signIn();
                 } catch (JSONException e) {
@@ -189,7 +186,7 @@ public class SignInActivity extends AppActivity {
              */
             @Override public void onSuccess() {
                 // 登录成功，把用户名保存在本地（可以不保存，根据自己的需求）
-                VMSPUtil.put(activity, Constants.SHARED_USERNAME, username);
+                VMSPUtil.put(activity, AConstants.SHARED_USERNAME, username);
                 // 登录成功同步联系人到本地
                 UserManager.getInstance().syncContactsFromServer();
                 // 加载所有会话到内存

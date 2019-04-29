@@ -1,4 +1,4 @@
-package com.vmloft.develop.app.chat.app;
+package com.vmloft.develop.app.chat.base;
 
 import android.app.ActivityManager;
 import android.content.Context;
@@ -18,6 +18,7 @@ import com.vmloft.develop.app.chat.contacts.UserEntity;
 import com.vmloft.develop.app.chat.database.DBHelper;
 import com.vmloft.develop.app.chat.database.UserDao;
 import com.vmloft.develop.library.tools.utils.VMLog;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,15 +28,16 @@ import java.util.List;
 
 /**
  * Created by lzan13 on 2015/7/13.
- * 自定义初始化类做一些环信sdk的初始化操作
+ *
+ * 自定义初始化类做一些环信 sdk 的初始化操作
  */
-public class Hyphenate {
+public class IMHelper {
 
     // 上下文对象
     private Context context;
 
-    // Hyphenate 单例对象
-    private static Hyphenate instance;
+    // IMHelper 单例对象
+    private static IMHelper instance;
 
     // 保存当前运行的 activity 对象，可用来判断程序是否处于前台，以及完全退出app等操作
     private List<AppActivity> activityList = new ArrayList<AppActivity>();
@@ -64,9 +66,9 @@ public class Hyphenate {
      *
      * @return 返回当前类的实例
      */
-    public static Hyphenate getInstance() {
+    public static IMHelper getInstance() {
         if (instance == null) {
-            instance = new Hyphenate();
+            instance = new IMHelper();
         }
         return instance;
     }
@@ -74,7 +76,7 @@ public class Hyphenate {
     /**
      * 私有的构造方法
      */
-    private Hyphenate() {
+    private IMHelper() {
     }
 
     /**
@@ -83,7 +85,7 @@ public class Hyphenate {
      * @param context 上下文菜单
      * @return 返回初始化状态是否成功
      */
-    public synchronized boolean initHyphenate(Context context) {
+    public synchronized boolean init(Context context) {
         VMLog.d("SDK init start -----");
         this.context = context;
         // 获取当前进程 id 并取得进程名
@@ -160,13 +162,6 @@ public class Hyphenate {
         options.setDeleteMessagesAsExitGroup(false);
         // 设置是否允许聊天室的Owner 离开并删除聊天室的会话
         options.allowChatroomOwnerLeave(true);
-
-        // Google 推送 Project Number
-        options.setGCMNumber(Constants.GCM_NUMBER);
-        // 华为推送 AppId
-        options.setHuaweiPushAppId(Constants.HW_APP_ID);
-        // 小米推送 AppId
-        options.setMipushConfig(Constants.MI_APP_ID, Constants.MI_APP_KEY);
 
         return options;
     }
@@ -245,21 +240,24 @@ public class Hyphenate {
          * callback 可选参数，用来接收推出的登录的结果
          */
         EMClient.getInstance().logout(unBuildToken, new EMCallBack() {
-            @Override public void onSuccess() {
+            @Override
+            public void onSuccess() {
                 unBuildToken = true;
                 if (callback != null) {
                     callback.onSuccess();
                 }
             }
 
-            @Override public void onError(int i, String s) {
+            @Override
+            public void onError(int i, String s) {
                 unBuildToken = true;
                 if (callback != null) {
                     callback.onError(i, s);
                 }
             }
 
-            @Override public void onProgress(int i, String s) {
+            @Override
+            public void onProgress(int i, String s) {
                 if (callback != null) {
                     callback.onProgress(i, s);
                 }

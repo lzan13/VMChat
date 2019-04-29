@@ -5,15 +5,12 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import com.vmloft.develop.app.chat.R;
-import com.vmloft.develop.app.chat.app.AppFragment;
-import com.vmloft.develop.app.chat.app.Constants;
+import com.vmloft.develop.app.chat.common.AConstants;
+import com.vmloft.develop.app.chat.base.AppFragment;
 import com.vmloft.develop.app.chat.widget.recycler.LinearLayoutManager;
 import com.vmloft.develop.app.chat.interfaces.ItemCallBack;
-
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +22,8 @@ import java.util.List;
 public class ContactsFragment extends AppFragment {
 
     // 代替 ListView 用来显示联系人列表
-    @BindView(R.id.recycler_view) RecyclerView recyclerView;
+    @BindView(R.id.recycler_view)
+    RecyclerView recyclerView;
     // 联系人界面适配器
     private ContactsAdapter adapter;
 
@@ -52,24 +50,20 @@ public class ContactsFragment extends AppFragment {
      *
      * @return 返回布局 id
      */
-    @Override protected int initLayoutId() {
+    @Override
+    protected int layoutId() {
         return R.layout.fragment_contacts;
     }
 
     /**
-     * 初始化联系人列表界面
+     * 初始化界面
      */
-    @Override protected void initView() {
-        ButterKnife.bind(this, getView());
-    }
-
-    /**
-     * 加载数据
-     */
-    @Override protected void initData() {
+    @Override
+    protected void init() {
+        super.init();
         loadContactsList();
-        adapter = new ContactsAdapter(activity, contactsList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
+        adapter = new ContactsAdapter(mContext, contactsList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setAdapter(adapter);
         setItemCallBack();
     }
@@ -79,16 +73,17 @@ public class ContactsFragment extends AppFragment {
      */
     private void setItemCallBack() {
         adapter.setItemCallBack(new ItemCallBack() {
-            @Override public void onAction(int action, Object tag) {
+            @Override
+            public void onAction(int action, Object tag) {
                 int position = (int) tag;
                 switch (action) {
                     case R.id.img_avatar:
                         itemClick(position);
                         break;
-                    case Constants.ACTION_CLICK:
+                    case AConstants.ACTION_CLICK:
                         itemClick(position);
                         break;
-                    case Constants.ACTION_LONG_CLICK:
+                    case AConstants.ACTION_LONG_CLICK:
                         itemLongClick(position);
                         break;
                 }
@@ -102,9 +97,9 @@ public class ContactsFragment extends AppFragment {
     private void itemClick(int position) {
         UserEntity userEntity = contactsList.get(position);
         Intent intent = new Intent();
-        intent.setClass(activity, UserActivity.class);
-        intent.putExtra(Constants.EXTRA_CHAT_ID, userEntity.getUserName());
-        activity.onStartActivity(activity, intent);
+        intent.setClass(mContext, UserActivity.class);
+        intent.putExtra(AConstants.EXTRA_CHAT_ID, userEntity.getUserName());
+//        mContext.onStartActivity(mContext, intent);
     }
 
     /**
@@ -133,21 +128,22 @@ public class ContactsFragment extends AppFragment {
     private void refreshContactsList() {
         loadContactsList();
         if (adapter == null) {
-            adapter = new ContactsAdapter(activity, contactsList);
+            adapter = new ContactsAdapter(mContext, contactsList);
             recyclerView.setAdapter(adapter);
         } else {
             adapter.notifyDataSetChanged();
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(ContactsEvent event) {
-        refreshContactsList();
-    }
+//    @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(ContactsEvent event) {
+//        refreshContactsList();
+//    }
 
     /**
      * 重写父类的onResume方法， 在这里注册广播
      */
-    @Override public void onResume() {
+    @Override
+    public void onResume() {
         super.onResume();
         // 刷新联系人界面
         refreshContactsList();
@@ -156,7 +152,8 @@ public class ContactsFragment extends AppFragment {
     /**
      * 重写父类的onStop方法，在这里边记得将注册的广播取消
      */
-    @Override public void onStop() {
+    @Override
+    public void onStop() {
         super.onStop();
     }
 }

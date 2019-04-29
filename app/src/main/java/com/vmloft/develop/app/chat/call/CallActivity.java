@@ -5,9 +5,7 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.WindowManager;
 import com.hyphenate.chat.EMClient;
-import com.vmloft.develop.app.chat.app.AppActivity;
-import com.vmloft.develop.library.tools.VMBaseActivity;
-import org.greenrobot.eventbus.EventBus;
+import com.vmloft.develop.app.chat.base.AppActivity;
 
 /**
  * Created by lzan13 on 2016/8/8.
@@ -91,21 +89,6 @@ public class CallActivity extends AppActivity {
      */
     protected void vibrate() {
         vibrator.vibrate(88);
-    }
-
-    /**
-     * 销毁界面时做一些自己的操作
-     */
-    @Override protected void onFinish() {
-        super.onFinish();
-    }
-
-    @Override protected void onStart() {
-        super.onStart();
-    }
-
-    @Override protected void onStop() {
-        super.onStop();
     }
 
     /**

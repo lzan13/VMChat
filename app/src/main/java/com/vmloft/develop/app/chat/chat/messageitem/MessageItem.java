@@ -16,7 +16,7 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.exceptions.HyphenateException;
 
 import com.vmloft.develop.app.chat.R;
-import com.vmloft.develop.app.chat.app.Constants;
+import com.vmloft.develop.app.chat.common.AConstants;
 import com.vmloft.develop.app.chat.chat.ChatActivity;
 import com.vmloft.develop.app.chat.chat.MessageAdapter;
 import com.vmloft.develop.library.tools.utils.VMLog;
@@ -127,7 +127,7 @@ public abstract class MessageItem extends LinearLayout {
             bubbleLayout.setOnClickListener(new OnClickListener() {
                 @Override public void onClick(View v) {
                     // 设置 Item 项点击的 Action
-                    adapter.onItemAction(Constants.ACTION_CLICK, message);
+                    adapter.onItemAction(AConstants.ACTION_CLICK, message);
                 }
             });
             // 设置Item 气泡的长按监听
@@ -172,7 +172,7 @@ public abstract class MessageItem extends LinearLayout {
             return;
         }
         // 判断是否是接收方的消息，是则发送ACK给消息发送者
-        if (viewType == Constants.MSG_TYPE_TEXT_RECEIVED) {
+        if (viewType == AConstants.MSG_TYPE_TEXT_RECEIVED) {
             message.setMessageStatusCallback(new EMCallBack() {
                 @Override public void onSuccess() {
                     VMLog.d("send message ack onSuccess");
@@ -193,7 +193,7 @@ public abstract class MessageItem extends LinearLayout {
             }
         }
         // 设置ACK 的状态显示
-        if (viewType == Constants.MSG_TYPE_TEXT_SEND) {
+        if (viewType == AConstants.MSG_TYPE_TEXT_SEND) {
             if (message.isAcked()) {
                 // 表示对方已读消息，用两个对号表示
                 ackStatusView.setImageResource(R.drawable.ic_done_all_white_18dp);

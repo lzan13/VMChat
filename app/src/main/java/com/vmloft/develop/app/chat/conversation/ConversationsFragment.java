@@ -7,12 +7,12 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 
-import com.vmloft.develop.app.chat.app.AppFragment;
-import com.vmloft.develop.app.chat.app.Constants;
+import com.vmloft.develop.app.chat.common.AConstants;
+import com.vmloft.develop.app.chat.base.AppFragment;
 import com.vmloft.develop.app.chat.apply.ApplyForActivity;
 import com.vmloft.develop.app.chat.chat.ChatActivity;
 import com.vmloft.develop.app.chat.chat.MessageEvent;
@@ -21,9 +21,9 @@ import com.vmloft.develop.app.chat.widget.recycler.LinearLayoutManager;
 import com.vmloft.develop.app.chat.R;
 import com.vmloft.develop.app.chat.interfaces.ItemCallBack;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+//import org.greenrobot.eventbus.EventBus;
+//import org.greenrobot.eventbus.Subscribe;
+//import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,7 +37,8 @@ import java.util.Map;
 public class ConversationsFragment extends AppFragment {
 
     // 代替 ListView 用来显示会话列表的控件
-    @BindView(R.id.recycler_view) RecyclerView recyclerView;
+    @BindView(R.id.recycler_view)
+    RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
 
     // 保存会话对象的集合
@@ -73,26 +74,22 @@ public class ConversationsFragment extends AppFragment {
      *
      * @return 返回布局 id
      */
-    @Override protected int initLayoutId() {
+    @Override
+    protected int layoutId() {
         return R.layout.fragment_conversation;
     }
 
     /**
      * 初始化会话列表界面
      */
-    @Override protected void initView() {
-        ButterKnife.bind(this, getView());
-    }
-
-    /**
-     * 加载数据
-     */
-    @Override protected void initData() {
+    @Override
+    protected void init() {
+        super.init();
         // 加载会话到list集合
         loadConversationList();
         // 实例化会话列表的 Adapter 对象
-        adapter = new ConversationAdapter(activity, conversations);
-        layoutManager = new LinearLayoutManager(activity);
+        adapter = new ConversationAdapter(mContext, conversations);
+        layoutManager = new LinearLayoutManager(mContext);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
@@ -125,7 +122,8 @@ public class ConversationsFragment extends AppFragment {
         }
         // 使用Collectons的sort()方法 对会话列表进行排序
         Collections.sort(list, new Comparator<EMConversation>() {
-            @Override public int compare(EMConversation lhs, EMConversation rhs) {
+            @Override
+            public int compare(EMConversation lhs, EMConversation rhs) {
                 /**
                  * 根据会话扩展中的时间进行排序
                  * 通过{@link ConversationExtUtils#getConversationLastTime(EMConversation)} 获取时间
@@ -165,19 +163,19 @@ public class ConversationsFragment extends AppFragment {
              * @param action 长按菜单需要处理的动作，
              * @param tag 需要操作的 Item 的 tag，这里定义为一个 Object，可以根据需要进行类型转换
              */
-            @Override public void onAction(int action, Object tag) {
+            @Override
+            public void onAction(int action, Object tag) {
                 int position = (int) tag;
                 switch (action) {
                     case R.id.img_avatar:
-                        Intent intent = new Intent(activity, UserActivity.class);
-                        intent.putExtra(Constants.EXTRA_CHAT_ID,
-                                conversations.get(position).conversationId());
-                        activity.onStartActivity(activity, intent);
+                        Intent intent = new Intent(mContext, UserActivity.class);
+                        intent.putExtra(AConstants.EXTRA_CHAT_ID,conversations.get(position).conversationId());
+//                        mContext.onStartActivity(mContext, intent);
                         break;
-                    case Constants.ACTION_CLICK:
+                    case AConstants.ACTION_CLICK:
                         itemClick(position);
                         break;
-                    case Constants.ACTION_LONG_CLICK:
+                    case AConstants.ACTION_LONG_CLICK:
                         itemLongClick(position);
                         break;
                 }
@@ -193,14 +191,14 @@ public class ConversationsFragment extends AppFragment {
     public void itemClick(int position) {
         EMConversation conversation = conversations.get(position);
         Intent intent = new Intent();
-        if (conversation.conversationId().equals(Constants.CONVERSATION_ID_APPLY)) {
-            intent.setClass(activity, ApplyForActivity.class);
-            activity.onStartActivity(activity, intent);
+        if (conversation.conversationId().equals(AConstants.CONVERSATION_ID_APPLY)) {
+            intent.setClass(mContext, ApplyForActivity.class);
+//            mContext.onStartActivity(mContext, intent);
         } else {
-            intent.setClass(activity, ChatActivity.class);
-            intent.putExtra(Constants.EXTRA_CHAT_ID, conversations.get(position).conversationId());
-            intent.putExtra(Constants.EXTRA_TYPE, conversations.get(position).getType());
-            activity.onStartActivity(activity, intent);
+            intent.setClass(mContext, ChatActivity.class);
+            intent.putExtra(AConstants.EXTRA_CHAT_ID, conversations.get(position).conversationId());
+            intent.putExtra(AConstants.EXTRA_TYPE, conversations.get(position).getType());
+//            mContext.onStartActivity(mContext, intent);
         }
     }
 
@@ -215,28 +213,29 @@ public class ConversationsFragment extends AppFragment {
         // 根据当前会话不同的状态来显示不同的长按菜单
         List<String> menuList = new ArrayList<String>();
         if (isTop) {
-            menuList.add(activity.getResources().getString(R.string.menu_conversation_cancel_top));
+            menuList.add(mContext.getResources().getString(R.string.menu_conversation_cancel_top));
         } else {
-            menuList.add(activity.getResources().getString(R.string.menu_conversation_top));
+            menuList.add(mContext.getResources().getString(R.string.menu_conversation_top));
         }
         if (conversation.getUnreadMsgCount() > 0 || ConversationExtUtils.getConversationUnread(
                 conversation)) {
-            menuList.add(activity.getResources().getString(R.string.menu_conversation_read));
+            menuList.add(mContext.getResources().getString(R.string.menu_conversation_read));
         } else {
-            menuList.add(activity.getResources().getString(R.string.menu_conversation_unread));
+            menuList.add(mContext.getResources().getString(R.string.menu_conversation_unread));
         }
-        menuList.add(activity.getResources().getString(R.string.menu_conversation_clear));
-        menuList.add(activity.getResources().getString(R.string.menu_conversation_delete));
+        menuList.add(mContext.getResources().getString(R.string.menu_conversation_clear));
+        menuList.add(mContext.getResources().getString(R.string.menu_conversation_delete));
 
         menus = new String[menuList.size()];
         menuList.toArray(menus);
 
         // 创建并显示 ListView 的长按弹出菜单，并设置弹出菜单 Item的点击监听
-        alertDialogBuilder = new AlertDialog.Builder(activity);
+        alertDialogBuilder = new AlertDialog.Builder(mContext);
         // 弹出框标题
         // alertDialogBuilder.setTitle(R.string.dialog_title_conversation);
         alertDialogBuilder.setItems(menus, new DialogInterface.OnClickListener() {
-            @Override public void onClick(DialogInterface dialog, int which) {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case 0:
                         // 根据当前状态设置会话是否置顶
@@ -279,23 +278,25 @@ public class ConversationsFragment extends AppFragment {
     /**
      * 作为{@link MessageEvent}事件订阅者需要实现的订阅方法，此方法永远运行在主线程
      *
-     * @param event 订阅的事件类型
      */
-    @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(MessageEvent event) {
-        // 调用界面刷新方法
-        refreshConversationList();
-    }
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onEventBus(MessageEvent event) {
+//        // 调用界面刷新方法
+//        refreshConversationList();
+//    }
 
-    @Override public void onStart() {
+    @Override
+    public void onStart() {
         super.onStart();
         // 注册订阅者，监听其它事件发送者发出的事件通知
-        EventBus.getDefault().register(this);
+//        EventBus.getDefault().register(this);
     }
 
     /**
      * 重写父类的onResume方法， 在这里注册广播
      */
-    @Override public void onResume() {
+    @Override
+    public void onResume() {
         super.onResume();
         // 刷新会话界面
         refreshConversationList();
@@ -304,14 +305,16 @@ public class ConversationsFragment extends AppFragment {
     /**
      * 重写父类的onStop方法，在这里边记得将注册的广播取消
      */
-    @Override public void onStop() {
+    @Override
+    public void onStop() {
         super.onStop();
         // 取消观察者的注册
-        EventBus.getDefault().unregister(this);
+//        EventBus.getDefault().unregister(this);
     }
 
-    @Override public void onDestroy() {
-        // 检测弹出框是否显示，显示中则销毁，防止因activity的销毁导致错误
+    @Override
+    public void onDestroy() {
+        // 检测弹出框是否显示，显示中则销毁，防止因 activity 的销毁导致错误
         if (conversationMenuDialog != null && conversationMenuDialog.isShowing()) {
             conversationMenuDialog.dismiss();
         }

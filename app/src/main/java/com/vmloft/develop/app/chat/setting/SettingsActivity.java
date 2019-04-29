@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import butterknife.ButterKnife;
 import com.hyphenate.chat.EMClient;
-import com.vmloft.develop.app.chat.app.AppActivity;
+import com.vmloft.develop.app.chat.base.AppActivity;
 import com.vmloft.develop.app.chat.R;
 
 /**

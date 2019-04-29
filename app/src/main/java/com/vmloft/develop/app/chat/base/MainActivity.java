@@ -1,4 +1,4 @@
-package com.vmloft.develop.app.chat.app;
+package com.vmloft.develop.app.chat.base;
 
 import android.content.ComponentName;
 import android.content.DialogInterface;
@@ -24,14 +24,16 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
 import com.hyphenate.chat.EMClient;
 
 import com.vmloft.develop.app.chat.R;
 import com.vmloft.develop.app.chat.chat.ChatActivity;
+import com.vmloft.develop.app.chat.common.AConstants;
 import com.vmloft.develop.app.chat.contacts.ContactsFragment;
 import com.vmloft.develop.app.chat.conversation.ConversationsFragment;
 import com.vmloft.develop.app.chat.sign.SignInActivity;
-import com.vmloft.develop.library.tools.utils.VMNetUtil;
+import com.vmloft.develop.library.tools.utils.VMNetwork;
 import com.vmloft.develop.library.tools.widget.VMImageView;
 import com.vmloft.develop.app.chat.connection.ConnectionEvent;
 import com.vmloft.develop.app.chat.contacts.UserActivity;
@@ -45,12 +47,18 @@ import com.vmloft.develop.library.tools.utils.VMSPUtil;
 public class MainActivity extends AppActivity {
 
     // 使用注解方式获取控件
-    @BindView(R.id.view_pager) ViewPager viewPager;
-    @BindView(R.id.widget_tab_layout) TabLayout tabLayout;
-    @BindView(R.id.layout_connection_error) LinearLayout connectionStatusLayout;
-    @BindView(R.id.text_connection_error) TextView connectionStatusView;
-    @BindView(R.id.img_avatar) VMImageView avatarView;
-    @BindView(R.id.text_username) TextView usernameView;
+    @BindView(R.id.view_pager)
+    ViewPager viewPager;
+    @BindView(R.id.widget_tab_layout)
+    TabLayout tabLayout;
+    @BindView(R.id.layout_connection_error)
+    LinearLayout connectionStatusLayout;
+    @BindView(R.id.text_connection_error)
+    TextView connectionStatusView;
+    @BindView(R.id.img_avatar)
+    VMImageView avatarView;
+    @BindView(R.id.text_username)
+    TextView usernameView;
 
     // 当前登录账户 Username
     private String currentUsername;
@@ -67,7 +75,8 @@ public class MainActivity extends AppActivity {
     private AlertDialog createConversationDialog;
     private AlertDialog.Builder alertDialogBuilder;
 
-    @Override protected void onCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -84,12 +93,12 @@ public class MainActivity extends AppActivity {
     private void init() {
         activity = this;
 
-        currentUsername = (String) VMSPUtil.get(activity, Constants.SHARED_USERNAME, "");
+        currentUsername = (String) VMSPUtil.get(activity, AConstants.SHARED_USERNAME, "");
         usernameView.setText(currentUsername);
 
         setSupportActionBar(getToolbar());
         currentTabIndex = 0;
-        tabTitles = new String[] {
+        tabTitles = new String[]{
                 getString(R.string.chat), getString(R.string.contacts), getString(R.string.me), getString(R.string.test)
         };
 
@@ -98,7 +107,7 @@ public class MainActivity extends AppActivity {
         meFragment = MeFragment.newInstance();
         otherFragment = OtherFragment.newInstance();
 
-        fragments = new Fragment[] {
+        fragments = new Fragment[]{
                 conversationFragment, contactsFragment, meFragment, otherFragment
         };
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager(), fragments, tabTitles);
@@ -108,13 +117,16 @@ public class MainActivity extends AppActivity {
         viewPager.setCurrentItem(currentTabIndex);
         // 添加 ViewPager 页面改变监听
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
 
-            @Override public void onPageSelected(int position) {
+            @Override
+            public void onPageSelected(int position) {
             }
 
-            @Override public void onPageScrollStateChanged(int state) {
+            @Override
+            public void onPageScrollStateChanged(int state) {
 
             }
         });
@@ -125,12 +137,13 @@ public class MainActivity extends AppActivity {
     /**
      * Fab 按钮控件点击监听
      */
-    @OnClick({ R.id.img_avatar, R.id.layout_connection_error }) void onClick(View view) {
+    @OnClick({R.id.img_avatar, R.id.layout_connection_error})
+    void onClick(View view) {
         Intent intent = null;
         switch (view.getId()) {
             case R.id.img_avatar:
                 intent = new Intent(activity, UserActivity.class);
-                intent.putExtra(Constants.EXTRA_CHAT_ID, currentUsername);
+                intent.putExtra(AConstants.EXTRA_CHAT_ID, currentUsername);
                 onStartActivity(activity, intent);
                 break;
             case R.id.layout_connection_error:
@@ -165,7 +178,8 @@ public class MainActivity extends AppActivity {
         editText.setHint(R.string.hint_input_not_null);
         alertDialogBuilder.setView(view);
         alertDialogBuilder.setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
-            @Override public void onClick(DialogInterface dialog, int which) {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
                 if (TextUtils.isEmpty(editText.getText().toString().trim())) {
                     Snackbar.make(getRootView(), R.string.hint_input_not_null, Snackbar.LENGTH_SHORT).show();
                     return;
@@ -176,12 +190,13 @@ public class MainActivity extends AppActivity {
                     return;
                 }
                 Intent intent = new Intent(activity, ChatActivity.class);
-                intent.putExtra(Constants.EXTRA_CHAT_ID, editText.getText().toString().trim());
+                intent.putExtra(AConstants.EXTRA_CHAT_ID, editText.getText().toString().trim());
                 onStartActivity(activity, intent);
             }
         });
         alertDialogBuilder.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
-            @Override public void onClick(DialogInterface dialog, int which) {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
 
             }
         });
@@ -202,7 +217,8 @@ public class MainActivity extends AppActivity {
      *
      * @param event 订阅的消息类型
      */
-    @Override public void onEventBus(ConnectionEvent event) {
+    @Override
+    public void onEventBus(ConnectionEvent event) {
         checkConnectionStatus();
         super.onEventBus(event);
     }
@@ -217,7 +233,7 @@ public class MainActivity extends AppActivity {
         } else {
             connectionStatusLayout.setVisibility(View.VISIBLE);
             // 判断连接不到服务器的原因是不是因为网络不可用
-            if (VMNetUtil.hasNetwork(activity)) {
+            if (VMNetwork.hasNetwork(activity)) {
                 connectionStatusView.setText(R.string.error_disconnected);
             } else {
                 connectionStatusView.setText(R.string.error_network_error);
@@ -231,7 +247,8 @@ public class MainActivity extends AppActivity {
      * @param menu 菜单对象
      * @return 返回加载结果
      */
-    @Override public boolean onCreateOptionsMenu(Menu menu) {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
     }
@@ -242,7 +259,8 @@ public class MainActivity extends AppActivity {
      * @param item 被选择的菜单项
      * @return 返回处理结果，是否向下传递
      */
-    @Override public boolean onOptionsItemSelected(MenuItem item) {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_search:
                 break;
@@ -263,12 +281,14 @@ public class MainActivity extends AppActivity {
      * Take care of popping the fragment back stack or finishing the activity
      * as appropriate.
      */
-    @Override public void onBackPressed() {
+    @Override
+    public void onBackPressed() {
         //super.onBackPressed();
         onFinish();
     }
 
-    @Override protected void onResume() {
+    @Override
+    protected void onResume() {
         super.onResume();
         checkConnectionStatus();
         if (!EMClient.getInstance().isLoggedInBefore()) {
@@ -279,7 +299,8 @@ public class MainActivity extends AppActivity {
         }
     }
 
-    @Override protected void onDestroy() {
+    @Override
+    protected void onDestroy() {
         // 判断对话框是否显示状态，显示中则销毁，避免 activity 的销毁导致错误
         if (createConversationDialog != null && createConversationDialog.isShowing()) {
             createConversationDialog.dismiss();
@@ -310,15 +331,18 @@ public class MainActivity extends AppActivity {
             mTabsTitle = args;
         }
 
-        @Override public CharSequence getPageTitle(int position) {
+        @Override
+        public CharSequence getPageTitle(int position) {
             return mTabsTitle[position];
         }
 
-        @Override public Fragment getItem(int position) {
+        @Override
+        public Fragment getItem(int position) {
             return mFragments[position];
         }
 
-        @Override public int getCount() {
+        @Override
+        public int getCount() {
             return mTabsTitle.length;
         }
     }

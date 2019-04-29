@@ -4,13 +4,10 @@ import android.app.ProgressDialog;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
-import android.transition.Transition;
-import android.transition.TransitionInflater;
 import android.view.View;
 
 import android.widget.Button;
@@ -24,8 +21,8 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.exceptions.HyphenateException;
 
 import com.vmloft.develop.app.chat.R;
-import com.vmloft.develop.app.chat.app.AppActivity;
-import com.vmloft.develop.app.chat.app.Constants;
+import com.vmloft.develop.app.chat.common.AConstants;
+import com.vmloft.develop.app.chat.base.AppActivity;
 import com.vmloft.develop.app.chat.network.NetworkManager;
 import com.vmloft.develop.library.tools.utils.VMLog;
 import com.vmloft.develop.library.tools.utils.VMSPUtil;
@@ -161,7 +158,7 @@ public class SignUpActivity extends AppActivity {
                     runOnUiThread(new Runnable() {
                         @Override public void run() {
                             // 注册成功保存用户名到本地
-                            VMSPUtil.put(activity, Constants.SHARED_USERNAME, username);
+                            VMSPUtil.put(activity, AConstants.SHARED_USERNAME, username);
                             Snackbar.make(getRootView(), R.string.sign_up_success,
                                     Snackbar.LENGTH_SHORT).show();
                             // 注册成功，返回登录界面
@@ -193,7 +190,7 @@ public class SignUpActivity extends AppActivity {
                                 progressDialog.dismiss();
                             }
                             // 注册成功保存用户名到本地
-                            VMSPUtil.put(activity, Constants.SHARED_USERNAME, username);
+                            VMSPUtil.put(activity, AConstants.SHARED_USERNAME, username);
                             Snackbar.make(getRootView(), R.string.sign_up_success,
                                     Snackbar.LENGTH_SHORT).show();
                             // 注册成功，返回登录界面

@@ -5,8 +5,8 @@ import android.text.TextUtils;
 
 import com.hyphenate.chat.EMConversation;
 
-import com.vmloft.develop.app.chat.app.Constants;
-import com.vmloft.develop.library.tools.utils.VMDateUtil;
+import com.vmloft.develop.app.chat.common.AConstants;
+import com.vmloft.develop.library.tools.utils.VMDate;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,7 +51,7 @@ public class ConversationExtUtils {
                 jsonObject = new JSONObject(ext);
             }
             // 将扩展信息设置给外层的 JSONObject 对象
-            jsonObject.put(Constants.ATTR_PUSHPIN, pushpin);
+            jsonObject.put(AConstants.ATTR_PUSHPIN, pushpin);
             // 将扩展信息保存到 Conversation 对象的扩展中去
             conversation.setExtField(jsonObject.toString());
         } catch (JSONException e) {
@@ -75,7 +75,7 @@ public class ConversationExtUtils {
         try {
             // 根据扩展获取Json对象，然后获取置顶的属性，
             JSONObject jsonObject = new JSONObject(ext);
-            return jsonObject.optBoolean(Constants.ATTR_PUSHPIN);
+            return jsonObject.optBoolean(AConstants.ATTR_PUSHPIN);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -100,9 +100,9 @@ public class ConversationExtUtils {
             }
             // 根据当前会话消息数是否为零来设置会话的最后时间
             if (conversation.getAllMessages().size() == 0) {
-                jsonObject.put(Constants.ATTR_LAST_TIME, VMDateUtil.getCurrentMillisecond());
+                jsonObject.put(AConstants.ATTR_LAST_TIME, VMDate.currentMilli());
             } else {
-                jsonObject.put(Constants.ATTR_LAST_TIME, conversation.getLastMessage().getMsgTime());
+                jsonObject.put(AConstants.ATTR_LAST_TIME, conversation.getLastMessage().getMsgTime());
             }
             // 将扩展信息保存到 Conversation 对象的扩展中去
             conversation.setExtField(jsonObject.toString());
@@ -129,11 +129,11 @@ public class ConversationExtUtils {
                 jsonObject = new JSONObject(ext);
             }
             // 根据扩展的key获取扩展的值
-            return jsonObject.optLong(Constants.ATTR_LAST_TIME);
+            return jsonObject.optLong(AConstants.ATTR_LAST_TIME);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return VMDateUtil.getCurrentMillisecond();
+        return VMDate.currentMilli();
     }
 
     /**
@@ -154,7 +154,7 @@ public class ConversationExtUtils {
                 jsonObject = new JSONObject(ext);
             }
             // 将扩展信息设置给 JSONObject 对象
-            jsonObject.put(Constants.ATTR_DRAFT, draft);
+            jsonObject.put(AConstants.ATTR_DRAFT, draft);
             // 将扩展信息保存到 EMConversation 对象扩展中去
             conversation.setExtField(jsonObject.toString());
         } catch (JSONException e) {
@@ -180,7 +180,7 @@ public class ConversationExtUtils {
                 jsonObject = new JSONObject(ext);
             }
             // 根据扩展的key获取扩展的值
-            return jsonObject.optString(Constants.ATTR_DRAFT);
+            return jsonObject.optString(AConstants.ATTR_DRAFT);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -205,7 +205,7 @@ public class ConversationExtUtils {
                 jsonObject = new JSONObject(ext);
             }
             // 将扩展信息设置给 JSONObject 对象
-            jsonObject.put(Constants.ATTR_UNREAD, unread);
+            jsonObject.put(AConstants.ATTR_UNREAD, unread);
             // 将扩展信息保存到 EMConversation 对象扩展中去
             conversation.setExtField(jsonObject.toString());
         } catch (JSONException e) {
@@ -231,7 +231,7 @@ public class ConversationExtUtils {
                 jsonObject = new JSONObject(ext);
             }
             // 根据扩展的key获取扩展的值
-            return jsonObject.optBoolean(Constants.ATTR_UNREAD);
+            return jsonObject.optBoolean(AConstants.ATTR_UNREAD);
         } catch (JSONException e) {
             e.printStackTrace();
         }

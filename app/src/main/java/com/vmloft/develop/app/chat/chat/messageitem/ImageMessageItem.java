@@ -17,15 +17,15 @@ import com.hyphenate.chat.EMImageMessageBody;
 import com.hyphenate.chat.EMMessage;
 
 import com.vmloft.develop.app.chat.R;
-import com.vmloft.develop.app.chat.app.Constants;
+import com.vmloft.develop.app.chat.common.AConstants;
 import com.vmloft.develop.app.chat.chat.ChatActivity;
 import com.vmloft.develop.app.chat.chat.MessageAdapter;
 import com.vmloft.develop.app.chat.chat.MessageEvent;
 import com.vmloft.develop.app.chat.chat.MessageUtils;
 
-import com.vmloft.develop.library.tools.utils.VMBitmapUtil;
-import com.vmloft.develop.library.tools.utils.VMDateUtil;
-import com.vmloft.develop.library.tools.utils.VMDimenUtil;
+import com.vmloft.develop.library.tools.utils.bitmap.VMBitmap;
+import com.vmloft.develop.library.tools.utils.VMDate;
+import com.vmloft.develop.library.tools.utils.VMDimen;
 import com.vmloft.develop.library.tools.utils.VMLog;
 import com.vmloft.develop.library.tools.widget.VMImageView;
 import org.greenrobot.eventbus.EventBus;
@@ -55,7 +55,7 @@ public class ImageMessageItem extends MessageItem {
      */
     public ImageMessageItem(Context context, MessageAdapter adapter, int viewType) {
         super(context, adapter, viewType);
-        thumbnailsMax = VMDimenUtil.getDimenPixel(context, R.dimen.vm_dimen_192);
+        thumbnailsMax = VMDimen.getDimenPixel( R.dimen.vm_dimen_192);
     }
 
     /**
@@ -89,14 +89,14 @@ public class ImageMessageItem extends MessageItem {
             usernameView.setVisibility(View.VISIBLE);
         }
         // 设置消息时间
-        msgTimeView.setText(VMDateUtil.getRelativeTime(this.message.getMsgTime()));
+        msgTimeView.setText(VMDate.getRelativeTime(this.message.getMsgTime()));
 
         // 获取图片消息体
         EMImageMessageBody imgBody = (EMImageMessageBody) this.message.getBody();
         // 取出图片原始宽高，这是在发送图片时发送方直接根据图片获得设置到body中的
         int width = imgBody.getWidth();
         int height = imgBody.getHeight();
-        float scale = VMBitmapUtil.getZoomScale(width, height, thumbnailsMax);
+        float scale = VMBitmap.getZoomScale(width, height, thumbnailsMax);
         // 根据图片原图大小，来计算缩略图要显示的大小，直接设置控件宽高
         ViewGroup.LayoutParams lp = imageView.getLayoutParams();
         if (width <= thumbnailsMax && height <= thumbnailsMax) {
@@ -117,7 +117,7 @@ public class ImageMessageItem extends MessageItem {
         imageView.setLayoutParams(lp);
 
         // 判断下是否是接收方的消息
-        if (viewType == Constants.MSG_TYPE_IMAGE_RECEIVED) {
+        if (viewType == AConstants.MSG_TYPE_IMAGE_RECEIVED) {
             // 判断消息是否处于下载状态，如果是下载状态设置一个默认的图片
             if (imgBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.DOWNLOADING
                     || imgBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.PENDING) {
@@ -128,7 +128,7 @@ public class ImageMessageItem extends MessageItem {
         String thumbnailsPath = "";
         // 原图在本地路径
         String originalPath = "";
-        if (viewType == Constants.MSG_TYPE_IMAGE_RECEIVED) {
+        if (viewType == AConstants.MSG_TYPE_IMAGE_RECEIVED) {
             // 接收方获取缩略图的路径
             originalPath = imgBody.getLocalUrl();
             thumbnailsPath = imgBody.thumbnailLocalPath();
@@ -154,7 +154,7 @@ public class ImageMessageItem extends MessageItem {
     @Override protected void onItemLongClick() {
         String[] menus = null;
         // 这里要根据消息的类型去判断要弹出的菜单，是否是发送方，并且是发送成功才能撤回
-        if (viewType == Constants.MSG_TYPE_IMAGE_RECEIVED) {
+        if (viewType == AConstants.MSG_TYPE_IMAGE_RECEIVED) {
             menus = new String[] {
                     activity.getResources().getString(R.string.menu_chat_forward),
                     activity.getResources().getString(R.string.menu_chat_delete)
@@ -175,13 +175,13 @@ public class ImageMessageItem extends MessageItem {
             @Override public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case 0:
-                        adapter.onItemAction(Constants.ACTION_FORWARD, message);
+                        adapter.onItemAction(AConstants.ACTION_FORWARD, message);
                         break;
                     case 1:
-                        adapter.onItemAction(Constants.ACTION_DELETE, message);
+                        adapter.onItemAction(AConstants.ACTION_DELETE, message);
                         break;
                     case 2:
-                        adapter.onItemAction(Constants.ACTION_RECALL, message);
+                        adapter.onItemAction(AConstants.ACTION_RECALL, message);
                         break;
                 }
             }
@@ -217,7 +217,7 @@ public class ImageMessageItem extends MessageItem {
      */
     protected void refreshView() {
         // 判断是不是阅后即焚的消息
-        if (message.getBooleanAttribute(Constants.ATTR_BURN, false)) {
+        if (message.getBooleanAttribute(AConstants.ATTR_BURN, false)) {
         } else {
         }
         // 判断消息的状态，如果发送失败就显示重发按钮，并设置重发按钮的监听
@@ -235,7 +235,7 @@ public class ImageMessageItem extends MessageItem {
                 resendView.setVisibility(View.VISIBLE);
                 resendView.setOnClickListener(new View.OnClickListener() {
                     @Override public void onClick(View v) {
-                        adapter.onItemAction(Constants.ACTION_RESEND, message);
+                        adapter.onItemAction(AConstants.ACTION_RESEND, message);
                     }
                 });
                 break;
@@ -269,7 +269,7 @@ public class ImageMessageItem extends MessageItem {
      * 解析对应的xml 布局，填充当前 ItemView，并初始化控件
      */
     @Override protected void onInflateView() {
-        if (viewType == Constants.MSG_TYPE_IMAGE_SEND) {
+        if (viewType == AConstants.MSG_TYPE_IMAGE_SEND) {
             inflater.inflate(R.layout.item_msg_image_send, this);
         } else {
             inflater.inflate(R.layout.item_msg_image_received, this);

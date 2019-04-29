@@ -1,4 +1,4 @@
-package com.vmloft.develop.app.chat.app;
+package com.vmloft.develop.app.chat.base;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
@@ -20,7 +20,7 @@ import java.util.List;
  * 主要检查在环信 SDK集成过程中的一些基本配置是否正确
  * 主要做了一下几项检查：
  * 权限的配置（permission）
- * AppApplication 的 name 配置
+ * App 的 name 配置
  * Appkey 的配置
  * Service 的配置
  */
@@ -136,17 +136,17 @@ public class MLEMCheck {
      */
     public void checkApplication(Context context) {
         logStart();
-        logE("检查 AppApplication 配置情况");
+        logE("检查 App 配置情况");
         logLine();
         PackageInfo pi = getPackageInfo(context, PackageManager.GET_UNINSTALLED_PACKAGES);
         ApplicationInfo ai = pi.applicationInfo;
         String className = ai.className;
-        logE("AppApplication className %s", className);
+        logE("App className %s", className);
         logLine();
         if (className != null) {
-            logE("AppApplication 已配置，可以在 AppApplication 的 onCreate 方法里进行 SDK 的初始化");
+            logE("App 已配置，可以在 App 的 onCreate 方法里进行 SDK 的初始化");
         } else {
-            logE("没有配置 AppApplication，如果有在 onCreate 做 SDK 的初始化操作会无效，请检查！");
+            logE("没有配置 App，如果有在 onCreate 做 SDK 的初始化操作会无效，请检查！");
         }
         logEnd();
     }

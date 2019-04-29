@@ -5,7 +5,7 @@
     android:id="@+id/layout_coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/vm_theme_background_light"
+    android:background="@color/vm_theme_background"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
     >
@@ -94,7 +94,7 @@
                     android:alpha="0.5"
                     android:enabled="false"
                     android:text="@string/sign_in"
-                    android:theme="@style/VMBtn.Red"
+                    style="@style/VMBtn.Green"
                     />
 
                 <LinearLayout
@@ -120,8 +120,7 @@
                         android:padding="@dimen/vm_dimen_0"
                         android:text="@string/sign_up_now"
                         android:textColor="@color/vm_blue_87"
-                        android:theme="@style/VMBtn.Transparent"
-                        style="@style/VMBtn.Transparent"
+                        style="@style/VMBtn.Flat"
                         />
                 </LinearLayout>
 
@@ -146,8 +145,7 @@
                         android:layout_height="@dimen/vm_btn_height_normal"
                         android:text="@string/sign_password_forget"
                         android:textColor="@color/vm_blue_87"
-                        android:theme="@style/VMBtn.Transparent"
-                        style="@style/VMBtn.Transparent"
+                        style="@style/VMBtn.Flat"
                         />
                 </LinearLayout>
             </LinearLayout>

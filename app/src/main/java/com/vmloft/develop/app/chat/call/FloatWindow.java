@@ -17,7 +17,7 @@ import com.hyphenate.media.EMCallSurfaceView;
 import com.superrtc.sdk.VideoView;
 
 import com.vmloft.develop.app.chat.R;
-import com.vmloft.develop.library.tools.utils.VMDimenUtil;
+import com.vmloft.develop.library.tools.utils.VMDimen;
 import com.vmloft.develop.library.tools.utils.VMLog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -98,7 +98,8 @@ public class FloatWindow {
 
         // 当点击悬浮窗时，返回到通话界面
         floatView.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 Intent intent = new Intent();
                 if (CallManager.getInstance().getCallType() == CallManager.CallType.VOICE) {
                     intent.setClass(context, VoiceCallActivity.class);
@@ -119,7 +120,8 @@ public class FloatWindow {
             float startX = 0;
             float startY = 0;
 
-            @Override public boolean onTouch(View v, MotionEvent event) {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         result = false;
@@ -166,10 +168,10 @@ public class FloatWindow {
         localView = new EMCallSurfaceView(context);
         oppositeView = new EMCallSurfaceView(context);
 
-        int lw = VMDimenUtil.dp2px(context, 24);
-        int lh = VMDimenUtil.dp2px(context, 32);
-        int ow = VMDimenUtil.dp2px(context, 96);
-        int oh = VMDimenUtil.dp2px(context, 128);
+        int lw = VMDimen.dp2px(24);
+        int lh = VMDimen.dp2px(32);
+        int ow = VMDimen.dp2px(96);
+        int oh = VMDimen.dp2px(128);
         RelativeLayout.LayoutParams localParams = new RelativeLayout.LayoutParams(lw, lh);
         RelativeLayout.LayoutParams oppositeParams = new RelativeLayout.LayoutParams(ow, oh);
         // 设置本地图像靠右
@@ -200,7 +202,8 @@ public class FloatWindow {
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(CallEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventBus(CallEvent event) {
         if (event.isState()) {
             refreshCallView(event);
         }

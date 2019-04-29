@@ -5,7 +5,7 @@
     android:id="@+id/layout_coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/vm_theme_background_light"
+    android:background="@color/vm_theme_background"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
     >
@@ -93,7 +93,7 @@
                     android:alpha="0.5"
                     android:enabled="false"
                     android:text="@string/sign_go_on"
-                    android:theme="@style/VMBtn.Red"
+                    style="@style/VMBtn.Red"
                     />
 
                 <TextView

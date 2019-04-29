@@ -24,9 +24,9 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 
 import com.vmloft.develop.app.chat.R;
-import com.vmloft.develop.app.chat.app.Constants;
+import com.vmloft.develop.app.chat.common.AConstants;
 import com.vmloft.develop.app.chat.interfaces.ItemCallBack;
-import com.vmloft.develop.library.tools.utils.VMDateUtil;
+import com.vmloft.develop.library.tools.utils.VMDate;
 import com.vmloft.develop.library.tools.utils.VMLog;
 
 import com.vmloft.develop.library.tools.widget.VMImageView;
@@ -84,7 +84,7 @@ public class ConversationAdapter
         long timestamp = ConversationExtUtils.getConversationLastTime(conversation);
 
         // 设置时间
-        holder.timeView.setText(VMDateUtil.getRelativeTime(timestamp));
+        holder.timeView.setText(VMDate.getRelativeTime(timestamp));
 
         /**
          * 根据当前 conversation 判断会话列表项要显示的内容
@@ -102,12 +102,12 @@ public class ConversationAdapter
         } else if (conversation.getAllMessages().size() > 0) {
             EMMessage lastMessage = conversation.getLastMessage();
             // 首先判断消息是否已经撤回，撤回就不能显示消息内容
-            if (lastMessage.getBooleanAttribute(Constants.ATTR_RECALL, false)) {
+            if (lastMessage.getBooleanAttribute(AConstants.ATTR_RECALL, false)) {
                 content = context.getString(R.string.hint_msg_recall_by_self);
-            } else if (lastMessage.getBooleanAttribute(Constants.ATTR_CALL_VIDEO, false)) {
+            } else if (lastMessage.getBooleanAttribute(AConstants.ATTR_CALL_VIDEO, false)) {
                 content = "[" + context.getString(R.string.video_call) + "]";
                 ;
-            } else if (lastMessage.getBooleanAttribute(Constants.ATTR_CALL_VOICE, false)) {
+            } else if (lastMessage.getBooleanAttribute(AConstants.ATTR_CALL_VOICE, false)) {
                 content = "[" + context.getString(R.string.voice_call) + "]";
                 ;
             } else {
@@ -164,7 +164,7 @@ public class ConversationAdapter
         // 设置当前会话联系人名称
         if (conversation.getType() == EMConversation.EMConversationType.Chat) {
             // 这里有一些特殊的会话，因为是使用会话保存的申请与通知，处理下会话的标题
-            if (conversation.conversationId().equals(Constants.CONVERSATION_ID_APPLY)) {
+            if (conversation.conversationId().equals(AConstants.CONVERSATION_ID_APPLY)) {
                 holder.titleView.setText(R.string.apply);
             } else {
                 holder.titleView.setText(conversation.conversationId());
@@ -228,12 +228,12 @@ public class ConversationAdapter
         // 为每个Item设置点击与长按监听
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                callback.onAction(Constants.ACTION_CLICK, position);
+                callback.onAction(AConstants.ACTION_CLICK, position);
             }
         });
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override public boolean onLongClick(View v) {
-                callback.onAction(Constants.ACTION_LONG_CLICK, position);
+                callback.onAction(AConstants.ACTION_LONG_CLICK, position);
                 return true;
             }
         });

@@ -13,14 +13,14 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMVoiceMessageBody;
 
 import com.vmloft.develop.app.chat.R;
-import com.vmloft.develop.app.chat.app.Constants;
+import com.vmloft.develop.app.chat.common.AConstants;
 import com.vmloft.develop.app.chat.chat.MessageEvent;
 import com.vmloft.develop.app.chat.chat.VoiceManager;
 import com.vmloft.develop.app.chat.chat.ChatActivity;
 import com.vmloft.develop.app.chat.chat.MessageAdapter;
 
-import com.vmloft.develop.library.tools.utils.VMDateUtil;
-import com.vmloft.develop.library.tools.utils.VMDimenUtil;
+import com.vmloft.develop.library.tools.utils.VMDate;
+import com.vmloft.develop.library.tools.utils.VMDimen;
 import com.vmloft.develop.library.tools.widget.VMImageView;
 import com.vmloft.develop.library.tools.widget.VMWaveformView;
 import org.greenrobot.eventbus.EventBus;
@@ -38,8 +38,8 @@ public class VoiceMessageItem extends MessageItem {
     /**
      * 构造方法，创建item的view，需要传递对应的参数
      *
-     * @param context 上下文对象
-     * @param adapter 适配器
+     * @param context  上下文对象
+     * @param adapter  适配器
      * @param viewType item类型
      */
     public VoiceMessageItem(Context context, MessageAdapter adapter, int viewType) {
@@ -51,7 +51,8 @@ public class VoiceMessageItem extends MessageItem {
      *
      * @param message 需要展示的 EMMessage 对象
      */
-    @Override public void onSetupView(EMMessage message) {
+    @Override
+    public void onSetupView(EMMessage message) {
         this.message = message;
 
         // 判断如果是单聊或者消息是发送方，不显示username
@@ -64,7 +65,7 @@ public class VoiceMessageItem extends MessageItem {
             usernameView.setVisibility(VISIBLE);
         }
         // 设置消息时间
-        msgTimeView.setText(VMDateUtil.getRelativeTime(this.message.getMsgTime()));
+        msgTimeView.setText(VMDate.getRelativeTime(this.message.getMsgTime()));
 
         // 获取语音消息体
         EMVoiceMessageBody body = (EMVoiceMessageBody) this.message.getBody();
@@ -78,12 +79,12 @@ public class VoiceMessageItem extends MessageItem {
         int width = 0;
         if (time > 20 * 1000) {
             // 音频持续时间大于60秒设置一个最大宽度
-            width = VMDimenUtil.getDimenPixel(context, R.dimen.vm_dimen_96);
+            width = VMDimen.getDimenPixel(R.dimen.vm_dimen_96);
         } else if (time < 10 * 1000) {
             // 音频持续时间小于8秒设置一个最小宽度
-            width = VMDimenUtil.getDimenPixel(context, R.dimen.vm_dimen_128);
+            width = VMDimen.getDimenPixel(R.dimen.vm_dimen_128);
         } else {
-            width = VMDimenUtil.getDimenPixel(context, R.dimen.vm_dimen_256) * time / (20 * 1000);
+            width = VMDimen.getDimenPixel(R.dimen.vm_dimen_256) * time / (20 * 1000);
         }
         // 动态设置控件布局参数
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) waveformView.getLayoutParams();
@@ -107,7 +108,8 @@ public class VoiceMessageItem extends MessageItem {
     private VMWaveformView.WaveformCallback waveformCallback =
             new VMWaveformView.WaveformCallback() {
 
-                @Override public void onDrag(int position) {
+                @Override
+                public void onDrag(int position) {
 
                 }
             };
@@ -116,16 +118,19 @@ public class VoiceMessageItem extends MessageItem {
      * 播放声音回调函数
      */
     private VoiceManager.VoiceCallback voiceCallback = new VoiceManager.VoiceCallback() {
-        @Override public void onUpdateData(byte[] data, int position) {
+        @Override
+        public void onUpdateData(byte[] data, int position) {
             waveformView.updateWaveformData(data, position);
         }
 
-        @Override public void onStop() {
+        @Override
+        public void onStop() {
             setPlayStatus();
         }
     };
 
-    @Override protected void onItemClick() {
+    @Override
+    protected void onItemClick() {
         //        super.onItemClick();
         // 判断当前Item 是否正在播放，然后设置数据更新回调，这里点击和上边的判断不同，这里要主动去设置
         if (!VoiceManager.getInstance().isPlaying(message)) {
@@ -142,7 +147,8 @@ public class VoiceMessageItem extends MessageItem {
      * ChatActivity#setItemClickListener()}中去实现 TODO 现在这种实现并不是最优，因为在每一个 Item 中都要去实现弹出一个
      * Dialog，但是又不想自定义dialog
      */
-    @Override protected void onItemLongClick() {
+    @Override
+    protected void onItemLongClick() {
         String[] menus = null;
         /**
          * 这里要根据消息的类型去判断要弹出的菜单，
@@ -150,12 +156,12 @@ public class VoiceMessageItem extends MessageItem {
          * 这里是语音消息，所以不能转发，只能删除和撤回
          * TODO 后期可以加上语音转文字
          */
-        if (viewType == Constants.MSG_TYPE_VOICE_RECEIVED) {
-            menus = new String[] {
+        if (viewType == AConstants.MSG_TYPE_VOICE_RECEIVED) {
+            menus = new String[]{
                     activity.getResources().getString(R.string.menu_chat_delete)
             };
         } else {
-            menus = new String[] {
+            menus = new String[]{
                     activity.getResources().getString(R.string.menu_chat_delete),
                     activity.getResources().getString(R.string.menu_chat_recall)
             };
@@ -166,13 +172,14 @@ public class VoiceMessageItem extends MessageItem {
         // 弹出框标题
         // alertDialogBuilder.setTitle(R.string.dialog_title_conversation);
         alertDialogBuilder.setItems(menus, new DialogInterface.OnClickListener() {
-            @Override public void onClick(DialogInterface dialog, int which) {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case 0:
-                        adapter.onItemAction(Constants.ACTION_DELETE, message);
+                        adapter.onItemAction(AConstants.ACTION_DELETE, message);
                         break;
                     case 1:
-                        adapter.onItemAction(Constants.ACTION_RECALL, message);
+                        adapter.onItemAction(AConstants.ACTION_RECALL, message);
                         break;
                 }
             }
@@ -199,7 +206,7 @@ public class VoiceMessageItem extends MessageItem {
 
     protected void refreshView() {
         // 判断是不是阅后即焚的消息
-        if (message.getBooleanAttribute(Constants.ATTR_BURN, false)) {
+        if (message.getBooleanAttribute(AConstants.ATTR_BURN, false)) {
         } else {
         }
         // 判断消息的状态，如果发送失败就显示重发按钮，并设置重发按钮的监听
@@ -216,8 +223,9 @@ public class VoiceMessageItem extends MessageItem {
                 msgProgressBar.setVisibility(GONE);
                 resendView.setVisibility(VISIBLE);
                 resendView.setOnClickListener(new OnClickListener() {
-                    @Override public void onClick(View v) {
-                        adapter.onItemAction(Constants.ACTION_RESEND, message);
+                    @Override
+                    public void onClick(View v) {
+                        adapter.onItemAction(AConstants.ACTION_RESEND, message);
                     }
                 });
                 break;
@@ -236,7 +244,8 @@ public class VoiceMessageItem extends MessageItem {
      *
      * @param event 要监听的事件类型
      */
-    @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(MessageEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventBus(MessageEvent event) {
         EMMessage message = event.getMessage();
         if (!message.getMsgId().equals(this.message.getMsgId())) {
             return;
@@ -246,8 +255,9 @@ public class VoiceMessageItem extends MessageItem {
     /**
      * 解析对应的xml 布局，填充当前 ItemView，并初始化控件
      */
-    @Override protected void onInflateView() {
-        if (viewType == Constants.MSG_TYPE_VOICE_SEND) {
+    @Override
+    protected void onInflateView() {
+        if (viewType == AConstants.MSG_TYPE_VOICE_SEND) {
             inflater.inflate(R.layout.item_msg_voice_send, this);
         } else {
             inflater.inflate(R.layout.item_msg_voice_received, this);
@@ -263,7 +273,8 @@ public class VoiceMessageItem extends MessageItem {
         waveformView = (VMWaveformView) findViewById(R.id.view_waveform);
     }
 
-    @Override protected void onAttachedToWindow() {
+    @Override
+    protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         // 注册订阅者
         EventBus.getDefault().register(this);
@@ -271,7 +282,8 @@ public class VoiceMessageItem extends MessageItem {
         //        VoiceManager.getInstance().startVisualizer();
     }
 
-    @Override protected void onDetachedFromWindow() {
+    @Override
+    protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         // 取消订阅者
         EventBus.getDefault().unregister(this);

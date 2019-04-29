@@ -26,7 +26,7 @@
             android:id="@+id/img_toast_icon"
             android:layout_width="@dimen/vm_dimen_24"
             android:layout_height="@dimen/vm_dimen_24"
-            android:tint="@color/vm_theme_primary_light"
+            android:tint="@color/vm_theme_primary"
             />
 
         <TextView

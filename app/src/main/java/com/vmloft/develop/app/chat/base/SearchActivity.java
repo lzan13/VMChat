@@ -1,4 +1,4 @@
-package com.vmloft.develop.app.chat.app;
+package com.vmloft.develop.app.chat.base;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.vmloft.develop.app.chat.R;
+import com.vmloft.develop.app.chat.common.AConstants;
 import com.vmloft.develop.app.chat.contacts.UserActivity;
 
 /**
@@ -85,7 +86,7 @@ public class SearchActivity extends AppActivity {
         //                String str = mSearchView.getText().toString();
         //                Intent intent = new Intent();
         //                intent.setClass(activity, UserActivity.class);
-        //                intent.putExtra(Constants.EXTRA_CHAT_ID, str);
+        //                intent.putExtra(AConstants.EXTRA_CHAT_ID, str);
         //                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(activity);
         //                ActivityCompat.startActivity(activity, intent, optionsCompat.toBundle());
         //                activity.finish();
@@ -103,7 +104,7 @@ public class SearchActivity extends AppActivity {
         String str = mSearchView.getText().toString();
         Intent intent = new Intent();
         intent.setClass(activity, UserActivity.class);
-        intent.putExtra(Constants.EXTRA_CHAT_ID, str);
+        intent.putExtra(AConstants.EXTRA_CHAT_ID, str);
         ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
                 activity, mToolbar, getResources().getString(R.string.shared_element_toolbar));
         ActivityCompat.startActivity(activity, intent, optionsCompat.toBundle());

@@ -7,30 +7,26 @@ ext {
 }
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.3'
 
-    //use legacy for for android 6.0
-    //    useLibrary 'org.apache.http.legacy'
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
+
     defaultConfig {
         applicationId 'com.vmloft.develop.app.chat'
         minSdkVersion 21
-        targetSdkVersion 22
+        targetSdkVersion 28
         versionCode 1
         versionName '1.0.0'
         // 开启分包
-        multiDexEnabled true
+//        multiDexEnabled true
+        // 简单粗暴解决多个库出现 UnsatisfiedLinkError 文件错误问题
+        ndk {
+            abiFilters "armeabi-v7a"
+        }
     }
 
     // 签名信息
     signingConfigs {
-        // debug 打包签名信息
-        debug {
-            keyAlias 'debugKey'
-            keyPassword '123123'
-            storeFile file('debug-keystore.jks')
-            storePassword '123123'
-        }
         //  release 打包签名信息，因为签名文件是保密信息，放在一个配置文件中进行读取，这个文件不会再版本库里存在
         release {
             keyAlias
@@ -45,22 +41,12 @@ android {
     // 编译配置
     buildTypes {
         debug {
-            // 简单粗暴解决多个库出现 UnsatisfiedLinkError 文件错误问题
-            ndk {
-                abiFilters "armeabi-v7a"
-            }
             // 是否开启压缩
             zipAlignEnabled false
             // 是否开启混淆
             minifyEnabled false
-            // 设置debug的签名
-            signingConfig signingConfigs.debug
         }
         release {
-            // 简单粗暴解决多个库引用 jni 库出现 UnsatisfiedLinkError 文件错误问题
-            ndk {
-                abiFilters "armeabi-v7a"
-            }
             // 是否开启压缩
             zipAlignEnabled true
             // 是否开启混淆
@@ -72,15 +58,10 @@ android {
             // 混淆文件
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
-            //修改生成的apk名字，格式为 app-版本号-打包时间-渠道名-release.apk
-            applicationVariants.all { variant ->
-                variant.outputs.each { output ->
-                    def oldFile = output.outputFile
-                    if (variant.buildType.name.equals('release')) {
-                        def releaseApkName = "app-v${defaultConfig.versionName}-${getTime()}-" + variant.productFlavors[0].name +
-                                '-release.apk'
-                        output.outputFile = new File(oldFile.parent, releaseApkName)
-                    }
+            // 修改生成的 apk 名字，格式为:项目-版本-时间-渠道名.apk
+            android.applicationVariants.all { variant ->
+                variant.outputs.all {
+                    outputFileName = "VMChat.V${defaultConfig.versionName}.${getTime()}." + variant.productFlavors[0].name + '.apk'
                 }
             }
         }
@@ -95,20 +76,26 @@ android {
     }
 
     // 多渠道打包配置
+    flavorDimensions "default"
     productFlavors {
         Develop {
+            dimension = "default"
             manifestPlaceholders = [em_appkey: mEMAppkey, td_app_id: mTDAppId, td_channel_id: "Develop"]
         }
-        "360" {
+        Qihu360 {
+            dimension = "default"
             manifestPlaceholders = [em_appkey: mEMAppkey, td_app_id: mTDAppId, td_channel_id: "360"]
         }
         GooglePlay {
+            dimension = "default"
             manifestPlaceholders = [em_appkey: mEMAppkey, td_app_id: mTDAppId, td_channel_id: "GooglePlay"]
         }
         XiaoMi {
+            dimension = "default"
             manifestPlaceholders = [em_appkey: mEMAppkey, td_app_id: mTDAppId, td_channel_id: "XiaoMi"]
         }
         WanDouJia {
+            dimension = "default"
             manifestPlaceholders = [em_appkey: mEMAppkey, td_app_id: mTDAppId, td_channel_id: "WanDouJia"]
         }
     }
@@ -119,23 +106,28 @@ android {
 // 项目依赖，包含引入的第三方 SDK以及Android官方 Support 库
 dependencies {
     // 引入项目 libs 目录下的各种第三方库，后边可以不用再单独添加
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    // Google Play Service 库，使用GCM推送需要
-    compile 'com.google.android.gms:play-services-gcm:10.2.1'
+    implementation 'com.android.support:design:28.0.0'
 
-    // 第三方图片加载库
-    compile 'com.github.bumptech.glide:glide:3.7.0'
-    // 支持手势缩放的ImageView
-    compile 'com.bm.photoview:library:1.4.1'
-    // square 家族的网络加载库 retrofit
-    compile 'com.squareup.retrofit2:retrofit:2.1.0'
-    // ButterKnife 库
-    compile 'com.jakewharton:butterknife:8.6.0'
+    // 图片加载库 Glide https://github.com/bumptech/glide
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
+    // 网络加载库 Retrofit https://github.com/square/retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
+    // 控件注解库 ButterKnife https://github.com/JakeWharton/butterknife
+    implementation 'com.jakewharton:butterknife:8.6.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
+    // 事件传递库 EventBus https://github.com/greenrobot/EventBus
+    implementation 'org.greenrobot:eventbus:3.1.1'
 
-    // 引入自己封装的工具库 GitHub: https://github.com/lzan13/VMLibraryManager
-    compile project(':vmtools')
+    // 支持手势缩放的图片加载控件 PhotoView https://github.com/bm-x/PhotoView
+    implementation 'com.bm.photoview:library:1.4.1'
+
+    // 环信聊天 IM 库 Easemob http://www.easemob.com
+    implementation 'com.hyphenate:hyphenate-sdk:3.5.5'
+
+    // 自己封装的工具库 VMTools https://github.com/lzan13/VMLibrary
+    implementation 'com.vmloft.library:vmtools:0.3.5'
 }
 
 // 读取配置文件，配置文件里记录的都是一些敏感信息，需要换成自己的

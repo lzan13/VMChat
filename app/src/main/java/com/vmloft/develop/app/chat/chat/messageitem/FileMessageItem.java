@@ -13,12 +13,12 @@ import com.hyphenate.chat.EMNormalFileMessageBody;
 import com.hyphenate.util.TextFormater;
 
 import com.vmloft.develop.app.chat.R;
-import com.vmloft.develop.app.chat.app.Constants;
+import com.vmloft.develop.app.chat.common.AConstants;
 import com.vmloft.develop.app.chat.chat.ChatActivity;
 import com.vmloft.develop.app.chat.chat.MessageEvent;
 import com.vmloft.develop.app.chat.chat.MessageAdapter;
 
-import com.vmloft.develop.library.tools.utils.VMDateUtil;
+import com.vmloft.develop.library.tools.utils.VMDate;
 import com.vmloft.develop.library.tools.widget.VMImageView;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -59,7 +59,7 @@ public class FileMessageItem extends MessageItem {
             usernameView.setVisibility(View.VISIBLE);
         }
         // 设置消息时间
-        msgTimeView.setText(VMDateUtil.getRelativeTime(this.message.getMsgTime()));
+        msgTimeView.setText(VMDate.getRelativeTime(this.message.getMsgTime()));
 
         EMNormalFileMessageBody fileBody = (EMNormalFileMessageBody) this.message.getBody();
         String filename = fileBody.getFileName();
@@ -82,7 +82,7 @@ public class FileMessageItem extends MessageItem {
     @Override protected void onItemLongClick() {
         String[] menus = null;
         // 这里要根据消息的类型去判断要弹出的菜单，是否是发送方，并且是发送成功才能撤回
-        if (viewType == Constants.MSG_TYPE_FILE_RECEIVED) {
+        if (viewType == AConstants.MSG_TYPE_FILE_RECEIVED) {
             menus = new String[] {
                     activity.getResources().getString(R.string.menu_chat_forward),
                     activity.getResources().getString(R.string.menu_chat_delete)
@@ -103,13 +103,13 @@ public class FileMessageItem extends MessageItem {
             @Override public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case 0:
-                        adapter.onItemAction(Constants.ACTION_FORWARD, message);
+                        adapter.onItemAction(AConstants.ACTION_FORWARD, message);
                         break;
                     case 1:
-                        adapter.onItemAction(Constants.ACTION_DELETE, message);
+                        adapter.onItemAction(AConstants.ACTION_DELETE, message);
                         break;
                     case 2:
-                        adapter.onItemAction(Constants.ACTION_RECALL, message);
+                        adapter.onItemAction(AConstants.ACTION_RECALL, message);
                         break;
                 }
             }
@@ -123,7 +123,7 @@ public class FileMessageItem extends MessageItem {
      */
     protected void refreshView() {
         // 判断是不是阅后即焚的消息
-        if (message.getBooleanAttribute(Constants.ATTR_BURN, false)) {
+        if (message.getBooleanAttribute(AConstants.ATTR_BURN, false)) {
         } else {
         }
         // 判断消息的状态，如果发送失败就显示重发按钮，并设置重发按钮的监听
@@ -141,7 +141,7 @@ public class FileMessageItem extends MessageItem {
                 resendView.setVisibility(View.VISIBLE);
                 resendView.setOnClickListener(new OnClickListener() {
                     @Override public void onClick(View v) {
-                        adapter.onItemAction(Constants.ACTION_RESEND, message);
+                        adapter.onItemAction(AConstants.ACTION_RESEND, message);
                     }
                 });
                 break;
@@ -176,7 +176,7 @@ public class FileMessageItem extends MessageItem {
      * 解析对应的xml 布局，填充当前 ItemView，并初始化控件
      */
     @Override protected void onInflateView() {
-        if (viewType == Constants.MSG_TYPE_FILE_SEND) {
+        if (viewType == AConstants.MSG_TYPE_FILE_SEND) {
             inflater.inflate(R.layout.item_msg_file_send, this);
         } else {
             inflater.inflate(R.layout.item_msg_file_received, this);

@@ -75,21 +75,21 @@
             app:tabIndicatorColor="@color/vm_white_87"
             app:tabIndicatorHeight="@dimen/vm_dimen_2"
             app:tabMode="fixed"
-            app:tabSelectedTextColor="@color/vm_white_100"
+            app:tabSelectedTextColor="@color/vm_white"
             app:tabTextColor="@color/vm_white_54"
             />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:animateLayoutChanges="true"
-            android:background="@color/vm_theme_background_light"
+            android:background="@color/vm_theme_background"
             android:orientation="vertical"
             >
             <LinearLayout
                 android:id="@+id/layout_connection_error"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/vm_dimen_32"
-                android:background="@color/vm_theme_primary_light"
+                android:background="@color/vm_theme_primary"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:visibility="visible"

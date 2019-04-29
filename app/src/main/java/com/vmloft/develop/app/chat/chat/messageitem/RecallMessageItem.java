@@ -8,7 +8,7 @@ import com.hyphenate.chat.EMMessage;
 
 import com.vmloft.develop.app.chat.R;
 import com.vmloft.develop.app.chat.chat.MessageAdapter;
-import com.vmloft.develop.library.tools.utils.VMDateUtil;
+import com.vmloft.develop.library.tools.utils.VMDate;
 
 /**
  * Created by lz on 2016/3/20.
@@ -36,7 +36,7 @@ public class RecallMessageItem extends MessageItem {
     public void onSetupView(EMMessage message) {
         this.message = message;
         // 设置消息时间
-        msgTimeView.setText(VMDateUtil.getRelativeTime(message.getMsgTime()));
+        msgTimeView.setText(VMDate.getRelativeTime(message.getMsgTime()));
         // 设置显示内容
         String messageStr = null;
         if (this.message.direct() == EMMessage.Direct.SEND) {

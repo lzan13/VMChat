@@ -4,8 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.vmloft.develop.app.chat.app.AppApplication;
-import com.vmloft.develop.app.chat.app.Constants;
+import com.vmloft.develop.app.chat.base.App;
+import com.vmloft.develop.app.chat.common.AConstants;
 import com.vmloft.develop.library.tools.utils.VMSPUtil;
 
 /**
@@ -65,7 +65,7 @@ public class DBHelper extends SQLiteOpenHelper {
      */
     public static DBHelper getInstance() {
         if (instance == null) {
-            context = AppApplication.getContext();
+            context = App.getContext();
             instance = new DBHelper(context);
         }
         return instance;
@@ -87,7 +87,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     private static String getDBName() {
-        String username = (String) VMSPUtil.get(context, Constants.SHARED_USERNAME, "");
+        String username = (String) VMSPUtil.get(context, AConstants.SHARED_USERNAME, "");
         return username + db_name;
     }
 

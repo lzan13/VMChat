@@ -9,19 +9,24 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
 import com.hyphenate.chat.EMCallManager;
 import com.hyphenate.chat.EMCallStateChangeListener;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMVideoCallHelper;
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.media.EMCallSurfaceView;
 import com.superrtc.sdk.VideoView;
 import com.vmloft.develop.app.chat.R;
-import com.vmloft.develop.library.tools.utils.VMDimenUtil;
+import com.vmloft.develop.library.tools.utils.VMDimen;
 import com.vmloft.develop.library.tools.utils.VMLog;
+
 import java.io.File;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -32,7 +37,7 @@ import org.greenrobot.eventbus.ThreadMode;
 public class VideoCallActivity extends CallActivity {
 
     // 视频通话帮助类
-    private EMCallManager.EMVideoCallHelper videoCallHelper;
+    private EMVideoCallHelper videoCallHelper;
     // SurfaceView 控件状态，-1 表示通话未接通，0 表示本小远大，1 表示远小本大
     private int surfaceState = -1;
 
@@ -42,23 +47,38 @@ public class VideoCallActivity extends CallActivity {
     private RelativeLayout.LayoutParams oppositeParams = null;
 
     // 使用 ButterKnife 注解的方式获取控件
-    @BindView(R.id.layout_call_control) View controlLayout;
-    @BindView(R.id.layout_surface_container) RelativeLayout surfaceLayout;
+    @BindView(R.id.layout_call_control)
+    View controlLayout;
+    @BindView(R.id.layout_surface_container)
+    RelativeLayout surfaceLayout;
 
-    @BindView(R.id.btn_exit_full_screen) ImageButton exitFullScreenBtn;
-    @BindView(R.id.text_call_state) TextView callStateView;
-    @BindView(R.id.text_call_time) TextView callTimeView;
-    @BindView(R.id.btn_mic_switch) ImageButton micSwitch;
-    @BindView(R.id.btn_camera_switch) ImageButton cameraSwitch;
-    @BindView(R.id.btn_speaker_switch) ImageButton speakerSwitch;
-    @BindView(R.id.btn_record_switch) ImageButton recordSwitch;
-    @BindView(R.id.btn_screenshot) ImageButton screenshotSwitch;
-    @BindView(R.id.btn_change_camera_switch) ImageButton changeCameraSwitch;
-    @BindView(R.id.fab_reject_call) FloatingActionButton rejectCallFab;
-    @BindView(R.id.fab_end_call) FloatingActionButton endCallFab;
-    @BindView(R.id.fab_answer_call) FloatingActionButton answerCallFab;
+    @BindView(R.id.btn_exit_full_screen)
+    ImageButton exitFullScreenBtn;
+    @BindView(R.id.text_call_state)
+    TextView callStateView;
+    @BindView(R.id.text_call_time)
+    TextView callTimeView;
+    @BindView(R.id.btn_mic_switch)
+    ImageButton micSwitch;
+    @BindView(R.id.btn_camera_switch)
+    ImageButton cameraSwitch;
+    @BindView(R.id.btn_speaker_switch)
+    ImageButton speakerSwitch;
+    @BindView(R.id.btn_record_switch)
+    ImageButton recordSwitch;
+    @BindView(R.id.btn_screenshot)
+    ImageButton screenshotSwitch;
+    @BindView(R.id.btn_change_camera_switch)
+    ImageButton changeCameraSwitch;
+    @BindView(R.id.fab_reject_call)
+    FloatingActionButton rejectCallFab;
+    @BindView(R.id.fab_end_call)
+    FloatingActionButton endCallFab;
+    @BindView(R.id.fab_answer_call)
+    FloatingActionButton answerCallFab;
 
-    @Override protected void onCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_call);
 
@@ -70,7 +90,8 @@ public class VideoCallActivity extends CallActivity {
     /**
      * 重载父类方法,实现一些当前通话的操作，
      */
-    @Override protected void initView() {
+    @Override
+    protected void initView() {
         super.initView();
         if (CallManager.getInstance().isInComingCall()) {
             endCallFab.setVisibility(View.GONE);
@@ -121,7 +142,8 @@ public class VideoCallActivity extends CallActivity {
             R.id.layout_call_control, R.id.btn_exit_full_screen, R.id.btn_change_camera_switch, R.id.btn_mic_switch,
             R.id.btn_camera_switch, R.id.btn_speaker_switch, R.id.btn_record_switch, R.id.btn_screenshot, R.id.fab_reject_call,
             R.id.fab_end_call, R.id.fab_answer_call
-    }) void onClick(View v) {
+    })
+    void onClick(View v) {
         switch (v.getId()) {
             case R.id.layout_call_control:
                 onControlLayout();
@@ -332,7 +354,8 @@ public class VideoCallActivity extends CallActivity {
     /**
      * 接听通话
      */
-    @Override protected void answerCall() {
+    @Override
+    protected void answerCall() {
         super.answerCall();
         endCallFab.setVisibility(View.VISIBLE);
         rejectCallFab.setVisibility(View.GONE);
@@ -361,7 +384,8 @@ public class VideoCallActivity extends CallActivity {
         surfaceLayout.addView(localSurface);
 
         localSurface.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 onControlLayout();
             }
         });
@@ -383,10 +407,10 @@ public class VideoCallActivity extends CallActivity {
         // 更新通话界面控件状态
         surfaceState = 0;
 
-        int width = VMDimenUtil.dp2px(activity, 96);
-        int height = VMDimenUtil.dp2px(activity, 128);
-        int rightMargin = VMDimenUtil.dp2px(activity, 16);
-        int topMargin = VMDimenUtil.dp2px(activity, 96);
+        int width = VMDimen.dp2px(96);
+        int height = VMDimen.dp2px(128);
+        int rightMargin = VMDimen.dp2px(16);
+        int topMargin = VMDimen.dp2px(96);
 
         localParams = new RelativeLayout.LayoutParams(width, height);
         localParams.width = width;
@@ -397,13 +421,15 @@ public class VideoCallActivity extends CallActivity {
         localSurface.setLayoutParams(localParams);
 
         localSurface.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 changeCallSurface();
             }
         });
 
         oppositeSurface.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 onControlLayout();
             }
         });
@@ -422,7 +448,8 @@ public class VideoCallActivity extends CallActivity {
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(CallEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventBus(CallEvent event) {
         if (event.isState()) {
             refreshCallView(event);
         }
@@ -521,11 +548,13 @@ public class VideoCallActivity extends CallActivity {
     /**
      * 屏幕方向改变回调方法
      */
-    @Override public void onConfigurationChanged(Configuration newConfig) {
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
     }
 
-    @Override protected void onFinish() {
+    @Override
+    public void onFinish() {
         // 结束通话要把 SurfaceView 释放 重置为 null
         surfaceLayout.removeAllViews();
         localSurface = null;

@@ -5,9 +5,10 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
-import com.vmloft.develop.app.chat.app.Constants;
-import com.vmloft.develop.app.chat.app.Hyphenate;
+import com.vmloft.develop.app.chat.common.AConstants;
+import com.vmloft.develop.app.chat.base.IMHelper;
 import java.util.List;
+
 import com.vmloft.develop.app.chat.notification.Notifier;
 import com.vmloft.develop.app.chat.conversation.ConversationExtUtils;
 import org.greenrobot.eventbus.EventBus;
@@ -28,8 +29,8 @@ public class MessageListener implements EMMessageListener {
      */
     @Override public void onMessageReceived(List<EMMessage> list) {
         // 判断当前活动界面是不是聊天界面，如果是，全局不处理消息
-        if (Hyphenate.getInstance().getActivityList().size() > 0) {
-            if (Hyphenate.getInstance()
+        if (IMHelper.getInstance().getActivityList().size() > 0) {
+            if (IMHelper.getInstance()
                     .getTopActivity()
                     .getClass()
                     .getSimpleName()
@@ -69,8 +70,8 @@ public class MessageListener implements EMMessageListener {
      */
     @Override public void onCmdMessageReceived(List<EMMessage> list) {
         // 判断当前活动界面是不是聊天界面，如果是，全局不处理消息
-        //if (Hyphenate.getInstance().getActivityList().size() > 0) {
-        //    if (Hyphenate.getInstance()
+        //if (IMHelper.getInstance().getActivityList().size() > 0) {
+        //    if (IMHelper.getInstance()
         //            .getTopActivity()
         //            .getClass()
         //            .getSimpleName()
@@ -88,7 +89,7 @@ public class MessageListener implements EMMessageListener {
             EventBus.getDefault().post(event);
 
             // 判断是不是撤回消息的透传
-            if (body.action().equals(Constants.ATTR_RECALL)) {
+            if (body.action().equals(AConstants.ATTR_RECALL)) {
                 MessageUtils.receiveRecallMessage(cmdMessage);
             }
         }
@@ -109,6 +110,11 @@ public class MessageListener implements EMMessageListener {
      * @param list 收到发送回执的消息集合
      */
     @Override public void onMessageDelivered(List<EMMessage> list) {
+
+    }
+
+    @Override
+    public void onMessageRecalled(List<EMMessage> messages) {
 
     }
 

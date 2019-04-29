@@ -4,8 +4,8 @@ import android.content.Context;
 import android.text.TextUtils;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.exceptions.HyphenateException;
-import com.vmloft.develop.app.chat.app.AppApplication;
-import com.vmloft.develop.app.chat.app.Constants;
+import com.vmloft.develop.app.chat.base.App;
+import com.vmloft.develop.app.chat.common.AConstants;
 import com.vmloft.develop.app.chat.database.DBHelper;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +13,7 @@ import com.vmloft.develop.app.chat.database.UserDao;
 import com.vmloft.develop.app.chat.network.NetworkManager;
 import com.vmloft.develop.library.tools.utils.VMLog;
 import com.vmloft.develop.library.tools.utils.VMSPUtil;
-import com.vmloft.develop.library.tools.utils.VMStrUtil;
+import com.vmloft.develop.library.tools.utils.VMStr;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,7 +45,7 @@ public class UserManager {
      */
     public static UserManager getInstance() {
         if (instance == null) {
-            instance = new UserManager(AppApplication.getContext());
+            instance = new UserManager(App.getContext());
         }
         return instance;
     }
@@ -129,12 +129,12 @@ public class UserManager {
     public void syncContactsFromServer() {
         // 同步联系人时先将数据清空
         UserDao.getInstance().clearTable();
-        String accessToken = (String) VMSPUtil.get(context, Constants.USER_ACCESS_TOKEN, "");
+        String accessToken = (String) VMSPUtil.get(context, AConstants.USER_ACCESS_TOKEN, "");
         try {
             // 从环信服务器同步好友列表
             List<String> list = EMClient.getInstance().contactManager().getAllContactsFromServer();
             String[] usernames = list.toArray(new String[list.size()]);
-            String names = VMStrUtil.arrayToStr(usernames, ",");
+            String names = VMStr.arrayToStr(usernames, ",");
             if (TextUtils.isEmpty(names)) {
                 return;
             }

@@ -14,7 +14,7 @@ import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 
 import com.vmloft.develop.app.chat.R;
-import com.vmloft.develop.app.chat.app.Constants;
+import com.vmloft.develop.app.chat.common.AConstants;
 import com.vmloft.develop.library.tools.utils.VMLog;
 import com.vmloft.develop.app.chat.interfaces.ItemCallBack;
 
@@ -48,7 +48,7 @@ public class ApplyForAdapter extends RecyclerView.Adapter<ApplyForAdapter.ApplyV
          */
         mConversation = EMClient.getInstance()
                 .chatManager()
-                .getConversation(Constants.CONVERSATION_ID_APPLY, null, true);
+                .getConversation(AConstants.CONVERSATION_ID_APPLY, null, true);
         mMessages = mConversation.getAllMessages();
         // 将list集合倒序排列
         Collections.reverse(mMessages);
@@ -65,14 +65,14 @@ public class ApplyForAdapter extends RecyclerView.Adapter<ApplyForAdapter.ApplyV
 
         holder.avatarView.setImageResource(R.drawable.ic_character_blackcat);
 
-        String username = message.getStringAttribute(Constants.ATTR_USERNAME, "");
+        String username = message.getStringAttribute(AConstants.ATTR_USERNAME, "");
         // 设置申请的人
         holder.usernameView.setText(username);
         // 设置申请理由
-        String reason = message.getStringAttribute(Constants.ATTR_REASON, "");
+        String reason = message.getStringAttribute(AConstants.ATTR_REASON, "");
         holder.reasonView.setText(reason);
 
-        String status = message.getStringAttribute(Constants.ATTR_STATUS, "");
+        String status = message.getStringAttribute(AConstants.ATTR_STATUS, "");
         if (!TextUtils.isEmpty(status)) {
             holder.btnAgree.setVisibility(View.VISIBLE);
             holder.btnReject.setVisibility(View.VISIBLE);
@@ -87,23 +87,23 @@ public class ApplyForAdapter extends RecyclerView.Adapter<ApplyForAdapter.ApplyV
         // 设置 itemView Button 的点击监听
         holder.btnAgree.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
-                mCallback.onAction(Constants.ACTION_AGREED, message.getMsgId());
+                mCallback.onAction(AConstants.ACTION_AGREED, message.getMsgId());
             }
         });
         holder.btnReject.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
-                mCallback.onAction(Constants.ACTION_REJECT, message.getMsgId());
+                mCallback.onAction(AConstants.ACTION_REJECT, message.getMsgId());
             }
         });
         // 给当前 itemView 设置点击和长按监听
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                mCallback.onAction(Constants.ACTION_CLICK, message.getMsgId());
+                mCallback.onAction(AConstants.ACTION_CLICK, message.getMsgId());
             }
         });
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override public boolean onLongClick(View v) {
-                mCallback.onAction(Constants.ACTION_LONG_CLICK, message.getMsgId());
+                mCallback.onAction(AConstants.ACTION_LONG_CLICK, message.getMsgId());
                 return true;
             }
         });

@@ -17,8 +17,10 @@ import com.hyphenate.chat.EMCallStateChangeListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.exceptions.HyphenateException;
 import com.vmloft.develop.app.chat.R;
-import com.vmloft.develop.library.tools.utils.VMBitmapUtil;
+import com.vmloft.develop.library.tools.utils.bitmap.VMBitmap;
 import com.vmloft.develop.library.tools.utils.VMLog;
+import com.vmloft.develop.library.tools.utils.bitmap.VMBlur;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -324,8 +326,8 @@ public class VoiceCallActivity extends CallActivity {
                 VMLog.i("blur image begin!");
                 backgroundView.setDrawingCacheEnabled(true);
                 Bitmap bitmap = backgroundView.getDrawingCache();
-                backgroundView.setImageBitmap(VMBitmapUtil.stackBlurBitmap(bitmap, 10, 10, false));
-                //backgroundView.setImageBitmap(VMBitmapUtil.rsBlurBitmp(activity, bitmap, 10, 10));
+                backgroundView.setImageBitmap(VMBlur.stackBlurBitmap(bitmap, 10, 10, false));
+                //backgroundView.setImageBitmap(bitmap.VMBitmap.rsBlurBitmp(activity, bitmap, 10, 10));
                 backgroundView.setDrawingCacheEnabled(false);
                 VMLog.i("blur image end!");
                 return false;

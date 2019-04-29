@@ -5,12 +5,12 @@ import com.hyphenate.EMContactListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
-import com.vmloft.develop.app.chat.app.Constants;
+import com.vmloft.develop.app.chat.common.AConstants;
 import com.vmloft.develop.app.chat.R;
 import com.vmloft.develop.app.chat.apply.ApplyEvent;
 import com.vmloft.develop.app.chat.notification.Notifier;
 import com.vmloft.develop.library.tools.utils.VMLog;
-import org.greenrobot.eventbus.EventBus;
+//import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by lzan13 on 2016/10/26.
@@ -35,7 +35,7 @@ public class ContactsListener implements EMContactListener {
         UserManager.getInstance().saveUser(userEntity);
 
         // 发送可被订阅的消息，通知订阅者联系人有变化
-        EventBus.getDefault().post(new ContactsEvent());
+//        EventBus.getDefault().post(new ContactsEvent());
     }
 
     /**
@@ -47,7 +47,7 @@ public class ContactsListener implements EMContactListener {
         UserManager.getInstance().deleteUser(username);
 
         // 发送可被订阅的消息，通知订阅者联系人有变化
-        EventBus.getDefault().post(new ContactsEvent());
+//        EventBus.getDefault().post(new ContactsEvent());
     }
 
     /**
@@ -69,15 +69,15 @@ public class ContactsListener implements EMContactListener {
         EMTextMessageBody body = new EMTextMessageBody(mContext.getString(R.string.have_apply));
         message.addBody(body);
         // 申请者username
-        message.setAttribute(Constants.ATTR_USERNAME, username);
+        message.setAttribute(AConstants.ATTR_USERNAME, username);
         // 设置理由
-        message.setAttribute(Constants.ATTR_REASON, reason);
+        message.setAttribute(AConstants.ATTR_REASON, reason);
         // 申请与通知类型
-        message.setAttribute(Constants.ATTR_TYPE, Constants.APPLY_TYPE_USER);
+        message.setAttribute(AConstants.ATTR_TYPE, AConstants.APPLY_TYPE_USER);
         // 设置当前申请信息状态
-        message.setAttribute(Constants.ATTR_STATUS, "");
+        message.setAttribute(AConstants.ATTR_STATUS, "");
         // 设置消息发送方
-        message.setFrom(Constants.CONVERSATION_ID_APPLY);
+        message.setFrom(AConstants.CONVERSATION_ID_APPLY);
         // 设置msgId
         message.setMsgId(msgId);
         // 将消息保存到本地和内存
@@ -89,7 +89,7 @@ public class ContactsListener implements EMContactListener {
         // 使用 EventBus 发布消息，通知订阅者申请与通知信息有变化
         ApplyEvent event = new ApplyEvent();
         event.setMessage(message);
-        EventBus.getDefault().post(event);
+//        EventBus.getDefault().post(event);
     }
 
     /**
@@ -109,16 +109,16 @@ public class ContactsListener implements EMContactListener {
         EMTextMessageBody body = new EMTextMessageBody(mContext.getString(R.string.have_apply));
         message.addBody(body);
         // 申请者username
-        message.setAttribute(Constants.ATTR_USERNAME, username);
+        message.setAttribute(AConstants.ATTR_USERNAME, username);
         // 设置理由
-        message.setAttribute(Constants.ATTR_REASON,
+        message.setAttribute(AConstants.ATTR_REASON,
                 mContext.getString(R.string.be_agreed_user));
         // 申请与通知类型
-        message.setAttribute(Constants.ATTR_TYPE, Constants.APPLY_TYPE_USER);
+        message.setAttribute(AConstants.ATTR_TYPE, AConstants.APPLY_TYPE_USER);
         // 设置当前申请信息状态
-        message.setAttribute(Constants.ATTR_STATUS, mContext.getString(R.string.agreed));
+        message.setAttribute(AConstants.ATTR_STATUS, mContext.getString(R.string.agreed));
         // 设置消息发送方
-        message.setFrom(Constants.CONVERSATION_ID_APPLY);
+        message.setFrom(AConstants.CONVERSATION_ID_APPLY);
         // 设置msgId
         message.setMsgId(msgId);
         // 将消息保存到本地和内存
@@ -130,7 +130,7 @@ public class ContactsListener implements EMContactListener {
         // 使用 EventBus 发布消息，通知订阅者申请与通知信息有变化
         ApplyEvent event = new ApplyEvent();
         event.setMessage(message);
-        EventBus.getDefault().post(event);
+//        EventBus.getDefault().post(event);
     }
 
     /**
@@ -150,16 +150,16 @@ public class ContactsListener implements EMContactListener {
         EMTextMessageBody body = new EMTextMessageBody(mContext.getString(R.string.have_apply));
         message.addBody(body);
         // 申请者username
-        message.setAttribute(Constants.ATTR_USERNAME, username);
+        message.setAttribute(AConstants.ATTR_USERNAME, username);
         // 设置理由
-        message.setAttribute(Constants.ATTR_REASON,
+        message.setAttribute(AConstants.ATTR_REASON,
                 mContext.getString(R.string.be_agreed_user));
         // 申请与通知类型
-        message.setAttribute(Constants.ATTR_TYPE, Constants.APPLY_TYPE_USER);
+        message.setAttribute(AConstants.ATTR_TYPE, AConstants.APPLY_TYPE_USER);
         // 设置当前申请信息状态
-        message.setAttribute(Constants.ATTR_STATUS, mContext.getString(R.string.rejected));
+        message.setAttribute(AConstants.ATTR_STATUS, mContext.getString(R.string.rejected));
         // 设置消息发送方
-        message.setFrom(Constants.CONVERSATION_ID_APPLY);
+        message.setFrom(AConstants.CONVERSATION_ID_APPLY);
         // 设置msgId
         message.setMsgId(msgId);
         // 将消息保存到本地和内存
@@ -171,6 +171,6 @@ public class ContactsListener implements EMContactListener {
         // 使用 EventBus 发布消息，通知订阅者申请与通知信息有变化
         ApplyEvent event = new ApplyEvent();
         event.setMessage(message);
-        EventBus.getDefault().post(event);
+//        EventBus.getDefault().post(event);
     }
 }

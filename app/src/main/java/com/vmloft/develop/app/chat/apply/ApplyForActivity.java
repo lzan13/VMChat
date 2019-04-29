@@ -17,14 +17,11 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.exceptions.HyphenateException;
 
 import com.vmloft.develop.app.chat.R;
-import com.vmloft.develop.app.chat.app.AppActivity;
-import com.vmloft.develop.app.chat.app.Constants;
+import com.vmloft.develop.app.chat.common.AConstants;
+import com.vmloft.develop.app.chat.base.AppActivity;
 import com.vmloft.develop.app.chat.contacts.UserActivity;
 import com.vmloft.develop.app.chat.conversation.ConversationExtUtils;
 import com.vmloft.develop.app.chat.interfaces.ItemCallBack;
-
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * Created by lzan13 on 2015/8/28. 好友申请通知界面
@@ -72,7 +69,7 @@ public class ApplyForActivity extends AppActivity {
          */
         conversation = EMClient.getInstance()
                 .chatManager()
-                .getConversation(Constants.CONVERSATION_ID_APPLY, null, true);
+                .getConversation(AConstants.CONVERSATION_ID_APPLY, null, true);
         // 设置当前会话未读数为 0
         conversation.markAllMessagesAsRead();
         ConversationExtUtils.setConversationUnread(conversation, false);
@@ -127,16 +124,16 @@ public class ApplyForActivity extends AppActivity {
             @Override public void onAction(int action, Object tag) {
                 String msgId = (String) tag;
                 switch (action) {
-                    case Constants.ACTION_CLICK:
+                    case AConstants.ACTION_CLICK:
                         jumpUserInfo(msgId);
                         break;
-                    case Constants.ACTION_LONG_CLICK:
+                    case AConstants.ACTION_LONG_CLICK:
                         deleteApply(msgId);
                         break;
-                    case Constants.ACTION_AGREED:
+                    case AConstants.ACTION_AGREED:
                         agreeApply(msgId);
                         break;
-                    case Constants.ACTION_REJECT:
+                    case AConstants.ACTION_REJECT:
                         rejectApply(msgId);
                         break;
                 }
@@ -153,9 +150,9 @@ public class ApplyForActivity extends AppActivity {
         EMMessage message = conversation.getMessage(msgId, false);
         Intent intent = new Intent();
         intent.setClass(activity, UserActivity.class);
-        intent.putExtra(Constants.EXTRA_CHAT_ID,
-                message.getStringAttribute(Constants.ATTR_USERNAME, "null"));
-        intent.putExtra(Constants.EXTRA_MSG_ID, msgId);
+        intent.putExtra(AConstants.EXTRA_CHAT_ID,
+                message.getStringAttribute(AConstants.ATTR_USERNAME, "null"));
+        intent.putExtra(AConstants.EXTRA_MSG_ID, msgId);
         activity.onStartActivity(activity, intent);
     }
 
@@ -174,11 +171,11 @@ public class ApplyForActivity extends AppActivity {
                 try {
                     // 同意申请
                     EMMessage message = conversation.getMessage(msgId, false);
-                    String username = message.getStringAttribute(Constants.ATTR_USERNAME, "");
+                    String username = message.getStringAttribute(AConstants.ATTR_USERNAME, "");
                     EMClient.getInstance().contactManager().acceptInvitation(username);
 
                     // 更新当前的申请信息
-                    message.setAttribute(Constants.ATTR_STATUS,
+                    message.setAttribute(AConstants.ATTR_STATUS,
                             activity.getString(R.string.agreed));
                     EMClient.getInstance().chatManager().updateMessage(message);
                     dialog.dismiss();
@@ -206,11 +203,11 @@ public class ApplyForActivity extends AppActivity {
                 try {
                     // 拒绝好友申请
                     EMMessage message = conversation.getMessage(msgId, false);
-                    String username = message.getStringAttribute(Constants.ATTR_USERNAME, "");
+                    String username = message.getStringAttribute(AConstants.ATTR_USERNAME, "");
                     EMClient.getInstance().contactManager().declineInvitation(username);
 
                     // 更新当前的申请信息
-                    message.setAttribute(Constants.ATTR_STATUS,
+                    message.setAttribute(AConstants.ATTR_STATUS,
                             activity.getString(R.string.rejected));
                     EMClient.getInstance().chatManager().updateMessage(message);
                     dialog.dismiss();
@@ -246,13 +243,6 @@ public class ApplyForActivity extends AppActivity {
             }
         });
         dialog.show();
-    }
-
-    /**
-     * 使用 EventBus 的订阅方式监听事件的变化，这里 EventBus 3.x 使用注解的方式确定方法调用的线程
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(ApplyEvent event) {
-        refresh();
     }
 
     /**

@@ -6,7 +6,7 @@
             <item android:state_pressed="true">
                 <shape
                     android:dither="true">
-                    <solid android:color="@color/vm_white_100"/>
+                    <solid android:color="@color/vm_white"/>
                 </shape>
             </item>
             <item android:state_activated="true">

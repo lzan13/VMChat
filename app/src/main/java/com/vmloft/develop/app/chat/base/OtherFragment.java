@@ -1,31 +1,29 @@
-package com.vmloft.develop.app.chat.app;
+package com.vmloft.develop.app.chat.base;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.text.TextUtils;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 
 import android.widget.Button;
+
 import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMCursorResult;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMGroupManager;
+import com.hyphenate.chat.EMGroupOptions;
 import com.hyphenate.chat.EMImageMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chat.EMVideoMessageBody;
 import com.hyphenate.chat.EMVoiceMessageBody;
-import com.hyphenate.chat.adapter.message.EMAImageMessageBody;
 import com.hyphenate.exceptions.HyphenateException;
-import com.vmloft.develop.app.chat.sign.SignInActivity;
-import com.vmloft.develop.library.tools.widget.VMViewGroup;
+
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -33,8 +31,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vmloft.develop.app.chat.R;
-import com.vmloft.develop.library.tools.utils.VMDateUtil;
+import com.vmloft.develop.app.chat.common.AConstants;
+import com.vmloft.develop.library.tools.utils.VMDate;
 import com.vmloft.develop.library.tools.utils.VMLog;
+import com.vmloft.develop.library.tools.widget.VMViewGroup;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,7 +47,8 @@ import org.json.JSONObject;
  */
 public class OtherFragment extends AppFragment {
 
-    @BindView(R.id.view_custom_viewgroup) VMViewGroup viewGroup;
+    @BindView(R.id.view_custom_viewgroup)
+    VMViewGroup viewGroup;
 
     private ProgressDialog progressDialog;
 
@@ -71,22 +73,23 @@ public class OtherFragment extends AppFragment {
      *
      * @return 返回布局 id
      */
-    @Override protected int initLayoutId() {
+    @Override
+    protected int layoutId() {
         return R.layout.fragment_other;
     }
 
     /**
      * 初始化界面控件，将 Fragment 变量和 View 建立起映射关系
      */
-    @Override protected void initView() {
-
-        ButterKnife.bind(this, getView());
+    @Override
+    protected void init() {
+        super.init();
 
         String[] btns = {
                 "Sign out", "Test 1", "Test 2", "Test 3"
         };
         for (int i = 0; i < btns.length; i++) {
-            Button btn = new Button(new ContextThemeWrapper(activity, R.style.VMBtn_Green), null, 0);
+            Button btn = new Button(new ContextThemeWrapper(mContext, R.style.VMBtn_Green), null, 0);
             btn.setText(btns[i]);
             btn.setId(100 + i);
             btn.setOnClickListener(viewListener);
@@ -95,17 +98,11 @@ public class OtherFragment extends AppFragment {
     }
 
     /**
-     * 加载数据
-     */
-    @Override protected void initData() {
-
-    }
-
-    /**
      * 测试按钮的监听事件
      */
     private View.OnClickListener viewListener = new View.OnClickListener() {
-        @Override public void onClick(View v) {
+        @Override
+        public void onClick(View v) {
             switch (v.getId()) {
                 case 100:
                     signOut();
@@ -129,7 +126,8 @@ public class OtherFragment extends AppFragment {
      */
     private void testPushConfig() {
         new Thread(new Runnable() {
-            @Override public void run() {
+            @Override
+            public void run() {
                 try {
                     EMClient.getInstance().pushManager().disableOfflinePush(0, 24);
                 } catch (HyphenateException e) {
@@ -172,8 +170,9 @@ public class OtherFragment extends AppFragment {
      */
     private void testCreateGroup() {
         new Thread(new Runnable() {
-            @Override public void run() {
-                EMGroupManager.EMGroupOptions options = new EMGroupManager.EMGroupOptions();
+            @Override
+            public void run() {
+                EMGroupOptions options = new EMGroupOptions();
                 options.maxUsers = 1500;
                 options.style = EMGroupManager.EMGroupStyle.EMGroupStylePublicOpenJoin;
 
@@ -199,7 +198,8 @@ public class OtherFragment extends AppFragment {
      */
     private void testFetchGroupMembers() {
         new Thread(new Runnable() {
-            @Override public void run() {
+            @Override
+            public void run() {
                 try {
                     EMClient.getInstance().groupManager().getJoinedGroupsFromServer();
                     EMGroup group = EMClient.getInstance().groupManager().getGroup("19369877897217");
@@ -229,9 +229,10 @@ public class OtherFragment extends AppFragment {
      */
     private void invitationJoinGroup() {
         new Thread(new Runnable() {
-            @Override public void run() {
+            @Override
+            public void run() {
                 String groupId = "5658110918657";
-                String[] usernames = { "lz2" };
+                String[] usernames = {"lz2"};
                 String reason = "邀请加入群组理由";
                 try {
                     EMClient.getInstance().groupManager().inviteUser(groupId, usernames, reason);
@@ -248,20 +249,23 @@ public class OtherFragment extends AppFragment {
      */
     private void sendGroupMessage() {
         //创建一条文本消息,content为消息文字内容，toChatUsername为对方用户或者群聊的id，后文皆是如此
-        EMMessage message = EMMessage.createTxtSendMessage("群消息" + VMDateUtil.getCurrentMillisecond(), "9946217381889");
+        EMMessage message = EMMessage.createTxtSendMessage("群消息" + VMDate.currentMilli(), "9946217381889");
         //如果是群聊，设置chattype,默认是单聊
         message.setChatType(EMMessage.ChatType.GroupChat);
         //发送消息
         message.setMessageStatusCallback(new EMCallBack() {
-            @Override public void onSuccess() {
+            @Override
+            public void onSuccess() {
                 VMLog.i("message send success!");
             }
 
-            @Override public void onError(int i, String s) {
+            @Override
+            public void onError(int i, String s) {
                 VMLog.i("message send error code:%d, error:%s", i, s);
             }
 
-            @Override public void onProgress(int i, String s) {
+            @Override
+            public void onProgress(int i, String s) {
 
             }
         });
@@ -277,7 +281,7 @@ public class OtherFragment extends AppFragment {
         // 更改要撤销的消息的内容，替换为消息已经撤销的提示内容
         EMMessage recallMessage = EMMessage.createSendMessage(EMMessage.Type.TXT);
         EMTextMessageBody body =
-                new EMTextMessageBody(String.format(activity.getString(R.string.hint_msg_recall_by_user), message.getUserName()));
+                new EMTextMessageBody(String.format(mContext.getString(R.string.hint_msg_recall_by_user), message.getUserName()));
         recallMessage.addBody(body);
         recallMessage.setTo(message.getFrom());
         // 设置新消息的 msgId为撤销消息的 msgId
@@ -285,7 +289,7 @@ public class OtherFragment extends AppFragment {
         // 设置新消息的 msgTime 为撤销消息的 mstTime
         recallMessage.setMsgTime(message.getMsgTime());
         // 设置扩展为撤回消息类型，是为了区分消息的显示
-        recallMessage.setAttribute(Constants.ATTR_RECALL, true);
+        recallMessage.setAttribute(AConstants.ATTR_RECALL, true);
         // 返回修改消息结果
         boolean result = EMClient.getInstance().chatManager().updateMessage(recallMessage);
     }
@@ -569,26 +573,29 @@ public class OtherFragment extends AppFragment {
      */
     private void signOut() {
 
-        progressDialog = new ProgressDialog(activity);
-        progressDialog.setMessage(activity.getString(R.string.hint_sign_out));
+        progressDialog = new ProgressDialog(mContext);
+        progressDialog.setMessage(mContext.getString(R.string.hint_sign_out));
         progressDialog.show();
 
-        Hyphenate.getInstance().signOut(new EMCallBack() {
-            @Override public void onSuccess() {
+        IMHelper.getInstance().signOut(new EMCallBack() {
+            @Override
+            public void onSuccess() {
                 progressDialog.dismiss();
-                activity.runOnUiThread(new Runnable() {
-                    @Override public void run() {
-                        activity.onStartActivity(activity, new Intent(activity, SignInActivity.class));
-                        activity.finishAfterTransition();
-                    }
-                });
+//                mContext.runOnUiThread(new Runnable() {
+//                    @Override public void run() {
+//                        mContext.onStartActivity(mContext, new Intent(mContext, SignInActivity.class));
+//                        mContext.finishAfterTransition();
+//                    }
+//                });
             }
 
-            @Override public void onError(int i, String s) {
+            @Override
+            public void onError(int i, String s) {
 
             }
 
-            @Override public void onProgress(int i, String s) {
+            @Override
+            public void onProgress(int i, String s) {
 
             }
         });

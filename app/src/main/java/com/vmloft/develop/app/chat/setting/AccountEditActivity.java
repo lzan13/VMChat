@@ -1,7 +1,7 @@
 package com.vmloft.develop.app.chat.setting;
 
 import android.os.Bundle;
-import com.vmloft.develop.app.chat.app.AppActivity;
+import com.vmloft.develop.app.chat.base.AppActivity;
 import com.vmloft.develop.app.chat.R;
 
 /**

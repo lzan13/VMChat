@@ -1,10 +1,10 @@
-package com.vmloft.develop.app.chat.app;
+package com.vmloft.develop.app.chat.common;
 
 /**
  * Created by lzan13 on 2015/9/10 22:04.
  * 静态变量类
  */
-public class Constants {
+public class AConstants {
 
     // MobAPI 后端数据存储 key
     public static final String MOB_KEY = "199439878d8e7";

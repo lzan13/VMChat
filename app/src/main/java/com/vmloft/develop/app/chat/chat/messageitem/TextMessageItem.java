@@ -14,10 +14,10 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 
 import com.vmloft.develop.app.chat.R;
-import com.vmloft.develop.app.chat.app.Constants;
+import com.vmloft.develop.app.chat.common.AConstants;
 import com.vmloft.develop.app.chat.chat.MessageAdapter;
 import com.vmloft.develop.app.chat.chat.ChatActivity;
-import com.vmloft.develop.library.tools.utils.VMDateUtil;
+import com.vmloft.develop.library.tools.utils.VMDate;
 import com.vmloft.develop.library.tools.widget.VMImageView;
 
 /**
@@ -56,7 +56,7 @@ public class TextMessageItem extends MessageItem {
         }
 
         // 设置消息时间
-        msgTimeView.setText(VMDateUtil.getRelativeTime(message.getMsgTime()));
+        msgTimeView.setText(VMDate.getRelativeTime(message.getMsgTime()));
 
         EMTextMessageBody body = (EMTextMessageBody) this.message.getBody();
         Spannable spannable = new SpannableString(body.getMessage().toString());
@@ -74,7 +74,7 @@ public class TextMessageItem extends MessageItem {
     @Override protected void onItemLongClick() {
         String[] menus = null;
         // 这里要根据消息的类型去判断要弹出的菜单，是否是发送方，并且是发送成功才能撤回
-        if (viewType == Constants.MSG_TYPE_TEXT_RECEIVED) {
+        if (viewType == AConstants.MSG_TYPE_TEXT_RECEIVED) {
             menus = new String[] {
                     activity.getResources().getString(R.string.menu_chat_copy),
                     activity.getResources().getString(R.string.menu_chat_forward),
@@ -97,16 +97,16 @@ public class TextMessageItem extends MessageItem {
             @Override public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case 0:
-                        adapter.onItemAction(Constants.ACTION_COPY, message);
+                        adapter.onItemAction(AConstants.ACTION_COPY, message);
                         break;
                     case 1:
-                        adapter.onItemAction(Constants.ACTION_FORWARD, message);
+                        adapter.onItemAction(AConstants.ACTION_FORWARD, message);
                         break;
                     case 2:
-                        adapter.onItemAction(Constants.ACTION_DELETE, message);
+                        adapter.onItemAction(AConstants.ACTION_DELETE, message);
                         break;
                     case 3:
-                        adapter.onItemAction(Constants.ACTION_RECALL, message);
+                        adapter.onItemAction(AConstants.ACTION_RECALL, message);
                         break;
                 }
             }
@@ -134,7 +134,7 @@ public class TextMessageItem extends MessageItem {
                 resendView.setVisibility(View.VISIBLE);
                 resendView.setOnClickListener(new View.OnClickListener() {
                     @Override public void onClick(View v) {
-                        adapter.onItemAction(Constants.ACTION_RESEND, message);
+                        adapter.onItemAction(AConstants.ACTION_RESEND, message);
                     }
                 });
                 break;
@@ -152,7 +152,7 @@ public class TextMessageItem extends MessageItem {
      * 解析对应的xml 布局，填充当前 ItemView，并初始化控件
      */
     @Override protected void onInflateView() {
-        if (viewType == Constants.MSG_TYPE_TEXT_SEND) {
+        if (viewType == AConstants.MSG_TYPE_TEXT_SEND) {
             inflater.inflate(R.layout.item_msg_text_send, this);
         } else {
             inflater.inflate(R.layout.item_msg_text_received, this);

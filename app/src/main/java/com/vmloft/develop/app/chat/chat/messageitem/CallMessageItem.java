@@ -11,10 +11,10 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 
 import com.vmloft.develop.app.chat.R;
-import com.vmloft.develop.app.chat.app.Constants;
+import com.vmloft.develop.app.chat.common.AConstants;
 import com.vmloft.develop.app.chat.chat.ChatActivity;
 import com.vmloft.develop.app.chat.chat.MessageAdapter;
-import com.vmloft.develop.library.tools.utils.VMDateUtil;
+import com.vmloft.develop.library.tools.utils.VMDate;
 import com.vmloft.develop.library.tools.widget.VMImageView;
 
 /**
@@ -55,13 +55,13 @@ public class CallMessageItem extends MessageItem {
         }
 
         // 设置消息时间
-        msgTimeView.setText(VMDateUtil.getRelativeTime(message.getMsgTime()));
+        msgTimeView.setText(VMDate.getRelativeTime(message.getMsgTime()));
 
         EMTextMessageBody body = (EMTextMessageBody) this.message.getBody();
         String messageStr = body.getMessage().toString();
         contentView.setText(messageStr);
 
-        if (this.message.getBooleanAttribute(Constants.ATTR_CALL_VIDEO, false)) {
+        if (this.message.getBooleanAttribute(AConstants.ATTR_CALL_VIDEO, false)) {
             mCallIcon.setImageResource(R.drawable.ic_videocam_white_24dp);
         } else {
             mCallIcon.setImageResource(R.drawable.ic_call_white_24dp);
@@ -90,7 +90,7 @@ public class CallMessageItem extends MessageItem {
             @Override public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case 0:
-                        adapter.onItemAction(Constants.ACTION_DELETE, message);
+                        adapter.onItemAction(AConstants.ACTION_DELETE, message);
                         break;
                 }
             }
@@ -110,7 +110,7 @@ public class CallMessageItem extends MessageItem {
      * 解析对应的xml 布局，填充当前 ItemView，并初始化控件
      */
     @Override protected void onInflateView() {
-        if (viewType == Constants.MSG_TYPE_CALL_SEND) {
+        if (viewType == AConstants.MSG_TYPE_CALL_SEND) {
             inflater.inflate(R.layout.item_msg_call_send, this);
         } else {
             inflater.inflate(R.layout.item_msg_call_received, this);
