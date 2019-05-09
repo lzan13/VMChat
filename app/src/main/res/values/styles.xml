@@ -3,11 +3,11 @@
     <style name="AppTheme" parent="VMTheme">
         <!-- 在这里自定义自己的主题 -->
         <!-- 默认主要颜色，一般是 Toolbar 等颜色 -->
-        <item name="colorPrimary">@color/vm_theme_primary</item>
+        <item name="colorPrimary">@color/app_primary</item>
         <!-- 深一些的主要色，一般是状态栏等颜色 -->
-        <item name="colorPrimaryDark">@color/vm_theme_primary_dark</item>
+        <item name="colorPrimaryDark">@color/app_primary_dark</item>
         <!--各控件激活时的颜色，一般是 CheckBox、EditText、Switch、Spinner、RadioButton 等控件激活的颜色-->
-        <item name="colorAccent">@color/vm_theme_accent</item>
+        <item name="colorAccent">@color/app_accent</item>
 
     </style>
 

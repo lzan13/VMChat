@@ -12,7 +12,7 @@ import android.widget.EditText;
 
 import com.vmloft.develop.app.chat.R;
 import com.vmloft.develop.app.chat.common.AConstants;
-import com.vmloft.develop.app.chat.contacts.UserActivity;
+import com.vmloft.develop.app.chat.ui.contacts.UserActivity;
 
 /**
  * Created by lzan13 on 2016/1/12.

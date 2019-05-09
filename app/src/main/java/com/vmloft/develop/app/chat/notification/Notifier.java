@@ -12,8 +12,8 @@ import com.hyphenate.chat.EMTextMessageBody;
 
 import com.vmloft.develop.app.chat.common.AConstants;
 import com.vmloft.develop.app.chat.base.App;
-import com.vmloft.develop.app.chat.base.MainActivity;
-import com.vmloft.develop.app.chat.chat.ChatActivity;
+import com.vmloft.develop.app.chat.ui.main.MainActivity;
+import com.vmloft.develop.app.chat.ui.chat.ChatActivity;
 import com.vmloft.develop.app.chat.R;
 
 import java.util.List;

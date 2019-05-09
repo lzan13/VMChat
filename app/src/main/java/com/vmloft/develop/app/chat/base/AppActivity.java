@@ -11,6 +11,8 @@ import java.util.List;
 import com.vmloft.develop.app.chat.R;
 import com.vmloft.develop.app.chat.common.AConstants;
 import com.vmloft.develop.app.chat.connection.ConnectionEvent;
+import com.vmloft.develop.app.chat.ui.main.MainActivity;
+
 import com.vmloft.develop.library.tools.base.VMActivity;
 import com.vmloft.develop.library.tools.utils.VMLog;
 

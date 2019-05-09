@@ -53,7 +53,7 @@
         tools:ignore="GoogleAppIndexingWarning">
         <!--欢迎界面-->
         <activity
-            android:name=".sign.WelcomeActivity"
+            android:name=".ui.sign.WelcomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Launcher">
             <intent-filter>
@@ -65,13 +65,13 @@
 
         <!-- 主界面 -->
         <activity
-            android:name=".base.MainActivity"
+            android:name=".ui.main.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Default"/>
 
         <!-- 登录界面 -->
         <activity
-            android:name=".sign.SignInActivity"
+            android:name=".ui.sign.SignInActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Default"
@@ -79,7 +79,7 @@
 
         <!-- 注册界面 -->
         <activity
-            android:name=".sign.SignUpActivity"
+            android:name=".ui.sign.SignUpActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Default"
@@ -92,33 +92,33 @@
             android:windowSoftInputMode="adjustResize|stateHidden"/>
         <!-- 账户信息界面 -->
         <activity
-            android:name=".contacts.UserActivity"
+            android:name=".ui.contacts.UserActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Default"/>
         <!-- 聊天界面 -->
         <activity
-            android:name=".chat.ChatActivity"
+            android:name=".ui.chat.ChatActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Default"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
         <!--视频通话界面-->
         <activity
-            android:name=".call.VideoCallActivity"
+            android:name=".ui.call.VideoCallActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.Transparent"
             android:windowSoftInputMode="adjustNothing|stateAlwaysHidden"/>
         <!--语音通话界面-->
         <activity
-            android:name=".call.VoiceCallActivity"
+            android:name=".ui.call.VoiceCallActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Transparent"
             android:windowSoftInputMode="adjustNothing|stateAlwaysHidden"/>
         <!--显示大图界面 使用半透明主题-->
         <activity
-            android:name=".chat.BigImageActivity"
+            android:name=".ui.chat.BigImageActivity"
             android:theme="@style/AppTheme.Transparent"
             android:windowSoftInputMode="adjustNothing|stateAlwaysHidden"/>
         <!-- 搜索界面 -->

@@ -19,8 +19,8 @@ import com.hyphenate.exceptions.HyphenateException;
 import com.vmloft.develop.app.chat.R;
 import com.vmloft.develop.app.chat.common.AConstants;
 import com.vmloft.develop.app.chat.base.AppActivity;
-import com.vmloft.develop.app.chat.contacts.UserActivity;
-import com.vmloft.develop.app.chat.conversation.ConversationExtUtils;
+import com.vmloft.develop.app.chat.ui.contacts.UserActivity;
+import com.vmloft.develop.app.chat.ui.conversation.ConversationExtUtils;
 import com.vmloft.develop.app.chat.interfaces.ItemCallBack;
 
 /**

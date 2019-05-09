@@ -6,7 +6,7 @@ import android.text.TextUtils;
 
 import com.hyphenate.util.HanziToPinyin;
 
-import com.vmloft.develop.app.chat.contacts.UserEntity;
+import com.vmloft.develop.app.chat.ui.contacts.UserEntity;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

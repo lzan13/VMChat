@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="app_primary">#ffffffff</color>
+    <color name="app_primary_dark">#ffffffff</color>
+    <color name="app_accent">#D81B60</color>
+
+    <color name="app_bg">@color/app_primary</color>
+
+    <color name="app_guide_bg_0">@color/vm_green_38</color>
+    <color name="app_guide_bg_1">@color/vm_light_green_38</color>
+    <color name="app_guide_bg_2">@color/vm_teal_38</color>
+
     <!--Application 基色-->
     <color name="transparent">#00000000</color>
     <color name="translucent">#89000000</color>

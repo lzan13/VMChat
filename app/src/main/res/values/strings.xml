@@ -5,6 +5,16 @@
 
     <string name="welcome">欢迎使用 VMChat</string>
 
+
+
+
+    <string name="guide_title_0">应用引导标题</string>
+    <string name="guide_title_1">应用引导标题</string>
+    <string name="guide_title_2">应用引导标题</string>
+    <string name="guide_intro_0">应用引导描述，写点儿什么呢，写点儿什么呢？</string>
+    <string name="guide_intro_1">应用引导描述，写点儿什么呢，写点儿什么呢？</string>
+    <string name="guide_intro_2">应用引导描述，写点儿什么呢，写点儿什么呢？</string>
+
     <!--登录与注册-->
     <string name="sign_go_on">继续</string>
     <string name="sign_in">登录</string>
@@ -23,6 +33,12 @@
     <string name="sign_up_failed">注册失败</string>
     <string name="sign_up_begin">正在注册……</string>
     <string name="sign_up_success">注册成功</string>
+
+    <string name="sign_up_go">去注册</string>
+    <string name="sign_up_boot">还没有账户？</string>
+    <string name="account">账户</string>
+    <string name="password">密码</string>
+
     <string name="sign_privacy_and_agreement">继续操作即表示您同意遵守 <a href="http://www.vmloft.com/policies/privacy">隐私权政策</a> 及 <a href="http://www.vmloft.com/policies/terms">服务条款</a></string>
 
     <!--用户信息相关-->
@@ -36,6 +52,9 @@
     <!--Button 按钮相关-->
     <string name="btn_ok">确定</string>
     <string name="btn_cancel">取消</string>
+    <string name="btn_prev">上一步</string>
+    <string name="btn_next">下一步</string>
+    <string name="btn_finish">完成</string>
     <string name="btn_i_know">我知道了</string>
     <string name="btn_agree">同意</string>
     <string name="btn_reject">拒绝</string>
