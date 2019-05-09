@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.WindowManager;
+
 import com.hyphenate.chat.EMClient;
 import com.vmloft.develop.app.chat.base.AppActivity;
 
